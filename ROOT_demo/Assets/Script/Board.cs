@@ -13,7 +13,7 @@ namespace ROOT
     {
         public readonly int BoardLength = 6;
         private readonly float _boardPhysicalLength = 1.2f;
-        private readonly float _boardPhysicalOriginX = -3.1f;
+        private readonly float _boardPhysicalOriginX = -3.1f - 1.75f;
         private readonly float _boardPhysicalOriginY = -3.1f;
         //public GlobalAssetLib _globalAssetLib;
 

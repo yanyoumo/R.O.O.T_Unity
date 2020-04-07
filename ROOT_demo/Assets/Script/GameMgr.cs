@@ -40,7 +40,7 @@ namespace ROOT
             DeltaCurrency = 0.0f;
 
             _gameStateMgr =new StandardGameStateMgr();
-            _gameStateMgr.InitGameMode(new ScoreSet(3000.0f, 100), new PerMoveData());
+            _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
 
             _shopMgr = gameObject.AddComponent<ShopMgr>();
             _shopMgr.InitPrice();
@@ -72,11 +72,6 @@ namespace ROOT
             newPos.x = Mathf.Clamp(newPos.x, 0, GameBoard.BoardLength-1);
             newPos.y = Mathf.Clamp(newPos.y, 0, GameBoard.BoardLength-1);
             cursor.board_position = newPos;
-        }
-
-        string PaddingFloat(float input)
-        {
-            return input + "";
         }
 
         void UpdateCursor()
@@ -287,9 +282,19 @@ namespace ROOT
                 DeltaCurrency += _currencyIoCalculator.CalculateProcessorScore();
                 DeltaCurrency += _currencyIoCalculator.CalculateServerScore();
                 DeltaCurrency -= _currencyIoCalculator.CalculateCost();
-                CurrencyText.text = "Currency:" + PaddingFloat(_gameStateMgr.GetCurrency());
-                DeltaCurrencyText.text = "DeltaCurrency:" + DeltaCurrency;
-                TimeText.text = "Time:" + _gameStateMgr.GetGameTime();
+                CurrencyText.text = ":" + Utils.PaddingFloat4Digit(_gameStateMgr.GetCurrency());
+                if (DeltaCurrency>0)
+                {
+                    DeltaCurrencyText.color = Color.green;
+                    DeltaCurrencyText.text = ":" + Utils.PaddingFloat4Digit(Mathf.Abs(DeltaCurrency));
+                }
+                else
+                {
+                    DeltaCurrencyText.color = Color.red;
+                    DeltaCurrencyText.text = ":" + Utils.PaddingFloat4Digit(Mathf.Abs(DeltaCurrency));
+                }
+
+                TimeText.text = ":" + Utils.PaddingFloat4Digit(_gameStateMgr.GetGameTime());
                 if (movedTile)
                 {
                     if (BoughtOnce)
@@ -304,6 +309,7 @@ namespace ROOT
                 if (_gameStateMgr.EndGameCheck(new ScoreSet(), new PerMoveData()))
                 {
                     CurrencyText.text = "GAME OVER";
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_GAMEOVER);
                 }
             }
         }

@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StartGameMgr : MonoBehaviour
+namespace ROOT
 {
-    public void GameStart()
+    public class StartGameMgr : MonoBehaviour
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+        public void GameStart()
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_GAMEPLAY);
+        }
     }
 }

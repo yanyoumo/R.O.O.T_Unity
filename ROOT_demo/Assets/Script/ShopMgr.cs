@@ -166,10 +166,10 @@ namespace ROOT
             _itemC.gameObject.transform.position = _posA + new Vector3(_posDisplace, 0, _posDisplace);
             _itemD.gameObject.transform.position = _posA + new Vector3(0, 0, _posDisplace);
 
-            ItemAPriceText.text = Mathf.FloorToInt(_priceA).ToString();
-            ItemBPriceText.text = Mathf.FloorToInt(_priceB).ToString();
-            ItemCPriceText.text = Mathf.FloorToInt(_priceC).ToString();
-            ItemDPriceText.text = Mathf.FloorToInt(_priceD).ToString();
+            ItemAPriceText.text = Utils.PaddingFloat3Digit(_priceA);
+            ItemBPriceText.text = Utils.PaddingFloat3Digit(_priceB);
+            ItemCPriceText.text = Utils.PaddingFloat3Digit(_priceC);
+            ItemDPriceText.text = Utils.PaddingFloat3Digit(_priceD);
         }
 
         public bool BuyA()

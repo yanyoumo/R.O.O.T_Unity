@@ -20,6 +20,9 @@ namespace ROOT
         public static string NAME_CORE_COOLER = "Cooler";
         public static string NAME_CORE_BACKPLATE = "BackPlate";
         //
+        public static int SCENE_ID_START = 0;
+        public static int SCENE_ID_GAMEPLAY = 1;
+        public static int SCENE_ID_GAMEOVER = 2;
     }
 
     public static class Utils
@@ -211,6 +214,52 @@ namespace ROOT
                 }
             }
             return default;
+        }
+
+        public static string  PaddingFloat4Digit(float input)
+        {
+            int inputInt = Mathf.FloorToInt(input);
+            if (inputInt >= 10000)
+            {
+                return "????";
+            }
+            else if (inputInt >= 1000)
+            {
+                return inputInt.ToString();
+            }
+            else if (inputInt >= 100)
+            {
+                return "0" + inputInt;
+            }
+            else if (inputInt >= 10)
+            {
+                return "00" + inputInt;
+            }
+            else
+            {
+                return "000" + inputInt;
+            }
+        }
+
+        public static string PaddingFloat3Digit(float input)
+        {
+            int inputInt = Mathf.FloorToInt(input);
+            if (inputInt >= 1000)
+            {
+                return "???";
+            }
+            else if (inputInt >= 100)
+            {
+                return inputInt.ToString();
+            }
+            else if (inputInt >= 10)
+            {
+                return "0" + inputInt;
+            }
+            else
+            {
+                return "00" + inputInt;
+            }
         }
     }
 }
