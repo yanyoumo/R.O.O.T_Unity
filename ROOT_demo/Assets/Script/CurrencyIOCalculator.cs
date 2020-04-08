@@ -58,6 +58,7 @@ namespace ROOT
                     if (unit.UnitCore == CoreType.HardDrive)
                     {
                         score += 1.0f;
+                        unit.InHDDGrid = true;
                     }
 
                     unit.Visited = true;
@@ -85,8 +86,10 @@ namespace ROOT
             {
                 var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
                 unit.Visited = false;
+                unit.InHDDGrid = false;
                 if (unit.UnitCore == CoreType.Processor)
                 {
+                    unit.InHDDGrid = true;
                     processorKeys.Add(keyValuePair.Key);
                     //现在是设计为任何接续到任何一个CPU上的硬盘都算分。但是只能算一次，就是一个集群中有两个CPU也只能算一次分。
                 }
@@ -114,7 +117,7 @@ namespace ROOT
         }
 
         private void CalculateServerScoreSingleDir(UnitBase unit, Vector2Int hostKey, RotationDirection direction,
-            int depth)
+            int depth, Vector2Int SrcPos)
         {
             var side = unit.GetWorldSpaceUnitSide(direction);
             if (side == SideType.SerialConnector)
@@ -130,13 +133,13 @@ namespace ROOT
 
                     if (otherSide == SideType.SerialConnector)
                     {
-                        CalculateServerScoreCore(nextKey, depth);
+                        CalculateServerScoreCore(nextKey, depth, SrcPos);
                     }
                 }
             }
         }
 
-        private void CalculateServerScoreCore(Vector2Int hostKey, int currentDepth)
+        private void CalculateServerScoreCore(Vector2Int hostKey, int currentDepth, Vector2Int SrcPos)
         {
             var depth = currentDepth;
             m_Board.Units.TryGetValue(hostKey, out var currentUnit);
@@ -146,6 +149,7 @@ namespace ROOT
                 if (unit.IntA > depth || unit.IntA == -1)
                 {
                     unit.Visited = true;
+                    unit.LastNetworkPos = SrcPos;
                     if (unit.UnitCore == CoreType.NetworkCable)
                     {
                         depth++;
@@ -156,10 +160,10 @@ namespace ROOT
                         unit.IntA = depth;
                     }
 
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.North, depth);
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.East, depth);
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.South, depth);
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.West, depth);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.North, depth,unit.board_position);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.East, depth, unit.board_position);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.South, depth, unit.board_position);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.West, depth, unit.board_position);
                 }
             }
             else
@@ -171,12 +175,14 @@ namespace ROOT
         public float CalculateServerScore()
         {
             var maxLength = 0.0f;
+            var farthestUnitPos = Vector2Int.zero;
             var serverKeys = new List<Vector2Int>();
 
             foreach (var keyValuePair in m_Board.Units)
             {
                 var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
                 unit.Visited = false;
+                unit.InServerGrid = false;
                 unit.IntA = -1;
                 if (unit.UnitCore == CoreType.Server)
                 {
@@ -193,13 +199,40 @@ namespace ROOT
                 //score += 0.0f;//只有服务器没分儿
                 foreach (var key in serverKeys)
                 {
-                    CalculateServerScoreCore(key, 0);
-                    foreach (var value in m_Board.Units.Values)
+                    CalculateServerScoreCore(key, 0, key);
+                    foreach (var keyValuePair in m_Board.Units)
                     {
-                        var unit = value.GetComponentInChildren<Unit>();
-                        maxLength = Mathf.Max(maxLength, unit.IntA);
+                        var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
+                        if (unit.IntA > maxLength)
+                        {
+                            maxLength = unit.IntA;
+                            farthestUnitPos = keyValuePair.Key;
+                        }
                         unit.IntA = -1;
                     }
+                    
+                }
+
+                int maxCount = 1000;
+                int counter = 0;
+
+                if (maxLength > 0)
+                {
+                    Unit farthestUnit;
+                    do
+                    {
+                        m_Board.Units.TryGetValue(farthestUnitPos, out var currentUnit);
+                        Debug.Assert(currentUnit);
+                        farthestUnit = currentUnit.GetComponentInChildren<Unit>();
+                        farthestUnit.InServerGrid = true;
+                        farthestUnitPos = farthestUnit.LastNetworkPos;
+                        counter++;
+                        if (counter >= maxCount)
+                        {
+                            Debug.Assert(false, "ERROR");
+                            break;
+                        }
+                    } while (farthestUnit.UnitCore != CoreType.Server);
                 }
 
                 return GetServerIncomeByLength((int) maxLength);

@@ -287,5 +287,43 @@ namespace ROOT
             }
             return res;
         }
+
+        public void ResetUnitEmission()
+        {
+            foreach (var unit in Units)
+            {
+                Material mt = unit.Value.GetComponentInChildren<Unit>().CoreMeshRenderer.material;
+                mt.EnableKeyword("_EMISSION");//就不是很懂为什么?照理说新建的模板材质打开这个了啊。
+                mt.SetColor("_EmissionColor", Color.black);              
+            }
+        }
+
+        public void DisplayConnectedHDDUnit()
+        {
+            float time = Time.timeSinceLevelLoad;
+            foreach (var unit in Units)
+            {
+                if (unit.Value.GetComponentInChildren<Unit>().InHDDGrid)
+                {
+                    Color color = (Mathf.Sin(time * 10) + 1.0f) * Color.red;
+                    Material mt = unit.Value.GetComponentInChildren<Unit>().CoreMeshRenderer.material;
+                    mt.SetColor("_EmissionColor", color);
+                }
+            }
+        }
+
+        public void DisplayConnectedServerUnit()
+        {
+            float time = Time.timeSinceLevelLoad;
+            foreach (var unit in Units)
+            {
+                if (unit.Value.GetComponentInChildren<Unit>().InServerGrid)
+                {
+                    Color color = (Mathf.Sin(time * 10) + 1.0f) * Color.blue;
+                    Material mt = unit.Value.GetComponentInChildren<Unit>().CoreMeshRenderer.material;
+                    mt.SetColor("_EmissionColor", color);
+                }
+            }
+        }
     }
 }

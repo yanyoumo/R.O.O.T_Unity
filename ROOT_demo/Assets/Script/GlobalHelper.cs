@@ -23,6 +23,7 @@ namespace ROOT
         public static int SCENE_ID_START = 0;
         public static int SCENE_ID_GAMEPLAY = 1;
         public static int SCENE_ID_GAMEOVER = 2;
+        public static int SCENE_ID_TUTORIAL = 3;
     }
 
     public static class Utils

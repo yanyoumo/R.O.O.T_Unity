@@ -59,6 +59,10 @@ namespace ROOT
         public bool Visited { get; set; }//for scoring purpose
         public int IntA { get; set; }//for scoring purpose
         public int IntB { get; set; }//for scoring purpose
+        public bool InHDDGrid { get; set; }//for scoring purpose
+        public bool InServerGrid { get; set; }//for scoring purpose
+
+        public Vector2Int LastNetworkPos = Vector2Int.zero;
 
         //public GlobalAssetLib _globalAssetLib;
 
@@ -92,6 +96,8 @@ namespace ROOT
             LocalWestSideMeshRenderer.material.SetColor("_Color", sideWColor);
 
             Visited = false;
+            InServerGrid = false;
+            InHDDGrid = false;
         }
 
         protected virtual void Awake()

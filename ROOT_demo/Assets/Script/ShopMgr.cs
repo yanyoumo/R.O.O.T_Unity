@@ -107,6 +107,7 @@ namespace ROOT
                 if (cutoffCounter >= cutoff)
                 {
                     Debug.Assert(false, "Can't generate good Unit");
+                    break;
                 }
             } while (!CheckConformKeySide(core, res));
             

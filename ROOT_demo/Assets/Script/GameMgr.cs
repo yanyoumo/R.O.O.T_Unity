@@ -6,6 +6,20 @@ using UnityEngine.UI;
 
 namespace ROOT
 {
+    public enum GameStatus
+    {
+        Starting,
+        Playing,
+        Ended
+    }
+
+    public static class GameGlobalStatus
+    {
+        public static GameStatus CurrentGameStatus;
+        public static float lastEndingCurrent;
+        public static float lastEndingTime;
+    }
+
     public class GameMgr : MonoBehaviour
     {
         //TODO https://shimo.im/docs/Dd86KXTqHJpqxwYX
@@ -30,6 +44,12 @@ namespace ROOT
         public Text ItemDPrice;
 
         private bool BoughtOnce = false;
+
+        public bool CursorMoveEnabled = true;
+        public bool UnitEnabled = true;
+        public bool ShopEnabled = true;
+        public bool DestoryerEnabled = true;
+        public bool HintEnabled = true;
 
         void Awake()
         {
@@ -130,140 +150,131 @@ namespace ROOT
             {
                 var cursor = _mCursor.GetComponent<ROOT.Cursor>();
                 {
-                    if (Input.GetKey(KeyCode.A))
+                    if (!BoughtOnce)
                     {
-                        //Shop优先
-                        /*
-                         *上D 左C
-                         *下A 右B
-                         */
-                        if (!BoughtOnce)
+                        bool successBought = false;
+                        if (Input.GetKeyDown(KeyCode.Alpha1))
                         {
-                            bool successBought = false;
-                            if (Input.GetKeyDown(KeyCode.UpArrow))
-                            {
-                                successBought=_shopMgr.BuyD();
-                            }
-                            else if (Input.GetKeyDown(KeyCode.DownArrow))
-                            {
-                                successBought=_shopMgr.BuyA();
-                            }
-                            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-                            {
-                                successBought=_shopMgr.BuyC();
-                            }
-                            else if (Input.GetKeyDown(KeyCode.RightArrow))
-                            {
-                                successBought=_shopMgr.BuyB();
-                            }
+                            successBought = _shopMgr.BuyD();
+                        }
+                        else if (Input.GetKeyDown(KeyCode.Alpha2))
+                        {
+                            successBought = _shopMgr.BuyC();
+                        }
+                        else if (Input.GetKeyDown(KeyCode.Alpha3))
+                        {
+                            successBought = _shopMgr.BuyA();
+                        }
+                        else if (Input.GetKeyDown(KeyCode.Alpha4))
+                        {
+                            successBought = _shopMgr.BuyB();
+                        }
 
-                            if (successBought)
+                        if (successBought)
+                        {
+                            BoughtOnce = true;
+                        }
+                    }
+
+                    if (Input.GetKey(KeyCode.Space) && GameBoard.CheckBoardPosValidAndFilled(cursor.board_position))
+                    {
+                        if (Input.GetKeyDown(KeyCode.LeftArrow))
+                        {
+                            if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetWestUnit()))
                             {
-                                BoughtOnce = true;
+                                GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
+                                if (unit)
+                                {
+                                    Vector2Int oldKey = cursor.board_position;
+                                    unit.GetComponentInChildren<Unit>().MoveLeft();
+                                    GameBoard.UpdateUnitBoardPos(oldKey);
+                                    movedTile = true;
+                                }
+
+                                cursor.MoveLeft();
+                            }
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.UpArrow))
+                        {
+                            if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetNorthUnit()))
+                            {
+                                GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
+                                if (unit)
+                                {
+                                    Vector2Int oldKey = cursor.board_position;
+                                    unit.GetComponentInChildren<Unit>().MoveUp();
+                                    GameBoard.UpdateUnitBoardPos(oldKey);
+                                    movedTile = true;
+                                }
+
+                                cursor.MoveUp();
+                            }
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.DownArrow))
+                        {
+                            if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetSouthUnit()))
+                            {
+                                GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
+                                if (unit)
+                                {
+                                    Vector2Int oldKey = cursor.board_position;
+                                    unit.GetComponentInChildren<Unit>().MoveDown();
+                                    GameBoard.UpdateUnitBoardPos(oldKey);
+                                    movedTile = true;
+                                }
+
+                                cursor.MoveDown();
+                            }
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.RightArrow))
+                        {
+                            if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetEastUnit()))
+                            {
+                                GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
+                                if (unit)
+                                {
+                                    Vector2Int oldKey = cursor.board_position;
+                                    unit.GetComponentInChildren<Unit>().MoveRight();
+                                    GameBoard.UpdateUnitBoardPos(oldKey);
+                                    movedTile = true;
+                                }
+
+                                cursor.MoveRight();
                             }
                         }
                     }
                     else
                     {
-                        if (Input.GetKey(KeyCode.Z) && GameBoard.CheckBoardPosValidAndFilled(cursor.board_position))
+                        if (GameBoard.CheckBoardPosValid(cursor.board_position))
                         {
                             if (Input.GetKeyDown(KeyCode.LeftArrow))
                             {
-                                if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetWestUnit()))
-                                {
-                                    GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
-                                    if (unit)
-                                    {
-                                        Vector2Int oldKey = cursor.board_position;
-                                        unit.GetComponentInChildren<Unit>().MoveLeft();
-                                        GameBoard.UpdateUnitBoardPos(oldKey);
-                                        movedTile = true;
-                                    }
-
-                                    cursor.MoveLeft();
-                                }
-                            }
-
-                            if (Input.GetKeyDown(KeyCode.UpArrow))
-                            {
-                                if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetNorthUnit()))
-                                {
-                                    GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
-                                    if (unit)
-                                    {
-                                        Vector2Int oldKey = cursor.board_position;
-                                        unit.GetComponentInChildren<Unit>().MoveUp();
-                                        GameBoard.UpdateUnitBoardPos(oldKey);
-                                        movedTile = true;
-                                    }
-
-                                    cursor.MoveUp();
-                                }
-                            }
-
-                            if (Input.GetKeyDown(KeyCode.DownArrow))
-                            {
-                                if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetSouthUnit()))
-                                {
-                                    GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
-                                    if (unit)
-                                    {
-                                        Vector2Int oldKey = cursor.board_position;
-                                        unit.GetComponentInChildren<Unit>().MoveDown();
-                                        GameBoard.UpdateUnitBoardPos(oldKey);
-                                        movedTile = true;
-                                    }
-
-                                    cursor.MoveDown();
-                                }
+                                cursor.MoveLeft();
                             }
 
                             if (Input.GetKeyDown(KeyCode.RightArrow))
                             {
-                                if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetEastUnit()))
-                                {
-                                    GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
-                                    if (unit)
-                                    {
-                                        Vector2Int oldKey = cursor.board_position;
-                                        unit.GetComponentInChildren<Unit>().MoveRight();
-                                        GameBoard.UpdateUnitBoardPos(oldKey);
-                                        movedTile = true;
-                                    }
-
-                                    cursor.MoveRight();
-                                }
+                                cursor.MoveRight();
                             }
-                        }
-                        else
-                        {
-                            if (GameBoard.CheckBoardPosValid(cursor.board_position))
+
+                            if (Input.GetKeyDown(KeyCode.UpArrow))
                             {
-                                if (Input.GetKeyDown(KeyCode.LeftArrow))
-                                {
-                                    cursor.MoveLeft();
-                                }
+                                cursor.MoveUp();
+                            }
 
-                                if (Input.GetKeyDown(KeyCode.RightArrow))
-                                {
-                                    cursor.MoveRight();
-                                }
-
-                                if (Input.GetKeyDown(KeyCode.UpArrow))
-                                {
-                                    cursor.MoveUp();
-                                }
-
-                                if (Input.GetKeyDown(KeyCode.DownArrow))
-                                {
-                                    cursor.MoveDown();
-                                }
+                            if (Input.GetKeyDown(KeyCode.DownArrow))
+                            {
+                                cursor.MoveDown();
                             }
                         }
                     }
 
+                    
                     CursorStayInBoard(cursor);
-                    if (Input.GetKeyDown(KeyCode.X))
+                    if (Input.GetKeyDown(KeyCode.LeftShift))
                     {
                         if (GameBoard.CheckBoardPosValidAndFilled(cursor.board_position))
                         {
@@ -283,7 +294,7 @@ namespace ROOT
                 DeltaCurrency += _currencyIoCalculator.CalculateServerScore();
                 DeltaCurrency -= _currencyIoCalculator.CalculateCost();
                 CurrencyText.text = ":" + Utils.PaddingFloat4Digit(_gameStateMgr.GetCurrency());
-                if (DeltaCurrency>0)
+                if (DeltaCurrency > 0)
                 {
                     DeltaCurrencyText.color = Color.green;
                     DeltaCurrencyText.text = ":" + Utils.PaddingFloat4Digit(Mathf.Abs(DeltaCurrency));
@@ -293,7 +304,19 @@ namespace ROOT
                     DeltaCurrencyText.color = Color.red;
                     DeltaCurrencyText.text = ":" + Utils.PaddingFloat4Digit(Mathf.Abs(DeltaCurrency));
                 }
-
+            }
+            {
+                GameBoard.ResetUnitEmission();
+                if (Input.GetKey(KeyCode.F1))
+                {
+                    GameBoard.DisplayConnectedHDDUnit();
+                }
+                if (Input.GetKey(KeyCode.F2))
+                {
+                    GameBoard.DisplayConnectedServerUnit();
+                }
+            }
+            {
                 TimeText.text = ":" + Utils.PaddingFloat4Digit(_gameStateMgr.GetGameTime());
                 if (movedTile)
                 {
@@ -301,6 +324,7 @@ namespace ROOT
                     {
                         BoughtOnce = false;
                     }
+
                     _shopMgr.ShopUpdate();
                     _warningDestoryer.Step();
                     _gameStateMgr.PerMove(new ScoreSet(), new PerMoveData(DeltaCurrency, 1));
@@ -309,6 +333,9 @@ namespace ROOT
                 if (_gameStateMgr.EndGameCheck(new ScoreSet(), new PerMoveData()))
                 {
                     CurrencyText.text = "GAME OVER";
+                    GameGlobalStatus.CurrentGameStatus = GameStatus.Ended;
+                    GameGlobalStatus.lastEndingCurrent = _gameStateMgr.GetCurrency();
+                    GameGlobalStatus.lastEndingCurrent = _gameStateMgr.GetGameTime();
                     UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_GAMEOVER);
                 }
             }
