@@ -19,5 +19,11 @@ namespace ROOT
             GameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
             UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_GAMEPLAY);
         }
+
+        public void TutorialStart()
+        {
+            GameGlobalStatus.CurrentGameStatus = GameStatus.Tutorial;
+            UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_GAMEPLAY);
+        }
     }
 }
