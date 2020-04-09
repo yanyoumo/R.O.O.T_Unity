@@ -25,7 +25,7 @@ namespace ROOT
         {
             var score = 0.0f;
             var side = unit.GetWorldSpaceUnitSide(direction);
-            if (side == SideType.ParallelConnector)
+            if (side == SideType.Connection)
             {
                 var nextKey = hostKey + Utils.ConvertDirectionToBoardPosOffset(direction);
                 if (m_Board.CheckBoardPosValidAndFilled(nextKey))
@@ -36,7 +36,7 @@ namespace ROOT
                     var otherSide =
                         nextUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(direction));
 
-                    if (otherSide == SideType.ParallelConnector)
+                    if (otherSide == SideType.Connection)
                     {
                         score = CalculateProcessorScoreCore(nextKey);
                     }
@@ -120,7 +120,7 @@ namespace ROOT
             int depth, Vector2Int SrcPos)
         {
             var side = unit.GetWorldSpaceUnitSide(direction);
-            if (side == SideType.SerialConnector)
+            if (side == SideType.Connection)
             {
                 var nextKey = hostKey + Utils.ConvertDirectionToBoardPosOffset(direction);
                 if (m_Board.CheckBoardPosValidAndFilled(nextKey))
@@ -131,7 +131,7 @@ namespace ROOT
                     var otherSide =
                         nextUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(direction));
 
-                    if (otherSide == SideType.SerialConnector)
+                    if (otherSide == SideType.Connection)
                     {
                         CalculateServerScoreCore(nextKey, depth, SrcPos);
                     }

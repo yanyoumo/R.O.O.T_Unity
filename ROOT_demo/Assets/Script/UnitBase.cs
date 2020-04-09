@@ -50,10 +50,10 @@ namespace ROOT
             CoreMatNameDic.Add(CoreType.Processor, GlobalResourcePath.UNIT_PROCESSOR_MAT_NAME);
             CoreMatNameDic.Add(CoreType.Server, GlobalResourcePath.UNIT_SERVER_MAT_NAME);
 
-            SideMatColorDic.Add(SideType.PCB, new Color(0.6f, 0.1f, 0.1f));//先干脆改成红的
-            SideMatColorDic.Add(SideType.Firewall, new Color(0.6f, 0.1f, 0.1f));
-            SideMatColorDic.Add(SideType.ParallelConnector, new Color(0.1f, 0.1f, 0.6f));
-            SideMatColorDic.Add(SideType.SerialConnector, new Color(0.1f, 0.6f, 0.6f));
+            SideMatColorDic.Add(SideType.NoConnection, Color.red*0.75f);//先干脆改成红的
+            //SideMatColorDic.Add(SideType.Firewall, new Color(0.6f, 0.1f, 0.1f));
+            SideMatColorDic.Add(SideType.Connection, Color.blue);
+            //SideMatColorDic.Add(SideType.SerialConnector, new Color(0.1f, 0.6f, 0.6f));
         }
 
         public bool Visited { get; set; }//for scoring purpose
@@ -73,6 +73,20 @@ namespace ROOT
             InitUnit(core, sides[0], sides[1], sides[2], sides[3]);
         }
 
+        private void InitSide(MeshRenderer meshRenderer,SideType sideType)
+        {
+            if (sideType == SideType.Connection)
+            {
+                meshRenderer.material.SetColor("_Color", Color.green*0.55f);
+            }
+            else if (sideType == SideType.NoConnection)
+            {
+                //感觉还是有个红的比较靠谱
+                meshRenderer.material.SetColor("_Color", Color.red * 0.25f);
+                //meshRenderer.enabled = false;
+            }
+        }
+
         public void InitUnit(CoreType core, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide)
         {
             //Debug.Assert(side.Length == 4);
@@ -86,14 +100,10 @@ namespace ROOT
             CoreMeshRenderer.material = Resources.Load<Material>(GlobalResourcePath.UNIT_MAT_PATH_PREFIX + val);
             Debug.Assert(CoreMeshRenderer.material);
 
-            SideMatColorDic.TryGetValue(lNSide, out var sideNColor);
-            LocalNorthSideMeshRenderer.material.SetColor("_Color", sideNColor);
-            SideMatColorDic.TryGetValue(lESide, out var sideEColor);
-            LocalEastSideMeshRenderer.material.SetColor("_Color", sideEColor);
-            SideMatColorDic.TryGetValue(lSSide, out var sideSColor);
-            LocalSouthSideMeshRenderer.material.SetColor("_Color", sideSColor);
-            SideMatColorDic.TryGetValue(lWSide, out var sideWColor);
-            LocalWestSideMeshRenderer.material.SetColor("_Color", sideWColor);
+            InitSide(LocalNorthSideMeshRenderer,lNSide);
+            InitSide(LocalEastSideMeshRenderer, lESide);
+            InitSide(LocalSouthSideMeshRenderer, lSSide);
+            InitSide(LocalWestSideMeshRenderer, lWSide);
 
             Visited = false;
             InServerGrid = false;

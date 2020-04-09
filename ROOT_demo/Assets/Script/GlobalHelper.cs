@@ -11,7 +11,7 @@ namespace ROOT
     public static class StaticName
     {
         //
-        public static string NAME_CORE_PCB = "PCB";
+        public static string NAME_CORE_PCB = "NoConnection";
         public static string NAME_CORE_NETCABLE = "NetworkCable";
         public static string NAME_CORE_SERVER = "Server";
         public static string NAME_CORE_BRIDGE = "Bridge";

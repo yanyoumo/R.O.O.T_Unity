@@ -407,11 +407,16 @@ namespace ROOT
             }
         }
 
-        void UpdatePlayerDataUI(bool movedTile = true)
+        void UpdatePlayerDataAndUI(bool movedTile = true)
         {
             TimeText.text = ":" + Utils.PaddingFloat4Digit(_gameStateMgr.GetGameTime());
+#if UNITY_EDITOR
+            if (movedTile||Input.GetKeyDown(KeyCode.F12))
+            {
+#else
             if (movedTile)
             {
+#endif
                 if (BoughtOnce)
                 {
                     BoughtOnce = false;
@@ -470,7 +475,7 @@ namespace ROOT
 
                 if (PlayerDataUIEnabled)
                 {
-                    UpdatePlayerDataUI(movedTile);
+                    UpdatePlayerDataAndUI(movedTile);
                 }
 
                 if (GameOverEnabled)

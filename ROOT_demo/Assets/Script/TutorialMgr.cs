@@ -128,7 +128,7 @@ namespace ROOT
                 case 3:
                     SideType[] sidesA =
                     {
-                        SideType.PCB, SideType.ParallelConnector, SideType.ParallelConnector, SideType.ParallelConnector
+                        SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection
                     };
                     MainGameMgr.GameBoard.Units.Add(new Vector2Int(2, 2),
                         MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.Processor, Utils.Shuffle(sidesA)));
@@ -146,7 +146,7 @@ namespace ROOT
                 case 6:
                     SideType[] sidesB =
                     {
-                        SideType.PCB, SideType.ParallelConnector, SideType.PCB, SideType.ParallelConnector
+                        SideType.NoConnection, SideType.Connection, SideType.NoConnection, SideType.Connection
                     };
                     //TODO 这里需要变成读取然后随机拿两个空的位置。
                     MainGameMgr.GameBoard.Units.Add(new Vector2Int(0, 0),

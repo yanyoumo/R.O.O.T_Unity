@@ -20,10 +20,10 @@ namespace ROOT
 
     public enum SideType
     {
-        PCB,
-        SerialConnector,
-        ParallelConnector,
-        Firewall,
+        NoConnection,
+        Connection,
+        //SerialConnector,
+        //Firewall,
         SIDETYPECOUNT
     }
 
@@ -54,10 +54,10 @@ namespace ROOT
             };
             _priceBySide = new Dictionary<SideType, float>()
             {
-                {SideType.PCB,2.0f },
-                {SideType.Firewall,8.0f },
-                {SideType.ParallelConnector,6.0f },
-                {SideType.SerialConnector,6.0f },
+                {SideType.NoConnection,2.0f },
+                //{SideType.Firewall,8.0f },
+                {SideType.Connection,6.0f },
+                //{SideType.SerialConnector,6.0f },
             };
         }
 
@@ -65,11 +65,11 @@ namespace ROOT
         {
             _keySideLib = new Dictionary<CoreType, Tuple<SideType, int>>()
             {
-                {CoreType.PCB,new Tuple<SideType, int>(SideType.PCB,4)},
-                {CoreType.NetworkCable,new Tuple<SideType, int>(SideType.SerialConnector,2)},
-                {CoreType.Server,new Tuple<SideType, int>(SideType.SerialConnector,1)},
-                {CoreType.HardDrive,new Tuple<SideType, int>(SideType.ParallelConnector,1)},
-                {CoreType.Processor,new Tuple<SideType, int>(SideType.ParallelConnector,1)},
+                {CoreType.PCB,new Tuple<SideType, int>(SideType.NoConnection,4)},
+                {CoreType.NetworkCable,new Tuple<SideType, int>(SideType.Connection,2)},
+                {CoreType.Server,new Tuple<SideType, int>(SideType.Connection,1)},
+                {CoreType.HardDrive,new Tuple<SideType, int>(SideType.Connection,1)},
+                {CoreType.Processor,new Tuple<SideType, int>(SideType.Connection,1)},
             };
 
             #region SideSection
@@ -77,37 +77,37 @@ namespace ROOT
 
             _defaultSideWeight = new Dictionary<SideType, float>()
             {
-                {SideType.PCB, 0.5f},
-                {SideType.ParallelConnector, 0.25f},
-                {SideType.SerialConnector, 0.25f},
+                {SideType.NoConnection, 0.75f},
+                {SideType.Connection, 0.25f},
+                //{SideType.SerialConnector, 0.25f},
             };
 
             _processorSideWeight = new Dictionary<SideType, float>()
             {
-                {SideType.PCB, 0.3f},
-                {SideType.ParallelConnector, 0.5f},
-                {SideType.SerialConnector, 0.2f},
+                {SideType.NoConnection, 0.5f},
+                {SideType.Connection, 0.5f},
+                //{SideType.SerialConnector, 0.2f},
             };
 
             _serverSideWeight = new Dictionary<SideType, float>()
             {
-                {SideType.PCB, 0.3f},
-                {SideType.ParallelConnector, 0.2f},
-                {SideType.SerialConnector, 0.5f},
+                {SideType.NoConnection, 0.5f},
+                {SideType.Connection, 0.5f},
+                //{SideType.SerialConnector, 0.5f},
             };
 
             _hddSideWeight = new Dictionary<SideType, float>()
             {
-                {SideType.PCB, 0.3f},
-                {SideType.ParallelConnector, 0.4f},
-                {SideType.SerialConnector, 0.3f},
+                {SideType.NoConnection, 0.8f},
+                {SideType.Connection, 0.2f},
+                //{SideType.SerialConnector, 0.3f},
             };
 
             _netCableSideWeight = new Dictionary<SideType, float>()
             {
-                {SideType.PCB, 0.3f},
-                {SideType.ParallelConnector, 0.4f},
-                {SideType.SerialConnector, 0.3f},
+                {SideType.NoConnection, 0.8f},
+                {SideType.Connection, 0.2f},
+                //{SideType.SerialConnector, 0.3f},
             };
 
             _sideWeightLib=new Dictionary<CoreType, Dictionary<SideType, float>>()

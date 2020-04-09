@@ -130,7 +130,21 @@ namespace ROOT
             return go;
         }
 
-        public void ShopUpdate()
+        public void ShopUpdateStack()
+        {
+            //D=1
+            //C=2
+            //A=3
+            //B=4
+
+            if (_itemD)
+            {
+                Destroy(_itemD.gameObject);
+                _itemD = null;
+            }
+        }
+
+        public void ShopUpdateRandom()
         {
             if (_itemA)
             {
@@ -161,6 +175,11 @@ namespace ROOT
             _itemC = InitUnitShop(coreC, GenerateRandomSideArray(coreC), out _priceC);
             CoreType coreD = GenerateRandomCore();
             _itemD = InitUnitShop(coreD, GenerateRandomSideArray(coreD), out _priceD);
+        }
+
+        public void ShopUpdate()
+        {
+            ShopUpdateRandom();
 
             _itemA.gameObject.transform.position = _posA;
             _itemB.gameObject.transform.position = _posA + new Vector3(_posDisplace, 0, 0);

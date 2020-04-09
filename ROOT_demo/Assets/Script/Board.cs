@@ -71,10 +71,10 @@ namespace ROOT
 
 #if UNITY_EDITOR
 
-        public void InitBoardRandom()
+        /*public void InitBoardRandom()
         {
-            SideType[] sides = { SideType.SerialConnector, SideType.ParallelConnector, SideType.ParallelConnector, SideType.SerialConnector };
-            //SideType[] sides2 = { SideType.PCB, SideType.SerialConnector, SideType.SerialConnector, SideType.PCB };
+            SideType[] sides = { SideType.SerialConnector, SideType.Connection, SideType.Connection, SideType.SerialConnector };
+            //SideType[] sides2 = { SideType.NoConnection, SideType.SerialConnector, SideType.SerialConnector, SideType.NoConnection };
             Units.Add(new Vector2Int(2, 2), InitUnit(new Vector2Int(2, 2), CoreType.Server, Utils.Shuffle(sides)));
             Units.Add(new Vector2Int(2, 3), InitUnit(new Vector2Int(2, 3), CoreType.NetworkCable, Utils.Shuffle(sides)));
             Units.Add(new Vector2Int(3, 3), InitUnit(new Vector2Int(3, 3), CoreType.NetworkCable, Utils.Shuffle(sides)));
@@ -88,8 +88,8 @@ namespace ROOT
 
         public void InitBoardTest()
         {
-            SideType[] sides = { SideType.PCB,  SideType.ParallelConnector , SideType.PCB, SideType.ParallelConnector };
-            SideType[] sides2 = { SideType.PCB,  SideType.SerialConnector , SideType.SerialConnector, SideType.PCB };
+            SideType[] sides = { SideType.NoConnection,  SideType.Connection , SideType.NoConnection, SideType.Connection };
+            SideType[] sides2 = { SideType.NoConnection,  SideType.SerialConnector , SideType.SerialConnector, SideType.NoConnection };
             Units.Add(new Vector2Int(2, 2), InitUnit(new Vector2Int(2, 2),CoreType.Processor, sides));
             Units.Add(new Vector2Int(2, 3), InitUnit(new Vector2Int(2, 3),CoreType.HardDrive, sides));
             Units.Add(new Vector2Int(3, 3), InitUnit(new Vector2Int(3, 3),CoreType.HardDrive, sides));
@@ -116,8 +116,8 @@ namespace ROOT
                 go.name = "Unit_" + Hash128.Compute(vector2Int.ToString());
                 go.GetComponentInChildren<Unit>().board_position = vector2Int;
                 Units.Add(vector2Int, go);
-                go.GetComponentInChildren<Unit>().InitUnit(CoreType.PCB,
-                    new[] {SideType.PCB, SideType.PCB, SideType.PCB, SideType.PCB});
+                go.GetComponentInChildren<Unit>().InitUnit(CoreType.NoConnection,
+                    new[] {SideType.NoConnection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection});
             }
         }
 
@@ -132,7 +132,7 @@ namespace ROOT
                 go.GetComponentInChildren<Unit>().board_position = bVector2Int;
                 Units.Add(bVector2Int, go);
             }
-        }
+        }*/
 #endif
 
         public void InitBoardRealStart()
@@ -171,7 +171,7 @@ namespace ROOT
                 go.GetComponentInChildren<Unit>().board_position = vector2Int;
                 Units.Add(vector2Int, go);
                 go.GetComponentInChildren<Unit>().InitUnit(CoreType.PCB,
-                    new[] { SideType.PCB, SideType.PCB, SideType.PCB, SideType.PCB });
+                    new[] { SideType.NoConnection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection });
             }
 
             Vector2Int vector2IntA=new Vector2Int(0,0);
@@ -180,7 +180,7 @@ namespace ROOT
             goA.GetComponentInChildren<Unit>().board_position = vector2IntA;
             Units.Add(vector2IntA, goA);
             goA.GetComponentInChildren<Unit>().InitUnit(CoreType.Processor,
-                new[] { SideType.ParallelConnector, SideType.ParallelConnector, SideType.ParallelConnector, SideType.ParallelConnector });
+                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
 
             Vector2Int vector2IntB = new Vector2Int(5, 5);
             var goB = Instantiate(UnitTemplate);
@@ -188,7 +188,7 @@ namespace ROOT
             goB.GetComponentInChildren<Unit>().board_position = vector2IntB;
             Units.Add(vector2IntB, goB);
             goB.GetComponentInChildren<Unit>().InitUnit(CoreType.Processor,
-                new[] { SideType.ParallelConnector, SideType.ParallelConnector, SideType.ParallelConnector, SideType.ParallelConnector });
+                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
 
             Vector2Int vector2IntC = new Vector2Int(0, 5);
             var goC = Instantiate(UnitTemplate);
@@ -196,7 +196,7 @@ namespace ROOT
             goC.GetComponentInChildren<Unit>().board_position = vector2IntC;
             Units.Add(vector2IntC, goC);
             goC.GetComponentInChildren<Unit>().InitUnit(CoreType.Server,
-                new[] { SideType.SerialConnector, SideType.SerialConnector, SideType.SerialConnector, SideType.SerialConnector });
+                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
 
             Vector2Int vector2IntD = new Vector2Int(5, 0);
             var goD = Instantiate(UnitTemplate);
@@ -204,7 +204,7 @@ namespace ROOT
             goD.GetComponentInChildren<Unit>().board_position = vector2IntD;
             Units.Add(vector2IntD, goD);
             goD.GetComponentInChildren<Unit>().InitUnit(CoreType.Server,
-                new[] { SideType.SerialConnector, SideType.SerialConnector, SideType.SerialConnector, SideType.SerialConnector });
+                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
         }
 
         public bool CheckBoardPosValid(Vector2Int mVector2Int)
