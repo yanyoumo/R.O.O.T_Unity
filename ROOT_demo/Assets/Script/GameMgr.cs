@@ -39,10 +39,10 @@ namespace ROOT
         private IWarningDestoryer _warningDestoryer;
         private GameObject[] _warningGo;
 
-        public Text ItemAPrice;
-        public Text ItemBPrice;
-        public Text ItemCPrice;
-        public Text ItemDPrice;
+        public Text Item1Price;
+        public Text Item2Price;
+        public Text Item3Price;
+        public Text Item4Price;
 
         private bool BoughtOnce = false;
 
@@ -63,6 +63,8 @@ namespace ROOT
         public Canvas TutorialUI;
 
         private TutorialMgr _tutorialMgr;
+
+        private bool LogicFrameAnimeFrameToggle=true;
 
         private void EnableAllFeature()
         {
@@ -93,7 +95,7 @@ namespace ROOT
         void Awake()
         {
 #if UNITY_EDITOR
-            //GameGlobalStatus.CurrentGameStatus = GameStatus.Tutorial;
+            GameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
 #endif
             Random.InitState(Time.frameCount);
             if (GameGlobalStatus.CurrentGameStatus == GameStatus.Playing)
@@ -105,13 +107,12 @@ namespace ROOT
                 _gameStateMgr = new StandardGameStateMgr();
                 _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
 
+
                 _shopMgr = gameObject.AddComponent<ShopMgr>();
+                _shopMgr.InitShop();
                 _shopMgr.InitPrice();
                 _shopMgr.InitSideCoreWeight();
-                _shopMgr.ItemAPriceText = this.ItemAPrice;
-                _shopMgr.ItemBPriceText = this.ItemBPrice;
-                _shopMgr.ItemCPriceText = this.ItemCPrice;
-                _shopMgr.ItemDPriceText = this.ItemDPrice;
+                _shopMgr.ItemPriceTexts = new[] {Item1Price, Item2Price, Item3Price, Item4Price};
                 _shopMgr.CurrentGameStateMgr = this._gameStateMgr;
                 _shopMgr.GameBoard = this.GameBoard;
 
@@ -216,19 +217,19 @@ namespace ROOT
                 bool successBought = false;
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    successBought = _shopMgr.BuyD();
+                    successBought = _shopMgr.Buy(0);
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    successBought = _shopMgr.BuyC();
+                    successBought = _shopMgr.Buy(1);
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
-                    successBought = _shopMgr.BuyA();
+                    successBought = _shopMgr.Buy(2);
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha4))
                 {
-                    successBought = _shopMgr.BuyB();
+                    successBought = _shopMgr.Buy(3);
                 }
 
                 if (successBought)
@@ -441,14 +442,10 @@ namespace ROOT
         }
 
         // Update is called once per frame
-        void Update()
+        void UpdateLogic()
         {
             DeltaCurrency = 0.0f;
             bool movedTile = false;
-            /*if (GameGlobalStatus.CurrentGameStatus==GameStatus.Tutorial)
-            {
-                
-            }*/
             {
                 if (DestoryerEnabled)
                 {
@@ -482,6 +479,18 @@ namespace ROOT
                 {
                     UpdateGameOverStatus();
                 }
+            }
+        }
+
+        void Update()
+        {
+            if (LogicFrameAnimeFrameToggle)
+            {                    
+                UpdateLogic();
+            }
+            else
+            {
+
             }
         }
     }

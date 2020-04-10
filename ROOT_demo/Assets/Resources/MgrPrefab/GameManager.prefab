@@ -49,12 +49,13 @@ MonoBehaviour:
   CursorTemplate: {fileID: 6636971623283588989, guid: d888cb50120172047abb6039d9bf53be,
     type: 3}
   GameBoard: {fileID: 0}
-  ItemAPrice: {fileID: 0}
-  ItemBPrice: {fileID: 0}
-  ItemCPrice: {fileID: 0}
-  ItemDPrice: {fileID: 0}
+  Item1Price: {fileID: 0}
+  Item2Price: {fileID: 0}
+  Item3Price: {fileID: 0}
+  Item4Price: {fileID: 0}
   InputEnabled: 1
   CursorEnabled: 1
+  RotateEnabled: 1
   ShopEnabled: 1
   UpdateDeltaCurrencyEnabled: 1
   DestoryerEnabled: 1

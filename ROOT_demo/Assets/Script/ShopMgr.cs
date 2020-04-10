@@ -21,23 +21,28 @@ namespace ROOT
         public GameStateMgr CurrentGameStateMgr;
         //public GlobalAssetLib _globalAssetLib;
 
-        private GameObject _itemA;
+        private GameObject[] _items;
+        private float[] _prices;
+
+        /*private GameObject _itemA;
         private GameObject _itemB;
         private GameObject _itemC;
-        private GameObject _itemD;
+        private GameObject _itemD;*/
 
-        private float _priceA;
+        /*private float _priceA;
         private float _priceB;
         private float _priceC;
-        private float _priceD;
+        private float _priceD;*/
 
-        public Text ItemAPriceText;
-        public Text ItemBPriceText;
-        public Text ItemCPriceText;
-        public Text ItemDPriceText;
+        /*public Text Item1PriceText;
+        public Text Item2PriceText;
+        public Text Item3PriceText;
+        public Text Item4PriceText;*/
 
-        private readonly Vector3 _posA=new Vector3(5.0f,0.0f,-2.5f);
-        private float _posDisplace = 2.0f;
+        public Text[] ItemPriceTexts;
+
+        private readonly Vector3 _posA=new Vector3(2.0f,0.0f,-2.3f);
+        private float _posDisplace = 5.5f/3.0f;
 
         private Dictionary<CoreType, float> _priceByCore;
         private Dictionary<SideType, float> _priceBySide;
@@ -56,6 +61,9 @@ namespace ROOT
 
         //KeySide minCount
         private Dictionary<CoreType, Tuple<SideType, int>> _keySideLib;
+
+        private readonly float[] _priceCof = { 0.8f, 1.0f, 1.2f, 1.5f };
+
 
         private CoreType GenerateRandomCore()
         {
@@ -114,6 +122,13 @@ namespace ROOT
             return res;
         }
 
+        public void InitShop()
+        {
+            _items = new GameObject[4];
+            _prices = new float[4];
+            ItemPriceTexts=new Text[4];
+        }
+
         private GameObject InitUnitShop(CoreType core, SideType[] sides, out float price)
         {
             var go = Instantiate(UnitTemplate);
@@ -132,127 +147,80 @@ namespace ROOT
 
         public void ShopUpdateStack()
         {
-            //D=1
-            //C=2
-            //A=3
-            //B=4
-
-            if (_itemD)
+            if (_items[0])
             {
-                Destroy(_itemD.gameObject);
-                _itemD = null;
+                Destroy(_items[0].gameObject);
+            }
+            _items[0] = null;
+            for (int i = 0; i < _items.Length; i++)
+            {
+                if (_items[i])
+                {
+                    for (int j = 0; j < _items.Length; j++)
+                    {
+                        if (!_items[j])
+                        {
+                            _items[j] = _items[i];
+                            _items[i] = null;
+                            _prices[j] = _prices[i];
+                            _prices[i] = -1;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < _items.Length; i++)
+            {
+                if (!_items[i])
+                {
+                    CoreType core = GenerateRandomCore();
+                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i]);
+                }
+                //_prices[i] *= _priceCof[i];
             }
         }
 
         public void ShopUpdateRandom()
         {
-            if (_itemA)
+            foreach (var item in _items)
             {
-                Destroy(_itemA.gameObject);
-                _itemA = null;
+                if (item)
+                {
+                    Destroy(item.gameObject);
+                }
             }
-            if (_itemB)
+            _items = new GameObject[4];
+            for (int i = 0; i < _items.Length; i++)
             {
-                Destroy(_itemB.gameObject);
-                _itemB = null;
+                CoreType core = GenerateRandomCore();
+                _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i]);
             }
-            if (_itemC)
-            {
-                Destroy(_itemC.gameObject);
-                _itemC = null;
-            }
-            if (_itemD)
-            {
-                Destroy(_itemD.gameObject);
-                _itemD = null;
-            }
-
-            CoreType coreA = GenerateRandomCore();
-            _itemA = InitUnitShop(coreA, GenerateRandomSideArray(coreA), out _priceA);
-            CoreType coreB = GenerateRandomCore();
-            _itemB = InitUnitShop(coreB, GenerateRandomSideArray(coreB), out _priceB);
-            CoreType coreC = GenerateRandomCore();
-            _itemC = InitUnitShop(coreC, GenerateRandomSideArray(coreC), out _priceC);
-            CoreType coreD = GenerateRandomCore();
-            _itemD = InitUnitShop(coreD, GenerateRandomSideArray(coreD), out _priceD);
         }
 
         public void ShopUpdate()
         {
-            ShopUpdateRandom();
+            ShopUpdateStack();//还需要一个价格的衰减//这个在视觉上必须是顺序的。
 
-            _itemA.gameObject.transform.position = _posA;
-            _itemB.gameObject.transform.position = _posA + new Vector3(_posDisplace, 0, 0);
-            _itemC.gameObject.transform.position = _posA + new Vector3(_posDisplace, 0, _posDisplace);
-            _itemD.gameObject.transform.position = _posA + new Vector3(0, 0, _posDisplace);
-
-            ItemAPriceText.text = Utils.PaddingFloat3Digit(_priceA);
-            ItemBPriceText.text = Utils.PaddingFloat3Digit(_priceB);
-            ItemCPriceText.text = Utils.PaddingFloat3Digit(_priceC);
-            ItemDPriceText.text = Utils.PaddingFloat3Digit(_priceD);
+            //应该弄个动画，但是这个对整个项目的视觉效果都有影响，提上日程，但是现在不做。（开个分支可以
+            for (int i = 0; i < _items.Length; i++)
+            {
+                _items[i].gameObject.transform.position = _posA + new Vector3(_posDisplace * i, 0, 0);
+                ItemPriceTexts[i].text = Utils.PaddingFloat3Digit(_prices[i] * _priceCof[i]);
+            }
         }
 
-        public bool BuyA()
+        public bool Buy(int idx)
         {
-            //Debug.Log("Buy A");
-            if (_itemA)
+            if (_items[idx])
             {
-                if (CurrentGameStateMgr.SpendCurrency(_priceA))
+                if (CurrentGameStateMgr.SpendCurrency(_prices[idx]*_priceCof[idx]))
                 {
-                    GameBoard.DeliverUnitRandomPlace(_itemA);
-                    _itemA = null;
+                    GameBoard.DeliverUnitRandomPlace(_items[idx]);
+                    _items[idx] = null;
                     return true;
                 }
             }
-
-            return false;
-        }
-
-        public bool BuyB()
-        {
-            //Debug.Log("Buy B");
-            if (_itemB)
-            {
-                if (CurrentGameStateMgr.SpendCurrency(_priceB))
-                {
-                    GameBoard.DeliverUnitRandomPlace(_itemB);
-                    _itemB = null;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public bool BuyC()
-        {
-            //Debug.Log("Buy C");
-            if (_itemC)
-            {
-                if (CurrentGameStateMgr.SpendCurrency(_priceC))
-                {
-                    GameBoard.DeliverUnitRandomPlace(_itemC);
-                    _itemC = null;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public bool BuyD()
-        {
-            //Debug.Log("Buy D");
-            if (_itemD)
-            {
-                if (CurrentGameStateMgr.SpendCurrency(_priceD))
-                {
-                    GameBoard.DeliverUnitRandomPlace(_itemD);
-                    _itemD = null;
-                    return true;
-                }
-            }
-
             return false;
         }
     }
