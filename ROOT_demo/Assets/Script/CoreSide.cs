@@ -18,12 +18,18 @@ namespace ROOT
         CORETYPECOUNT
     }
 
+    public enum CoreGenre
+    {
+        Source,
+        Destination,
+        Support,
+        Other
+    }
+
     public enum SideType
     {
         NoConnection,
         Connection,
-        //SerialConnector,
-        //Firewall,
         SIDETYPECOUNT
     }
 
@@ -35,6 +41,23 @@ namespace ROOT
     public struct Side
     {
         public string Name;
+    }
+
+    public abstract partial class UnitBase : MoveableBase
+    {
+        protected readonly CoreType[] SourceCoreTypeLib = { CoreType.Server, CoreType.Processor };
+
+        public CoreGenre GetCoreGenreByCoreType(CoreType coreType)
+        {
+            foreach (var type in SourceCoreTypeLib)
+            {
+                if (coreType == type)
+                {
+                    return CoreGenre.Source;
+                }
+            }
+            return CoreGenre.Destination;
+        }
     }
 
     public sealed partial class ShopMgr : MonoBehaviour

@@ -11,19 +11,33 @@ namespace ROOT
     public static class StaticName
     {
         //
-        public static string NAME_CORE_PCB = "NoConnection";
-        public static string NAME_CORE_NETCABLE = "NetworkCable";
-        public static string NAME_CORE_SERVER = "Server";
-        public static string NAME_CORE_BRIDGE = "Bridge";
-        public static string NAME_CORE_DRIVER = "HardDrive";
-        public static string NAME_CORE_CPU = "Processor";
-        public static string NAME_CORE_COOLER = "Cooler";
-        public static string NAME_CORE_BACKPLATE = "BackPlate";
+        public static readonly string NAME_CORE_PCB = "NoConnection";
+        public static readonly string NAME_CORE_NETCABLE = "NetworkCable";
+        public static readonly string NAME_CORE_SERVER = "Server";
+        public static readonly string NAME_CORE_BRIDGE = "Bridge";
+        public static readonly string NAME_CORE_DRIVER = "HardDrive";
+        public static readonly string NAME_CORE_CPU = "Processor";
+        public static readonly string NAME_CORE_COOLER = "Cooler";
+        public static readonly string NAME_CORE_BACKPLATE = "BackPlate";
         //
-        public static int SCENE_ID_START = 0;
-        public static int SCENE_ID_GAMEPLAY = 1;
-        public static int SCENE_ID_GAMEOVER = 2;
-        public static int SCENE_ID_TUTORIAL = 3;
+        public static readonly int SCENE_ID_START = 0;
+        public static readonly int SCENE_ID_GAMEPLAY = 1;
+        public static readonly int SCENE_ID_GAMEOVER = 2;
+        public static readonly int SCENE_ID_TUTORIAL = 3;
+
+
+        public static readonly string SourceCoreNodeName = "SourceCore";
+        public static readonly string DestCoreNodeName = "DestCore";
+
+        public static readonly string CoreMeshMasterNodeName = "CoreMesh";
+
+        public static readonly string SourceConnectorMasterNodeName = "SourceConnector";
+        public static readonly string DestConnectorMasterNodeName = "DestConnector";
+
+        public static readonly string LocalNorthSideMeshRendererName = "LocalNorthSide";
+        public static readonly string LocalEastSideMeshRendererName = "LocalEastSide";
+        public static readonly string LocalSouthSideMeshRendererName = "LocalSouthSide";
+        public static readonly string LocalWestSideMeshRendererName = "LocalWestSide";
     }
 
     public static class Utils

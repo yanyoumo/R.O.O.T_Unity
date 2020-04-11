@@ -112,21 +112,38 @@ namespace ROOT
 
         #region GetNeigbourCoord
 
-        public Vector2Int GetEastUnit()
+        public Vector2Int GetEastCoord()
         {
             return new Vector2Int(CurrentBoardPosition.x + 1, CurrentBoardPosition.y);
         }
-        public Vector2Int GetWestUnit()
+        public Vector2Int GetWestCoord()
         {
             return new Vector2Int(CurrentBoardPosition.x - 1, CurrentBoardPosition.y);
         }
-        public Vector2Int GetSouthUnit()
+        public Vector2Int GetSouthCoord()
         {
             return new Vector2Int(CurrentBoardPosition.x, CurrentBoardPosition.y - 1);
         }
-        public Vector2Int GetNorthUnit()
+        public Vector2Int GetNorthCoord()
         {
             return new Vector2Int(CurrentBoardPosition.x, CurrentBoardPosition.y + 1);
+        }
+
+        public Vector2Int GetNeigbourCoord(RotationDirection rotation)
+        {
+            switch (rotation)
+            {
+                case RotationDirection.North:
+                    return GetNorthCoord();
+                case RotationDirection.East:
+                    return GetEastCoord();
+                case RotationDirection.West:
+                    return GetWestCoord();
+                case RotationDirection.South:
+                    return GetSouthCoord();
+                default:
+                    return CurrentBoardPosition;
+            }
         }
 
         #endregion

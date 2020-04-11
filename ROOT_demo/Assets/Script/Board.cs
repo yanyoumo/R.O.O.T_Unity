@@ -64,7 +64,6 @@ namespace ROOT
             Units.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit);
         }
 
-        //[Obsolete]
         public void UpdateBoardInit()
         {
             foreach (var unit in Units)
@@ -94,6 +93,16 @@ namespace ROOT
                 var mUnit = unit.Value.GetComponentInChildren<Unit>();
                 mUnit.UpdateTransform(GetFloatTransformAnimation(mUnit.LerpingBoardPosition));
                 mUnit.UpdateWorldRotationTransform();
+            }
+        }
+
+        public void UpdateBoardPostAnimation()
+        {
+            foreach (var unit in Units)
+            {
+                if (unit.Value == null) continue;
+                var mUnit = unit.Value.GetComponentInChildren<Unit>();
+                mUnit.UpdateSideMesh();
             }
         }
 
@@ -211,7 +220,7 @@ namespace ROOT
                 go.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2Int);
                 Units.Add(vector2Int, go);
                 go.GetComponentInChildren<Unit>().InitUnit(CoreType.PCB,
-                    new[] { SideType.NoConnection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection });
+                    new[] { SideType.NoConnection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection },this);
             }
 
             Vector2Int vector2IntA=new Vector2Int(0,0);
@@ -220,7 +229,7 @@ namespace ROOT
             goA.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntA);
             Units.Add(vector2IntA, goA);
             goA.GetComponentInChildren<Unit>().InitUnit(CoreType.Processor,
-                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
+                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
 
             Vector2Int vector2IntB = new Vector2Int(5, 5);
             var goB = Instantiate(UnitTemplate);
@@ -228,7 +237,7 @@ namespace ROOT
             goB.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntB);
             Units.Add(vector2IntB, goB);
             goB.GetComponentInChildren<Unit>().InitUnit(CoreType.Processor,
-                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
+                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
 
             Vector2Int vector2IntC = new Vector2Int(0, 5);
             var goC = Instantiate(UnitTemplate);
@@ -236,7 +245,7 @@ namespace ROOT
             goC.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntC);
             Units.Add(vector2IntC, goC);
             goC.GetComponentInChildren<Unit>().InitUnit(CoreType.Server,
-                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
+                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
 
             Vector2Int vector2IntD = new Vector2Int(5, 0);
             var goD = Instantiate(UnitTemplate);
@@ -244,7 +253,7 @@ namespace ROOT
             goD.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntD);
             Units.Add(vector2IntD, goD);
             goD.GetComponentInChildren<Unit>().InitUnit(CoreType.Server,
-                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
+                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
         }
 
         public bool CheckBoardPosValid(Vector2Int mVector2Int)
@@ -303,6 +312,7 @@ namespace ROOT
             }
             Vector2Int randomPlace = Utils.GenerateWeightedRandom(emptyPlace);
             unit.GetComponentInChildren<Unit>().InitPosWithAnimation(randomPlace);
+            unit.GetComponentInChildren<Unit>().GameBoard = this;
             Units.Add(randomPlace, unit);          
             UpdateBoardInit();
             deliveringPos = randomPlace;
@@ -339,9 +349,7 @@ namespace ROOT
         {
             foreach (var unit in Units)
             {
-                Material mt = unit.Value.GetComponentInChildren<Unit>().CoreMeshRenderer.material;
-                mt.EnableKeyword("_EMISSION");//就不是很懂为什么?照理说新建的模板材质打开这个了啊。
-                mt.SetColor("_EmissionColor", Color.black);              
+                unit.Value.GetComponentInChildren<Unit>().SetCoreEmissive(Color.black);
             }
         }
 
@@ -350,11 +358,10 @@ namespace ROOT
             float time = Time.timeSinceLevelLoad;
             foreach (var unit in Units)
             {
-                if (unit.Value.GetComponentInChildren<Unit>().InHDDGrid)
+                if (unit.Value.GetComponentInChildren<Unit>().InHddGrid)
                 {
                     Color color = (Mathf.Sin(time * 10) + 1.0f) * Color.red;
-                    Material mt = unit.Value.GetComponentInChildren<Unit>().CoreMeshRenderer.material;
-                    mt.SetColor("_EmissionColor", color);
+                    unit.Value.GetComponentInChildren<Unit>().SetCoreEmissive(color);
                 }
             }
         }
@@ -367,8 +374,7 @@ namespace ROOT
                 if (unit.Value.GetComponentInChildren<Unit>().InServerGrid)
                 {
                     Color color = (Mathf.Sin(time * 10) + 1.0f) * Color.blue;
-                    Material mt = unit.Value.GetComponentInChildren<Unit>().CoreMeshRenderer.material;
-                    mt.SetColor("_EmissionColor", color);
+                    unit.Value.GetComponentInChildren<Unit>().SetCoreEmissive(color);
                 }
             }
         }

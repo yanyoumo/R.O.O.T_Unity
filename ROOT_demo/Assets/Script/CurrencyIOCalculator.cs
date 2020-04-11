@@ -58,7 +58,7 @@ namespace ROOT
                     if (unit.UnitCore == CoreType.HardDrive)
                     {
                         score += 1.0f;
-                        unit.InHDDGrid = true;
+                        unit.InHddGrid = true;
                     }
 
                     unit.Visited = true;
@@ -86,10 +86,10 @@ namespace ROOT
             {
                 var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
                 unit.Visited = false;
-                unit.InHDDGrid = false;
+                unit.InHddGrid = false;
                 if (unit.UnitCore == CoreType.Processor)
                 {
-                    unit.InHDDGrid = true;
+                    unit.InHddGrid = true;
                     processorKeys.Add(keyValuePair.Key);
                     //现在是设计为任何接续到任何一个CPU上的硬盘都算分。但是只能算一次，就是一个集群中有两个CPU也只能算一次分。
                 }

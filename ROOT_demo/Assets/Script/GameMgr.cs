@@ -102,7 +102,7 @@ namespace ROOT
         void Awake()
         {
 #if UNITY_EDITOR
-            GameGlobalStatus.CurrentGameStatus = GameStatus.Tutorial;
+            GameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
 #endif
             Debug.Assert(GameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial|| GameGlobalStatus.CurrentGameStatus == GameStatus.Playing);
             Random.InitState(Mathf.FloorToInt(Time.realtimeSinceStartup));
@@ -282,7 +282,7 @@ namespace ROOT
             {
                 if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
-                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetWestUnit()))
+                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetWestCoord()))
                     {
                         GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
                         if (unit)
@@ -300,7 +300,7 @@ namespace ROOT
 
                 if (Input.GetKeyDown(KeyCode.UpArrow))
                 {
-                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetNorthUnit()))
+                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetNorthCoord()))
                     {
                         GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
                         if (unit)
@@ -318,7 +318,7 @@ namespace ROOT
 
                 if (Input.GetKeyDown(KeyCode.DownArrow))
                 {
-                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetSouthUnit()))
+                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetSouthCoord()))
                     {
                         GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
                         if (unit)
@@ -336,7 +336,7 @@ namespace ROOT
 
                 if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
-                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetEastUnit()))
+                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetEastCoord()))
                     {
                         GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
                         if (unit)
@@ -401,7 +401,6 @@ namespace ROOT
                     GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
                     if (unit)
                     {
-                        //这个是和动画统一更新的，要改下。
                         unit.GetComponentInChildren<Unit>().UnitRotateCw();
                     }
                 }
@@ -607,6 +606,11 @@ namespace ROOT
 
                     if (movedTileAni)
                     {
+                        if (GameBoard != null)
+                        {
+                            GameBoard.UpdateBoardPostAnimation();
+                        }
+
                         if (_shopMgr)
                         {
                             _shopMgr.ShopPostAnimationUpdate();
