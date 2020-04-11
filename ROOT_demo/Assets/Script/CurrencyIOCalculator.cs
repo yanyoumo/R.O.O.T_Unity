@@ -8,7 +8,7 @@ namespace ROOT
     public struct ScoreContext
     {
         public SideType ConnectionType;
-        public Func<Unit, CoreType,float, bool> ActionOnUnitUponVisit;
+        public Func<Unit, CoreType, float, bool> ActionOnUnitUponVisit;
         public Func<Unit, RotationDirection, SideType, bool> ConnectionRequirement;
     }
 
@@ -160,10 +160,14 @@ namespace ROOT
                         unit.IntA = depth;
                     }
 
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.North, depth,unit.board_position);
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.East, depth, unit.board_position);
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.South, depth, unit.board_position);
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.West, depth, unit.board_position);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.North, depth,
+                        unit.CurrentBoardPosition);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.East, depth,
+                        unit.CurrentBoardPosition);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.South, depth,
+                        unit.CurrentBoardPosition);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.West, depth,
+                        unit.CurrentBoardPosition);
                 }
             }
             else
@@ -208,9 +212,10 @@ namespace ROOT
                             maxLength = unit.IntA;
                             farthestUnitPos = keyValuePair.Key;
                         }
+
                         unit.IntA = -1;
                     }
-                    
+
                 }
 
                 int maxCount = 1000;
@@ -235,6 +240,15 @@ namespace ROOT
                     } while (farthestUnit.UnitCore != CoreType.Server);
                 }
 
+                foreach (var keyValuePair in m_Board.Units)
+                {
+                    var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
+                    if (unit.UnitCore == CoreType.Server)
+                    {
+                        unit.InServerGrid = true;
+                    }
+                }
+
                 return GetServerIncomeByLength((int) maxLength);
             }
         }
@@ -248,6 +262,7 @@ namespace ROOT
                 var unit = value.GetComponentInChildren<Unit>();
                 cost += GetCostByCore(unit.UnitCore);
             }
+
             return cost;
         }
     }

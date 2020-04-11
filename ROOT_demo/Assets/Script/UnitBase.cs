@@ -114,7 +114,7 @@ namespace ROOT
         {
             RootTransform = transform.parent;
             Debug.Assert(RootTransform != null,"Unit should use as prefab");
-            board_position = new Vector2Int(0,0);
+            CurrentBoardPosition = new Vector2Int(0,0);
             UnitSides=new Dictionary<RotationDirection, SideType>();
             unitRotation = RotationDirection.North;
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,7 +13,10 @@ namespace ROOT
         private Text _buttonText;
         private Canvas _tutorialCanvas;
         private Text _mainText;
+        private Text _hintAText;
+        private Text _hintBText;
         private Image _focusPanel;
+        private Material _focusPanelMat;
         private Image _MainPanel;
 
         private string[] _tutorialContent = { };
@@ -30,9 +34,14 @@ namespace ROOT
         private readonly string NextButtonTextName = "NextButtonText";
 
         private readonly string MainTextName = "MainContent";
+        private readonly string HintATextName = "HintTextA";
+        private readonly string HintBTextName = "HintTextB";
 
         private bool IsCustomButtonText = false;
         private string CustomButtonText = "";
+
+        private Vector2 focusPanelOffset= new Vector2(-0.135f, -0.235f);
+        private Vector2 focusPanelOrg = new Vector2(0.26f, 0.13f);
 
         // Start is called before the first frame update
         void Awake()
@@ -47,7 +56,32 @@ namespace ROOT
                 "在光标选中后单位后，点按【左Shift】可以进行旋转。",
                 "来，再给你几个单位，随便试试先，习惯一下操作。",
                 "",
-                "好的，教程继续。"
+                "好的，教程继续。",
+                "现在把目光放回到一个单元上，咱们会看到一个单元的四个边的颜色不一样。这个就是另外一个概念，一个单元会有四个不同的接口。分为绿色和红色。",
+                "绿色代表接通，红色代表无法接通。\n换句话说，两个单元如果通过绿色接口贴近的话，就可以将两个单元连接起来。",
+                "试试吧，再给你两个，把所有的单元都链接起来试试。",
+                "",
+                "好的，教程继续。",
+                "此时可以看到，闪烁代表连接上了，并且这个链接状态是可以传递的。只不过需要从一个“源头”开始。",
+                "当然，这只是一种单元的玩法，咱们给换成另一种玩法的单位。",
+                "",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
+                "好的，教程继续。",
             };
         }
 
@@ -64,6 +98,15 @@ namespace ROOT
                 {
                     _mainText = text;
                 }
+
+                if (text.name== HintATextName)
+                {
+                    _hintAText = text;
+                }
+                if (text.name == HintBTextName)
+                {
+                    _hintBText = text;
+                }
             }
 
             foreach (var image in tmpI)
@@ -71,6 +114,7 @@ namespace ROOT
                 if (image.name == "FocusPanel")
                 {
                     _focusPanel = image;
+                    _focusPanelMat = _focusPanel.material;
                 }
 
                 if (image.name== "MainContentPanel")
@@ -118,6 +162,14 @@ namespace ROOT
 
         public void UpdateNext()
         {
+            SideType[] sidesA =
+            {
+                SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection
+            };
+            SideType[] sidesB =
+            {
+                SideType.NoConnection, SideType.Connection, SideType.NoConnection, SideType.Connection
+            };
             switch (_tutorialContentCounter)
             {
                 case 2:
@@ -126,15 +178,14 @@ namespace ROOT
                     MainGameMgr.CursorEnabled = true;
                     break;
                 case 3:
-                    SideType[] sidesA =
-                    {
-                        SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection
-                    };
-                    MainGameMgr.GameBoard.Units.Add(new Vector2Int(2, 2),
-                        MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.Processor, Utils.Shuffle(sidesA)));
-                    MainGameMgr.GameBoard.UpdateBoard();
+
+                    GameObject go = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.Processor,
+                        Utils.Shuffle(sidesA));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(go, out Vector2Int deliveringPos);
                     MainGameMgr.InputEnabled = false;
                     _focusPanel.enabled = true;
+                    Vector2 offset = focusPanelOrg + deliveringPos * focusPanelOffset;
+                    _focusPanelMat.SetVector("_MainTex_ST", new Vector4(2.0f, 2.0f, offset.x, offset.y));
                     break;
                 case 4:
                     _focusPanel.enabled = false;
@@ -144,25 +195,85 @@ namespace ROOT
                     MainGameMgr.RotateEnabled = true;
                     break;
                 case 6:
-                    SideType[] sidesB =
-                    {
-                        SideType.NoConnection, SideType.Connection, SideType.NoConnection, SideType.Connection
-                    };
                     //TODO 这里需要变成读取然后随机拿两个空的位置。
-                    MainGameMgr.GameBoard.Units.Add(new Vector2Int(0, 0),
-                        MainGameMgr.GameBoard.InitUnit(new Vector2Int(0, 0), CoreType.Processor, Utils.Shuffle(sidesB)));
-                    MainGameMgr.GameBoard.Units.Add(new Vector2Int(5, 5),
-                        MainGameMgr.GameBoard.InitUnit(new Vector2Int(5, 5), CoreType.Processor, Utils.Shuffle(sidesB)));
-                    MainGameMgr.GameBoard.UpdateBoard();
+                    GameObject goA = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,
+                        Utils.Shuffle(sidesB));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goA);
+                    GameObject goB = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,
+                        Utils.Shuffle(sidesB));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goB);
+                    MainGameMgr.GameBoard.UpdateBoardInit();
                     IsCustomButtonText = true;
                     CustomButtonText = "我试试";
                     break;
                 case 7:
                     CustomButtonText = "我好了";
+                    _hintAText.enabled = true;
                     _MainPanel.enabled = false;
                     break;
                 case 8:
                     IsCustomButtonText = false;
+                    _hintAText.enabled = false;
+                    _MainPanel.enabled = true;
+                    break;
+                case 9:
+                    MainGameMgr.InputEnabled = false;
+                    _focusPanel.enabled = true;
+                    var units = MainGameMgr.GameBoard.Units.Values.ToArray();
+                    offset = units[0].GetComponentInChildren<Unit>().CurrentBoardPosition;
+                    offset = focusPanelOrg + offset * focusPanelOffset;
+                    _focusPanelMat.SetVector("_MainTex_ST", new Vector4(2.0f, 2.0f, offset.x, offset.y));
+                    break;
+                case 11:
+                    //试试吧，再给你两个，把所有的单元都链接起来试试。
+                    _focusPanel.enabled = false;
+                    MainGameMgr.InputEnabled = true;
+                    GameObject goC = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,
+                        Utils.Shuffle(sidesB));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goC);
+                    GameObject goD = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,
+                        Utils.Shuffle(sidesB));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goD);
+                    MainGameMgr.GameBoard.UpdateBoardInit();
+
+                    MainGameMgr.InitCurrencyIOMgr();
+                    MainGameMgr.UpdateDeltaCurrencyEnabled = true;
+                    MainGameMgr.HintEnabled = true;
+                    MainGameMgr.ForceHDDConnectionHint = true;
+
+                    IsCustomButtonText = true;
+                    CustomButtonText = "我试试";
+                    break;
+                case 12:
+                    CustomButtonText = "我好了";
+                    _hintAText.enabled = true;
+                    _hintBText.enabled = true;
+                    _MainPanel.enabled = false;
+                    break;
+                case 13:
+                    IsCustomButtonText = false;
+                    _hintAText.enabled = false;
+                    _hintBText.enabled = false;
+                    _MainPanel.enabled = true;
+                    //MainGameMgr.ForceHDDConnectionHint = false;
+                    IsCustomButtonText = true;
+                    CustomButtonText = "我试试";
+                    break;
+                case 16:
+                    MainGameMgr.ForceHDDConnectionHint = false;
+                    MainGameMgr.ForceServerConnectionHint = true;
+                    MainGameMgr.GameBoard.ForceChangeUnitCoreType(this);
+                    MainGameMgr.GameBoard.UpdateBoardAnimation();
+
+                    CustomButtonText = "我好了";
+                    _hintAText.enabled = true;
+                    _hintBText.enabled = true;
+                    _MainPanel.enabled = false;
+                    break;
+                case 17:
+                    IsCustomButtonText = false;
+                    _hintAText.enabled = false;
+                    _hintBText.enabled = false;
                     _MainPanel.enabled = true;
                     break;
             }
@@ -171,6 +282,11 @@ namespace ROOT
         // Update is called once per frame
         void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                //TODO 按动回车继续，要写在UI上
+                Next();
+            }
             if (IsCustomButtonText)
             {
                 _buttonText.text = CustomButtonText;

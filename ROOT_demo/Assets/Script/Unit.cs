@@ -9,7 +9,7 @@ namespace ROOT
     {
         void Update()
         {
-            //Debug.Log(board_position.ToString());
+            //Debug.Log(CurrentBoardPosition.ToString());
         }
     }
 }

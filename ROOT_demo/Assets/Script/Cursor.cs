@@ -18,7 +18,7 @@ namespace ROOT
         {
             RootTransform = transform;
             Debug.Assert(RootTransform != null, "Unit should use as prefab");
-            board_position = new Vector2Int(0, 0);
+            CurrentBoardPosition = new Vector2Int(0, 0);
             _meshFilter = GetComponentInChildren<MeshFilter>();
             _meshFilter.mesh = CursorMesh;
             tm = GetComponentInChildren<MeshRenderer>().material;

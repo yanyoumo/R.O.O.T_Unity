@@ -59,12 +59,19 @@ namespace ROOT
         public bool PlayerDataUIEnabled = true;
         public bool GameOverEnabled = true;
 
+        public bool ForceHDDConnectionHint = false;
+        public bool ForceServerConnectionHint = false;
+
         public Canvas PlayingUI;
         public Canvas TutorialUI;
 
         private TutorialMgr _tutorialMgr;
 
         private bool LogicFrameAnimeFrameToggle=true;
+        private bool movedTileAni=false;
+        private bool movedCursorAni = false;
+        private List<MoveableBase> animationPendingObj;
+
 
         private void EnableAllFeature()
         {
@@ -95,13 +102,13 @@ namespace ROOT
         void Awake()
         {
 #if UNITY_EDITOR
-            GameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
+            GameGlobalStatus.CurrentGameStatus = GameStatus.Tutorial;
 #endif
-            Random.InitState(Time.frameCount);
+            Debug.Assert(GameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial|| GameGlobalStatus.CurrentGameStatus == GameStatus.Playing);
+            Random.InitState(Mathf.FloorToInt(Time.realtimeSinceStartup));
             if (GameGlobalStatus.CurrentGameStatus == GameStatus.Playing)
             {
-                _currencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
-                _currencyIoCalculator.m_Board = GameBoard;
+                InitCurrencyIOMgr();
                 DeltaCurrency = 0.0f;
 
                 _gameStateMgr = new StandardGameStateMgr();
@@ -109,10 +116,9 @@ namespace ROOT
 
 
                 _shopMgr = gameObject.AddComponent<ShopMgr>();
-                _shopMgr.InitShop();
-                _shopMgr.InitPrice();
-                _shopMgr.InitSideCoreWeight();
-                _shopMgr.ItemPriceTexts = new[] {Item1Price, Item2Price, Item3Price, Item4Price};
+                _shopMgr.UnitTemplate = GameBoard.UnitTemplate;
+                _shopMgr.ShopInit();
+                _shopMgr.ItemPriceTexts = new[] { Item1Price, Item2Price, Item3Price, Item4Price };
                 _shopMgr.CurrentGameStateMgr = this._gameStateMgr;
                 _shopMgr.GameBoard = this.GameBoard;
 
@@ -133,10 +139,18 @@ namespace ROOT
             }
         }
 
+        public void InitCurrencyIOMgr()
+        {
+            _currencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
+            _currencyIoCalculator.m_Board = GameBoard;
+        }
+
         public void InitCursor(Vector2Int pos)
         {
             _mCursor = Instantiate(CursorTemplate);
-            _mCursor.GetComponent<Cursor>().board_position = pos;
+            Cursor cursor=_mCursor.GetComponent<Cursor>();
+            cursor.InitPosWithAnimation(pos);
+            cursor.UpdateTransform(GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
 
         // Start is called before the first frame update
@@ -145,9 +159,12 @@ namespace ROOT
             if (GameGlobalStatus.CurrentGameStatus == GameStatus.Playing)
             {
                 InitCursor(new Vector2Int(2, 3));
+
                 GameBoard.InitBoardRealStart();
-                _shopMgr.UnitTemplate = GameBoard.UnitTemplate;
-                _shopMgr.ShopUpdate();
+                GameBoard.UpdateBoardAnimation();
+
+                //得最后做
+                _shopMgr.ShopStart();
             }
             else if (GameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial)
             {
@@ -156,12 +173,18 @@ namespace ROOT
             }
         }
 
-        private void CursorStayInBoard(Cursor cursor)
+        private Vector2Int ClampPosInBoard(Vector2Int pos)
         {
-            Vector2Int newPos = cursor.board_position;
+            Vector2Int newPos = pos;
             newPos.x = Mathf.Clamp(newPos.x, 0, GameBoard.BoardLength - 1);
             newPos.y = Mathf.Clamp(newPos.y, 0, GameBoard.BoardLength - 1);
-            cursor.board_position = newPos;
+            return newPos;
+        }
+
+        private void CursorStayInBoard(Cursor cursor)
+        {
+            cursor.SetPosWithAnimation(ClampPosInBoard(cursor.CurrentBoardPosition), PosSetFlag.Current);
+            cursor.SetPosWithAnimation(ClampPosInBoard(cursor.NextBoardPosition), PosSetFlag.Next);
         }
 
         void UpdateDestoryer()
@@ -184,13 +207,12 @@ namespace ROOT
                 _warningGo = new GameObject[count];
                 for (int i = 0; i < count; i++)
                 {
-                    //Debug.Log("Drawing=" + incomings[i].ToString());
                     _warningGo[i] = Instantiate(CursorTemplate);
                     var mIndCursor = _warningGo[i].GetComponent<Cursor>();
                     mIndCursor.SetIndMesh();
-                    mIndCursor.board_position = incomings[i];
+                    mIndCursor.InitPosWithAnimation(incomings[i]);
                     CursorStayInBoard(mIndCursor);
-                    mIndCursor.UpdateTransform(GameBoard.GetFloatTransform(mIndCursor.board_position));
+                    mIndCursor.UpdateTransform(GameBoard.GetFloatTransform(mIndCursor.CurrentBoardPosition));
 
                     Material tm = _warningGo[i].GetComponentInChildren<MeshRenderer>().material;
 
@@ -206,6 +228,17 @@ namespace ROOT
                     {
                         Debug.Assert(false, "Internal Error");
                     }
+                }
+            }
+        }
+
+        public void AddAnimationPendingObj(MoveableBase pending)
+        {
+            if (animationPendingObj!=null)
+            {
+                if (pending!=null)
+                {                    
+                    animationPendingObj.Add(pending);
                 }
             }
         }
@@ -239,21 +272,25 @@ namespace ROOT
             }
         }
 
-        void UpdateCursor(ref Cursor cursor, out bool movedTile)
+        void UpdateCursor(ref Cursor cursor, out bool movedTile, out bool movedCursor)
         {
             movedTile = false;
-            if (Input.GetKey(KeyCode.Space) && GameBoard.CheckBoardPosValidAndFilled(cursor.board_position))
+            movedCursor = false;
+            animationPendingObj.Add(cursor);
+            Unit movingUnit = null;
+            if (Input.GetKey(KeyCode.Space) && GameBoard.CheckBoardPosValidAndFilled(cursor.CurrentBoardPosition))
             {
                 if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
                     if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetWestUnit()))
                     {
-                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
+                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
                         if (unit)
                         {
-                            Vector2Int oldKey = cursor.board_position;
-                            unit.GetComponentInChildren<Unit>().MoveLeft();
-                            GameBoard.UpdateUnitBoardPos(oldKey);
+                            Vector2Int oldKey = cursor.CurrentBoardPosition;
+                            movingUnit=unit.GetComponentInChildren<Unit>();
+                            movingUnit.MoveLeft();
+                            GameBoard.UpdateUnitBoardPosAnimation(oldKey);
                             movedTile = true;
                         }
 
@@ -265,12 +302,13 @@ namespace ROOT
                 {
                     if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetNorthUnit()))
                     {
-                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
+                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
                         if (unit)
                         {
-                            Vector2Int oldKey = cursor.board_position;
-                            unit.GetComponentInChildren<Unit>().MoveUp();
-                            GameBoard.UpdateUnitBoardPos(oldKey);
+                            Vector2Int oldKey = cursor.CurrentBoardPosition;
+                            movingUnit = unit.GetComponentInChildren<Unit>();
+                            movingUnit.MoveUp();
+                            GameBoard.UpdateUnitBoardPosAnimation(oldKey);
                             movedTile = true;
                         }
 
@@ -282,12 +320,13 @@ namespace ROOT
                 {
                     if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetSouthUnit()))
                     {
-                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
+                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
                         if (unit)
                         {
-                            Vector2Int oldKey = cursor.board_position;
-                            unit.GetComponentInChildren<Unit>().MoveDown();
-                            GameBoard.UpdateUnitBoardPos(oldKey);
+                            Vector2Int oldKey = cursor.CurrentBoardPosition;
+                            movingUnit=unit.GetComponentInChildren<Unit>();
+                            movingUnit.MoveDown();
+                            GameBoard.UpdateUnitBoardPosAnimation(oldKey);
                             movedTile = true;
                         }
 
@@ -299,12 +338,13 @@ namespace ROOT
                 {
                     if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetEastUnit()))
                     {
-                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
+                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
                         if (unit)
                         {
-                            Vector2Int oldKey = cursor.board_position;
-                            unit.GetComponentInChildren<Unit>().MoveRight();
-                            GameBoard.UpdateUnitBoardPos(oldKey);
+                            Vector2Int oldKey = cursor.CurrentBoardPosition;
+                            movingUnit=unit.GetComponentInChildren<Unit>();
+                            movingUnit.MoveRight();
+                            GameBoard.UpdateUnitBoardPosAnimation(oldKey);
                             movedTile = true;
                         }
 
@@ -314,30 +354,41 @@ namespace ROOT
             }
             else
             {
-                if (GameBoard.CheckBoardPosValid(cursor.board_position))
+                if (GameBoard.CheckBoardPosValid(cursor.CurrentBoardPosition))
                 {
                     if (Input.GetKeyDown(KeyCode.LeftArrow))
                     {
+                        movedCursor = true;
                         cursor.MoveLeft();
                     }
 
                     if (Input.GetKeyDown(KeyCode.RightArrow))
                     {
+                        movedCursor = true;
                         cursor.MoveRight();
                     }
 
                     if (Input.GetKeyDown(KeyCode.UpArrow))
                     {
+                        movedCursor = true;
                         cursor.MoveUp();
                     }
 
                     if (Input.GetKeyDown(KeyCode.DownArrow))
                     {
+                        movedCursor = true;
                         cursor.MoveDown();
                     }
                 }
             }
 
+            if (movingUnit)
+            {
+                Debug.Assert(movingUnit);
+                animationPendingObj.Add(movingUnit);
+            }
+
+            movedCursor |= movedTile;
             CursorStayInBoard(cursor);
         }
 
@@ -345,31 +396,33 @@ namespace ROOT
         {
             if (Input.GetKeyDown(KeyCode.LeftShift))
             {
-                if (GameBoard.CheckBoardPosValidAndFilled(cursor.board_position))
+                if (GameBoard.CheckBoardPosValidAndFilled(cursor.CurrentBoardPosition))
                 {
-                    GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.board_position);
+                    GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
                     if (unit)
                     {
+                        //这个是和动画统一更新的，要改下。
                         unit.GetComponentInChildren<Unit>().UnitRotateCw();
                     }
                 }
             }
         }
 
-        void UpdateInput(ref Cursor cursor, out bool movedTile)
+        void UpdateInput(ref Cursor cursor, out bool movedTile, out bool movedCursor)
         {
             movedTile = false;
-            //var cursor = _mCursor.GetComponent<ROOT.Cursor>();
+            movedCursor = false;
             if (ShopEnabled)
             {
                 UpdateShop();
             }
             if (CursorEnabled)
             {
-                UpdateCursor(ref cursor, out movedTile);
+                UpdateCursor(ref cursor, out movedTile,out movedCursor);
             }
             if (RotateEnabled)
             {
+                //旋转的动画先没有吧。
                 UpdateRotate(ref cursor);
             }
 
@@ -381,7 +434,14 @@ namespace ROOT
             DeltaCurrency += _currencyIoCalculator.CalculateProcessorScore();
             DeltaCurrency += _currencyIoCalculator.CalculateServerScore();
             DeltaCurrency -= _currencyIoCalculator.CalculateCost();
-            CurrencyText.text = ":" + Utils.PaddingFloat4Digit(_gameStateMgr.GetCurrency());
+            if (_gameStateMgr!=null)
+            {               
+                CurrencyText.text = ":" + Utils.PaddingFloat4Digit(_gameStateMgr.GetCurrency());
+            }
+            else
+            {
+                CurrencyText.text = "No _gameStateMgr";
+            }
             if (DeltaCurrency > 0)
             {
                 DeltaCurrencyText.color = Color.green;
@@ -397,12 +457,12 @@ namespace ROOT
         void UpdateHint()
         {
             GameBoard.ResetUnitEmission();
-            if (Input.GetKey(KeyCode.F1))
+            if (Input.GetKey(KeyCode.F1) || ForceHDDConnectionHint)
             {
                 GameBoard.DisplayConnectedHDDUnit();
             }
 
-            if (Input.GetKey(KeyCode.F2))
+            if (Input.GetKey(KeyCode.F2) || ForceServerConnectionHint)
             {
                 GameBoard.DisplayConnectedServerUnit();
             }
@@ -423,7 +483,7 @@ namespace ROOT
                     BoughtOnce = false;
                 }
 
-                _shopMgr.ShopUpdate();
+                _shopMgr.ShopPreAnimationUpdate();
                 _warningDestoryer.Step();
                 _gameStateMgr.PerMove(new ScoreSet(), new PerMoveData(DeltaCurrency, 1));
             }
@@ -442,10 +502,11 @@ namespace ROOT
         }
 
         // Update is called once per frame
-        void UpdateLogic()
+        void UpdateLogic(out bool movedTile, out bool movedCursor)
         {
             DeltaCurrency = 0.0f;
-            bool movedTile = false;
+            movedTile = false;
+            movedCursor = false;
             {
                 if (DestoryerEnabled)
                 {
@@ -455,19 +516,13 @@ namespace ROOT
                 if (InputEnabled)
                 {
                     var cursor = _mCursor.GetComponent<ROOT.Cursor>();
-                    UpdateInput(ref cursor, out movedTile);
-                    GameBoard.UpdateBoard();
-                    cursor.UpdateTransform(GameBoard.GetFloatTransform(cursor.board_position));
+                    UpdateInput(ref cursor, out movedTile,out movedCursor);
+                    GameBoard.UpdateBoardRotate();//TODO 旋转现在还是闪现的。这个不用着急做。
                 }
 
                 if (UpdateDeltaCurrencyEnabled)
                 {
                     UpdateDeltaCurrency();
-                }
-
-                if (HintEnabled)
-                {
-                    UpdateHint();
                 }
 
                 if (PlayerDataUIEnabled)
@@ -482,15 +537,91 @@ namespace ROOT
             }
         }
 
+        //都是秒
+        private float animationTimerOrigin = 0.0f;
+        
+        private float animationDuration = 0.1f;
+
+
         void Update()
         {
+            //TODO 从LF到AF的数据应该再多一些。
+            bool movedTile=false;
+            bool movedCusor = false;
+            bool pressedAny = Input.anyKeyDown;
             if (LogicFrameAnimeFrameToggle)
-            {                    
-                UpdateLogic();
+            {
+                animationTimerOrigin = Time.timeSinceLevelLoad;
+                animationPendingObj = new List<MoveableBase>();
+
+                UpdateLogic(out movedTile,out movedCusor);
+                LogicFrameAnimeFrameToggle = !(pressedAny & (movedTile | movedCusor));
+                if (!LogicFrameAnimeFrameToggle)
+                {
+                    movedTileAni = movedTile;
+                    movedCursorAni = movedCusor;
+                }
             }
             else
             {
+                var cursor = _mCursor.GetComponent<ROOT.Cursor>();
 
+                float animationTimer = Time.timeSinceLevelLoad - animationTimerOrigin;
+                float animationLerper = animationTimer / animationDuration;
+                if (animationPendingObj.Count > 0)
+                {
+                    animationLerper = Mathf.Min(animationLerper, 1.0f);
+                    foreach (var moveableBase in animationPendingObj)
+                    {
+                        //
+                        if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
+                        {
+                            moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition,
+                                PosSetFlag.CurrentAndLerping);
+                        }
+                        else
+                        {
+                            moveableBase.LerpingBoardPosition = moveableBase.LerpBoardPos(animationLerper);
+                        }
+                    }
+
+                    if (movedTileAni)
+                    {
+                        if (_shopMgr)
+                        {
+                            _shopMgr.ShopUpdateAnimation(animationLerper);
+                        }
+                    }
+                }
+
+                //Debug.Log(cursor.LerpingBoardPosition.ToString());
+                if (animationLerper >= 1.0f)
+                    //if (animationLerper >= (1.0f - Mathf.Epsilon/10.0f))
+                {
+                    //AnimationEnding
+                    foreach (var moveableBase in animationPendingObj)
+                    {
+                        //完成后的pingpong
+                        moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
+                    }
+
+                    if (movedTileAni)
+                    {
+                        if (_shopMgr)
+                        {
+                            _shopMgr.ShopPostAnimationUpdate();
+                        }
+                    }
+
+                    LogicFrameAnimeFrameToggle = true;
+                }
+
+                GameBoard.UpdateBoardAnimation();
+                cursor.UpdateTransform(GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+            }
+            if (HintEnabled)
+            {
+                UpdateHint();
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -33,27 +34,65 @@ namespace ROOT
             return Units.TryGetValue(boardPos, out var go) ? go : null;
         }
 
+        [Obsolete]
         public Vector3 GetFloatTransform(Vector2Int boardPos)
         {
             return new Vector3(this._boardPhysicalOriginX + boardPos.x * this._boardPhysicalLength, 0,
                 this._boardPhysicalOriginY + boardPos.y * this._boardPhysicalLength);
         }
 
+        public Vector3 GetFloatTransformAnimation(Vector2 boardPos)
+        {
+            return new Vector3(this._boardPhysicalOriginX + boardPos.x * this._boardPhysicalLength, 0,
+                this._boardPhysicalOriginY + boardPos.y * this._boardPhysicalLength);
+        }
+
+        [Obsolete]
         public void UpdateUnitBoardPos(Vector2Int oldKey)
         {
             Units.TryGetValue(oldKey,out var unit);
             Units.Remove(oldKey);
             System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-            Units.Add(unit.GetComponentInChildren<Unit>().board_position,unit);
+            Units.Add(unit.GetComponentInChildren<Unit>().CurrentBoardPosition,unit);
         }
 
-        public void UpdateBoard()
+        public void UpdateUnitBoardPosAnimation(Vector2Int oldKey)
+        {
+            Units.TryGetValue(oldKey, out var unit);
+            Units.Remove(oldKey);
+            System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
+            Units.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit);
+        }
+
+        //[Obsolete]
+        public void UpdateBoardInit()
         {
             foreach (var unit in Units)
             {
                 if (unit.Value == null) continue;
                 var mUnit = unit.Value.GetComponentInChildren<Unit>();
-                mUnit.UpdateTransform(GetFloatTransform(mUnit.board_position));
+                mUnit.UpdateTransform(GetFloatTransform(mUnit.CurrentBoardPosition));
+                mUnit.UpdateWorldRotationTransform();
+            }
+        }
+
+        public void UpdateBoardRotate()
+        {
+            foreach (var unit in Units)
+            {
+                if (unit.Value == null) continue;
+                var mUnit = unit.Value.GetComponentInChildren<Unit>();
+                mUnit.UpdateWorldRotationTransform();
+            }
+        }
+
+        public void UpdateBoardAnimation()
+        {
+            foreach (var unit in Units)
+            {
+                if (unit.Value == null) continue;
+                var mUnit = unit.Value.GetComponentInChildren<Unit>();
+                mUnit.UpdateTransform(GetFloatTransformAnimation(mUnit.LerpingBoardPosition));
                 mUnit.UpdateWorldRotationTransform();
             }
         }
@@ -63,8 +102,9 @@ namespace ROOT
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(board_pos.ToString());
             var unit = go.GetComponentInChildren<Unit>();
-            unit.board_position = board_pos;
-            //unit._globalAssetLib = _globalAssetLib;
+            /*unit.CurrentBoardPosition = board_pos;
+            unit.NextBoardPosition = board_pos;*/
+            unit.InitPosWithAnimation(board_pos);
             unit.InitUnit(core, sides);
             return go;
         }
@@ -114,7 +154,7 @@ namespace ROOT
                     continue;
                 };
                 go.name = "Unit_" + Hash128.Compute(vector2Int.ToString());
-                go.GetComponentInChildren<Unit>().board_position = vector2Int;
+                go.GetComponentInChildren<Unit>().CurrentBoardPosition = vector2Int;
                 Units.Add(vector2Int, go);
                 go.GetComponentInChildren<Unit>().InitUnit(CoreType.NoConnection,
                     new[] {SideType.NoConnection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection});
@@ -129,7 +169,7 @@ namespace ROOT
                 var go = PrefabUtility.InstantiatePrefab(UnitTemplate) as GameObject;
                 Debug.Assert(go != null);
                 go.name = "Unit_" + Hash128.Compute(i.ToString());
-                go.GetComponentInChildren<Unit>().board_position = bVector2Int;
+                go.GetComponentInChildren<Unit>().CurrentBoardPosition = bVector2Int;
                 Units.Add(bVector2Int, go);
             }
         }*/
@@ -168,7 +208,7 @@ namespace ROOT
                     continue;
                 };
                 go.name = "Unit_" + Hash128.Compute(vector2Int.ToString());
-                go.GetComponentInChildren<Unit>().board_position = vector2Int;
+                go.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2Int);
                 Units.Add(vector2Int, go);
                 go.GetComponentInChildren<Unit>().InitUnit(CoreType.PCB,
                     new[] { SideType.NoConnection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection });
@@ -177,7 +217,7 @@ namespace ROOT
             Vector2Int vector2IntA=new Vector2Int(0,0);
             var goA = Instantiate(UnitTemplate);
             goA.name = "Unit_" + Hash128.Compute(vector2IntA.ToString());
-            goA.GetComponentInChildren<Unit>().board_position = vector2IntA;
+            goA.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntA);
             Units.Add(vector2IntA, goA);
             goA.GetComponentInChildren<Unit>().InitUnit(CoreType.Processor,
                 new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
@@ -185,7 +225,7 @@ namespace ROOT
             Vector2Int vector2IntB = new Vector2Int(5, 5);
             var goB = Instantiate(UnitTemplate);
             goB.name = "Unit_" + Hash128.Compute(vector2IntB.ToString());
-            goB.GetComponentInChildren<Unit>().board_position = vector2IntB;
+            goB.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntB);
             Units.Add(vector2IntB, goB);
             goB.GetComponentInChildren<Unit>().InitUnit(CoreType.Processor,
                 new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
@@ -193,7 +233,7 @@ namespace ROOT
             Vector2Int vector2IntC = new Vector2Int(0, 5);
             var goC = Instantiate(UnitTemplate);
             goC.name = "Unit_" + Hash128.Compute(vector2IntC.ToString());
-            goC.GetComponentInChildren<Unit>().board_position = vector2IntC;
+            goC.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntC);
             Units.Add(vector2IntC, goC);
             goC.GetComponentInChildren<Unit>().InitUnit(CoreType.Server,
                 new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
@@ -201,7 +241,7 @@ namespace ROOT
             Vector2Int vector2IntD = new Vector2Int(5, 0);
             var goD = Instantiate(UnitTemplate);
             goD.name = "Unit_" + Hash128.Compute(vector2IntD.ToString());
-            goD.GetComponentInChildren<Unit>().board_position = vector2IntD;
+            goD.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntD);
             Units.Add(vector2IntD, goD);
             goD.GetComponentInChildren<Unit>().InitUnit(CoreType.Server,
                 new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection });
@@ -250,15 +290,22 @@ namespace ROOT
 
         public bool DeliverUnitRandomPlace(GameObject unit)
         {
+            return DeliverUnitRandomPlace(unit, out Vector2Int vector2Int);
+        }
+
+        public bool DeliverUnitRandomPlace(GameObject unit,out Vector2Int deliveringPos)
+        {
             Vector2Int[] emptyPlace = GetAllEmptySpace();
             if (emptyPlace.Length==0)
             {
+                deliveringPos = Vector2Int.zero;
                 return false;
             }
             Vector2Int randomPlace = Utils.GenerateWeightedRandom(emptyPlace);
-            unit.GetComponentInChildren<Unit>().board_position = randomPlace;
+            unit.GetComponentInChildren<Unit>().InitPosWithAnimation(randomPlace);
             Units.Add(randomPlace, unit);          
-            UpdateBoard();
+            UpdateBoardInit();
+            deliveringPos = randomPlace;
             return true;
         }
 
@@ -324,6 +371,34 @@ namespace ROOT
                     mt.SetColor("_EmissionColor", color);
                 }
             }
+        }
+
+        public void ForceChangeUnitCoreType(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker,"这个函数只能在教程里面调。");
+            foreach (var key in Units.Keys)
+            {
+                if (CheckBoardPosValidAndFilled(key))
+                {
+                    Units.TryGetValue(key, out GameObject go);
+                    Destroy(go);
+                }
+            }
+            Units=new Dictionary<Vector2Int, GameObject>();
+            SideType[] sidesA =
+            {
+                SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection
+            };
+            GameObject goA = InitUnit(new Vector2Int(2, 2), CoreType.Server,Utils.Shuffle(sidesA));
+            GameObject goB = InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable,Utils.Shuffle(sidesA));
+            GameObject goC = InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable, Utils.Shuffle(sidesA));
+            GameObject goD = InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable, Utils.Shuffle(sidesA));
+            GameObject goE = InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable, Utils.Shuffle(sidesA));
+            DeliverUnitRandomPlace(goA);
+            DeliverUnitRandomPlace(goB);
+            DeliverUnitRandomPlace(goC);
+            DeliverUnitRandomPlace(goD);
+            DeliverUnitRandomPlace(goE);
         }
     }
 }

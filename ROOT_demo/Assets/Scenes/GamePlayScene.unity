@@ -140,15 +140,52 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 112370911, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 112370913, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -59
+      objectReference: {fileID: 0}
+    - target: {fileID: 112370913, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 82.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 112370913, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 631.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 606323647, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 606323647, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -59
+      objectReference: {fileID: 0}
+    - target: {fileID: 606323647, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 919.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 606323648, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6818143809580116540, guid: 22ab6b277575e9349a7851ed23d338e2,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 6818143809580116540, guid: 22ab6b277575e9349a7851ed23d338e2,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6818143810823760096, guid: 22ab6b277575e9349a7851ed23d338e2,
         type: 3}
       propertyPath: m_Name
       value: TutorialUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 6818143810823760096, guid: 22ab6b277575e9349a7851ed23d338e2,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6818143810823760108, guid: 22ab6b277575e9349a7851ed23d338e2,
         type: 3}

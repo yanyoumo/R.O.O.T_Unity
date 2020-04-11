@@ -19,25 +19,13 @@ namespace ROOT
          *A B
          */
         public GameStateMgr CurrentGameStateMgr;
-        //public GlobalAssetLib _globalAssetLib;
 
         private GameObject[] _items;
         private float[] _prices;
 
-        /*private GameObject _itemA;
-        private GameObject _itemB;
-        private GameObject _itemC;
-        private GameObject _itemD;*/
-
-        /*private float _priceA;
-        private float _priceB;
-        private float _priceC;
-        private float _priceD;*/
-
-        /*public Text Item1PriceText;
-        public Text Item2PriceText;
-        public Text Item3PriceText;
-        public Text Item4PriceText;*/
+        private Vector3[] currentPosS;
+        //private Vector3[] lerpingingPosS;
+        private Vector3[] nextPosS;
 
         public Text[] ItemPriceTexts;
 
@@ -122,19 +110,17 @@ namespace ROOT
             return res;
         }
 
-        public void InitShop()
+        /*public void InitShop()
         {
-            _items = new GameObject[4];
-            _prices = new float[4];
-            ItemPriceTexts=new Text[4];
-        }
+
+        }*/
 
         private GameObject InitUnitShop(CoreType core, SideType[] sides, out float price)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
             var unit = go.GetComponentInChildren<Unit>();
-            unit.board_position = Vector2Int.zero;
+            unit.InitPosWithAnimation(Vector2Int.zero);
             unit.InitUnit(core, sides);
             _priceByCore.TryGetValue(core, out float corePrice);
             _priceBySide.TryGetValue(sides[0], out float sidePrice0);
@@ -164,20 +150,11 @@ namespace ROOT
                             _items[i] = null;
                             _prices[j] = _prices[i];
                             _prices[i] = -1;
+                            currentPosS[j] = currentPosS[i];
                             break;
                         }
                     }
                 }
-            }
-
-            for (int i = 0; i < _items.Length; i++)
-            {
-                if (!_items[i])
-                {
-                    CoreType core = GenerateRandomCore();
-                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i]);
-                }
-                //_prices[i] *= _priceCof[i];
             }
         }
 
@@ -198,14 +175,78 @@ namespace ROOT
             }
         }
 
-        public void ShopUpdate()
+        public void ShopInit()
+        {
+            _items = new GameObject[4];
+            _prices = new float[_items.Length];
+            ItemPriceTexts = new Text[_items.Length];
+            currentPosS = new Vector3[_items.Length];
+            nextPosS = new Vector3[_items.Length];
+        }
+
+        public void ShopStart()
+        {
+            InitPrice();
+            InitSideCoreWeight();
+
+            ShopPreAnimationUpdate();
+            ShopPostAnimationUpdate();
+        }
+
+        public void ShopInitPos()
+        {
+            for (int i = 0; i < _items.Length; i++)
+            {
+                currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
+                nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
+            }
+        }
+
+        public void ShopPreAnimationUpdate()
         {
             ShopUpdateStack();//还需要一个价格的衰减//这个在视觉上必须是顺序的。
 
-            //应该弄个动画，但是这个对整个项目的视觉效果都有影响，提上日程，但是现在不做。（开个分支可以
             for (int i = 0; i < _items.Length; i++)
             {
-                _items[i].gameObject.transform.position = _posA + new Vector3(_posDisplace * i, 0, 0);
+                nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
+            }
+        }
+
+        private Vector3 lerpVec3(Vector3 vecA,Vector3 vecB,float lerp)
+        {
+            return new Vector3(Mathf.Lerp(vecA.x, vecB.x, lerp), Mathf.Lerp(vecA.y, vecB.y, lerp),
+                Mathf.Lerp(vecA.z, vecB.z, lerp));
+        }
+
+        public void ShopUpdateAnimation(float lerp)
+        {
+            for (int i = 0; i < _items.Length; i++)
+            {
+                if (_items[i])
+                {
+                    _items[i].gameObject.transform.position = lerpVec3(currentPosS[i], nextPosS[i], lerp);
+                }
+            }
+        }
+
+        public void ShopPostAnimationUpdate()
+        {
+            for (int i = 0; i < _items.Length; i++)
+            {
+                currentPosS[i] = new Vector3(nextPosS[i].x, nextPosS[i].y, nextPosS[i].z);
+            }
+
+            for (int i = 0; i < _items.Length; i++)
+            {
+                if (!_items[i])
+                {
+                    CoreType core = GenerateRandomCore();
+                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i]);
+                    currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
+                    nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
+                    _items[i].gameObject.transform.position = currentPosS[i];
+                }
+
                 ItemPriceTexts[i].text = Utils.PaddingFloat3Digit(_prices[i] * _priceCof[i]);
             }
         }
@@ -216,6 +257,7 @@ namespace ROOT
             {
                 if (CurrentGameStateMgr.SpendCurrency(_prices[idx]*_priceCof[idx]))
                 {
+                    //TODO 因为是立刻送，所以目前还是闪现。
                     GameBoard.DeliverUnitRandomPlace(_items[idx]);
                     _items[idx] = null;
                     return true;
