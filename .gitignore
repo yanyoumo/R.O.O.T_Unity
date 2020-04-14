@@ -10,6 +10,11 @@
 /ROOT_demo/[Ll]ogs/
 /ROOT_demo/[Mm]emoryCaptures/
 
+/ROOT_demo/**/*.ttc
+/ROOT_demo/**/*.ttc.meta
+/ROOT_demo/**/*.otf
+/ROOT_demo/**/*.otf.meta
+
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 /ROOT_demo/!/[Aa]ssets/**/*.meta
 
