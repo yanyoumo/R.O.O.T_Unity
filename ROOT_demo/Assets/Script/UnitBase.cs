@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -9,7 +10,24 @@ namespace ROOT
     {
         //即所为当前状态的表示，也作为旋转动作的标识
         //顺时针为正：±0，+90，-90，±180
-        North, East,West,South
+        North,
+        East,
+        West,
+        South
+    }
+
+    public struct ConnectionData
+    {
+        public bool HasConnector;
+        public bool Connected;
+        public CoreGenre ConnectedToGenre;
+
+        public ConnectionData(bool hasConnector = false)
+        {
+            HasConnector = hasConnector;
+            Connected = false;
+            ConnectedToGenre = CoreGenre.Other;
+        }
     }
 
     public abstract partial class UnitBase : MoveableBase
@@ -73,7 +91,11 @@ namespace ROOT
         public bool InHddGrid { get; set; } //for scoring purpose
         public bool InServerGrid { get; set; } //for scoring purpose
 
-        public readonly RotationDirection[] RotationList = {
+        //Rotation使用的世界方向的。
+        public Dictionary<RotationDirection, ConnectionData> WorldNeighboringData { protected set; get; }
+
+        public readonly RotationDirection[] RotationList =
+        {
             RotationDirection.East,
             RotationDirection.North,
             RotationDirection.South,
@@ -82,17 +104,16 @@ namespace ROOT
 
         protected Dictionary<RotationDirection, MeshRenderer> meshRendererLocalDir;
 
-        [HideInInspector]
-        public Vector2Int LastNetworkPos = Vector2Int.zero;
+        [HideInInspector] public Vector2Int LastNetworkPos = Vector2Int.zero;
 
         //public GlobalAssetLib _globalAssetLib;
 
         //North,South,West,East
-        protected void InitSide(MeshRenderer meshRenderer,SideType sideType)
+        protected void InitSide(MeshRenderer meshRenderer, SideType sideType)
         {
             if (sideType == SideType.Connection)
             {
-                meshRenderer.material.SetColor("_Color", Color.green*0.55f);
+                meshRenderer.material.SetColor("_Color", Color.green * 0.55f);
             }
             else if (sideType == SideType.NoConnection)
             {
@@ -110,13 +131,13 @@ namespace ROOT
 
             if (UnitCoreGenre == CoreGenre.Source)
             {
-                connectorMasterNodeName = StaticName.SourceConnectorMasterNodeName;
-                coreMeshNodeName = StaticName.SourceCoreNodeName;
+                connectorMasterNodeName = StaticName.SOURCE_CONNECTOR_MASTER_NODE_NAME;
+                coreMeshNodeName = StaticName.SOURCE_CORE_NODE_NAME;
             }
             else
             {
-                connectorMasterNodeName = StaticName.DestConnectorMasterNodeName;
-                coreMeshNodeName = StaticName.DestCoreNodeName;
+                connectorMasterNodeName = StaticName.DEST_CONNECTOR_MASTER_NODE_NAME;
+                coreMeshNodeName = StaticName.DEST_CORE_NODE_NAME;
             }
 
             Transform[] trans = RootTransform.GetComponentsInChildren<Transform>();
@@ -151,35 +172,39 @@ namespace ROOT
             MeshRenderer[] sideMeshRenderers = SideRootTransform.GetComponentsInChildren<MeshRenderer>();
             foreach (var meshRenderer in sideMeshRenderers)
             {
-                if (meshRenderer.name == StaticName.LocalEastSideMeshRendererName)
+                if (meshRenderer.name == StaticName.LOCAL_EAST_SIDE_MESH_RENDERER_NAME)
                 {
                     LocalEastSideMeshRenderer = meshRenderer;
                 }
-                if (meshRenderer.name == StaticName.LocalNorthSideMeshRendererName)
+
+                if (meshRenderer.name == StaticName.LOCAL_NORTH_SIDE_MESH_RENDERER_NAME)
                 {
                     LocalNorthSideMeshRenderer = meshRenderer;
                 }
-                if (meshRenderer.name == StaticName.LocalSouthSideMeshRendererName)
+
+                if (meshRenderer.name == StaticName.LOCAL_SOUTH_SIDE_MESH_RENDERER_NAME)
                 {
                     LocalSouthSideMeshRenderer = meshRenderer;
                 }
-                if (meshRenderer.name == StaticName.LocalWestSideMeshRendererName)
+
+                if (meshRenderer.name == StaticName.LOCAL_WEST_SIDE_MESH_RENDERER_NAME)
                 {
                     LocalWestSideMeshRenderer = meshRenderer;
                 }
             }
-            meshRendererLocalDir=new Dictionary<RotationDirection, MeshRenderer>()
+
+            meshRendererLocalDir = new Dictionary<RotationDirection, MeshRenderer>()
             {
-                { RotationDirection.East,LocalEastSideMeshRenderer},
-                { RotationDirection.North,LocalNorthSideMeshRenderer},
-                { RotationDirection.South,LocalSouthSideMeshRenderer},
-                { RotationDirection.West,LocalWestSideMeshRenderer},
+                {RotationDirection.East, LocalEastSideMeshRenderer},
+                {RotationDirection.North, LocalNorthSideMeshRenderer},
+                {RotationDirection.South, LocalSouthSideMeshRenderer},
+                {RotationDirection.West, LocalWestSideMeshRenderer},
             };
         }
 
         public void SetCoreEmissive(Color color)
         {
-            CoreMeshRenderer.material.EnableKeyword("_EMISSION");//还是不懂，为什么每次设置前得Enable一下。
+            CoreMeshRenderer.material.EnableKeyword("_EMISSION"); //还是不懂，为什么每次设置前得Enable一下。
             CoreMeshRenderer.material.SetColor("_EmissionColor", color);
         }
 
@@ -189,7 +214,8 @@ namespace ROOT
             InitUnit(core, sides[0], sides[1], sides[2], sides[3], gameBoard);
         }
 
-        public void InitUnit(CoreType core, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,Board gameBoard=null)
+        public void InitUnit(CoreType core, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
+            Board gameBoard = null)
         {
             //Debug.Assert(side.Length == 4);
             this.UnitCore = core;
@@ -204,7 +230,7 @@ namespace ROOT
             CoreMeshRenderer.material = Resources.Load<Material>(GlobalResourcePath.UNIT_MAT_PATH_PREFIX + val);
             Debug.Assert(CoreMeshRenderer.material);
 
-            InitSide(LocalNorthSideMeshRenderer,lNSide);
+            InitSide(LocalNorthSideMeshRenderer, lNSide);
             InitSide(LocalEastSideMeshRenderer, lESide);
             InitSide(LocalSouthSideMeshRenderer, lSSide);
             InitSide(LocalWestSideMeshRenderer, lWSide);
@@ -218,13 +244,13 @@ namespace ROOT
         protected virtual void Awake()
         {
             RootTransform = transform.parent;
-            Debug.Assert(RootTransform != null,"Unit should use as prefab");
-            CurrentBoardPosition = new Vector2Int(0,0);
-            UnitSides=new Dictionary<RotationDirection, SideType>();
+            Debug.Assert(RootTransform != null, "Unit should use as prefab");
+            CurrentBoardPosition = new Vector2Int(0, 0);
+            UnitSides = new Dictionary<RotationDirection, SideType>();
             UnitRotation = RotationDirection.North;
 
-            CoreMatNameDic=new Dictionary<CoreType, string>();
-            SideMatColorDic=new Dictionary<SideType, Color>();
+            CoreMatNameDic = new Dictionary<CoreType, string>();
+            SideMatColorDic = new Dictionary<SideType, Color>();
             InitDic();
         }
 
@@ -237,6 +263,7 @@ namespace ROOT
         {
             UnitRotation = Utils.GetCWDirection(UnitRotation);
         }
+
         public void UnitRotateCcw()
         {
             UnitRotation = Utils.GetCCWDirection(UnitRotation);
@@ -248,10 +275,11 @@ namespace ROOT
             Debug.Assert(UnitSides.TryGetValue(UnitRotation, out res));
             return res;
         }
+
         public SideType GetWorldSpaceUnitSide(RotationDirection worldDirection)
         {
             SideType res = SideType.SIDETYPECOUNT;
-            var desiredLocalSideDirection=Utils.RotateDirectionBeforeRotation(worldDirection, UnitRotation);
+            var desiredLocalSideDirection = Utils.RotateDirectionBeforeRotation(worldDirection, UnitRotation);
             Debug.Assert(UnitSides.TryGetValue(desiredLocalSideDirection, out res));
             return res;
         }
@@ -261,7 +289,7 @@ namespace ROOT
             switch (UnitRotation)
             {
                 case RotationDirection.North:
-                    RootTransform.rotation=Quaternion.Euler(0,0,0);
+                    RootTransform.rotation = Quaternion.Euler(0, 0, 0);
                     break;
                 case RotationDirection.East:
                     RootTransform.rotation = Quaternion.Euler(0, 90, 0);
@@ -273,42 +301,106 @@ namespace ROOT
                     RootTransform.rotation = Quaternion.Euler(0, 180, 0);
                     break;
             }
-            UpdateSideMesh();
+
+            UpdateNeighboringDataAndSideMesh();
+        }
+
+        public void UpdateNeighboringData()
+        {
+            WorldNeighboringData = new Dictionary<RotationDirection, ConnectionData>();
+            if (GameBoard != null)
+            {
+                foreach (var currentSideDirection in RotationList)
+                {
+                    ConnectionData connectionData = new ConnectionData();
+                    if (GetWorldSpaceUnitSide(currentSideDirection) == SideType.Connection)
+                    {
+                        connectionData.HasConnector = true;
+                        Vector2Int otherUnitPos = GetNeigbourCoord(currentSideDirection);
+                        GameBoard.Units.TryGetValue(otherUnitPos, out GameObject value);
+                        if (value != null)
+                        {
+                            Unit otherUnit = value.GetComponentInChildren<Unit>();
+                            connectionData.Connected =
+                                (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(otherUnit.UnitRotation)) ==
+                                 SideType.Connection);
+                            if (connectionData.Connected)
+                            {
+                                connectionData.ConnectedToGenre = otherUnit.UnitCoreGenre;
+                            }
+                        }
+                    }
+                    WorldNeighboringData.Add(currentSideDirection, connectionData);
+                }
+            }
+        }
+
+        private void UpdateDestConnectionSide(ConnectionData data, MeshRenderer localMeshRenderer)
+        {
+            if (data.Connected)
+            {
+                switch (data.ConnectedToGenre)
+                {
+                    case CoreGenre.Source:
+                        localMeshRenderer.gameObject.GetComponent<MeshFilter>().mesh = DtoSSideMesh;
+                        break;
+                    case CoreGenre.Destination:
+                        localMeshRenderer.gameObject.GetComponent<MeshFilter>().mesh = DtoDSideMesh;
+                        break;
+                    case CoreGenre.Support:
+                        break;
+                    case CoreGenre.Other:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            else
+            {
+                localMeshRenderer.gameObject.GetComponent<MeshFilter>().mesh = DtoDSideMesh;
+            }
         }
 
         public void UpdateSideMesh()
         {
-            //TODO Board也需要一个postAnimationUpdate，就是调这个。旋转之后也要调这个。
-            if (GameBoard != null)
+            if (WorldNeighboringData != null)
             {
-                if (UnitCoreGenre == CoreGenre.Destination)
+                foreach (var currentSideDirection in RotationList)
                 {
-                    foreach (var CurrentSideDirection in RotationList)
+                    WorldNeighboringData.TryGetValue(currentSideDirection, out ConnectionData data);
+                    if (data.HasConnector)
                     {
-                        if (GetWorldSpaceUnitSide(CurrentSideDirection) == SideType.Connection)
+                        var localRotation =Utils.RotateDirectionBeforeRotation(currentSideDirection, UnitRotation);
+                        meshRendererLocalDir.TryGetValue(localRotation, out MeshRenderer localMeshRenderer);
+#if UNITY_EDITOR
+                        System.Diagnostics.Debug.Assert(localMeshRenderer != null,nameof(localMeshRenderer) + " != null");
+#endif
+                        if (data.Connected)
                         {
-                            RotationDirection LocalRotation =Utils.RotateDirectionBeforeRotation(CurrentSideDirection, UnitRotation);
-                            meshRendererLocalDir.TryGetValue(LocalRotation, out MeshRenderer localMeshRenderer);
-                            if (localMeshRenderer != null)
+                            switch (UnitCoreGenre)
                             {
-                                localMeshRenderer.gameObject.GetComponent<MeshFilter>().mesh = DtoDSideMesh;
-                                Vector2Int otherUnitPos = GetNeigbourCoord(CurrentSideDirection);
-                                GameBoard.Units.TryGetValue(otherUnitPos, out GameObject value);
-                                if (value != null)
-                                {
-                                    Unit otherUnit = value.GetComponentInChildren<Unit>();
-                                    bool otherIsSrc=(otherUnit.UnitCoreGenre == CoreGenre.Source);
-                                    bool otherSideIsConnecting =(otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(otherUnit.UnitRotation)) == SideType.Connection);
-                                    if (otherIsSrc&&otherSideIsConnecting)
-                                    {
-                                        localMeshRenderer.gameObject.GetComponent<MeshFilter>().mesh = DtoSSideMesh;
-                                    }
-                                }                               
+                                case CoreGenre.Source:
+                                    break;
+                                case CoreGenre.Destination:
+                                    UpdateDestConnectionSide(data, localMeshRenderer);
+                                    break;
+                                case CoreGenre.Support:
+                                    break;
+                                case CoreGenre.Other:
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
                             }
                         }
                     }
                 }
             }
+        }
+
+        public void UpdateNeighboringDataAndSideMesh()
+        {
+            UpdateNeighboringData();
+            UpdateSideMesh();
         }
     }
 }

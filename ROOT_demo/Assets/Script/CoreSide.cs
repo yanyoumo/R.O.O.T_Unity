@@ -205,15 +205,16 @@ namespace ROOT
 
         public float GetServerIncomeByLength(int length)
         {
-            float[] incomeArray = { 4.0f,5.0f,7.0f,10.0f,14.0f,19.0f };
-            if (length>=incomeArray.Length)
+            float[] incomeArrayDel = {3.0f, 5.0f, 9.0f, 11.0f, 14.0f};
+            float incomeArrayBase = 2.0f;
+            float income = incomeArrayBase;
+            for (int i = 0; i < length; i++)
             {
-                return incomeArray[incomeArray.Length - 1];
+                int idx = Mathf.Min(i, incomeArrayDel.Length - 1);
+                income += incomeArrayDel[idx];
             }
-            else
-            {
-                return incomeArray[length];
-            }
+
+            return income;
         }
 
         public float GetPerDriverIncome()

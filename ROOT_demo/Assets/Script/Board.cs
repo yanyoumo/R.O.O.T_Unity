@@ -102,7 +102,7 @@ namespace ROOT
             {
                 if (unit.Value == null) continue;
                 var mUnit = unit.Value.GetComponentInChildren<Unit>();
-                mUnit.UpdateSideMesh();
+                mUnit.UpdateNeighboringDataAndSideMesh();
             }
         }
 
@@ -189,23 +189,23 @@ namespace ROOT
             Vector2Int[] startingArray =
                 {
                     new Vector2Int(0, 1),
-                    new Vector2Int(0, 2),
-                    new Vector2Int(0, 3),
+                    //new Vector2Int(0, 2),
+                    //new Vector2Int(0, 3),
                     new Vector2Int(0, 4),
 
                     new Vector2Int(5, 1),
-                    new Vector2Int(5, 2),
-                    new Vector2Int(5, 3),
+                    //new Vector2Int(5, 2),
+                    //new Vector2Int(5, 3),
                     new Vector2Int(5, 4),
 
                     new Vector2Int(1, 0),
-                    new Vector2Int(2, 0),
-                    new Vector2Int(3, 0),
+                    //new Vector2Int(2, 0),
+                    //new Vector2Int(3, 0),
                     new Vector2Int(4, 0),
 
                     new Vector2Int(1, 5),
-                    new Vector2Int(2, 5),
-                    new Vector2Int(3, 5),
+                    //new Vector2Int(2, 5),
+                    //new Vector2Int(3, 5),
                     new Vector2Int(4, 5),
                 };
             foreach (var vector2Int in startingArray)
@@ -319,6 +319,16 @@ namespace ROOT
             return true;
         }
 
+        private void UpdateBoard()
+        {
+            foreach (var unit in Units)
+            {
+                if (unit.Value == null) continue;
+                var mUnit = unit.Value.GetComponentInChildren<Unit>();
+                mUnit.UpdateNeighboringDataAndSideMesh();
+            }
+        }
+
         public bool TryDeleteCertainUnit(Vector2Int pos)
         {
             if (CheckBoardPosValidAndFilled(pos))
@@ -327,6 +337,7 @@ namespace ROOT
                 Units.TryGetValue(pos, out GameObject go);
                 Destroy(go);
                 Units.Remove(pos);
+                UpdateBoard();
                 return true;
             }
             return false;

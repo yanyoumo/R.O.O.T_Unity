@@ -10,6 +10,25 @@ namespace ROOT
 {
     public static class StaticName
     {
+        public static readonly string INPUT_BUTTON_NAME_CURSORUP = "CursorUp";
+        public static readonly string INPUT_BUTTON_NAME_CURSORDOWN = "CursorDown";
+        public static readonly string INPUT_BUTTON_NAME_CURSORLEFT = "CursorLeft";
+        public static readonly string INPUT_BUTTON_NAME_CURSORRIGHT = "CursorRight";
+
+        public static readonly string INPUT_BUTTON_NAME_MOVEUNIT = "MoveUnit";
+        public static readonly string INPUT_BUTTON_NAME_ROTATEUNIT = "RotateUnit";
+
+        public static readonly string INPUT_BUTTON_NAME_HINTHDD = "HintHDD";
+        public static readonly string INPUT_BUTTON_NAME_HINTNET = "HintNetwork";
+        public static readonly string INPUT_BUTTON_NAME_HINTCTRL = "HintControl";
+
+        public static readonly string INPUT_BUTTON_NAME_SHOPBUY1 = "ShopBuy1";
+        public static readonly string INPUT_BUTTON_NAME_SHOPBUY2 = "ShopBuy2";
+        public static readonly string INPUT_BUTTON_NAME_SHOPBUY3 = "ShopBuy3";
+        public static readonly string INPUT_BUTTON_NAME_SHOPBUY4 = "ShopBuy4";
+#if UNITY_EDITOR
+        public static readonly string DEBUG_INPUT_BUTTON_NAME_FORCESTEP = "DebugForceStep";
+#endif
         //
         public static readonly string NAME_CORE_PCB = "NoConnection";
         public static readonly string NAME_CORE_NETCABLE = "NetworkCable";
@@ -26,18 +45,18 @@ namespace ROOT
         public static readonly int SCENE_ID_TUTORIAL = 3;
 
 
-        public static readonly string SourceCoreNodeName = "SourceCore";
-        public static readonly string DestCoreNodeName = "DestCore";
+        public static readonly string SOURCE_CORE_NODE_NAME = "SourceCore";
+        public static readonly string DEST_CORE_NODE_NAME = "DestCore";
 
-        public static readonly string CoreMeshMasterNodeName = "CoreMesh";
+        public static readonly string CORE_MESH_MASTER_NODE_NAME = "CoreMesh";
 
-        public static readonly string SourceConnectorMasterNodeName = "SourceConnector";
-        public static readonly string DestConnectorMasterNodeName = "DestConnector";
+        public static readonly string SOURCE_CONNECTOR_MASTER_NODE_NAME = "SourceConnector";
+        public static readonly string DEST_CONNECTOR_MASTER_NODE_NAME = "DestConnector";
 
-        public static readonly string LocalNorthSideMeshRendererName = "LocalNorthSide";
-        public static readonly string LocalEastSideMeshRendererName = "LocalEastSide";
-        public static readonly string LocalSouthSideMeshRendererName = "LocalSouthSide";
-        public static readonly string LocalWestSideMeshRendererName = "LocalWestSide";
+        public static readonly string LOCAL_NORTH_SIDE_MESH_RENDERER_NAME = "LocalNorthSide";
+        public static readonly string LOCAL_EAST_SIDE_MESH_RENDERER_NAME = "LocalEastSide";
+        public static readonly string LOCAL_SOUTH_SIDE_MESH_RENDERER_NAME = "LocalSouthSide";
+        public static readonly string LOCAL_WEST_SIDE_MESH_RENDERER_NAME = "LocalWestSide";
     }
 
     public static class Utils

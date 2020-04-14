@@ -116,8 +116,7 @@ namespace ROOT
             }
         }
 
-        private void CalculateServerScoreSingleDir(UnitBase unit, Vector2Int hostKey, RotationDirection direction,
-            int depth, Vector2Int SrcPos)
+        private void CalculateServerScoreSingleDir(UnitBase unit, Vector2Int hostKey, RotationDirection direction,int depth)
         {
             var side = unit.GetWorldSpaceUnitSide(direction);
             if (side == SideType.Connection)
@@ -128,18 +127,17 @@ namespace ROOT
                     var nextGo = m_Board.FindUnitUnderBoardPos(nextKey);
                     Debug.Assert(nextGo != null);
                     var nextUnit = nextGo.GetComponentInChildren<Unit>();
-                    var otherSide =
-                        nextUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(direction));
+                    var otherSide = nextUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(direction));
 
                     if (otherSide == SideType.Connection)
                     {
-                        CalculateServerScoreCore(nextKey, depth, SrcPos);
+                        CalculateServerScoreCore(nextKey, depth, hostKey);
                     }
                 }
             }
         }
 
-        private void CalculateServerScoreCore(Vector2Int hostKey, int currentDepth, Vector2Int SrcPos)
+        private void CalculateServerScoreCore(Vector2Int hostKey, int currentDepth, Vector2Int srcPos)
         {
             var depth = currentDepth;
             m_Board.Units.TryGetValue(hostKey, out var currentUnit);
@@ -149,7 +147,7 @@ namespace ROOT
                 if (unit.IntA > depth || unit.IntA == -1)
                 {
                     unit.Visited = true;
-                    unit.LastNetworkPos = SrcPos;
+                    unit.LastNetworkPos = srcPos;
                     if (unit.UnitCore == CoreType.NetworkCable)
                     {
                         depth++;
@@ -160,14 +158,10 @@ namespace ROOT
                         unit.IntA = depth;
                     }
 
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.North, depth,
-                        unit.CurrentBoardPosition);
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.East, depth,
-                        unit.CurrentBoardPosition);
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.South, depth,
-                        unit.CurrentBoardPosition);
-                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.West, depth,
-                        unit.CurrentBoardPosition);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.North, depth);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.East, depth);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.South, depth);
+                    CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.West, depth);
                 }
             }
             else
@@ -203,23 +197,32 @@ namespace ROOT
                 //score += 0.0f;//只有服务器没分儿
                 foreach (var key in serverKeys)
                 {
-                    CalculateServerScoreCore(key, 0, key);
-                    foreach (var keyValuePair in m_Board.Units)
-                    {
-                        var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
-                        if (unit.IntA > maxLength)
-                        {
-                            maxLength = unit.IntA;
-                            farthestUnitPos = keyValuePair.Key;
-                        }
+                    m_Board.Units.TryGetValue(key, out var currentServerUnit);
+                    currentServerUnit.GetComponentInChildren<Unit>().IntA = -1;
 
-                        unit.IntA = -1;
+                    CalculateServerScoreCore(key, 0, key); //这是在服务器本身上面调的，没有Srckey，或者说就是它本身。
+                }
+
+                foreach (var keyValuePair in m_Board.Units)
+                {
+                    //之所以第二个Server没有再计算是因为他的IntA被写了，所以就不再计算了。
+                    //两个Server被串在一起后，肯定有一个（随机）会被完全剔出计算流程。
+                    //讲道理，如果两个Server被串在一起，就是应该只有半个的距离：最远Unit应该是任何一个Server中必要最长的。
+                    var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
+                    //这个max被顶起来了下不去了，之前没有考虑另一个Server会给这个数据降下来的可能。
+                    if (unit.IntA > maxLength)
+                    {
+                        maxLength = unit.IntA;
+                        farthestUnitPos = keyValuePair.Key;
                     }
 
+                    //unit.IntA = -1;？？为什么？
                 }
 
                 int maxCount = 1000;
                 int counter = 0;
+
+                Vector2Int tmp = new Vector2Int(-1, -1);
 
                 if (maxLength > 0)
                 {
@@ -230,6 +233,7 @@ namespace ROOT
                         Debug.Assert(currentUnit);
                         farthestUnit = currentUnit.GetComponentInChildren<Unit>();
                         farthestUnit.InServerGrid = true;
+                        tmp = farthestUnit.NextBoardPosition;
                         farthestUnitPos = farthestUnit.LastNetworkPos;
                         counter++;
                         if (counter >= maxCount)
@@ -237,7 +241,10 @@ namespace ROOT
                             Debug.Assert(false, "ERROR");
                             break;
                         }
-                    } while (farthestUnit.UnitCore != CoreType.Server);
+
+                        //TODO，不是，问题出在这，就是如果两个服务器被串在一起的话。有一个变成farthestUnit，在这儿就跳出去了。
+                        //} while (farthestUnit.UnitCore != CoreType.Server);
+                    } while (tmp != farthestUnit.LastNetworkPos);
                 }
 
                 foreach (var keyValuePair in m_Board.Units)

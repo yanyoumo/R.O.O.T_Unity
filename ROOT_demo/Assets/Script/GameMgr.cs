@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,7 +55,7 @@ namespace ROOT
         //public bool UnitEnabled = true;
         public bool ShopEnabled = true;
         public bool UpdateDeltaCurrencyEnabled = true;
-        public bool DestoryerEnabled = true;
+        public bool DestoryerEnabled = false;
         public bool HintEnabled = true;
         public bool PlayerDataUIEnabled = true;
         public bool GameOverEnabled = true;
@@ -72,6 +73,9 @@ namespace ROOT
         private bool movedCursorAni = false;
         private List<MoveableBase> animationPendingObj;
 
+        public Image tmpHintPanel;
+        //public Text tmpHintText;
+        public TextMeshProUGUI tmpHintText;
 
         private void EnableAllFeature()
         {
@@ -102,7 +106,7 @@ namespace ROOT
         void Awake()
         {
 #if UNITY_EDITOR
-            GameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
+            GameGlobalStatus.CurrentGameStatus = GameStatus.Tutorial;
 #endif
             Debug.Assert(GameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial|| GameGlobalStatus.CurrentGameStatus == GameStatus.Playing);
             Random.InitState(Mathf.FloorToInt(Time.realtimeSinceStartup));
@@ -112,7 +116,11 @@ namespace ROOT
                 DeltaCurrency = 0.0f;
 
                 _gameStateMgr = new StandardGameStateMgr();
+#if UNITY_EDITOR
+                _gameStateMgr.InitGameMode(new ScoreSet(10000.0f, 600000), new PerMoveData());
+#else
                 _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
+#endif
 
 
                 _shopMgr = gameObject.AddComponent<ShopMgr>();
@@ -248,19 +256,19 @@ namespace ROOT
             if (!BoughtOnce)
             {
                 bool successBought = false;
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY1))
                 {
                     successBought = _shopMgr.Buy(0);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY2))
                 {
                     successBought = _shopMgr.Buy(1);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY3))
                 {
                     successBought = _shopMgr.Buy(2);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha4))
+                else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY4))
                 {
                     successBought = _shopMgr.Buy(3);
                 }
@@ -278,9 +286,9 @@ namespace ROOT
             movedCursor = false;
             animationPendingObj.Add(cursor);
             Unit movingUnit = null;
-            if (Input.GetKey(KeyCode.Space) && GameBoard.CheckBoardPosValidAndFilled(cursor.CurrentBoardPosition))
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT) && GameBoard.CheckBoardPosValidAndFilled(cursor.CurrentBoardPosition))
             {
-                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
                 {
                     if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetWestCoord()))
                     {
@@ -298,7 +306,7 @@ namespace ROOT
                     }
                 }
 
-                if (Input.GetKeyDown(KeyCode.UpArrow))
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORUP))
                 {
                     if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetNorthCoord()))
                     {
@@ -316,7 +324,7 @@ namespace ROOT
                     }
                 }
 
-                if (Input.GetKeyDown(KeyCode.DownArrow))
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
                 {
                     if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetSouthCoord()))
                     {
@@ -334,7 +342,7 @@ namespace ROOT
                     }
                 }
 
-                if (Input.GetKeyDown(KeyCode.RightArrow))
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
                 {
                     if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetEastCoord()))
                     {
@@ -356,25 +364,25 @@ namespace ROOT
             {
                 if (GameBoard.CheckBoardPosValid(cursor.CurrentBoardPosition))
                 {
-                    if (Input.GetKeyDown(KeyCode.LeftArrow))
+                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
                     {
                         movedCursor = true;
                         cursor.MoveLeft();
                     }
 
-                    if (Input.GetKeyDown(KeyCode.RightArrow))
+                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
                     {
                         movedCursor = true;
                         cursor.MoveRight();
                     }
 
-                    if (Input.GetKeyDown(KeyCode.UpArrow))
+                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORUP))
                     {
                         movedCursor = true;
                         cursor.MoveUp();
                     }
 
-                    if (Input.GetKeyDown(KeyCode.DownArrow))
+                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
                     {
                         movedCursor = true;
                         cursor.MoveDown();
@@ -394,7 +402,7 @@ namespace ROOT
 
         void UpdateRotate(ref Cursor cursor)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT))
             {
                 if (GameBoard.CheckBoardPosValidAndFilled(cursor.CurrentBoardPosition))
                 {
@@ -456,12 +464,12 @@ namespace ROOT
         void UpdateHint()
         {
             GameBoard.ResetUnitEmission();
-            if (Input.GetKey(KeyCode.F1) || ForceHDDConnectionHint)
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD) || ForceHDDConnectionHint)
             {
                 GameBoard.DisplayConnectedHDDUnit();
             }
 
-            if (Input.GetKey(KeyCode.F2) || ForceServerConnectionHint)
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET) || ForceServerConnectionHint)
             {
                 GameBoard.DisplayConnectedServerUnit();
             }
@@ -471,7 +479,7 @@ namespace ROOT
         {
             TimeText.text = ":" + Utils.PaddingFloat4Digit(_gameStateMgr.GetGameTime());
 #if UNITY_EDITOR
-            if (movedTile||Input.GetKeyDown(KeyCode.F12))
+            if (movedTile|| Input.GetButton(StaticName.DEBUG_INPUT_BUTTON_NAME_FORCESTEP))
             {
 #else
             if (movedTile)
@@ -625,6 +633,8 @@ namespace ROOT
             }
             if (HintEnabled)
             {
+                tmpHintPanel.enabled = Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL);
+                tmpHintText.enabled = Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL);
                 UpdateHint();
             }
         }

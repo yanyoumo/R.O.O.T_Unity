@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,13 +11,13 @@ namespace ROOT
 {
     public class TutorialMgr : MonoBehaviour
     {
-        private Text _buttonText;
         private Canvas _tutorialCanvas;
-        private Text _mainText;
-        private Text _hintAText;
-        private Text _hintBText;
-        private Image _focusPanel;
+        private TextMeshProUGUI _buttonText;
+        private TextMeshProUGUI _mainText;
+        private TextMeshProUGUI _hintAText;
+        //private TextMeshProUGUI _hintBText;
         private Material _focusPanelMat;
+        private Image _focusPanel;
         private Image _MainPanel;
 
         private string[] _tutorialContent = { };
@@ -35,7 +36,7 @@ namespace ROOT
 
         private readonly string MainTextName = "MainContent";
         private readonly string HintATextName = "HintTextA";
-        private readonly string HintBTextName = "HintTextB";
+        //private readonly string HintBTextName = "HintTextB";
 
         private bool IsCustomButtonText = false;
         private string CustomButtonText = "";
@@ -47,6 +48,26 @@ namespace ROOT
         void Awake()
         {
             _tutorialContent = new[]
+            {
+                /*000*/"你好，欢迎来到R.O.O.T.教程。",
+                /*001*/"这是一个基于棋盘的模拟经营游戏。",
+                /*002*/"首先，这个是游戏中最重要的元素，我们称为单位。",
+                /*003*/"然后，这个是你的光标。",
+                /*004*/"来，再给你几个单位，随便试试先，习惯一下操作。",
+                /*005*/"",
+                /*006*/"你也一定注意到了，只从外形上来看，又两大类单元。一个方的，一个圆的。",
+                /*007*/"方形是发射端，圆形是接收端。并且接收端可以串联下去。",
+                /*008*/"除了形状，上面的图案也很重要。你已经接触过的是【处理器和硬盘】这一组发射端和接收端。",
+                /*009*/"来，这时另外一组。这组称为【服务器和网线】。",
+                /*00X*/"好的，教程继续。",
+                /*00X*/"好的，教程继续。",
+                /*00X*/"好的，教程继续。",
+                /*00X*/"好的，教程继续。",
+                /*00X*/"好的，教程继续。",
+                /*00X*/"好的，教程继续。",
+                /*00X*/"好的，教程继续。",
+            };
+            /*_tutorialContent = new[]
             {
                 "你好，欢迎来到R.O.O.T.教程。",
                 "这是一个基于棋盘的模拟经营游戏。",
@@ -82,16 +103,22 @@ namespace ROOT
                 "好的，教程继续。",
                 "好的，教程继续。",
                 "好的，教程继续。",
-            };
+            };*/
         }
 
         void Start()
         {
             _tutorialContentMax = _tutorialContent.Length;
             _tutorialCanvas = MainGameMgr.TutorialUI;
-            Button[] tmpB = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Button>();
-            Text[] tmpT = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Text>();
-            Image[] tmpI = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Image>();
+            var tmpB = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Button>();
+            var tmpT = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<TextMeshProUGUI>();
+            var tmpI = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Image>();
+
+#if UNITY_EDITOR
+            var tmpOT = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Text>();
+            Debug.Assert(tmpOT.Length == 0, "不要再用原版Text，用TextMeshPro");
+#endif
+
             foreach (var text in tmpT)
             {
                 if (text.name == MainTextName)
@@ -103,10 +130,10 @@ namespace ROOT
                 {
                     _hintAText = text;
                 }
-                if (text.name == HintBTextName)
+                /*if (text.name == HintBTextName)
                 {
                     _hintBText = text;
-                }
+                }*/
             }
 
             foreach (var image in tmpI)
@@ -128,7 +155,7 @@ namespace ROOT
                 if (button.name == NextButtonName)
                 {
                     button.onClick.AddListener(Next);
-                    _buttonText = button.GetComponentInChildren<Text>();
+                    _buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
                     Debug.Assert(_buttonText.name == NextButtonTextName);
                 }
             }
@@ -171,6 +198,59 @@ namespace ROOT
                 SideType.NoConnection, SideType.Connection, SideType.NoConnection, SideType.Connection
             };
             switch (_tutorialContentCounter)
+            {
+                case 2:
+                    GameObject go = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.Processor, Utils.Shuffle(sidesA));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(go, out Vector2Int deliveringPos);
+                    _focusPanel.enabled = true;
+                    Vector2 offset = focusPanelOrg + deliveringPos * focusPanelOffset;
+                    _focusPanelMat.SetVector("_MainTex_ST", new Vector4(2.0f, 2.0f, offset.x, offset.y));
+                    break;
+                case 3:
+                    _focusPanel.enabled = false;
+                    MainGameMgr.InitCursor(new Vector2Int(2, 3));
+                    MainGameMgr.InputEnabled = true;
+                    MainGameMgr.CursorEnabled = true;
+                    MainGameMgr.RotateEnabled = true;
+                    _hintAText.enabled = true;
+                    break;
+                case 4:
+                    GameObject goA = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,
+                        Utils.Shuffle(sidesB));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goA);
+                    GameObject goB = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,
+                        Utils.Shuffle(sidesB));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goB);
+                    MainGameMgr.GameBoard.UpdateBoardInit();
+                    IsCustomButtonText = true;
+                    CustomButtonText = "我试试";
+                    break;
+                case 5:
+                    CustomButtonText = "我好了";
+                    _hintAText.enabled = true;
+                    _MainPanel.enabled = false;
+                    break;
+                case 6:
+                    IsCustomButtonText = false;
+                    _hintAText.enabled = false;
+                    _MainPanel.enabled = true;
+                    break;
+                case 7:
+                    MainGameMgr.ForceHDDConnectionHint = true;
+                    break;
+                case 9:
+                    GameObject goC = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.Server,
+                        Utils.Shuffle(sidesA));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goC);
+                    GameObject goD = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable,
+                        Utils.Shuffle(sidesB));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goD);
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goD);
+                    MainGameMgr.GameBoard.UpdateBoardInit();
+                    MainGameMgr.ForceServerConnectionHint = true;
+                    break;
+            }
+            /*switch (_tutorialContentCounter)
             {
                 case 2:
                     MainGameMgr.InitCursor(new Vector2Int(2, 3));
@@ -247,13 +327,13 @@ namespace ROOT
                 case 12:
                     CustomButtonText = "我好了";
                     _hintAText.enabled = true;
-                    _hintBText.enabled = true;
+                    //_hintBText.enabled = true;
                     _MainPanel.enabled = false;
                     break;
                 case 13:
                     IsCustomButtonText = false;
                     _hintAText.enabled = false;
-                    _hintBText.enabled = false;
+                    //_hintBText.enabled = false;
                     _MainPanel.enabled = true;
                     //MainGameMgr.ForceHDDConnectionHint = false;
                     IsCustomButtonText = true;
@@ -267,16 +347,16 @@ namespace ROOT
 
                     CustomButtonText = "我好了";
                     _hintAText.enabled = true;
-                    _hintBText.enabled = true;
+                    //_hintBText.enabled = true;
                     _MainPanel.enabled = false;
                     break;
                 case 17:
                     IsCustomButtonText = false;
                     _hintAText.enabled = false;
-                    _hintBText.enabled = false;
+                    //_hintBText.enabled = false;
                     _MainPanel.enabled = true;
                     break;
-            }
+            }*/
         }
 
         // Update is called once per frame
