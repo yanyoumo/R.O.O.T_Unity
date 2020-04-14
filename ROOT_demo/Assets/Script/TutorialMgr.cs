@@ -244,8 +244,10 @@ namespace ROOT
                     MainGameMgr.GameBoard.DeliverUnitRandomPlace(goC);
                     GameObject goD = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable,
                         Utils.Shuffle(sidesB));
+                    GameObject goE = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable,
+                        Utils.Shuffle(sidesB));
                     MainGameMgr.GameBoard.DeliverUnitRandomPlace(goD);
-                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goD);
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goE);
                     MainGameMgr.GameBoard.UpdateBoardInit();
                     MainGameMgr.ForceServerConnectionHint = true;
                     break;

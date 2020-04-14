@@ -140,6 +140,64 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 59361432, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_Name
+      value: TMP SubMeshUI [LiberationSans SDF Material]
+      objectReference: {fileID: 0}
+    - target: {fileID: 538799526, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_Name
+      value: TMP SubMeshUI [FZHTJW Atlas Material]
+      objectReference: {fileID: 0}
+    - target: {fileID: 538799528, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 9098069174060035587, guid: 46a823238f12f7d41925ff67a2da68bc,
+        type: 2}
+    - target: {fileID: 538799528, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 46a823238f12f7d41925ff67a2da68bc,
+        type: 2}
+    - target: {fileID: 538799528, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 9098069174060035587, guid: 46a823238f12f7d41925ff67a2da68bc,
+        type: 2}
+    - target: {fileID: 829651942, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 46a823238f12f7d41925ff67a2da68bc,
+        type: 2}
+    - target: {fileID: 829651942, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 9098069174060035587, guid: 46a823238f12f7d41925ff67a2da68bc,
+        type: 2}
+    - target: {fileID: 829651942, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_textInfo.materialCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 829651942, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_text
+      value: "\u6D4B\u8BD5\u6587\u5B57\u6587\u5B57"
+      objectReference: {fileID: 0}
+    - target: {fileID: 829651942, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 829651942, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 829651942, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4027151794142065363, guid: 22ab6b277575e9349a7851ed23d338e2,
+        type: 3}
+      propertyPath: m_Name
+      value: TMP SubMeshUI [FZHTJW Atlas Material]
+      objectReference: {fileID: 0}
     - target: {fileID: 6818143810823760096, guid: 22ab6b277575e9349a7851ed23d338e2,
         type: 3}
       propertyPath: m_Name
@@ -250,6 +308,24 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6867136554515834559, guid: 22ab6b277575e9349a7851ed23d338e2,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 9098069174060035587, guid: 46a823238f12f7d41925ff67a2da68bc,
+        type: 2}
+    - target: {fileID: 6867136554515834559, guid: 22ab6b277575e9349a7851ed23d338e2,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 46a823238f12f7d41925ff67a2da68bc,
+        type: 2}
+    - target: {fileID: 6867136554515834559, guid: 22ab6b277575e9349a7851ed23d338e2,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 9098069174060035587, guid: 46a823238f12f7d41925ff67a2da68bc,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22ab6b277575e9349a7851ed23d338e2, type: 3}
 --- !u!223 &161305719 stripped
@@ -282,7 +358,7 @@ GameObject:
   - component: {fileID: 675526958}
   - component: {fileID: 675526957}
   m_Layer: 5
-  m_Name: TMP SubMeshUI [SourceHanSans-Regular Atlas Material]
+  m_Name: TMP SubMeshUI [FZHTJW Atlas Material]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -300,17 +376,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 058cba836c1846c3aa1c5fd2e28aea77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: -6171016631069268861, guid: f930a82ce5b6b1041972435144197e45,
+  m_Material: {fileID: 9098069174060035587, guid: 46a823238f12f7d41925ff67a2da68bc,
     type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_fontAsset: {fileID: 11400000, guid: f930a82ce5b6b1041972435144197e45, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 46a823238f12f7d41925ff67a2da68bc, type: 2}
   m_spriteAsset: {fileID: 0}
   m_material: {fileID: 0}
-  m_sharedMaterial: {fileID: -6171016631069268861, guid: f930a82ce5b6b1041972435144197e45,
+  m_sharedMaterial: {fileID: 9098069174060035587, guid: 46a823238f12f7d41925ff67a2da68bc,
     type: 2}
   m_isDefaultMaterial: 1
   m_padding: 1.25
