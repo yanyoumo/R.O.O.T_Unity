@@ -65,6 +65,7 @@ namespace ROOT
 
         public Canvas PlayingUI;
         public Canvas TutorialUI;
+        public RectTransform ShopUI;
 
         private TutorialMgr _tutorialMgr;
 
@@ -73,9 +74,10 @@ namespace ROOT
         private bool movedCursorAni = false;
         private List<MoveableBase> animationPendingObj;
 
-        public Image tmpHintPanel;
+        public RectTransform HintPanel;
+        //public Image tmpHintPanel;
         //public Text tmpHintText;
-        public TextMeshProUGUI tmpHintText;
+        //public TextMeshProUGUI tmpHintText;
 
         private void EnableAllFeature()
         {
@@ -129,6 +131,7 @@ namespace ROOT
                 _shopMgr.ItemPriceTexts = new[] { Item1Price, Item2Price, Item3Price, Item4Price };
                 _shopMgr.CurrentGameStateMgr = this._gameStateMgr;
                 _shopMgr.GameBoard = this.GameBoard;
+                ShopUI.gameObject.SetActive(true);
 
                 _warningDestoryer = new MeteoriteBomber();
                 _warningDestoryer.SetBoard(ref GameBoard);
@@ -145,6 +148,12 @@ namespace ROOT
                 _tutorialMgr = gameObject.AddComponent<TutorialMgr>();
                 _tutorialMgr.MainGameMgr = this;
             }
+        }
+
+        public void InitGameStateMgr()
+        {
+            _gameStateMgr = new StandardGameStateMgr();
+            _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
         }
 
         public void InitCurrencyIOMgr()
@@ -491,8 +500,16 @@ namespace ROOT
                     BoughtOnce = false;
                 }
 
-                _shopMgr.ShopPreAnimationUpdate();
-                _warningDestoryer.Step();
+                if (ShopEnabled)
+                {
+                    _shopMgr.ShopPreAnimationUpdate();
+                }
+
+                if (_warningDestoryer != null && DestoryerEnabled)
+                {
+                    _warningDestoryer.Step();
+                }
+
                 _gameStateMgr.PerMove(new ScoreSet(), new PerMoveData(DeltaCurrency, 1));
             }
         }
@@ -634,8 +651,10 @@ namespace ROOT
             }
             if (HintEnabled)
             {
-                tmpHintPanel.enabled = Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL);
-                tmpHintText.enabled = Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL);
+                if (HintPanel != null)
+                {
+                    HintPanel.gameObject.SetActive(Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL));
+                }
                 UpdateHint();
             }
         }

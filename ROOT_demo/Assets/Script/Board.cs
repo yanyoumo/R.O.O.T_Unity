@@ -382,10 +382,15 @@ namespace ROOT
             float time = Time.timeSinceLevelLoad;
             foreach (var unit in Units)
             {
-                if (unit.Value.GetComponentInChildren<Unit>().InServerGrid)
-                {
-                    Color color = (Mathf.Sin(time * 10) + 1.0f) * Color.blue;
-                    unit.Value.GetComponentInChildren<Unit>().SetCoreEmissive(color);
+                Unit unitComp = unit.Value.GetComponentInChildren<Unit>();
+                if (unitComp.UnitCore==CoreType.NetworkCable||unitComp.UnitCore==CoreType.Server)
+                {                  
+                    //现在网络只显示网线和服务器，不会有错，但是有可能有更好的解决方案？
+                    if (unitComp.InServerGrid)
+                    {
+                        Color color = (Mathf.Sin(time * 10) + 1.0f) * Color.blue;
+                        unit.Value.GetComponentInChildren<Unit>().SetCoreEmissive(color);
+                    }
                 }
             }
         }

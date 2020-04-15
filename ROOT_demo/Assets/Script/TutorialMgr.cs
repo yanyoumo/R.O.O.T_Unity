@@ -226,6 +226,17 @@ namespace ROOT
                     IsCustomButtonText = false;
                     _MainPanel.enabled = true;
                     break;
+                case 22:
+                    _hintAText.enabled = false;
+                    _hintBText.enabled = false;
+                    _hintCText.enabled = false;
+                    break;
+                case 23:
+                    MainGameMgr.InitGameStateMgr();
+                    MainGameMgr.PlayerDataUIEnabled = true;
+                    MainGameMgr.PlayingUI.enabled = true;
+                    MainGameMgr.ShopUI.gameObject.SetActive(false);
+                    break;
             }
         }
 

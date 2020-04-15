@@ -62,5 +62,9 @@ MonoBehaviour:
   HintEnabled: 1
   PlayerDataUIEnabled: 1
   GameOverEnabled: 1
+  ForceHDDConnectionHint: 0
+  ForceServerConnectionHint: 0
   PlayingUI: {fileID: 0}
   TutorialUI: {fileID: 0}
+  ShopUI: {fileID: 0}
+  HintPanel: {fileID: 0}
