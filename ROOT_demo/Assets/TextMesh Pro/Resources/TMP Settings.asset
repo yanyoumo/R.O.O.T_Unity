@@ -30,9 +30,9 @@ MonoBehaviour:
   m_defaultTextMeshProUITextContainerSize: {x: 200, y: 50}
   m_autoSizeTextContainer: 0
   m_fallbackFontAssets:
-  - {fileID: 11400000, guid: 4481247bc56a25144a356179889ee70e, type: 2}
-  - {fileID: 11400000, guid: f930a82ce5b6b1041972435144197e45, type: 2}
-  - {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  - {fileID: 11400000, guid: 46a823238f12f7d41925ff67a2da68bc, type: 2}
+  - {fileID: 11400000, guid: 3c8eafa5598ba04438db703aa3935885, type: 2}
+  - {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_matchMaterialPreset: 0
   m_defaultSpriteAsset: {fileID: 11400000, guid: c41005c129ba4d66911b75229fd70b45,
     type: 2}

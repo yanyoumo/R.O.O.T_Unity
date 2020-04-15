@@ -319,7 +319,7 @@ namespace ROOT
             return true;
         }
 
-        private void UpdateBoard()
+        public void UpdateBoard()
         {
             foreach (var unit in Units)
             {

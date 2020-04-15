@@ -33,6 +33,16 @@ namespace ROOT
         SIDETYPECOUNT
     }
 
+    public enum ConnectionMeshType
+    {
+        NoConnectionMesh,
+        DtoDConnectedMesh,
+        StDConnectedMesh,
+        DtSConnectedMesh,
+        StSConnectedMesh,
+        NoChange
+    }
+
     public struct Core
     {
         public string Name;

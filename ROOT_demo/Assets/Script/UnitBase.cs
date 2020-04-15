@@ -322,7 +322,7 @@ namespace ROOT
                         {
                             Unit otherUnit = value.GetComponentInChildren<Unit>();
                             connectionData.Connected =
-                                (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(otherUnit.UnitRotation)) ==
+                                (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(currentSideDirection)) ==
                                  SideType.Connection);
                             if (connectionData.Connected)
                             {
@@ -335,29 +335,23 @@ namespace ROOT
             }
         }
 
-        private void UpdateDestConnectionSide(ConnectionData data, MeshRenderer localMeshRenderer)
+        private void UpdateDestConnectionSide(ConnectionMeshType connectionMeshType,ref MeshRenderer localMeshRenderer)
         {
-            if (data.Connected)
+            if (connectionMeshType == ConnectionMeshType.NoChange) return;
+            switch (connectionMeshType)
             {
-                switch (data.ConnectedToGenre)
-                {
-                    case CoreGenre.Source:
-                        localMeshRenderer.gameObject.GetComponent<MeshFilter>().mesh = DtoSSideMesh;
-                        break;
-                    case CoreGenre.Destination:
-                        localMeshRenderer.gameObject.GetComponent<MeshFilter>().mesh = DtoDSideMesh;
-                        break;
-                    case CoreGenre.Support:
-                        break;
-                    case CoreGenre.Other:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            else
-            {
-                localMeshRenderer.gameObject.GetComponent<MeshFilter>().mesh = DtoDSideMesh;
+                case ConnectionMeshType.NoConnectionMesh:
+                case ConnectionMeshType.DtoDConnectedMesh:
+                    localMeshRenderer.gameObject.GetComponent<MeshFilter>().mesh = DtoDSideMesh;
+                    break;
+                case ConnectionMeshType.DtSConnectedMesh:
+                    localMeshRenderer.gameObject.GetComponent<MeshFilter>().mesh = DtoSSideMesh;
+                    break;
+                case ConnectionMeshType.StDConnectedMesh:
+                case ConnectionMeshType.StSConnectedMesh:
+                    throw new NotImplementedException();
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -370,28 +364,14 @@ namespace ROOT
                     WorldNeighboringData.TryGetValue(currentSideDirection, out ConnectionData data);
                     if (data.HasConnector)
                     {
-                        var localRotation =Utils.RotateDirectionBeforeRotation(currentSideDirection, UnitRotation);
+                        var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, UnitRotation);
                         meshRendererLocalDir.TryGetValue(localRotation, out MeshRenderer localMeshRenderer);
 #if UNITY_EDITOR
-                        System.Diagnostics.Debug.Assert(localMeshRenderer != null,nameof(localMeshRenderer) + " != null");
+                        System.Diagnostics.Debug.Assert(localMeshRenderer != null,
+                            nameof(localMeshRenderer) + " != null");
 #endif
-                        if (data.Connected)
-                        {
-                            switch (UnitCoreGenre)
-                            {
-                                case CoreGenre.Source:
-                                    break;
-                                case CoreGenre.Destination:
-                                    UpdateDestConnectionSide(data, localMeshRenderer);
-                                    break;
-                                case CoreGenre.Support:
-                                    break;
-                                case CoreGenre.Other:
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
+                        ConnectionMeshType connectionMeshType = data.Connected ? Utils.GetRelationBetweenGenre(UnitCoreGenre, data.ConnectedToGenre) : Utils.GetRelationNoConnection(UnitCoreGenre);
+                        UpdateDestConnectionSide(connectionMeshType, ref localMeshRenderer);
                     }
                 }
             }

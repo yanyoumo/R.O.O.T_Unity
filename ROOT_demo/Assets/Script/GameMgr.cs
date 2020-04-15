@@ -410,6 +410,7 @@ namespace ROOT
                     if (unit)
                     {
                         unit.GetComponentInChildren<Unit>().UnitRotateCw();
+                        GameBoard.UpdateBoard();
                     }
                 }
             }
@@ -553,7 +554,8 @@ namespace ROOT
         void Update()
         {
             //TODO 从LF到AF的数据应该再多一些。
-            bool movedTile=false;
+            System.Diagnostics.Debug.Assert(GameBoard != null, nameof(GameBoard) + " != null");
+            bool movedTile =false;
             bool movedCusor = false;
             bool pressedAny = Input.anyKeyDown;
             if (LogicFrameAnimeFrameToggle)
@@ -603,7 +605,6 @@ namespace ROOT
 
                 //Debug.Log(cursor.LerpingBoardPosition.ToString());
                 if (animationLerper >= 1.0f)
-                    //if (animationLerper >= (1.0f - Mathf.Epsilon/10.0f))
                 {
                     //AnimationEnding
                     foreach (var moveableBase in animationPendingObj)

@@ -295,5 +295,107 @@ namespace ROOT
                 return "00" + inputInt;
             }
         }
+
+        public static ConnectionMeshType GetRelationNoConnection(CoreGenre SrcGenre)
+        {
+            return GetRelationBetweenGenre(SrcGenre, null);
+        }
+
+
+        public static ConnectionMeshType GetRelationBetweenGenre(CoreGenre SrcGenre, CoreGenre? OtherGenre)
+        {
+            switch (SrcGenre)
+            {
+                case CoreGenre.Source:
+                    return ConnectionMeshType.NoChange;
+                case CoreGenre.Destination:
+                    if (OtherGenre == null)
+                    {
+                        return ConnectionMeshType.NoConnectionMesh;
+                    }
+                    else
+                    {
+                        if (OtherGenre == CoreGenre.Source)
+                        {
+                            return ConnectionMeshType.DtSConnectedMesh;
+                        }
+                        if (OtherGenre == CoreGenre.Destination)
+                        {
+                            return ConnectionMeshType.DtoDConnectedMesh;
+                        }
+                    }
+                    break;
+                case CoreGenre.Support:
+                    return ConnectionMeshType.NoChange;
+                case CoreGenre.Other:
+                    return ConnectionMeshType.NoChange;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(SrcGenre), SrcGenre, null);
+            }
+            return ConnectionMeshType.NoChange;
+        }
+    }
+
+    public partial class TutorialMgr : MonoBehaviour
+    {
+        void Awake()
+        {
+            string TmpColorBlueXml(string content)
+            {
+                return TmpColorXml(content, Color.blue);
+            }
+
+            string TmpColorRedXml(string content)
+            {
+                return TmpColorXml(content,Color.red);
+            }
+
+            string TmpColorXml(string content,Color col)
+            {
+                var hexCol = ColorUtility.ToHtmlStringRGB(col);
+                return "<color=#" + hexCol + "> " + content + " </color> ";
+            }
+
+            string TmpColorBold(string content)
+            {
+                return "<b> " + content + " </b> ";
+            }
+
+            _tutorialContent = new[]
+            {
+                /*000*/"你好，欢迎来到R.O.O.T.教程。",
+                /*001*/"这是一个基于棋盘的模拟经营游戏。",
+                /*002*/"首先，这个是游戏中最重要的元素，我们称为单位。",
+                /*003*/"然后，这个是你的光标。",
+                /*004*/"来，再给你几个单位，随便试试先，习惯一下操作。",
+                /*005*/"",
+                /*006*/"是不是很像水管工啊，当然，有点像。\n水管工中连接了水管，还要有水对吧。",
+                /*007*/"这里也是，你目前只处理了物理上的链接，换句话说\n有点像接了网线但是还没网。",
+                /*008*/"现在给你打开数据的传输。",
+                /*009*/"目前游戏中有两种数据：\n\t【"+TmpColorRedXml("一般数据")+"】和【"+TmpColorBlueXml("网络数据")+"】",//"（希望之后还能有更多",
+                /*010*/"既然提到数据，就一定有发射端，和接收端。\n从形状上来看，很容易区别。【方形】是发射端，【圆形】是接收端。",
+                /*011*/"除了形状，上面的图案也很重要。\n你已经接触过的是【处理器和硬盘】这一组发射端和接收端。负责"+TmpColorBold("处理")+"【"+TmpColorRedXml("一般数据")+"】",
+                /*012*/"来，这时另外一组。\n这组称为【服务器和网线】，负责"+TmpColorBold("处理")+"【"+TmpColorBlueXml("网络数据")+"】",
+                /*013*/"话说，信号的提示是不是有点晃眼？先帮你隐藏掉了，按住"+TmpColorBold("TAB")+"可以再显示",
+                /*014*/"先来自己试试。"/*（        
+                    * 硬盘：只要链接到处理器单元上即可获得数据，并且可以串联。
+                    * 网络：只有从服务器中连出的最长一串的网线单元。才能计分，并且只有最长的一串才能获得数据。（显示在外面）
+                ）*/,
+                /*015*/"",
+                /*016*/"虽说需要对应的单元才能"+TmpColorBold("处理")+"对应的数据。但是他们可以传递任意数据。来试试，使用网线模组链接一个硬盘和处理器。",
+                /*017*/"此时你就可以看到，虽然网线不能处理【"+TmpColorRedXml("一般数据")+"】，但是可以通过它传递到可以处理【"+TmpColorRedXml("一般数据")+"】的硬盘上。当然，反之亦然。",
+                /*018*/"总之，一切单元都可以传递一切数据，但是能否处理某些数据，就是需要特定的对应关系的单元和数据了。",
+                /*019*/"知道这个信息后，你的整个网络是不是可以更加紧凑和灵活了呢~？",
+                /*020*/"",
+                /*021*/"说了这么半天，传递、处理数据有什么用呢？就提到这个游戏的目标了",//【解释面板】
+                /*022*/"所有获得数据的单元可以获得金钱（网线一般要比硬盘获得的多一些。）",
+                /*0XX*/"好的，教程继续。",
+                /*0XX*/"好的，教程继续。",
+                /*0XX*/"好的，教程继续。",
+                /*0XX*/"好的，教程继续。",
+                /*0XX*/"好的，教程继续。",
+                /*0XX*/"好的，教程继续。",
+            };
+        }
     }
 }
