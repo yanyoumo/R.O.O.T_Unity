@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace ROOT
 {
-    public partial class TutorialMgr : MonoBehaviour
+    public sealed partial class TutorialMgr : MonoBehaviour
     {
         private Canvas _tutorialCanvas;
         private TextMeshProUGUI _buttonText;
@@ -19,7 +19,7 @@ namespace ROOT
         private TextMeshProUGUI _hintCText;
         private Material _focusPanelMat;
         private Image _focusPanel;
-        private Image _MainPanel;
+        private Image _mainPanel;
 
         private string[] _tutorialContent = { };
 
@@ -32,19 +32,19 @@ namespace ROOT
 
         private GameObject _mCursor;
 
-        private readonly string NextButtonName = "NextButton";
-        private readonly string NextButtonTextName = "NextButtonText";
+        private const string NextButtonName = "NextButton";
+        private const string NextButtonTextName = "NextButtonText";
 
-        private readonly string MainTextName = "MainContent";
-        private readonly string HintATextName = "HintTextA";
-        private readonly string HintBTextName = "HintTextB";
-        private readonly string HintCTextName = "HintTextC";
+        private const string MainTextName = "MainContent";
+        private const string HintATextName = "HintTextA";
+        private const string HintBTextName = "HintTextB";
+        private const string HintCTextName = "HintTextC";
 
-        private bool IsCustomButtonText = false;
-        private string CustomButtonText = "";
+        private bool _isCustomButtonText = false;
+        private string _customButtonText = "";
 
-        private Vector2 focusPanelOffset= new Vector2(-0.135f, -0.235f);
-        private Vector2 focusPanelOrg = new Vector2(0.26f, 0.13f);
+        private Vector2 _focusPanelOffset= new Vector2(-0.135f, -0.235f);
+        private Vector2 _focusPanelOrg = new Vector2(0.26f, 0.13f);
 
         void Start()
         {
@@ -55,8 +55,8 @@ namespace ROOT
             var tmpI = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Image>();
 
 #if UNITY_EDITOR
-            var tmpOT = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Text>();
-            Debug.Assert(tmpOT.Length == 0, "不要再用原版Text，用TextMeshPro");
+            var tmpOt = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Text>();
+            Debug.Assert(tmpOt.Length == 0, "不要再用原版Text，用TextMeshPro");
 #endif
 
             foreach (var text in tmpT)
@@ -90,7 +90,7 @@ namespace ROOT
 
                 if (image.name== "MainContentPanel")
                 {
-                    _MainPanel = image;
+                    _mainPanel = image;
                 }
             }
 
@@ -139,12 +139,12 @@ namespace ROOT
             };
             switch (_tutorialContentCounter)
             {
-                case 2:
+                /*case 2:
                     GameObject go = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.Processor,
                         Utils.Shuffle(sidesA));
                     MainGameMgr.GameBoard.DeliverUnitRandomPlace(go, out Vector2Int deliveringPos);
                     _focusPanel.enabled = true;
-                    Vector2 offset = focusPanelOrg + deliveringPos * focusPanelOffset;
+                    Vector2 offset = _focusPanelOrg + deliveringPos * _focusPanelOffset;
                     _focusPanelMat.SetVector("_MainTex_ST", new Vector4(2.0f, 2.0f, offset.x, offset.y));
                     break;
                 case 3:
@@ -163,18 +163,18 @@ namespace ROOT
                         Utils.Shuffle(sidesA));
                     MainGameMgr.GameBoard.DeliverUnitRandomPlace(goB);
                     MainGameMgr.GameBoard.UpdateBoardInit();
-                    IsCustomButtonText = true;
-                    CustomButtonText = "我试试";
+                    _isCustomButtonText = true;
+                    _customButtonText = "我试试";
                     break;
                 case 5:
-                    CustomButtonText = "我好了";
+                    _customButtonText = "我好了";
                     _hintAText.enabled = true;
-                    _MainPanel.enabled = false;
+                    _mainPanel.enabled = false;
                     break;
                 case 6:
-                    IsCustomButtonText = false;
+                    _isCustomButtonText = false;
                     _hintAText.enabled = false;
-                    _MainPanel.enabled = true;
+                    _mainPanel.enabled = true;
                     break;
                 case 8:
                     MainGameMgr.InitCurrencyIOMgr();
@@ -198,33 +198,33 @@ namespace ROOT
                 case 13:
                     MainGameMgr.ForceServerConnectionHint = false;
                     MainGameMgr.ForceHDDConnectionHint = false;
-                    IsCustomButtonText = true;
-                    CustomButtonText = "我试试";
+                    _isCustomButtonText = true;
+                    _customButtonText = "我试试";
                     break;
                 case 15:
-                    CustomButtonText = "我好了";
+                    _customButtonText = "我好了";
                     _hintAText.enabled = true;
                     _hintBText.enabled = true;
                     _hintCText.enabled = true;
-                    _MainPanel.enabled = false;
+                    _mainPanel.enabled = false;
                     break;
                 case 16:
-                    IsCustomButtonText = false;
-                    _MainPanel.enabled = true;
+                    _isCustomButtonText = false;
+                    _mainPanel.enabled = true;
                     break;
                 case 19:
-                    IsCustomButtonText = true;
-                    CustomButtonText = "我试试";
+                    _isCustomButtonText = true;
+                    _customButtonText = "我试试";
                     break;
                 case 20:
-                    CustomButtonText = "我好了";
+                    _customButtonText = "我好了";
                     _hintAText.enabled = true;
                     _hintBText.enabled = true;
-                    _MainPanel.enabled = false;
+                    _mainPanel.enabled = false;
                     break;
                 case 21:
-                    IsCustomButtonText = false;
-                    _MainPanel.enabled = true;
+                    _isCustomButtonText = false;
+                    _mainPanel.enabled = true;
                     break;
                 case 22:
                     _hintAText.enabled = false;
@@ -236,7 +236,7 @@ namespace ROOT
                     MainGameMgr.PlayerDataUIEnabled = true;
                     MainGameMgr.PlayingUI.enabled = true;
                     MainGameMgr.ShopUI.gameObject.SetActive(false);
-                    break;
+                    break;*/
             }
         }
 
@@ -248,9 +248,9 @@ namespace ROOT
                 //TODO 按动回车继续，要写在UI上
                 Next();
             }
-            if (IsCustomButtonText)
+            if (_isCustomButtonText)
             {
-                _buttonText.text = CustomButtonText;
+                _buttonText.text = _customButtonText;
             }
             else
             {
