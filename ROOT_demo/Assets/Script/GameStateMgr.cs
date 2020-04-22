@@ -82,6 +82,7 @@ namespace ROOT
 
     public abstract class GameStateMgr: IGameLoopStepCheck
     {
+        public float StartingMoney { protected set; get; }
         public ScoreSet GameScoreSet { protected set; get; }
 
         public virtual bool SpendCurrency(float price)
@@ -113,6 +114,7 @@ namespace ROOT
     {
         public override void InitGameMode(ScoreSet initScoreSet, PerMoveData perMoveData)
         {
+            StartingMoney = initScoreSet.Currency;
             GameScoreSet = initScoreSet;
         }
 

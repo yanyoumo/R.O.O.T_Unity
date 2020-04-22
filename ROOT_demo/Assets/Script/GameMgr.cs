@@ -18,7 +18,7 @@ namespace ROOT
     public static class GameGlobalStatus
     {
         public static GameStatus CurrentGameStatus;
-        public static float lastEndingCurrent;
+        public static float lastEndingIncome;
         public static float lastEndingTime;
     }
 
@@ -75,9 +75,6 @@ namespace ROOT
         private List<MoveableBase> animationPendingObj;
 
         public RectTransform HintPanel;
-        //public Image tmpHintPanel;
-        //public Text tmpHintText;
-        //public TextMeshProUGUI tmpHintText;
 
         private void EnableAllFeature()
         {
@@ -105,10 +102,38 @@ namespace ROOT
             GameOverEnabled = false;
         }
 
+        public void InitDestoryer(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            InitDestoryer();
+        }
+
+        private void InitDestoryer()
+        {
+            _warningDestoryer = new MeteoriteBomber();
+            _warningDestoryer.SetBoard(ref GameBoard);
+            _warningDestoryer.Init(5, 2);
+        }
+
+        public void ForceSetDestoryerShell(TutorialMgr invoker, Vector2Int nextIncome)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            ((MeteoriteBomber) _warningDestoryer).ForceSetDestoryer(invoker,nextIncome);
+        }
+
+        public void ForceWindDestoryer(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            do
+            {
+                _warningDestoryer.Step();
+            } while (((MeteoriteBomber) _warningDestoryer).Counter>0);
+        }
+
         void Awake()
         {
 #if UNITY_EDITOR
-            GameGlobalStatus.CurrentGameStatus = GameStatus.Tutorial;
+            GameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
 #endif
             Debug.Assert(GameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial|| GameGlobalStatus.CurrentGameStatus == GameStatus.Playing);
             Random.InitState(Mathf.FloorToInt(Time.realtimeSinceStartup));
@@ -119,23 +144,14 @@ namespace ROOT
 
                 _gameStateMgr = new StandardGameStateMgr();
 #if UNITY_EDITOR
-                _gameStateMgr.InitGameMode(new ScoreSet(10000.0f, 600000), new PerMoveData());
+                _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
 #else
                 _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
 #endif
 
+                InitShop();
 
-                _shopMgr = gameObject.AddComponent<ShopMgr>();
-                _shopMgr.UnitTemplate = GameBoard.UnitTemplate;
-                _shopMgr.ShopInit();
-                _shopMgr.ItemPriceTexts = new[] { Item1Price, Item2Price, Item3Price, Item4Price };
-                _shopMgr.CurrentGameStateMgr = this._gameStateMgr;
-                _shopMgr.GameBoard = this.GameBoard;
-                ShopUI.gameObject.SetActive(true);
-
-                _warningDestoryer = new MeteoriteBomber();
-                _warningDestoryer.SetBoard(ref GameBoard);
-                _warningDestoryer.Init(5, 2);
+                InitDestoryer();
                 PlayingUI.enabled = true;
                 TutorialUI.enabled = false;
                 EnableAllFeature();
@@ -150,19 +166,65 @@ namespace ROOT
             }
         }
 
-        public void InitGameStateMgr()
+        public void InitShop(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            InitShop();
+        }
+
+        private void InitShop()
+        {
+            _shopMgr = gameObject.AddComponent<ShopMgr>();
+            _shopMgr.UnitTemplate = GameBoard.UnitTemplate;
+            _shopMgr.ShopInit();
+            _shopMgr.ItemPriceTexts = new[] { Item1Price, Item2Price, Item3Price, Item4Price };
+            _shopMgr.CurrentGameStateMgr = this._gameStateMgr;
+            _shopMgr.GameBoard = this.GameBoard;
+            ShopUI.gameObject.SetActive(true);
+        }
+
+        public void StartShop(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            StartShop();
+        }
+
+        private void StartShop()
+        {
+            _shopMgr.ShopStart();
+        }
+
+        public void InitGameStateMgr(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            InitGameStateMgr();
+        }
+
+        private void InitGameStateMgr()
         {
             _gameStateMgr = new StandardGameStateMgr();
             _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
         }
 
-        public void InitCurrencyIOMgr()
+        public void InitCurrencyIOMgr(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            InitCurrencyIOMgr();
+        }
+
+        private void InitCurrencyIOMgr()
         {
             _currencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
             _currencyIoCalculator.m_Board = GameBoard;
         }
 
-        public void InitCursor(Vector2Int pos)
+        public void InitCursor(TutorialMgr invoker, Vector2Int pos)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            InitCursor(pos);
+        }
+
+        private void InitCursor(Vector2Int pos)
         {
             _mCursor = Instantiate(CursorTemplate);
             Cursor cursor=_mCursor.GetComponent<Cursor>();
@@ -181,7 +243,7 @@ namespace ROOT
                 GameBoard.UpdateBoardAnimation();
 
                 //得最后做
-                _shopMgr.ShopStart();
+                StartShop();
             }
             else if (GameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial)
             {
@@ -520,8 +582,8 @@ namespace ROOT
             {
                 CurrencyText.text = "GAME OVER";
                 GameGlobalStatus.CurrentGameStatus = GameStatus.Ended;
-                GameGlobalStatus.lastEndingCurrent = _gameStateMgr.GetCurrency();
-                GameGlobalStatus.lastEndingCurrent = _gameStateMgr.GetGameTime();
+                GameGlobalStatus.lastEndingIncome = _gameStateMgr.GetCurrency() - _gameStateMgr.StartingMoney;
+                GameGlobalStatus.lastEndingTime = _gameStateMgr.GetGameTime();
                 UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_GAMEOVER);
             }
         }

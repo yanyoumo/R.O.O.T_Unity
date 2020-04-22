@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -12,11 +13,12 @@ namespace ROOT
     public sealed partial class TutorialMgr : MonoBehaviour
     {
         private Canvas _tutorialCanvas;
-        private TextMeshProUGUI _buttonText;
+        //private TextMeshProUGUI _buttonText;
         private TextMeshProUGUI _mainText;
         private TextMeshProUGUI _hintAText;
         private TextMeshProUGUI _hintBText;
         private TextMeshProUGUI _hintCText;
+        private TextMeshProUGUI _NextHintText;
         private Material _focusPanelMat;
         private Image _focusPanel;
         private Image _mainPanel;
@@ -26,19 +28,18 @@ namespace ROOT
         private int _tutorialContentCounter = 0;
         private int _tutorialContentMax = 0;
 
-        //public GameObject CursorTemplate;
-
         public GameMgr MainGameMgr;
 
         private GameObject _mCursor;
 
-        private const string NextButtonName = "NextButton";
-        private const string NextButtonTextName = "NextButtonText";
+        private const string FocusPanelName = "FocusPanel";
+        private const string MainContentPanelName = "MainContentPanel";
 
         private const string MainTextName = "MainContent";
         private const string HintATextName = "HintTextA";
         private const string HintBTextName = "HintTextB";
         private const string HintCTextName = "HintTextC";
+        private const string EnterHint = "EnterHint";
 
         private bool _isCustomButtonText = false;
         private string _customButtonText = "";
@@ -46,11 +47,13 @@ namespace ROOT
         private Vector2 _focusPanelOffset= new Vector2(-0.135f, -0.235f);
         private Vector2 _focusPanelOrg = new Vector2(0.26f, 0.13f);
 
+        private RectTransform mainRectTransform;
+
         void Start()
         {
             _tutorialContentMax = _tutorialContent.Length;
             _tutorialCanvas = MainGameMgr.TutorialUI;
-            var tmpB = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Button>();
+            //var tmpB = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Button>();
             var tmpT = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<TextMeshProUGUI>();
             var tmpI = _tutorialCanvas.transform.gameObject.GetComponentsInChildren<Image>();
 
@@ -73,34 +76,31 @@ namespace ROOT
                 if (text.name == HintBTextName)
                 {
                     _hintBText = text;
+                    _hintBText.gameObject.SetActive(false);
                 }
                 if (text.name == HintCTextName)
                 {
                     _hintCText = text;
                 }
+
+                if (text.name== EnterHint)
+                {
+                    _NextHintText = text;
+                }
             }
 
             foreach (var image in tmpI)
             {
-                if (image.name == "FocusPanel")
+                if (image.name == FocusPanelName)
                 {
                     _focusPanel = image;
                     _focusPanelMat = _focusPanel.material;
                 }
 
-                if (image.name== "MainContentPanel")
+                if (image.name== MainContentPanelName)
                 {
                     _mainPanel = image;
-                }
-            }
-
-            foreach (var button in tmpB)
-            {
-                if (button.name == NextButtonName)
-                {
-                    button.onClick.AddListener(Next);
-                    _buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
-                    Debug.Assert(_buttonText.name == NextButtonTextName);
+                    mainRectTransform=_mainPanel.GetComponent<RectTransform>();
                 }
             }
         }
@@ -139,48 +139,50 @@ namespace ROOT
             };
             switch (_tutorialContentCounter)
             {
-                /*case 2:
-                    GameObject go = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.Processor,
-                        Utils.Shuffle(sidesA));
-                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(go, out Vector2Int deliveringPos);
-                    _focusPanel.enabled = true;
-                    Vector2 offset = _focusPanelOrg + deliveringPos * _focusPanelOffset;
-                    _focusPanelMat.SetVector("_MainTex_ST", new Vector4(2.0f, 2.0f, offset.x, offset.y));
+                case 1:
+                    GameObject go = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.Processor,Utils.Shuffle(sidesA));
+                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(go);
                     break;
-                case 3:
-                    _focusPanel.enabled = false;
-                    MainGameMgr.InitCursor(new Vector2Int(2, 3));
+                case 2:
+                    MainGameMgr.InitCursor(this,new Vector2Int(2, 3));
                     MainGameMgr.InputEnabled = true;
                     MainGameMgr.CursorEnabled = true;
                     MainGameMgr.RotateEnabled = true;
                     _hintAText.enabled = true;
                     break;
-                case 4:
-                    GameObject goA = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,
-                        Utils.Shuffle(sidesA));
+                case 3:
+                    GameObject goA = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,Utils.Shuffle(sidesA));
+                    GameObject goB = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,Utils.Shuffle(sidesA));
                     MainGameMgr.GameBoard.DeliverUnitRandomPlace(goA);
-                    GameObject goB = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,
-                        Utils.Shuffle(sidesA));
                     MainGameMgr.GameBoard.DeliverUnitRandomPlace(goB);
                     MainGameMgr.GameBoard.UpdateBoardInit();
                     _isCustomButtonText = true;
                     _customButtonText = "我试试";
                     break;
-                case 5:
+                case 4:
                     _customButtonText = "我好了";
                     _hintAText.enabled = true;
                     _mainPanel.enabled = false;
                     break;
-                case 6:
+                case 5:
                     _isCustomButtonText = false;
-                    _hintAText.enabled = false;
                     _mainPanel.enabled = true;
                     break;
                 case 8:
-                    MainGameMgr.InitCurrencyIOMgr();
+                    MainGameMgr.InitCurrencyIOMgr(this);
                     MainGameMgr.UpdateDeltaCurrencyEnabled = true;
                     MainGameMgr.HintEnabled = true;
                     MainGameMgr.ForceHDDConnectionHint = true;
+                    _isCustomButtonText = true;
+                    _customButtonText = "我试试";
+                    break;
+                case 9:
+                    _customButtonText = "我好了";
+                    _mainPanel.enabled = false;
+                    break;
+                case 10:
+                    _isCustomButtonText = false;
+                    _mainPanel.enabled = true;
                     break;
                 case 12:
                     GameObject goC = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.Server,
@@ -193,78 +195,105 @@ namespace ROOT
                     MainGameMgr.GameBoard.DeliverUnitRandomPlace(goD);
                     MainGameMgr.GameBoard.DeliverUnitRandomPlace(goE);
                     MainGameMgr.GameBoard.UpdateBoardInit();
-                    MainGameMgr.ForceServerConnectionHint = true;
+                    MainGameMgr.ForceHDDConnectionHint = false;
+                    _hintCText.enabled = true;
                     break;
                 case 13:
-                    MainGameMgr.ForceServerConnectionHint = false;
-                    MainGameMgr.ForceHDDConnectionHint = false;
                     _isCustomButtonText = true;
                     _customButtonText = "我试试";
+                    //_hintBText.enabled = true;
+                    _hintBText.gameObject.SetActive(true);
+                    break;
+                case 14:
+                    _customButtonText = "我好了";
+                    _mainPanel.enabled = false;
                     break;
                 case 15:
-                    _customButtonText = "我好了";
-                    _hintAText.enabled = true;
-                    _hintBText.enabled = true;
-                    _hintCText.enabled = true;
-                    _mainPanel.enabled = false;
-                    break;
-                case 16:
-                    _isCustomButtonText = false;
                     _mainPanel.enabled = true;
                     break;
-                case 19:
+                case 16:
                     _isCustomButtonText = true;
                     _customButtonText = "我试试";
                     break;
-                case 20:
+                case 17:
                     _customButtonText = "我好了";
-                    _hintAText.enabled = true;
-                    _hintBText.enabled = true;
                     _mainPanel.enabled = false;
                     break;
-                case 21:
+                case 18:
                     _isCustomButtonText = false;
                     _mainPanel.enabled = true;
                     break;
-                case 22:
+                case 20:
                     _hintAText.enabled = false;
-                    _hintBText.enabled = false;
+                    //_hintBText.enabled = false;
+                    _hintBText.gameObject.SetActive(false);
                     _hintCText.enabled = false;
-                    break;
-                case 23:
-                    MainGameMgr.InitGameStateMgr();
+                    MainGameMgr.InitGameStateMgr(this);
                     MainGameMgr.PlayerDataUIEnabled = true;
                     MainGameMgr.PlayingUI.enabled = true;
                     MainGameMgr.ShopUI.gameObject.SetActive(false);
-                    break;*/
+                    break;
+                case 28:
+                    mainRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1000f);
+                    MainGameMgr.ShopEnabled = true;
+                    MainGameMgr.InitShop(this);
+                    MainGameMgr.StartShop(this);
+                    MainGameMgr.ShopUI.gameObject.SetActive(true);
+                    break;
+                case 35:
+                    _isCustomButtonText = true;
+                    _customButtonText = "我试试";
+                    break;
+                case 36:
+                    _customButtonText = "我好了";
+                    _mainPanel.enabled = false;
+                    break;
+                case 37:
+                    _isCustomButtonText = false;
+                    _mainPanel.enabled = true;
+                    MainGameMgr.InitDestoryer(this);
+                    MainGameMgr.DestoryerEnabled = true;
+                    MainGameMgr.ForceSetDestoryerShell(this, new Vector2Int(2, 4));
+                    MainGameMgr.ForceWindDestoryer(this);
+                    break;
+                default:
+                    break;
             }
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_QUIT))
             {
-                //TODO 按动回车继续，要写在UI上
-                Next();
-            }
-            if (_isCustomButtonText)
-            {
-                _buttonText.text = _customButtonText;
+                GameGlobalStatus.CurrentGameStatus = GameStatus.Starting;
+                UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_START);
             }
             else
             {
-                _buttonText.text = "继续" + DotDotDot();
-            }
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
+                {
+                    Next();
+                }
 
-            if (_tutorialContentCounter < _tutorialContentMax)
-            {
-                _mainText.text = _tutorialContent[Mathf.FloorToInt(_tutorialContentCounter)];
-            }
-            else
-            {
-                _buttonText.text = "返回";
-                _mainText.text = "教程结束";
+                if (_isCustomButtonText)
+                {
+                    _NextHintText.text = "按回车：" + _customButtonText;
+                }
+                else
+                {
+                    _NextHintText.text = "按回车继续" + DotDotDot();
+                }
+
+                if (_tutorialContentCounter < _tutorialContentMax)
+                {
+                    _mainText.text = _tutorialContent[Mathf.FloorToInt(_tutorialContentCounter)];
+                }
+                else
+                {
+                    _NextHintText.text = "按回车返回";
+                    _mainText.text = "教程结束";
+                }
             }
         }
     }

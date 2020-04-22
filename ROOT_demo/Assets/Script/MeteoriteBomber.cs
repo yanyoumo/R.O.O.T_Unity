@@ -33,6 +33,12 @@ namespace ROOT
 
         public Vector2Int NextIncome { private set; get; }
 
+        public void ForceSetDestoryer(TutorialMgr invoker,Vector2Int nextIncome)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            NextIncome = nextIncome;
+        }
+
         public void Init(int counterLoopMedian = 4, int counterLoopVariance = 1)
         {
             CounterLoopMedian = counterLoopMedian;
@@ -46,7 +52,6 @@ namespace ROOT
 
         private int GenerateNextLoop()
         {
-            //TODO 到时候得弄一个随机数的库。这个东西分布在设计上很重要。
             int variance=Mathf.FloorToInt(Random.Range(-CounterLoopVariance, CounterLoopVariance));
             return Mathf.Max(CounterLoopMedian + variance, MinLoopStep);
         }

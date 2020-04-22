@@ -10,7 +10,7 @@ namespace ROOT
         {
             //游戏中理论最早点。
             GameGlobalStatus.CurrentGameStatus = GameStatus.Starting;
-            GameGlobalStatus.lastEndingCurrent = -1;
+            GameGlobalStatus.lastEndingIncome = -1;
             GameGlobalStatus.lastEndingTime = -1;
         }
 
