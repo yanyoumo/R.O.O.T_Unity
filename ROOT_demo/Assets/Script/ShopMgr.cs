@@ -29,8 +29,8 @@ namespace ROOT
 
         public Text[] ItemPriceTexts;
 
-        private readonly Vector3 _posA=new Vector3(2.0f,0.0f,-2.3f);
-        private float _posDisplace = 5.5f/3.0f;
+        private readonly Vector3 _posA = new Vector3(2.273f, 0.718f, -2.801f);
+        private float _posDisplace = (6.78f - 2.273f) / 3.0f;
 
         private Dictionary<CoreType, float> _priceByCore;
         private Dictionary<SideType, float> _priceBySide;
@@ -247,7 +247,7 @@ namespace ROOT
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
 
-                ItemPriceTexts[i].text = Utils.PaddingFloat3Digit(_prices[i] * _priceCof[i]);
+                ItemPriceTexts[i].text = Utils.PaddingNum3Digit(_prices[i] * _priceCof[i]);
             }
         }
 

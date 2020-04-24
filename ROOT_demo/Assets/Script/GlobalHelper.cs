@@ -253,9 +253,13 @@ namespace ROOT
             return default;
         }
 
-        public static string  PaddingFloat4Digit(float input)
+        public static string PaddingNum4Digit(float input)
         {
-            int inputInt = Mathf.FloorToInt(input);
+            return PaddingNum4Digit(Mathf.FloorToInt(input));
+        }
+        public static string PaddingNum4Digit(int input)
+        {
+            int inputInt = input;
             if (inputInt >= 10000)
             {
                 return "????";
@@ -278,9 +282,13 @@ namespace ROOT
             }
         }
 
-        public static string PaddingFloat3Digit(float input)
+        public static string PaddingNum3Digit(float input)
         {
-            int inputInt = Mathf.FloorToInt(input);
+            return PaddingNum3Digit(Mathf.FloorToInt(input));
+        }
+        public static string PaddingNum3Digit(int input)
+        {
+            int inputInt = input;
             if (inputInt >= 1000)
             {
                 return "???";
@@ -296,6 +304,27 @@ namespace ROOT
             else
             {
                 return "00" + inputInt;
+            }
+        }
+
+        public static string PaddingNum2Digit(float input)
+        {
+            return PaddingNum2Digit(Mathf.FloorToInt(input));
+        }
+        public static string PaddingNum2Digit(int input)
+        {
+            int inputInt = input;
+            if (inputInt >= 100)
+            {
+                return "???";
+            }
+            else if (inputInt >= 10)
+            {
+                return "" + inputInt;
+            }
+            else
+            {
+                return "0" + inputInt;
             }
         }
 

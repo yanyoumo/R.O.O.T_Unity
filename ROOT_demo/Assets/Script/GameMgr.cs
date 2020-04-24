@@ -515,7 +515,7 @@ namespace ROOT
             DeltaCurrency -= _currencyIoCalculator.CalculateCost();
             if (_gameStateMgr!=null)
             {               
-                CurrencyText.text = ":" + Utils.PaddingFloat4Digit(_gameStateMgr.GetCurrency());
+                CurrencyText.text = ":" + Utils.PaddingNum4Digit(_gameStateMgr.GetCurrency());
             }
             else
             {
@@ -524,12 +524,12 @@ namespace ROOT
             if (DeltaCurrency > 0)
             {
                 DeltaCurrencyText.color = Color.green;
-                DeltaCurrencyText.text = ":" + Utils.PaddingFloat4Digit(Mathf.Abs(DeltaCurrency));
+                DeltaCurrencyText.text = ":" + Utils.PaddingNum4Digit(Mathf.Abs(DeltaCurrency));
             }
             else
             {
                 DeltaCurrencyText.color = Color.red;
-                DeltaCurrencyText.text = ":" + Utils.PaddingFloat4Digit(Mathf.Abs(DeltaCurrency));
+                DeltaCurrencyText.text = ":" + Utils.PaddingNum4Digit(Mathf.Abs(DeltaCurrency));
             }
         }
 
@@ -549,7 +549,7 @@ namespace ROOT
 
         void UpdatePlayerDataAndUI(bool movedTile = true)
         {
-            TimeText.text = ":" + Utils.PaddingFloat4Digit(_gameStateMgr.GetGameTime());
+            TimeText.text = ":" + Utils.PaddingNum4Digit(_gameStateMgr.GetGameTime());
 #if UNITY_EDITOR
             if (movedTile|| Input.GetButton(StaticName.DEBUG_INPUT_BUTTON_NAME_FORCESTEP))
             {

@@ -272,7 +272,7 @@ namespace ROOT
         public SideType GetLocalSpaceUnitSide(RotationDirection localDirection)
         {
             SideType res = SideType.SIDETYPECOUNT;
-            Debug.Assert(UnitSides.TryGetValue(UnitRotation, out res));
+            UnitSides.TryGetValue(UnitRotation, out res);
             return res;
         }
 
@@ -280,7 +280,7 @@ namespace ROOT
         {
             SideType res = SideType.SIDETYPECOUNT;
             var desiredLocalSideDirection = Utils.RotateDirectionBeforeRotation(worldDirection, UnitRotation);
-            Debug.Assert(UnitSides.TryGetValue(desiredLocalSideDirection, out res));
+            UnitSides.TryGetValue(desiredLocalSideDirection, out res);
             return res;
         }
 

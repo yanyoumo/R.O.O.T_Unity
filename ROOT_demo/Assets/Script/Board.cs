@@ -16,7 +16,6 @@ namespace ROOT
         private readonly float _boardPhysicalLength = 1.2f;
         private readonly float _boardPhysicalOriginX = -3.1f - 1.75f-2.0f;
         private readonly float _boardPhysicalOriginY = -3.1f;
-        //public GlobalAssetLib _globalAssetLib;
 
         public GameObject UnitTemplate; //TODO 应该要改成AssetLoad那种
 
@@ -229,6 +228,19 @@ namespace ROOT
                 }
             }
             return res.ToArray();
+        }
+
+        public bool DeliverUnitAssignedPlace(GameObject unit, Vector2Int AssignedPos)
+        {
+            if (CheckBoardPosValidAndEmpty(AssignedPos))
+            {
+                unit.GetComponentInChildren<Unit>().InitPosWithAnimation(AssignedPos);
+                unit.GetComponentInChildren<Unit>().GameBoard = this;
+                Units.Add(AssignedPos, unit);
+                UpdateBoardInit();
+                return true;
+            }
+            return false;
         }
 
         public bool DeliverUnitRandomPlace(GameObject unit)

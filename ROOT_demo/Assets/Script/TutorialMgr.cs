@@ -141,7 +141,7 @@ namespace ROOT
             {
                 case 1:
                     GameObject go = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.Processor,Utils.Shuffle(sidesA));
-                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(go);
+                    MainGameMgr.GameBoard.DeliverUnitAssignedPlace(go, new Vector2Int(2, 2));
                     break;
                 case 2:
                     MainGameMgr.InitCursor(this,new Vector2Int(2, 3));
@@ -153,8 +153,8 @@ namespace ROOT
                 case 3:
                     GameObject goA = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,Utils.Shuffle(sidesA));
                     GameObject goB = MainGameMgr.GameBoard.InitUnit(new Vector2Int(2, 2), CoreType.HardDrive,Utils.Shuffle(sidesA));
-                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goA);
-                    MainGameMgr.GameBoard.DeliverUnitRandomPlace(goB);
+                    MainGameMgr.GameBoard.DeliverUnitAssignedPlace(goA, new Vector2Int(3, 4));
+                    MainGameMgr.GameBoard.DeliverUnitAssignedPlace(goB, new Vector2Int(2, 5));
                     MainGameMgr.GameBoard.UpdateBoardInit();
                     _isCustomButtonText = true;
                     _customButtonText = "我试试";

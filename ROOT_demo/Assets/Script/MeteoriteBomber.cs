@@ -17,12 +17,20 @@ namespace ROOT
         WarningDestoryerStatus GetStatus();
         Vector2Int[] NextStrikingPos(out int count);
         void Init(int counterLoopMedian = 4, int counterLoopVariance = 1);
+        void RequestUpStrikeCount(int requestAmount);//外界可以申请对这一系统的攻击力度加码。
         void Step();
     }
 
     public class MeteoriteBomber: IWarningDestoryer
     {
         public Board GameBoard;
+        public int NextStrikingCount { private set; get; }
+
+        //TODO 具体的提高Strike数据的逻辑还没定，现在就很简单的每4次加一次。
+        public const int NextStrikeUpCounter = 4;
+        public int HasStrikedTimes { private set; get; }//这个是攻击了多少次
+        public int HasStrikedCount { private set; get; }//这个是攻击了多少发（可能一次好几发）
+
 
         private WarningDestoryerStatus Status;
 
@@ -31,22 +39,43 @@ namespace ROOT
         public int CounterLoopVariance { private set; get; }
         public static readonly int MinLoopStep=3;
 
-        public Vector2Int NextIncome { private set; get; }
+        //public Vector2Int NextIncome { private set; get; }
+        public Vector2Int[] NextIncomes { private set; get; }
 
         public void ForceSetDestoryer(TutorialMgr invoker,Vector2Int nextIncome)
         {
             Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            NextIncome = nextIncome;
+            NextStrikingCount = 1;
+            NextIncomes = new[]{ nextIncome };
+        }
+
+        private void GenerateNewIncomes()
+        {
+            NextIncomes = new Vector2Int[NextStrikingCount];
+            for (int i = 0; i < NextStrikingCount; i++)
+            {
+                NextIncomes[i] = PureRandomTarget();
+            }
+        }
+
+        public void RequestUpStrikeCount(int requestAmount)
+        {
+            //TODO 这个函数肯定是异步调的，这里要保证这个东西不乱加。
         }
 
         public void Init(int counterLoopMedian = 4, int counterLoopVariance = 1)
         {
+            NextStrikingCount = 1;
             CounterLoopMedian = counterLoopMedian;
             CounterLoopVariance = counterLoopVariance;
 
+            HasStrikedTimes = 0;
+            HasStrikedCount = 0;
+
             Counter = GenerateNextLoop();
             Status = WarningDestoryerStatus.Dormant;
-            NextIncome = PureRandomTarget();
+            NextIncomes = new Vector2Int[NextStrikingCount];
+            GenerateNewIncomes();
             Debug.Assert(GameBoard);
         }
 
@@ -63,16 +92,27 @@ namespace ROOT
             return new Vector2Int(randX, randY);
         }
 
+        private void UpdateNextStrikingCount()
+        {
+            NextStrikingCount = Mathf.FloorToInt(HasStrikedTimes / (float) NextStrikeUpCounter)+1;
+        }
+
         public virtual void Step()
         {
             //这里计算的节奏意外地关键。
             if (Counter == 0)
             {
+                HasStrikedTimes++;
+                HasStrikedCount += NextStrikingCount;
+                UpdateNextStrikingCount();
                 Counter = GenerateNextLoop();
                 //Debug.Log("Aiming=" + NextIncome.ToString());
-                GameBoard.TryDeleteCertainUnit(NextIncome);
+                foreach (var nextIncome in NextIncomes)
+                {
+                    GameBoard.TryDeleteCertainUnit(nextIncome);
+                }
                 //得摧毁之后才更新数据。
-                NextIncome = PureRandomTarget();
+                GenerateNewIncomes();
             }
             else
             {
@@ -89,7 +129,7 @@ namespace ROOT
             }
             else if (Counter > 1)
             {
-                //TODO: Striked  waiting for next.   
+                //TODO: "Striked waiting for next" State.   
                 Status = WarningDestoryerStatus.Dormant;
             }
             else
@@ -105,8 +145,8 @@ namespace ROOT
 
         public virtual Vector2Int[] NextStrikingPos(out int count)
         {
-            count = 1;
-            return new[] {NextIncome};
+            count = NextStrikingCount;
+            return NextIncomes;
         }
 
         public void SetBoard(ref Board gameBoard)
