@@ -46,6 +46,9 @@ MonoBehaviour:
   CurrencyText: {fileID: 0}
   DeltaCurrencyText: {fileID: 0}
   TimeText: {fileID: 0}
+  CurrencyText_TMP: {fileID: 0}
+  DeltaCurrencyText_TMP: {fileID: 0}
+  TimeText_TMP: {fileID: 0}
   CursorTemplate: {fileID: 6636971623283588989, guid: d888cb50120172047abb6039d9bf53be,
     type: 3}
   GameBoard: {fileID: 0}
@@ -53,6 +56,10 @@ MonoBehaviour:
   Item2Price: {fileID: 0}
   Item3Price: {fileID: 0}
   Item4Price: {fileID: 0}
+  Item1Price_TMP: {fileID: 0}
+  Item2Price_TMP: {fileID: 0}
+  Item3Price_TMP: {fileID: 0}
+  Item4Price_TMP: {fileID: 0}
   InputEnabled: 1
   CursorEnabled: 1
   RotateEnabled: 1
