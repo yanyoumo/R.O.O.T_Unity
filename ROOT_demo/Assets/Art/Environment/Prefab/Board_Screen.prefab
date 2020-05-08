@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2370308339823758932}
   - component: {fileID: 8053067051530310054}
   m_Layer: 0
-  m_Name: Row1
+  m_Name: CurrentCurrencyRow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,7 +62,7 @@ GameObject:
   - component: {fileID: 1845628455684046586}
   - component: {fileID: 731643373835695699}
   m_Layer: 0
-  m_Name: Row3
+  m_Name: TimeRow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 7642151215269357533}
   - component: {fileID: 5169004123883655110}
   m_Layer: 0
-  m_Name: Row2
+  m_Name: DeltaCurrencyRow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

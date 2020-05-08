@@ -25,14 +25,6 @@ namespace ROOT
     public class GameMgr : MonoBehaviour
     {
         //TODO https://shimo.im/docs/Dd86KXTqHJpqxwYX
-        public UnityEngine.UI.Text CurrencyText;
-        public UnityEngine.UI.Text DeltaCurrencyText;
-        public UnityEngine.UI.Text TimeText;
-
-        public TextMeshPro CurrencyText_TMP;
-        public TextMeshPro DeltaCurrencyText_TMP;
-        public TextMeshPro TimeText_TMP;
-
         public GameObject CursorTemplate;
         private GameObject _mCursor;
         public Board GameBoard;
@@ -85,9 +77,9 @@ namespace ROOT
 
         public RectTransform HintPanel;
 
-        public LCDRow rowA;
-        public LCDRow rowB;
-        public LCDRow rowC;
+        public LCDRow CurrentMoneyLCDRow;
+        public LCDRow DeltaMoneyLCDRow;
+        public LCDRow TimeLCDRow;
 
         private void EnableAllFeature()
         {
@@ -529,36 +521,14 @@ namespace ROOT
             DeltaCurrency -= _currencyIoCalculator.CalculateCost();
             if (_gameStateMgr!=null)
             {               
-                CurrencyText.text = ":" + Utils.PaddingNum4Digit(_gameStateMgr.GetCurrency());
-                CurrencyText_TMP.text = ":" + Utils.PaddingNum4Digit(_gameStateMgr.GetCurrency());
-                rowA.SetNumber(Mathf.FloorToInt(_gameStateMgr.GetCurrency()));
+                CurrentMoneyLCDRow.SetNumber(Mathf.FloorToInt(_gameStateMgr.GetCurrency()));
             }
             else
             {
-                CurrencyText.text = "No _gameStateMgr";
-                CurrencyText_TMP.text = "No _gameStateMgr";
-                rowA.SetNumber(0);
-                rowB.SetNumber(0);
+                CurrentMoneyLCDRow.SetNumber(0);
+                DeltaMoneyLCDRow.SetNumber(0);
             }
-            if (DeltaCurrency > 0)
-            {
-                DeltaCurrencyText.color = Color.green;
-                DeltaCurrencyText.text = ":" + Utils.PaddingNum4Digit(Mathf.Abs(DeltaCurrency));
-
-                DeltaCurrencyText_TMP.color = Color.green;
-                DeltaCurrencyText_TMP.text = ":" + Utils.PaddingNum4Digit(Mathf.Abs(DeltaCurrency));
-
-            }
-            else
-            {
-                DeltaCurrencyText.color = Color.red;
-                DeltaCurrencyText.text = ":" + Utils.PaddingNum4Digit(Mathf.Abs(DeltaCurrency));
-
-                DeltaCurrencyText_TMP.color = Color.red;
-                DeltaCurrencyText_TMP.text = ":" + Utils.PaddingNum4Digit(Mathf.Abs(DeltaCurrency));
-            }
-
-            rowB.SetNumber(Mathf.FloorToInt(Mathf.Abs(DeltaCurrency)), DeltaCurrency >= 0);
+            DeltaMoneyLCDRow.SetNumber(Mathf.FloorToInt(Mathf.Abs(DeltaCurrency)), DeltaCurrency >= 0);
         }
 
         void UpdateHint()
@@ -577,9 +547,9 @@ namespace ROOT
 
         void UpdatePlayerDataAndUI(bool movedTile = true)
         {
-            TimeText.text = ":" + Utils.PaddingNum4Digit(_gameStateMgr.GetGameTime());
-            TimeText_TMP.text = ":" + Utils.PaddingNum4Digit(_gameStateMgr.GetGameTime());
-            rowC.SetNumber(Mathf.FloorToInt(_gameStateMgr.GetGameTime()));
+            /*TimeText.text = ":" + Utils.PaddingNum4Digit(_gameStateMgr.GetGameTime());
+            TimeText_TMP.text = ":" + Utils.PaddingNum4Digit(_gameStateMgr.GetGameTime());*/
+            TimeLCDRow.SetNumber(Mathf.FloorToInt(_gameStateMgr.GetGameTime()));
 #if UNITY_EDITOR
             if (movedTile|| Input.GetButton(StaticName.DEBUG_INPUT_BUTTON_NAME_FORCESTEP))
             {
@@ -610,7 +580,7 @@ namespace ROOT
         {
             if (_gameStateMgr.EndGameCheck(new ScoreSet(), new PerMoveData()))
             {
-                CurrencyText.text = "GAME OVER";
+                //CurrencyText.text = "GAME OVER";
                 GameGlobalStatus.CurrentGameStatus = GameStatus.Ended;
                 GameGlobalStatus.lastEndingIncome = _gameStateMgr.GetCurrency() - _gameStateMgr.StartingMoney;
                 GameGlobalStatus.lastEndingTime = _gameStateMgr.GetGameTime();
