@@ -77,9 +77,9 @@ namespace ROOT
 
         public RectTransform HintPanel;
 
-        public LCDRow CurrentMoneyLCDRow;
-        public LCDRow DeltaMoneyLCDRow;
-        public LCDRow TimeLCDRow;
+        public ScoreWriting sW;
+
+        public DataScreen dataScreen;
 
         private void EnableAllFeature()
         {
@@ -169,6 +169,9 @@ namespace ROOT
                 _tutorialMgr = gameObject.AddComponent<TutorialMgr>();
                 _tutorialMgr.MainGameMgr = this;
             }
+            //sW=new ScoreWriting();
+            //sW.Save();
+            sW.Read();
         }
 
         public void InitShop(TutorialMgr invoker)
@@ -519,16 +522,11 @@ namespace ROOT
             DeltaCurrency += _currencyIoCalculator.CalculateProcessorScore();
             DeltaCurrency += _currencyIoCalculator.CalculateServerScore();
             DeltaCurrency -= _currencyIoCalculator.CalculateCost();
-            if (_gameStateMgr!=null)
-            {               
-                CurrentMoneyLCDRow.SetNumber(Mathf.FloorToInt(_gameStateMgr.GetCurrency()));
-            }
-            else
-            {
-                CurrentMoneyLCDRow.SetNumber(0);
-                DeltaMoneyLCDRow.SetNumber(0);
-            }
-            DeltaMoneyLCDRow.SetNumber(Mathf.FloorToInt(Mathf.Abs(DeltaCurrency)), DeltaCurrency >= 0);
+
+            System.Diagnostics.Debug.Assert(_gameStateMgr != null, nameof(_gameStateMgr) + " != null");
+            dataScreen.SetLCD(_gameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
+            dataScreen.SetAlertLevel(_gameStateMgr.GetCurrencyRatio(), RowEnum.CurrentMoney);
+            dataScreen.SetLCD(DeltaCurrency, RowEnum.DeltaMoney);
         }
 
         void UpdateHint()
@@ -547,9 +545,8 @@ namespace ROOT
 
         void UpdatePlayerDataAndUI(bool movedTile = true)
         {
-            /*TimeText.text = ":" + Utils.PaddingNum4Digit(_gameStateMgr.GetGameTime());
-            TimeText_TMP.text = ":" + Utils.PaddingNum4Digit(_gameStateMgr.GetGameTime());*/
-            TimeLCDRow.SetNumber(Mathf.FloorToInt(_gameStateMgr.GetGameTime()));
+            dataScreen.SetLCD(_gameStateMgr.GetGameTime(),RowEnum.Time);
+            dataScreen.SetAlertLevel(_gameStateMgr.GetTimeRatio(),RowEnum.Time);
 #if UNITY_EDITOR
             if (movedTile|| Input.GetButton(StaticName.DEBUG_INPUT_BUTTON_NAME_FORCESTEP))
             {

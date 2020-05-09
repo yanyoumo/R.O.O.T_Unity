@@ -46,5 +46,11 @@ namespace ROOT
                 }
             }
         }
+
+        void Update()
+        {
+            //TODO 可以弄一个减数的动画；但是和结果没啥关系。
+            //SetNumber(Time.frameCount);
+        }
     }
 }

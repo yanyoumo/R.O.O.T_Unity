@@ -463,7 +463,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145128176}
-  m_LocalRotation: {x: 0.0056613362, y: 0.7219449, z: -0.6919061, w: -0.0054291734}
+  m_LocalRotation: {x: 0.0056613376, y: 0.7219449, z: -0.6919061, w: -0.0054291748}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3404,18 +3404,6 @@ Transform:
   m_Father: {fileID: 2011711876}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &889175732 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4063558159639225926, guid: 40928d7890910d44eaf6776f04e7fb43,
-    type: 3}
-  m_PrefabInstance: {fileID: 4063558159842679026}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &903478896
 GameObject:
   m_ObjectHideFlags: 0
@@ -3517,18 +3505,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &958565840 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4063558159693944098, guid: 40928d7890910d44eaf6776f04e7fb43,
-    type: 3}
-  m_PrefabInstance: {fileID: 4063558159842679026}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -4328,7 +4304,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 983952641}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 2.0535002, y: 0.38, z: 0.014839877}
+  m_LocalPosition: {x: 2.046, y: 0.38, z: 0.028}
   m_LocalScale: {x: 0.45503035, y: 0.45503035, z: 0.45503035}
   m_Children: []
   m_Father: {fileID: 1404317991}
@@ -4435,6 +4411,30 @@ Transform:
   m_Father: {fileID: 972844093}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1001656225 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5241894430393899160, guid: b66c159d798747246944a6c3f379562f,
+    type: 3}
+  m_PrefabInstance: {fileID: 6160794715798958231}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1001656226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001656225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6267af0287423704eaf998c948afc267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentMoneyLCDRow: {fileID: 6160794715798958234}
+  DeltaMoneyLCDRow: {fileID: 6160794715798958233}
+  TimeLCDRow: {fileID: 6160794715798958232}
+  CurrentMoneyIcon: {fileID: 1350586789}
+  DeltaMoneyIcon: {fileID: 828762299}
+  TimeIcon: {fileID: 983952643}
 --- !u!1 &1032545743
 GameObject:
   m_ObjectHideFlags: 0
@@ -5917,18 +5917,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1409163951}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1484364576 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4063558159177450450, guid: 40928d7890910d44eaf6776f04e7fb43,
-    type: 3}
-  m_PrefabInstance: {fileID: 4063558159842679026}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &1499725176 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4063558159618920497, guid: 40928d7890910d44eaf6776f04e7fb43,
@@ -10892,30 +10880,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: CurrencyText
-      value: 
-      objectReference: {fileID: 889175732}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: DeltaCurrencyText
-      value: 
-      objectReference: {fileID: 1484364576}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: TimeText
-      value: 
-      objectReference: {fileID: 958565840}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: CurrencyText_TMP
-      value: 
-      objectReference: {fileID: 163922715}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: DeltaCurrencyText_TMP
-      value: 
-      objectReference: {fileID: 878791514}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: TimeText_TMP
-      value: 
-      objectReference: {fileID: 972844089}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
       propertyPath: GameBoard
       value: 
       objectReference: {fileID: 601813112}
@@ -10968,29 +10932,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4063558159842679033}
     - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: rowA
+      propertyPath: dataScreen
       value: 
-      objectReference: {fileID: 6160794715798958234}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: rowB
-      value: 
-      objectReference: {fileID: 6160794715798958233}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: rowC
-      value: 
-      objectReference: {fileID: 6160794715798958232}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: CurrentMoneyLCDRow
-      value: 
-      objectReference: {fileID: 6160794715798958234}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: DeltaMoneyLCDRow
-      value: 
-      objectReference: {fileID: 6160794715798958233}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: TimeLCDRow
-      value: 
-      objectReference: {fileID: 6160794715798958232}
+      objectReference: {fileID: 1001656226}
     - target: {fileID: 8586799390202968552, guid: 25923f3782893cf449b4c4facea54024,
         type: 3}
       propertyPath: m_Name
