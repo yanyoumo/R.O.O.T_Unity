@@ -107,17 +107,19 @@ namespace ROOT
             GameOverEnabled = false;
         }
 
-        public void InitDestoryer(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            InitDestoryer();
-        }
-
         private void InitDestoryer()
         {
             _warningDestoryer = new MeteoriteBomber();
             _warningDestoryer.SetBoard(ref GameBoard);
             _warningDestoryer.Init(5, 2);
+        }
+
+        #region TutorialShellRegion
+
+        public void InitDestoryer(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            InitDestoryer();
         }
 
         public void ForceSetDestoryerShell(TutorialMgr invoker, Vector2Int nextIncome)
@@ -135,14 +137,43 @@ namespace ROOT
             } while (((MeteoriteBomber) _warningDestoryer).Counter>0);
         }
 
+        public void InitShop(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            InitShop();
+        }
+        public void StartShop(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            StartShop();
+        }
+
+        public void InitGameStateMgr(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            InitGameStateMgr();
+        }
+
+        public void InitCurrencyIOMgr(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            InitCurrencyIOMgr();
+        }
+
+        public void InitCursor(TutorialMgr invoker, Vector2Int pos)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            InitCursor(pos);
+        }
+
+        #endregion
+
         void Awake()
         {
-#if UNITY_EDITOR
             GameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
-#endif
-            Debug.Assert(GameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial|| GameGlobalStatus.CurrentGameStatus == GameStatus.Playing);
             Random.InitState(Mathf.FloorToInt(Time.realtimeSinceStartup));
-            if (GameGlobalStatus.CurrentGameStatus == GameStatus.Playing)
+            _tutorialMgr = FindObjectOfType<TutorialMgr>();
+            if (_tutorialMgr == null)
             {
                 InitCurrencyIOMgr();
                 DeltaCurrency = 0.0f;
@@ -161,24 +192,31 @@ namespace ROOT
                 TutorialUI.enabled = false;
                 EnableAllFeature();
             }
-            else if (GameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial)
+            else
+            {
+                DisableAllFeature();
+            }
+        }
+        // Start is called before the first frame update
+        void Start()
+        {
+            if (_tutorialMgr == null)
+            {
+                InitCursor(new Vector2Int(2, 3));
+
+                GameBoard.InitBoardRealStart();
+                GameBoard.UpdateBoardAnimation();
+
+                //得最后做
+                StartShop();
+            }
+            else
             {
                 PlayingUI.enabled = false;
                 TutorialUI.enabled = true;
-                DisableAllFeature();
-                _tutorialMgr = gameObject.AddComponent<TutorialMgr>();
-                _tutorialMgr.MainGameMgr = this;
             }
-            //sW=new ScoreWriting();
-            //sW.Save();
-            sW.Read();
         }
 
-        public void InitShop(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            InitShop();
-        }
 
         private void InitShop()
         {
@@ -189,50 +227,25 @@ namespace ROOT
             _shopMgr.ItemPriceTexts_TMP = new[] { Item1Price_TMP, Item2Price_TMP, Item3Price_TMP, Item4Price_TMP };
             _shopMgr.CurrentGameStateMgr = this._gameStateMgr;
             _shopMgr.GameBoard = this.GameBoard;
-            //ShopUI.gameObject.SetActive(true);
         }
-
-        public void StartShop(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            StartShop();
-        }
-
+        
         private void StartShop()
         {
             _shopMgr.ShopStart();
         }
-
-        public void InitGameStateMgr(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            InitGameStateMgr();
-        }
-
+        
         private void InitGameStateMgr()
         {
             _gameStateMgr = new StandardGameStateMgr();
             _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
         }
-
-        public void InitCurrencyIOMgr(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            InitCurrencyIOMgr();
-        }
-
+        
         private void InitCurrencyIOMgr()
         {
             _currencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
             _currencyIoCalculator.m_Board = GameBoard;
         }
-
-        public void InitCursor(TutorialMgr invoker, Vector2Int pos)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            InitCursor(pos);
-        }
-
+        
         private void InitCursor(Vector2Int pos)
         {
             _mCursor = Instantiate(CursorTemplate);
@@ -240,27 +253,7 @@ namespace ROOT
             cursor.InitPosWithAnimation(pos);
             cursor.UpdateTransform(GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            if (GameGlobalStatus.CurrentGameStatus == GameStatus.Playing)
-            {
-                InitCursor(new Vector2Int(2, 3));
-
-                GameBoard.InitBoardRealStart();
-                GameBoard.UpdateBoardAnimation();
-
-                //得最后做
-                StartShop();
-            }
-            else if (GameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial)
-            {
-                PlayingUI.enabled = false;
-                TutorialUI.enabled = true;
-            }
-        }
-
+        
         private Vector2Int ClampPosInBoard(Vector2Int pos)
         {
             Vector2Int newPos = pos;
@@ -625,8 +618,7 @@ namespace ROOT
         private float animationTimerOrigin = 0.0f;
         
         private float animationDuration = 0.1f;
-
-
+        
         void Update()
         {
             //TODO 从LF到AF的数据应该再多一些。

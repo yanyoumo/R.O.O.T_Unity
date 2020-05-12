@@ -12,7 +12,101 @@ namespace ROOT
 {
     public sealed partial class TutorialMgr : MonoBehaviour
     {
-        private Canvas _tutorialCanvas;
+        private GameMgr MainGameMgr;
+
+        TutorialActionBase tutorialAction=new TutorialAction0();
+        private int actionIndex=0;
+        private int lastActionCount = 0;
+
+        private bool PlayerTryingState = false;
+
+        void StepForward()
+        {
+            actionIndex++;
+        }
+
+        void DisplayText(string text)
+        {
+            Debug.Log(text);
+        }
+
+        void CreateUnitOnBoard(TutorialActionData data)
+        {
+            GameObject go = MainGameMgr.GameBoard.InitUnit(Vector2Int.zero, data.Core, Utils.Shuffle(data.Sides));
+            if (data.Pos.x<0|| data.Pos.y < 0)
+            {
+                MainGameMgr.GameBoard.DeliverUnitRandomPlace(go);
+            }
+            else
+            {
+                MainGameMgr.GameBoard.DeliverUnitAssignedPlace(go, data.Pos);
+            }
+            MainGameMgr.GameBoard.UpdateBoardInit();
+        }
+
+        void CreateCursorOnBoard(TutorialActionData data)
+        {
+            MainGameMgr.InitCursor(this, data.Pos);
+        }
+
+        void DealStep(TutorialActionData data)
+        {
+            switch (data.ActionType)
+            {
+                case TutorialActionType.Text:
+                    DisplayText(data.Text);
+                    break;
+                case TutorialActionType.CreateUnit:
+                    CreateUnitOnBoard(data);
+                    break;
+                case TutorialActionType.CreateCursor:
+                    CreateCursorOnBoard(data);
+                    break;
+                case TutorialActionType.PlayerTry:
+                    PlayerTryingState = true;
+                    break;
+                case TutorialActionType.Function:
+                    tutorialAction.CustomFunction();
+                    break;
+                case TutorialActionType.End:
+                    throw new NotImplementedException();
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        void DealStepMgr()
+        {
+            int actionLength = tutorialAction.Actions.Length;
+            for (int i = lastActionCount; i < actionLength; i++)
+            {
+                DealStep(tutorialAction.Actions[i]);
+                if (tutorialAction.Actions[i].ActionIdx > actionIndex)
+                {
+                    lastActionCount = i;
+                    break;
+                }
+            }
+        }
+
+        void Update()
+        {
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_QUIT))
+            {
+                GameGlobalStatus.CurrentGameStatus = GameStatus.Starting;
+                UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_START);
+            }
+            else
+            {
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
+                {
+                    StepForward();
+                    DealStepMgr();
+                }
+            }
+        }
+        /*private Canvas _tutorialCanvas;
         //private TextMeshProUGUI _buttonText;
         private TextMeshProUGUI _mainText;
         private TextMeshProUGUI _hintAText;
@@ -295,6 +389,6 @@ namespace ROOT
                     _mainText.text = "教程结束";
                 }
             }
-        }
+        }*/
     }
 }

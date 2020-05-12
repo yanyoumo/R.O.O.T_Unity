@@ -40,7 +40,9 @@ namespace ROOT
         public static readonly string NAME_CORE_DRIVER = "HardDrive";
         public static readonly string NAME_CORE_CPU = "Processor";
         public static readonly string NAME_CORE_COOLER = "Cooler";
+
         public static readonly string NAME_CORE_BACKPLATE = "BackPlate";
+
         //
         public static readonly int SCENE_ID_START = 0;
         public static readonly int SCENE_ID_GAMEPLAY = 1;
@@ -71,11 +73,12 @@ namespace ROOT
             int n = array.Length;
             while (n > 1)
             {
-                int k = (int)(Random.value*(n--));
+                int k = (int) (Random.value * (n--));
                 T temp = array[n];
                 array[n] = array[k];
                 array[k] = temp;
             }
+
             return array;
         }
 
@@ -112,6 +115,7 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException(nameof(orgRotationDirection), orgRotationDirection, null);
             }
         }
+
         public static RotationDirection GetCCWDirection(RotationDirection orgRotationDirection)
         {
             switch (orgRotationDirection)
@@ -129,7 +133,8 @@ namespace ROOT
             }
         }
 
-        public static RotationDirection RotateDirectionAfterRotation(RotationDirection direction,RotationDirection rotation)
+        public static RotationDirection RotateDirectionAfterRotation(RotationDirection direction,
+            RotationDirection rotation)
         {
             switch (rotation)
             {
@@ -181,12 +186,18 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
             }
         }
-        public static RotationDirection RotateDirectionBeforeRotation(RotationDirection direction, RotationDirection rotation)
+
+        public static RotationDirection RotateDirectionBeforeRotation(RotationDirection direction,
+            RotationDirection rotation)
         {
-            if (direction == RotateDirectionAfterRotation(RotationDirection.North, rotation))return RotationDirection.North;
-            if (direction == RotateDirectionAfterRotation(RotationDirection.South, rotation))return RotationDirection.South;
-            if (direction == RotateDirectionAfterRotation(RotationDirection.East, rotation))return RotationDirection.East;
-            if (direction == RotateDirectionAfterRotation(RotationDirection.West, rotation))return RotationDirection.West;
+            if (direction == RotateDirectionAfterRotation(RotationDirection.North, rotation))
+                return RotationDirection.North;
+            if (direction == RotateDirectionAfterRotation(RotationDirection.South, rotation))
+                return RotationDirection.South;
+            if (direction == RotateDirectionAfterRotation(RotationDirection.East, rotation))
+                return RotationDirection.East;
+            if (direction == RotateDirectionAfterRotation(RotationDirection.West, rotation))
+                return RotationDirection.West;
             throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
         }
 
@@ -215,11 +226,11 @@ namespace ROOT
         [CanBeNull]
         public static T GenerateWeightedRandom<T>(T[] lib)
         {
-            Dictionary<T, float> _lib=new Dictionary<T, float>();
-            Debug.Assert(lib.Length>0);
+            Dictionary<T, float> _lib = new Dictionary<T, float>();
+            Debug.Assert(lib.Length > 0);
             foreach (var type in lib)
             {
-                _lib.Add(type,1.00f/lib.Length);
+                _lib.Add(type, 1.00f / lib.Length);
             }
 
             return GenerateWeightedRandom(_lib);
@@ -227,7 +238,7 @@ namespace ROOT
 
 
         [CanBeNull]
-        public static T GenerateWeightedRandom<T>(Dictionary<T,float> lib)
+        public static T GenerateWeightedRandom<T>(Dictionary<T, float> lib)
         {
             //有这个东西啊，不要小看他，这个很牛逼的。
             //各种分布都可以有的。
@@ -245,11 +256,12 @@ namespace ROOT
             foreach (var keyValuePair in lib)
             {
                 totalWeight += keyValuePair.Value;
-                if (val<= totalWeight)
+                if (val <= totalWeight)
                 {
                     return keyValuePair.Key;
                 }
             }
+
             return default;
         }
 
@@ -257,6 +269,7 @@ namespace ROOT
         {
             return PaddingNum4Digit(Mathf.FloorToInt(input));
         }
+
         public static string PaddingNum4Digit(int input)
         {
             int inputInt = input;
@@ -286,6 +299,7 @@ namespace ROOT
         {
             return PaddingNum3Digit(Mathf.FloorToInt(input));
         }
+
         public static string PaddingNum3Digit(int input)
         {
             int inputInt = input;
@@ -311,6 +325,7 @@ namespace ROOT
         {
             return PaddingNum2Digit(Mathf.FloorToInt(input));
         }
+
         public static string PaddingNum2Digit(int input)
         {
             int inputInt = input;
@@ -351,11 +366,13 @@ namespace ROOT
                         {
                             return ConnectionMeshType.DtSConnectedMesh;
                         }
+
                         if (OtherGenre == CoreGenre.Destination)
                         {
                             return ConnectionMeshType.DtoDConnectedMesh;
                         }
                     }
+
                     break;
                 case CoreGenre.Support:
                     return ConnectionMeshType.NoChange;
@@ -364,56 +381,58 @@ namespace ROOT
                 default:
                     throw new ArgumentOutOfRangeException(nameof(SrcGenre), SrcGenre, null);
             }
+
             return ConnectionMeshType.NoChange;
         }
     }
 
     public sealed partial class TutorialMgr : MonoBehaviour
     {
+
+        string TmpColorBlueXml(string content)
+        {
+            return TmpColorXml(content, Color.blue);
+        }
+
+        string TmpColorRedXml(string content)
+        {
+            return TmpColorXml(content, Color.red);
+        }
+
+        string TmpColorXml(string content, Color col)
+        {
+            var hexCol = ColorUtility.ToHtmlStringRGB(col);
+            return "<color=#" + hexCol + "> " + content + " </color> ";
+        }
+
+        string TmpColorBold(string content)
+        {
+            return "<b> " + content + " </b> ";
+        }
+
+        string TmpBracket(string content)
+        {
+            return "【" + content + "】";
+        }
+
+        string TmpBracketAndBold(string content)
+        {
+            return "【" + TmpColorBold(content) + "】";
+        }
+
+        string TMPNormalDataCompo()
+        {
+            return TmpBracketAndBold(TmpColorRedXml("一般数据"));
+        }
+
+        string TMPNetworkDataCompo()
+        {
+            return TmpBracketAndBold(TmpColorBlueXml("网络数据"));
+        }
+
         void Awake()
         {
-            string TmpColorBlueXml(string content)
-            {
-                return TmpColorXml(content, Color.blue);
-            }
-
-            string TmpColorRedXml(string content)
-            {
-                return TmpColorXml(content,Color.red);
-            }
-
-            string TmpColorXml(string content,Color col)
-            {
-                var hexCol = ColorUtility.ToHtmlStringRGB(col);
-                return "<color=#" + hexCol + "> " + content + " </color> ";
-            }
-
-            string TmpColorBold(string content)
-            {
-                return "<b> " + content + " </b> ";
-            }
-
-            string TmpBracket(string content)
-            {
-                return "【" + content + "】";
-            }
-
-            string TmpBracketAndBold(string content)
-            {
-                return "【" + TmpColorBold(content) + "】";
-            }
-
-            string TMPNormalDataCompo()
-            {
-                return TmpBracketAndBold(TmpColorRedXml("一般数据"));
-            }
-
-            string TMPNetworkDataCompo()
-            {
-                return TmpBracketAndBold(TmpColorBlueXml("网络数据"));
-            }
-
-            _tutorialContent = new[]
+            string[] _tutorialContent = new[]
             {
                 /*000*/"你好，欢迎来到R.O.O.T.教程。这是一款基于棋盘的模拟经营游戏。",
                 /*001*/"首先，这个是游戏中最重要的元素，称其为" + TmpBracketAndBold("单元") + "。",
