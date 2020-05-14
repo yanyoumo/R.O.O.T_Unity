@@ -12,9 +12,9 @@ namespace ROOT
 
         private float UpPos = -1.64f;
         private float DownPos = -10.49f;
-        private float Sec = 0.1f;
-        private float speedPerMultiplier=1.75f;
-        private float YPos= 1.53f;
+        //private float Sec = 0.1f;
+        //private float speedPerMultiplier=1.75f;
+        //private float YPos= 1.53f;
 
         private float slideTimer = 0.0f;
         private float slideDuration = 0.3f;

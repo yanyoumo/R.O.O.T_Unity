@@ -47,7 +47,9 @@ namespace ROOT
         public static readonly int SCENE_ID_START = 0;
         public static readonly int SCENE_ID_GAMEPLAY = 1;
         public static readonly int SCENE_ID_GAMEOVER = 2;
-        public static readonly int SCENE_ID_TUTORIAL = 3;
+        public static readonly int SCENE_ID_ADDTIVEVISUAL = 3;
+        public static readonly int SCENE_ID_ADDTIVELOGIC = 4;
+        public static readonly int SCENE_ID_TUTORIAL = 5;
 
 
         public static readonly string SOURCE_CORE_NODE_NAME = "SourceCore";
@@ -62,6 +64,13 @@ namespace ROOT
         public static readonly string LOCAL_EAST_SIDE_MESH_RENDERER_NAME = "LocalEastSide";
         public static readonly string LOCAL_SOUTH_SIDE_MESH_RENDERER_NAME = "LocalSouthSide";
         public static readonly string LOCAL_WEST_SIDE_MESH_RENDERER_NAME = "LocalWestSide";
+
+    }
+    public static class RootEVENT
+    { //
+        public delegate void GameMajorEvent();
+        public delegate void TutorialStartEvent(TutorialActionBase tutorialAction);
+        public delegate void GameStartEvent(ScoreSet scoreSet, PerMoveData _perMoveData,Type gameStateType);
     }
 
     public static class Utils

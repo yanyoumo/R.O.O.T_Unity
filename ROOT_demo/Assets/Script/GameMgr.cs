@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace ROOT
@@ -15,15 +18,18 @@ namespace ROOT
         Ended
     }
 
-    public static class GameGlobalStatus
+    public class GameGlobalStatus
     {
-        public static GameStatus CurrentGameStatus;
-        public static float lastEndingIncome;
-        public static float lastEndingTime;
+        public GameStatus CurrentGameStatus;
+        public float lastEndingIncome;
+        public float lastEndingTime;
     }
 
     public class GameMgr : MonoBehaviour
     {
+        public static event RootEVENT.GameMajorEvent GameStarted;
+        public static event RootEVENT.GameMajorEvent GameOverReached;
+        public static event RootEVENT.GameMajorEvent GameCompleteReached;
         //TODO https://shimo.im/docs/Dd86KXTqHJpqxwYX
         public GameObject CursorTemplate;
         private GameObject _mCursor;
@@ -36,15 +42,12 @@ namespace ROOT
         private IWarningDestoryer _warningDestoryer;
         private GameObject[] _warningGo;
 
-        public Text Item1Price;
-        public Text Item2Price;
-        public Text Item3Price;
-        public Text Item4Price;
+        public GameObject ItemPriceRoot;
 
-        public TextMeshPro Item1Price_TMP;
-        public TextMeshPro Item2Price_TMP;
-        public TextMeshPro Item3Price_TMP;
-        public TextMeshPro Item4Price_TMP;
+        private TextMeshPro Item1Price_TMP;
+        private TextMeshPro Item2Price_TMP;
+        private TextMeshPro Item3Price_TMP;
+        private TextMeshPro Item4Price_TMP;
 
         private bool BoughtOnce = false;
 
@@ -64,10 +67,6 @@ namespace ROOT
         public bool ForceHDDConnectionHint = false;
         public bool ForceServerConnectionHint = false;
 
-        public Canvas PlayingUI;
-        public Canvas TutorialUI;
-        public RectTransform ShopUI;
-
         private TutorialMgr _tutorialMgr;
 
         private bool LogicFrameAnimeFrameToggle=true;
@@ -75,11 +74,86 @@ namespace ROOT
         private bool movedCursorAni = false;
         private List<MoveableBase> animationPendingObj;
 
-        public RectTransform HintPanel;
-
         public ScoreWriting sW;
 
         public DataScreen dataScreen;
+
+        private bool readyToGo = false;
+        public bool Playing { private set; get; }
+        private bool referenceOK = false;
+        private bool pendingCleanUp;
+
+        public void SetReady_Tutorial(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
+        {
+            //这里是默认都关了
+            Debug.Assert(referenceOK);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+            DisableAllFeature();
+
+            readyToGo = true;
+            GameStarted?.Invoke();
+        }
+
+        public void SetReady_GamePlay(ScoreSet scoreSet=null,PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
+        {
+            Debug.Assert(referenceOK);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+
+            InitCurrencyIOMgr();
+            DeltaCurrency = 0.0f;
+
+            _gameStateMgr = _gameStateMgrType!=null ? GameStateMgr.GenerateGameStateMgrByType(_gameStateMgrType) : new StandardGameStateMgr();
+            _gameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
+
+            InitShop();
+            InitDestoryer();
+
+            EnableAllFeature();
+            InitCursor(new Vector2Int(2, 3));
+
+            GameBoard.InitBoardRealStart();
+            GameBoard.UpdateBoardAnimation();
+            StartShop();
+
+            readyToGo = true;
+            GameStarted?.Invoke();
+        }
+
+        public bool CheckReference()
+        {
+            bool res = true;
+            res &= (dataScreen != null);
+            res &= (Item1Price_TMP != null);
+            res &= (Item2Price_TMP != null);
+            res &= (Item3Price_TMP != null);
+            res &= (Item4Price_TMP != null);
+            return res;
+        }
+
+        public void UpdateReference()
+        {
+            var tempT = ItemPriceRoot.GetComponentsInChildren<TextMeshPro>();
+            foreach (var text in tempT)
+            {
+                if (text.gameObject.name == "UnitAPrice_1")
+                {
+                    Item1Price_TMP = text;
+                }
+                if (text.gameObject.name == "UnitAPrice_2")
+                {
+                    Item2Price_TMP = text;
+                }
+                if (text.gameObject.name == "UnitAPrice_3")
+                {
+                    Item3Price_TMP = text;
+                }
+                if (text.gameObject.name == "UnitAPrice_4")
+                {
+                    Item4Price_TMP = text;
+                }
+            }
+            referenceOK = CheckReference();
+        }
 
         private void EnableAllFeature()
         {
@@ -168,10 +242,9 @@ namespace ROOT
 
         #endregion
 
-        void Awake()
+        //先不删，做参考。
+        /*void Awake()
         {
-            GameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
-            Random.InitState(Mathf.FloorToInt(Time.realtimeSinceStartup));
             _tutorialMgr = FindObjectOfType<TutorialMgr>();
             if (_tutorialMgr == null)
             {
@@ -179,11 +252,7 @@ namespace ROOT
                 DeltaCurrency = 0.0f;
 
                 _gameStateMgr = new StandardGameStateMgr();
-#if UNITY_EDITOR
                 _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
-#else
-                _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
-#endif
 
                 InitShop();
 
@@ -215,15 +284,14 @@ namespace ROOT
                 PlayingUI.enabled = false;
                 TutorialUI.enabled = true;
             }
-        }
-
+        }*/
 
         private void InitShop()
         {
             _shopMgr = gameObject.AddComponent<ShopMgr>();
             _shopMgr.UnitTemplate = GameBoard.UnitTemplate;
             _shopMgr.ShopInit();
-            _shopMgr.ItemPriceTexts = new[] { Item1Price, Item2Price, Item3Price, Item4Price };
+            //_shopMgr.ItemPriceTexts = new[] { Item1Price, Item2Price, Item3Price, Item4Price };
             _shopMgr.ItemPriceTexts_TMP = new[] { Item1Price_TMP, Item2Price_TMP, Item3Price_TMP, Item4Price_TMP };
             _shopMgr.CurrentGameStateMgr = this._gameStateMgr;
             _shopMgr.GameBoard = this.GameBoard;
@@ -571,10 +639,11 @@ namespace ROOT
             if (_gameStateMgr.EndGameCheck(new ScoreSet(), new PerMoveData()))
             {
                 //CurrencyText.text = "GAME OVER";
-                GameGlobalStatus.CurrentGameStatus = GameStatus.Ended;
-                GameGlobalStatus.lastEndingIncome = _gameStateMgr.GetCurrency() - _gameStateMgr.StartingMoney;
-                GameGlobalStatus.lastEndingTime = _gameStateMgr.GetGameTime();
-                UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_GAMEOVER);
+                GameMasterManager.UpdateGameGlobalStatuslastEndingIncome(_gameStateMgr.GetCurrency() - _gameStateMgr.StartingMoney);
+                GameMasterManager.UpdateGameGlobalStatuslastEndingTime(_gameStateMgr.GetGameTime());
+                //此时要把GameOverScene所需要的内容填好。
+                pendingCleanUp = true;//“一次性”设计思路这里还要调整。
+                GameOverReached?.Invoke();
             }
         }
 
@@ -621,22 +690,32 @@ namespace ROOT
         
         void Update()
         {
+            if ((!readyToGo) || (pendingCleanUp))
+            {
+                Playing = false;
+                return;
+            }
+
+            if (!Playing)
+            {
+                Playing = true;
+            }
             //TODO 从LF到AF的数据应该再多一些。
             System.Diagnostics.Debug.Assert(GameBoard != null, nameof(GameBoard) + " != null");
             bool movedTile =false;
-            bool movedCusor = false;
+            bool movedCursor = false;
             bool pressedAny = Input.anyKeyDown;
             if (LogicFrameAnimeFrameToggle)
             {
                 animationTimerOrigin = Time.timeSinceLevelLoad;
                 animationPendingObj = new List<MoveableBase>();
 
-                UpdateLogic(out movedTile,out movedCusor);
-                LogicFrameAnimeFrameToggle = !(pressedAny & (movedTile | movedCusor));
+                UpdateLogic(out movedTile,out movedCursor);
+                LogicFrameAnimeFrameToggle = !(pressedAny & (movedTile | movedCursor));
                 if (!LogicFrameAnimeFrameToggle)
                 {
                     movedTileAni = movedTile;
-                    movedCursorAni = movedCusor;
+                    movedCursorAni = movedCursor;
                 }
             }
             else
@@ -702,10 +781,6 @@ namespace ROOT
             }
             if (HintEnabled)
             {
-                if (HintPanel != null)
-                {
-                    //HintPanel.gameObject.SetActive(Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL));
-                }
                 UpdateHint();
             }
         }

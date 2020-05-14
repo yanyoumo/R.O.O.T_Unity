@@ -8,7 +8,7 @@ namespace ROOT
 {
     public class LibItem : MonoBehaviour
     {
-        public String name;
+        public String itemname;
         public String content;
         public Texture2D Icon;
         public Color nameColor = Color.white;
@@ -26,7 +26,7 @@ namespace ROOT
         void Awake()
         {
             IconQuad.material.SetTexture("_MainTex", Icon);
-            Name.text = TmpColorXml(name, nameColor);
+            Name.text = TmpColorXml(itemname, nameColor);
             Content.text = content;
         }
     }

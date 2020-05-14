@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 189673990}
   - component: {fileID: 189673989}
   m_Layer: 5
-  m_Name: Image
+  m_Name: LOGO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -350,7 +350,7 @@ GameObject:
   - component: {fileID: 368359920}
   - component: {fileID: 368359919}
   m_Layer: 5
-  m_Name: Button
+  m_Name: GameStartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -478,7 +478,7 @@ GameObject:
   - component: {fileID: 879229359}
   - component: {fileID: 879229358}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: StartPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 1259851609}
   - component: {fileID: 1259851608}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: TutorialStartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -697,7 +697,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1259851609}
   m_OnClick:
     m_PersistentCalls:

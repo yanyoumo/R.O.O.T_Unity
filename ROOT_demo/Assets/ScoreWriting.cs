@@ -7,7 +7,7 @@ using UnityEngine;
 namespace ROOT
 {
     [System.Serializable]
-    struct ScoreData
+    public struct ScoreData
     {
         public string name;
         public int time;

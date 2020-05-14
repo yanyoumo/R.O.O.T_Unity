@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace ROOT
             GameTime = 0;
         }
 
-        public ScoreSet(float initCurrency,int initTime)
+        public ScoreSet(float initCurrency = 1000.0f, int initTime = 60)
         {
             Currency = initCurrency;
             GameTime = initTime;
@@ -119,6 +120,20 @@ namespace ROOT
         public abstract void InitGameMode(ScoreSet initScoreSet, PerMoveData perMoveData);
         public abstract bool PerMove(ScoreSet initScoreSet, PerMoveData perMoveData);
         public abstract bool EndGameCheck(ScoreSet initScoreSet, PerMoveData perMoveData);
+
+        public static GameStateMgr GenerateGameStateMgrByType(Type type)
+        {
+            if (type==typeof(StandardGameStateMgr))
+            {
+                return new StandardGameStateMgr();
+            }
+            else if (type == typeof(InfiniteGameStateMgr))
+            {
+                return new InfiniteGameStateMgr();
+            }
+
+            throw new NotImplementedException();
+        }
     }
 
     public class StandardGameStateMgr : GameStateMgr
@@ -139,6 +154,27 @@ namespace ROOT
         public override bool EndGameCheck(ScoreSet initScoreSet, PerMoveData perMoveData)
         {
             return (GetCurrency() < 0) || (GetGameTime() <= 0);
+        }
+    }
+
+    public class InfiniteGameStateMgr : GameStateMgr
+    {
+        //TODO 这个东西的界面表现可以再优化一下。
+        public override void InitGameMode(ScoreSet initScoreSet, PerMoveData perMoveData)
+        {
+            StartingMoney = initScoreSet.Currency;
+            StartingTime = initScoreSet.GameTime;
+            GameScoreSet = initScoreSet;
+        }
+
+        public override bool PerMove(ScoreSet initScoreSet, PerMoveData perMoveData)
+        {
+            return true;
+        }
+
+        public override bool EndGameCheck(ScoreSet initScoreSet, PerMoveData perMoveData)
+        {
+            return false;
         }
     }
 }

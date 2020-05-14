@@ -22,28 +22,13 @@ namespace ROOT
         public void SetNumber(int number,bool _PosOrNeg = true)
         {
             number = number % 10000;
-            Digit0.PosOrNeg = _PosOrNeg;
-            Digit1.PosOrNeg = _PosOrNeg;
-            Digit2.PosOrNeg = _PosOrNeg;
-            Digit3.PosOrNeg = _PosOrNeg;
-
-            Digit3.SetDigit(-1);
-            Digit2.SetDigit(-1);
-            Digit1.SetDigit(-1);
-            Digit0.SetDigit(-1);
-
-            Digit3.SetDigit(Mathf.FloorToInt(number % 10));
-            if (number > 9)
+            for (var i = 0; i < lcdS.Length; i++)
             {
-                Digit2.SetDigit(Mathf.FloorToInt(number / 10) % 10);
-                if (number > 99)
-                {
-                    Digit1.SetDigit(Mathf.FloorToInt(number / 100) % 10);
-                    if (number > 999)
-                    {
-                        Digit0.SetDigit(Mathf.FloorToInt(number / 1000));
-                    }
-                }
+                lcdS[3 - i].PosOrNeg = _PosOrNeg;
+                //这样的话，纯0是显示不出来的……其实也无所谓。
+                bool upper = (number >= Mathf.Pow(10, i));
+                int val = Mathf.FloorToInt((number / Mathf.Pow(10, i))) % 10;
+                lcdS[3 - i].SetDigit(upper ? val : -1);
             }
         }
 

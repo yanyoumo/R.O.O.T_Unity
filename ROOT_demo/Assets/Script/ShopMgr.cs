@@ -28,7 +28,7 @@ namespace ROOT
         //private Vector3[] lerpingingPosS;
         private Vector3[] nextPosS;
 
-        public Text[] ItemPriceTexts;
+        //public Text[] ItemPriceTexts;
         public TextMeshPro[] ItemPriceTexts_TMP;
 
         private readonly Vector3 _posA = new Vector3(2.273f, 0.718f, -2.801f);
@@ -181,7 +181,7 @@ namespace ROOT
         {
             _items = new GameObject[4];
             _prices = new float[_items.Length];
-            ItemPriceTexts = new Text[_items.Length];
+            //ItemPriceTexts = new Text[_items.Length];
             ItemPriceTexts_TMP = new TextMeshPro[_items.Length];
             currentPosS = new Vector3[_items.Length];
             nextPosS = new Vector3[_items.Length];
@@ -250,7 +250,7 @@ namespace ROOT
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
 
-                ItemPriceTexts[i].text = "";
+                //ItemPriceTexts[i].text = "";
                 //ItemPriceTexts[i].text = Utils.PaddingNum3Digit(_prices[i] * _priceCof[i]);
                 ItemPriceTexts_TMP[i].text = Utils.PaddingNum3Digit(_prices[i] * _priceCof[i]);
             }

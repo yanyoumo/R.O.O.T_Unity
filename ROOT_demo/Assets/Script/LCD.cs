@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace ROOT
     //[ExecuteInEditMode]
     public class LCD : MonoBehaviour
     {
-        public int Digit = 0;
+        public int digit = 0;
         public bool PosOrNeg = false;
 
         public MeshRenderer stroke_1;
@@ -21,18 +22,45 @@ namespace ROOT
         private Color PosColor = Color.green;
         private Color OffColor = Color.black;
         private Color NegColor = Color.red;
-        private MeshRenderer[] strokes;
-        private int[][] digitLib;
+        private MeshRenderer[] _strokes;
+        private int[][] _digitLib;
+        private int[] nanDigit;
+
+        public int Digit
+        {
+            set
+            {
+                digit = value % 10;
+                Color targetColor = PosOrNeg ? PosColor : NegColor;
+                foreach (var meshRenderer in _strokes)
+                {
+                    meshRenderer.material.SetColor("_EmissionColor", OffColor);
+                }
+
+                if (value >= 0)
+                {
+                    for (var i = 0; i < _digitLib[digit].Length; i++)
+                    {
+                        _strokes[_digitLib[digit][i]].material.SetColor("_EmissionColor", targetColor);
+                    }
+                }
+            }
+            get => digit;
+        }
 
         void Awake()
         {
-            strokes = new[] {stroke_1, stroke_2, stroke_3, stroke_4, stroke_5, stroke_6, stroke_7};
-            digitLib = new[]
+            _strokes = new[] {stroke_1, stroke_2, stroke_3, stroke_4, stroke_5, stroke_6, stroke_7};
+            _digitLib = new[]
             {
                 new[] {0, 1, 2, 4, 5, 6}, new[] {0, 4}, new[] {1, 2, 3, 4, 5},
                 new[] {0, 1, 3, 4, 5}, new[] {0, 3, 4, 6}, new[] {0, 1, 3, 5, 6}, new[] {0, 1, 2, 3, 5, 6},
                 new[] {0, 1, 4},
                 new[] {0, 1, 2, 3, 4, 5, 6}, new[] {0, 1, 3, 4, 5, 6}
+            };
+            nanDigit = new[]
+            {
+                3
             };
         }
 
@@ -45,8 +73,8 @@ namespace ROOT
 #if UNITY_EDITOR
         void OnEnable()
         {
-            strokes = new[] {stroke_1, stroke_2, stroke_3, stroke_4, stroke_5, stroke_6, stroke_7};
-            digitLib = new[]
+            _strokes = new[] {stroke_1, stroke_2, stroke_3, stroke_4, stroke_5, stroke_6, stroke_7};
+            _digitLib = new[]
             {
                 new[] {0, 1, 2, 4, 5, 6}, new[] {0, 4}, new[] {1, 2, 3, 4, 5},
                 new[] {0, 1, 3, 4, 5}, new[] {0, 3, 4, 6}, new[] {0, 1, 3, 5, 6}, new[] {0, 1, 2, 3, 5, 6},
@@ -61,16 +89,16 @@ namespace ROOT
             //Digit = Mathf.Abs(dig);
             Digit = dig % 10;
             Color targetColor = PosOrNeg ? PosColor : NegColor;
-            foreach (var meshRenderer in strokes)
+            foreach (var meshRenderer in _strokes)
             {
                 meshRenderer.material.SetColor("_EmissionColor", OffColor);
             }
 
             if (dig >= 0)
             {
-                for (var i = 0; i < digitLib[Digit].Length; i++)
+                for (var i = 0; i < _digitLib[Digit].Length; i++)
                 {
-                    strokes[digitLib[Digit][i]].material.SetColor("_EmissionColor", targetColor);
+                    _strokes[_digitLib[Digit][i]].material.SetColor("_EmissionColor", targetColor);
                 }
             }
         }

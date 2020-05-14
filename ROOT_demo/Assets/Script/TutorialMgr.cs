@@ -12,13 +12,23 @@ namespace ROOT
 {
     public sealed partial class TutorialMgr : MonoBehaviour
     {
-        private GameMgr MainGameMgr;
+        public GameMgr MainGameMgr;
+        public TutorialActionBase tutorialAction;//=new TutorialActionBasicControl();
+        public static event RootEVENT.GameMajorEvent TutorialCompleteReached;
 
-        TutorialActionBase tutorialAction=new TutorialAction0();
-        private int actionIndex=0;
+        private int actionIndex = -1;
         private int lastActionCount = 0;
 
         private bool PlayerTryingState = false;
+
+        public TutorialMainTextFrame TtrMainTextFrame;
+
+        public bool CheckReference()
+        {
+            bool res = true;
+            res &= (TtrMainTextFrame != null);
+            return res;
+        }
 
         void StepForward()
         {
@@ -47,6 +57,9 @@ namespace ROOT
         void CreateCursorOnBoard(TutorialActionData data)
         {
             MainGameMgr.InitCursor(this, data.Pos);
+            MainGameMgr.InputEnabled = true;
+            MainGameMgr.CursorEnabled = true;
+            MainGameMgr.RotateEnabled = true;
         }
 
         void DealStep(TutorialActionData data)
@@ -63,13 +76,15 @@ namespace ROOT
                     CreateCursorOnBoard(data);
                     break;
                 case TutorialActionType.PlayerTry:
+                    //TODO
                     PlayerTryingState = true;
                     break;
                 case TutorialActionType.Function:
                     tutorialAction.CustomFunction();
                     break;
                 case TutorialActionType.End:
-                    throw new NotImplementedException();
+                    Debug.Log("Current TutorialCompleteReached");
+                    TutorialCompleteReached?.Invoke();
                     break;
                 default:
                     throw new NotImplementedException();
@@ -81,21 +96,28 @@ namespace ROOT
             int actionLength = tutorialAction.Actions.Length;
             for (int i = lastActionCount; i < actionLength; i++)
             {
-                DealStep(tutorialAction.Actions[i]);
                 if (tutorialAction.Actions[i].ActionIdx > actionIndex)
                 {
                     lastActionCount = i;
                     break;
                 }
+                DealStep(tutorialAction.Actions[i]);
             }
         }
 
         void Update()
         {
+            if (actionIndex==-1)
+            {
+                StepForward();
+                DealStepMgr();
+            }
+
             if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_QUIT))
             {
-                GameGlobalStatus.CurrentGameStatus = GameStatus.Starting;
-                UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_START);
+                //TODO　先什么的都不做。
+                //GameGlobalStatus.CurrentGameStatus = GameStatus.Starting;
+                //UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_START);
             }
             else
             {
@@ -106,6 +128,7 @@ namespace ROOT
                 }
             }
         }
+
         /*private Canvas _tutorialCanvas;
         //private TextMeshProUGUI _buttonText;
         private TextMeshProUGUI _mainText;
@@ -158,26 +181,26 @@ namespace ROOT
 
             foreach (var text in tmpT)
             {
-                if (text.name == MainTextName)
+                if (text.itemname == MainTextName)
                 {
                     _mainText = text;
                 }
 
-                if (text.name== HintATextName)
+                if (text.itemname== HintATextName)
                 {
                     _hintAText = text;
                 }
-                if (text.name == HintBTextName)
+                if (text.itemname == HintBTextName)
                 {
                     _hintBText = text;
                     _hintBText.gameObject.SetActive(false);
                 }
-                if (text.name == HintCTextName)
+                if (text.itemname == HintCTextName)
                 {
                     _hintCText = text;
                 }
 
-                if (text.name== EnterHint)
+                if (text.itemname== EnterHint)
                 {
                     _NextHintText = text;
                 }
@@ -185,13 +208,13 @@ namespace ROOT
 
             foreach (var image in tmpI)
             {
-                if (image.name == FocusPanelName)
+                if (image.itemname == FocusPanelName)
                 {
                     _focusPanel = image;
                     _focusPanelMat = _focusPanel.material;
                 }
 
-                if (image.name== MainContentPanelName)
+                if (image.itemname== MainContentPanelName)
                 {
                     _mainPanel = image;
                     mainRectTransform=_mainPanel.GetComponent<RectTransform>();

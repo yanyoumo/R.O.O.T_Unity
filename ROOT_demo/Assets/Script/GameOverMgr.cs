@@ -1,21 +1,37 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
+    //TODO 这货要变成由GameMasterManager直接管理的一环。
     public class GameOverMgr : MonoBehaviour
     {
         public TextMeshProUGUI EndingMessage;
+        public static event RootEVENT.GameMajorEvent GameRequestSameRestart;
+
+        public bool sceneNotActive;
+
+        void GameOverSceneLoaded(Scene scene,LoadSceneMode loadSceneMode)
+        {
+            if (scene.buildIndex==StaticName.SCENE_ID_GAMEOVER)
+            {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_GAMEOVER));
+            }
+        }
 
         void Awake()
         {
-            Debug.Assert(GameGlobalStatus.CurrentGameStatus == GameStatus.Ended, "Game Status not matching");
-            if (GameGlobalStatus.lastEndingTime <= 0)
+            SceneManager.sceneLoaded += GameOverSceneLoaded;
+            GameGlobalStatus currentStatus = GameMasterManager.getGameGlobalStatus();
+            Debug.Assert(currentStatus.CurrentGameStatus == GameStatus.Ended, "Game Status not matching");
+            if (currentStatus.lastEndingTime <= 0)
             {
-                float deltaMoney = Mathf.Abs(GameGlobalStatus.lastEndingIncome);
-                if (GameGlobalStatus.lastEndingIncome>=0)
+                float deltaMoney = Mathf.Abs(currentStatus.lastEndingIncome);
+                if (currentStatus.lastEndingIncome>=0)
                 {
                     EndingMessage.text = "时间到了，你赚了" + deltaMoney + "钱";
                 }
@@ -30,10 +46,14 @@ namespace ROOT
             }
         }
 
+        void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= GameOverSceneLoaded;
+        }
+
         public void GameRestart()
         {
-            GameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
-            UnityEngine.SceneManagement.SceneManager.LoadScene(StaticName.SCENE_ID_GAMEPLAY);
+            GameRequestSameRestart?.Invoke();
         }
     }
 }
