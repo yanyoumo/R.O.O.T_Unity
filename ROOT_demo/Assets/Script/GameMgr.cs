@@ -25,7 +25,236 @@ namespace ROOT
         public float lastEndingTime;
     }
 
-    public class GameMgr : MonoBehaviour
+    public struct LevelAssetReference//这个不用从LOGIC更新。
+    {
+        public Cursor Cursor;
+        public Board GameBoard;
+        //public List<MoveableBase> AnimationPendingObj;
+        public ShopMgr ShopMgr;
+    }
+
+    public struct LevelAssetFlag//这个需要从LOGIC更新。
+    {
+        public bool MovedTile;
+        public bool MovedCursor;
+        public bool BoughtOnce;
+        public bool ShopEnabled;
+        public bool CursorEnabled;
+        public bool RotateEnabled;
+    }
+
+    //要把Asset和Logic彻底拆开。
+    /// <summary>
+    /// 世界本身的运行逻辑、应该类比于物理世界，高程度独立。
+    /// </summary>
+    internal static class GameLogic//WORLD-LOGIC
+    {
+        private static Vector2Int ClampPosInBoard(Vector2Int pos, Board gameBoard)
+        {
+            Vector2Int newPos = pos;
+            newPos.x = Mathf.Clamp(newPos.x, 0, gameBoard.BoardLength - 1);
+            newPos.y = Mathf.Clamp(newPos.y, 0, gameBoard.BoardLength - 1);
+            return newPos;
+        }
+        private static void UpdateShop(ShopMgr _shopMgr,ref bool BoughtOnce)
+        {
+            if (!BoughtOnce)
+            {
+                bool successBought = false;
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY1))
+                {
+                    successBought = _shopMgr.Buy(0);
+                }
+                else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY2))
+                {
+                    successBought = _shopMgr.Buy(1);
+                }
+                else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY3))
+                {
+                    successBought = _shopMgr.Buy(2);
+                }
+                else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY4))
+                {
+                    successBought = _shopMgr.Buy(3);
+                }
+
+                if (successBought)
+                {
+                    BoughtOnce = true;
+                }
+            }
+        }
+        internal static void CursorStayInBoard(LevelAssetReference lvlAssetReference)
+        {
+            lvlAssetReference.Cursor.SetPosWithAnimation(ClampPosInBoard(lvlAssetReference.Cursor.CurrentBoardPosition, lvlAssetReference.GameBoard), PosSetFlag.Current);
+            lvlAssetReference.Cursor.SetPosWithAnimation(ClampPosInBoard(lvlAssetReference.Cursor.NextBoardPosition, lvlAssetReference.GameBoard), PosSetFlag.Next);
+        }
+        internal static void UpdateRotate(LevelAssetReference lvlAssetReference)
+        {
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT))
+            {
+                if (lvlAssetReference.GameBoard.CheckBoardPosValidAndFilled(lvlAssetReference.Cursor.CurrentBoardPosition))
+                {
+                    GameObject unit = lvlAssetReference.GameBoard.FindUnitUnderBoardPos(lvlAssetReference.Cursor.CurrentBoardPosition);
+                    if (unit)
+                    {
+                        unit.GetComponentInChildren<Unit>().UnitRotateCw();
+                        lvlAssetReference.GameBoard.UpdateBoard();
+                    }
+                }
+            }
+        }
+        internal static void UpdateCursor(LevelAssetReference lvlAssetReference,ref List<MoveableBase> animationPendingObj, out bool movedTile, out bool movedCursor)
+        {
+            movedTile = false;
+            movedCursor = false;
+            animationPendingObj.Add(lvlAssetReference.Cursor);
+            Unit movingUnit = null;
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT) && lvlAssetReference.GameBoard.CheckBoardPosValidAndFilled(lvlAssetReference.Cursor.CurrentBoardPosition))
+            {
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
+                {
+                    if (lvlAssetReference.GameBoard.CheckBoardPosValidAndEmpty(lvlAssetReference.Cursor.GetWestCoord()))
+                    {
+                        GameObject unit = lvlAssetReference.GameBoard.FindUnitUnderBoardPos(lvlAssetReference.Cursor.CurrentBoardPosition);
+                        if (unit)
+                        {
+                            Vector2Int oldKey = lvlAssetReference.Cursor.CurrentBoardPosition;
+                            movingUnit = unit.GetComponentInChildren<Unit>();
+                            movingUnit.MoveLeft();
+                            lvlAssetReference.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
+                            movedTile = true;
+                        }
+
+                        lvlAssetReference.Cursor.MoveLeft();
+                    }
+                }
+
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORUP))
+                {
+                    if (lvlAssetReference.GameBoard.CheckBoardPosValidAndEmpty(lvlAssetReference.Cursor.GetNorthCoord()))
+                    {
+                        GameObject unit = lvlAssetReference.GameBoard.FindUnitUnderBoardPos(lvlAssetReference.Cursor.CurrentBoardPosition);
+                        if (unit)
+                        {
+                            Vector2Int oldKey = lvlAssetReference.Cursor.CurrentBoardPosition;
+                            movingUnit = unit.GetComponentInChildren<Unit>();
+                            movingUnit.MoveUp();
+                            lvlAssetReference.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
+                            movedTile = true;
+                        }
+
+                        lvlAssetReference.Cursor.MoveUp();
+                    }
+                }
+
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
+                {
+                    if (lvlAssetReference.GameBoard.CheckBoardPosValidAndEmpty(lvlAssetReference.Cursor.GetSouthCoord()))
+                    {
+                        GameObject unit = lvlAssetReference.GameBoard.FindUnitUnderBoardPos(lvlAssetReference.Cursor.CurrentBoardPosition);
+                        if (unit)
+                        {
+                            Vector2Int oldKey = lvlAssetReference.Cursor.CurrentBoardPosition;
+                            movingUnit = unit.GetComponentInChildren<Unit>();
+                            movingUnit.MoveDown();
+                            lvlAssetReference.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
+                            movedTile = true;
+                        }
+
+                        lvlAssetReference.Cursor.MoveDown();
+                    }
+                }
+
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
+                {
+                    if (lvlAssetReference.GameBoard.CheckBoardPosValidAndEmpty(lvlAssetReference.Cursor.GetEastCoord()))
+                    {
+                        GameObject unit = lvlAssetReference.GameBoard.FindUnitUnderBoardPos(lvlAssetReference.Cursor.CurrentBoardPosition);
+                        if (unit)
+                        {
+                            Vector2Int oldKey = lvlAssetReference.Cursor.CurrentBoardPosition;
+                            movingUnit = unit.GetComponentInChildren<Unit>();
+                            movingUnit.MoveRight();
+                            lvlAssetReference.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
+                            movedTile = true;
+                        }
+
+                        lvlAssetReference.Cursor.MoveRight();
+                    }
+                }
+            }
+            else
+            {
+                if (lvlAssetReference.GameBoard.CheckBoardPosValid(lvlAssetReference.Cursor.CurrentBoardPosition))
+                {
+                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
+                    {
+                        movedCursor = true;
+                        lvlAssetReference.Cursor.MoveLeft();
+                    }
+
+                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
+                    {
+                        movedCursor = true;
+                        lvlAssetReference.Cursor.MoveRight();
+                    }
+
+                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORUP))
+                    {
+                        movedCursor = true;
+                        lvlAssetReference.Cursor.MoveUp();
+                    }
+
+                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
+                    {
+                        movedCursor = true;
+                        lvlAssetReference.Cursor.MoveDown();
+                    }
+                }
+            }
+
+            if (movingUnit)
+            {
+                Debug.Assert(movingUnit);
+                animationPendingObj.Add(movingUnit);
+            }
+
+            movedCursor |= movedTile;
+            CursorStayInBoard(lvlAssetReference);
+        }
+        internal static void UpdateInput(LevelAssetReference lvlAssetReference, ref List<MoveableBase> animationPendingObj, 
+            out bool movedTile, out bool movedCursor,ref bool BoughtOnce,
+            bool shopEnabled=false,bool cursorEnabled=false,bool rotateEnabled=false)
+        {
+            movedTile = false;
+            movedCursor = false;
+            if (shopEnabled)
+            {
+                UpdateShop(lvlAssetReference.ShopMgr, ref BoughtOnce);
+            }
+            if (cursorEnabled)
+            {
+                GameLogic.UpdateCursor(lvlAssetReference,ref animationPendingObj, out movedTile, out movedCursor);
+            }
+            if (rotateEnabled)
+            {
+                //旋转的动画先没有吧。
+                GameLogic.UpdateRotate(lvlAssetReference);
+            }
+
+        }
+    }
+
+    /// <summary>
+    /// 一个每个关卡都有这么一个类，在Lvl-WRD之间传来传去。这个类只有一个，做成最通用的样子。
+    /// </summary>
+    public sealed class GameAssets//ASSET
+    {
+
+    }
+
+    public class GameMgr : MonoBehaviour//LEVEL-LOGIC/每一关都有一个这个类。
     {
         public static event RootEVENT.GameMajorEvent GameStarted;
         public static event RootEVENT.GameMajorEvent GameOverReached;
@@ -82,6 +311,23 @@ namespace ROOT
         public bool Playing { private set; get; }
         private bool referenceOK = false;
         private bool pendingCleanUp;
+        
+        private float animationTimerOrigin = 0.0f;//都是秒
+        private float animationDuration = 0.1f;//都是秒
+
+        private LevelAssetReference lvlAssetReference;
+        private LevelAssetFlag lvlAssetFlag;
+
+        public void SetLevelAsset()
+        {
+            lvlAssetReference = new LevelAssetReference
+            {
+                GameBoard = GameBoard,
+                Cursor = _mCursor.GetComponent<ROOT.Cursor>(),
+                //AnimationPendingObj = animationPendingObj,
+                ShopMgr = _shopMgr
+            };
+        }
 
         public void SetReady_Tutorial(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
         {
@@ -91,9 +337,9 @@ namespace ROOT
             DisableAllFeature();
 
             readyToGo = true;
+            SetLevelAsset();
             GameStarted?.Invoke();
         }
-
         public void SetReady_GamePlay(ScoreSet scoreSet=null,PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
         {
             Debug.Assert(referenceOK);
@@ -116,6 +362,9 @@ namespace ROOT
             StartShop();
 
             readyToGo = true;
+
+            SetLevelAsset();
+
             GameStarted?.Invoke();
         }
 
@@ -242,50 +491,6 @@ namespace ROOT
 
         #endregion
 
-        //先不删，做参考。
-        /*void Awake()
-        {
-            _tutorialMgr = FindObjectOfType<TutorialMgr>();
-            if (_tutorialMgr == null)
-            {
-                InitCurrencyIOMgr();
-                DeltaCurrency = 0.0f;
-
-                _gameStateMgr = new StandardGameStateMgr();
-                _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
-
-                InitShop();
-
-                InitDestoryer();
-                PlayingUI.enabled = true;
-                TutorialUI.enabled = false;
-                EnableAllFeature();
-            }
-            else
-            {
-                DisableAllFeature();
-            }
-        }
-        // Start is called before the first frame update
-        void Start()
-        {
-            if (_tutorialMgr == null)
-            {
-                InitCursor(new Vector2Int(2, 3));
-
-                GameBoard.InitBoardRealStart();
-                GameBoard.UpdateBoardAnimation();
-
-                //得最后做
-                StartShop();
-            }
-            else
-            {
-                PlayingUI.enabled = false;
-                TutorialUI.enabled = true;
-            }
-        }*/
-
         private void InitShop()
         {
             _shopMgr = gameObject.AddComponent<ShopMgr>();
@@ -322,20 +527,6 @@ namespace ROOT
             cursor.UpdateTransform(GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
         
-        private Vector2Int ClampPosInBoard(Vector2Int pos)
-        {
-            Vector2Int newPos = pos;
-            newPos.x = Mathf.Clamp(newPos.x, 0, GameBoard.BoardLength - 1);
-            newPos.y = Mathf.Clamp(newPos.y, 0, GameBoard.BoardLength - 1);
-            return newPos;
-        }
-
-        private void CursorStayInBoard(Cursor cursor)
-        {
-            cursor.SetPosWithAnimation(ClampPosInBoard(cursor.CurrentBoardPosition), PosSetFlag.Current);
-            cursor.SetPosWithAnimation(ClampPosInBoard(cursor.NextBoardPosition), PosSetFlag.Next);
-        }
-
         void UpdateDestoryer()
         {
             if (_warningGo != null)
@@ -360,7 +551,7 @@ namespace ROOT
                     var mIndCursor = _warningGo[i].GetComponent<Cursor>();
                     mIndCursor.SetIndMesh();
                     mIndCursor.InitPosWithAnimation(incomings[i]);
-                    CursorStayInBoard(mIndCursor);
+                    GameLogic.CursorStayInBoard(lvlAssetReference);
                     mIndCursor.UpdateTransform(GameBoard.GetFloatTransform(mIndCursor.CurrentBoardPosition));
 
                     Material tm = _warningGo[i].GetComponentInChildren<MeshRenderer>().material;
@@ -379,202 +570,6 @@ namespace ROOT
                     }
                 }
             }
-        }
-
-        public void AddAnimationPendingObj(MoveableBase pending)
-        {
-            if (animationPendingObj!=null)
-            {
-                if (pending!=null)
-                {                    
-                    animationPendingObj.Add(pending);
-                }
-            }
-        }
-
-        void UpdateShop()
-        {
-            if (!BoughtOnce)
-            {
-                bool successBought = false;
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY1))
-                {
-                    successBought = _shopMgr.Buy(0);
-                }
-                else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY2))
-                {
-                    successBought = _shopMgr.Buy(1);
-                }
-                else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY3))
-                {
-                    successBought = _shopMgr.Buy(2);
-                }
-                else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY4))
-                {
-                    successBought = _shopMgr.Buy(3);
-                }
-
-                if (successBought)
-                {
-                    BoughtOnce = true;
-                }
-            }
-        }
-
-        void UpdateCursor(ref Cursor cursor, out bool movedTile, out bool movedCursor)
-        {
-            movedTile = false;
-            movedCursor = false;
-            animationPendingObj.Add(cursor);
-            Unit movingUnit = null;
-            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT) && GameBoard.CheckBoardPosValidAndFilled(cursor.CurrentBoardPosition))
-            {
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
-                {
-                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetWestCoord()))
-                    {
-                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
-                        if (unit)
-                        {
-                            Vector2Int oldKey = cursor.CurrentBoardPosition;
-                            movingUnit=unit.GetComponentInChildren<Unit>();
-                            movingUnit.MoveLeft();
-                            GameBoard.UpdateUnitBoardPosAnimation(oldKey);
-                            movedTile = true;
-                        }
-
-                        cursor.MoveLeft();
-                    }
-                }
-
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORUP))
-                {
-                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetNorthCoord()))
-                    {
-                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
-                        if (unit)
-                        {
-                            Vector2Int oldKey = cursor.CurrentBoardPosition;
-                            movingUnit = unit.GetComponentInChildren<Unit>();
-                            movingUnit.MoveUp();
-                            GameBoard.UpdateUnitBoardPosAnimation(oldKey);
-                            movedTile = true;
-                        }
-
-                        cursor.MoveUp();
-                    }
-                }
-
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
-                {
-                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetSouthCoord()))
-                    {
-                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
-                        if (unit)
-                        {
-                            Vector2Int oldKey = cursor.CurrentBoardPosition;
-                            movingUnit=unit.GetComponentInChildren<Unit>();
-                            movingUnit.MoveDown();
-                            GameBoard.UpdateUnitBoardPosAnimation(oldKey);
-                            movedTile = true;
-                        }
-
-                        cursor.MoveDown();
-                    }
-                }
-
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
-                {
-                    if (GameBoard.CheckBoardPosValidAndEmpty(cursor.GetEastCoord()))
-                    {
-                        GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
-                        if (unit)
-                        {
-                            Vector2Int oldKey = cursor.CurrentBoardPosition;
-                            movingUnit=unit.GetComponentInChildren<Unit>();
-                            movingUnit.MoveRight();
-                            GameBoard.UpdateUnitBoardPosAnimation(oldKey);
-                            movedTile = true;
-                        }
-
-                        cursor.MoveRight();
-                    }
-                }
-            }
-            else
-            {
-                if (GameBoard.CheckBoardPosValid(cursor.CurrentBoardPosition))
-                {
-                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
-                    {
-                        movedCursor = true;
-                        cursor.MoveLeft();
-                    }
-
-                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
-                    {
-                        movedCursor = true;
-                        cursor.MoveRight();
-                    }
-
-                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORUP))
-                    {
-                        movedCursor = true;
-                        cursor.MoveUp();
-                    }
-
-                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
-                    {
-                        movedCursor = true;
-                        cursor.MoveDown();
-                    }
-                }
-            }
-
-            if (movingUnit)
-            {
-                Debug.Assert(movingUnit);
-                animationPendingObj.Add(movingUnit);
-            }
-
-            movedCursor |= movedTile;
-            CursorStayInBoard(cursor);
-        }
-
-        void UpdateRotate(ref Cursor cursor)
-        {
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT))
-            {
-                if (GameBoard.CheckBoardPosValidAndFilled(cursor.CurrentBoardPosition))
-                {
-                    GameObject unit = GameBoard.FindUnitUnderBoardPos(cursor.CurrentBoardPosition);
-                    if (unit)
-                    {
-                        unit.GetComponentInChildren<Unit>().UnitRotateCw();
-                        GameBoard.UpdateBoard();
-                    }
-                }
-            }
-        }
-
-        void UpdateInput(ref Cursor cursor, out bool movedTile, out bool movedCursor)
-        {
-            movedTile = false;
-            movedCursor = false;
-            if (ShopEnabled)
-            {
-                UpdateShop();
-            }
-            if (CursorEnabled)
-            {
-                UpdateCursor(ref cursor, out movedTile,out movedCursor);
-            }
-            if (RotateEnabled)
-            {
-                //旋转的动画先没有吧。
-                UpdateRotate(ref cursor);
-            }
-
         }
 
         void UpdateDeltaCurrency()
@@ -662,7 +657,7 @@ namespace ROOT
                 if (InputEnabled)
                 {
                     var cursor = _mCursor.GetComponent<ROOT.Cursor>();
-                    UpdateInput(ref cursor, out movedTile,out movedCursor);
+                    GameLogic.UpdateInput(lvlAssetReference,ref animationPendingObj, out movedTile, out movedCursor, ref BoughtOnce,ShopEnabled, CursorEnabled, RotateEnabled);
                     GameBoard.UpdateBoardRotate();//TODO 旋转现在还是闪现的。这个不用着急做。
                 }
 
@@ -682,11 +677,6 @@ namespace ROOT
                 }
             }
         }
-
-        //都是秒
-        private float animationTimerOrigin = 0.0f;
-        
-        private float animationDuration = 0.1f;
         
         void Update()
         {
