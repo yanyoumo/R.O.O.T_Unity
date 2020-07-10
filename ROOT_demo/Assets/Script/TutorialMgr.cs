@@ -42,24 +42,24 @@ namespace ROOT
 
         void CreateUnitOnBoard(TutorialActionData data)
         {
-            GameObject go = MainGameMgr.GameBoard.InitUnit(Vector2Int.zero, data.Core, Utils.Shuffle(data.Sides));
+            GameObject go = MainGameMgr.LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core, Utils.Shuffle(data.Sides));
             if (data.Pos.x<0|| data.Pos.y < 0)
             {
-                MainGameMgr.GameBoard.DeliverUnitRandomPlace(go);
+                MainGameMgr.LevelAsset.GameBoard.DeliverUnitRandomPlace(go);
             }
             else
             {
-                MainGameMgr.GameBoard.DeliverUnitAssignedPlace(go, data.Pos);
+                MainGameMgr.LevelAsset.GameBoard.DeliverUnitAssignedPlace(go, data.Pos);
             }
-            MainGameMgr.GameBoard.UpdateBoardInit();
+            MainGameMgr.LevelAsset.GameBoard.UpdateBoardInit();
         }
 
         void CreateCursorOnBoard(TutorialActionData data)
         {
             MainGameMgr.InitCursor(this, data.Pos);
-            MainGameMgr.InputEnabled = true;
-            MainGameMgr.CursorEnabled = true;
-            MainGameMgr.RotateEnabled = true;
+            MainGameMgr.LevelAsset.InputEnabled = true;
+            MainGameMgr.LevelAsset.CursorEnabled = true;
+            MainGameMgr.LevelAsset.RotateEnabled = true;
         }
 
         void DealStep(TutorialActionData data)

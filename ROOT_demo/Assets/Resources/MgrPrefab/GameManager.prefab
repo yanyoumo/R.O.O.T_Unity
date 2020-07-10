@@ -44,34 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17ac01c6d39166c42b74025262f0606c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CursorTemplate: {fileID: 6636971623283588989, guid: d888cb50120172047abb6039d9bf53be,
+  CursorTemplate_IO: {fileID: 6636971623283588989, guid: d888cb50120172047abb6039d9bf53be,
     type: 3}
-  GameBoard: {fileID: 0}
-  Item1Price: {fileID: 0}
-  Item2Price: {fileID: 0}
-  Item3Price: {fileID: 0}
-  Item4Price: {fileID: 0}
-  Item1Price_TMP: {fileID: 0}
-  Item2Price_TMP: {fileID: 0}
-  Item3Price_TMP: {fileID: 0}
-  Item4Price_TMP: {fileID: 0}
-  InputEnabled: 1
-  CursorEnabled: 1
-  RotateEnabled: 1
-  ShopEnabled: 1
-  UpdateDeltaCurrencyEnabled: 1
-  DestoryerEnabled: 1
-  HintEnabled: 1
-  PlayerDataUIEnabled: 1
-  GameOverEnabled: 1
-  ForceHDDConnectionHint: 0
-  ForceServerConnectionHint: 0
-  PlayingUI: {fileID: 0}
-  TutorialUI: {fileID: 0}
-  ShopUI: {fileID: 0}
-  HintPanel: {fileID: 0}
-  sW: {fileID: 2029385627820872066}
-  dataScreen: {fileID: 0}
+  ItemPriceRoot_IO: {fileID: 0}
+  GameBoard_IO: {fileID: 0}
+  sW_IO: {fileID: 0}
+  dataScreen_IO: {fileID: 0}
 --- !u!114 &2029385627820872066
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,7 +7,9 @@ using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
+//TODO https://shimo.im/docs/Dd86KXTqHJpqxwYX
 namespace ROOT
 {
     public enum GameStatus
@@ -25,30 +27,15 @@ namespace ROOT
         public float lastEndingTime;
     }
 
-    public struct LevelAssetReference//这个不用从LOGIC更新。
-    {
-        public Cursor Cursor;
-        public Board GameBoard;
-        //public List<MoveableBase> AnimationPendingObj;
-        public ShopMgr ShopMgr;
-    }
-
-    public struct LevelAssetFlag//这个需要从LOGIC更新。
-    {
-        public bool MovedTile;
-        public bool MovedCursor;
-        public bool BoughtOnce;
-        public bool ShopEnabled;
-        public bool CursorEnabled;
-        public bool RotateEnabled;
-    }
-
     //要把Asset和Logic彻底拆开。
     /// <summary>
     /// 世界本身的运行逻辑、应该类比于物理世界，高程度独立。
     /// </summary>
     internal static class GameLogic//WORLD-LOGIC
     {
+        //对，这种需要影响场景怎么办？
+        //本来是为了保证WRD-LOGIC的独立性（体现形而上学的概念）；
+        //就是弄成了静态类，但是现在看估计得弄成单例？
         private static Vector2Int ClampPosInBoard(Vector2Int pos, Board gameBoard)
         {
             Vector2Int newPos = pos;
@@ -56,160 +43,228 @@ namespace ROOT
             newPos.y = Mathf.Clamp(newPos.y, 0, gameBoard.BoardLength - 1);
             return newPos;
         }
-        private static void UpdateShop(ShopMgr _shopMgr,ref bool BoughtOnce)
+
+        private static void UpdateShop(ShopMgr shopMgr, ref bool boughtOnce)
         {
-            if (!BoughtOnce)
+            if (!boughtOnce)
             {
                 bool successBought = false;
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY1))
                 {
-                    successBought = _shopMgr.Buy(0);
+                    successBought = shopMgr.Buy(0);
                 }
                 else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY2))
                 {
-                    successBought = _shopMgr.Buy(1);
+                    successBought = shopMgr.Buy(1);
                 }
                 else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY3))
                 {
-                    successBought = _shopMgr.Buy(2);
+                    successBought = shopMgr.Buy(2);
                 }
                 else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY4))
                 {
-                    successBought = _shopMgr.Buy(3);
+                    successBought = shopMgr.Buy(3);
                 }
 
                 if (successBought)
                 {
-                    BoughtOnce = true;
+                    boughtOnce = true;
                 }
             }
         }
-        internal static void CursorStayInBoard(LevelAssetReference lvlAssetReference)
+
+        internal static void UpdateDestoryer(GameAssets currentLevelAsset)
         {
-            lvlAssetReference.Cursor.SetPosWithAnimation(ClampPosInBoard(lvlAssetReference.Cursor.CurrentBoardPosition, lvlAssetReference.GameBoard), PosSetFlag.Current);
-            lvlAssetReference.Cursor.SetPosWithAnimation(ClampPosInBoard(lvlAssetReference.Cursor.NextBoardPosition, lvlAssetReference.GameBoard), PosSetFlag.Next);
-        }
-        internal static void UpdateRotate(LevelAssetReference lvlAssetReference)
-        {
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT))
+            if (currentLevelAsset.WarningGo != null)
             {
-                if (lvlAssetReference.GameBoard.CheckBoardPosValidAndFilled(lvlAssetReference.Cursor.CurrentBoardPosition))
+                if (currentLevelAsset.WarningGo.Length > 0)
                 {
-                    GameObject unit = lvlAssetReference.GameBoard.FindUnitUnderBoardPos(lvlAssetReference.Cursor.CurrentBoardPosition);
-                    if (unit)
+                    foreach (var go in currentLevelAsset.WarningGo)
                     {
-                        unit.GetComponentInChildren<Unit>().UnitRotateCw();
-                        lvlAssetReference.GameBoard.UpdateBoard();
+                        currentLevelAsset.Owner.WorldLogicRequestDestroy(go);
+                        currentLevelAsset.WarningGo = null;
+                    }
+                }
+            }
+
+            if (currentLevelAsset.WarningDestoryer.GetStatus() != WarningDestoryerStatus.Dormant)
+            {
+                Vector2Int[] incomings = currentLevelAsset.WarningDestoryer.NextStrikingPos(out int count);
+                currentLevelAsset.WarningGo = new GameObject[count];
+                for (int i = 0; i < count; i++)
+                {
+                    currentLevelAsset.WarningGo[i] = currentLevelAsset.Owner.WorldLogicRequestInstantiate(currentLevelAsset.CursorTemplate);
+                    var mIndCursor = currentLevelAsset.WarningGo[i].GetComponent<Cursor>();
+                    mIndCursor.SetIndMesh();
+                    mIndCursor.InitPosWithAnimation(incomings[i]);
+                    CursorStayInBoard(currentLevelAsset);
+                    mIndCursor.UpdateTransform(
+                        currentLevelAsset.GameBoard.GetFloatTransform(mIndCursor.CurrentBoardPosition));
+
+                    Material tm = currentLevelAsset.WarningGo[i].GetComponentInChildren<MeshRenderer>().material;
+
+                    if (currentLevelAsset.WarningDestoryer.GetStatus() == WarningDestoryerStatus.Warning)
+                    {
+                        tm.SetColor("_Color", Color.yellow);
+                    }
+                    else if (currentLevelAsset.WarningDestoryer.GetStatus() == WarningDestoryerStatus.Striking)
+                    {
+                        tm.SetColor("_Color", new Color(1.0f, 0.2f, 0.0f));
+                    }
+                    else
+                    {
+                        Debug.Assert(false, "Internal Error");
                     }
                 }
             }
         }
-        internal static void UpdateCursor(LevelAssetReference lvlAssetReference,ref List<MoveableBase> animationPendingObj, out bool movedTile, out bool movedCursor)
+
+        internal static void CursorStayInBoard(GameAssets currentLevelAsset)
+        {
+            currentLevelAsset.Cursor.SetPosWithAnimation(
+                ClampPosInBoard(currentLevelAsset.Cursor.CurrentBoardPosition, currentLevelAsset.GameBoard),
+                PosSetFlag.Current);
+            currentLevelAsset.Cursor.SetPosWithAnimation(
+                ClampPosInBoard(currentLevelAsset.Cursor.NextBoardPosition, currentLevelAsset.GameBoard),
+                PosSetFlag.Next);
+        }
+
+        internal static void UpdateRotate(GameAssets currentLevelAsset)
+        {
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT))
+            {
+                if (currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(currentLevelAsset.Cursor
+                    .CurrentBoardPosition))
+                {
+                    GameObject unit =
+                        currentLevelAsset.GameBoard.FindUnitUnderBoardPos(currentLevelAsset.Cursor
+                            .CurrentBoardPosition);
+                    if (unit)
+                    {
+                        unit.GetComponentInChildren<Unit>().UnitRotateCw();
+                        currentLevelAsset.GameBoard.UpdateBoard();
+                    }
+                }
+            }
+        }
+
+        internal static void UpdateCursor(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor)
         {
             movedTile = false;
             movedCursor = false;
-            animationPendingObj.Add(lvlAssetReference.Cursor);
+            currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
             Unit movingUnit = null;
-            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT) && lvlAssetReference.GameBoard.CheckBoardPosValidAndFilled(lvlAssetReference.Cursor.CurrentBoardPosition))
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT) &&
+                currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(currentLevelAsset.Cursor.CurrentBoardPosition))
             {
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
                 {
-                    if (lvlAssetReference.GameBoard.CheckBoardPosValidAndEmpty(lvlAssetReference.Cursor.GetWestCoord()))
+                    if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(currentLevelAsset.Cursor.GetWestCoord()))
                     {
-                        GameObject unit = lvlAssetReference.GameBoard.FindUnitUnderBoardPos(lvlAssetReference.Cursor.CurrentBoardPosition);
+                        GameObject unit =
+                            currentLevelAsset.GameBoard.FindUnitUnderBoardPos(currentLevelAsset.Cursor
+                                .CurrentBoardPosition);
                         if (unit)
                         {
-                            Vector2Int oldKey = lvlAssetReference.Cursor.CurrentBoardPosition;
+                            Vector2Int oldKey = currentLevelAsset.Cursor.CurrentBoardPosition;
                             movingUnit = unit.GetComponentInChildren<Unit>();
                             movingUnit.MoveLeft();
-                            lvlAssetReference.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
+                            currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
                             movedTile = true;
                         }
 
-                        lvlAssetReference.Cursor.MoveLeft();
+                        currentLevelAsset.Cursor.MoveLeft();
                     }
                 }
 
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORUP))
                 {
-                    if (lvlAssetReference.GameBoard.CheckBoardPosValidAndEmpty(lvlAssetReference.Cursor.GetNorthCoord()))
+                    if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(currentLevelAsset.Cursor.GetNorthCoord())
+                    )
                     {
-                        GameObject unit = lvlAssetReference.GameBoard.FindUnitUnderBoardPos(lvlAssetReference.Cursor.CurrentBoardPosition);
+                        GameObject unit =
+                            currentLevelAsset.GameBoard.FindUnitUnderBoardPos(currentLevelAsset.Cursor
+                                .CurrentBoardPosition);
                         if (unit)
                         {
-                            Vector2Int oldKey = lvlAssetReference.Cursor.CurrentBoardPosition;
+                            Vector2Int oldKey = currentLevelAsset.Cursor.CurrentBoardPosition;
                             movingUnit = unit.GetComponentInChildren<Unit>();
                             movingUnit.MoveUp();
-                            lvlAssetReference.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
+                            currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
                             movedTile = true;
                         }
 
-                        lvlAssetReference.Cursor.MoveUp();
+                        currentLevelAsset.Cursor.MoveUp();
                     }
                 }
 
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
                 {
-                    if (lvlAssetReference.GameBoard.CheckBoardPosValidAndEmpty(lvlAssetReference.Cursor.GetSouthCoord()))
+                    if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(currentLevelAsset.Cursor.GetSouthCoord())
+                    )
                     {
-                        GameObject unit = lvlAssetReference.GameBoard.FindUnitUnderBoardPos(lvlAssetReference.Cursor.CurrentBoardPosition);
+                        GameObject unit =
+                            currentLevelAsset.GameBoard.FindUnitUnderBoardPos(currentLevelAsset.Cursor
+                                .CurrentBoardPosition);
                         if (unit)
                         {
-                            Vector2Int oldKey = lvlAssetReference.Cursor.CurrentBoardPosition;
+                            Vector2Int oldKey = currentLevelAsset.Cursor.CurrentBoardPosition;
                             movingUnit = unit.GetComponentInChildren<Unit>();
                             movingUnit.MoveDown();
-                            lvlAssetReference.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
+                            currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
                             movedTile = true;
                         }
 
-                        lvlAssetReference.Cursor.MoveDown();
+                        currentLevelAsset.Cursor.MoveDown();
                     }
                 }
 
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
                 {
-                    if (lvlAssetReference.GameBoard.CheckBoardPosValidAndEmpty(lvlAssetReference.Cursor.GetEastCoord()))
+                    if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(currentLevelAsset.Cursor.GetEastCoord()))
                     {
-                        GameObject unit = lvlAssetReference.GameBoard.FindUnitUnderBoardPos(lvlAssetReference.Cursor.CurrentBoardPosition);
+                        GameObject unit =
+                            currentLevelAsset.GameBoard.FindUnitUnderBoardPos(currentLevelAsset.Cursor
+                                .CurrentBoardPosition);
                         if (unit)
                         {
-                            Vector2Int oldKey = lvlAssetReference.Cursor.CurrentBoardPosition;
+                            Vector2Int oldKey = currentLevelAsset.Cursor.CurrentBoardPosition;
                             movingUnit = unit.GetComponentInChildren<Unit>();
                             movingUnit.MoveRight();
-                            lvlAssetReference.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
+                            currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(oldKey);
                             movedTile = true;
                         }
 
-                        lvlAssetReference.Cursor.MoveRight();
+                        currentLevelAsset.Cursor.MoveRight();
                     }
                 }
             }
             else
             {
-                if (lvlAssetReference.GameBoard.CheckBoardPosValid(lvlAssetReference.Cursor.CurrentBoardPosition))
+                if (currentLevelAsset.GameBoard.CheckBoardPosValid(currentLevelAsset.Cursor.CurrentBoardPosition))
                 {
                     if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
                     {
                         movedCursor = true;
-                        lvlAssetReference.Cursor.MoveLeft();
+                        currentLevelAsset.Cursor.MoveLeft();
                     }
 
                     if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
                     {
                         movedCursor = true;
-                        lvlAssetReference.Cursor.MoveRight();
+                        currentLevelAsset.Cursor.MoveRight();
                     }
 
                     if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORUP))
                     {
                         movedCursor = true;
-                        lvlAssetReference.Cursor.MoveUp();
+                        currentLevelAsset.Cursor.MoveUp();
                     }
 
                     if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
                     {
                         movedCursor = true;
-                        lvlAssetReference.Cursor.MoveDown();
+                        currentLevelAsset.Cursor.MoveDown();
                     }
                 }
             }
@@ -217,68 +272,131 @@ namespace ROOT
             if (movingUnit)
             {
                 Debug.Assert(movingUnit);
-                animationPendingObj.Add(movingUnit);
+                currentLevelAsset.AnimationPendingObj.Add(movingUnit);
             }
 
             movedCursor |= movedTile;
-            CursorStayInBoard(lvlAssetReference);
+            CursorStayInBoard(currentLevelAsset);
         }
-        internal static void UpdateInput(LevelAssetReference lvlAssetReference, ref List<MoveableBase> animationPendingObj, 
-            out bool movedTile, out bool movedCursor,ref bool BoughtOnce,
-            bool shopEnabled=false,bool cursorEnabled=false,bool rotateEnabled=false)
+
+        internal static void UpdateInput(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor,
+            ref bool boughtOnce)
         {
             movedTile = false;
             movedCursor = false;
-            if (shopEnabled)
+            if (currentLevelAsset.ShopEnabled)
             {
-                UpdateShop(lvlAssetReference.ShopMgr, ref BoughtOnce);
-            }
-            if (cursorEnabled)
-            {
-                GameLogic.UpdateCursor(lvlAssetReference,ref animationPendingObj, out movedTile, out movedCursor);
-            }
-            if (rotateEnabled)
-            {
-                //旋转的动画先没有吧。
-                GameLogic.UpdateRotate(lvlAssetReference);
+                UpdateShop(currentLevelAsset.ShopMgr, ref boughtOnce);
             }
 
+            if (currentLevelAsset.CursorEnabled)
+            {
+                UpdateCursor(currentLevelAsset, out movedTile, out movedCursor);
+            }
+
+            if (currentLevelAsset.RotateEnabled)
+            {
+                //旋转的动画先没有吧。
+                UpdateRotate(currentLevelAsset);
+            }
+        }
+
+        internal static void UpdateDeltaCurrency(GameAssets currentLevelAsset)
+        {
+            currentLevelAsset.DeltaCurrency = 0.0f;
+            currentLevelAsset.DeltaCurrency += currentLevelAsset.CurrencyIoCalculator.CalculateProcessorScore();
+            currentLevelAsset.DeltaCurrency += currentLevelAsset.CurrencyIoCalculator.CalculateServerScore();
+            currentLevelAsset.DeltaCurrency -= currentLevelAsset.CurrencyIoCalculator.CalculateCost();
+
+            //System.Diagnostics.Debug.Assert(currentLevelAsset._gameStateMgr != null, nameof(currentLevelAsset._gameStateMgr) + " != null");
+            currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
+            currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(), RowEnum.CurrentMoney);
+            currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.DeltaCurrency, RowEnum.DeltaMoney);
+        }
+        internal static void UpdatePlayerDataAndUI(GameAssets currentLevelAsset, bool movedTile = true)
+        {
+            currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetGameTime(), RowEnum.Time);
+            currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetTimeRatio(), RowEnum.Time);
+#if UNITY_EDITOR
+            if (movedTile || Input.GetButton(StaticName.DEBUG_INPUT_BUTTON_NAME_FORCESTEP))
+            {
+#else
+            if (movedTile)
+            {
+#endif
+                if (currentLevelAsset.BoughtOnce)
+                {
+                    currentLevelAsset.BoughtOnce = false;
+                }
+
+                if (currentLevelAsset.ShopEnabled)
+                {
+                    currentLevelAsset.ShopMgr.ShopPreAnimationUpdate();
+                }
+
+                if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestoryerEnabled)
+                {
+                    currentLevelAsset.WarningDestoryer.Step();
+                }
+
+                currentLevelAsset.GameStateMgr.PerMove(new ScoreSet(), new PerMoveData(currentLevelAsset.DeltaCurrency, 1));
+            }
+        }
+        internal static void UpdateLogic(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor)
+        {
+            currentLevelAsset.DeltaCurrency = 0.0f;
+            movedTile = false;
+            movedCursor = false;
+            {
+                if (currentLevelAsset.DestoryerEnabled)
+                {
+                    GameLogic.UpdateDestoryer(currentLevelAsset);
+                }
+                if (currentLevelAsset.InputEnabled)
+                {
+                    var cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
+                    GameLogic.UpdateInput(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset.BoughtOnce);
+                    currentLevelAsset.GameBoard.UpdateBoardRotate();//TODO 旋转现在还是闪现的。这个不用着急做。
+                }
+                if (currentLevelAsset.UpdateDeltaCurrencyEnabled)
+                {
+                    UpdateDeltaCurrency(currentLevelAsset);
+                }
+                if (currentLevelAsset.PlayerDataUiEnabled)
+                {
+                    UpdatePlayerDataAndUI(currentLevelAsset,movedTile);
+                }
+            }
         }
     }
 
     /// <summary>
     /// 一个每个关卡都有这么一个类，在Lvl-WRD之间传来传去。这个类只有一个，做成最通用的样子。
     /// </summary>
-    public sealed class GameAssets//ASSET
+    public sealed class GameAssets//ASSET 这里不应该有任何之际逻辑（有些便于操作的除外
     {
-
-    }
-
-    public class GameMgr : MonoBehaviour//LEVEL-LOGIC/每一关都有一个这个类。
-    {
-        public static event RootEVENT.GameMajorEvent GameStarted;
-        public static event RootEVENT.GameMajorEvent GameOverReached;
-        public static event RootEVENT.GameMajorEvent GameCompleteReached;
-        //TODO https://shimo.im/docs/Dd86KXTqHJpqxwYX
+        public BaseLevelMgr Owner;//裁判同时要担任神使，神要通过这里影响世界。
+        //这些引用在Asset外面要设好，在WRD-LOGIC里面也要处理。
         public GameObject CursorTemplate;
-        private GameObject _mCursor;
-        public Board GameBoard;
-        public float DeltaCurrency { get; private set; }
-
-        private CurrencyIOCalculator _currencyIoCalculator;
-        private GameStateMgr _gameStateMgr;
-        private ShopMgr _shopMgr;
-        private IWarningDestoryer _warningDestoryer;
-        private GameObject[] _warningGo;
-
         public GameObject ItemPriceRoot;
+        public Board GameBoard;
+        public DataScreen DataScreen;
 
-        private TextMeshPro Item1Price_TMP;
-        private TextMeshPro Item2Price_TMP;
-        private TextMeshPro Item3Price_TMP;
-        private TextMeshPro Item4Price_TMP;
+        internal GameObject GameCursor;
+        internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
+        internal CurrencyIOCalculator CurrencyIoCalculator;
+        internal GameStateMgr GameStateMgr;
+        internal TutorialMgr TutorialMgr;
+        internal ShopMgr ShopMgr;
+        internal IWarningDestoryer WarningDestoryer;
+        internal GameObject[] WarningGo;
 
-        private bool BoughtOnce = false;
+        internal TextMeshPro Item1PriceTmp;
+        internal TextMeshPro Item2PriceTmp;
+        internal TextMeshPro Item3PriceTmp;
+        internal TextMeshPro Item4PriceTmp;
+
+        public float DeltaCurrency { get; internal set; }
 
         //下面是给【指引】弄得。
         public bool InputEnabled = true;
@@ -290,121 +408,21 @@ namespace ROOT
         public bool UpdateDeltaCurrencyEnabled = true;
         public bool DestoryerEnabled = false;
         public bool HintEnabled = true;
-        public bool PlayerDataUIEnabled = true;
+        public bool PlayerDataUiEnabled = true;
         public bool GameOverEnabled = true;
 
-        public bool ForceHDDConnectionHint = false;
+        public bool ForceHddConnectionHint = false;
         public bool ForceServerConnectionHint = false;
 
-        private TutorialMgr _tutorialMgr;
 
-        private bool LogicFrameAnimeFrameToggle=true;
-        private bool movedTileAni=false;
-        private bool movedCursorAni = false;
-        private List<MoveableBase> animationPendingObj;
+        internal bool BoughtOnce = false;
+        internal bool MovedTileAni = false;
+        internal bool MovedCursorAni = false;
+        internal List<MoveableBase> AnimationPendingObj;
 
-        public ScoreWriting sW;
+        //一些辅助函数可以在这里。
 
-        public DataScreen dataScreen;
-
-        private bool readyToGo = false;
-        public bool Playing { private set; get; }
-        private bool referenceOK = false;
-        private bool pendingCleanUp;
-        
-        private float animationTimerOrigin = 0.0f;//都是秒
-        private float animationDuration = 0.1f;//都是秒
-
-        private LevelAssetReference lvlAssetReference;
-        private LevelAssetFlag lvlAssetFlag;
-
-        public void SetLevelAsset()
-        {
-            lvlAssetReference = new LevelAssetReference
-            {
-                GameBoard = GameBoard,
-                Cursor = _mCursor.GetComponent<ROOT.Cursor>(),
-                //AnimationPendingObj = animationPendingObj,
-                ShopMgr = _shopMgr
-            };
-        }
-
-        public void SetReady_Tutorial(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
-        {
-            //这里是默认都关了
-            Debug.Assert(referenceOK);
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
-            DisableAllFeature();
-
-            readyToGo = true;
-            SetLevelAsset();
-            GameStarted?.Invoke();
-        }
-        public void SetReady_GamePlay(ScoreSet scoreSet=null,PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
-        {
-            Debug.Assert(referenceOK);
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
-
-            InitCurrencyIOMgr();
-            DeltaCurrency = 0.0f;
-
-            _gameStateMgr = _gameStateMgrType!=null ? GameStateMgr.GenerateGameStateMgrByType(_gameStateMgrType) : new StandardGameStateMgr();
-            _gameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
-
-            InitShop();
-            InitDestoryer();
-
-            EnableAllFeature();
-            InitCursor(new Vector2Int(2, 3));
-
-            GameBoard.InitBoardRealStart();
-            GameBoard.UpdateBoardAnimation();
-            StartShop();
-
-            readyToGo = true;
-
-            SetLevelAsset();
-
-            GameStarted?.Invoke();
-        }
-
-        public bool CheckReference()
-        {
-            bool res = true;
-            res &= (dataScreen != null);
-            res &= (Item1Price_TMP != null);
-            res &= (Item2Price_TMP != null);
-            res &= (Item3Price_TMP != null);
-            res &= (Item4Price_TMP != null);
-            return res;
-        }
-
-        public void UpdateReference()
-        {
-            var tempT = ItemPriceRoot.GetComponentsInChildren<TextMeshPro>();
-            foreach (var text in tempT)
-            {
-                if (text.gameObject.name == "UnitAPrice_1")
-                {
-                    Item1Price_TMP = text;
-                }
-                if (text.gameObject.name == "UnitAPrice_2")
-                {
-                    Item2Price_TMP = text;
-                }
-                if (text.gameObject.name == "UnitAPrice_3")
-                {
-                    Item3Price_TMP = text;
-                }
-                if (text.gameObject.name == "UnitAPrice_4")
-                {
-                    Item4Price_TMP = text;
-                }
-            }
-            referenceOK = CheckReference();
-        }
-
-        private void EnableAllFeature()
+        internal void EnableAllFeature()
         {
             InputEnabled = true;
             CursorEnabled = true;
@@ -413,11 +431,11 @@ namespace ROOT
             UpdateDeltaCurrencyEnabled = true;
             DestoryerEnabled = true;
             HintEnabled = true;
-            PlayerDataUIEnabled = true;
+            PlayerDataUiEnabled = true;
             GameOverEnabled = true;
         }
 
-        private void DisableAllFeature()
+        internal void DisableAllFeature()
         {
             InputEnabled = false;
             CursorEnabled = false;
@@ -426,15 +444,144 @@ namespace ROOT
             UpdateDeltaCurrencyEnabled = false;
             DestoryerEnabled = false;
             HintEnabled = false;
-            PlayerDataUIEnabled = false;
+            PlayerDataUiEnabled = false;
             GameOverEnabled = false;
+        }
+    }
+
+    //TODO 然后就是Level中的时序怎么弄了。
+    public abstract class BaseLevelMgr : MonoBehaviour//LEVEL-LOGIC/每一关都有一个这个类。
+    {
+        //事件完全由LVL-Logic管理。
+        public static event RootEVENT.GameMajorEvent GameStarted;
+        public static event RootEVENT.GameMajorEvent GameOverReached;
+        public static event RootEVENT.GameMajorEvent GameCompleteReached;
+        //ASSET
+        internal GameAssets LevelAsset;
+        //LVL-Logic还负责和Inspector交互。需要把这里的引用传到Asset里面
+        //原则上这些引用只有一开始用一下，之后不能从这里调。
+        public GameObject CursorTemplate_IO;
+        public Board GameBoard_IO;
+        //Lvl-Logic实际用的判断逻辑。
+        public bool Playing { get; private set;  }
+        private bool LogicFrameAnimeFrameToggle = true;
+        private bool readyToGo = false;
+        private bool referenceOK = false;
+        private bool pendingCleanUp;
+        
+        private float animationTimerOrigin = 0.0f;//都是秒
+        private float animationDuration = 0.1f;//都是秒
+
+        void LinkGameAsset()
+        {
+            //还要在这里把Asset的数据填好。这里只搞要从Inspector里面进来的。
+            LevelAsset.CursorTemplate = CursorTemplate_IO;
+            LevelAsset.GameBoard = GameBoard_IO;
+        }
+
+        void Awake()
+        {
+            LevelAsset=new GameAssets();
+            //时序现在很乱。
+            LevelAsset.Owner = this;
+            //LinkGameAsset();
+        }
+
+        //这两个函数是WorldLogic要通过LvlLogic去影响世界/因为Unity的规定。
+        //这样不得不得出的结论就是裁判要兼任神使这一工作（是个隐坑
+        internal T WorldLogicRequestInstantiate<T>(T obj) where T: Object
+        {
+            return Instantiate(obj);
+        }
+
+        internal void WorldLogicRequestDestroy(Object obj)
+        {
+            Destroy(obj);
+        }
+
+        //之后Tutorial和一般的Level要分开。
+        public void SetReady_Tutorial(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
+        {
+            Debug.Assert(false);//先关了。
+            //这里是默认都关了
+            /*Debug.Assert(referenceOK);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+            LevelAsset.DisableAllFeature();
+
+            readyToGo = true;
+            SetLevelAsset();
+            GameStarted?.Invoke();*/
+        }
+
+        //之后Tutorial和一般的Level要分开。
+        public void SetReady_GamePlay(ScoreSet scoreSet=null,PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
+        {
+            Debug.Assert(referenceOK);//意外的有确定Reference的……还行……
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+
+            InitCurrencyIOMgr();
+            LevelAsset.DeltaCurrency = 0.0f;
+
+            LevelAsset.GameStateMgr = _gameStateMgrType!=null ? GameStateMgr.GenerateGameStateMgrByType(_gameStateMgrType) : new StandardGameStateMgr();
+            LevelAsset.GameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
+
+            InitShop();
+            InitDestoryer();
+
+            LevelAsset.EnableAllFeature();
+            InitCursor(new Vector2Int(2, 3));
+
+            LevelAsset.GameBoard.InitBoardRealStart();
+            LevelAsset.GameBoard.UpdateBoardAnimation();
+            StartShop();
+
+            readyToGo = true;
+
+            GameStarted?.Invoke();
+        }
+
+        public bool CheckReference()
+        {
+            bool res = true;
+            res &= (LevelAsset.DataScreen != null);
+            res &= (LevelAsset.Item1PriceTmp != null);
+            res &= (LevelAsset.Item2PriceTmp != null);
+            res &= (LevelAsset.Item3PriceTmp != null);
+            res &= (LevelAsset.Item4PriceTmp != null);
+            return res;
+        }
+
+        public void UpdateReference()
+        {
+            var tempT = LevelAsset.ItemPriceRoot.GetComponentsInChildren<TextMeshPro>();
+            foreach (var text in tempT)
+            {
+                if (text.gameObject.name == "UnitAPrice_1")
+                {
+                    LevelAsset.Item1PriceTmp = text;
+                }
+                if (text.gameObject.name == "UnitAPrice_2")
+                {
+                    LevelAsset.Item2PriceTmp = text;
+                }
+                if (text.gameObject.name == "UnitAPrice_3")
+                {
+                    LevelAsset.Item3PriceTmp = text;
+                }
+                if (text.gameObject.name == "UnitAPrice_4")
+                {
+                    LevelAsset.Item4PriceTmp = text;
+                }
+            }
+            LinkGameAsset();
+            referenceOK = CheckReference();
         }
 
         private void InitDestoryer()
         {
-            _warningDestoryer = new MeteoriteBomber();
-            _warningDestoryer.SetBoard(ref GameBoard);
-            _warningDestoryer.Init(5, 2);
+            LevelAsset.WarningDestoryer = new MeteoriteBomber();
+            LevelAsset.WarningDestoryer.SetBoard(ref LevelAsset.GameBoard);
+            LevelAsset.WarningDestoryer.Init(5, 2);
         }
 
         #region TutorialShellRegion
@@ -448,7 +595,7 @@ namespace ROOT
         public void ForceSetDestoryerShell(TutorialMgr invoker, Vector2Int nextIncome)
         {
             Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            ((MeteoriteBomber) _warningDestoryer).ForceSetDestoryer(invoker,nextIncome);
+            ((MeteoriteBomber)LevelAsset.WarningDestoryer).ForceSetDestoryer(invoker,nextIncome);
         }
 
         public void ForceWindDestoryer(TutorialMgr invoker)
@@ -456,8 +603,8 @@ namespace ROOT
             Debug.Assert(invoker, "这个函数只能在教程里面调。");
             do
             {
-                _warningDestoryer.Step();
-            } while (((MeteoriteBomber) _warningDestoryer).Counter>0);
+                LevelAsset.WarningDestoryer.Step();
+            } while (((MeteoriteBomber)LevelAsset.WarningDestoryer).Counter>0);
         }
 
         public void InitShop(TutorialMgr invoker)
@@ -493,191 +640,68 @@ namespace ROOT
 
         private void InitShop()
         {
-            _shopMgr = gameObject.AddComponent<ShopMgr>();
-            _shopMgr.UnitTemplate = GameBoard.UnitTemplate;
-            _shopMgr.ShopInit();
-            //_shopMgr.ItemPriceTexts = new[] { Item1Price, Item2Price, Item3Price, Item4Price };
-            _shopMgr.ItemPriceTexts_TMP = new[] { Item1Price_TMP, Item2Price_TMP, Item3Price_TMP, Item4Price_TMP };
-            _shopMgr.CurrentGameStateMgr = this._gameStateMgr;
-            _shopMgr.GameBoard = this.GameBoard;
+            LevelAsset.ShopMgr = gameObject.AddComponent<ShopMgr>();
+            LevelAsset.ShopMgr.UnitTemplate = LevelAsset.GameBoard.UnitTemplate;
+            LevelAsset.ShopMgr.ShopInit();
+            LevelAsset.ShopMgr.ItemPriceTexts_TMP = new[] { LevelAsset.Item1PriceTmp, LevelAsset.Item2PriceTmp, LevelAsset.Item3PriceTmp, LevelAsset.Item4PriceTmp };
+            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
         }
         
         private void StartShop()
         {
-            _shopMgr.ShopStart();
+            LevelAsset.ShopMgr.ShopStart();
         }
         
         private void InitGameStateMgr()
         {
-            _gameStateMgr = new StandardGameStateMgr();
-            _gameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
+            LevelAsset.GameStateMgr = new StandardGameStateMgr();
+            LevelAsset.GameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
         }
         
         private void InitCurrencyIOMgr()
         {
-            _currencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
-            _currencyIoCalculator.m_Board = GameBoard;
+            LevelAsset.CurrencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
+            LevelAsset.CurrencyIoCalculator.m_Board = LevelAsset.GameBoard;
         }
         
         private void InitCursor(Vector2Int pos)
         {
-            _mCursor = Instantiate(CursorTemplate);
-            Cursor cursor=_mCursor.GetComponent<Cursor>();
+            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
+            Cursor cursor=LevelAsset.GameCursor.GetComponent<Cursor>();
             cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
-        
-        void UpdateDestoryer()
-        {
-            if (_warningGo != null)
-            {
-                if (_warningGo.Length > 0)
-                {
-                    foreach (var go in _warningGo)
-                    {
-                        Destroy(go);
-                        _warningGo = null;
-                    }
-                }
-            }
-
-            if (_warningDestoryer.GetStatus() != WarningDestoryerStatus.Dormant)
-            {
-                Vector2Int[] incomings = _warningDestoryer.NextStrikingPos(out int count);
-                _warningGo = new GameObject[count];
-                for (int i = 0; i < count; i++)
-                {
-                    _warningGo[i] = Instantiate(CursorTemplate);
-                    var mIndCursor = _warningGo[i].GetComponent<Cursor>();
-                    mIndCursor.SetIndMesh();
-                    mIndCursor.InitPosWithAnimation(incomings[i]);
-                    GameLogic.CursorStayInBoard(lvlAssetReference);
-                    mIndCursor.UpdateTransform(GameBoard.GetFloatTransform(mIndCursor.CurrentBoardPosition));
-
-                    Material tm = _warningGo[i].GetComponentInChildren<MeshRenderer>().material;
-
-                    if (_warningDestoryer.GetStatus() == WarningDestoryerStatus.Warning)
-                    {
-                        tm.SetColor("_Color", Color.yellow);
-                    }
-                    else if (_warningDestoryer.GetStatus() == WarningDestoryerStatus.Striking)
-                    {
-                        tm.SetColor("_Color", new Color(1.0f, 0.2f, 0.0f));
-                    }
-                    else
-                    {
-                        Debug.Assert(false, "Internal Error");
-                    }
-                }
-            }
-        }
-
-        void UpdateDeltaCurrency()
-        {
-            DeltaCurrency = 0.0f;
-            DeltaCurrency += _currencyIoCalculator.CalculateProcessorScore();
-            DeltaCurrency += _currencyIoCalculator.CalculateServerScore();
-            DeltaCurrency -= _currencyIoCalculator.CalculateCost();
-
-            System.Diagnostics.Debug.Assert(_gameStateMgr != null, nameof(_gameStateMgr) + " != null");
-            dataScreen.SetLCD(_gameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
-            dataScreen.SetAlertLevel(_gameStateMgr.GetCurrencyRatio(), RowEnum.CurrentMoney);
-            dataScreen.SetLCD(DeltaCurrency, RowEnum.DeltaMoney);
-        }
-
+       
         void UpdateHint()
         {
-            GameBoard.ResetUnitEmission();
-            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD) || ForceHDDConnectionHint)
+            LevelAsset.GameBoard.ResetUnitEmission();
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD) || LevelAsset.ForceHddConnectionHint)
             {
-                GameBoard.DisplayConnectedHDDUnit();
+                LevelAsset.GameBoard.DisplayConnectedHDDUnit();
             }
 
-            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET) || ForceServerConnectionHint)
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET) || LevelAsset.ForceServerConnectionHint)
             {
-                GameBoard.DisplayConnectedServerUnit();
-            }
-        }
-
-        void UpdatePlayerDataAndUI(bool movedTile = true)
-        {
-            dataScreen.SetLCD(_gameStateMgr.GetGameTime(),RowEnum.Time);
-            dataScreen.SetAlertLevel(_gameStateMgr.GetTimeRatio(),RowEnum.Time);
-#if UNITY_EDITOR
-            if (movedTile|| Input.GetButton(StaticName.DEBUG_INPUT_BUTTON_NAME_FORCESTEP))
-            {
-#else
-            if (movedTile)
-            {
-#endif
-                if (BoughtOnce)
-                {
-                    BoughtOnce = false;
-                }
-
-                if (ShopEnabled)
-                {
-                    _shopMgr.ShopPreAnimationUpdate();
-                }
-
-                if (_warningDestoryer != null && DestoryerEnabled)
-                {
-                    _warningDestoryer.Step();
-                }
-
-                _gameStateMgr.PerMove(new ScoreSet(), new PerMoveData(DeltaCurrency, 1));
+                LevelAsset.GameBoard.DisplayConnectedServerUnit();
             }
         }
 
-        void UpdateGameOverStatus()
+        //这个严格来说就已经属于检测了。
+        private void UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
-            if (_gameStateMgr.EndGameCheck(new ScoreSet(), new PerMoveData()))
+            //这个函数就很接近裁判要做的事儿了。
+            if (currentLevelAsset.GameStateMgr.EndGameCheck(new ScoreSet(), new PerMoveData()))
             {
                 //CurrencyText.text = "GAME OVER";
-                GameMasterManager.UpdateGameGlobalStatuslastEndingIncome(_gameStateMgr.GetCurrency() - _gameStateMgr.StartingMoney);
-                GameMasterManager.UpdateGameGlobalStatuslastEndingTime(_gameStateMgr.GetGameTime());
+                GameMasterManager.UpdateGameGlobalStatuslastEndingIncome(currentLevelAsset.GameStateMgr.GetCurrency() - currentLevelAsset.GameStateMgr.StartingMoney);
+                GameMasterManager.UpdateGameGlobalStatuslastEndingTime(currentLevelAsset.GameStateMgr.GetGameTime());
                 //此时要把GameOverScene所需要的内容填好。
-                pendingCleanUp = true;//“一次性”设计思路这里还要调整。
+                pendingCleanUp = true;
                 GameOverReached?.Invoke();
             }
         }
 
-        // Update is called once per frame
-        void UpdateLogic(out bool movedTile, out bool movedCursor)
-        {
-            DeltaCurrency = 0.0f;
-            movedTile = false;
-            movedCursor = false;
-            {
-                if (DestoryerEnabled)
-                {
-                    UpdateDestoryer();
-                }
-
-                if (InputEnabled)
-                {
-                    var cursor = _mCursor.GetComponent<ROOT.Cursor>();
-                    GameLogic.UpdateInput(lvlAssetReference,ref animationPendingObj, out movedTile, out movedCursor, ref BoughtOnce,ShopEnabled, CursorEnabled, RotateEnabled);
-                    GameBoard.UpdateBoardRotate();//TODO 旋转现在还是闪现的。这个不用着急做。
-                }
-
-                if (UpdateDeltaCurrencyEnabled)
-                {
-                    UpdateDeltaCurrency();
-                }
-
-                if (PlayerDataUIEnabled)
-                {
-                    UpdatePlayerDataAndUI(movedTile);
-                }
-
-                if (GameOverEnabled)
-                {
-                    UpdateGameOverStatus();
-                }
-            }
-        }
-        
         void Update()
         {
             if ((!readyToGo) || (pendingCleanUp))
@@ -691,33 +715,44 @@ namespace ROOT
                 Playing = true;
             }
             //TODO 从LF到AF的数据应该再多一些。
-            System.Diagnostics.Debug.Assert(GameBoard != null, nameof(GameBoard) + " != null");
+            System.Diagnostics.Debug.Assert(LevelAsset.GameBoard != null, nameof(LevelAsset.GameBoard) + " != null");
             bool movedTile =false;
             bool movedCursor = false;
             bool pressedAny = Input.anyKeyDown;
             if (LogicFrameAnimeFrameToggle)
             {
+                //更新Lvl信息
+                //更新物理
+                //检查Asset。
+                
                 animationTimerOrigin = Time.timeSinceLevelLoad;
-                animationPendingObj = new List<MoveableBase>();
+                LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
-                UpdateLogic(out movedTile,out movedCursor);
+                GameLogic.UpdateLogic(LevelAsset, out movedTile, out movedCursor);
+
+                if (LevelAsset.GameOverEnabled)
+                {
+                    UpdateGameOverStatus(LevelAsset);
+                }
+
                 LogicFrameAnimeFrameToggle = !(pressedAny & (movedTile | movedCursor));
                 if (!LogicFrameAnimeFrameToggle)
                 {
-                    movedTileAni = movedTile;
-                    movedCursorAni = movedCursor;
+                    LevelAsset.MovedTileAni = movedTile;
+                    LevelAsset.MovedCursorAni = movedCursor;
                 }
             }
             else
             {
-                var cursor = _mCursor.GetComponent<ROOT.Cursor>();
+                //这个使用coroutine重写。
+                var cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
 
                 float animationTimer = Time.timeSinceLevelLoad - animationTimerOrigin;
                 float animationLerper = animationTimer / animationDuration;
-                if (animationPendingObj.Count > 0)
+                if (LevelAsset.AnimationPendingObj.Count > 0)
                 {
                     animationLerper = Mathf.Min(animationLerper, 1.0f);
-                    foreach (var moveableBase in animationPendingObj)
+                    foreach (var moveableBase in LevelAsset.AnimationPendingObj)
                     {
                         //
                         if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
@@ -731,11 +766,11 @@ namespace ROOT
                         }
                     }
 
-                    if (movedTileAni)
+                    if (LevelAsset.MovedTileAni)
                     {
-                        if (_shopMgr)
+                        if (LevelAsset.ShopMgr)
                         {
-                            _shopMgr.ShopUpdateAnimation(animationLerper);
+                            LevelAsset.ShopMgr.ShopUpdateAnimation(animationLerper);
                         }
                     }
                 }
@@ -744,35 +779,40 @@ namespace ROOT
                 if (animationLerper >= 1.0f)
                 {
                     //AnimationEnding
-                    foreach (var moveableBase in animationPendingObj)
+                    foreach (var moveableBase in LevelAsset.AnimationPendingObj)
                     {
                         //完成后的pingpong
                         moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
                     }
 
-                    if (movedTileAni)
+                    if (LevelAsset.MovedTileAni)
                     {
-                        if (GameBoard != null)
+                        if (LevelAsset.GameBoard != null)
                         {
-                            GameBoard.UpdateBoardPostAnimation();
+                            LevelAsset.GameBoard.UpdateBoardPostAnimation();
                         }
 
-                        if (_shopMgr)
+                        if (LevelAsset.ShopMgr)
                         {
-                            _shopMgr.ShopPostAnimationUpdate();
+                            LevelAsset.ShopMgr.ShopPostAnimationUpdate();
                         }
                     }
 
                     LogicFrameAnimeFrameToggle = true;
                 }
 
-                GameBoard.UpdateBoardAnimation();
-                cursor.UpdateTransform(GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+                LevelAsset.GameBoard.UpdateBoardAnimation();
+                cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
             }
-            if (HintEnabled)
+            if (LevelAsset.HintEnabled)
             {
                 UpdateHint();
             }
         }
+    }
+
+    public class GameMgr : BaseLevelMgr //LEVEL-LOGIC/每一关都有一个这个类。
+    {
+
     }
 }

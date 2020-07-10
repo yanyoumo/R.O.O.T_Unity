@@ -189,6 +189,7 @@ namespace ROOT
                 }
                 else
                 {
+                    //这里是Link的流程，理论上应该是通过Lvl-Logic更新Asset，先这么写，我知道比较乱。
                     var tmpO = FindObjectsOfType<GameObject>();
                     var dataScreen = FindObjectOfType<DataScreen>();
 
@@ -196,11 +197,11 @@ namespace ROOT
                     {
                         if (go.name == "PlayUI")
                         {
-                            gameMgr.ItemPriceRoot = go;
+                            gameMgr.LevelAsset.ItemPriceRoot = go;
                         }
                     }
 
-                    gameMgr.dataScreen = dataScreen;
+                    gameMgr.LevelAsset.DataScreen = dataScreen;
                     gameMgr.UpdateReference();
                 }           
             }

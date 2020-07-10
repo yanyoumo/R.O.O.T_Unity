@@ -175,61 +175,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: GameBoard
+      propertyPath: GameBoard_IO
       value: 
       objectReference: {fileID: 6771122058842015215}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: Item1Price
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: Item2Price
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: Item3Price
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: Item4Price
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: Item1Price_TMP
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: Item2Price_TMP
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: Item3Price_TMP
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: Item4Price_TMP
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: PlayingUI
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: TutorialUI
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: ShopUI
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: HintPanel
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 137906548, guid: 25923f3782893cf449b4c4facea54024, type: 3}
-      propertyPath: dataScreen
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 8586799390202968552, guid: 25923f3782893cf449b4c4facea54024,
         type: 3}
       propertyPath: m_Name
