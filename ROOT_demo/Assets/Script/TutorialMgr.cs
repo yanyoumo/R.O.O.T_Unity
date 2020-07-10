@@ -12,7 +12,7 @@ namespace ROOT
 {
     public sealed partial class TutorialMgr : MonoBehaviour
     {
-        public GameMgr MainGameMgr;
+        public BaseTutorialMgr MainGameMgr;
         public TutorialActionBase tutorialAction;//=new TutorialActionBasicControl();
         public static event RootEVENT.GameMajorEvent TutorialCompleteReached;
 

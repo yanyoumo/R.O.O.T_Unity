@@ -8,7 +8,6 @@ using UnityEngine.Assertions.Must;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
-
 //TODO https://shimo.im/docs/Dd86KXTqHJpqxwYX
 namespace ROOT
 {
@@ -25,6 +24,18 @@ namespace ROOT
         public GameStatus CurrentGameStatus;
         public float lastEndingIncome;
         public float lastEndingTime;
+    }
+
+    public interface ITutorialLevel
+    {
+        void InitDestoryer(TutorialMgr invoker);
+        void ForceSetDestoryerShell(TutorialMgr invoker, Vector2Int nextIncome);
+        void ForceWindDestoryer(TutorialMgr invoker);
+        void InitShop(TutorialMgr invoker);
+        void StartShop(TutorialMgr invoker);
+        void InitGameStateMgr(TutorialMgr invoker);
+        void InitCurrencyIOMgr(TutorialMgr invoker);
+        void InitCursor(TutorialMgr invoker, Vector2Int pos);
     }
 
     //要把Asset和Logic彻底拆开。
@@ -457,26 +468,26 @@ namespace ROOT
         public static event RootEVENT.GameMajorEvent GameOverReached;
         public static event RootEVENT.GameMajorEvent GameCompleteReached;
         //ASSET
-        internal GameAssets LevelAsset;
+        protected internal GameAssets LevelAsset;
         //LVL-Logic还负责和Inspector交互。需要把这里的引用传到Asset里面
         //原则上这些引用只有一开始用一下，之后不能从这里调。
-        public GameObject CursorTemplate_IO;
-        public Board GameBoard_IO;
+        public GameObject CursorTemplateIo;
+        public Board GameBoardIo;
         //Lvl-Logic实际用的判断逻辑。
         public bool Playing { get; private set;  }
-        private bool LogicFrameAnimeFrameToggle = true;
-        private bool readyToGo = false;
-        private bool referenceOK = false;
-        private bool pendingCleanUp;
-        
-        private float animationTimerOrigin = 0.0f;//都是秒
-        private float animationDuration = 0.1f;//都是秒
+        protected bool LogicFrameAnimeFrameToggle = true;
+        protected bool ReadyToGo = false;
+        protected bool ReferenceOk = false;
+        protected bool PendingCleanUp;
+
+        protected float AnimationTimerOrigin = 0.0f;//都是秒
+        protected float AnimationDuration = 0.1f;//都是秒
 
         void LinkGameAsset()
         {
             //还要在这里把Asset的数据填好。这里只搞要从Inspector里面进来的。
-            LevelAsset.CursorTemplate = CursorTemplate_IO;
-            LevelAsset.GameBoard = GameBoard_IO;
+            LevelAsset.CursorTemplate = CursorTemplateIo;
+            LevelAsset.GameBoard = GameBoardIo;
         }
 
         void Awake()
@@ -499,48 +510,19 @@ namespace ROOT
             Destroy(obj);
         }
 
-        //之后Tutorial和一般的Level要分开。
-        public void SetReady_Tutorial(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
+        protected void InvokeGameStartedEvent()
         {
-            Debug.Assert(false);//先关了。
-            //这里是默认都关了
-            /*Debug.Assert(referenceOK);
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
-            LevelAsset.DisableAllFeature();
-
-            readyToGo = true;
-            SetLevelAsset();
-            GameStarted?.Invoke();*/
-        }
-
-        //之后Tutorial和一般的Level要分开。
-        public void SetReady_GamePlay(ScoreSet scoreSet=null,PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
-        {
-            Debug.Assert(referenceOK);//意外的有确定Reference的……还行……
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
-
-            InitCurrencyIOMgr();
-            LevelAsset.DeltaCurrency = 0.0f;
-
-            LevelAsset.GameStateMgr = _gameStateMgrType!=null ? GameStateMgr.GenerateGameStateMgrByType(_gameStateMgrType) : new StandardGameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
-
-            InitShop();
-            InitDestoryer();
-
-            LevelAsset.EnableAllFeature();
-            InitCursor(new Vector2Int(2, 3));
-
-            LevelAsset.GameBoard.InitBoardRealStart();
-            LevelAsset.GameBoard.UpdateBoardAnimation();
-            StartShop();
-
-            readyToGo = true;
-
             GameStarted?.Invoke();
         }
 
-        public bool CheckReference()
+        public abstract void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData(),Type gameStateMgrType = null);
+        protected abstract void InitDestoryer();
+        protected abstract void InitShop();
+        protected abstract void InitGameStateMgr();
+        protected abstract void InitCurrencyIoMgr();
+        protected abstract void InitCursor(Vector2Int pos);
+
+        public virtual bool CheckReference()
         {
             bool res = true;
             res &= (LevelAsset.DataScreen != null);
@@ -550,8 +532,7 @@ namespace ROOT
             res &= (LevelAsset.Item4PriceTmp != null);
             return res;
         }
-
-        public void UpdateReference()
+        public virtual void UpdateReference()
         {
             var tempT = LevelAsset.ItemPriceRoot.GetComponentsInChildren<TextMeshPro>();
             foreach (var text in tempT)
@@ -574,106 +555,26 @@ namespace ROOT
                 }
             }
             LinkGameAsset();
-            referenceOK = CheckReference();
+            ReferenceOk = CheckReference();
         }
-
-        private void InitDestoryer()
-        {
-            LevelAsset.WarningDestoryer = new MeteoriteBomber();
-            LevelAsset.WarningDestoryer.SetBoard(ref LevelAsset.GameBoard);
-            LevelAsset.WarningDestoryer.Init(5, 2);
-        }
-
-        #region TutorialShellRegion
-
-        public void InitDestoryer(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            InitDestoryer();
-        }
-
-        public void ForceSetDestoryerShell(TutorialMgr invoker, Vector2Int nextIncome)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            ((MeteoriteBomber)LevelAsset.WarningDestoryer).ForceSetDestoryer(invoker,nextIncome);
-        }
-
-        public void ForceWindDestoryer(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            do
-            {
-                LevelAsset.WarningDestoryer.Step();
-            } while (((MeteoriteBomber)LevelAsset.WarningDestoryer).Counter>0);
-        }
-
-        public void InitShop(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            InitShop();
-        }
-        public void StartShop(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            StartShop();
-        }
-
-        public void InitGameStateMgr(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            InitGameStateMgr();
-        }
-
-        public void InitCurrencyIOMgr(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            InitCurrencyIOMgr();
-        }
-
-        public void InitCursor(TutorialMgr invoker, Vector2Int pos)
-        {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
-            InitCursor(pos);
-        }
-
-        #endregion
-
-        private void InitShop()
-        {
-            LevelAsset.ShopMgr = gameObject.AddComponent<ShopMgr>();
-            LevelAsset.ShopMgr.UnitTemplate = LevelAsset.GameBoard.UnitTemplate;
-            LevelAsset.ShopMgr.ShopInit();
-            LevelAsset.ShopMgr.ItemPriceTexts_TMP = new[] { LevelAsset.Item1PriceTmp, LevelAsset.Item2PriceTmp, LevelAsset.Item3PriceTmp, LevelAsset.Item4PriceTmp };
-            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
-            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
-        }
-        
-        private void StartShop()
+        protected virtual void StartShop()
         {
             LevelAsset.ShopMgr.ShopStart();
         }
-        
-        private void InitGameStateMgr()
+        protected virtual void UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
-            LevelAsset.GameStateMgr = new StandardGameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
+            //这个函数就很接近裁判要做的事儿了。
+            if (currentLevelAsset.GameStateMgr.EndGameCheck(new ScoreSet(), new PerMoveData()))
+            {
+                //CurrencyText.text = "GAME OVER";
+                GameMasterManager.UpdateGameGlobalStatuslastEndingIncome(currentLevelAsset.GameStateMgr.GetCurrency() - currentLevelAsset.GameStateMgr.StartingMoney);
+                GameMasterManager.UpdateGameGlobalStatuslastEndingTime(currentLevelAsset.GameStateMgr.GetGameTime());
+                //此时要把GameOverScene所需要的内容填好。
+                PendingCleanUp = true;
+                GameOverReached?.Invoke();
+            }
         }
-        
-        private void InitCurrencyIOMgr()
-        {
-            LevelAsset.CurrencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
-            LevelAsset.CurrencyIoCalculator.m_Board = LevelAsset.GameBoard;
-        }
-        
-        private void InitCursor(Vector2Int pos)
-        {
-            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
-            Cursor cursor=LevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
-        }
-       
-        void UpdateHint()
+        protected virtual void UpdateHint()
         {
             LevelAsset.GameBoard.ResetUnitEmission();
             if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD) || LevelAsset.ForceHddConnectionHint)
@@ -687,24 +588,77 @@ namespace ROOT
             }
         }
 
-        //这个严格来说就已经属于检测了。
-        private void UpdateGameOverStatus(GameAssets currentLevelAsset)
+        IEnumerator AnimationCoroutine()
         {
-            //这个函数就很接近裁判要做的事儿了。
-            if (currentLevelAsset.GameStateMgr.EndGameCheck(new ScoreSet(), new PerMoveData()))
+            //这个使用coroutine重写。
+            var cursor = LevelAsset.Cursor;
+
+            float animationTimer = Time.timeSinceLevelLoad - AnimationTimerOrigin;
+            float animationLerper = animationTimer / AnimationDuration;
+            if (LevelAsset.AnimationPendingObj.Count > 0)
             {
-                //CurrencyText.text = "GAME OVER";
-                GameMasterManager.UpdateGameGlobalStatuslastEndingIncome(currentLevelAsset.GameStateMgr.GetCurrency() - currentLevelAsset.GameStateMgr.StartingMoney);
-                GameMasterManager.UpdateGameGlobalStatuslastEndingTime(currentLevelAsset.GameStateMgr.GetGameTime());
-                //此时要把GameOverScene所需要的内容填好。
-                pendingCleanUp = true;
-                GameOverReached?.Invoke();
+                animationLerper = Mathf.Min(animationLerper, 1.0f);
+                foreach (var moveableBase in LevelAsset.AnimationPendingObj)
+                {
+                    //
+                    if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
+                    {
+                        moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition,
+                            PosSetFlag.CurrentAndLerping);
+                    }
+                    else
+                    {
+                        moveableBase.LerpingBoardPosition = moveableBase.LerpBoardPos(animationLerper);
+                    }
+                }
+
+                if (LevelAsset.MovedTileAni)
+                {
+                    if (LevelAsset.ShopMgr)
+                    {
+                        LevelAsset.ShopMgr.ShopUpdateAnimation(animationLerper);
+                    }
+                }
             }
+
+            //Debug.Log(cursor.LerpingBoardPosition.ToString());
+            if (animationLerper >= 1.0f)
+            {
+                //AnimationEnding
+                foreach (var moveableBase in LevelAsset.AnimationPendingObj)
+                {
+                    //完成后的pingpong
+                    moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
+                }
+
+                if (LevelAsset.MovedTileAni)
+                {
+                    if (LevelAsset.GameBoard != null)
+                    {
+                        LevelAsset.GameBoard.UpdateBoardPostAnimation();
+                    }
+
+                    if (LevelAsset.ShopMgr)
+                    {
+                        LevelAsset.ShopMgr.ShopPostAnimationUpdate();
+                    }
+                }
+
+                LogicFrameAnimeFrameToggle = true;
+                yield break;
+            }
+
+            LevelAsset.GameBoard.UpdateBoardAnimation();
+            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+            yield return null;
         }
 
+        //原则上这个不让被重载了。
         void Update()
         {
-            if ((!readyToGo) || (pendingCleanUp))
+            //StartCoroutine(CoroutineTest());
+
+            if ((!ReadyToGo) || (PendingCleanUp))
             {
                 Playing = false;
                 return;
@@ -725,7 +679,7 @@ namespace ROOT
                 //更新物理
                 //检查Asset。
                 
-                animationTimerOrigin = Time.timeSinceLevelLoad;
+                AnimationTimerOrigin = Time.timeSinceLevelLoad;
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
                 GameLogic.UpdateLogic(LevelAsset, out movedTile, out movedCursor);
@@ -744,11 +698,14 @@ namespace ROOT
             }
             else
             {
-                //这个使用coroutine重写。
-                var cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
+                //StartCoroutine(AnimationCoroutine());
+                //但是此时可以跑一些和输入无关的代码了。
+                //这个使用coroutine重写。//直接重写没P用，要想想怎么弄。
+                //coroutine对于ROOT这个框架似乎就是没啥用，但是对于kRTS可能还有点用。
+                var cursor = LevelAsset.Cursor;
 
-                float animationTimer = Time.timeSinceLevelLoad - animationTimerOrigin;
-                float animationLerper = animationTimer / animationDuration;
+                float animationTimer = Time.timeSinceLevelLoad - AnimationTimerOrigin;
+                float animationLerper = animationTimer / AnimationDuration;
                 if (LevelAsset.AnimationPendingObj.Count > 0)
                 {
                     animationLerper = Mathf.Min(animationLerper, 1.0f);
@@ -811,8 +768,93 @@ namespace ROOT
         }
     }
 
+    public abstract class BaseTutorialMgr : BaseLevelMgr,ITutorialLevel //LEVEL-LOGIC/每一关都有一个这个类。
+    {
+        public abstract void InitDestoryer(TutorialMgr invoker);
+        public abstract void ForceSetDestoryerShell(TutorialMgr invoker, Vector2Int nextIncome);
+        public virtual void ForceWindDestoryer(TutorialMgr invoker)
+        {
+            Debug.Assert(invoker, "这个函数只能在教程里面调。");
+            do
+            {
+                LevelAsset.WarningDestoryer.Step();
+            } while (((MeteoriteBomber)LevelAsset.WarningDestoryer).Counter > 0);
+        }
+        public abstract void InitShop(TutorialMgr invoker);
+        public abstract void StartShop(TutorialMgr invoker);
+        public abstract void InitGameStateMgr(TutorialMgr invoker);
+        public abstract void InitCurrencyIOMgr(TutorialMgr invoker);
+        public abstract void InitCursor(TutorialMgr invoker, Vector2Int pos);
+
+        public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = default, Type _gameStateMgrType = null)
+        {
+            Debug.Assert(ReferenceOk);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+            LevelAsset.DisableAllFeature();
+
+            ReadyToGo = true;
+            InvokeGameStartedEvent();
+        }
+    }
+
     public class GameMgr : BaseLevelMgr //LEVEL-LOGIC/每一关都有一个这个类。
     {
+        public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
+        {
+            Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
+            InitCurrencyIoMgr();
+            LevelAsset.DeltaCurrency = 0.0f;
+
+            LevelAsset.GameStateMgr = _gameStateMgrType != null ? GameStateMgr.GenerateGameStateMgrByType(_gameStateMgrType) : new StandardGameStateMgr();
+            LevelAsset.GameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
+
+            InitShop();
+            InitDestoryer();
+
+            LevelAsset.EnableAllFeature();
+            InitCursor(new Vector2Int(2, 3));
+
+            LevelAsset.GameBoard.InitBoardRealStart();
+            LevelAsset.GameBoard.UpdateBoardAnimation();
+            StartShop();
+
+            ReadyToGo = true;
+
+            InvokeGameStartedEvent();
+        }
+        protected override void InitDestoryer()
+        {
+            LevelAsset.WarningDestoryer = new MeteoriteBomber();
+            LevelAsset.WarningDestoryer.SetBoard(ref LevelAsset.GameBoard);
+            LevelAsset.WarningDestoryer.Init(5, 2);
+        }
+        protected override void InitShop()
+        {
+            LevelAsset.ShopMgr = gameObject.AddComponent<ShopMgr>();
+            LevelAsset.ShopMgr.UnitTemplate = LevelAsset.GameBoard.UnitTemplate;
+            LevelAsset.ShopMgr.ShopInit();
+            LevelAsset.ShopMgr.ItemPriceTexts_TMP = new[] { LevelAsset.Item1PriceTmp, LevelAsset.Item2PriceTmp, LevelAsset.Item3PriceTmp, LevelAsset.Item4PriceTmp };
+            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
+        }
+        protected override void InitGameStateMgr()
+        {
+            LevelAsset.GameStateMgr = new StandardGameStateMgr();
+            LevelAsset.GameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
+        }
+        protected override void InitCurrencyIoMgr()
+        {
+            LevelAsset.CurrencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
+            LevelAsset.CurrencyIoCalculator.m_Board = LevelAsset.GameBoard;
+        }
+        protected override void InitCursor(Vector2Int pos)
+        {
+            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
+            Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
+            cursor.InitPosWithAnimation(pos);
+            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+        }
     }
 }

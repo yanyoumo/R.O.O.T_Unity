@@ -249,9 +249,6 @@ namespace ROOT
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
-
-                //ItemPriceTexts[i].text = "";
-                //ItemPriceTexts[i].text = Utils.PaddingNum3Digit(_prices[i] * _priceCof[i]);
                 ItemPriceTexts_TMP[i].text = Utils.PaddingNum3Digit(_prices[i] * _priceCof[i]);
             }
         }

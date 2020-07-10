@@ -9,6 +9,9 @@ namespace ROOT
 {
     //TutorialManager全权由这个东西管理，TutorialMasterManager只传一个ActionBase进来。
     //这里负责把Visual和TutorialManager的引用建立起来。然后就TutorialManager和GameManager接手了。
+
+    //现在这一套也要完全重写，这里应该不再区分一般Level还是Tutorial了。
+    //coroutine还真有可能在这儿用。
     public class GameMasterManager : MonoBehaviour
     {
 
@@ -16,7 +19,7 @@ namespace ROOT
         private PerMoveData NextGamePerMoveData;
         private Type NextGameState;
         private TutorialActionBase NextActionBase;
-        private GameMgr gameMgr;
+        private BaseLevelMgr gameMgr;
 
 
         private static GameGlobalStatus gameGlobalStatus;
@@ -178,12 +181,12 @@ namespace ROOT
                     {
                         if (gameGlobalStatus.CurrentGameStatus == GameStatus.Playing)
                         {
-                            gameMgr.SetReady_GamePlay(NextGameScoreSet, NextGamePerMoveData, NextGameState);
+                            gameMgr.InitLevel(NextGameScoreSet, NextGamePerMoveData, NextGameState);
                         }
                         else if (gameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial)
                         {
-                            gameMgr.SetReady_Tutorial(NextActionBase.GetScoreSet, NextActionBase.GetPerMoveData,
-                                NextActionBase.GetGameMove);
+                            Debug.Assert(false);//准备重构
+                            //gameMgr.SetReady_Tutorial(NextActionBase.GetScoreSet, NextActionBase.GetPerMoveData,NextActionBase.GetGameMove);
                         }
                     }
                 }
@@ -208,12 +211,13 @@ namespace ROOT
             else
             {
                 //这是第一次找到GameMgr的时候，只在上面运行一次的东西写在这。
-                gameMgr = FindObjectOfType<GameMgr>();
+                gameMgr = FindObjectOfType<BaseLevelMgr>();
                 if (gameMgr != null)
                 {
                     GameMgr.GameOverReached += CurrentGameOver;
                     if (gameGlobalStatus.CurrentGameStatus == GameStatus.Tutorial)
                     {
+                        Debug.Assert(gameMgr is BaseTutorialMgr);
                         if (tutorialMgr == null)
                         {
                             GameObject goO = new GameObject();
@@ -221,7 +225,7 @@ namespace ROOT
                             go.name = "TutorialMgr";
                             tutorialMgr = go.AddComponent<TutorialMgr>();
                             tutorialMgr.tutorialAction = NextActionBase;
-                            tutorialMgr.MainGameMgr = gameMgr;
+                            tutorialMgr.MainGameMgr = gameMgr as BaseTutorialMgr;
                             TutorialMgr.TutorialCompleteReached += CurrentTutorialOver;
                             Destroy(goO);
                         }
