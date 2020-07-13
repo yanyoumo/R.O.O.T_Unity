@@ -11,8 +11,7 @@ namespace ROOT
     public class GameOverMgr : MonoBehaviour
     {
         public TextMeshProUGUI EndingMessage;
-        public static event RootEVENT.GameMajorEvent GameRequestSameRestart;
-
+        //public static event RootEVENT.GameMajorEvent GameRequestSameRestart;
         public bool sceneNotActive;
 
         void GameOverSceneLoaded(Scene scene,LoadSceneMode loadSceneMode)
@@ -53,7 +52,8 @@ namespace ROOT
 
         public void GameRestart()
         {
-            GameRequestSameRestart?.Invoke();
+            //TODO 这里需要拿到之前玩的关卡类型。这里怎么处理？
+            GameMasterManager.Instance.RestartLevel<DefaultLevelMgr>();
         }
     }
 }

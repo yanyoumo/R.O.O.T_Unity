@@ -45,7 +45,7 @@ namespace ROOT
 
         //
         public static readonly int SCENE_ID_START = 0;
-        public static readonly int SCENE_ID_GAMEPLAY = 1;
+        public static readonly int SCENE_ID_LEVELMASTER = 1;
         public static readonly int SCENE_ID_GAMEOVER = 2;
         public static readonly int SCENE_ID_ADDTIVEVISUAL = 3;
         public static readonly int SCENE_ID_ADDTIVELOGIC = 4;
@@ -68,9 +68,9 @@ namespace ROOT
     }
     public static class RootEVENT
     { //
-        public delegate void GameMajorEvent();
-        public delegate void TutorialStartEvent(TutorialActionBase tutorialAction);
-        public delegate void GameStartEvent(ScoreSet scoreSet, PerMoveData _perMoveData,Type gameStateType);
+        //public delegate void GameMajorEvent();
+        //public delegate void TutorialStartEvent(TutorialActionBase tutorialAction);
+        //public delegate void GameStartEvent(ScoreSet scoreSet, PerMoveData _perMoveData,Type gameStateType);
     }
 
     public static class Utils

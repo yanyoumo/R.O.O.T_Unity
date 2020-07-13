@@ -386,7 +386,10 @@ namespace ROOT
     /// </summary>
     public sealed class GameAssets//ASSET 这里不应该有任何之际逻辑（有些便于操作的除外
     {
-        public BaseLevelMgr Owner;//裁判同时要担任神使，神要通过这里影响世界。
+        /// <summary>
+        /// 裁判同时要担任神使，神要通过这里影响世界。
+        /// </summary>
+        public BaseLevelMgr Owner;
         //这些引用在Asset外面要设好，在WRD-LOGIC里面也要处理。
         public GameObject CursorTemplate;
         public GameObject ItemPriceRoot;
@@ -414,11 +417,19 @@ namespace ROOT
         public bool CursorEnabled = true;
         public bool RotateEnabled = true;
 
-        //public bool UnitEnabled = true;
+        /// <summary>
+        /// 开启商店，先决条件为：PlayerDataUiEnabled开启。
+        /// </summary>
         public bool ShopEnabled = true;
         public bool UpdateDeltaCurrencyEnabled = true;
+        /// <summary>
+        /// 摧毁模组的计算，但是同时需要PlayerDataUiEnabled开启才进行步进。
+        /// </summary>
         public bool DestoryerEnabled = false;
         public bool HintEnabled = true;
+        /// <summary>
+        ///更新玩家每一轮的信息，包含更新LCD；为商店开启购买的先决条件，为摧毁模组步进的先决条件。
+        /// </summary>
         public bool PlayerDataUiEnabled = true;
         public bool GameOverEnabled = true;
 
@@ -464,15 +475,15 @@ namespace ROOT
     public abstract class BaseLevelMgr : MonoBehaviour//LEVEL-LOGIC/每一关都有一个这个类。
     {
         //事件完全由LVL-Logic管理。
-        public static event RootEVENT.GameMajorEvent GameStarted;
+        /*public static event RootEVENT.GameMajorEvent GameStarted;
         public static event RootEVENT.GameMajorEvent GameOverReached;
-        public static event RootEVENT.GameMajorEvent GameCompleteReached;
+        public static event RootEVENT.GameMajorEvent GameCompleteReached;*/
         //ASSET
         protected internal GameAssets LevelAsset;
         //LVL-Logic还负责和Inspector交互。需要把这里的引用传到Asset里面
         //原则上这些引用只有一开始用一下，之后不能从这里调。
-        public GameObject CursorTemplateIo;
-        public Board GameBoardIo;
+        //private GameObject CursorTemplateIo;
+        //private Board GameBoardIo;
         //Lvl-Logic实际用的判断逻辑。
         public bool Playing { get; private set;  }
         protected bool LogicFrameAnimeFrameToggle = true;
@@ -483,17 +494,16 @@ namespace ROOT
         protected float AnimationTimerOrigin = 0.0f;//都是秒
         protected float AnimationDuration = 0.1f;//都是秒
 
-        void LinkGameAsset()
-        {
-            //还要在这里把Asset的数据填好。这里只搞要从Inspector里面进来的。
-            LevelAsset.CursorTemplate = CursorTemplateIo;
-            LevelAsset.GameBoard = GameBoardIo;
-        }
+        public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC;//这个游戏的这两个参数是写死的
+        public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL;//但是别的游戏的这个值多少是需要重写的。
 
         void Awake()
         {
-            LevelAsset=new GameAssets();
+            //因为这个也是动态生成的了，UnitTemplate和Board都要动态的找了。
+            LevelAsset = new GameAssets();
             //时序现在很乱。
+            LevelAsset.CursorTemplate = Resources.Load("Cursor/Prefab/Cursor", typeof(GameObject)) as GameObject;
+            LevelAsset.GameBoard = FindObjectOfType<Board>();
             LevelAsset.Owner = this;
             //LinkGameAsset();
         }
@@ -512,10 +522,11 @@ namespace ROOT
 
         protected void InvokeGameStartedEvent()
         {
-            GameStarted?.Invoke();
+            //GameMasterManager.Instance
+            //GameStarted?.Invoke();
         }
 
-        public abstract void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData(),Type gameStateMgrType = null);
+        public abstract void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData());
         protected abstract void InitDestoryer();
         protected abstract void InitShop();
         protected abstract void InitGameStateMgr();
@@ -554,24 +565,27 @@ namespace ROOT
                     LevelAsset.Item4PriceTmp = text;
                 }
             }
-            LinkGameAsset();
             ReferenceOk = CheckReference();
         }
         protected virtual void StartShop()
         {
             LevelAsset.ShopMgr.ShopStart();
         }
-        protected virtual void UpdateGameOverStatus(GameAssets currentLevelAsset)
+        protected virtual bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             //这个函数就很接近裁判要做的事儿了。
             if (currentLevelAsset.GameStateMgr.EndGameCheck(new ScoreSet(), new PerMoveData()))
             {
-                //CurrencyText.text = "GAME OVER";
                 GameMasterManager.UpdateGameGlobalStatuslastEndingIncome(currentLevelAsset.GameStateMgr.GetCurrency() - currentLevelAsset.GameStateMgr.StartingMoney);
                 GameMasterManager.UpdateGameGlobalStatuslastEndingTime(currentLevelAsset.GameStateMgr.GetGameTime());
                 //此时要把GameOverScene所需要的内容填好。
                 PendingCleanUp = true;
-                GameOverReached?.Invoke();
+                GameMasterManager.Instance.LevelFinished();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
         protected virtual void UpdateHint()
@@ -652,7 +666,6 @@ namespace ROOT
             cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
             yield return null;
         }
-
         //原则上这个不让被重载了。
         void Update()
         {
@@ -786,7 +799,7 @@ namespace ROOT
         public abstract void InitCurrencyIOMgr(TutorialMgr invoker);
         public abstract void InitCursor(TutorialMgr invoker, Vector2Int pos);
 
-        public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = default, Type _gameStateMgrType = null)
+        public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = default)
         {
             Debug.Assert(ReferenceOk);
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
@@ -797,9 +810,9 @@ namespace ROOT
         }
     }
 
-    public class GameMgr : BaseLevelMgr //LEVEL-LOGIC/每一关都有一个这个类。
+    public class DefaultLevelMgr : BaseLevelMgr //LEVEL-LOGIC/每一关都有一个这个类。
     {
-        public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData(), Type _gameStateMgrType = null)
+        public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
@@ -807,7 +820,7 @@ namespace ROOT
             InitCurrencyIoMgr();
             LevelAsset.DeltaCurrency = 0.0f;
 
-            LevelAsset.GameStateMgr = _gameStateMgrType != null ? GameStateMgr.GenerateGameStateMgrByType(_gameStateMgrType) : new StandardGameStateMgr();
+            LevelAsset.GameStateMgr = new StandardGameStateMgr();
             LevelAsset.GameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
 
             InitShop();
@@ -821,7 +834,6 @@ namespace ROOT
             StartShop();
 
             ReadyToGo = true;
-
             InvokeGameStartedEvent();
         }
         protected override void InitDestoryer()

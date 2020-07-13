@@ -14,7 +14,7 @@ namespace ROOT
     {
         public BaseTutorialMgr MainGameMgr;
         public TutorialActionBase tutorialAction;//=new TutorialActionBasicControl();
-        public static event RootEVENT.GameMajorEvent TutorialCompleteReached;
+        //public static event RootEVENT.GameMajorEvent TutorialCompleteReached;
 
         private int actionIndex = -1;
         private int lastActionCount = 0;
@@ -84,7 +84,8 @@ namespace ROOT
                     break;
                 case TutorialActionType.End:
                     Debug.Log("Current TutorialCompleteReached");
-                    TutorialCompleteReached?.Invoke();
+                    GameMasterManager.Instance.LevelFinished();
+                    //TutorialCompleteReached?.Invoke();
                     break;
                 default:
                     throw new NotImplementedException();
@@ -145,7 +146,7 @@ namespace ROOT
         private int _tutorialContentCounter = 0;
         private int _tutorialContentMax = 0;
 
-        public GameMgr MainGameMgr;
+        public DefaultLevelMgr MainGameMgr;
 
         private GameObject _mCursor;
 

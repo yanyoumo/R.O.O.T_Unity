@@ -69,3 +69,4 @@ crashlytics-build.properties
 /BuildGame_*/*
 
 /Art_Assets/**/*
+ROOT_demo/Packages/packages-lock.json

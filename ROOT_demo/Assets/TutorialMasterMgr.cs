@@ -16,22 +16,22 @@ namespace ROOT
         private PerMoveData NextGamePerMoveData = new PerMoveData();
 
         private GameMasterManager gameMasterManager;
-        public static event RootEVENT.GameMajorEvent RequestTutorialStart;
+        /*public static event RootEVENT.GameMajorEvent RequestTutorialStart;
         public static event RootEVENT.GameStartEvent RequestTutorialStartWParam;
-        public static event RootEVENT.TutorialStartEvent TutorialStart;
+        public static event RootEVENT.TutorialStartEvent TutorialStart;*/
         private bool gameMasterManagerReady = false;
         TutorialQuadDataPack[] dataS;
 
-        public void GameStarted()
+        /*public void GameStarted()
         {
-            GameMgr.GameStarted -= GameStarted;
+            DefaultLevelMgr.GameStarted -= GameStarted;
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_TUTORIAL);//干脆自己Unload掉，到时候再Reload也方便。
         }
 
         void Awake()
         {
             InitTutorialActions();
-            GameMgr.GameStarted += GameStarted;
+            DefaultLevelMgr.GameStarted += GameStarted;
         }
 
         void Start()
@@ -80,6 +80,6 @@ namespace ROOT
         public void ButtonsListener(int buttonId)
         {
             TutorialStart?.Invoke(tutorialActions[buttonId]);
-        }
+        }*/
     }
 }
