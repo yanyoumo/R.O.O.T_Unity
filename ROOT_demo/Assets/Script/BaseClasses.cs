@@ -5,14 +5,6 @@ using UnityEngine;
 
 namespace ROOT
 {
-    /*public interface IPlaceable
-    {      
-        Vector2Int CurrentBoardPosition { get; set; }
-        Vector2Int NextBoardPosition { get; set; }
-        Vector2 LerpingBoardPosition { get; set; }
-        void UpdateTransform(Vector3 pos);
-    }*/
-
     public enum PosSetFlag
     {
         NONE,

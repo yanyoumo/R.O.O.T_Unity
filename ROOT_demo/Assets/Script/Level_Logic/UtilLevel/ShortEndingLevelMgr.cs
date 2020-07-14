@@ -16,7 +16,6 @@ namespace ROOT
             LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.GameStateMgr = new StandardGameStateMgr();
             LevelAsset.GameStateMgr.InitGameMode(new ScoreSet(10, 3), new PerMoveData());
-            //LevelAsset.EnableAllFeature();
             LevelAsset.DisableAllFeature();
             LevelAsset.InputEnabled = true;
             LevelAsset.CursorEnabled = true;
@@ -27,40 +26,19 @@ namespace ROOT
             LevelAsset.GameBoard.InitBoardRealStart();
             LevelAsset.GameBoard.UpdateBoardAnimation();
 
+            LevelAsset.StartingScoreSet = scoreSet;
+            LevelAsset.StartingPerMoveData = perMoveData;
+
             ReadyToGo = true;
             InvokeGameStartedEvent();
         }
 
-        protected override void InitDestoryer(){}
-        protected override void InitShop(){}
-
-        protected override void InitGameStateMgr(){}
-        protected override void InitCurrencyIoMgr(){}
-
-        protected override void InitCursor(Vector2Int pos)
+        protected void InitCursor(Vector2Int pos)
         {
             LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
             Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
             cursor.InitPosWithAnimation(pos);
             cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
-        }
-
-        protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
-        {
-            //这个函数就很接近裁判要做的事儿了。
-            if (currentLevelAsset.GameStateMgr.EndGameCheck(new ScoreSet(10,3), new PerMoveData()))
-            {
-                GameMasterManager.UpdateGameGlobalStatuslastEndingIncome(0);
-                GameMasterManager.UpdateGameGlobalStatuslastEndingTime(0);
-                //此时要把GameOverScene所需要的内容填好。
-                PendingCleanUp = true;
-                GameMasterManager.Instance.LevelFinished();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
     }
 }

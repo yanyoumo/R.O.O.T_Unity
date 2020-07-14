@@ -10,12 +10,6 @@ namespace ROOT
         public float Currency;
         public int GameTime;
 
-        public ScoreSet()
-        {
-            Currency = 0;
-            GameTime = 0;
-        }
-
         public ScoreSet(float initCurrency = 1000.0f, int initTime = 60)
         {
             Currency = initCurrency;

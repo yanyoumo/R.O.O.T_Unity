@@ -10,9 +10,9 @@ using UnityEngine.UI;
 
 namespace ROOT
 {
-    public sealed partial class TutorialMgr : MonoBehaviour
+    /*public sealed partial class TutorialMgr : MonoBehaviour
     {
-        public BaseTutorialMgr MainGameMgr;
+        /*public BaseTutorialMgr MainGameMgr;
         public TutorialActionBase tutorialAction;//=new TutorialActionBasicControl();
         //public static event RootEVENT.GameMajorEvent TutorialCompleteReached;
 
@@ -84,7 +84,7 @@ namespace ROOT
                     break;
                 case TutorialActionType.End:
                     Debug.Log("Current TutorialCompleteReached");
-                    GameMasterManager.Instance.LevelFinished();
+                    LevelMasterManager.Instance.LevelFinished(null);
                     //TutorialCompleteReached?.Invoke();
                     break;
                 default:
@@ -128,7 +128,7 @@ namespace ROOT
                     DealStepMgr();
                 }
             }
-        }
+        }*/
 
         /*private Canvas _tutorialCanvas;
         //private TextMeshProUGUI _buttonText;
@@ -413,6 +413,6 @@ namespace ROOT
                     _mainText.text = "教程结束";
                 }
             }
-        }*/
-    }
+        }
+    }*/
 }

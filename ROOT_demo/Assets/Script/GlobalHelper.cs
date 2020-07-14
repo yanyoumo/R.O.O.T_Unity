@@ -64,13 +64,12 @@ namespace ROOT
         public static readonly string LOCAL_EAST_SIDE_MESH_RENDERER_NAME = "LocalEastSide";
         public static readonly string LOCAL_SOUTH_SIDE_MESH_RENDERER_NAME = "LocalSouthSide";
         public static readonly string LOCAL_WEST_SIDE_MESH_RENDERER_NAME = "LocalWestSide";
-
     }
     public static class RootEVENT
-    { //
-        //public delegate void GameMajorEvent();
-        //public delegate void TutorialStartEvent(TutorialActionBase tutorialAction);
-        //public delegate void GameStartEvent(ScoreSet scoreSet, PerMoveData _perMoveData,Type gameStateType);
+    { 
+        public delegate void GameMajorEvent();
+        public delegate void TutorialStartEvent(TutorialActionBase tutorialAction);
+        public delegate void GameStartEvent(ScoreSet scoreSet, PerMoveData _perMoveData,Type gameStateType);
     }
 
     public static class Utils

@@ -12,15 +12,19 @@ namespace ROOT
 
     //现在这一套也要完全重写，这里应该不再区分一般Level还是Tutorial了。
     //coroutine还真有可能在这儿用。
-    public class GameMasterManager : MonoBehaviour
+    //这个是足球场的后勤和人事部门，告诉它需要来一场如何的比赛。
+    //叫裁判进来，联系球员这些动态Asset，设置好球门这些静态Asset，让后就全权交给裁判了
+    //现在就是裁判确定游戏结束后，是直接处理游戏结束的场景，还是让后勤部门处理？
+    //目前认为后勤也没有“重启”关卡的概念，让后期帮忙从裁判往结束场景里面传递数据。
+    public partial class LevelMasterManager : MonoBehaviour
     {
 
-        private static GameMasterManager _instance;
-        public static GameMasterManager Instance => _instance;
+        private static LevelMasterManager _instance;
+        public static LevelMasterManager Instance => _instance;
         
         //只是给co-routine用一下，这个master里面原则上不留变量。
-        private LevelLogicSpawner lls;
-        private BaseLevelMgr gameMgr;
+        private LevelLogicSpawner _lls;
+        private BaseLevelMgr _gameMgr;
         IEnumerator LinkLevel()
         {
             while (true)
@@ -45,16 +49,16 @@ namespace ROOT
             {
                 if (go.name == "PlayUI")
                 {
-                    gameMgr.LevelAsset.ItemPriceRoot = go;
+                    _gameMgr.LevelAsset.ItemPriceRoot = go;
                 }
             }
 
-            gameMgr.LevelAsset.DataScreen = dataScreen;
-            gameMgr.UpdateReference();
+            _gameMgr.LevelAsset.DataScreen = dataScreen;
+            _gameMgr.UpdateReference();
         }
-        IEnumerator FindLLSAfterLoad()
+        IEnumerator FindLlsAfterLoad()
         {
-            while (lls==null)
+            while (_lls==null)
             {
                 try
                 {
@@ -64,25 +68,23 @@ namespace ROOT
                 {
 
                 }
-                lls = FindObjectOfType<LevelLogicSpawner>();
+                _lls = FindObjectOfType<LevelLogicSpawner>();
                 yield return 0;
             }
         }
         IEnumerator LoadGamePlay_Coroutine<T>(ScoreSet nextScoreSet,PerMoveData nextPerMoveData) where T : BaseLevelMgr
         {
-            //var tmp = new T();
             //目前这个框架下，所有的Logic Scene只能是一个，但是基于LLS就没有问题。
             SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDTIVELOGIC, LoadSceneMode.Additive);
-            yield return StartCoroutine(FindLLSAfterLoad());
-            BaseLevelMgr tmp = lls.SpawnLevelLogic<T>();
-            lls = null;
-            gameMgr = FindObjectOfType<T>();
+            yield return StartCoroutine(FindLlsAfterLoad());
+            BaseLevelMgr tmp = _lls.SpawnLevelLogic<T>();
+            _lls = null;
+            _gameMgr = FindObjectOfType<T>();
             SceneManager.LoadSceneAsync(tmp.LEVEL_ART_SCENE_ID, LoadSceneMode.Additive);
             yield return LinkLevel();
-            Debug.Assert(gameMgr.CheckReference());
-            Debug.Assert(!gameMgr.Playing);
-            //这里是现有框架和之前框架冲突的地方。
-            gameMgr.InitLevel(nextScoreSet, nextPerMoveData);
+            Debug.Assert(_gameMgr.CheckReference());
+            Debug.Assert(!_gameMgr.Playing);
+            _gameMgr.InitLevel(nextScoreSet, nextPerMoveData);
         }
 
         void Awake()
@@ -98,15 +100,16 @@ namespace ROOT
 
             Random.InitState(Mathf.FloorToInt(Time.realtimeSinceStartup));
             //先写在这儿。
-            gameGlobalStatus = new GameGlobalStatus { CurrentGameStatus = GameStatus.Starting };
+            _gameGlobalStatus = new GameGlobalStatus { CurrentGameStatus = GameStatus.Starting };
         }
 
         //原则上加载等功能只写这几个。(重载不算
+
         public void LoadLevelThenPlay<T>(ScoreSet nextScoreSet, PerMoveData nextPerMoveData) where T : BaseLevelMgr
         {
-            if (gameGlobalStatus.CurrentGameStatus != GameStatus.Playing)
+            if (_gameGlobalStatus.CurrentGameStatus != GameStatus.Playing)
             {
-                gameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
+                _gameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
                 StartCoroutine(LoadGamePlay_Coroutine<T>(nextScoreSet, nextPerMoveData));
             }
         }
@@ -114,16 +117,38 @@ namespace ROOT
         {
             LoadLevelThenPlay<T>(new ScoreSet(), new PerMoveData());
         }
+
         public void LoadLevelThenPlay()
         {
             LoadLevelThenPlay<DefaultLevelMgr>(new ScoreSet(), new PerMoveData());
         }
 
-        public void LevelFinished()
+        private GameOverMgr GOM;
+
+        IEnumerator FindGOMAfterLoad()
         {
-            if (gameGlobalStatus.CurrentGameStatus != GameStatus.Ended)
+            while (GOM == null)
             {
-                gameGlobalStatus.CurrentGameStatus = GameStatus.Ended;
+                GOM = FindObjectOfType<GameOverMgr>();
+                yield return 0;
+            }
+        }
+        IEnumerator SendLastGameAssetsToGameOverMgr(GameAssets lastGameAssets)
+        {
+            yield return StartCoroutine(FindGOMAfterLoad());
+            Debug.Assert(GOM!=null);
+            GOM.LastGameAssets = lastGameAssets;
+        }
+
+        /// <summary>
+        /// Level-logic通过LevelManager和GameOverScene取得联系。
+        /// </summary>
+        /// <param name="lastGameAssets">已经结束关卡的参数和最终的状态。</param>
+        public void LevelFinished(GameAssets lastGameAssets)
+        {
+            if (_gameGlobalStatus.CurrentGameStatus != GameStatus.Ended)
+            {
+                _gameGlobalStatus.CurrentGameStatus = GameStatus.Ended;
                 SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_LEVELMASTER));
                 for (int i = 0; i < SceneManager.sceneCount; i++)
                 {
@@ -134,52 +159,14 @@ namespace ROOT
                     }
                 }
                 SceneManager.LoadSceneAsync(StaticName.SCENE_ID_GAMEOVER, LoadSceneMode.Additive);
+                StartCoroutine(SendLastGameAssetsToGameOverMgr(lastGameAssets));
             }
         }
 
-        public void RestartLevel<T>() where T : BaseLevelMgr
+        private static GameGlobalStatus _gameGlobalStatus;
+        public static GameGlobalStatus GetGameGlobalStatus()
         {
-            SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);//在哪里Unload也要调整一下。
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_LEVELMASTER));
-            //SetUpNextGameParam();
-            LoadLevelThenPlay<T>();
+            return _gameGlobalStatus;
         }
-
-        /*private ScoreSet NextGameScoreSet = new ScoreSet(1000.0f, 100);
-        private PerMoveData NextGamePerMoveData;
-        private Type NextGameState;
-        private TutorialActionBase NextActionBase;
-        private BaseLevelMgr gameMgr;
-        
-        private TutorialMgr tutorialMgr;*/
-
-        //把这个挪出去。
-        private static GameGlobalStatus gameGlobalStatus;
-        public static GameGlobalStatus getGameGlobalStatus()
-        {
-            return gameGlobalStatus;
-        }
-
-        public static void UpdateGameGlobalStatuslastEndingIncome(float lastEndingIncome)
-        {
-            gameGlobalStatus.lastEndingIncome = lastEndingIncome;
-        }
-        public static void UpdateGameGlobalStatuslastEndingTime(float lastEndingTime)
-        {
-            gameGlobalStatus.lastEndingTime = lastEndingTime;
-        }
-
-        /*void SetUpNextGameParam(ScoreSet scoreSet=null,PerMoveData _perMoveData=new PerMoveData())
-        {
-            if (scoreSet != null)
-            {
-                NextGameScoreSet = scoreSet;
-            }
-            else
-            {
-                NextGameScoreSet = new ScoreSet(1000.0f, 60);
-            }
-            NextGamePerMoveData = _perMoveData;
-        }*/
     }
 }
