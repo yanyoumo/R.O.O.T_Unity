@@ -9,11 +9,13 @@ namespace ROOT
     {
         public string Title;
         public string ButtonText;
+        public Sprite Thumbnail;
 
-        public TutorialQuadDataPack(string title, string _buttonText)
+        public TutorialQuadDataPack(string title, string _buttonText, string thumbnailName)
         {
             Title = title;
             ButtonText = _buttonText;
+            Thumbnail = Resources.Load<Sprite>("UIThumbnail/TutorialThumbnail/" + thumbnailName);
         }
     }
 

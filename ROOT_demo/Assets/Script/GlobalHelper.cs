@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -394,6 +393,51 @@ namespace ROOT
         }
     }
 
+
+    public abstract partial class TutorialActionBase
+    {
+        protected static string TmpColorBlueXml(string content)
+        {
+            return TmpColorXml(content, Color.blue);
+        }
+
+        protected static string TmpColorRedXml(string content)
+        {
+            return TmpColorXml(content, Color.red);
+        }
+
+        protected static string TmpColorXml(string content, Color col)
+        {
+            var hexCol = ColorUtility.ToHtmlStringRGB(col);
+            return "<color=#" + hexCol + ">" + content + "</color>";
+        }
+
+        protected static string TmpColorBold(string content)
+        {
+            return "<b>" + content + "</b>";
+        }
+
+        protected static string TmpBracket(string content)
+        {
+            return "[" + content + "]";
+        }
+
+        protected static string TmpBracketAndBold(string content)
+        {
+            return "[" + TmpColorBold(content) + "]";
+        }
+
+        protected static string TMPNormalDataCompo()
+        {
+            return TmpBracketAndBold(TmpColorRedXml("一般数据"));
+        }
+
+        protected static string TMPNetworkDataCompo()
+        {
+            return TmpBracketAndBold(TmpColorBlueXml("网络数据"));
+        }
+    }
+
     public sealed partial class TutorialMgr : MonoBehaviour
     {
 
@@ -420,12 +464,12 @@ namespace ROOT
 
         string TmpBracket(string content)
         {
-            return "【" + content + "】";
+            return "[" + content + "]";
         }
 
         string TmpBracketAndBold(string content)
         {
-            return "【" + TmpColorBold(content) + "】";
+            return "[" + TmpColorBold(content) + "]";
         }
 
         string TMPNormalDataCompo()

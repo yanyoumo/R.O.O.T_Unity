@@ -23,7 +23,7 @@ namespace ROOT
             _dataS = new TutorialQuadDataPack[tutorialActions.Length];
             for (var i = 0; i < tutorialActions.Length; i++)
             {
-                _dataS[i] = tutorialActions[i].GetTutorialQuadDataPack;
+                _dataS[i] = tutorialActions[i].TutorialQuadDataPack;
             }
 
             var buttons = TutorialCanvas.GetComponentInChildren<TutorialLevelSelectionMainMenu>().InitTutorialLevelSelectionMainMenu(_dataS);

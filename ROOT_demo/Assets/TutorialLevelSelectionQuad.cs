@@ -18,6 +18,7 @@ namespace ROOT
         {
             Title.text = data.Title;
             StartTutorialButtonText.text = data.ButtonText;
+            TutorialThumbnail.sprite = data.Thumbnail;
             return StartTutorialButton;
         }
     }

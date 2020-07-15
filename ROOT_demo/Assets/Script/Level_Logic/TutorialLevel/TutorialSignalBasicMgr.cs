@@ -6,18 +6,27 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    public class TutorialLevelBasicControlMgr : BaseTutorialMgr
+    public class TutorialSignalBasicMgr : BaseTutorialMgr
     {
         protected override void Update()
         {
             base.Update();
             if (ReadyToGo)
             {
-                if (ActionIndex==3)
+                if (ActionIndex == 2)
                 {
-                    LevelAsset.InputEnabled = true;
-                    LevelAsset.CursorEnabled = true;
-                    LevelAsset.RotateEnabled = true;
+                    LevelAsset.UpdateDeltaCurrencyEnabled = true;
+                    LevelAsset.HintEnabled = true;
+                    LevelAsset.ForceHddConnectionHint = true;
+                }
+                if (ActionIndex==5)
+                {
+                    LevelAsset.ForceServerConnectionHint = true;
+                }
+                if (ActionIndex == 6)
+                {
+                    LevelAsset.ForceHddConnectionHint = false;
+                    LevelAsset.ForceServerConnectionHint = false;
                 }
             }
         }
@@ -33,6 +42,7 @@ namespace ROOT
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
+            InitCurrencyIoMgr();
             LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.GameStateMgr = new StandardGameStateMgr();
             LevelAsset.GameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
@@ -42,8 +52,13 @@ namespace ROOT
             LevelAsset.StartingPerMoveData = new PerMoveData();
 
             LevelAsset.DisableAllFeature();
+            LevelAsset.InputEnabled = true;
+            LevelAsset.CursorEnabled = true;
+            LevelAsset.RotateEnabled = true;
 
-            TutorialAction =new TutorialActionBasicControl();
+            InitCursor(new Vector2Int(2, 3));
+            
+            TutorialAction = new TutorialActionSignalBasic();
 
             ReadyToGo = true;
             InvokeGameStartedEvent();
@@ -61,15 +76,14 @@ namespace ROOT
             }
             catch (NotImplementedException)
             {
-                switch (data.ActionType)
-                {
-                    case TutorialActionType.CreateCursor:
-                        InitCursor(data.Pos);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                throw new ArgumentOutOfRangeException();
             }
+        }
+
+        protected void InitCurrencyIoMgr()
+        {
+            LevelAsset.CurrencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
+            LevelAsset.CurrencyIoCalculator.m_Board = LevelAsset.GameBoard;
         }
 
         protected void InitCursor(Vector2Int pos)

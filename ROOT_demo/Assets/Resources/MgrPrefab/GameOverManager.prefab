@@ -43,3 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0b497d23d56a84ca5b19796cad7338, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EndingTitle: {fileID: 0}
+  EndingMessage: {fileID: 0}
+  BackButton: {fileID: 0}
+  OtherButton: {fileID: 0}

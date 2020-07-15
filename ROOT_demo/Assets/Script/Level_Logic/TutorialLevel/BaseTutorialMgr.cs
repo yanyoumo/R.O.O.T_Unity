@@ -11,8 +11,26 @@ namespace ROOT
         protected int ActionIndex { get; private set; } = -1;
         protected int LastActionCount { get; private set; } = 0;
         protected TutorialActionBase TutorialAction;
+        private TutorialMainTextFrame _tutorialMainText;
+        protected bool ShowText
+        {
+            set => _tutorialMainText.ShouldShow = value;
+        }
 
         protected abstract override bool UpdateGameOverStatus(GameAssets currentLevelAsset);
+
+        public override IEnumerator UpdateArtLevelReference(AsyncOperation aOP)
+        {
+            while (!aOP.isDone)
+            {
+                yield return 0;
+            }
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
+            LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
+            LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
+            _tutorialMainText = FindObjectOfType<TutorialMainTextFrame>();
+            PopulateArtLevelReference();
+        }
 
         public abstract override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = default);
 
@@ -37,10 +55,37 @@ namespace ROOT
 
         protected virtual void DisplayText(string text)
         {
-            Debug.Log(text);
+            //Debug.Log(text);
+            _tutorialMainText.Content = text;
         }
 
-        protected abstract void DealStep(TutorialActionData data);
+        /// <summary>
+        /// Tutorial父类里面会为通用的动作做一个处理。如果没有会throw
+        /// </summary>
+        /// <param name="data">输入的TutorialActionData</param>
+        protected virtual void DealStep(TutorialActionData data)
+        {
+            switch (data.ActionType)
+            {
+                case TutorialActionType.Text:
+                    DisplayText(data.Text);
+                    break;
+                case TutorialActionType.CreateUnit:
+                    CreateUnitOnBoard(data);
+                    break;
+                case TutorialActionType.End:
+                    LevelMasterManager.Instance.LevelFinished(LevelAsset);
+                    break;
+                case TutorialActionType.ShowText:
+                    _tutorialMainText.ShouldShow = true;
+                    break;
+                case TutorialActionType.HideText:
+                    _tutorialMainText.ShouldShow = false;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
         protected void DealStepMgr()
         {
             int actionLength = TutorialAction.Actions.Length;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,23 +8,28 @@ namespace ROOT
 {
     public class StartGameMgr : MonoBehaviour
     {
-        void Awake()
-        {
-            //游戏中理论最早点。
-            SceneManager.sceneLoaded += GamePlaySceneLoaded;
-        }
-
-        void Start()
+        IEnumerator LoadLevelMasterSceneAndSetActive()
         {
             SceneManager.LoadSceneAsync(StaticName.SCENE_ID_LEVELMASTER, LoadSceneMode.Additive);
+            while (true)
+            {
+                yield return 0;
+                try
+                {
+                    SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_LEVELMASTER));
+                }
+                catch (ArgumentException)
+                {
+                    continue;
+                }
+                break;
+            }
         }
 
-        void GamePlaySceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        void Awake()
         {
-            if (scene.buildIndex == StaticName.SCENE_ID_LEVELMASTER)
-            {
-                SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_LEVELMASTER));
-            }
+            Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
+            StartCoroutine(LoadLevelMasterSceneAndSetActive());
         }
 
         public void GameStart()

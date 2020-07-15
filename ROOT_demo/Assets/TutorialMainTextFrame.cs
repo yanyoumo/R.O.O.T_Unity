@@ -8,6 +8,8 @@ namespace ROOT
     public class TutorialMainTextFrame : MonoBehaviour
     {
         public TextMeshPro ContentText;
+        public TextMeshPro Next_Extended;
+        public TextMeshPro Next_Collapsed;
         public AnimationCurve Curve;
         private float ShowTime = 0.1f;
         private float ShowTimer = 0.1f;
@@ -18,11 +20,13 @@ namespace ROOT
             set => ContentText.text = value;
             get => ContentText.text;
         }
-
         public bool ShouldShow
         {
             set
             {
+                Next_Extended.enabled = value;
+                Next_Collapsed.enabled = !value;
+
                 if (shouldShow == showed)
                 {
                     shouldShow = value;

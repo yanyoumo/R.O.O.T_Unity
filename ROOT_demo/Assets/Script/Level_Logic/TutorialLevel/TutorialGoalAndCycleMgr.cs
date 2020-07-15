@@ -6,18 +6,17 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    public class TutorialLevelBasicControlMgr : BaseTutorialMgr
+    public class TutorialGoalAndCycleMgr : BaseTutorialMgr
     {
         protected override void Update()
         {
             base.Update();
             if (ReadyToGo)
             {
-                if (ActionIndex==3)
+                if (ActionIndex==5)
                 {
-                    LevelAsset.InputEnabled = true;
-                    LevelAsset.CursorEnabled = true;
-                    LevelAsset.RotateEnabled = true;
+                    LevelAsset.LCDEnabled = true;
+                    LevelAsset.PlayerDataUiEnabled = true;
                 }
             }
         }
@@ -25,6 +24,7 @@ namespace ROOT
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             //教程的结束一般都是在DealStep里面处理。
+            //TODO 这里开启时间后，DealStep的结束和WorldLogic的结束逻辑就有可能冲突。
             return false;
         }
 
@@ -33,17 +33,25 @@ namespace ROOT
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
+            InitCurrencyIoMgr();
             LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.GameStateMgr = new StandardGameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
+            LevelAsset.GameStateMgr.InitGameMode(new ScoreSet(), new PerMoveData());
             //LevelAsset.GameBoard.InitBoardRealStart();
             LevelAsset.GameBoard.UpdateBoardAnimation();
             LevelAsset.StartingScoreSet = new ScoreSet();
             LevelAsset.StartingPerMoveData = new PerMoveData();
 
             LevelAsset.DisableAllFeature();
+            LevelAsset.InputEnabled = true;
+            LevelAsset.CursorEnabled = true;
+            LevelAsset.RotateEnabled = true;
+            LevelAsset.HintEnabled = true;
+            LevelAsset.UpdateDeltaCurrencyEnabled = true;
 
-            TutorialAction =new TutorialActionBasicControl();
+            InitCursor(new Vector2Int(2, 3));
+            
+            TutorialAction = new TutorialActionGoalAndCycle();
 
             ReadyToGo = true;
             InvokeGameStartedEvent();
@@ -61,15 +69,14 @@ namespace ROOT
             }
             catch (NotImplementedException)
             {
-                switch (data.ActionType)
-                {
-                    case TutorialActionType.CreateCursor:
-                        InitCursor(data.Pos);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                throw new ArgumentOutOfRangeException();
             }
+        }
+
+        protected void InitCurrencyIoMgr()
+        {
+            LevelAsset.CurrencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
+            LevelAsset.CurrencyIoCalculator.m_Board = LevelAsset.GameBoard;
         }
 
         protected void InitCursor(Vector2Int pos)

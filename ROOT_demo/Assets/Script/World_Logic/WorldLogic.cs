@@ -287,16 +287,21 @@ namespace ROOT
             currentLevelAsset.DeltaCurrency -= currentLevelAsset.CurrencyIoCalculator.CalculateCost();
 
             //System.Diagnostics.Debug.Assert(currentLevelAsset._gameStateMgr != null, nameof(currentLevelAsset._gameStateMgr) + " != null");
-            currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
-            currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(),
-                RowEnum.CurrentMoney);
-            currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.DeltaCurrency, RowEnum.DeltaMoney);
+            if (currentLevelAsset.LCDEnabled)
+            {
+                currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
+                currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(),RowEnum.CurrentMoney);
+                currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.DeltaCurrency, RowEnum.DeltaMoney);
+            }
         }
 
         internal static void UpdatePlayerDataAndUI(GameAssets currentLevelAsset, bool movedTile = true)
         {
-            currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetGameTime(), RowEnum.Time);
-            currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetTimeRatio(), RowEnum.Time);
+            if (currentLevelAsset.LCDEnabled)
+            {
+                currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetGameTime(), RowEnum.Time);
+                currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetTimeRatio(), RowEnum.Time);
+            }
 #if UNITY_EDITOR
             if (movedTile || Input.GetButton(StaticName.DEBUG_INPUT_BUTTON_NAME_FORCESTEP))
             {
@@ -319,8 +324,7 @@ namespace ROOT
                     currentLevelAsset.WarningDestoryer.Step();
                 }
 
-                currentLevelAsset.GameStateMgr.PerMove(new ScoreSet(),
-                    new PerMoveData(currentLevelAsset.DeltaCurrency, 1));
+                currentLevelAsset.GameStateMgr.PerMove(new ScoreSet(),new PerMoveData(currentLevelAsset.DeltaCurrency, 1));
             }
         }
 

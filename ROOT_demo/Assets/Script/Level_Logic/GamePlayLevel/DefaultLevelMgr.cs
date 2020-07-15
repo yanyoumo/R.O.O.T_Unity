@@ -58,7 +58,6 @@ namespace ROOT
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
         internal CurrencyIOCalculator CurrencyIoCalculator;
         internal GameStateMgr GameStateMgr;
-        internal TutorialMgr TutorialMgr;
         internal ShopMgr ShopMgr;
         internal IWarningDestoryer WarningDestoryer;
         internal GameObject[] WarningGo;
@@ -79,6 +78,7 @@ namespace ROOT
         /// 开启商店，先决条件为：PlayerDataUiEnabled开启。
         /// </summary>
         public bool ShopEnabled = true;
+        public bool LCDEnabled = true;
         public bool UpdateDeltaCurrencyEnabled = true;
         /// <summary>
         /// 摧毁模组的计算，但是同时需要PlayerDataUiEnabled开启才进行步进。
@@ -93,8 +93,7 @@ namespace ROOT
 
         public bool ForceHddConnectionHint = false;
         public bool ForceServerConnectionHint = false;
-
-
+        
         internal bool BoughtOnce = false;
         internal bool MovedTileAni = false;
         internal bool MovedCursorAni = false;
@@ -108,19 +107,20 @@ namespace ROOT
             CursorEnabled = true;
             RotateEnabled = true;
             ShopEnabled = true;
+            LCDEnabled = true;
             UpdateDeltaCurrencyEnabled = true;
             DestoryerEnabled = true;
             HintEnabled = true;
             PlayerDataUiEnabled = true;
             GameOverEnabled = true;
         }
-
         internal void DisableAllFeature()
         {
             InputEnabled = false;
             CursorEnabled = false;
             RotateEnabled = false;
             ShopEnabled = false;
+            LCDEnabled = false;
             UpdateDeltaCurrencyEnabled = false;
             DestoryerEnabled = false;
             HintEnabled = false;
@@ -129,19 +129,10 @@ namespace ROOT
         }
     }
 
-    //TODO 然后就是Level中的时序怎么弄了。
     public abstract class BaseLevelMgr : MonoBehaviour//LEVEL-LOGIC/每一关都有一个这个类。
     {
-        //事件完全由LVL-Logic管理。
-        /*public static event RootEVENT.GameMajorEvent GameStarted;
-        public static event RootEVENT.GameMajorEvent GameOverReached;
-        public static event RootEVENT.GameMajorEvent GameCompleteReached;*/
         //ASSET
         protected internal GameAssets LevelAsset;
-        //LVL-Logic还负责和Inspector交互。需要把这里的引用传到Asset里面
-        //原则上这些引用只有一开始用一下，之后不能从这里调。
-        //private GameObject CursorTemplateIo;
-        //private Board GameBoardIo;
         //Lvl-Logic实际用的判断逻辑。
         public bool Playing { get; private set;  }
         protected bool LogicFrameAnimeFrameToggle = true;
@@ -155,16 +146,18 @@ namespace ROOT
         public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC;//这个游戏的这两个参数是写死的
         public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL;//但是别的游戏的这个值多少是需要重写的。
 
-        void Awake()
+        protected virtual void UpdateLogicLevelReference()
         {
-            //因为这个也是动态生成的了，UnitTemplate和Board都要动态的找了。
-            LevelAsset = new GameAssets();
-            //时序现在很乱。
             LevelAsset.CursorTemplate = Resources.Load("Cursor/Prefab/Cursor", typeof(GameObject)) as GameObject;
             LevelAsset.GameBoard = FindObjectOfType<Board>();
             LevelAsset.Owner = this;
             LevelAsset.LevelLogicType = this.GetType();
-            //LinkGameAsset();
+        }
+
+        void Awake()
+        {
+            LevelAsset = new GameAssets();
+            UpdateLogicLevelReference();
         }
 
         //这两个函数是WorldLogic要通过LvlLogic去影响世界/因为Unity的规定。
@@ -185,12 +178,23 @@ namespace ROOT
             //GameStarted?.Invoke();
         }
 
+        /// <summary>
+        /// 需要允许各个Level去自定义如何Link。
+        /// </summary>
+        /// <param name="aOP">上一个Loading核心逻辑场景的异步操作实例</param>
+        /// <returns></returns>
+        public virtual IEnumerator UpdateArtLevelReference(AsyncOperation aOP)
+        {
+            while (!aOP.isDone)
+            {
+                yield return 0;
+            }
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
+            LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
+            LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
+            PopulateArtLevelReference();
+        }
         public abstract void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData());
-        /*protected abstract void InitDestoryer();
-        protected abstract void InitShop();
-        protected abstract void InitGameStateMgr();
-        protected abstract void InitCurrencyIoMgr();
-        protected abstract void InitCursor(Vector2Int pos);*/
 
         public virtual bool CheckReference()
         {
@@ -202,7 +206,7 @@ namespace ROOT
             res &= (LevelAsset.Item4PriceTmp != null);
             return res;
         }
-        public virtual void UpdateReference()
+        public virtual void PopulateArtLevelReference()
         {
             var tempT = LevelAsset.ItemPriceRoot.GetComponentsInChildren<TextMeshPro>();
             foreach (var text in tempT)
@@ -322,7 +326,7 @@ namespace ROOT
             cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
             yield return null;
         }
-        //原则上这个不让被重载了。
+        //原则上这个不让被重载。
         protected virtual void Update()
         {
             //StartCoroutine(CoroutineTest());
