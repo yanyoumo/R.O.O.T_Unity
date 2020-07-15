@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using I2.Loc;
 using UnityEngine;
 
 namespace ROOT
@@ -45,26 +46,26 @@ namespace ROOT
     public abstract partial class TutorialActionBase
     {
         public readonly TutorialActionData[] Actions;
-        public readonly string Title;
+        public readonly string TitleTerm;
         public readonly string ThumbnailName;
         public readonly Type LevelLogicType;
 
-        protected TutorialActionBase(string title, string thumbnailName, Type levelLogicType, TutorialActionData[] actions)
+        protected TutorialActionBase(string titleTerm, string thumbnailName, Type levelLogicType, TutorialActionData[] actions)
         {
             LevelLogicType = levelLogicType;
             Actions = actions;
-            Title = title;
+            TitleTerm = titleTerm;
             ThumbnailName = thumbnailName;
         }
 
-        public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(Title, "Play", ThumbnailName);
+        public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", ThumbnailName);
     }
 
     //这些不要弄ID什么的，最好写名字，要不然插队会很费劲。
     public class TutorialActionBasicControl : TutorialActionBase
     {
         public TutorialActionBasicControl() : base(
-            "Basic Control",
+            ScriptTerms.TutorialBasicControl,
             "Thumbnail_BasicControl",
             typeof(TutorialLevelBasicControlMgr),
             new[]
@@ -72,10 +73,10 @@ namespace ROOT
                 new TutorialActionData(0, TutorialActionType.ShowText),
                 new TutorialActionData(0, TutorialActionType.Text, "你好，欢迎来到R.O.O.T.教程。这是一款基于棋盘的模拟经营游戏。"),
                 new TutorialActionData(1, TutorialActionType.Text, "首先，这个是游戏中最重要的元素，称其为" + TmpBracketAndBold("单元") + ""),
-                new TutorialActionData(1, TutorialActionType.CreateUnit, "", new Vector2Int(2, 3), CoreType.Processor,
+                new TutorialActionData(1, TutorialActionType.CreateUnit, "", new Vector2Int(2, 1), CoreType.Processor,
                     new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
                 new TutorialActionData(2, TutorialActionType.Text, "然后，这个是你的光标。"),
-                new TutorialActionData(2, TutorialActionType.CreateCursor, "", new Vector2Int(2, 3)), //放光标
+                new TutorialActionData(2, TutorialActionType.CreateCursor, "", new Vector2Int(2, 1)), //放光标
                 new TutorialActionData(3, TutorialActionType.Text, "使用" + TmpBracketAndBold("方向键") + "移动，按住" + TmpBracketAndBold("空格") + "拖动。" + TmpBracketAndBold("左Shift") + "旋转。"),
                 new TutorialActionData(4, TutorialActionType.Text, "我再多放几个" + TmpBracketAndBold("单元") + "，可以熟悉一下基本操作。"),
                 new TutorialActionData(5, TutorialActionType.HideText),
@@ -96,7 +97,7 @@ namespace ROOT
     public class TutorialActionSignalBasic : TutorialActionBase
     {
         public TutorialActionSignalBasic() : base(
-            "Signal Basic",
+            ScriptTerms.TutorialSignalBasic,
             "Thumbnail_SignalBasic",
             typeof(TutorialSignalBasicMgr),
             new[]
@@ -135,7 +136,7 @@ namespace ROOT
     public class TutorialActionGoalAndCycle : TutorialActionBase
     {
         public TutorialActionGoalAndCycle() : base(
-            "Goal/Cycle",
+            ScriptTerms.TutorialGoalAndCycle,
             "Thumbnail_GoalCycle",
             typeof(TutorialGoalAndCycleMgr),
             new[]
@@ -156,8 +157,7 @@ namespace ROOT
                 new TutorialActionData(5, TutorialActionType.Text, "此时看到右上侧，依次显示的是你的【现有金钱】【收入/损失】【剩余时间】。既然称为模拟游戏，这个游戏的目的还是赚钱。（当然，更不能破产）"),
                 new TutorialActionData(6, TutorialActionType.Text, "只要一个单元在处理对应的信号，那么这个单元就会产生收入。如果你的收入大于成本，那么就能赚钱了。"),
                 new TutorialActionData(7, TutorialActionType.Text, "成本哪里来？每个单元在棋盘上，就会有一个运营成本，你的总收入只要高于总成本就有收益了。这就是为什么【" + TmpColorXml("收入", Color.green * 0.8f) + "/" +TmpColorRedXml("损失") + "】分不同颜色。"),
-                new TutorialActionData(8, TutorialActionType.Text, "话说，一般人上班都是一个月拿一次工资。这个收益也是以" + TmpBracketAndBold("周期") + "计算的；这里是游戏最后一个重要元素" + TmpBracketAndBold("周期") +
-                                                                   "。"),
+                new TutorialActionData(8, TutorialActionType.Text, "话说，一般人上班都是一个月拿一次工资。这个收益也是以" + TmpBracketAndBold("周期") + "计算的；这里是游戏最后一个重要元素" + TmpBracketAndBold("周期") + "。"),
                 new TutorialActionData(9, TutorialActionType.Text, "这个游戏的所有关键结算都是以" + TmpBracketAndBold("周期") + "计算的，你目前只接触了收益这一个，之后还会有别的。"),
                 new TutorialActionData(10, TutorialActionType.Text, TmpBracketAndBold("周期") + "的演进其实不是全自动的，是由你【移动一次单位】而触发的半自动方式。"),
                 new TutorialActionData(11, TutorialActionType.Text, "你只要不动单位，游戏就算是静止的，所以可以慢慢思考。啊对，旋转单位不算，可以随便转。"),
@@ -171,12 +171,56 @@ namespace ROOT
     public class TutorialActionShop : TutorialActionBase
     {
         public TutorialActionShop() : base(
-            "About Shop",
+            ScriptTerms.TutorialShop,
             "Thumbnail_Shop",
             typeof(TutorialShopMgr),
             new[]
             {
                 new TutorialActionData(0, TutorialActionType.ShowText),
+                new TutorialActionData(0, TutorialActionType.Text, "话说回来，赚了钱之后不用只存在银行里，可以按需扩大生产的，就是通过商店。"),
+                new TutorialActionData(1, TutorialActionType.Text, "在右下角的商店中，同时会有4个" + TmpBracketAndBold("单元") + "可供购买；"),
+                new TutorialActionData(2, TutorialActionType.Text, "使用数字键购买，当然，需要按照下面价格支付金钱~"),
+                new TutorialActionData(3, TutorialActionType.Text, "来，先买个试试。"),
+                new TutorialActionData(4, TutorialActionType.HideText),
+                new TutorialActionData(5, TutorialActionType.ShowText),
+                new TutorialActionData(5, TutorialActionType.Text, "但是每个" + TmpBracketAndBold("周期") + "你只能在商店购买一个" + TmpBracketAndBold("单元") + "。"),
+                new TutorialActionData(6, TutorialActionType.Text, "商店刷新的方式是这样的：1号位上面的" + TmpBracketAndBold("单元") + "会被移除。"),
+                new TutorialActionData(7, TutorialActionType.Text, "后面进行补位，而且越接近1号位，它的价格会越便宜。"),
+                new TutorialActionData(8, TutorialActionType.Text, "但是千万不要图便宜就都买下来啊，别忘了" + TmpBracketAndBold("单元") + "的运营费用。"),
+                new TutorialActionData(9, TutorialActionType.Text, "来，再试试吧。"),
+                new TutorialActionData(10, TutorialActionType.HideText),
+                new TutorialActionData(11, TutorialActionType.ShowText),
+                new TutorialActionData(11, TutorialActionType.Text, "这就是这个游戏的商店。"),
+                new TutorialActionData(12, TutorialActionType.End),
+            })
+        {
+        }
+    }
+
+    public class TutorialActionDestroyer : TutorialActionBase
+    {
+        public TutorialActionDestroyer() : base(
+            ScriptTerms.TutorialDestroyer,
+            "Thumbnail_Destroyer",
+            typeof(TutorialDestroyerMgr),
+            new[]
+            {
+                new TutorialActionData(0, TutorialActionType.ShowText),
+                new TutorialActionData(0, TutorialActionType.Text, "最后，你不会认为你就可以这么安稳的玩下去吧，看这个红色标记。"),
+                new TutorialActionData(0, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.Server, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(0, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.NetworkCable, new[] {SideType.NoConnection, SideType.NoConnection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(0, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.NetworkCable, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(0, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.NetworkCable, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(1, TutorialActionType.Text, "若干个" + TmpBracketAndBold("周期") + "后，下面的单元就会被摧毁。"),
+                new TutorialActionData(2, TutorialActionType.Text, "黄色状态是提前一" + TmpBracketAndBold("周期") + "的预警。"),
+                new TutorialActionData(3, TutorialActionType.Text, "当然，即使是红色标记，如果你及时挪开下面的" + TmpBracketAndBold("单元") + "，就可以回避掉。"),
+                new TutorialActionData(4, TutorialActionType.Text, "来，躲开他。"),
+                new TutorialActionData(5, TutorialActionType.HideText),
+                new TutorialActionData(6, TutorialActionType.ShowText),
+                new TutorialActionData(6, TutorialActionType.Text, "但是，如果原来不在标记下的" + TmpBracketAndBold("单元") + "，你给挪过去，也是会被摧毁的。"),
+                new TutorialActionData(7, TutorialActionType.Text, "嘛，这么做有什么好处就需要你自己考虑考虑了。"),
+                new TutorialActionData(8, TutorialActionType.Text, "这种标记在游戏中会随机出现，但是永远都是有预警的。至于怎么利用和回避，就靠你的发挥了。"),
+                new TutorialActionData(9, TutorialActionType.End),
             })
         {
         }
@@ -194,6 +238,7 @@ namespace ROOT
                 new TutorialActionSignalBasic(),
                 new TutorialActionGoalAndCycle(),
                 new TutorialActionShop(),
+                new TutorialActionDestroyer(),
             };
         }
     }
@@ -235,6 +280,11 @@ namespace ROOT
             if (levelLogicType == typeof(TutorialShopMgr))
             {
                 LoadLevelThenPlay<TutorialShopMgr>(nextScoreSet, nextPerMoveData);
+                return;
+            }
+            if (levelLogicType == typeof(TutorialDestroyerMgr))
+            {
+                LoadLevelThenPlay<TutorialDestroyerMgr>(nextScoreSet, nextPerMoveData);
                 return;
             }
             throw new NotImplementedException();

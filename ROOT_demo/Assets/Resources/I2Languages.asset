@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0b0c553be8edd4682e9180fdd13e37, type: 3}
+  m_Name: I2Languages
+  m_EditorClassIdentifier: 
+  mSource:
+    UserAgreesToHaveItOnTheScene: 0
+    UserAgreesToHaveItInsideThePluginsFolder: 0
+    GoogleLiveSyncIsUptoDate: 1
+    mTerms:
+    - Term: PlayLevel
+      TermType: 0
+      Description: text on button that start level
+      Languages:
+      - Play
+      - "\u6E38\u73A9\u5173\u5361"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: StartGame
+      TermType: 0
+      Description: Main start game button
+      Languages:
+      - <b>Start Game</b>
+      - "<b>\u5F00\u59CB\u6E38\u620F</b>"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Tutorial
+      TermType: 0
+      Description: Main start tutorial button
+      Languages:
+      - <b>Tutorial</b>
+      - "<b>\u65B0\u624B\u6307\u5357</b>"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialBasicControl
+      TermType: 0
+      Description: 
+      Languages:
+      - Basic Control
+      - "\u57FA\u672C\u64CD\u4F5C"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialGoalAndCycle
+      TermType: 0
+      Description: 
+      Languages:
+      - Goal/Cycle
+      - "\u76EE\u6807\u53CA\u5468\u671F"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialSignalBasic
+      TermType: 0
+      Description: 
+      Languages:
+      - Signal Basic
+      - "\u4FE1\u53F7\u57FA\u7840"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialDestroyer
+      TermType: 0
+      Description: 
+      Languages:
+      - Destroyer
+      - "\u5173\u4E8E\u707E\u96BE"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialShop
+      TermType: 0
+      Description: 
+      Languages:
+      - About Shop
+      - "\u5173\u4E8E\u5546\u5E97"
+      Flags: 0000
+      Languages_Touch: []
+    CaseInsensitiveTerms: 0
+    OnMissingTranslation: 1
+    mTerm_AppName: 
+    mLanguages:
+    - Name: English
+      Code: en
+      Flags: 0
+    - Name: Chinese (Simplified)
+      Code: zh-CN
+      Flags: 0
+    IgnoreDeviceLanguage: 0
+    _AllowUnloadingLanguages: 0
+    Google_WebServiceURL: 
+    Google_SpreadsheetKey: 
+    Google_SpreadsheetName: 
+    Google_LastUpdatedVersion: 
+    Google_Password: change_this
+    GoogleUpdateFrequency: 3
+    GoogleInEditorCheckFrequency: 2
+    GoogleUpdateSynchronization: 1
+    GoogleUpdateDelay: 0
+    Assets: []
+    Spreadsheet_LocalFileName: Localization.csv
+    Spreadsheet_LocalCSVSeparator: ','
+    Spreadsheet_LocalCSVEncoding: utf-8
+    Spreadsheet_SpecializationAsRows: 1

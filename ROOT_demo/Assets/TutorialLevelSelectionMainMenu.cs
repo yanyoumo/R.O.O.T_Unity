@@ -7,13 +7,13 @@ namespace ROOT
 {
     public struct TutorialQuadDataPack
     {
-        public string Title;
+        public string TitleTerm;
         public string ButtonText;
         public Sprite Thumbnail;
 
-        public TutorialQuadDataPack(string title, string _buttonText, string thumbnailName)
+        public TutorialQuadDataPack(string titleTerm, string _buttonText, string thumbnailName)
         {
-            Title = title;
+            TitleTerm = titleTerm;
             ButtonText = _buttonText;
             Thumbnail = Resources.Load<Sprite>("UIThumbnail/TutorialThumbnail/" + thumbnailName);
         }
@@ -27,6 +27,8 @@ namespace ROOT
         public RectTransform TutorialQuadPos2;
         public RectTransform TutorialQuadPos3;
         public RectTransform TutorialQuadPos4;
+        public RectTransform TutorialQuadPos5;
+        public RectTransform TutorialQuadPos6;
 
         private RectTransform[] TutorialQuadPosS;
         private TutorialLevelSelectionQuad[] TutorialQuadS;
@@ -39,12 +41,14 @@ namespace ROOT
                 TutorialQuadPos2,
                 TutorialQuadPos3,
                 TutorialQuadPos4,
+                TutorialQuadPos5,
+                TutorialQuadPos6,
             };
         }
 
         public Button[] InitTutorialLevelSelectionMainMenu(TutorialQuadDataPack[] data)
         {
-            Debug.Assert(data.Length < 5);
+            Debug.Assert(data.Length < 7);
             Button[] res = new Button[data.Length];
             TutorialQuadS = new TutorialLevelSelectionQuad[data.Length];
             for (var i = 0; i < data.Length; i++)

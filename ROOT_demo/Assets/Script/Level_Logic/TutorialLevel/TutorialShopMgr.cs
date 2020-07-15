@@ -8,15 +8,21 @@ namespace ROOT
 {
     public class TutorialShopMgr : BaseTutorialMgr
     {
+
+
         protected override void Update()
         {
             base.Update();
             if (ReadyToGo)
             {
-                if (ActionIndex==5)
+                if (ActionIndex == 1)
                 {
-                    LevelAsset.LCDEnabled = true;
-                    LevelAsset.PlayerDataUiEnabled = true;
+                    if (!LevelAsset.ShopEnabled)
+                    {
+                        InitShop();
+                        StartShop();
+                        LevelAsset.ShopEnabled = true;
+                    }
                 }
             }
         }
@@ -48,6 +54,8 @@ namespace ROOT
             LevelAsset.RotateEnabled = true;
             LevelAsset.HintEnabled = true;
             LevelAsset.UpdateDeltaCurrencyEnabled = true;
+            LevelAsset.LCDEnabled = true;
+            LevelAsset.PlayerDataUiEnabled = true;
 
             InitCursor(new Vector2Int(2, 3));
             
@@ -85,6 +93,16 @@ namespace ROOT
             Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
             cursor.InitPosWithAnimation(pos);
             cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+        }
+
+        protected void InitShop()
+        {
+            LevelAsset.ShopMgr = gameObject.AddComponent<ShopMgr>();
+            LevelAsset.ShopMgr.UnitTemplate = LevelAsset.GameBoard.UnitTemplate;
+            LevelAsset.ShopMgr.ShopInit();
+            LevelAsset.ShopMgr.ItemPriceTexts_TMP = new[] { LevelAsset.Item1PriceTmp, LevelAsset.Item2PriceTmp, LevelAsset.Item3PriceTmp, LevelAsset.Item4PriceTmp };
+            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
         }
     }
 }

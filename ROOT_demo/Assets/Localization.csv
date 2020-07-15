@@ -1,0 +1,8 @@
+﻿Key,Type,Desc,English,Chinese (Simplified)
+PlayLevel,Text,,Play,游玩关卡
+StartGame,Text,,Start Game,开始游戏
+Tutorial,Text,TutorialMenuButton,Tutorial,新手指南
+TutorialActionShop,Text,,About Shop,关于商店
+TutorialBasicControl,Text,,Basic Control,基本操作
+TutorialGoalAndCycle,Text,,Goal/Cycle,目标及周期
+TutorialSignalBasic,Text,,Signal Basic,信号基础
