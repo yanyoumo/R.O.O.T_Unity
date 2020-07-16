@@ -81,6 +81,88 @@ MonoBehaviour:
       - "\u5173\u4E8E\u5546\u5E97"
       Flags: 0000
       Languages_Touch: []
+    - Term: Restart
+      TermType: 0
+      Description: 
+      Languages:
+      - Restart
+      - "\u91CD\u65B0\u5F00\u59CB"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Back
+      TermType: 0
+      Description: 
+      Languages:
+      - Back
+      - "\u8FD4\u56DE"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: NextTutorial
+      TermType: 0
+      Description: 
+      Languages:
+      - Next
+      - "\u4E0B\u4E00\u6559\u7A0B"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialSectionOver
+      TermType: 0
+      Description: 
+      Languages:
+      - Section Over
+      - "\u6B64\u6BB5\u6559\u7A0B\u7ED3\u675F"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: GameOver
+      TermType: 0
+      Description: 
+      Languages:
+      - GAME OVER
+      - "\u6E38\u620F\u7ED3\u675F"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: EndingMessageNormal_EarnedMoney
+      TermType: 0
+      Description: 
+      Languages:
+      - Time Up, and you earned {[VALUE]} money[i2p_Zero]Time Up, and you earned
+        no money
+      - "\u65F6\u95F4\u5230\u4E86\uFF0C\u4F60\u8D5A\u4E86{[VALUE]}\u5757\u94B1[i2p_Zero]\u65F6\u95F4\u5230\u4E86\uFF0C\u4F46\u4F60\u6CA1\u8D5A\u94B1"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: EndingMessageNormal_NoEarnedMoney
+      TermType: 0
+      Description: 
+      Languages:
+      - Time Up, and you lost {[VALUE]} money[i2p_Zero]Time Up, but you haven't lost
+        money
+      - "\u65F6\u95F4\u5230\u4E86\uFF0C\u4F60\u8D54\u4E86{[VALUE]}\u5757\u94B1[i2p_Zero]\u65F6\u95F4\u5230\u4E86\uFF0C\u4F46\u4F60\u4E5F\u6CA1\u8D54\u94B1"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: EndingMessageNormal_NoMoney
+      TermType: 0
+      Description: 
+      Languages:
+      - You've run out of money.
+      - "\u4F60\u6CA1\u94B1\u4E86\uFF01"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: EndingMessageTutorial
+      TermType: 0
+      Description: 
+      Languages:
+      - This section of tutorial has concluded
+      - "\u672C\u8282\u6559\u7A0B\u7ED3\u675F~"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: HForHint
+      TermType: 0
+      Description: 
+      Languages:
+      - Press <b>[H]</b> for controlling
+      - "\u6309<b>[H]</b>\u67E5\u770B\u64CD\u4F5C\u8BF4\u660E"
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 

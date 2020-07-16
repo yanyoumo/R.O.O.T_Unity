@@ -15,8 +15,9 @@ namespace ROOT
             {
                 if (ActionIndex==5)
                 {
-                    LevelAsset.LCDEnabled = true;
-                    LevelAsset.PlayerDataUiEnabled = true;
+                    LevelAsset.LCDCurrencyEnabled = true;
+                    LevelAsset.LCDTimeEnabled = true;
+                    LevelAsset.CycleEnabled = true;
                 }
             }
         }
@@ -42,12 +43,12 @@ namespace ROOT
             LevelAsset.StartingScoreSet = new ScoreSet();
             LevelAsset.StartingPerMoveData = new PerMoveData();
 
-            LevelAsset.DisableAllFeature();
+            LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;
             LevelAsset.CursorEnabled = true;
             LevelAsset.RotateEnabled = true;
             LevelAsset.HintEnabled = true;
-            LevelAsset.UpdateDeltaCurrencyEnabled = true;
+            LevelAsset.CurrencyEnabled = true;
 
             InitCursor(new Vector2Int(2, 3));
             

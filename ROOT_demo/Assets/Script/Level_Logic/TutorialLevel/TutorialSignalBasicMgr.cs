@@ -13,9 +13,9 @@ namespace ROOT
             base.Update();
             if (ReadyToGo)
             {
-                if (ActionIndex == 2)
+                if (ActionIndex == 3)
                 {
-                    LevelAsset.UpdateDeltaCurrencyEnabled = true;
+                    LevelAsset.CurrencyEnabled = true;
                     LevelAsset.HintEnabled = true;
                     LevelAsset.ForceHddConnectionHint = true;
                 }
@@ -51,7 +51,7 @@ namespace ROOT
             LevelAsset.StartingScoreSet = new ScoreSet();
             LevelAsset.StartingPerMoveData = new PerMoveData();
 
-            LevelAsset.DisableAllFeature();
+            LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;
             LevelAsset.CursorEnabled = true;
             LevelAsset.RotateEnabled = true;

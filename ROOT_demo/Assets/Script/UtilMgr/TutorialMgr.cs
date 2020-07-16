@@ -288,7 +288,7 @@ namespace ROOT
                     break;
                 case 8:
                     MainGameMgr.InitCurrencyIOMgr(this);
-                    MainGameMgr.UpdateDeltaCurrencyEnabled = true;
+                    MainGameMgr.CurrencyEnabled = true;
                     MainGameMgr.HintEnabled = true;
                     MainGameMgr.ForceHDDConnectionHint = true;
                     _isCustomButtonText = true;
@@ -370,7 +370,7 @@ namespace ROOT
                     _isCustomButtonText = false;
                     _mainPanel.enabled = true;
                     MainGameMgr.InitDestoryer(this);
-                    MainGameMgr.DestoryerEnabled = true;
+                    MainGameMgr.DestroyerEnabled = true;
                     MainGameMgr.ForceSetDestoryerShell(this, new Vector2Int(2, 4));
                     MainGameMgr.ForceWindDestoryer(this);
                     break;

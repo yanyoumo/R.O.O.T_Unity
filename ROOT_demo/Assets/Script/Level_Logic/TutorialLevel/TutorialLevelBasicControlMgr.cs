@@ -35,13 +35,12 @@ namespace ROOT
 
             LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.GameStateMgr = new StandardGameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
-            //LevelAsset.GameBoard.InitBoardRealStart();
+            LevelAsset.GameStateMgr.InitGameMode(new ScoreSet(), new PerMoveData());
             LevelAsset.GameBoard.UpdateBoardAnimation();
             LevelAsset.StartingScoreSet = new ScoreSet();
             LevelAsset.StartingPerMoveData = new PerMoveData();
 
-            LevelAsset.DisableAllFeature();
+            LevelAsset.DisableAllCoreFunctionAndFeature();
 
             TutorialAction =new TutorialActionBasicControl();
 

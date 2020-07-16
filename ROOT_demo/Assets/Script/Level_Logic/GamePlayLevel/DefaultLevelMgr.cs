@@ -69,31 +69,24 @@ namespace ROOT
 
         public float DeltaCurrency { get; internal set; }
 
-        //下面是给【指引】弄得。
+        //CoreFunctionFlag
         public bool InputEnabled = true;
+        public bool CurrencyEnabled = true;
+        public bool CycleEnabled = true;
+        //FeatureFunctionFlag
         public bool CursorEnabled = true;
         public bool RotateEnabled = true;
-
-        /// <summary>
-        /// 开启商店，先决条件为：PlayerDataUiEnabled开启。
-        /// </summary>
         public bool ShopEnabled = true;
-        public bool LCDEnabled = true;
-        public bool UpdateDeltaCurrencyEnabled = true;
-        /// <summary>
-        /// 摧毁模组的计算，但是同时需要PlayerDataUiEnabled开启才进行步进。
-        /// </summary>
-        public bool DestoryerEnabled = false;
-        public bool HintEnabled = true;
-        /// <summary>
-        ///更新玩家每一轮的信息，包含更新LCD；为商店开启购买的先决条件，为摧毁模组步进的先决条件。
-        /// </summary>
-        public bool PlayerDataUiEnabled = true;
+        public bool DestroyerEnabled = false;
+        //LevelLogicFlag
         public bool GameOverEnabled = true;
-
+        //UtilsFlag
+        public bool LCDCurrencyEnabled = true;
+        public bool LCDTimeEnabled = true;
+        public bool HintEnabled = true;
         public bool ForceHddConnectionHint = false;
         public bool ForceServerConnectionHint = false;
-        
+        //internal flag 
         internal bool BoughtOnce = false;
         internal bool MovedTileAni = false;
         internal bool MovedCursorAni = false;
@@ -101,30 +94,45 @@ namespace ROOT
 
         //一些辅助函数可以在这里。
 
-        internal void EnableAllFeature()
+        internal void EnableAllCoreFunction()
+        {
+            InputEnabled = true;
+            CurrencyEnabled = true;
+            CycleEnabled = true;
+        }
+        internal void DisableAllCoreFunction()
+        {
+            InputEnabled = false;
+            CurrencyEnabled = false;
+            CycleEnabled = false;
+        }
+
+        internal void EnableAllCoreFunctionAndFeature()
         {
             InputEnabled = true;
             CursorEnabled = true;
             RotateEnabled = true;
             ShopEnabled = true;
-            LCDEnabled = true;
-            UpdateDeltaCurrencyEnabled = true;
-            DestoryerEnabled = true;
+            LCDCurrencyEnabled = true;
+            LCDTimeEnabled = true;
+            CurrencyEnabled = true;
+            DestroyerEnabled = true;
             HintEnabled = true;
-            PlayerDataUiEnabled = true;
+            CycleEnabled = true;
             GameOverEnabled = true;
         }
-        internal void DisableAllFeature()
+        internal void DisableAllCoreFunctionAndFeature()
         {
             InputEnabled = false;
             CursorEnabled = false;
             RotateEnabled = false;
             ShopEnabled = false;
-            LCDEnabled = false;
-            UpdateDeltaCurrencyEnabled = false;
-            DestoryerEnabled = false;
+            LCDCurrencyEnabled = false;
+            LCDTimeEnabled = false;
+            CurrencyEnabled = false;
+            DestroyerEnabled = false;
             HintEnabled = false;
-            PlayerDataUiEnabled = false;
+            CycleEnabled = false;
             GameOverEnabled = false;
         }
     }
@@ -458,7 +466,7 @@ namespace ROOT
             InitShop();
             InitDestoryer();
 
-            LevelAsset.EnableAllFeature();
+            LevelAsset.EnableAllCoreFunctionAndFeature();
             InitCursor(new Vector2Int(2, 3));
 
             LevelAsset.GameBoard.InitBoardRealStart();

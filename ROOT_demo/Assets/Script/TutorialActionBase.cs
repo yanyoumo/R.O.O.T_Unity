@@ -71,29 +71,24 @@ namespace ROOT
             new[]
             {
                 new TutorialActionData(0, TutorialActionType.ShowText),
-                new TutorialActionData(0, TutorialActionType.Text, "你好，欢迎来到R.O.O.T.教程。这是一款基于棋盘的模拟经营游戏。"),
-                new TutorialActionData(1, TutorialActionType.Text, "首先，这个是游戏中最重要的元素，称其为" + TmpBracketAndBold("单元") + ""),
-                new TutorialActionData(1, TutorialActionType.CreateUnit, "", new Vector2Int(2, 1), CoreType.Processor,
-                    new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
-                new TutorialActionData(2, TutorialActionType.Text, "然后，这个是你的光标。"),
-                new TutorialActionData(2, TutorialActionType.CreateCursor, "", new Vector2Int(2, 1)), //放光标
-                new TutorialActionData(3, TutorialActionType.Text, "使用" + TmpBracketAndBold("方向键") + "移动，按住" + TmpBracketAndBold("空格") + "拖动。" + TmpBracketAndBold("左Shift") + "旋转。"),
-                new TutorialActionData(4, TutorialActionType.Text, "我再多放几个" + TmpBracketAndBold("单元") + "，可以熟悉一下基本操作。"),
+                new TutorialActionData(0, TutorialActionType.Text, "你好,欢迎来到<b>[ROOT]</b>的教程;这是一款基于棋盘的模拟经营类游戏")
+                ,new TutorialActionData(1, TutorialActionType.Text, "首先,这个是"+TmpBracketAndBold("单元")+",游戏中最重要的元素之一"),
+                new TutorialActionData(1, TutorialActionType.CreateUnit, "", new Vector2Int(2, 1), CoreType.Processor,new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(2, TutorialActionType.Text, "然后,这个是你的光标"),
+                new TutorialActionData(2, TutorialActionType.CreateCursor, "", new Vector2Int(3, 2)),
+                new TutorialActionData(3, TutorialActionType.Text, "使用" + TmpBracketAndBold("方向键") + "移动,按住" + TmpBracketAndBold("空格") + "拖动"+TmpBracketAndBold("单元")+"," + TmpBracketAndBold("左Shift") + "旋转"),
+                new TutorialActionData(4, TutorialActionType.Text, "我再多放几个" + TmpBracketAndBold("单元") + ",熟悉一下基本操作"),
                 new TutorialActionData(5, TutorialActionType.HideText),
-                new TutorialActionData(5, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive,
-                    new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
-                new TutorialActionData(5, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive,
-                    new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
-                new TutorialActionData(5, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive,
-                    new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(5, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive,new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(5, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive,new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(5, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive,new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
                 new TutorialActionData(6, TutorialActionType.ShowText),
-                new TutorialActionData(6, TutorialActionType.Text, "好的，这就是这个游戏的基本操作。"),
+                new TutorialActionData(6, TutorialActionType.Text, "以上,这就是这个游戏的基本操作"),
                 new TutorialActionData(7, TutorialActionType.End),
             })
         {
         }
     }
-
     public class TutorialActionSignalBasic : TutorialActionBase
     {
         public TutorialActionSignalBasic() : base(
@@ -103,36 +98,35 @@ namespace ROOT
             new[]
             {
                 new TutorialActionData(0, TutorialActionType.ShowText),
-                new TutorialActionData(0, TutorialActionType.Text, "游戏中另一个重要元素就是" + TmpBracketAndBold("数据") + "，目前游戏中有两种数据：" + TMPNormalDataCompo() + "和" + TMPNetworkDataCompo() + "。"),
-                new TutorialActionData(1, TutorialActionType.Text, "既然提到数据，就一定有发射端，和接收端。从形状上来看，很容易区别。【方形】是发射端，【圆形】是接收端。"),
-                new TutorialActionData(2, TutorialActionType.Text, "当然，除了形状，上面的图案也很重要；你已经接触过的是【处理器和硬盘】这一组发射端和接收端。负责处理一般数据。"),
-                new TutorialActionData(2, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.Processor, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
-                new TutorialActionData(2, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
-                new TutorialActionData(2, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.NoConnection}),
-                new TutorialActionData(3, TutorialActionType.Text, "现在给你打开" + TMPNormalDataCompo() + "的传输。"),
+                new TutorialActionData(0, TutorialActionType.Text, "游戏中另一个重要元素就是" + TmpBracketAndBold("数据") + ",目前游戏中有两种数据:" + TMPNormalDataCompo() + "和" + TMPNetworkDataCompo() + "."),
+                new TutorialActionData(1, TutorialActionType.Text, "有数据,就会有发射及接收端,[方形]的"+TmpBracketAndBold("单元")+"是发射端,[圆形]的"+TmpBracketAndBold("单元")+"是接收端."),
+                new TutorialActionData(1, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.Processor, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(1, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(1, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.NoConnection}),
+                new TutorialActionData(2, TutorialActionType.Text, "除了形状,"+TmpBracketAndBold("单元")+"上的图案也很重要;你已经接触过的是" + TmpBracketAndBold("处理器和硬盘") + "这一组发射及接收端,负责处理" + TMPNormalDataCompo() + "."),
+                new TutorialActionData(3, TutorialActionType.Text, "现在给你打开" + TMPNormalDataCompo() + "的传输."),
                 new TutorialActionData(4, TutorialActionType.HideText),
                 new TutorialActionData(5, TutorialActionType.ShowText),
-                new TutorialActionData(5, TutorialActionType.Text, "来，这时另外一组。这组称为" + TmpBracketAndBold("服务器和网线") + "，负责处理" + TMPNetworkDataCompo() + "。"),
-                new TutorialActionData(6, TutorialActionType.Text, "话说，信号的提示是不是有点晃眼？先帮你隐藏掉了，按住" + TmpBracketAndBold("TAB") + "可以再显示。"),
-                new TutorialActionData(7, TutorialActionType.Text, "你再试试另一类的数据。来，稍微看看数据的特点"),
+                new TutorialActionData(5, TutorialActionType.Text, "除了这些,还有另外一组,这组称为" + TmpBracketAndBold("服务器和网线") + ",负责处理" + TMPNetworkDataCompo() + "."),
+                new TutorialActionData(6, TutorialActionType.Text, "话说,信号的提示是不是有点晃眼?先帮你隐藏掉了,按住" + TmpBracketAndBold("TAB") + "会显示."),
+                new TutorialActionData(7, TutorialActionType.Text, "现在有了两组数据,试试同时有两种数据的情况."),
                 new TutorialActionData(8, TutorialActionType.HideText),
                 new TutorialActionData(8, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.Server, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
                 new TutorialActionData(8, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.NetworkCable, new[] {SideType.NoConnection, SideType.NoConnection, SideType.Connection, SideType.Connection}),
                 new TutorialActionData(8, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.NetworkCable, new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
                 new TutorialActionData(9, TutorialActionType.ShowText),
-                new TutorialActionData(9, TutorialActionType.Text, "虽说需要对应的" + TmpBracketAndBold("单元") + "才能处理对应的数据。但是有一点要注意的是：他们可以传递任意数据。"),
-                new TutorialActionData(10, TutorialActionType.Text, "来试试，使用网线模组链接一个硬盘和处理器。"),
+                new TutorialActionData(9, TutorialActionType.Text, "数据需要对应的" + TmpBracketAndBold("单元") + "处理;但是,数据可以通过所有的" + TmpBracketAndBold("单元") + "传递."),
+                new TutorialActionData(10, TutorialActionType.Text, "其实可以使用网线模组来链接一对硬盘和处理器,来试试~"),
                 new TutorialActionData(11, TutorialActionType.HideText),
                 new TutorialActionData(12, TutorialActionType.ShowText),
-                new TutorialActionData(12, TutorialActionType.Text, "总之，一切" + TmpBracketAndBold("单元") + "都可以传递一切数据，但是能否处理某些数据，就是需要特定的对应关系的单元和数据了。"),
-                new TutorialActionData(13, TutorialActionType.Text, "这么处理后，你的整个网络是不是可以更加紧凑和灵活了呢~？"),
-                new TutorialActionData(14, TutorialActionType.Text, "这就是这个游戏中信号的基本了。"),
+                new TutorialActionData(12, TutorialActionType.Text, "总之,所有" + TmpBracketAndBold("单元") + "都可以传递两种数据;但是需要特定单元,处理特定数据."),
+                new TutorialActionData(13, TutorialActionType.Text, "这么处理后,你的整个网络是不是可以更加紧凑和灵活了呢?"),
+                new TutorialActionData(14, TutorialActionType.Text, "这就是这个游戏中信号的基本了."),
                 new TutorialActionData(15, TutorialActionType.End),
             })
         {
         }
     }
-
     public class TutorialActionGoalAndCycle : TutorialActionBase
     {
         public TutorialActionGoalAndCycle() : base(
@@ -167,7 +161,6 @@ namespace ROOT
         {
         }
     }
-
     public class TutorialActionShop : TutorialActionBase
     {
         public TutorialActionShop() : base(
@@ -196,7 +189,6 @@ namespace ROOT
         {
         }
     }
-
     public class TutorialActionDestroyer : TutorialActionBase
     {
         public TutorialActionDestroyer() : base(

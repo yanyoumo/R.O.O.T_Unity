@@ -16,10 +16,10 @@ namespace ROOT
             LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.GameStateMgr = new StandardGameStateMgr();
             LevelAsset.GameStateMgr.InitGameMode(new ScoreSet(10, 3), new PerMoveData());
-            LevelAsset.DisableAllFeature();
+            LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;
             LevelAsset.CursorEnabled = true;
-            LevelAsset.PlayerDataUiEnabled = true;
+            LevelAsset.CycleEnabled = true;
             LevelAsset.GameOverEnabled = true;
 
             InitCursor(new Vector2Int(2, 3));

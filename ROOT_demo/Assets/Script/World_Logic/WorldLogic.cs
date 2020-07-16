@@ -63,21 +63,18 @@ namespace ROOT
                     }
                 }
             }
-
             if (currentLevelAsset.WarningDestoryer.GetStatus() != WarningDestoryerStatus.Dormant)
             {
                 Vector2Int[] incomings = currentLevelAsset.WarningDestoryer.NextStrikingPos(out int count);
                 currentLevelAsset.WarningGo = new GameObject[count];
                 for (int i = 0; i < count; i++)
                 {
-                    currentLevelAsset.WarningGo[i] =
-                        currentLevelAsset.Owner.WorldLogicRequestInstantiate(currentLevelAsset.CursorTemplate);
+                    currentLevelAsset.WarningGo[i] =currentLevelAsset.Owner.WorldLogicRequestInstantiate(currentLevelAsset.CursorTemplate);
                     var mIndCursor = currentLevelAsset.WarningGo[i].GetComponent<Cursor>();
                     mIndCursor.SetIndMesh();
                     mIndCursor.InitPosWithAnimation(incomings[i]);
                     CursorStayInBoard(currentLevelAsset);
-                    mIndCursor.UpdateTransform(
-                        currentLevelAsset.GameBoard.GetFloatTransform(mIndCursor.CurrentBoardPosition));
+                    mIndCursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransform(mIndCursor.CurrentBoardPosition));
 
                     Material tm = currentLevelAsset.WarningGo[i].GetComponentInChildren<MeshRenderer>().material;
 
@@ -279,36 +276,32 @@ namespace ROOT
             }
         }
 
-        internal static void UpdateDeltaCurrency(GameAssets currentLevelAsset)
+        internal static void UpdateCurrency(GameAssets currentLevelAsset)
         {
             currentLevelAsset.DeltaCurrency = 0.0f;
             currentLevelAsset.DeltaCurrency += currentLevelAsset.CurrencyIoCalculator.CalculateProcessorScore();
             currentLevelAsset.DeltaCurrency += currentLevelAsset.CurrencyIoCalculator.CalculateServerScore();
             currentLevelAsset.DeltaCurrency -= currentLevelAsset.CurrencyIoCalculator.CalculateCost();
 
-            //System.Diagnostics.Debug.Assert(currentLevelAsset._gameStateMgr != null, nameof(currentLevelAsset._gameStateMgr) + " != null");
-            if (currentLevelAsset.LCDEnabled)
+            if (currentLevelAsset.LCDCurrencyEnabled)
             {
                 currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
-                currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(),RowEnum.CurrentMoney);
+                currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(), RowEnum.CurrentMoney);
                 currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.DeltaCurrency, RowEnum.DeltaMoney);
             }
         }
 
-        internal static void UpdatePlayerDataAndUI(GameAssets currentLevelAsset, bool movedTile = true)
+        internal static void UpdateCycle(GameAssets currentLevelAsset, bool movedTile = true)
         {
-            if (currentLevelAsset.LCDEnabled)
+            if (currentLevelAsset.LCDTimeEnabled)
             {
                 currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetGameTime(), RowEnum.Time);
                 currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetTimeRatio(), RowEnum.Time);
             }
-#if UNITY_EDITOR
-            if (movedTile || Input.GetButton(StaticName.DEBUG_INPUT_BUTTON_NAME_FORCESTEP))
-            {
-#else
+
             if (movedTile)
             {
-#endif
+                currentLevelAsset.GameStateMgr.PerMove(new ScoreSet(),new PerMoveData(currentLevelAsset.DeltaCurrency, 1));
                 if (currentLevelAsset.BoughtOnce)
                 {
                     currentLevelAsset.BoughtOnce = false;
@@ -319,12 +312,10 @@ namespace ROOT
                     currentLevelAsset.ShopMgr.ShopPreAnimationUpdate();
                 }
 
-                if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestoryerEnabled)
+                if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
                 {
                     currentLevelAsset.WarningDestoryer.Step();
                 }
-
-                currentLevelAsset.GameStateMgr.PerMove(new ScoreSet(),new PerMoveData(currentLevelAsset.DeltaCurrency, 1));
             }
         }
 
@@ -334,11 +325,10 @@ namespace ROOT
             movedTile = false;
             movedCursor = false;
             {
-                if (currentLevelAsset.DestoryerEnabled)
+                if (currentLevelAsset.DestroyerEnabled)
                 {
-                    WorldLogic.UpdateDestoryer(currentLevelAsset);
+                    UpdateDestoryer(currentLevelAsset);
                 }
-
                 if (currentLevelAsset.InputEnabled)
                 {
                     var cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
@@ -346,15 +336,13 @@ namespace ROOT
                         ref currentLevelAsset.BoughtOnce);
                     currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
                 }
-
-                if (currentLevelAsset.UpdateDeltaCurrencyEnabled)
+                if (currentLevelAsset.CurrencyEnabled)
                 {
-                    UpdateDeltaCurrency(currentLevelAsset);
+                    UpdateCurrency(currentLevelAsset);
                 }
-
-                if (currentLevelAsset.PlayerDataUiEnabled)
+                if (currentLevelAsset.CycleEnabled)
                 {
-                    UpdatePlayerDataAndUI(currentLevelAsset, movedTile);
+                    UpdateCycle(currentLevelAsset, movedTile);
                 }
             }
         }

@@ -8,7 +8,16 @@ namespace ROOT
 {
     public class TutorialDestroyerMgr : BaseTutorialMgr
     {
+        private bool windingOnce = false;
 
+        IEnumerator ForceWindingDestroyer()
+        {
+            while (LevelAsset.WarningDestoryer.GetStatus()!=WarningDestoryerStatus.Striking)
+            {
+                yield return 0;
+                LevelAsset.WarningDestoryer.Step();
+            }
+        }
 
         protected override void Update()
         {
@@ -17,12 +26,12 @@ namespace ROOT
             {
                 if (ActionIndex == 1)
                 {
-                    /*if (!LevelAsset.ShopEnabled)
+                    if (!windingOnce)
                     {
-                        InitShop();
-                        StartShop();
-                        LevelAsset.ShopEnabled = true;
-                    }*/
+                        windingOnce = true;
+                        //TODO 这里有个问题，就是这个有可能出现在说明框后面。
+                        StartCoroutine(ForceWindingDestroyer());
+                    }
                 }
             }
         }
@@ -39,24 +48,20 @@ namespace ROOT
             Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
-            /*InitCurrencyIoMgr();
-            LevelAsset.DeltaCurrency = 0.0f;
-            LevelAsset.GameStateMgr = new StandardGameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(new ScoreSet(), new PerMoveData());
-            //LevelAsset.GameBoard.InitBoardRealStart();*/
             LevelAsset.GameBoard.UpdateBoardAnimation();
             LevelAsset.StartingScoreSet = new ScoreSet();
             LevelAsset.StartingPerMoveData = new PerMoveData();
 
-            LevelAsset.DisableAllFeature();
+            LevelAsset.GameStateMgr = new StandardGameStateMgr();
+            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.StartingScoreSet, LevelAsset.StartingPerMoveData);
+
+            LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;
             LevelAsset.CursorEnabled = true;
             LevelAsset.RotateEnabled = true;
             LevelAsset.HintEnabled = true;
-            LevelAsset.DestoryerEnabled = true;
-            //LevelAsset.UpdateDeltaCurrencyEnabled = true;
-            //LevelAsset.LCDEnabled = true;
-            LevelAsset.PlayerDataUiEnabled = true;
+            LevelAsset.DestroyerEnabled = true;
+            LevelAsset.CycleEnabled = true;
 
             InitCursor(new Vector2Int(2, 3));
             InitDestoryer();
@@ -83,12 +88,6 @@ namespace ROOT
             }
         }
 
-        /*protected void InitCurrencyIoMgr()
-        {
-            LevelAsset.CurrencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
-            LevelAsset.CurrencyIoCalculator.m_Board = LevelAsset.GameBoard;
-        }*/
-
         protected void InitCursor(Vector2Int pos)
         {
             LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
@@ -103,15 +102,5 @@ namespace ROOT
             LevelAsset.WarningDestoryer.SetBoard(ref LevelAsset.GameBoard);
             LevelAsset.WarningDestoryer.Init(5, 2);
         }
-
-        /* protected void InitShop()
-         {
-             LevelAsset.ShopMgr = gameObject.AddComponent<ShopMgr>();
-             LevelAsset.ShopMgr.UnitTemplate = LevelAsset.GameBoard.UnitTemplate;
-             LevelAsset.ShopMgr.ShopInit();
-             LevelAsset.ShopMgr.ItemPriceTexts_TMP = new[] { LevelAsset.Item1PriceTmp, LevelAsset.Item2PriceTmp, LevelAsset.Item3PriceTmp, LevelAsset.Item4PriceTmp };
-             LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
-             LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
-         }*/
     }
 }

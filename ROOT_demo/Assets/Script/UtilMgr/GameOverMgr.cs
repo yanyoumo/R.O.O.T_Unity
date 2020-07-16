@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using I2.Loc;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,13 +24,17 @@ namespace ROOT
                 UpdateUIContent();
             }
         }
-        public TextMeshProUGUI EndingTitle;
-        public TextMeshProUGUI EndingMessage;
+        //public TextMeshProUGUI EndingTitle;
+        public Localize EndingTitleLocalize;
+        public Localize EndingMessageLocalize;
+        public LocalizationParamsManager EndingMessageParam;
+        //public TextMeshProUGUI EndingMessage;
 
         public Button BackButton;
-        public Text BackButtonText;
+        //public Text BackButtonText;
         public Button OtherButton;
-        public Text OtherButtonText;
+        public Localize OtherButtonLocalize;
+        //public Text OtherButtonText;
 
         void GameOverSceneLoaded(Scene scene,LoadSceneMode loadSceneMode)
         {
@@ -45,36 +50,29 @@ namespace ROOT
             {
                 BackButton.onClick.AddListener(Back);
                 OtherButton.onClick.AddListener(NextTutorial);
-                OtherButtonText.text = "Next";
+                OtherButtonLocalize.Term = ScriptTerms.NextTutorial;
                 OtherButton.interactable = false;//TODO 到时候改成能去下一关。
 
-                EndingTitle.text = "SECTION OVER";
-                EndingMessage.text = "本节教程结束~";
+                EndingTitleLocalize.Term = ScriptTerms.TutorialSectionOver;
+                EndingMessageLocalize.Term = ScriptTerms.EndingMessageTutorial;
             }
             else
             {
                 BackButton.onClick.AddListener(Back);
                 OtherButton.onClick.AddListener(GameRestart);
-                OtherButtonText.text = "Restart";
-
-                EndingTitle.text = "GAME OVER";
+                OtherButtonLocalize.Term = ScriptTerms.Restart;
+                EndingTitleLocalize.Term = ScriptTerms.GameOver;
                 float endingIncome = _lastGameAssets.GameStateMgr.GetCurrency() - _lastGameAssets.GameStateMgr.StartingMoney;
 
                 if (_lastGameAssets.GameStateMgr.GetGameTime() <= 0)
                 {
-                    float deltaMoney = Mathf.Abs(endingIncome);
-                    if (endingIncome >= 0)
-                    {
-                        EndingMessage.text = "时间到了，你赚了" + deltaMoney + "钱";
-                    }
-                    else
-                    {
-                        EndingMessage.text = "时间到了，你赔了" + deltaMoney + "钱";
-                    }
+                    int deltaMoney = Mathf.FloorToInt(Mathf.Abs(endingIncome));
+                    EndingMessageParam.SetParameterValue("VALUE", deltaMoney.ToString());
+                    EndingMessageLocalize.Term = endingIncome >= 0 ? ScriptTerms.EndingMessageNormal_EarnedMoney : ScriptTerms.EndingMessageNormal_NoEarnedMoney;
                 }
                 else
                 {
-                    EndingMessage.text = "你没钱了";
+                    EndingMessageLocalize.Term = ScriptTerms.EndingMessageNormal_NoMoney;
                 }
             }
         }
