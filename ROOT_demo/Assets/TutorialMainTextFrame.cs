@@ -11,9 +11,8 @@ namespace ROOT
         public TextMeshPro Next_Extended;
         public TextMeshPro Next_Collapsed;
         public AnimationCurve Curve;
-        private float ShowTime = 0.1f;
-        private float ShowTimer = 0.1f;
-        private bool shouldShow;
+        private readonly float ShowTime = 0.1f;
+        private float _showTimer = 0.1f;
 
         public string Content
         {
@@ -27,40 +26,63 @@ namespace ROOT
                 Next_Extended.enabled = value;
                 Next_Collapsed.enabled = !value;
 
-                if (shouldShow == showed)
+                if (value)
                 {
-                    shouldShow = value;
+                    Show();
+                }
+                else
+                {
+                    Hide();
                 }
             }
-            get => shouldShow;
         }
 
-        private bool showed;
-        private float PosXNotShow= -13.14f;
-        private float PosXShow = -4.1f;
-        
-        void Update()
+        private float TimeLerper => (Time.timeSinceLevelLoad - _showTimer)/ ShowTime;
+
+        private readonly float PosXNotShow= -13.14f;
+        private readonly float PosXShow = -4.1f;
+        private bool _animating = false;
+
+        void Show()
         {
-            if (shouldShow != showed)
+            if (!_animating)
             {
-                float PosX = 0.0f;
-                Vector3 pos = transform.position;
-                float timeLerp = Time.timeSinceLevelLoad - ShowTimer;
-                timeLerp /= ShowTime;
-                if (timeLerp > 1.0f)
+                _showTimer = Time.timeSinceLevelLoad;
+                StartCoroutine(Animate(true));
+            }
+        }
+
+        void Hide()
+        {
+            if (!_animating)
+            {
+                _showTimer = Time.timeSinceLevelLoad;
+                StartCoroutine(Animate(false));
+            }
+        }
+
+        IEnumerator Animate(bool shouldShow)
+        {
+            _animating = true;
+            float PosX = 0.0f;
+            Vector3 pos = transform.position;
+            while (true)
+            {
+                if (TimeLerper >= 1.0f)
                 {
-                    showed = shouldShow;
-                    timeLerp = 1.0f;
+                    _animating = false;
+
+                    PosX = shouldShow ? PosXShow : PosXNotShow;
+                    transform.position = new Vector3(PosX, pos.y, pos.z);
+
+                    yield break;
                 }
 
                 PosX = shouldShow
-                    ? Mathf.Lerp(PosXNotShow, PosXShow, timeLerp)
-                    : Mathf.Lerp(PosXShow, PosXNotShow, timeLerp);
+                    ? Mathf.Lerp(PosXNotShow, PosXShow, TimeLerper)
+                    : Mathf.Lerp(PosXShow, PosXNotShow, TimeLerper);
                 transform.position = new Vector3(PosX, pos.y, pos.z);
-            }
-            else
-            {
-                ShowTimer = Time.timeSinceLevelLoad;
+                yield return 0;
             }
         }
     }

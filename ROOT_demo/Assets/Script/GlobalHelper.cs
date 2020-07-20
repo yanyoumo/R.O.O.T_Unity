@@ -424,7 +424,7 @@ namespace ROOT
 
         protected static string TmpBracketAndBold(string content)
         {
-            return "[" + TmpColorBold(content) + "]";
+            return TmpColorBold("[" + content + "]");
         }
 
         protected static string TMPNormalDataCompo()

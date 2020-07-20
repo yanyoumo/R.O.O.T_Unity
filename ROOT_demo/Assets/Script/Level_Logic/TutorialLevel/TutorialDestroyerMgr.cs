@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    public class TutorialDestroyerMgr : BaseTutorialMgr
+    public partial class TutorialDestroyerMgr : BaseTutorialMgr
     {
         private bool windingOnce = false;
 
@@ -24,12 +24,14 @@ namespace ROOT
             base.Update();
             if (ReadyToGo)
             {
-                if (ActionIndex == 1)
+                if (ActionIndex == 0)
                 {
                     if (!windingOnce)
                     {
                         windingOnce = true;
-                        //TODO 这里有个问题，就是这个有可能出现在说明框后面。
+                        //这里有个问题，就是这个有可能出现在说明框后面。
+                        //现在把框改小了，凑活这样吧。
+                        ForceSetWarningDestoryer(new Vector2Int(4, 1));
                         StartCoroutine(ForceWindingDestroyer());
                     }
                 }

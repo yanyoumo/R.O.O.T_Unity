@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 namespace ROOT
 {
     //TODO 这货要变成由GameMasterManager直接管理的一环。
-    public partial class TutorialMasterMgr : MonoBehaviour
+    public sealed partial class TutorialMasterMgr : MonoBehaviour
     {
         public GameObject TutorialCanvas;
         TutorialQuadDataPack[] _dataS;

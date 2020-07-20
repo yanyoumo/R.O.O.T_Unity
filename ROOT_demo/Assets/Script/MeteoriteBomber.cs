@@ -21,10 +21,19 @@ namespace ROOT
         void Step();
     }
 
+    public partial class TutorialDestroyerMgr : BaseTutorialMgr
+    {
+        private void ForceSetWarningDestoryer(Vector2Int nextIncome)
+        {
+            MeteoriteBomber obj= LevelAsset.WarningDestoryer as MeteoriteBomber;
+            obj?.ForceSetDestoryer(nextIncome);
+        }
+    }
+
     public class MeteoriteBomber: IWarningDestoryer
     {
         public Board GameBoard;
-        public int NextStrikingCount { private set; get; }
+        public int NextStrikingCount { internal set; get; }
 
         //TODO 具体的提高Strike数据的逻辑还没定，现在就很简单的每4次加一次。
         public const int NextStrikeUpCounter = 4;
@@ -39,14 +48,12 @@ namespace ROOT
         public int CounterLoopVariance { private set; get; }
         public static readonly int MinLoopStep=3;
 
-        //public Vector2Int NextIncome { private set; get; }
         public Vector2Int[] NextIncomes { private set; get; }
 
-        public void ForceSetDestoryer(TutorialMgr invoker,Vector2Int nextIncome)
+        internal void ForceSetDestoryer(Vector2Int nextIncome)
         {
-            Debug.Assert(invoker, "这个函数只能在教程里面调。");
             NextStrikingCount = 1;
-            NextIncomes = new[]{ nextIncome };
+            NextIncomes = new[] { nextIncome };
         }
 
         private void GenerateNewIncomes()
