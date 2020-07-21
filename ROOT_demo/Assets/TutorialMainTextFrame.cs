@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using TMPro;
 using UnityEngine;
 
@@ -42,8 +43,9 @@ namespace ROOT
 
         private float TimeLerper => (Time.timeSinceLevelLoad - _showTimer)/ ShowTime;
 
-        private readonly float PosXNotShow= -13.14f;
-        private readonly float PosXShow = -4.1f;
+        private float PosXNotShow= -13.14f;
+        private float PosXShow = -4.1f;
+        private readonly float DistanceFromCamera = 20.0f;
         public bool Animating { get; private set; } = false;
 
         void Show()
@@ -61,6 +63,23 @@ namespace ROOT
                 _showTimer = Time.timeSinceLevelLoad;
                 StartCoroutine(Animate(false));
             }
+        }
+
+        void Awake()
+        {
+            Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, DistanceFromCamera));
+            Debug.Log(pos);
+            float ZeroX = pos.x;
+            Vector3 currentPos = transform.position;
+            float camZ = 25;
+            if (StartGameMgr.DetectedDevice==SupportedDevice.iPadPro4)
+            {
+                camZ = 30;
+            }
+            currentPos.y = camZ - DistanceFromCamera;
+            transform.position = currentPos;
+            PosXNotShow = ZeroX - 4.21f;
+            PosXShow = ZeroX + 4.71f;
         }
 
         IEnumerator Animate(bool shouldShow)
