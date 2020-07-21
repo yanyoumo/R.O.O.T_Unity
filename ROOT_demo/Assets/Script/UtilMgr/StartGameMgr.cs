@@ -48,15 +48,15 @@ namespace ROOT
                 DetectedDevice = SupportedDevice.iPadPro4;
             }
 #elif UNITY_STANDALONE_WIN
-            detectedDevice = SupportedDevice.StandAlone;
+            DetectedDevice = SupportedDevice.StandAlone;
 #elif UNITY_IOS
             if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhoneXR)
             {
-                detectedDevice = SupportedDevice.iPXR;
+                DetectedDevice = SupportedDevice.iPXR;
             }
             else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPadUnknown)
             {
-                detectedDevice = SupportedDevice.iPadPro4;
+                DetectedDevice = SupportedDevice.iPadPro4;
             }
             else
             {
