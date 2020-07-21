@@ -1111,7 +1111,7 @@ MonoBehaviour:
     linkCount: 0
     lineCount: 5
     pageCount: 1
-    materialCount: 3
+    materialCount: 2
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
@@ -1533,8 +1533,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ContentText: {fileID: 1575517699}
-  Next_Extended: {fileID: 920799950}
-  Next_Collapsed: {fileID: 190566316}
+  NextExtended: {fileID: 920799950}
+  NextCollapsed: {fileID: 190566316}
   Curve:
     serializedVersion: 2
     m_Curve:
@@ -1559,6 +1559,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  Showed: 0
 --- !u!4 &242932733
 Transform:
   m_ObjectHideFlags: 0
@@ -1922,7 +1923,7 @@ MonoBehaviour:
     linkCount: 0
     lineCount: 1
     pageCount: 1
-    materialCount: 3
+    materialCount: 2
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
@@ -3435,7 +3436,7 @@ GameObject:
   - component: {fileID: 822959384}
   - component: {fileID: 822959383}
   m_Layer: 0
-  m_Name: TMP SubMesh [SourceHanSansSC-Normal_Statuc Material + SourceHanSansSC-Bold
+  m_Name: TMP SubMesh [SourceHanSansSC-Normal_Statuc Material + SourceHanSansSC-Normal
     Atlas]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3468,7 +3469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07994bfe8b0e4adb97d706de5dea48d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fontAsset: {fileID: 11400000, guid: 5bd4087b5a736ed45b437430693e1591, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 69281d8b38e19f7418a30224da8d5e13, type: 2}
   m_spriteAsset: {fileID: 0}
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
@@ -4343,7 +4344,7 @@ MonoBehaviour:
     linkCount: 0
     lineCount: 1
     pageCount: 1
-    materialCount: 3
+    materialCount: 2
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
@@ -8369,7 +8370,7 @@ GameObject:
   - component: {fileID: 1691995102}
   - component: {fileID: 1691995101}
   m_Layer: 0
-  m_Name: TMP SubMesh [SourceHanSansSC-Normal_Statuc Material + SourceHanSansSC-Bold
+  m_Name: TMP SubMesh [SourceHanSansSC-Normal_Statuc Material + SourceHanSansSC-Normal
     Atlas]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8402,7 +8403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07994bfe8b0e4adb97d706de5dea48d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fontAsset: {fileID: 11400000, guid: 5bd4087b5a736ed45b437430693e1591, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 69281d8b38e19f7418a30224da8d5e13, type: 2}
   m_spriteAsset: {fileID: 0}
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
@@ -11402,6 +11403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30749a8712c17a442acc0116ec45e9de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TutorialMainTextFrame: {fileID: 0}
   Curve:
     serializedVersion: 2
     m_Curve:
