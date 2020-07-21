@@ -35,6 +35,7 @@ namespace ROOT
 #if UNITY_EDITOR
                     throw new ArgumentOutOfRangeException();
 #else
+                    break;                  
                     //Fall back to PC.
 #endif
             }
