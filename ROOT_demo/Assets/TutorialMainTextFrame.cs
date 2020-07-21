@@ -5,11 +5,12 @@ using UnityEngine;
 
 namespace ROOT
 {
+    //TODO 这个东西不知道是不是要和另外那个联合起来，要不然这个管理很不利。
     public class TutorialMainTextFrame : MonoBehaviour
     {
         public TextMeshPro ContentText;
-        public TextMeshPro Next_Extended;
-        public TextMeshPro Next_Collapsed;
+        public TextMeshPro NextExtended;
+        public TextMeshPro NextCollapsed;
         public AnimationCurve Curve;
         private readonly float ShowTime = 0.1f;
         private float _showTimer = 0.1f;
@@ -19,12 +20,14 @@ namespace ROOT
             set => ContentText.text = value;
             get => ContentText.text;
         }
+        public bool Showed=false;
         public bool ShouldShow
         {
             set
             {
-                Next_Extended.enabled = value;
-                Next_Collapsed.enabled = !value;
+                NextExtended.enabled = value;
+                NextCollapsed.enabled = !value;
+                ContentText.enabled = value;
 
                 if (value)
                 {
@@ -41,20 +44,19 @@ namespace ROOT
 
         private readonly float PosXNotShow= -13.14f;
         private readonly float PosXShow = -4.1f;
-        private bool _animating = false;
+        public bool Animating { get; private set; } = false;
 
         void Show()
         {
-            if (!_animating)
+            if (!Animating)
             {
                 _showTimer = Time.timeSinceLevelLoad;
                 StartCoroutine(Animate(true));
             }
         }
-
         void Hide()
         {
-            if (!_animating)
+            if (!Animating)
             {
                 _showTimer = Time.timeSinceLevelLoad;
                 StartCoroutine(Animate(false));
@@ -63,25 +65,25 @@ namespace ROOT
 
         IEnumerator Animate(bool shouldShow)
         {
-            _animating = true;
-            float PosX = 0.0f;
+            Animating = true;
             Vector3 pos = transform.position;
             while (true)
             {
+                var posX = 0.0f;
                 if (TimeLerper >= 1.0f)
                 {
-                    _animating = false;
+                    Animating = false;
 
-                    PosX = shouldShow ? PosXShow : PosXNotShow;
-                    transform.position = new Vector3(PosX, pos.y, pos.z);
-
+                    posX = shouldShow ? PosXShow : PosXNotShow;
+                    transform.position = new Vector3(posX, pos.y, pos.z);
+                    Showed = shouldShow;
                     yield break;
                 }
 
-                PosX = shouldShow
+                posX = shouldShow
                     ? Mathf.Lerp(PosXNotShow, PosXShow, TimeLerper)
                     : Mathf.Lerp(PosXShow, PosXNotShow, TimeLerper);
-                transform.position = new Vector3(PosX, pos.y, pos.z);
+                transform.position = new Vector3(posX, pos.y, pos.z);
                 yield return 0;
             }
         }

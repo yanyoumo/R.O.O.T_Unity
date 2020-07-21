@@ -264,7 +264,6 @@ namespace ROOT
             {
                 LevelAsset.GameBoard.DisplayConnectedHDDUnit();
             }
-
             if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET) || LevelAsset.ForceServerConnectionHint)
             {
                 LevelAsset.GameBoard.DisplayConnectedServerUnit();
