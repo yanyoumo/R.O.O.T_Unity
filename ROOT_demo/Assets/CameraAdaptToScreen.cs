@@ -7,38 +7,25 @@ using UnityEngine;
 
 namespace ROOT
 {
-    public enum SupportedDevice
-    {
-        StandAlone,
-        iPXR,
-        iPadPro4,
-    }
-
     public class CameraAdaptToScreen : MonoBehaviour
     {
         public CinemachineFreeLook Crane;
 
         void Awake()
         {
-            switch (StartGameMgr.DetectedDevice)
+            switch (StartGameMgr.DetectedScreenRatio)
             {
-                case SupportedDevice.StandAlone:
-                    //DO NOTHING 16:9
-                    break;
-                case SupportedDevice.iPXR:
-                    //IPHONE XR
-                    break;
-                case SupportedDevice.iPadPro4:
+                case SupportedScreenRatio.XGA:
                     Crane.m_Orbits[1].m_Radius = 30.0f;
                     break;
+                case SupportedScreenRatio.HD:
+                    break;
+                case SupportedScreenRatio.AppleHD:
+                    break;
                 default:
-#if UNITY_EDITOR
                     throw new ArgumentOutOfRangeException();
-#else
-                    break;                  
-                    //Fall back to PC.
-#endif
             }
+
             Destroy(this);
         }
 

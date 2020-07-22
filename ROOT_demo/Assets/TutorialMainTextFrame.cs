@@ -72,7 +72,7 @@ namespace ROOT
             float ZeroX = pos.x;
             Vector3 currentPos = transform.position;
             float camZ = 25;
-            if (StartGameMgr.DetectedDevice==SupportedDevice.iPadPro4)
+            if (StartGameMgr.DetectedScreenRatio==SupportedScreenRatio.XGA)
             {
                 camZ = 30;
             }

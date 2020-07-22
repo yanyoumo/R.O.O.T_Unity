@@ -9,7 +9,7 @@ PlayerSettings:
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
   defaultScreenOrientation: 4
-  targetDevice: 0
+  targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
@@ -175,7 +175,7 @@ PlayerSettings:
     Standalone: com.theArchitect.ROOTdemo
     iPhone: com.thearchitect.root
   buildNumber:
-    iPhone: 5952b5b
+    iPhone: 59525
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
@@ -701,7 +701,7 @@ PlayerSettings:
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
     1: UNITY_POST_PROCESSING_STACK_V2;TextMeshPro
-    4: TextMeshPro
+    4: TextMeshPro;ODIN_INSPECTOR
     7: UNITY_POST_PROCESSING_STACK_V2;TextMeshPro
     13: UNITY_POST_PROCESSING_STACK_V2;TextMeshPro
     19: UNITY_POST_PROCESSING_STACK_V2;TextMeshPro
