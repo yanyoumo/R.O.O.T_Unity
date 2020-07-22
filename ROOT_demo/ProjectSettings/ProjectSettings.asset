@@ -9,7 +9,7 @@ PlayerSettings:
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
   defaultScreenOrientation: 4
-  targetDevice: 2
+  targetDevice: 0
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
@@ -174,7 +174,8 @@ PlayerSettings:
   applicationIdentifier:
     Standalone: com.theArchitect.ROOTdemo
     iPhone: com.thearchitect.root
-  buildNumber: {}
+  buildNumber:
+    iPhone: 5952b5b
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
