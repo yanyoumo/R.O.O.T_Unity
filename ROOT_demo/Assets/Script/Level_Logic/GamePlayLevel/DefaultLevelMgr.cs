@@ -367,11 +367,16 @@ namespace ROOT
 
                 if (LevelAsset.GameOverEnabled)
                 {
-
                     UpdateGameOverStatus(LevelAsset);
                 }
-
-                LogicFrameAnimeFrameToggle = !(pressedAny & (movedTile | movedCursor));
+                if (StartGameMgr.DetectedInputScheme == InputScheme.TouchScreen)
+                {
+                    LogicFrameAnimeFrameToggle = !movedTile;
+                }
+                else
+                {
+                    LogicFrameAnimeFrameToggle = !(pressedAny & (movedTile | movedCursor));
+                }
                 if (!LogicFrameAnimeFrameToggle)
                 {
                     LevelAsset.MovedTileAni = movedTile;

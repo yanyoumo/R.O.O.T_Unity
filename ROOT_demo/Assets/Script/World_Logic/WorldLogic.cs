@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,10 @@ namespace ROOT
     /// </summary>
     internal static class WorldLogic //WORLD-LOGIC
     {
+        private static int lastFingerID=0;
+        private static bool swiping=false;
+        private static Vector2 moveVal =Vector2.zero;
+        private static Unit swipingUnit = null;
         //对，这种需要影响场景怎么办？
         //本来是为了保证WRD-LOGIC的独立性（体现形而上学的概念）；
         //就是弄成了静态类，但是现在看估计得弄成单例？
@@ -73,7 +78,7 @@ namespace ROOT
                     var mIndCursor = currentLevelAsset.WarningGo[i].GetComponent<Cursor>();
                     mIndCursor.SetIndMesh();
                     mIndCursor.InitPosWithAnimation(incomings[i]);
-                    CursorStayInBoard(currentLevelAsset);
+                    UpdateCursorPos(currentLevelAsset);
                     mIndCursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransform(mIndCursor.CurrentBoardPosition));
 
                     Material tm = currentLevelAsset.WarningGo[i].GetComponentInChildren<MeshRenderer>().material;
@@ -94,7 +99,7 @@ namespace ROOT
             }
         }
 
-        internal static void CursorStayInBoard(GameAssets currentLevelAsset)
+        internal static void UpdateCursorPos(GameAssets currentLevelAsset)
         {
             currentLevelAsset.Cursor.SetPosWithAnimation(
                 ClampPosInBoard(currentLevelAsset.Cursor.CurrentBoardPosition, currentLevelAsset.GameBoard),
@@ -251,7 +256,48 @@ namespace ROOT
             }
 
             movedCursor |= movedTile;
-            CursorStayInBoard(currentLevelAsset);
+            UpdateCursorPos(currentLevelAsset);
+        }
+
+        private static void ApplyMove(GameAssets currentLevelAsset, Vector2 val,Unit unit)
+        {
+            //再转译成上下左右即可。
+            Vector2 pivot = Vector2.one.normalized;
+            float angle=Vector2.SignedAngle(pivot, val.normalized);
+            angle -= 90;
+
+            Vector2Int oldKey = unit.CurrentBoardPosition;
+            oldKey = new Vector2Int(oldKey.y, oldKey.x);
+
+            if (angle<0&&angle>=-90)
+            {
+                //North
+                unit.MoveUp();
+                Debug.Log("North");
+            }
+            else if (angle < -90 && angle >=-180)
+            {
+                //WEST
+                unit.MoveRight();
+                Debug.Log("WEST");
+            }
+            else if (angle > 0 && angle <= 90)
+            {
+                //EAST
+                unit.MoveLeft();
+                Debug.Log("EAST");
+            }
+            else
+            {
+                //SOUTH
+                unit.MoveDown();
+                Debug.Log("SOUTH");
+            }
+
+            currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation_Touch(unit);
+            currentLevelAsset.AnimationPendingObj.Add(unit);
+
+            Debug.Log(val);
         }
 
         internal static void UpdateInput(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor,
@@ -264,9 +310,72 @@ namespace ROOT
                 UpdateShop(currentLevelAsset.ShopMgr, ref boughtOnce);
             }
 
-            if (currentLevelAsset.CursorEnabled)
+            if (StartGameMgr.DetectedInputScheme == InputScheme.TouchScreen)
             {
-                UpdateCursor(currentLevelAsset, out movedTile, out movedCursor);
+                if (Input.touchCount > 0)
+                {
+                    foreach (var touch in Input.touches)
+                    {
+                        if (!swiping)
+                        {
+                            Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                            if (Physics.Raycast(ray, out RaycastHit hitInfo))
+                            {
+                                if (hitInfo.collider != null)
+                                {
+                                    if (hitInfo.transform.name == "UnitRoot")
+                                    {
+                                        swipingUnit = hitInfo.transform.GetComponentInChildren<Unit>();
+                                        lastFingerID = touch.fingerId;
+                                        Debug.Assert(touch.phase == TouchPhase.Began);
+                                        swiping = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (touch.fingerId == lastFingerID)
+                            {
+                                switch (touch.phase)
+                                {
+                                    case TouchPhase.Began:
+                                    case TouchPhase.Stationary:
+                                        //DO NOTHING
+                                        break;
+                                    case TouchPhase.Moved:
+                                        moveVal += touch.deltaPosition;
+                                        break;
+                                    case TouchPhase.Ended:
+                                        lastFingerID = touch.fingerId;
+                                        moveVal += touch.deltaPosition;
+                                        swiping = false;
+                                        ApplyMove(currentLevelAsset, moveVal, swipingUnit);
+                                        swipingUnit = null;
+                                        moveVal = Vector2.zero;
+                                        movedTile = true;
+                                        break;
+                                    case TouchPhase.Canceled:
+                                        lastFingerID = touch.fingerId;
+                                        swiping = false;
+                                        swipingUnit = null;
+                                        moveVal = Vector2.zero;
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (currentLevelAsset.CursorEnabled)
+                {
+                    UpdateCursor(currentLevelAsset, out movedTile, out movedCursor);
+                }
             }
 
             if (currentLevelAsset.RotateEnabled)
@@ -332,7 +441,7 @@ namespace ROOT
                 if (currentLevelAsset.InputEnabled)
                 {
                     var cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
-                    WorldLogic.UpdateInput(currentLevelAsset, out movedTile, out movedCursor,
+                    UpdateInput(currentLevelAsset, out movedTile, out movedCursor,
                         ref currentLevelAsset.BoughtOnce);
                     currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
                 }

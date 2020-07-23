@@ -14,10 +14,14 @@ namespace ROOT
         AppleHD, //2.1645:1/iPhoneX/iPhoneXR/iPhone11Pro/iPhoneXSMax
     }
 
+    public enum InputScheme
+    {
+        KeyboardMouse,
+        TouchScreen,
+    }
+
     public class StartGameMgr : MonoBehaviour
     {
-
-
         /*public enum SupportedDevice
         {
             StandAlone,//1920x1080-1.78-16:9
@@ -31,8 +35,10 @@ namespace ROOT
         }*/
 
         public SupportedScreenRatio PCSimulateDevice;
+        public InputScheme EditorInputScheme;
 
         public static SupportedScreenRatio DetectedScreenRatio { get; private set; } = SupportedScreenRatio.HD;
+        public static InputScheme DetectedInputScheme { get; private set; } = InputScheme.KeyboardMouse;
 
         IEnumerator LoadLevelMasterSceneAndSetActive()
         {
@@ -56,24 +62,33 @@ namespace ROOT
         void Awake()
         {
 #if UNITY_EDITOR
+            Input.simulateMouseWithTouches = true;
             DetectedScreenRatio = PCSimulateDevice;
+            DetectedInputScheme = EditorInputScheme;
 #elif UNITY_STANDALONE_WIN
             DetectedScreenRatio = SupportedScreenRatio.HD;
+            DetectedInputScheme = InputScheme.KeyboardMouse;
 #elif UNITY_IOS
             switch (UnityEngine.iOS.Device.generation)
             {
                 case DeviceGeneration.iPhone7Plus:
                     DetectedScreenRatio = SupportedScreenRatio.HD;
+                    DetectedInputScheme = InputScheme.TouchScreen;
                     break;
                 case DeviceGeneration.iPhoneX:
                 case DeviceGeneration.iPhoneXR:
                 case DeviceGeneration.iPhone11Pro:
                 case DeviceGeneration.iPhoneXSMax:
                     DetectedScreenRatio = SupportedScreenRatio.AppleHD;
+                    DetectedInputScheme = InputScheme.TouchScreen;
                     break;
                 case DeviceGeneration.iPadAir2:
+                    DetectedScreenRatio = SupportedScreenRatio.XGA;
+                    DetectedInputScheme = InputScheme.TouchScreen;
+                    break;
                 case DeviceGeneration.iPadUnknown://iPadPro4Gen
                     DetectedScreenRatio = SupportedScreenRatio.XGA;
+                    DetectedInputScheme = InputScheme.KeyboardMouse;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
