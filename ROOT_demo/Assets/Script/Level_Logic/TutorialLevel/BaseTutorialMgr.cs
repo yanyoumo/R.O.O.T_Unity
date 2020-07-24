@@ -11,10 +11,11 @@ namespace ROOT
         protected int ActionIndex { get; private set; } = -1;
         protected int LastActionCount { get; private set; } = 0;
         protected TutorialActionBase TutorialAction;
-        private TutorialMainTextFrame _tutorialMainText;
+        //private TutorialMainTextFrame _tutorialMainText;
+        protected HintMaster HintMaster;
         protected bool ShowText
         {
-            set => _tutorialMainText.ShouldShow = value;
+            set => HintMaster.RequestedShowTutorialContent = value;
         }
 
         protected abstract override bool UpdateGameOverStatus(GameAssets currentLevelAsset);
@@ -28,7 +29,8 @@ namespace ROOT
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
             LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
-            _tutorialMainText = FindObjectOfType<TutorialMainTextFrame>();
+            HintMaster = FindObjectOfType<HintMaster>();
+            //_tutorialMainText = FindObjectOfType<TutorialMainTextFrame>();
             PopulateArtLevelReference();
         }
 
@@ -56,7 +58,7 @@ namespace ROOT
         protected virtual void DisplayText(string text)
         {
             //Debug.Log(text);
-            _tutorialMainText.Content = text;
+            HintMaster.TutorialContent = text;
         }
 
         /// <summary>
@@ -77,10 +79,10 @@ namespace ROOT
                     LevelMasterManager.Instance.LevelFinished(LevelAsset);
                     break;
                 case TutorialActionType.ShowText:
-                    _tutorialMainText.ShouldShow = true;
+                    ShowText = true;
                     break;
                 case TutorialActionType.HideText:
-                    _tutorialMainText.ShouldShow = false;
+                    ShowText = false;
                     break;
                 default:
                     throw new NotImplementedException();

@@ -1,22 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using I2.Loc;
 using UnityEngine;
 
 namespace ROOT
 {
+    public partial class HintMaster : MonoBehaviour
+    {
+        public HelpScreen HelpScreen;
+    }
+
     public class HelpScreen : MonoBehaviour
     {
-        public TutorialMainTextFrame TutorialMainTextFrame;
+        public Localize HorHintText;
 
         private bool _atUpOrDown = false;
-        private bool _sliding = false;
-        private bool _slidingUpOrDown = true;
+        internal bool ShouldShow = false;
+        internal bool Animating { get; private set; } = false;
+        private bool _animatingUpOrDown = true;
 
         private float _upPos = -1.64f;
         private float _downPos = -10.49f;
 
         private float _slideTimer = 0.0f;
         private float _slideDuration = 0.3f;
+        private float TimeLerper => (Time.time - _slideTimer) / _slideDuration;
 
         public AnimationCurve Curve;
 
@@ -27,65 +35,45 @@ namespace ROOT
             _posXY = new Vector2(transform.position.x, transform.position.y);
         }
 
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
         // Update is called once per frame
         void Update()
         {
-            if (!_sliding)
+            if (!Animating)
             {
                 if (!_atUpOrDown)
                 {
-                    if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL))
+                    if (ShouldShow)
                     {
-                        _slidingUpOrDown = true;
-                        _sliding = true;
+                        _animatingUpOrDown = true;
+                        Animating = true;
                         _slideTimer = Time.time;
+                        HorHintText.Term = ScriptTerms.ReleaseToReturn;
                     }
                 }
                 else
                 {
-                    if (!Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL))
+                    if (!ShouldShow)
                     {
-                        _slidingUpOrDown = false;
-                        _sliding = true;
+                        _animatingUpOrDown = false;
+                        Animating = true;
                         _slideTimer = Time.time;
+                        HorHintText.Term = ScriptTerms.HForHint;
                     }
                 }
             }
             else
             {
-                float lerpingTime = (Time.time - _slideTimer) / _slideDuration;
-
-                if (_slidingUpOrDown)
+                if (TimeLerper < 1.0f)
                 {
-                    if (lerpingTime < 1.0f)
-                    {
-                        transform.position = new Vector3(_posXY.x, _posXY.y, Mathf.Lerp(_downPos,_upPos,Curve.Evaluate(lerpingTime)));
-                    }
-                    else
-                    {
-                        transform.position = new Vector3(_posXY.x, _posXY.y, _upPos);
-                        _atUpOrDown = true;
-                        _sliding = false;
-                    }
+                    float A = _animatingUpOrDown ? _downPos : _upPos;
+                    float B = _animatingUpOrDown ? _upPos : _downPos;
+                    transform.position = new Vector3(_posXY.x, _posXY.y, Mathf.Lerp(A, B, Curve.Evaluate(TimeLerper)));
                 }
                 else
                 {
-                    if (lerpingTime < 1.0f)
-                    {
-                        transform.position = new Vector3(_posXY.x, _posXY.y, Mathf.Lerp(_upPos, _downPos,  Curve.Evaluate(lerpingTime)));
-                    }
-                    else
-                    {
-                        transform.position = new Vector3(_posXY.x, _posXY.y, _downPos);
-                        _atUpOrDown = false;
-                        _sliding = false;
-                    }
+                    transform.position = new Vector3(_posXY.x, _posXY.y, _animatingUpOrDown ? _upPos : _downPos);
+                    _atUpOrDown = _animatingUpOrDown;
+                    Animating = false;
                 }
             }
         }

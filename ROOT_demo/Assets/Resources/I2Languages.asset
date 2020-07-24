@@ -160,7 +160,15 @@ MonoBehaviour:
       Description: 
       Languages:
       - Press <b>[H]</b> for controlling
-      - "\u6309<b>[H]</b>\u67E5\u770B\u64CD\u4F5C\u8BF4\u660E"
+      - "\u6309<b>[H]</b>\u952E\u67E5\u770B\u64CD\u4F5C\u8BF4\u660E"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: ReleaseToReturn
+      TermType: 0
+      Description: 
+      Languages:
+      - Release to Hide
+      - "\u677E\u5F00<b>[H]</b>\u952E\u4EE5\u8FD4\u56DE"
       Flags: 0000
       Languages_Touch: []
     CaseInsensitiveTerms: 0

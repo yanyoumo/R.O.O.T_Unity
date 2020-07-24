@@ -2597,7 +2597,7 @@ PrefabInstance:
     - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}
       propertyPath: EditorInputScheme
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2835144725562628124, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}

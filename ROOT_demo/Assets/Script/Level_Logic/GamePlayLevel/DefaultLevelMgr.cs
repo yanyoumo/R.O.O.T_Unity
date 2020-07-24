@@ -200,7 +200,7 @@ namespace ROOT
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
             LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
-            FindObjectOfType<TutorialMainTextFrame>().ShouldShow = false;
+            FindObjectOfType<HintMaster>().RequestedShowTutorialContent = false;
             PopulateArtLevelReference();
         }
         public abstract void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData());
@@ -257,7 +257,7 @@ namespace ROOT
                 return false;
             }
         }
-        protected virtual void UpdateHint()
+        protected virtual void UpdateSignalHint()
         {
             LevelAsset.GameBoard.ResetUnitEmission();
             if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD) || LevelAsset.ForceHddConnectionHint)
@@ -450,7 +450,7 @@ namespace ROOT
             }
             if (LevelAsset.HintEnabled)
             {
-                UpdateHint();
+                UpdateSignalHint();
             }
         }
     }

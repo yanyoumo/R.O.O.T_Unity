@@ -262,6 +262,7 @@ namespace ROOT
         private static void ApplyMove(GameAssets currentLevelAsset, Vector2 val,Unit unit)
         {
             //再转译成上下左右即可。
+            //TODO 日，这里还得排除Shop里面那些Unit
             Vector2 pivot = Vector2.one.normalized;
             float angle=Vector2.SignedAngle(pivot, val.normalized);
             angle -= 90;

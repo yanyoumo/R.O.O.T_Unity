@@ -11,8 +11,10 @@ namespace I2.Loc
 		public static string EndingMessageNormal_NoMoney 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageNormal_NoMoney"); } }
 		public static string EndingMessageTutorial 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageTutorial"); } }
 		public static string GameOver 		{ get{ return LocalizationManager.GetTranslation ("GameOver"); } }
+		public static string HForHint 		{ get{ return LocalizationManager.GetTranslation ("HForHint"); } }
 		public static string NextTutorial 		{ get{ return LocalizationManager.GetTranslation ("NextTutorial"); } }
 		public static string PlayLevel 		{ get{ return LocalizationManager.GetTranslation ("PlayLevel"); } }
+		public static string ReleaseToReturn 		{ get{ return LocalizationManager.GetTranslation ("ReleaseToReturn"); } }
 		public static string Restart 		{ get{ return LocalizationManager.GetTranslation ("Restart"); } }
 		public static string StartGame 		{ get{ return LocalizationManager.GetTranslation ("StartGame"); } }
 		public static string Tutorial 		{ get{ return LocalizationManager.GetTranslation ("Tutorial"); } }
@@ -33,8 +35,10 @@ namespace I2.Loc
 		public const string EndingMessageNormal_NoMoney = "EndingMessageNormal_NoMoney";
 		public const string EndingMessageTutorial = "EndingMessageTutorial";
 		public const string GameOver = "GameOver";
+		public const string HForHint = "HForHint";
 		public const string NextTutorial = "NextTutorial";
 		public const string PlayLevel = "PlayLevel";
+		public const string ReleaseToReturn = "ReleaseToReturn";
 		public const string Restart = "Restart";
 		public const string StartGame = "StartGame";
 		public const string Tutorial = "Tutorial";

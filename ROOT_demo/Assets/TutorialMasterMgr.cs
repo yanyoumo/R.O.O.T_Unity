@@ -11,7 +11,8 @@ namespace ROOT
     {
         public GameObject TutorialCanvas;
         TutorialQuadDataPack[] _dataS;
-
+        private TextMeshProUGUI content;
+        private bool Loading = false;
         void Awake()
         {
             InitTutorialActions();
@@ -30,14 +31,38 @@ namespace ROOT
             for (var i = 0; i < buttons.Length; i++)
             {
                 var buttonId = i;
-                buttons[i].onClick.AddListener(() => { ButtonsListener(buttonId); });
+                TextMeshProUGUI tmp = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
+                buttons[i].onClick.AddListener(() => { ButtonsListener(buttonId, tmp); });
             }
         }
 
-        public void ButtonsListener(int buttonId)
+        IEnumerator DoLoading(int buttonId)
         {
+            yield return 0;
             LevelMasterManager.Instance.LoadLevelThenPlay(tutorialActions[buttonId].LevelLogicType);
+            yield return 0;
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_TUTORIAL);
+        }
+
+        public void ButtonsListener(int buttonId, TextMeshProUGUI _content)
+        {
+            Loading = true;
+            content = _content;
+            StartCoroutine(DoLoading(buttonId));
+        }
+
+        public void Update()
+        {
+            if (Loading)
+            {
+                int count = Mathf.FloorToInt((Time.time*50) % 5);
+                string res= "加载中";
+                for (int i = 0; i < count; i++)
+                {
+                    res += ".";
+                }
+                content.text = res;
+            }
         }
     }
 }

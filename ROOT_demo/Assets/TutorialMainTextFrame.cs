@@ -6,6 +6,11 @@ using UnityEngine;
 
 namespace ROOT
 {
+    public partial class HintMaster : MonoBehaviour
+    {
+        public TutorialMainTextFrame TutorialMainTextFrame;
+    }
+
     //TODO 这个东西不知道是不是要和另外那个联合起来，要不然这个管理很不利。
     public class TutorialMainTextFrame : MonoBehaviour
     {
@@ -21,8 +26,8 @@ namespace ROOT
             set => ContentText.text = value;
             get => ContentText.text;
         }
-        public bool Showed=false;
-        public bool ShouldShow
+        internal bool _showed=false;
+        internal bool ShouldShow
         {
             set
             {
@@ -95,7 +100,7 @@ namespace ROOT
 
                     posX = shouldShow ? PosXShow : PosXNotShow;
                     transform.position = new Vector3(posX, pos.y, pos.z);
-                    Showed = shouldShow;
+                    _showed = shouldShow;
                     yield break;
                 }
 
