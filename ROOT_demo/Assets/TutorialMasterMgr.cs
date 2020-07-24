@@ -38,7 +38,6 @@ namespace ROOT
 
         IEnumerator DoLoading(int buttonId)
         {
-            yield return 0;
             LevelMasterManager.Instance.LoadLevelThenPlay(tutorialActions[buttonId].LevelLogicType);
             yield return 0;
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_TUTORIAL);

@@ -245,6 +245,32 @@ namespace ROOT
             LoadLevelThenPlay(levelLogicType, new ScoreSet(), new PerMoveData());
         }
 
+        public void LoadNextTutorialLevelThenPlay(Type levelLogicType)
+        {
+            LoadLevelThenPlay(GetNextTutorialLevel(levelLogicType), new ScoreSet(), new PerMoveData());
+        }
+
+        public static Type GetNextTutorialLevel(Type levelLogicType)
+        {
+            if (levelLogicType == typeof(TutorialLevelBasicControlMgr))
+            {
+                return typeof(TutorialSignalBasicMgr);
+            }
+            if (levelLogicType == typeof(TutorialSignalBasicMgr))
+            {
+                return typeof(TutorialGoalAndCycleMgr);
+            }
+            if (levelLogicType == typeof(TutorialGoalAndCycleMgr))
+            {
+                return typeof(TutorialShopMgr);
+            }
+            if (levelLogicType == typeof(TutorialShopMgr))
+            {
+                return typeof(TutorialDestroyerMgr);
+            }
+            throw new ArgumentOutOfRangeException();
+        }
+
         public void LoadLevelThenPlay(Type levelLogicType, ScoreSet nextScoreSet, PerMoveData nextPerMoveData)
         {
             //这里是一个动态到静态的转换。

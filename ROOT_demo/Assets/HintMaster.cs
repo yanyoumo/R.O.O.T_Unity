@@ -6,7 +6,12 @@ namespace ROOT
 {
     public partial class HintMaster : MonoBehaviour
     {
-        private bool TutorialMainTextFrameSuppressed = false;
+        private bool _tutorialMainTextFrameSuppressed = false;
+
+        public bool HideTutorialFrame
+        {
+            set => TutorialMainTextFrame.gameObject.SetActive(value);
+        }
 
         public bool RequestedShowTutorialContent
         {
@@ -33,15 +38,15 @@ namespace ROOT
                     if (TutorialMainTextFrame._showed)
                     {
                         TutorialMainTextFrame.ShouldShow = false;
-                        TutorialMainTextFrameSuppressed = true;
+                        _tutorialMainTextFrameSuppressed = true;
                     }
                 }
                 else
                 {
-                    if (TutorialMainTextFrameSuppressed)
+                    if (_tutorialMainTextFrameSuppressed)
                     {
                         TutorialMainTextFrame.ShouldShow = true;
-                        TutorialMainTextFrameSuppressed = false;
+                        _tutorialMainTextFrameSuppressed = false;
                     }
                 }
             }

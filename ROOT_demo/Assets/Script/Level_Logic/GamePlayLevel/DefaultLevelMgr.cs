@@ -200,7 +200,7 @@ namespace ROOT
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
             LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
-            FindObjectOfType<HintMaster>().RequestedShowTutorialContent = false;
+            FindObjectOfType<HintMaster>().HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
         public abstract void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData());

@@ -34,6 +34,7 @@ namespace ROOT
         //public Text BackButtonText;
         public Button OtherButton;
         public Localize OtherButtonLocalize;
+        private Type nextLevelType;
         //public Text OtherButtonText;
 
         void GameOverSceneLoaded(Scene scene,LoadSceneMode loadSceneMode)
@@ -48,10 +49,18 @@ namespace ROOT
         {
             if (_lastGameAssets.LevelLogicType.BaseType == typeof(BaseTutorialMgr))
             {
+                try
+                {
+                    nextLevelType = LevelMasterManager.GetNextTutorialLevel(_lastGameAssets.LevelLogicType);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    OtherButton.interactable = false;//没有下一关了。
+                    nextLevelType = null;
+                }
                 BackButton.onClick.AddListener(Back);
                 OtherButton.onClick.AddListener(NextTutorial);
                 OtherButtonLocalize.Term = ScriptTerms.NextTutorial;
-                OtherButton.interactable = false;//TODO 到时候改成能去下一关。
 
                 EndingTitleLocalize.Term = ScriptTerms.TutorialSectionOver;
                 EndingMessageLocalize.Term = ScriptTerms.EndingMessageTutorial;
@@ -92,6 +101,7 @@ namespace ROOT
 
         public void NextTutorial()
         {
+            LevelMasterManager.Instance.LoadNextTutorialLevelThenPlay(_lastGameAssets.LevelLogicType);
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
         }
 
