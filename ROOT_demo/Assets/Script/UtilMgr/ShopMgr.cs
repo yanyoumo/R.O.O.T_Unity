@@ -112,27 +112,6 @@ namespace ROOT
             return res;
         }
 
-        /*public void InitShop()
-        {
-
-        }*/
-
-        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float price)
-        {
-            var go = Instantiate(UnitTemplate);
-            go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
-            var unit = go.GetComponentInChildren<Unit>();
-            unit.InitPosWithAnimation(Vector2Int.zero);
-            unit.InitUnit(core, sides);
-            _priceByCore.TryGetValue(core, out float corePrice);
-            _priceBySide.TryGetValue(sides[0], out float sidePrice0);
-            _priceBySide.TryGetValue(sides[1], out float sidePrice1);
-            _priceBySide.TryGetValue(sides[2], out float sidePrice2);
-            _priceBySide.TryGetValue(sides[3], out float sidePrice3);
-            price = corePrice + sidePrice0 + sidePrice1 + sidePrice2 + sidePrice3;
-            return go;
-        }
-
         public void ShopUpdateStack()
         {
             if (_items[0])
@@ -173,7 +152,7 @@ namespace ROOT
             for (int i = 0; i < _items.Length; i++)
             {
                 CoreType core = GenerateRandomCore();
-                _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i]);
+                _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i],i);
             }
         }
 
@@ -244,7 +223,7 @@ namespace ROOT
                 if (!_items[i])
                 {
                     CoreType core = GenerateRandomCore();
-                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i]);
+                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i], i);
                     currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];

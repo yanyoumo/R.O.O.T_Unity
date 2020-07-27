@@ -241,9 +241,7 @@ namespace ROOT
                             Debug.Assert(false, "ERROR");
                             break;
                         }
-
-                        //TODO，不是，问题出在这，就是如果两个服务器被串在一起的话。有一个变成farthestUnit，在这儿就跳出去了。
-                        //} while (farthestUnit.UnitCore != CoreType.Server);
+                        //TODO 现在CPU本身不能传递网络信号？
                     } while (tmp != farthestUnit.LastNetworkPos);
                 }
 

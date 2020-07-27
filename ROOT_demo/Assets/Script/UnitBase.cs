@@ -30,8 +30,30 @@ namespace ROOT
         }
     }
 
+    public sealed partial class ShopMgr : MonoBehaviour
+    {
+
+        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float price,int ID)
+        {
+            var go = Instantiate(UnitTemplate);
+            go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
+            var unit = go.GetComponentInChildren<Unit>();
+            unit.InitPosWithAnimation(Vector2Int.zero);
+            unit.InitUnit(core, sides);
+            _priceByCore.TryGetValue(core, out float corePrice);
+            _priceBySide.TryGetValue(sides[0], out float sidePrice0);
+            _priceBySide.TryGetValue(sides[1], out float sidePrice1);
+            _priceBySide.TryGetValue(sides[2], out float sidePrice2);
+            _priceBySide.TryGetValue(sides[3], out float sidePrice3);
+            price = corePrice + sidePrice0 + sidePrice1 + sidePrice2 + sidePrice3;
+            unit.ShopID = ID;
+            return go;
+        }
+    }
+
     public abstract partial class UnitBase : MoveableBase
     {
+        public int ShopID { get; internal set; } = -1;
         protected string UnitName { get; }
 
         public CoreType UnitCore { get; protected set; }
@@ -39,11 +61,7 @@ namespace ROOT
         public Dictionary<RotationDirection, SideType> UnitSides { get; protected set; }
 
         protected RotationDirection UnitRotation;
-
-        //public RotationDirection UnitRotation => unitRotation;
-
         protected Transform RootTransform;
-
         protected Material CoreMat;
 
         protected MeshRenderer CoreMeshRenderer;
@@ -80,9 +98,7 @@ namespace ROOT
             CoreMatNameDic.Add(CoreType.Server, GlobalResourcePath.UNIT_SERVER_MAT_NAME);
 
             SideMatColorDic.Add(SideType.NoConnection, Color.red * 0.75f); //先干脆改成红的
-            //SideMatColorDic.Add(SideType.Firewall, new Color(0.6f, 0.1f, 0.1f));
             SideMatColorDic.Add(SideType.Connection, Color.blue);
-            //SideMatColorDic.Add(SideType.SerialConnector, new Color(0.1f, 0.6f, 0.6f));
         }
 
         public bool Visited { get; set; } //for scoring purpose
@@ -106,8 +122,6 @@ namespace ROOT
 
         [HideInInspector] public Vector2Int LastNetworkPos = Vector2Int.zero;
 
-        //public GlobalAssetLib _globalAssetLib;
-
         //North,South,West,East
         protected void InitSide(MeshRenderer meshRenderer, SideType sideType)
         {
@@ -118,7 +132,6 @@ namespace ROOT
             else if (sideType == SideType.NoConnection)
             {
                 //感觉还是有个红的比较靠谱
-                //meshRenderer.material.SetColor("_Color", Color.red * 0.25f);
                 meshRenderer.enabled = false;
             }
         }
@@ -214,10 +227,8 @@ namespace ROOT
             InitUnit(core, sides[0], sides[1], sides[2], sides[3], gameBoard);
         }
 
-        public void InitUnit(CoreType core, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
-            Board gameBoard = null)
+        public void InitUnit(CoreType core, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,Board gameBoard = null)
         {
-            //Debug.Assert(side.Length == 4);
             this.UnitCore = core;
             InitUnitMeshByCore(core);
 
@@ -243,6 +254,8 @@ namespace ROOT
 
         protected virtual void Awake()
         {
+            ShopID = -1;
+
             RootTransform = transform.parent;
             Debug.Assert(RootTransform != null, "Unit should use as prefab");
             CurrentBoardPosition = new Vector2Int(0, 0);
@@ -382,7 +395,5 @@ namespace ROOT
             UpdateNeighboringData();
             UpdateSideMesh();
         }
-
-        //public void 
     }
 }

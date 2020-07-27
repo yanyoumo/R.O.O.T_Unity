@@ -14,7 +14,7 @@ namespace ROOT
         private static int lastFingerID=0;
         private static bool swiping=false;
         private static Vector2 moveVal =Vector2.zero;
-        private static Unit swipingUnit = null;
+        private static Unit touchingUnit = null;
         //对，这种需要影响场景怎么办？
         //本来是为了保证WRD-LOGIC的独立性（体现形而上学的概念）；
         //就是弄成了静态类，但是现在看估计得弄成单例？
@@ -26,7 +26,9 @@ namespace ROOT
             return newPos;
         }
 
-        private static void UpdateShop(ShopMgr shopMgr, ref bool boughtOnce)
+
+
+        private static void UpdateShopBuy(ShopMgr shopMgr, ref bool boughtOnce)
         {
             if (!boughtOnce)
             {
@@ -134,16 +136,13 @@ namespace ROOT
             movedCursor = false;
             currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
             Unit movingUnit = null;
-            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT) &&
-                currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(currentLevelAsset.Cursor.CurrentBoardPosition))
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT) && currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(currentLevelAsset.Cursor.CurrentBoardPosition))
             {
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
                 {
                     if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(currentLevelAsset.Cursor.GetWestCoord()))
                     {
-                        GameObject unit =
-                            currentLevelAsset.GameBoard.FindUnitUnderBoardPos(currentLevelAsset.Cursor
-                                .CurrentBoardPosition);
+                        GameObject unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(currentLevelAsset.Cursor.CurrentBoardPosition);
                         if (unit)
                         {
                             Vector2Int oldKey = currentLevelAsset.Cursor.CurrentBoardPosition;
@@ -258,7 +257,6 @@ namespace ROOT
             movedCursor |= movedTile;
             UpdateCursorPos(currentLevelAsset);
         }
-
         private static void ApplyMove(GameAssets currentLevelAsset, Vector2 val,Unit unit)
         {
             //再转译成上下左右即可。
@@ -300,80 +298,100 @@ namespace ROOT
 
             Debug.Log(val);
         }
-
-        internal static void UpdateInput(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor,
-            ref bool boughtOnce)
+        private static void UpdateTouchInput(GameAssets currentLevelAsset, out bool movedTile)
         {
             movedTile = false;
-            movedCursor = false;
-            if (currentLevelAsset.ShopEnabled)
+            if (Input.touchCount > 0)
             {
-                UpdateShop(currentLevelAsset.ShopMgr, ref boughtOnce);
-            }
-
-            if (StartGameMgr.DetectedInputScheme == InputScheme.TouchScreen)
-            {
-                if (Input.touchCount > 0)
+                foreach (var touch in Input.touches)
                 {
-                    foreach (var touch in Input.touches)
+                    //Debug.Log(touch.tapCount);
+                    if (!swiping)
                     {
-                        if (!swiping)
+                        Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                        if (Physics.Raycast(ray, out RaycastHit hitInfo))
                         {
-                            Ray ray = Camera.main.ScreenPointToRay(touch.position);
-                            if (Physics.Raycast(ray, out RaycastHit hitInfo))
+                            if (hitInfo.collider != null)
                             {
-                                if (hitInfo.collider != null)
+                                if (hitInfo.transform.name == "UnitRoot")
                                 {
-                                    if (hitInfo.transform.name == "UnitRoot")
+                                    touchingUnit = hitInfo.transform.GetComponentInChildren<Unit>();
+                                    if (touchingUnit.ShopID == -1)
                                     {
-                                        swipingUnit = hitInfo.transform.GetComponentInChildren<Unit>();
-                                        lastFingerID = touch.fingerId;
-                                        Debug.Assert(touch.phase == TouchPhase.Began);
-                                        swiping = true;
-                                        break;
+                                        if (touch.tapCount == 1)
+                                        {
+                                            //swipe的动作有一个tapCount
+                                            lastFingerID = touch.fingerId;
+                                            swiping = true;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (touch.tapCount > 0)
+                                        {
+                                            Debug.Log("Request Buy:" + touchingUnit.ShopID);
+                                            touchingUnit = null;
+                                            break;
+                                        }
                                     }
                                 }
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (touch.fingerId == lastFingerID)
                         {
-                            if (touch.fingerId == lastFingerID)
+                            switch (touch.phase)
                             {
-                                switch (touch.phase)
-                                {
-                                    case TouchPhase.Began:
-                                    case TouchPhase.Stationary:
-                                        //DO NOTHING
-                                        break;
-                                    case TouchPhase.Moved:
-                                        moveVal += touch.deltaPosition;
-                                        break;
-                                    case TouchPhase.Ended:
-                                        lastFingerID = touch.fingerId;
-                                        moveVal += touch.deltaPosition;
-                                        swiping = false;
-                                        ApplyMove(currentLevelAsset, moveVal, swipingUnit);
-                                        swipingUnit = null;
-                                        moveVal = Vector2.zero;
-                                        movedTile = true;
-                                        break;
-                                    case TouchPhase.Canceled:
-                                        lastFingerID = touch.fingerId;
-                                        swiping = false;
-                                        swipingUnit = null;
-                                        moveVal = Vector2.zero;
-                                        break;
-                                    default:
-                                        throw new ArgumentOutOfRangeException();
-                                }
+                                case TouchPhase.Began:
+                                case TouchPhase.Stationary:
+                                    //DO NOTHING
+                                    break;
+                                case TouchPhase.Moved:
+                                    moveVal += touch.deltaPosition;
+                                    break;
+                                case TouchPhase.Ended:
+                                    lastFingerID = touch.fingerId;
+                                    moveVal += touch.deltaPosition;
+                                    swiping = false;
+                                    ApplyMove(currentLevelAsset, moveVal, touchingUnit);
+                                    touchingUnit = null;
+                                    moveVal = Vector2.zero;
+                                    movedTile = true;
+                                    break;
+                                case TouchPhase.Canceled:
+                                    lastFingerID = touch.fingerId;
+                                    swiping = false;
+                                    touchingUnit = null;
+                                    moveVal = Vector2.zero;
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
                             }
                         }
                     }
                 }
             }
-            else
+        }
+
+        internal static void UpdateInput(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor,ref bool boughtOnce)
+        {
+            movedTile = false;
+            movedCursor = false;
+            if (currentLevelAsset.ShopEnabled)
             {
-                if (currentLevelAsset.CursorEnabled)
+                UpdateShopBuy(currentLevelAsset.ShopMgr, ref boughtOnce);
+            }
+
+            if (currentLevelAsset.CursorEnabled)
+            {
+                if (StartGameMgr.DetectedInputScheme == InputScheme.TouchScreen)
+                {
+                    UpdateTouchInput(currentLevelAsset, out movedTile);
+                }
+                else
                 {
                     UpdateCursor(currentLevelAsset, out movedTile, out movedCursor);
                 }
