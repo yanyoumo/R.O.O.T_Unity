@@ -228,6 +228,7 @@ namespace ROOT
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
+                _items[i].gameObject.GetComponentInChildren<Unit>().ShopID = i;
                 ItemPriceTexts_TMP[i].text = Utils.PaddingNum3Digit(_prices[i] * _priceCof[i]);
             }
         }
@@ -239,6 +240,7 @@ namespace ROOT
                 if (CurrentGameStateMgr.SpendCurrency(_prices[idx]*_priceCof[idx]))
                 {
                     //TODO 因为是立刻送，所以目前还是闪现。
+                    _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;
                     GameBoard.DeliverUnitRandomPlace(_items[idx]);
                     _items[idx] = null;
                     return true;

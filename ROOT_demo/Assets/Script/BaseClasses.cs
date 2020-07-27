@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CommandDir = ROOT.RotationDirection;
 
 namespace ROOT
 {
@@ -33,22 +34,60 @@ namespace ROOT
 
         #region MoveToNeigbour
 
-        public virtual void MoveLeft()
+        public virtual void Move(CommandDir Dir)
+        {
+            switch (Dir)
+            {
+                case CommandDir.North:
+                    MoveUp();
+                    return;
+                case CommandDir.East:
+                    MoveRight();
+                    return;
+                case CommandDir.West:
+                    MoveLeft();
+                    return;
+                case CommandDir.South:
+                    MoveDown();
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(Dir), Dir, null);
+            }
+        }
+
+        public virtual Vector2Int GetCoord(CommandDir Offset)
+        {
+            switch (Offset)
+            {
+                case CommandDir.North:
+                    return GetNorthCoord();
+                case CommandDir.East:
+                    return GetEastCoord();
+                case CommandDir.West:
+                    return GetWestCoord();
+                case CommandDir.South:
+                    return GetSouthCoord();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(Offset), Offset, null);
+            }
+        }
+
+        protected virtual void MoveLeft()
         {
             NextBoardPosition = new Vector2Int(CurrentBoardPosition.x - 1, CurrentBoardPosition.y);
         }
 
-        public virtual void MoveRight()
+        protected virtual void MoveRight()
         {
             NextBoardPosition = new Vector2Int(CurrentBoardPosition.x + 1, CurrentBoardPosition.y);
         }
 
-        public virtual void MoveUp()
+        protected virtual void MoveUp()
         {
             NextBoardPosition = new Vector2Int(CurrentBoardPosition.x, CurrentBoardPosition.y + 1);
         }
 
-        public virtual void MoveDown()
+        protected virtual void MoveDown()
         {
             NextBoardPosition = new Vector2Int(CurrentBoardPosition.x, CurrentBoardPosition.y - 1);
         }
@@ -104,34 +143,34 @@ namespace ROOT
 
         #region GetNeigbourCoord
 
-        public Vector2Int GetEastCoord()
+        protected Vector2Int GetEastCoord()
         {
             return new Vector2Int(CurrentBoardPosition.x + 1, CurrentBoardPosition.y);
         }
-        public Vector2Int GetWestCoord()
+        protected Vector2Int GetWestCoord()
         {
             return new Vector2Int(CurrentBoardPosition.x - 1, CurrentBoardPosition.y);
         }
-        public Vector2Int GetSouthCoord()
+        protected Vector2Int GetSouthCoord()
         {
             return new Vector2Int(CurrentBoardPosition.x, CurrentBoardPosition.y - 1);
         }
-        public Vector2Int GetNorthCoord()
+        protected Vector2Int GetNorthCoord()
         {
             return new Vector2Int(CurrentBoardPosition.x, CurrentBoardPosition.y + 1);
         }
 
-        public Vector2Int GetNeigbourCoord(RotationDirection rotation)
+        public Vector2Int GetNeigbourCoord(CommandDir rotation)
         {
             switch (rotation)
             {
-                case RotationDirection.North:
+                case CommandDir.North:
                     return GetNorthCoord();
-                case RotationDirection.East:
+                case CommandDir.East:
                     return GetEastCoord();
-                case RotationDirection.West:
+                case CommandDir.West:
                     return GetWestCoord();
-                case RotationDirection.South:
+                case CommandDir.South:
                     return GetSouthCoord();
                 default:
                     return CurrentBoardPosition;
