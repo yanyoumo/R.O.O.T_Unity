@@ -251,9 +251,10 @@ namespace ROOT
                                     }
                                     else if (touchedGo.CompareTag("TutorialTextFrame"))
                                     {
-                                        //TODO 这个也不能受InputEnable影响。
-                                        //TODO Anti-Spam
-                                        ctrlPack.SetFlag(ControllingCommand.NextButton);
+                                        if (touch.phase == TouchPhase.Began)//Anti-Spam
+                                        {
+                                            ctrlPack.SetFlag(ControllingCommand.NextButton);
+                                        }
                                     }
                                 }
                             }
@@ -506,7 +507,7 @@ namespace ROOT
             UpdateCursorPos(currentLevelAsset);
         }
 
-        internal static ControllingPack UpdateInput(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor, ref bool boughtOnce)
+        internal static ControllingPack UpdateInputScheme(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor, ref bool boughtOnce)
         {
             movedTile = false;
             movedCursor = false;
@@ -522,19 +523,10 @@ namespace ROOT
                 {
                     WorldController.GetCommand_KM(currentLevelAsset, out ctrlPack);
                 }
-            }
-
-            if (currentLevelAsset.ShopEnabled)
-            {
-                UpdateShopBuy(currentLevelAsset.ShopMgr,in ctrlPack, ref boughtOnce);
-            }
-
-            UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
-
-            if (currentLevelAsset.RotateEnabled)
-            {
-                //旋转的动画先没有吧。
-                UpdateRotate(currentLevelAsset, in ctrlPack);
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
+                {
+                    ctrlPack.SetFlag(ControllingCommand.NextButton);
+                }
             }
 
             return ctrlPack;
@@ -597,17 +589,22 @@ namespace ROOT
                     UpdateDestoryer(currentLevelAsset);
                 }
 
+                ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset.BoughtOnce);
+
                 if (currentLevelAsset.InputEnabled)
                 {
-                    var cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
-                    ctrlPack = UpdateInput(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset.BoughtOnce);
-                    currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
-                }
+                    if (currentLevelAsset.ShopEnabled)
+                    {
+                        UpdateShopBuy(currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset.BoughtOnce);
+                    }
+                    UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
+                    if (currentLevelAsset.RotateEnabled)
+                    {
+                        //旋转的动画先没有吧。
+                        UpdateRotate(currentLevelAsset, in ctrlPack);
+                    }
 
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
-                {
-                    //这个不能被InputEnabled关掉。
-                    ctrlPack.SetFlag(ControllingCommand.NextButton);
+                    currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
                 }
 
                 if (currentLevelAsset.CurrencyEnabled)
