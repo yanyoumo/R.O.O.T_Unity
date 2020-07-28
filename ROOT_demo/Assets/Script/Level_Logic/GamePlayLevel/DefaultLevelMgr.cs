@@ -143,6 +143,9 @@ namespace ROOT
     {
         //ASSET
         protected internal GameAssets LevelAsset;
+        private ControllingPack _ctrlPack;
+        protected ControllingPack CtrlPack => _ctrlPack;
+
         //Lvl-Logic实际用的判断逻辑。
         public bool Playing { get; private set;  }
         protected bool LogicFrameAnimeFrameToggle = true;
@@ -358,7 +361,7 @@ namespace ROOT
             //TODO 从LF到AF的数据应该再多一些。
             System.Diagnostics.Debug.Assert(LevelAsset.GameBoard != null, nameof(LevelAsset.GameBoard) + " != null");
             var pressedAny = Input.anyKeyDown;
-            var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+            _ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (LogicFrameAnimeFrameToggle)
             {
                 //更新Lvl信息
@@ -368,7 +371,7 @@ namespace ROOT
                 AnimationTimerOrigin = Time.timeSinceLevelLoad;
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
-                WorldLogic.UpdateLogic(LevelAsset,out ctrlPack, out var movedTile, out var movedCursor);
+                WorldLogic.UpdateLogic(LevelAsset,out _ctrlPack, out var movedTile, out var movedCursor);
 
                 if (LevelAsset.GameOverEnabled)
                 {
@@ -450,8 +453,8 @@ namespace ROOT
             }
             if (LevelAsset.HintEnabled)
             {
-                UpdateSignalHint(ctrlPack);
-                LevelAsset.HintMaster.UpdateHintMaster(ctrlPack);
+                UpdateSignalHint(_ctrlPack);
+                LevelAsset.HintMaster.UpdateHintMaster(_ctrlPack);
             }
         }
     }

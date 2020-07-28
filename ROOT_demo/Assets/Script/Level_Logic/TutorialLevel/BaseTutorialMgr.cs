@@ -103,7 +103,7 @@ namespace ROOT
 
         protected override void Update()
         {
-            base.Update();
+            base.Update();//严格来说ControlPack在这里搞定了。
 
             if (ReadyToGo)
             {
@@ -113,17 +113,24 @@ namespace ROOT
                     DealStepMgr();
                 }
 
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_QUIT))
+                /*if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_QUIT))
                 {
                     //TODO　先什么的都不做。
                 }
                 else
                 {
-                    if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
+                    //TODO 就是这里要整合仅WorldLogic里面。
+                    //if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
+                    if (CtrlPack.HasFlag(ControllingCommand.NextButton))
                     {
                         StepForward();
                         DealStepMgr();
                     }
+                }*/
+                if (CtrlPack.HasFlag(ControllingCommand.NextButton))
+                {
+                    StepForward();
+                    DealStepMgr();
                 }
             }
         }

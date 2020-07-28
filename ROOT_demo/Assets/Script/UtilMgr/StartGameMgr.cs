@@ -90,7 +90,7 @@ namespace ROOT
                     break;
                 case DeviceGeneration.iPadUnknown://iPadPro4Gen
                     DetectedScreenRatio = SupportedScreenRatio.XGA;
-                    DetectedInputScheme = InputScheme.KeyboardMouse;
+                    DetectedInputScheme = InputScheme.TouchScreen;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

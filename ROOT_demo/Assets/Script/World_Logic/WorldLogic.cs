@@ -245,10 +245,15 @@ namespace ROOT
                                         ctrlPack.SetFlag(ControllingCommand.Buy);
                                         ctrlPack.ShopID = tmpTouchingUnit.ShopID;
                                     }
-                                    else
+                                    else if (touchedGo.CompareTag("HelpScreen"))
                                     {
-                                        touchedGo.CompareTag("HelpScreen");
                                         ctrlPack.SetFlag(ControllingCommand.PlayHint);
+                                    }
+                                    else if (touchedGo.CompareTag("TutorialTextFrame"))
+                                    {
+                                        //TODO 这个也不能受InputEnable影响。
+                                        //TODO Anti-Spam
+                                        ctrlPack.SetFlag(ControllingCommand.NextButton);
                                     }
                                 }
                             }
@@ -597,6 +602,12 @@ namespace ROOT
                     var cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
                     ctrlPack = UpdateInput(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset.BoughtOnce);
                     currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
+                }
+
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
+                {
+                    //这个不能被InputEnabled关掉。
+                    ctrlPack.SetFlag(ControllingCommand.NextButton);
                 }
 
                 if (currentLevelAsset.CurrencyEnabled)
