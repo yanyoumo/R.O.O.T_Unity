@@ -52,9 +52,9 @@ namespace ROOT
             }
         }
 
-        void Update()
+        public void UpdateHintMaster(ControllingPack ctrlPack)
         {
-            RequestedShowHelpScreen = Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL);
+            RequestedShowHelpScreen = ctrlPack.HasFlag(ControllingCommand.PlayHint);
         }
     }
 }

@@ -12,10 +12,9 @@ namespace ROOT
         protected int LastActionCount { get; private set; } = 0;
         protected TutorialActionBase TutorialAction;
         //private TutorialMainTextFrame _tutorialMainText;
-        protected HintMaster HintMaster;
         protected bool ShowText
         {
-            set => HintMaster.RequestedShowTutorialContent = value;
+            set => LevelAsset.HintMaster.RequestedShowTutorialContent = value;
         }
 
         protected abstract override bool UpdateGameOverStatus(GameAssets currentLevelAsset);
@@ -29,7 +28,7 @@ namespace ROOT
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
             LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
-            HintMaster = FindObjectOfType<HintMaster>();
+            LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
             //_tutorialMainText = FindObjectOfType<TutorialMainTextFrame>();
             PopulateArtLevelReference();
         }
@@ -58,7 +57,7 @@ namespace ROOT
         protected virtual void DisplayText(string text)
         {
             //Debug.Log(text);
-            HintMaster.TutorialContent = text;
+            LevelAsset.HintMaster.TutorialContent = text;
         }
 
         /// <summary>

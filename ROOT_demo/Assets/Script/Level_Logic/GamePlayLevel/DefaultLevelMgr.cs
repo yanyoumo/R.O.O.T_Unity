@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 //TODO https://shimo.im/docs/Dd86KXTqHJpqxwYX
+// ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
 namespace ROOT
 {
     public enum GameStatus
@@ -53,6 +54,7 @@ namespace ROOT
         public GameObject ItemPriceRoot;
         public Board GameBoard;
         public DataScreen DataScreen;
+        public HintMaster HintMaster;
 
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
@@ -200,7 +202,8 @@ namespace ROOT
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
             LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
-            FindObjectOfType<HintMaster>().HideTutorialFrame = false;
+            LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
+            LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
         public abstract void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData());
@@ -257,14 +260,17 @@ namespace ROOT
                 return false;
             }
         }
-        protected virtual void UpdateSignalHint()
+
+        protected virtual void UpdateSignalHint(in ControllingPack ctrlPack)
         {
             LevelAsset.GameBoard.ResetUnitEmission();
-            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD) || LevelAsset.ForceHddConnectionHint)
+            var pressed = ctrlPack.HasFlag(ControllingCommand.SignalHint);
+            if (pressed || LevelAsset.ForceHddConnectionHint)
             {
                 LevelAsset.GameBoard.DisplayConnectedHDDUnit();
             }
-            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET) || LevelAsset.ForceServerConnectionHint)
+
+            if (pressed || LevelAsset.ForceServerConnectionHint)
             {
                 LevelAsset.GameBoard.DisplayConnectedServerUnit();
             }
@@ -351,9 +357,8 @@ namespace ROOT
             }
             //TODO 从LF到AF的数据应该再多一些。
             System.Diagnostics.Debug.Assert(LevelAsset.GameBoard != null, nameof(LevelAsset.GameBoard) + " != null");
-            bool movedTile =false;
-            bool movedCursor = false;
-            bool pressedAny = Input.anyKeyDown;
+            var pressedAny = Input.anyKeyDown;
+            var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (LogicFrameAnimeFrameToggle)
             {
                 //更新Lvl信息
@@ -363,13 +368,13 @@ namespace ROOT
                 AnimationTimerOrigin = Time.timeSinceLevelLoad;
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
-                WorldLogic.UpdateLogic(LevelAsset, out movedTile, out movedCursor);
+                WorldLogic.UpdateLogic(LevelAsset,out ctrlPack, out var movedTile, out var movedCursor);
 
                 if (LevelAsset.GameOverEnabled)
                 {
                     UpdateGameOverStatus(LevelAsset);
                 }
-                if (StartGameMgr.DetectedInputScheme == InputScheme.TouchScreen)
+                if (StartGameMgr.UseTouchScreen)
                 {
                     LogicFrameAnimeFrameToggle = !movedTile;
                 }
@@ -385,14 +390,10 @@ namespace ROOT
             }
             else
             {
-                //StartCoroutine(AnimationCoroutine());
-                //但是此时可以跑一些和输入无关的代码了。
-                //这个使用coroutine重写。//直接重写没P用，要想想怎么弄。
-                //coroutine对于ROOT这个框架似乎就是没啥用，但是对于kRTS可能还有点用。
                 var cursor = LevelAsset.Cursor;
 
-                float animationTimer = Time.timeSinceLevelLoad - AnimationTimerOrigin;
-                float animationLerper = animationTimer / AnimationDuration;
+                var animationTimer = Time.timeSinceLevelLoad - AnimationTimerOrigin;
+                var animationLerper = animationTimer / AnimationDuration;
                 if (LevelAsset.AnimationPendingObj.Count > 0)
                 {
                     animationLerper = Mathf.Min(animationLerper, 1.0f);
@@ -419,7 +420,6 @@ namespace ROOT
                     }
                 }
 
-                //Debug.Log(cursor.LerpingBoardPosition.ToString());
                 if (animationLerper >= 1.0f)
                 {
                     //AnimationEnding
@@ -450,7 +450,8 @@ namespace ROOT
             }
             if (LevelAsset.HintEnabled)
             {
-                UpdateSignalHint();
+                UpdateSignalHint(ctrlPack);
+                LevelAsset.HintMaster.UpdateHintMaster(ctrlPack);
             }
         }
     }
@@ -483,6 +484,11 @@ namespace ROOT
             LevelAsset.StartingScoreSet = scoreSet;
             LevelAsset.StartingPerMoveData = perMoveData;
 
+            if (StartGameMgr.UseTouchScreen)
+            {
+                LevelAsset.Cursor.gameObject.SetActive(false);
+            }
+
             InvokeGameStartedEvent();
         }
         protected void InitDestoryer()
@@ -500,11 +506,6 @@ namespace ROOT
             LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
             LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
         }
-        /*protected void InitGameStateMgr()
-        {
-            LevelAsset.GameStateMgr = new StandardGameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(new ScoreSet(1000.0f, 60), new PerMoveData());
-        }*/
         protected void InitCurrencyIoMgr()
         {
             LevelAsset.CurrencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();

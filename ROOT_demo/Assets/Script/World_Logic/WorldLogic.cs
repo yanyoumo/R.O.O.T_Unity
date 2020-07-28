@@ -2,13 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using YamlDotNet.Core.Tokens;
 using CommandDir = ROOT.RotationDirection;
+// ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
 
 namespace ROOT
 {
     [Flags]
-    internal enum ControllingCommand
+    public enum ControllingCommand
     {
         Nop = 0b_00000000,
         Move = 0b_00000001,
@@ -20,37 +20,49 @@ namespace ROOT
         NextButton = 0b_01000000,
     }
 
-    internal struct ControllingPack
+    public struct ControllingPack
     {
         public ControllingCommand CtrlCMD;
         public CommandDir CommandDir;
         public Vector2Int CurrentPos;
         public Vector2Int NextPos;
         public int ShopID;
-    }
 
+        public bool HasFlag(ControllingCommand a)
+        {
+            return (CtrlCMD & a) == a;
+        }
+
+        public void ReplaceFlag(ControllingCommand a)
+        {
+            CtrlCMD = a;
+        }
+
+        public void SetFlag(ControllingCommand a)
+        {
+            CtrlCMD |= a;
+        }
+
+        public void UnsetFlag(ControllingCommand a)
+        {
+            CtrlCMD &= (~a);
+        }
+
+        public void ToggleFlag(ControllingCommand a)
+        {
+            CtrlCMD ^= a;
+        }
+
+        public static bool HasFlag(ControllingCommand a, ControllingCommand b)
+        {
+            return (a & b) == b;
+        }
+    }
 
     //要把Asset和Logic，把Controller也要彻底拆开。
     internal static class WorldController
     {
         private static float _moveValThreadhold = 0.1f;
-        /*//这里不处理命令的合法性。是更接近硬件的版本
-        //hmmmmmmm但是是Drag与否还要读取Board……//这里对于board应该是从概念上只读的
-        internal static ControllingCommand UpdateCommand(GameAssets currentLevelAsset,out Vector2Int CommandLoc)
-        {
-            ControllingCommand command = 0b_0000000000000000;
-            CommandLoc = Vector2Int.zero;
-            if (StartGameMgr.DetectedInputScheme == InputScheme.TouchScreen)
-            {
-
-            }
-            else
-            {
-
-            }
-
-            return command;
-        }*/
         private static bool GetCommandDir(out CommandDir dir)
         {
             bool anyDir = false;
@@ -89,22 +101,27 @@ namespace ROOT
         private static Vector2 _moveVal = Vector2.zero;
         private static Unit _touchingUnit = null;
 
+        private static GameObject GetTouchedOnGameObject(in Touch touch)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(touch.position);
+            if (Physics.Raycast(ray, out RaycastHit hitInfo))
+            {
+                return hitInfo.collider.gameObject;
+            }
+            return null;
+        }
+
         /// <summary>
         /// 检测时候触碰了一个Unit.
         /// </summary>
         /// <param name="touch">输入Touch结构体</param>
         /// <returns>得到的Unit，如果没有则返回null</returns>
-        private static Unit GetTouchedOnUnit(in Touch touch)
+        private static Unit GetTouchedOnUnit(in GameObject go)
         {
-            Ray ray = Camera.main.ScreenPointToRay(touch.position);
-            if (Physics.Raycast(ray, out RaycastHit hitInfo))
+            if (go != null && go.CompareTag("Unit"))
             {
-                if (hitInfo.collider != null && hitInfo.collider.gameObject.CompareTag("Unit"))
-                {
-                    return hitInfo.transform.GetComponentInChildren<Unit>();
-                }
+                return go.GetComponentInChildren<Unit>();
             }
-
             return null;
         }
 
@@ -173,90 +190,103 @@ namespace ROOT
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (Input.touchCount > 0)
             {
-                Touch touch = Input.touches[0];
-                //不允许在滑动的同时还有一次别的手指点击的可能。
-                Unit tmpTouchingUnit = GetTouchedOnUnit(in touch); //这个在滑动过程中不要了。
-                Debug.Log("touch.tapCount ==" + touch.tapCount);
-                if (touch.tapCount >= 2)
+                if (Input.touchCount>1)
                 {
-                    //f^ck，在DoubleTap前会出现一次SingleTap
-                    //日，在接收到doubleTap前就已经被Swipe挪走了。
-                    //在识别到是双击前，就已经完成一次单击了。 
-                    //就是这里处理是：双击单元
-                    if (_lastFingerID == touch.fingerId)
-                    {
-                        ResetSwipeStatus(); //是一次双击，要撤销上一次滑动的指令。
-                    }
-
-                    if (tmpTouchingUnit != null)
-                    {
-                        if (_ObsoleteFingerID != _lastFingerID)
-                        {
-                            _ObsoleteFingerID = _lastFingerID;
-                            ctrlPack.CtrlCMD |= ControllingCommand.Rotate;
-                            ctrlPack.CurrentPos = tmpTouchingUnit.CurrentBoardPosition;
-                        }
-                    }
+                    //Dual Finger touch
+                    ctrlPack.SetFlag(ControllingCommand.SignalHint);
                 }
                 else
                 {
-                    //目前滑动优先级高。//不行，双击需要可以打断滑动。
-                    if (!swiping)
+                    Touch touch = Input.touches[0];
+                    //不允许在滑动的同时还有一次别的手指点击的可能。
+                    var touchedGo=GetTouchedOnGameObject(in touch);
+                    Unit tmpTouchingUnit = GetTouchedOnUnit(in touchedGo); //这个在滑动过程中不要了。
+                    Debug.Log("touch.tapCount ==" + touch.tapCount);
+                    if (touch.tapCount >= 2)
                     {
-                        if (touch.tapCount == 1)
+                        //f^ck，在DoubleTap前会出现一次SingleTap
+                        //日，在接收到doubleTap前就已经被Swipe挪走了。
+                        //在识别到是双击前，就已经完成一次单击了。 
+                        //就是这里处理是：双击单元
+                        if (_lastFingerID == touch.fingerId)
                         {
-                            //就是这里处理是：开始滑动/一次点击
-                            swiping = GetBeginSwipingOnUnit(in touch, in tmpTouchingUnit);
-                            if (!swiping)
-                            {
-                                //就是点击了一个商店的Unit。并且应该是是由一帧的状态。
-                                //这里的Buy会反复触发，但是有BoughtOnce帮忙挡住。
+                            ResetSwipeStatus(); //是一次双击，要撤销上一次滑动的指令。
+                        }
 
-                                //f^ck，如何判断是点击了一个一般单位还是滑动了一个一般单位？
-                                //干脆目前弄成双击旋转吧。
-                                if (tmpTouchingUnit)
-                                {
-                                    //Anti-Spam
-                                    ctrlPack.CtrlCMD |= ControllingCommand.Buy;
-                                    ctrlPack.ShopID = tmpTouchingUnit.ShopID;
-                                }
+                        if (tmpTouchingUnit != null)
+                        {
+                            if (_ObsoleteFingerID != _lastFingerID)
+                            {
+                                _ObsoleteFingerID = _lastFingerID;
+                                ctrlPack.SetFlag(ControllingCommand.Rotate);
+                                ctrlPack.CurrentPos = tmpTouchingUnit.CurrentBoardPosition;
                             }
                         }
                     }
                     else
                     {
-                        //进入滑动状态。
-                        Debug.Assert(_lastFingerID == touch.fingerId);
-                        switch (touch.phase)
+                        //目前滑动优先级高。//不行，双击需要可以打断滑动。
+                        if (!swiping)
                         {
-                            case TouchPhase.Began:
-                                //DO NOTHING
-                                break;
-                            case TouchPhase.Stationary:
-                                //Stationary说明可能是doubleTap
-                                ResetSwipeStatus(); //多少可以用。
-                                break;
-                            case TouchPhase.Moved:
-                                _moveVal += touch.deltaPosition;
-                                break;
-                            case TouchPhase.Ended:
-                                _moveVal += touch.deltaPosition;
-                                //_moveVal有一个最小阈值，和一般的单击分开（和慢速双击混淆）。
-                                if (_moveVal.magnitude >= _moveValThreadhold)
+                            if (touch.tapCount == 1)
+                            {
+                                //就是这里处理是：开始滑动/一次点击
+                                swiping = GetBeginSwipingOnUnit(in touch, in tmpTouchingUnit);
+                                if (!swiping)
                                 {
-                                    ctrlPack.CtrlCMD = ControllingCommand.Drag;
-                                    //Debug.Log("Completed Once");
-                                    ctrlPack.CurrentPos = _touchingUnit.CurrentBoardPosition; //这里要反转一下？？
-                                    ctrlPack.CommandDir = ConvertValToOffset(_moveVal, out var offset);
-                                    ctrlPack.NextPos = ctrlPack.CurrentPos + offset;
+                                    //就是点击了一个商店的Unit。并且应该是是由一帧的状态。
+                                    //这里的Buy会反复触发，但是有BoughtOnce帮忙挡住。
+
+                                    //f^ck，如何判断是点击了一个一般单位还是滑动了一个一般单位？
+                                    //干脆目前弄成双击旋转吧。
+                                    if (tmpTouchingUnit)
+                                    {
+                                        //Anti-Spam
+                                        ctrlPack.SetFlag(ControllingCommand.Buy);
+                                        ctrlPack.ShopID = tmpTouchingUnit.ShopID;
+                                    }
+                                    else
+                                    {
+                                        touchedGo.CompareTag("HelpScreen");
+                                        ctrlPack.SetFlag(ControllingCommand.PlayHint);
+                                    }
                                 }
-                                ResetSwipeStatus();
-                                break;
-                            case TouchPhase.Canceled:
-                                ResetSwipeStatus();
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                        else
+                        {
+                            //进入滑动状态。
+                            Debug.Assert(_lastFingerID == touch.fingerId);
+                            switch (touch.phase)
+                            {
+                                case TouchPhase.Began:
+                                    //DO NOTHING
+                                    break;
+                                case TouchPhase.Stationary:
+                                    //Stationary说明可能是doubleTap
+                                    ResetSwipeStatus(); //多少可以用。
+                                    break;
+                                case TouchPhase.Moved:
+                                    _moveVal += touch.deltaPosition;
+                                    break;
+                                case TouchPhase.Ended:
+                                    _moveVal += touch.deltaPosition;
+                                    //_moveVal有一个最小阈值，和一般的单击分开（和慢速双击混淆）。
+                                    if (_moveVal.magnitude >= _moveValThreadhold)
+                                    {
+                                        ctrlPack.ReplaceFlag(ControllingCommand.Drag);
+                                        ctrlPack.CurrentPos = _touchingUnit.CurrentBoardPosition; //这里要反转一下？？
+                                        ctrlPack.CommandDir = ConvertValToOffset(_moveVal, out var offset);
+                                        ctrlPack.NextPos = ctrlPack.CurrentPos + offset;
+                                    }
+                                    ResetSwipeStatus();
+                                    break;
+                                case TouchPhase.Canceled:
+                                    ResetSwipeStatus();
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
                         }
                     }
                 }
@@ -268,10 +298,10 @@ namespace ROOT
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (WorldController.GetCommandDir(out ctrlPack.CommandDir))
             {
-                ctrlPack.CtrlCMD = ControllingCommand.Move; //Replace
+                ctrlPack.ReplaceFlag(ControllingCommand.Move); //Replace
                 if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT))
                 {
-                    ctrlPack.CtrlCMD = ControllingCommand.Drag; //Replace
+                    ctrlPack.ReplaceFlag(ControllingCommand.Drag);  //Replace
                 }
             }
 
@@ -282,7 +312,17 @@ namespace ROOT
             {
                 //移动和拖动的优先级比旋转高。
                 ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
-                ctrlPack.CtrlCMD |= ControllingCommand.Rotate;
+                ctrlPack.SetFlag(ControllingCommand.Rotate);
+            }
+
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD)|| Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET))
+            {
+                ctrlPack.SetFlag(ControllingCommand.SignalHint);
+            }
+
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL))
+            {
+                ctrlPack.SetFlag(ControllingCommand.PlayHint);
             }
 
             bool anyBuy = false;
@@ -308,7 +348,7 @@ namespace ROOT
             }
             if (anyBuy)
             {
-                ctrlPack.CtrlCMD |= ControllingCommand.Buy;
+                ctrlPack.SetFlag(ControllingCommand.Buy);
             }
         }
     }
@@ -325,7 +365,7 @@ namespace ROOT
         //就是弄成了静态类，但是现在看估计得弄成单例？
         private static Vector2Int ClampPosInBoard(Vector2Int pos, Board gameBoard)
         {
-            Vector2Int newPos = pos;
+            var newPos = pos;
             newPos.x = Mathf.Clamp(newPos.x, 0, gameBoard.BoardLength - 1);
             newPos.y = Mathf.Clamp(newPos.y, 0, gameBoard.BoardLength - 1);
             return newPos;
@@ -335,9 +375,9 @@ namespace ROOT
         {
             if (!boughtOnce)
             {
-                bool successBought = false;
+                var successBought = false;
 
-                if (HasFlag(ctrlPack.CtrlCMD, ControllingCommand.Buy))
+                if (ctrlPack.HasFlag(ControllingCommand.Buy))
                 {
                     successBought = shopMgr.Buy(ctrlPack.ShopID);
                 }
@@ -365,9 +405,9 @@ namespace ROOT
 
             if (currentLevelAsset.WarningDestoryer.GetStatus() != WarningDestoryerStatus.Dormant)
             {
-                Vector2Int[] incomings = currentLevelAsset.WarningDestoryer.NextStrikingPos(out int count);
+                var incomings = currentLevelAsset.WarningDestoryer.NextStrikingPos(out var count);
                 currentLevelAsset.WarningGo = new GameObject[count];
-                for (int i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                 {
                     currentLevelAsset.WarningGo[i] =
                         currentLevelAsset.Owner.WorldLogicRequestInstantiate(currentLevelAsset.CursorTemplate);
@@ -377,7 +417,7 @@ namespace ROOT
                     UpdateCursorPos(currentLevelAsset);
                     mIndCursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransform(mIndCursor.CurrentBoardPosition));
 
-                    Material tm = currentLevelAsset.WarningGo[i].GetComponentInChildren<MeshRenderer>().material;
+                    var tm = currentLevelAsset.WarningGo[i].GetComponentInChildren<MeshRenderer>().material;
 
                     if (currentLevelAsset.WarningDestoryer.GetStatus() == WarningDestoryerStatus.Warning)
                     {
@@ -407,21 +447,16 @@ namespace ROOT
 
         internal static void UpdateRotate(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
-            if (HasFlag(ctrlPack.CtrlCMD,ControllingCommand.Rotate))
+            if (ctrlPack.HasFlag(ControllingCommand.Rotate))
             {
                 if (currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos))
                 {
-                    GameObject unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
+                    var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
                     System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
                     unit.GetComponentInChildren<Unit>().UnitRotateCw();
                     currentLevelAsset.GameBoard.UpdateBoard();
                 }
             }
-        }
-
-        internal static bool HasFlag(ControllingCommand A, ControllingCommand B)
-        {
-            return (A & B) == B;
         }
 
         internal static void UpdateCursor_Unit(GameAssets currentLevelAsset,in ControllingPack ctrlPack, out bool movedTile, out bool movedCursor)
@@ -430,14 +465,14 @@ namespace ROOT
             movedCursor = false;
             Unit movingUnit = null;
 
-            bool validAction = currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos) &&
-                               currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos);
+            var validAction = currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos) &&
+                              currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos);
 
-            ControllingCommand extractedCommand = ctrlPack.CtrlCMD & (ControllingCommand.Drag | ControllingCommand.Move);
+            var extractedCommand = ctrlPack.CtrlCMD & (ControllingCommand.Drag | ControllingCommand.Move);
 
-            if (HasFlag(extractedCommand, ControllingCommand.Drag) && validAction)
+            if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Drag) && validAction)
             {
-                GameObject unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
+                var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
                 System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
                 movingUnit = unit.GetComponentInChildren<Unit>();
                 movingUnit.Move(ctrlPack.CommandDir);
@@ -445,7 +480,7 @@ namespace ROOT
                 currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
                 movedTile = true;
             }
-            else if (HasFlag(extractedCommand, ControllingCommand.Move))
+            else if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Move))
             {
                 currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
                 movedCursor = true;
@@ -466,13 +501,13 @@ namespace ROOT
             UpdateCursorPos(currentLevelAsset);
         }
 
-        internal static void UpdateInput(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor, ref bool boughtOnce)
+        internal static ControllingPack UpdateInput(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor, ref bool boughtOnce)
         {
             movedTile = false;
             movedCursor = false;
 
-            ControllingPack ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
-            if (StartGameMgr.DetectedInputScheme == InputScheme.TouchScreen)
+            var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+            if (StartGameMgr.UseTouchScreen)
             {
                 WorldController.GetCommand_Touch(currentLevelAsset, out ctrlPack);
             }
@@ -496,6 +531,8 @@ namespace ROOT
                 //旋转的动画先没有吧。
                 UpdateRotate(currentLevelAsset, in ctrlPack);
             }
+
+            return ctrlPack;
         }
 
         internal static void UpdateCurrency(GameAssets currentLevelAsset)
@@ -543,11 +580,12 @@ namespace ROOT
             }
         }
 
-        public static void UpdateLogic(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor)
+        public static void UpdateLogic(GameAssets currentLevelAsset,out ControllingPack ctrlPack, out bool movedTile, out bool movedCursor)
         {
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = false;
             movedCursor = false;
+            ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             {
                 if (currentLevelAsset.DestroyerEnabled)
                 {
@@ -557,7 +595,7 @@ namespace ROOT
                 if (currentLevelAsset.InputEnabled)
                 {
                     var cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
-                    UpdateInput(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset.BoughtOnce);
+                    ctrlPack = UpdateInput(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset.BoughtOnce);
                     currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
                 }
 

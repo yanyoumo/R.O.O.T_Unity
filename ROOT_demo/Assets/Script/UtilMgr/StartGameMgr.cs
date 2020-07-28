@@ -40,6 +40,8 @@ namespace ROOT
         public static SupportedScreenRatio DetectedScreenRatio { get; private set; } = SupportedScreenRatio.HD;
         public static InputScheme DetectedInputScheme { get; private set; } = InputScheme.KeyboardMouse;
 
+        public static bool UseTouchScreen => DetectedInputScheme == InputScheme.TouchScreen;
+
         IEnumerator LoadLevelMasterSceneAndSetActive()
         {
             SceneManager.LoadSceneAsync(StaticName.SCENE_ID_LEVELMASTER, LoadSceneMode.Additive);

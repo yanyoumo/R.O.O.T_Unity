@@ -155,20 +155,56 @@ MonoBehaviour:
       - "\u672C\u8282\u6559\u7A0B\u7ED3\u675F~"
       Flags: 0000
       Languages_Touch: []
-    - Term: HForHint
+    - Term: BasicControl_KM
       TermType: 0
       Description: 
       Languages:
-      - Press <b>[H]</b> for controlling
-      - "\u6309<b>[H]</b>\u952E\u67E5\u770B\u64CD\u4F5C\u8BF4\u660E"
+      - '<b>[Arrows]:</b> Move Cursor
+
+        <b>[Arrows+SpaceBar]:</b> Drag Unit
+
+        <b>[Left-Shift]:</b>
+        Rotate Unit
+
+        <b>[TAB]:</b> Visualize Signal'
+      - "\u3010\u65B9\u5411\u952E\u3011\uFF1A\u79FB\u52A8\u5149\u6807\n\u3010\u65B9\u5411\u952E\u3011+\u3010\u7A7A\u683C\u3011\uFF1A\u62D6\u52A8\u5355\u5143\n\u3010\u5DE6Shift\u3011\uFF1A\u65CB\u8F6C\u5355\u5143\n\u3010TAB\u3011\uFF1A\u67E5\u770B\u6570\u636E\u8303\u56F4"
       Flags: 0000
       Languages_Touch: []
-    - Term: ReleaseToReturn
+    - Term: BasicControl_Touch
+      TermType: 0
+      Description: 
+      Languages:
+      - '<b>[Swipe on Unit]:</b>Drag Unit
+
+        <b>[DoubleTap on Unit]:</b>Rotate
+        Unit
+
+        <b>[DoubleFinger Hold]:</b>Visualize Signal'
+      - "\u3010\u6ED1\u52A8\u5355\u5143\u3011\uFF1A\u62D6\u52A8\u5355\u5143\n\u3010\u53CC\u51FB\u5355\u5143\u3011\uFF1A\u65CB\u8F6C\u5355\u5143\n\u3010\u53CC\u6307\u6309\u4F4F\u3011\uFF1A\u67E5\u770B\u6570\u636E\u8303\u56F4"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: HForHint_KM
+      TermType: 0
+      Description: 
+      Languages:
+      - Hold <b>[H]</b> for controlling
+      - "\u6309\u4F4F<b>[H]</b>\u952E\u67E5\u770B\u64CD\u4F5C\u8BF4\u660E"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: ReleaseToReturn_KM
       TermType: 0
       Description: 
       Languages:
       - Release to Hide
-      - "\u677E\u5F00<b>[H]</b>\u952E\u4EE5\u8FD4\u56DE"
+      - "\u677E\u5F00\u4EE5\u8FD4\u56DE"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: HForHint_Touch
+      TermType: 0
+      Description: 
+      Languages:
+      - Hold Here for Hint
+      - "\u6309\u4F4F\u8FD9\u91CC\u67E5\u770B\u64CD\u4F5C\u8BF4\u660E"
       Flags: 0000
       Languages_Touch: []
     CaseInsensitiveTerms: 0

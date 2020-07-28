@@ -13,6 +13,7 @@ namespace ROOT
     public class HelpScreen : MonoBehaviour
     {
         public Localize HorHintText;
+        public Localize BasicControlHint;
 
         private bool _atUpOrDown = false;
         internal bool ShouldShow = false;
@@ -33,6 +34,8 @@ namespace ROOT
         void Awake()
         {
             _posXY = new Vector2(transform.position.x, transform.position.y);
+            BasicControlHint.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.BasicControl_Touch : ScriptTerms.BasicControl_KM;
+            HorHintText.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.HForHint_Touch : ScriptTerms.HForHint_KM;
         }
 
         // Update is called once per frame
@@ -47,7 +50,7 @@ namespace ROOT
                         _animatingUpOrDown = true;
                         Animating = true;
                         _slideTimer = Time.time;
-                        HorHintText.Term = ScriptTerms.ReleaseToReturn;
+                        HorHintText.Term = ScriptTerms.ReleaseToReturn_KM;
                     }
                 }
                 else
@@ -57,7 +60,7 @@ namespace ROOT
                         _animatingUpOrDown = false;
                         Animating = true;
                         _slideTimer = Time.time;
-                        HorHintText.Term = ScriptTerms.HForHint;
+                        HorHintText.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.HForHint_Touch : ScriptTerms.HForHint_KM;
                     }
                 }
             }
