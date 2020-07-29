@@ -131,7 +131,7 @@ namespace ROOT
         }*/
 
         /*private Canvas _tutorialCanvas;
-        //private TextMeshProUGUI _buttonText;
+        //private TextMeshProUGUI _buttonTerm;
         private TextMeshProUGUI _mainText;
         private TextMeshProUGUI _hintAText;
         private TextMeshProUGUI _hintBText;

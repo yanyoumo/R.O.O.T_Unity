@@ -9,14 +9,21 @@ namespace ROOT
     public struct TutorialQuadDataPack
     {
         public string TitleTerm;
-        public string ButtonText;
+        public string ButtonTerm;
         public Sprite Thumbnail;
 
-        public TutorialQuadDataPack(string titleTerm, string _buttonText, string thumbnailName)
+        public TutorialQuadDataPack(string titleTerm, string _buttonTerm, string thumbnailName)
         {
             TitleTerm = titleTerm;
-            ButtonText = _buttonText;
+            ButtonTerm = _buttonTerm;
             Thumbnail = Resources.Load<Sprite>("UIThumbnail/TutorialThumbnail/" + thumbnailName);
+        }
+
+        public TutorialQuadDataPack(string titleTerm, string _buttonTerm, Sprite thumbnail)
+        {
+            TitleTerm = titleTerm;
+            ButtonTerm = _buttonTerm;
+            Thumbnail = thumbnail;
         }
     }
 

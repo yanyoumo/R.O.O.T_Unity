@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace ROOT
 {
+    [Serializable]
     [CreateAssetMenu(fileName = "NewActionAsset")]
     public class TutorialActionAsset : ScriptableObject
     {
@@ -16,8 +17,10 @@ namespace ROOT
         [AssetSelector(Filter = "t:Sprite",Paths= "Assets/Resources/UIThumbnail/TutorialThumbnail")]
         public Sprite Thumbnail;
         [ShowInInspector]
-        public Type LevelLogicType;
+        public LevelType LevelType;
         [Header("Actions")]
         public TutorialActionData[] Actions;
+
+        public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
     }
 }

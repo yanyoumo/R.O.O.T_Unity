@@ -59,7 +59,7 @@ namespace ROOT
 
             InitCursor(new Vector2Int(2, 3));
             
-            TutorialAction = new TutorialActionShop();
+            //TutorialAction = new TutorialActionShop();
 
             ReadyToGo = true;
             InvokeGameStartedEvent();

@@ -19,7 +19,7 @@ namespace ROOT
 
         public Button InitTutorialLevelSelectionQuad(TutorialQuadDataPack data)
         {
-            //StartTutorialButtonText.text = data.ButtonText;
+            //StartTutorialButtonText.text = data.ButtonTerm;
             TutorialThumbnail.sprite = data.Thumbnail;
             TitleLocalize.SetTerm(data.TitleTerm);
             ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);

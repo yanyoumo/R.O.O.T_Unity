@@ -58,7 +58,7 @@ namespace ROOT
 
             InitCursor(new Vector2Int(2, 3));
             
-            TutorialAction = new TutorialActionSignalBasic();
+            //TutorialAction = new TutorialActionSignalBasic();
 
             ReadyToGo = true;
             InvokeGameStartedEvent();

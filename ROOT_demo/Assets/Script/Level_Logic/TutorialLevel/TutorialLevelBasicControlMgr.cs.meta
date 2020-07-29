@@ -3,7 +3,9 @@ guid: a1131a75368da2349bbc2608dc3894d9
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - TutorialActionAsset: {fileID: 11400000, guid: 23055b243c854b3488cdf6cf6fd31d79,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -13,17 +13,16 @@ namespace ROOT
         TutorialQuadDataPack[] _dataS;
         private TextMeshProUGUI content;
         private bool Loading = false;
-        void Awake()
-        {
-            InitTutorialActions();
-        }
+        public TutorialActionAssetLib TutorialActionAssetLib;
+        public TutorialActionAsset[] ActionAssetList => TutorialActionAssetLib.TutorialActionAssetList;
+        public int ActionAssetCount => TutorialActionAssetLib.TutorialActionAssetList.Length;
 
         void Start()
         {
-            _dataS = new TutorialQuadDataPack[tutorialActions.Length];
-            for (var i = 0; i < tutorialActions.Length; i++)
+            _dataS = new TutorialQuadDataPack[ActionAssetCount];
+            for (var i = 0; i < ActionAssetCount; i++)
             {
-                _dataS[i] = tutorialActions[i].TutorialQuadDataPack;
+                _dataS[i] = ActionAssetList[i].TutorialQuadDataPack;
             }
 
             var buttons = TutorialCanvas.GetComponentInChildren<TutorialLevelSelectionMainMenu>().InitTutorialLevelSelectionMainMenu(_dataS);
@@ -38,7 +37,7 @@ namespace ROOT
 
         IEnumerator DoLoading(int buttonId)
         {
-            LevelMasterManager.Instance.LoadLevelThenPlay(tutorialActions[buttonId].LevelLogicType);
+            LevelMasterManager.Instance.LoadLevelThenPlay(ActionAssetList[buttonId].LevelType);
             yield return 0;
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_TUTORIAL);
         }

@@ -8,6 +8,16 @@ using UnityEngine;
 
 namespace ROOT
 {
+    public enum LevelType
+    {
+        TutorialActionBasicControl,
+        TutorialActionBasicControlTouch,
+        TutorialActionSignalBasic,
+        TutorialActionGoalAndCycle,
+        TutorialActionShop,
+        TutorialActionDestroyer
+    }
+
     public enum TutorialActionType
     {
         //各种动作直接打开对应的模块，模块的开关就不独立做了。
@@ -76,7 +86,7 @@ namespace ROOT
     /// TODO Tutorial文字的部分要对【H】键有一个对应
 
     //这些不要弄ID什么的，最好写名字，要不然插队会很费劲。
-    public class TutorialActionBasicControl : TutorialActionBase
+    /*public class TutorialActionBasicControl : TutorialActionBase
     {
         public TutorialActionBasicControl() : base(
             ScriptTerms.TutorialBasicControl,
@@ -103,7 +113,7 @@ namespace ROOT
             })
         {
         }
-    }
+    }*/
 
     public class TutorialActionBasicControlTouch : TutorialActionBase
     {
@@ -263,30 +273,34 @@ namespace ROOT
         }
     }
 
-    public sealed partial class TutorialMasterMgr : MonoBehaviour
-    {
-        private TutorialActionBase[] tutorialActions;
-
-        private void InitTutorialActions()
-        {
-            tutorialActions = new TutorialActionBase[]
-            {
-                new TutorialActionBasicControl(),
-                new TutorialActionSignalBasic(),
-                new TutorialActionGoalAndCycle(),
-                new TutorialActionShop(),
-                new TutorialActionDestroyer(),
-            };
-
-            if (StartGameMgr.UseTouchScreen)
-            {
-                tutorialActions[0]=new TutorialActionBasicControlTouch();
-            }
-        }
-    }
-
     public sealed partial class LevelMasterManager : MonoBehaviour
     {
+        public Type LevelEnumToType(LevelType levelLogicType)
+        {
+            switch (levelLogicType)
+            {
+                case LevelType.TutorialActionBasicControl:
+                    return typeof(TutorialLevelBasicControlMgr);
+                case LevelType.TutorialActionBasicControlTouch:
+                    return typeof(TutorialLevelBasicControlMgr);
+                case LevelType.TutorialActionSignalBasic:
+                    return typeof(TutorialSignalBasicMgr);
+                case LevelType.TutorialActionGoalAndCycle:
+                    return typeof(TutorialGoalAndCycleMgr);
+                case LevelType.TutorialActionShop:
+                    return typeof(TutorialShopMgr);
+                case LevelType.TutorialActionDestroyer:
+                    return typeof(TutorialDestroyerMgr);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(levelLogicType), levelLogicType, null);
+            }
+        }
+
+        public void LoadLevelThenPlay(LevelType levelLogicType)
+        {
+            LoadLevelThenPlay(LevelEnumToType(levelLogicType), new ScoreSet(), new PerMoveData());
+        }
+
         public void LoadLevelThenPlay(Type levelLogicType)
         {
             LoadLevelThenPlay(levelLogicType, new ScoreSet(), new PerMoveData());

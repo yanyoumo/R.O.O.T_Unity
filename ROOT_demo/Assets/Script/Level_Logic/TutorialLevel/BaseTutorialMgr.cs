@@ -10,7 +10,8 @@ namespace ROOT
     {
         protected int ActionIndex { get; private set; } = -1;
         protected int LastActionCount { get; private set; } = 0;
-        protected TutorialActionBase TutorialAction;
+        public TutorialActionAsset TutorialActionAsset;
+        //protected TutorialActionBase TutorialAction;
         //private TutorialMainTextFrame _tutorialMainText;
         protected bool ShowText
         {
@@ -89,15 +90,15 @@ namespace ROOT
         }
         protected void DealStepMgr()
         {
-            int actionLength = TutorialAction.Actions.Length;
+            int actionLength = TutorialActionAsset.Actions.Length;
             for (int i = LastActionCount; i < actionLength; i++)
             {
-                if (TutorialAction.Actions[i].ActionIdx > ActionIndex)
+                if (TutorialActionAsset.Actions[i].ActionIdx > ActionIndex)
                 {
                     LastActionCount = i;
                     break;
                 }
-                DealStep(TutorialAction.Actions[i]);
+                DealStep(TutorialActionAsset.Actions[i]);
             }
         }
 

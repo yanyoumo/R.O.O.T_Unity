@@ -42,15 +42,7 @@ namespace ROOT
 
             LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.HintEnabled = true;
-
-            if (StartGameMgr.UseTouchScreen)
-            {
-                TutorialAction = new TutorialActionBasicControlTouch();
-            }
-            else
-            {
-                TutorialAction = new TutorialActionBasicControl();
-            }
+            TutorialActionAsset = Resources.Load<TutorialActionAsset>("TutorialActionAsset/TutorialActionBasicControl");
 
             ReadyToGo = true;
             InvokeGameStartedEvent();
