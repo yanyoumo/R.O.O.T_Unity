@@ -245,15 +245,18 @@ namespace ROOT
                                         ctrlPack.SetFlag(ControllingCommand.Buy);
                                         ctrlPack.ShopID = tmpTouchingUnit.ShopID;
                                     }
-                                    else if (touchedGo.CompareTag("HelpScreen"))
+                                    if (touchedGo != null)
                                     {
-                                        ctrlPack.SetFlag(ControllingCommand.PlayHint);
-                                    }
-                                    else if (touchedGo.CompareTag("TutorialTextFrame"))
-                                    {
-                                        if (touch.phase == TouchPhase.Began)//Anti-Spam
+                                        if (touchedGo.CompareTag("HelpScreen"))
                                         {
-                                            ctrlPack.SetFlag(ControllingCommand.NextButton);
+                                            ctrlPack.SetFlag(ControllingCommand.PlayHint);
+                                        }
+                                        else if (touchedGo.CompareTag("TutorialTextFrame"))
+                                        {
+                                            if (touch.phase == TouchPhase.Began) //Anti-Spam
+                                            {
+                                                ctrlPack.SetFlag(ControllingCommand.NextButton);
+                                            }
                                         }
                                     }
                                 }
@@ -465,46 +468,40 @@ namespace ROOT
             }
         }
 
-        internal static void UpdateCursor_Unit(GameAssets currentLevelAsset,in ControllingPack ctrlPack, out bool movedTile, out bool movedCursor)
+        internal static void UpdateCursor_Unit(GameAssets currentLevelAsset, in ControllingPack ctrlPack,
+            out bool movedTile, out bool movedCursor)
         {
+            //这个还要能够处理enableCursor是false的情况。
+            //相当于现在这个函数是Cursor和Unit混在一起的，可能还需要拆开。
             movedTile = false;
             movedCursor = false;
-            Unit movingUnit = null;
 
-            var validAction = currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos) &&
-                              currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos);
-
+            var validAction = currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos) && currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos);
             var extractedCommand = ctrlPack.CtrlCMD & (ControllingCommand.Drag | ControllingCommand.Move);
 
             if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Drag) && validAction)
             {
                 var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
                 System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-                movingUnit = unit.GetComponentInChildren<Unit>();
+                var movingUnit = unit.GetComponentInChildren<Unit>();
                 movingUnit.Move(ctrlPack.CommandDir);
                 currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(ctrlPack.CurrentPos);
                 currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
+                currentLevelAsset.AnimationPendingObj.Add(movingUnit);
                 movedTile = true;
+                movedCursor = true;
             }
             else if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Move))
             {
                 currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
                 movedCursor = true;
             }
-
-
-            if (movingUnit)
-            {
-                currentLevelAsset.AnimationPendingObj.Add(movingUnit);
-            }
-
-            movedCursor |= movedTile;
-            if (movedCursor)
+            if (currentLevelAsset.CursorEnabled && movedCursor)
             {
                 currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
+                UpdateCursorPos(currentLevelAsset);
+                movedCursor = true;
             }
-
-            UpdateCursorPos(currentLevelAsset);
         }
 
         internal static ControllingPack UpdateInputScheme(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor, ref bool boughtOnce)
@@ -598,12 +595,10 @@ namespace ROOT
                         UpdateShopBuy(currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset.BoughtOnce);
                     }
                     UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
-                    if (currentLevelAsset.RotateEnabled)
+                    if (currentLevelAsset.RotateEnabled) //旋转的动画先没有吧。
                     {
-                        //旋转的动画先没有吧。
                         UpdateRotate(currentLevelAsset, in ctrlPack);
                     }
-
                     currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
                 }
 

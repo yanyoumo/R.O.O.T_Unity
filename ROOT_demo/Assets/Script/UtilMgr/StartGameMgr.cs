@@ -10,7 +10,7 @@ namespace ROOT
     public enum SupportedScreenRatio
     {
         XGA, //4:3/iPadAir2/iPadPro4Gen
-        HD, //16:9/StandAlone/iPhone7Plus
+        HD, //16:9/StandAlone/iPhone7Plus/iPhone6
         AppleHD, //2.1645:1/iPhoneX/iPhoneXR/iPhone11Pro/iPhoneXSMax
     }
 
@@ -25,6 +25,7 @@ namespace ROOT
         /*public enum SupportedDevice
         {
             StandAlone,//1920x1080-1.78-16:9
+            iPhone6,//1334x750-1.78-16:9
             iPhone7Plus,//1920x1080-1.78-16:9
             iPhoneX,//2436x1125-2.165
             iPhoneXR,//1792x828-2.164
@@ -73,6 +74,10 @@ namespace ROOT
 #elif UNITY_IOS
             switch (UnityEngine.iOS.Device.generation)
             {
+                case DeviceGeneration.iPhone6:
+                    DetectedScreenRatio = SupportedScreenRatio.HD;
+                    DetectedInputScheme = InputScheme.TouchScreen;
+                    break;
                 case DeviceGeneration.iPhone7Plus:
                     DetectedScreenRatio = SupportedScreenRatio.HD;
                     DetectedInputScheme = InputScheme.TouchScreen;

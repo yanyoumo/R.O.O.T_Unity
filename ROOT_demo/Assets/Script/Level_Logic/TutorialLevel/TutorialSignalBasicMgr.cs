@@ -16,7 +16,6 @@ namespace ROOT
                 if (ActionIndex == 3)
                 {
                     LevelAsset.CurrencyEnabled = true;
-                    LevelAsset.HintEnabled = true;
                     LevelAsset.ForceHddConnectionHint = true;
                 }
                 if (ActionIndex==5)
@@ -53,6 +52,7 @@ namespace ROOT
 
             LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;
+            LevelAsset.HintEnabled = true;
             LevelAsset.CursorEnabled = true;
             LevelAsset.RotateEnabled = true;
 

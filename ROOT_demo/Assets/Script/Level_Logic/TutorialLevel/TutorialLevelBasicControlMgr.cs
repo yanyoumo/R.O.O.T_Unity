@@ -41,8 +41,16 @@ namespace ROOT
             LevelAsset.StartingPerMoveData = new PerMoveData();
 
             LevelAsset.DisableAllCoreFunctionAndFeature();
+            LevelAsset.HintEnabled = true;
 
-            TutorialAction =new TutorialActionBasicControl();
+            if (StartGameMgr.UseTouchScreen)
+            {
+                TutorialAction = new TutorialActionBasicControlTouch();
+            }
+            else
+            {
+                TutorialAction = new TutorialActionBasicControl();
+            }
 
             ReadyToGo = true;
             InvokeGameStartedEvent();

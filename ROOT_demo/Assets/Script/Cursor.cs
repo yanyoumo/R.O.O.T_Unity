@@ -14,6 +14,11 @@ namespace ROOT
         public Mesh CursorMesh;
         public Mesh IndicatorMesh;
 
+        private bool ShowMesh
+        {
+            set => GetComponentInChildren<MeshRenderer>().enabled = value;
+        }
+
         void Awake()
         {
             RootTransform = transform;
@@ -22,6 +27,10 @@ namespace ROOT
             _meshFilter = GetComponentInChildren<MeshFilter>();
             _meshFilter.mesh = CursorMesh;
             tm = GetComponentInChildren<MeshRenderer>().material;
+            if (StartGameMgr.UseTouchScreen)
+            {
+                ShowMesh = false;
+            }
         }
 
         public override void UpdateTransform(Vector3 pos)

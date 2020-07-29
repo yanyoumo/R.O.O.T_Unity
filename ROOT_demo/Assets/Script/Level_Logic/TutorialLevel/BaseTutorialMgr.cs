@@ -112,21 +112,6 @@ namespace ROOT
                     StepForward();
                     DealStepMgr();
                 }
-
-                /*if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_QUIT))
-                {
-                    //TODO　先什么的都不做。
-                }
-                else
-                {
-                    //TODO 就是这里要整合仅WorldLogic里面。
-                    //if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
-                    if (CtrlPack.HasFlag(ControllingCommand.NextButton))
-                    {
-                        StepForward();
-                        DealStepMgr();
-                    }
-                }*/
                 if (CtrlPack.HasFlag(ControllingCommand.NextButton))
                 {
                     StepForward();

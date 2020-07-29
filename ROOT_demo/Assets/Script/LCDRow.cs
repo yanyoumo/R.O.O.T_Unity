@@ -19,16 +19,26 @@ namespace ROOT
             lcdS = new[] {Digit0, Digit1, Digit2, Digit3};
         }
 
-        public void SetNumber(int number,bool _PosOrNeg = true)
+        public void SetNumber(int number, bool posOrNeg = true)
         {
-            number = number % 10000;
-            for (var i = 0; i < lcdS.Length; i++)
+            if (number == 0)
             {
-                lcdS[3 - i].PosOrNeg = _PosOrNeg;
-                //这样的话，纯0是显示不出来的……其实也无所谓。
-                bool upper = (number >= Mathf.Pow(10, i));
-                int val = Mathf.FloorToInt((number / Mathf.Pow(10, i))) % 10;
-                lcdS[3 - i].SetDigit(upper ? val : -1);
+                lcdS[0].SetDigit(-1);
+                lcdS[1].SetDigit(-1);
+                lcdS[2].SetDigit(-1);
+                lcdS[3].SetDigit(0);
+                lcdS[3].PosOrNeg = false;
+            }
+            else
+            {
+                number %= 10000;
+                for (var i = 0; i < lcdS.Length; i++)
+                {
+                    lcdS[3 - i].PosOrNeg = posOrNeg;
+                    bool upper = (number >= Mathf.Pow(10, i));
+                    int val = Mathf.FloorToInt((number / Mathf.Pow(10, i))) % 10;
+                    lcdS[3 - i].SetDigit(upper ? val : -1);
+                }
             }
         }
 

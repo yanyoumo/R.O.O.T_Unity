@@ -58,6 +58,7 @@ namespace ROOT
 
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
+
         internal CurrencyIOCalculator CurrencyIoCalculator;
         internal GameStateMgr GameStateMgr;
         internal ShopMgr ShopMgr;
@@ -474,10 +475,8 @@ namespace ROOT
 
             InitShop();
             InitDestoryer();
-
-            LevelAsset.EnableAllCoreFunctionAndFeature();
             InitCursor(new Vector2Int(2, 3));
-
+            LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.InitBoardRealStart();
             LevelAsset.GameBoard.UpdateBoardAnimation();
             StartShop();
@@ -486,11 +485,6 @@ namespace ROOT
 
             LevelAsset.StartingScoreSet = scoreSet;
             LevelAsset.StartingPerMoveData = perMoveData;
-
-            if (StartGameMgr.UseTouchScreen)
-            {
-                LevelAsset.Cursor.gameObject.SetActive(false);
-            }
 
             InvokeGameStartedEvent();
         }

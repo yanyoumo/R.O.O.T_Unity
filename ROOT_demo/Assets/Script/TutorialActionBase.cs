@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using I2.Loc;
+using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace ROOT
@@ -15,19 +17,28 @@ namespace ROOT
         CreateCursor,
         ShowText,
         HideText,
-        PlayerTry,
-        Function,
+        /*PlayerTry,
+        Function,*/
         End,
     }
+
+    [Serializable]
     public struct TutorialActionData
     {
         public int ActionIdx;
+        [EnumToggleButtons]
         public TutorialActionType ActionType;
+        [ShowIf("ActionType", TutorialActionType.Text)]
         public string Text;
-        public CoreType Core;
-        public SideType[] Sides;
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
+        [ShowIf("@this.ActionType==TutorialActionType.CreateUnit||this.ActionType==TutorialActionType.CreateCursor")]
         public Vector2Int Pos;
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
+        public CoreType Core;
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
+        public SideType[] Sides;
 
+        [StringFormatMethod("actionIdx")]
         public TutorialActionData(int actionIdx=0,
             TutorialActionType actionType=TutorialActionType.Text,
             string text="",
@@ -93,6 +104,36 @@ namespace ROOT
         {
         }
     }
+
+    public class TutorialActionBasicControlTouch : TutorialActionBase
+    {
+        public TutorialActionBasicControlTouch() : base(
+            ScriptTerms.TutorialBasicControl,
+            "Thumbnail_BasicControl_Touch",
+            typeof(TutorialLevelBasicControlMgr),
+            new[]
+            {
+                new TutorialActionData(0, TutorialActionType.ShowText),
+                new TutorialActionData(0, TutorialActionType.Text, "你好,欢迎来到<b>[ROOT]</b>的教程;这是一款基于棋盘的模拟经营类游戏"),
+                new TutorialActionData(1, TutorialActionType.Text, "首先,这个是"+TmpBracketAndBold("单元")+",游戏中最重要的元素之一"),
+                new TutorialActionData(1, TutorialActionType.CreateUnit, "", new Vector2Int(2, 1), CoreType.Processor,new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(2, TutorialActionType.Text, "通过触摸屏就可以操作"+TmpBracketAndBold("单元")),
+                new TutorialActionData(2, TutorialActionType.CreateCursor, "", new Vector2Int(3, 2)),//先这样……
+                new TutorialActionData(3, TutorialActionType.Text, "拖动就可以移动"+TmpBracketAndBold("单元")+",双击就可以旋转"+TmpBracketAndBold("单元")),
+                new TutorialActionData(4, TutorialActionType.Text, "话说,在之后和正式游戏中随时可以按住右下角的方框来显示操作提示."),
+                new TutorialActionData(5, TutorialActionType.Text, "我再多放几个" + TmpBracketAndBold("单元") + ",熟悉一下基本操作"),
+                new TutorialActionData(6, TutorialActionType.HideText),
+                new TutorialActionData(6, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive,new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(6, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive,new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(6, TutorialActionType.CreateUnit, "", new Vector2Int(-1, -1), CoreType.HardDrive,new[] {SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection}),
+                new TutorialActionData(7, TutorialActionType.ShowText),
+                new TutorialActionData(7, TutorialActionType.Text, "以上,这就是这个游戏的基本操作"),
+                new TutorialActionData(8, TutorialActionType.End),
+            })
+        {
+        }
+    }
+
     public class TutorialActionSignalBasic : TutorialActionBase
     {
         public TutorialActionSignalBasic() : base(
@@ -236,8 +277,14 @@ namespace ROOT
                 new TutorialActionShop(),
                 new TutorialActionDestroyer(),
             };
+
+            if (StartGameMgr.UseTouchScreen)
+            {
+                tutorialActions[0]=new TutorialActionBasicControlTouch();
+            }
         }
     }
+
     public sealed partial class LevelMasterManager : MonoBehaviour
     {
         public void LoadLevelThenPlay(Type levelLogicType)
