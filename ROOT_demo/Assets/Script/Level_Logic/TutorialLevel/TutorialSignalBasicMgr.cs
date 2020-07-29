@@ -57,8 +57,7 @@ namespace ROOT
             LevelAsset.RotateEnabled = true;
 
             InitCursor(new Vector2Int(2, 3));
-            
-            //TutorialAction = new TutorialActionSignalBasic();
+            TutorialActionAsset = Resources.Load<TutorialActionAsset>("TutorialActionAsset/TutorialActionSignalBasic");
 
             ReadyToGo = true;
             InvokeGameStartedEvent();

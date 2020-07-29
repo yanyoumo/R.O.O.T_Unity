@@ -7,15 +7,146 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
+    public enum LevelType
+    {
+        TutorialActionBasicControl,
+        TutorialActionBasicControlTouch,
+        TutorialActionSignalBasic,
+        TutorialActionGoalAndCycle,
+        TutorialActionShop,
+        TutorialActionDestroyer
+    }
     /// <summary>
     /// 这个是足球场的后勤和人事部门，告诉它需要来一场如何的比赛。
     /// 叫裁判进来，联系球员这些动态Asset，设置好球门这些静态Asset，让后就全权交给裁判了
     /// 现在就是裁判确定游戏结束后，是直接处理游戏结束的场景，还是让后勤部门处理？
     /// 目前认为后勤也没有“重启”关卡的概念，让后期帮忙从裁判往结束场景里面传递数据。
     /// </summary>
-    /// 
-    public sealed partial class LevelMasterManager : MonoBehaviour
+    ///
+    public sealed class LevelMasterManager : MonoBehaviour
     {
+        #region 关卡切换
+        //TODO 所有基于Type都要换掉，换成基于LevelType
+        [Obsolete]
+        public Type LevelEnumToType(LevelType levelLogicType)
+        {
+            switch (levelLogicType)
+            {
+                case LevelType.TutorialActionBasicControl:
+                    return typeof(TutorialLevelBasicControlMgr);
+                case LevelType.TutorialActionBasicControlTouch:
+                    return typeof(TutorialLevelBasicControlMgr);
+                case LevelType.TutorialActionSignalBasic:
+                    return typeof(TutorialSignalBasicMgr);
+                case LevelType.TutorialActionGoalAndCycle:
+                    return typeof(TutorialGoalAndCycleMgr);
+                case LevelType.TutorialActionShop:
+                    return typeof(TutorialShopMgr);
+                case LevelType.TutorialActionDestroyer:
+                    return typeof(TutorialDestroyerMgr);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(levelLogicType), levelLogicType, null);
+            }
+        }
+
+        public void LoadLevelThenPlay(LevelType levelLogicType)
+        {
+            LoadLevelThenPlay(LevelEnumToType(levelLogicType), new ScoreSet(), new PerMoveData());
+        }
+
+        public void LoadLevelThenPlay(Type levelLogicType)
+        {
+            LoadLevelThenPlay(levelLogicType, new ScoreSet(), new PerMoveData());
+        }
+
+        public void LoadNextTutorialLevelThenPlay(Type levelLogicType)
+        {
+            LoadLevelThenPlay(GetNextTutorialLevel(levelLogicType), new ScoreSet(), new PerMoveData());
+        }
+
+        public static LevelType GetNextTutorialLevel(LevelType levelLogicType)
+        {
+            switch (levelLogicType)
+            {
+                case LevelType.TutorialActionBasicControl:
+                    return LevelType.TutorialActionBasicControlTouch;
+                case LevelType.TutorialActionBasicControlTouch:
+                    return LevelType.TutorialActionSignalBasic;
+                case LevelType.TutorialActionSignalBasic:
+                    return LevelType.TutorialActionGoalAndCycle;
+                case LevelType.TutorialActionGoalAndCycle:
+                    return LevelType.TutorialActionShop;
+                case LevelType.TutorialActionShop:
+                    return LevelType.TutorialActionDestroyer;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        [Obsolete]
+        public static Type GetNextTutorialLevel(Type levelLogicType)
+        {
+            if (levelLogicType == typeof(TutorialLevelBasicControlMgr))
+            {
+                return typeof(TutorialSignalBasicMgr);
+            }
+            if (levelLogicType == typeof(TutorialSignalBasicMgr))
+            {
+                return typeof(TutorialGoalAndCycleMgr);
+            }
+            if (levelLogicType == typeof(TutorialGoalAndCycleMgr))
+            {
+                return typeof(TutorialShopMgr);
+            }
+            if (levelLogicType == typeof(TutorialShopMgr))
+            {
+                return typeof(TutorialDestroyerMgr);
+            }
+            throw new ArgumentOutOfRangeException();
+        }
+
+        [Obsolete]
+        public void LoadLevelThenPlay(Type levelLogicType, ScoreSet nextScoreSet, PerMoveData nextPerMoveData)
+        {
+            //这里是一个动态到静态的转换。
+            if (levelLogicType == typeof(DefaultLevelMgr))
+            {
+                LoadLevelThenPlay<DefaultLevelMgr>(nextScoreSet, nextPerMoveData);
+                return;
+            }
+            if (levelLogicType == typeof(ShortEndingLevelMgr))
+            {
+                LoadLevelThenPlay<ShortEndingLevelMgr>(nextScoreSet, nextPerMoveData);
+                return;
+            }
+            if (levelLogicType == typeof(TutorialLevelBasicControlMgr))
+            {
+                LoadLevelThenPlay<TutorialLevelBasicControlMgr>(nextScoreSet, nextPerMoveData);
+                return;
+            }
+            if (levelLogicType == typeof(TutorialSignalBasicMgr))
+            {
+                LoadLevelThenPlay<TutorialSignalBasicMgr>(nextScoreSet, nextPerMoveData);
+                return;
+            }
+            if (levelLogicType == typeof(TutorialGoalAndCycleMgr))
+            {
+                LoadLevelThenPlay<TutorialGoalAndCycleMgr>(nextScoreSet, nextPerMoveData);
+                return;
+            }
+            if (levelLogicType == typeof(TutorialShopMgr))
+            {
+                LoadLevelThenPlay<TutorialShopMgr>(nextScoreSet, nextPerMoveData);
+                return;
+            }
+            if (levelLogicType == typeof(TutorialDestroyerMgr))
+            {
+                LoadLevelThenPlay<TutorialDestroyerMgr>(nextScoreSet, nextPerMoveData);
+                return;
+            }
+            throw new NotImplementedException();
+        }
+#endregion
 
         private static LevelMasterManager _instance;
         public static LevelMasterManager Instance => _instance;

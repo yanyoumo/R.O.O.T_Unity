@@ -55,10 +55,21 @@ namespace ROOT
             ActionIndex++;
         }
 
+        private string ProcessText(string Text)
+        {
+            Text = Text.Replace("单元", "<b>[单元]</b>");
+            Text = Text.Replace("方形", "<b>[方形]</b>");
+            Text = Text.Replace("圆形", "<b>[圆形]</b>");
+            Text = Text.Replace("周期", "<b>[周期]</b>");
+            Text = Text.Replace("一般数据", TutorialActionBase.TMPNormalDataCompo());
+            Text = Text.Replace("网络数据", TutorialActionBase.TMPNetworkDataCompo());
+            return Text;
+        }
+
         protected virtual void DisplayText(string text)
         {
             //Debug.Log(text);
-            LevelAsset.HintMaster.TutorialContent = text;
+            LevelAsset.HintMaster.TutorialContent = ProcessText(text);
         }
 
         /// <summary>

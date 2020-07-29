@@ -58,8 +58,7 @@ namespace ROOT
             LevelAsset.CycleEnabled = true;
 
             InitCursor(new Vector2Int(2, 3));
-            
-            //TutorialAction = new TutorialActionShop();
+            TutorialActionAsset = Resources.Load<TutorialActionAsset>("TutorialActionAsset/TutorialActionShop");
 
             ReadyToGo = true;
             InvokeGameStartedEvent();

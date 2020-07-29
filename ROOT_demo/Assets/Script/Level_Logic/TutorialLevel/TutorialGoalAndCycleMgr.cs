@@ -51,8 +51,8 @@ namespace ROOT
             LevelAsset.CurrencyEnabled = true;
 
             InitCursor(new Vector2Int(2, 3));
-            
-            //TutorialAction = new TutorialActionGoalAndCycle();
+
+            TutorialActionAsset = Resources.Load<TutorialActionAsset>("TutorialActionAsset/TutorialActionGoalAndCycle");
 
             ReadyToGo = true;
             InvokeGameStartedEvent();

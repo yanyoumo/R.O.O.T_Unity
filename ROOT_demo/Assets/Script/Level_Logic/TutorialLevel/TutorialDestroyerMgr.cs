@@ -68,7 +68,7 @@ namespace ROOT
             InitCursor(new Vector2Int(2, 3));
             InitDestoryer();
 
-            //TutorialAction = new TutorialActionDestroyer();
+            TutorialActionAsset = Resources.Load<TutorialActionAsset>("TutorialActionAsset/TutorialActionDestroyer");
 
             ReadyToGo = true;
             InvokeGameStartedEvent();

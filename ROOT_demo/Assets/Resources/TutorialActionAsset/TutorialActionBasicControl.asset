@@ -39,7 +39,7 @@ MonoBehaviour:
     Text: 
     Pos: {x: 2, y: 1}
     Core: 5
-    Sides: 00000000010000000100000001000000
+    Sides: 01000000010000000000000001000000
   - ActionIdx: 2
     ActionType: 0
     Text: "\u7136\u540E,\u8FD9\u4E2A\u662F\u4F60\u7684\u5149\u6807"
@@ -54,7 +54,7 @@ MonoBehaviour:
     Sides: 
   - ActionIdx: 3
     ActionType: 0
-    Text: "\u4F7F\u7528\u7A7A\u683C\u62D6\u52A8\u5355\u5143,\\n\u5DE6Shift\u65CB\u8F6C"
+    Text: "\u4F7F\u7528\u7A7A\u683C\u62D6\u52A8\u5355\u5143,<b>[\u5DE6Shift]</b>\u65CB\u8F6C"
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
@@ -97,6 +97,12 @@ MonoBehaviour:
   - ActionIdx: 7
     ActionType: 3
     Text: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  - ActionIdx: 7
+    ActionType: 0
+    Text: "\u4EE5\u4E0A,\u8FD9\u5C31\u662F\u8FD9\u4E2A\u6E38\u620F\u7684\u57FA\u672C\u64CD\u4F5C"
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
