@@ -34,7 +34,7 @@ namespace ROOT
         //public Text BackButtonText;
         public Button OtherButton;
         public Localize OtherButtonLocalize;
-        private Type nextLevelType;
+        private LevelType nextLevelType;
         //public Text OtherButtonText;
 
         void GameOverSceneLoaded(Scene scene,LoadSceneMode loadSceneMode)
@@ -47,17 +47,18 @@ namespace ROOT
 
         void UpdateUIContent()
         {
-            if (_lastGameAssets.LevelLogicType.BaseType == typeof(BaseTutorialMgr))
+            if (LevelMasterManager.IsTutorialLevel(_lastGameAssets.LevelType))
             {
-                try
+                OtherButton.interactable = false;//先关了，目前的数据结构不好弄这个。
+                /*try
                 {
-                    nextLevelType = LevelMasterManager.GetNextTutorialLevel(_lastGameAssets.LevelLogicType);
+                    nextLevelType = LevelMasterManager.GetNextTutorialLevel(_lastGameAssets.LevelType);
                 }
                 catch (ArgumentOutOfRangeException)
                 {
                     OtherButton.interactable = false;//没有下一关了。
-                    nextLevelType = null;
-                }
+                    nextLevelType = LevelType.NONE;
+                }*/
                 BackButton.onClick.AddListener(Back);
                 OtherButton.onClick.AddListener(NextTutorial);
                 OtherButtonLocalize.Term = ScriptTerms.NextTutorial;
@@ -101,13 +102,13 @@ namespace ROOT
 
         public void NextTutorial()
         {
-            LevelMasterManager.Instance.LoadNextTutorialLevelThenPlay(_lastGameAssets.LevelLogicType);
+            LevelMasterManager.Instance.LoadLevelThenPlay(LevelMasterManager.GetNextTutorialLevel(_lastGameAssets.LevelType));//这里不好整。
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
         }
 
         public void GameRestart()
         {
-            LevelMasterManager.Instance.LoadLevelThenPlay(_lastGameAssets.LevelLogicType, new ScoreSet(),new PerMoveData());
+            LevelMasterManager.Instance.LoadLevelThenPlay(_lastGameAssets.LevelType, new ScoreSet(),new PerMoveData());
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
         }
 

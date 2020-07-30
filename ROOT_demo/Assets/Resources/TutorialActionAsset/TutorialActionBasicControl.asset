@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TitleTerm: TutorialBasicControl
   Thumbnail: {fileID: 21300000, guid: f8294d4198f323b4cbd32bb90215b4fb, type: 3}
-  LevelType: 0
+  LevelType: 3
   Actions:
   - ActionIdx: 0
     ActionType: 3
@@ -54,7 +54,7 @@ MonoBehaviour:
     Sides: 
   - ActionIdx: 3
     ActionType: 0
-    Text: "\u4F7F\u7528\u7A7A\u683C\u62D6\u52A8\u5355\u5143,<b>[\u5DE6Shift]</b>\u65CB\u8F6C"
+    Text: "<b>[\u65B9\u5411\u952E]</b>\u79FB\u52A8,\u540C\u65F6\u6309\u4F4F<b>[\u7A7A\u683C]</b>\u62D6\u52A8\u5355\u5143,\\n<b>[\u5DE6Shift]</b>\u65CB\u8F6C"
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
@@ -81,13 +81,13 @@ MonoBehaviour:
     Text: 
     Pos: {x: -1, y: -1}
     Core: 4
-    Sides: 00000000010000000100000001000000
+    Sides: 01000000010000000000000001000000
   - ActionIdx: 6
     ActionType: 1
     Text: 
     Pos: {x: -1, y: -1}
     Core: 4
-    Sides: 00000000010000000100000001000000
+    Sides: 01000000000000000100000001000000
   - ActionIdx: 6
     ActionType: 1
     Text: 

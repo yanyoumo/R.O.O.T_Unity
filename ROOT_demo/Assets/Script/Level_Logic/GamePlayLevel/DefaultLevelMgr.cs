@@ -46,7 +46,8 @@ namespace ROOT
         /// 裁判同时要担任神使，神要通过这里影响世界。
         /// </summary>
         public BaseLevelMgr Owner;
-        public Type LevelLogicType;
+        //public Type LevelLogicType;
+        public LevelType LevelType;
         public ScoreSet StartingScoreSet;
         public PerMoveData StartingPerMoveData;
         //这些引用在Asset外面要设好，在WRD-LOGIC里面也要处理。
@@ -160,12 +161,14 @@ namespace ROOT
         public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC;//这个游戏的这两个参数是写死的
         public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL;//但是别的游戏的这个值多少是需要重写的。
 
+        public abstract LevelType GetLevelType { get; }
+
         protected virtual void UpdateLogicLevelReference()
         {
             LevelAsset.CursorTemplate = Resources.Load("Cursor/Prefab/Cursor", typeof(GameObject)) as GameObject;
             LevelAsset.GameBoard = FindObjectOfType<Board>();
             LevelAsset.Owner = this;
-            LevelAsset.LevelLogicType = this.GetType();
+            LevelAsset.LevelType = this.GetLevelType;
         }
 
         void Awake()
@@ -462,6 +465,8 @@ namespace ROOT
 
     public class DefaultLevelMgr : BaseLevelMgr //LEVEL-LOGIC/每一关都有一个这个类。
     {
+        public override LevelType GetLevelType => LevelType.PlayLevel;
+
         public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……

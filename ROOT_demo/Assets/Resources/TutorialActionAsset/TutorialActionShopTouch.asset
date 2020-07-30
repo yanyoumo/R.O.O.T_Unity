@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
-  m_Name: TutorialActionShop
+  m_Name: TutorialActionShopTouch
   m_EditorClassIdentifier: 
   TitleTerm: TutorialShop
   Thumbnail: {fileID: 21300000, guid: 1c53b8690023ede4cbb1fce9a88255ab, type: 3}
@@ -36,7 +36,7 @@ MonoBehaviour:
     Sides: 
   - ActionIdx: 2
     ActionType: 0
-    Text: "\u4F7F\u7528\u6570\u5B57\u952E\u8D2D\u4E70,\u5F53\u7136,\u9700\u8981\u6309\u7167\u4E0B\u9762\u4EF7\u683C\u652F\u4ED8\u91D1\u94B1~"
+    Text: "\u76F4\u63A5\u70B9\u51FB\u60F3\u8981\u7684\u5355\u4F4D\u5373\u53EF\u8D2D\u4E70,\u5F53\u7136,\u9700\u8981\u6309\u7167\u4E0B\u9762\u4EF7\u683C\u652F\u4ED8\u91D1\u94B1~"
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 

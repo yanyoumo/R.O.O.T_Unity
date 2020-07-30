@@ -28,6 +28,8 @@ namespace ROOT
             MeteoriteBomber obj= LevelAsset.WarningDestoryer as MeteoriteBomber;
             obj?.ForceSetDestoryer(nextIncome);
         }
+
+        public override LevelType GetLevelType => LevelType.TutorialActionDestroyer;
     }
 
     public class MeteoriteBomber: IWarningDestoryer

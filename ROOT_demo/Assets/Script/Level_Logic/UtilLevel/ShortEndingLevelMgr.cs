@@ -8,6 +8,8 @@ namespace ROOT
 {
     public class ShortEndingLevelMgr : BaseLevelMgr
     {
+        public override LevelType GetLevelType => LevelType.SimpleLevel;
+
         public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……

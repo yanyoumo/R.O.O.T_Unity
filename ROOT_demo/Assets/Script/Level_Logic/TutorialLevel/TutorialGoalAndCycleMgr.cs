@@ -29,6 +29,8 @@ namespace ROOT
             return false;
         }
 
+        public override LevelType GetLevelType => LevelType.TutorialActionGoalAndCycle;
+
         public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
@@ -51,8 +53,6 @@ namespace ROOT
             LevelAsset.CurrencyEnabled = true;
 
             InitCursor(new Vector2Int(2, 3));
-
-            TutorialActionAsset = Resources.Load<TutorialActionAsset>("TutorialActionAsset/TutorialActionGoalAndCycle");
 
             ReadyToGo = true;
             InvokeGameStartedEvent();

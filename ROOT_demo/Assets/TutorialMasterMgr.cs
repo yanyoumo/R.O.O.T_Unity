@@ -14,8 +14,9 @@ namespace ROOT
         private TextMeshProUGUI content;
         private bool Loading = false;
         public TutorialActionAssetLib TutorialActionAssetLib;
-        public TutorialActionAsset[] ActionAssetList => TutorialActionAssetLib.TutorialActionAssetList;
-        public int ActionAssetCount => TutorialActionAssetLib.TutorialActionAssetList.Length;
+        public TutorialActionAssetLib TouchTutorialActionAssetLib;
+        public TutorialActionAsset[] ActionAssetList => StartGameMgr.UseTouchScreen ? TouchTutorialActionAssetLib.TutorialActionAssetList : TutorialActionAssetLib.TutorialActionAssetList;
+        public int ActionAssetCount => StartGameMgr.UseTouchScreen ? TouchTutorialActionAssetLib.TutorialActionAssetList.Length:TutorialActionAssetLib.TutorialActionAssetList.Length;
 
         void Start()
         {
@@ -37,7 +38,7 @@ namespace ROOT
 
         IEnumerator DoLoading(int buttonId)
         {
-            LevelMasterManager.Instance.LoadLevelThenPlay(ActionAssetList[buttonId].LevelType);
+            LevelMasterManager.Instance.LoadLevelThenPlay(ActionAssetList[buttonId].LevelType,ActionAssetList[buttonId]);
             yield return 0;
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_TUTORIAL);
         }

@@ -28,6 +28,8 @@ namespace ROOT
             return false;
         }
 
+        public override LevelType GetLevelType => LevelType.TutorialActionBasicControl;
+
         public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
@@ -42,8 +44,6 @@ namespace ROOT
 
             LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.HintEnabled = true;
-            //TODO 这个加载最好还是修整一下。
-            TutorialActionAsset = Resources.Load<TutorialActionAsset>("TutorialActionAsset/TutorialActionBasicControl");
 
             ReadyToGo = true;
             InvokeGameStartedEvent();

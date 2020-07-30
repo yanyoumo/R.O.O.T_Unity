@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,8 +10,6 @@ namespace ROOT
         protected int ActionIndex { get; private set; } = -1;
         protected int LastActionCount { get; private set; } = 0;
         public TutorialActionAsset TutorialActionAsset;
-        //protected TutorialActionBase TutorialAction;
-        //private TutorialMainTextFrame _tutorialMainText;
         protected bool ShowText
         {
             set => LevelAsset.HintMaster.RequestedShowTutorialContent = value;
@@ -57,12 +54,16 @@ namespace ROOT
 
         private string ProcessText(string Text)
         {
+            Text = Text.Replace("\\n", "\n");
             Text = Text.Replace("单元", "<b>[单元]</b>");
             Text = Text.Replace("方形", "<b>[方形]</b>");
             Text = Text.Replace("圆形", "<b>[圆形]</b>");
             Text = Text.Replace("周期", "<b>[周期]</b>");
             Text = Text.Replace("一般数据", TutorialActionBase.TMPNormalDataCompo());
             Text = Text.Replace("网络数据", TutorialActionBase.TMPNetworkDataCompo());
+            Text = Text.Replace("收入/损失",
+                TutorialActionBase.TmpBracketAndBold(TutorialActionBase.TmpColorXml("收入", Color.green * 0.4f) + "/" +
+                                                     TutorialActionBase.TmpColorRedXml("损失")));
             return Text;
         }
 
