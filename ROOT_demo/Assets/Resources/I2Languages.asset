@@ -207,6 +207,38 @@ MonoBehaviour:
       - "\u6309\u4F4F\u8FD9\u91CC\u67E5\u770B\u64CD\u4F5C\u8BF4\u660E"
       Flags: 0000
       Languages_Touch: []
+    - Term: TouchHintExtend
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u70B9<b>[\u8FD9\u91CC]</b>\u7EE7\u7EED"
+      - "\u70B9<b>[\u8FD9\u91CC]</b>\u7EE7\u7EED"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TouchHintCollapsed
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u70B9<b>\u8FD9\u91CC</b>\u7EE7\u7EED"
+      - "\u70B9<b>\u8FD9\u91CC</b>\u7EE7\u7EED"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: KMHintExtend
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6309<b>[\u56DE\u8F66]</b>\u7EE7\u7EED"
+      - "\u6309<b>[\u56DE\u8F66]</b>\u7EE7\u7EED"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: KMHintCollapsed
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6309<b>\u56DE\u8F66</b>\u7EE7\u7EED"
+      - "\u6309<b>\u56DE\u8F66</b>\u7EE7\u7EED"
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 

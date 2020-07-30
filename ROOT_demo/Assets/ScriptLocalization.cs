@@ -15,11 +15,15 @@ namespace I2.Loc
 		public static string GameOver 		{ get{ return LocalizationManager.GetTranslation ("GameOver"); } }
 		public static string HForHint_KM 		{ get{ return LocalizationManager.GetTranslation ("HForHint_KM"); } }
 		public static string HForHint_Touch 		{ get{ return LocalizationManager.GetTranslation ("HForHint_Touch"); } }
+		public static string KMHintCollapsed 		{ get{ return LocalizationManager.GetTranslation ("KMHintCollapsed"); } }
+		public static string KMHintExtend 		{ get{ return LocalizationManager.GetTranslation ("KMHintExtend"); } }
 		public static string NextTutorial 		{ get{ return LocalizationManager.GetTranslation ("NextTutorial"); } }
 		public static string PlayLevel 		{ get{ return LocalizationManager.GetTranslation ("PlayLevel"); } }
 		public static string ReleaseToReturn_KM 		{ get{ return LocalizationManager.GetTranslation ("ReleaseToReturn_KM"); } }
 		public static string Restart 		{ get{ return LocalizationManager.GetTranslation ("Restart"); } }
 		public static string StartGame 		{ get{ return LocalizationManager.GetTranslation ("StartGame"); } }
+		public static string TouchHintCollapsed 		{ get{ return LocalizationManager.GetTranslation ("TouchHintCollapsed"); } }
+		public static string TouchHintExtend 		{ get{ return LocalizationManager.GetTranslation ("TouchHintExtend"); } }
 		public static string Tutorial 		{ get{ return LocalizationManager.GetTranslation ("Tutorial"); } }
 		public static string TutorialBasicControl 		{ get{ return LocalizationManager.GetTranslation ("TutorialBasicControl"); } }
 		public static string TutorialDestroyer 		{ get{ return LocalizationManager.GetTranslation ("TutorialDestroyer"); } }
@@ -42,11 +46,15 @@ namespace I2.Loc
 		public const string GameOver = "GameOver";
 		public const string HForHint_KM = "HForHint_KM";
 		public const string HForHint_Touch = "HForHint_Touch";
+		public const string KMHintCollapsed = "KMHintCollapsed";
+		public const string KMHintExtend = "KMHintExtend";
 		public const string NextTutorial = "NextTutorial";
 		public const string PlayLevel = "PlayLevel";
 		public const string ReleaseToReturn_KM = "ReleaseToReturn_KM";
 		public const string Restart = "Restart";
 		public const string StartGame = "StartGame";
+		public const string TouchHintCollapsed = "TouchHintCollapsed";
+		public const string TouchHintExtend = "TouchHintExtend";
 		public const string Tutorial = "Tutorial";
 		public const string TutorialBasicControl = "TutorialBasicControl";
 		public const string TutorialDestroyer = "TutorialDestroyer";

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using I2.Loc;
 using TMPro;
 using UnityEngine;
 
@@ -17,6 +18,8 @@ namespace ROOT
         public TextMeshPro ContentText;
         public TextMeshPro NextExtended;
         public TextMeshPro NextCollapsed;
+        public Localize NextCollapsedLLE;
+        public Localize NextExtendedLLE;
         public AnimationCurve Curve;
         private readonly float ShowTime = 0.1f;
         private float _showTimer = 0.1f;
@@ -85,6 +88,16 @@ namespace ROOT
             transform.position = currentPos;
             PosXNotShow = ZeroX - 4.21f;
             PosXShow = ZeroX + 4.71f;
+            if (StartGameMgr.UseTouchScreen)
+            {
+                NextCollapsedLLE.Term = ScriptTerms.TouchHintCollapsed;
+                NextExtendedLLE.Term = ScriptTerms.TouchHintExtend;
+            }
+            else
+            {
+                NextCollapsedLLE.Term = ScriptTerms.KMHintCollapsed;
+                NextExtendedLLE.Term = ScriptTerms.KMHintExtend;
+            }
         }
 
         IEnumerator Animate(bool shouldShow)
