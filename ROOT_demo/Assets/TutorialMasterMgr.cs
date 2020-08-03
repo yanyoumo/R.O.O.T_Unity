@@ -13,10 +13,9 @@ namespace ROOT
         TutorialQuadDataPack[] _dataS;
         private TextMeshProUGUI content;
         private bool Loading = false;
-        public TutorialActionAssetLib TutorialActionAssetLib;
-        public TutorialActionAssetLib TouchTutorialActionAssetLib;
-        public TutorialActionAsset[] ActionAssetList => StartGameMgr.UseTouchScreen ? TouchTutorialActionAssetLib.TutorialActionAssetList : TutorialActionAssetLib.TutorialActionAssetList;
-        public int ActionAssetCount => StartGameMgr.UseTouchScreen ? TouchTutorialActionAssetLib.TutorialActionAssetList.Length:TutorialActionAssetLib.TutorialActionAssetList.Length;
+
+        private TutorialActionAsset[] ActionAssetList => LevelLib.Instance.TutorialActionAssetList;
+        private int ActionAssetCount => LevelLib.Instance.TutorialActionAssetCount;
 
         void Start()
         {

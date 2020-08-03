@@ -35,6 +35,9 @@ namespace ROOT
             iPadPro4Gen,//2732x2048-1.33-4:3
         }*/
 
+        public TutorialActionAssetLib TutorialActionAssetLib;
+        public TutorialActionAssetLib TutorialTouchActionAssetLib;
+
         public SupportedScreenRatio PCSimulateDevice;
         public InputScheme EditorInputScheme;
 
@@ -72,139 +75,66 @@ namespace ROOT
             DetectedScreenRatio = SupportedScreenRatio.HD;
             DetectedInputScheme = InputScheme.KeyboardMouse;
 #elif UNITY_IOS
-            switch (UnityEngine.iOS.Device.generation)
             {
-                case DeviceGeneration.iPhone6:
-                    DetectedScreenRatio = SupportedScreenRatio.HD;
-                    DetectedInputScheme = InputScheme.TouchScreen;
-                    break;
-                case DeviceGeneration.iPhone7Plus:
-                    DetectedScreenRatio = SupportedScreenRatio.HD;
-                    DetectedInputScheme = InputScheme.TouchScreen;
-                    break;
-                case DeviceGeneration.iPhoneX:
-                case DeviceGeneration.iPhoneXR:
-                case DeviceGeneration.iPhone11Pro:
-                case DeviceGeneration.iPhoneXSMax:
-                    DetectedScreenRatio = SupportedScreenRatio.AppleHD;
-                    DetectedInputScheme = InputScheme.TouchScreen;
-                    break;
-                case DeviceGeneration.iPadAir2:
-                    DetectedScreenRatio = SupportedScreenRatio.XGA;
-                    DetectedInputScheme = InputScheme.TouchScreen;
-                    break;
-                case DeviceGeneration.iPadUnknown://iPadPro4Gen
-                    DetectedScreenRatio = SupportedScreenRatio.XGA;
-                    DetectedInputScheme = InputScheme.TouchScreen;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            #region NotSupportingdevice
-                    /*case DeviceGeneration.Unknown:
-                            break;
-                        case DeviceGeneration.iPhone:
-                            break;
-                        case DeviceGeneration.iPhone3G:
-                            break;
-                        case DeviceGeneration.iPhone3GS:
-                            break;
-                        case DeviceGeneration.iPodTouch1Gen:
-                            break;
-                        case DeviceGeneration.iPodTouch2Gen:
-                            break;
-                        case DeviceGeneration.iPodTouch3Gen:
-                            break;
-                        case DeviceGeneration.iPad1Gen:
-                            break;
-                        case DeviceGeneration.iPhone4:
-                            break;
-                        case DeviceGeneration.iPodTouch4Gen:
-                            break;
-                        case DeviceGeneration.iPad2Gen:
-                            break;
-                        case DeviceGeneration.iPhone4S:
-                            break;
-                        case DeviceGeneration.iPad3Gen:
-                            break;
-                        case DeviceGeneration.iPhone5:
-                            break;
-                        case DeviceGeneration.iPodTouch5Gen:
-                            break;
-                        case DeviceGeneration.iPadMini1Gen:
-                            break;
-                        case DeviceGeneration.iPad4Gen:
-                            break;
-                        case DeviceGeneration.iPhone5C:
-                            break;
-                        case DeviceGeneration.iPhone5S:
-                            break;
-                        case DeviceGeneration.iPadAir1:
-                            break;
-                        case DeviceGeneration.iPadMini2Gen:
-                            break;
-                        case DeviceGeneration.iPhone6:
-                            break;
-                        case DeviceGeneration.iPhone6Plus:
-                            break;
-                        case DeviceGeneration.iPadMini3Gen:
-                            break;
-                        case DeviceGeneration.iPhone6S:
-                            break;
-                        case DeviceGeneration.iPhone6SPlus:
-                            break;
-                        case DeviceGeneration.iPadPro1Gen:
-                            break;
-                        case DeviceGeneration.iPadMini4Gen:
-                            break;
-                        case DeviceGeneration.iPhoneSE1Gen:
-                            break;
-                        case DeviceGeneration.iPadPro10Inch1Gen:
-                            break;
-                        case DeviceGeneration.iPhone7:
-                            break;
-                        case DeviceGeneration.iPodTouch6Gen:
-                            break;
-                        case DeviceGeneration.iPad5Gen:
-                            break;
-                        case DeviceGeneration.iPadPro2Gen:
-                            break;
-                        case DeviceGeneration.iPadPro10Inch2Gen:
-                            break;
-                        case DeviceGeneration.iPhone8:
-                            break;
-                        case DeviceGeneration.iPhone8Plus:
-                            break;
-                        case DeviceGeneration.iPhoneXS:
-                            break;
-                        case DeviceGeneration.iPadPro11Inch:
-                            break;
-                        case DeviceGeneration.iPadPro3Gen:
-                            break;
-                        case DeviceGeneration.iPad6Gen:
-                            break;
-                        case DeviceGeneration.iPhone11:
-                            break;
-                        case DeviceGeneration.iPhone11ProMax:
-                            break;
-                        case DeviceGeneration.iPodTouch7Gen:
-                            break;
-                        case DeviceGeneration.iPad7Gen:
-                            break;
-                        case DeviceGeneration.iPhoneUnknown:
-                            break;
-                        case DeviceGeneration.iPadUnknown:
-                            break;
-                        case DeviceGeneration.iPodTouchUnknown:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();*/
-            #endregion
+                switch (UnityEngine.iOS.Device.generation)
+                {
+                    case DeviceGeneration.iPhone5S:
+                    case DeviceGeneration.iPhone6:
+                    case DeviceGeneration.iPhone6Plus:
+                    case DeviceGeneration.iPhone6S:
+                    case DeviceGeneration.iPhone6SPlus:
+                    case DeviceGeneration.iPhoneSE1Gen:
+                    case DeviceGeneration.iPhone7:
+                    case DeviceGeneration.iPhone7Plus:
+                    case DeviceGeneration.iPhone8:
+                    case DeviceGeneration.iPhone8Plus:
+                        DetectedScreenRatio = SupportedScreenRatio.HD;
+                        break;
+                    case DeviceGeneration.iPhoneX:
+                    case DeviceGeneration.iPhoneXS:
+                    case DeviceGeneration.iPhoneXSMax:
+                    case DeviceGeneration.iPhoneXR:
+                    case DeviceGeneration.iPhone11:
+                    case DeviceGeneration.iPhone11Pro:
+                    case DeviceGeneration.iPhone11ProMax:
+                        DetectedScreenRatio = SupportedScreenRatio.AppleHD;
+                        break;
+                    case DeviceGeneration.iPadAir1:
+                    case DeviceGeneration.iPadMini2Gen:
+                    case DeviceGeneration.iPadMini3Gen:
+                    case DeviceGeneration.iPadMini4Gen:
+                    case DeviceGeneration.iPadAir2:
+                    case DeviceGeneration.iPadPro1Gen:
+                    case DeviceGeneration.iPad5Gen:
+                    case DeviceGeneration.iPadPro2Gen:
+                    case DeviceGeneration.iPadPro10Inch1Gen:
+                    case DeviceGeneration.iPadPro10Inch2Gen:
+                    case DeviceGeneration.iPadPro11Inch:
+                    case DeviceGeneration.iPad6Gen:
+                    case DeviceGeneration.iPadPro3Gen:
+                    case DeviceGeneration.iPadAir3Gen:
+                    case DeviceGeneration.iPadMini5Gen:
+                    case DeviceGeneration.iPad7Gen:
+                    case DeviceGeneration.iPadUnknown:
+                        DetectedScreenRatio = SupportedScreenRatio.XGA;
+                        break;
+                    default:
+                        DetectedScreenRatio = SupportedScreenRatio.HD;
+                        break;
+                }
+
+                DetectedInputScheme = InputScheme.TouchScreen;
             }
 #else
             throw new ArgumentOutOfRangeException();
 #endif
             Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
             StartCoroutine(LoadLevelMasterSceneAndSetActive());
+
+            //LevelLib.Instance.LockedLibin();
+            LevelLib.Instance.TutorialActionAssetLib = UseTouchScreen ? TutorialTouchActionAssetLib : TutorialActionAssetLib;
+
+            LevelLib.Instance.LockedLibin();
         }
 
         public void GameStart()

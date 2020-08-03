@@ -48,6 +48,7 @@ namespace ROOT
         public BaseLevelMgr Owner;
         //public Type LevelLogicType;
         public LevelType LevelType;
+        public TutorialActionAsset ActionAsset;
         public ScoreSet StartingScoreSet;
         public PerMoveData StartingPerMoveData;
         //这些引用在Asset外面要设好，在WRD-LOGIC里面也要处理。
@@ -490,6 +491,7 @@ namespace ROOT
 
             LevelAsset.StartingScoreSet = scoreSet;
             LevelAsset.StartingPerMoveData = perMoveData;
+            LevelAsset.ActionAsset = null;
 
             InvokeGameStartedEvent();
         }

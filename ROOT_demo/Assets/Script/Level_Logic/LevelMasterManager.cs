@@ -38,8 +38,9 @@ namespace ROOT
             LoadLevelThenPlay(levelLogicType, new ScoreSet(), new PerMoveData(), actionAsset);
         }
 
-        public static LevelType GetNextTutorialLevel(LevelType levelLogicType)
+        /*public static LevelType GetNextTutorialLevel(LevelType levelLogicType)
         {
+            //TODO 这个当然是不行的。
             switch (levelLogicType)
             {
                 case LevelType.TutorialActionBasicControl:
@@ -53,7 +54,7 @@ namespace ROOT
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
+        }*/
 
         public void LoadLevelThenPlay(LevelType levelLogicType, ScoreSet nextScoreSet, PerMoveData nextPerMoveData, TutorialActionAsset actionAsset = null)
         {
@@ -128,6 +129,7 @@ namespace ROOT
             {
                 Debug.Assert(actionAsset!=null);
                 mgr.TutorialActionAsset = actionAsset;
+                mgr.LevelAsset.ActionAsset = actionAsset;
             }
             _lls = null;
             loadSceneAsync = SceneManager.LoadSceneAsync(_gameMgr.LEVEL_ART_SCENE_ID, LoadSceneMode.Additive);

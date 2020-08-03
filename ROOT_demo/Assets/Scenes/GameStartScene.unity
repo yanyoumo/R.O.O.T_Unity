@@ -839,7 +839,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 506343762}
   m_Template: {fileID: 1821892400}
   m_CaptionText: {fileID: 1531794774}
@@ -897,6 +897,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 506343758}
   m_CullTransparentMesh: 0
+--- !u!1 &832477804
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 832477805}
+  - component: {fileID: 832477806}
+  m_Layer: 0
+  m_Name: LevelLibObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &832477805
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832477804}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 22.478294, y: 10.687975, z: 102.61653}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &832477806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832477804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d96fb4d7af0f19b44b5a322675fd1f6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TutorialActionAssetLib: {fileID: 0}
 --- !u!1 &879229356
 GameObject:
   m_ObjectHideFlags: 0
@@ -2561,16 +2605,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
-        type: 3}
-      propertyPath: PCSimulateDevice
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
-        type: 3}
-      propertyPath: EditorInputScheme
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2835144725562628124, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2630,11 +2664,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: StartGameManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 2835144725562628127, guid: 49bc32739dd400b42bae1bad3768912c,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49bc32739dd400b42bae1bad3768912c, type: 3}
