@@ -1,0 +1,6 @@
+Build Version:59598
+Major Update:
+    1、支持了所有iOS 12以上设备。
+    2、锁定了iOS设备的屏幕方向。
+    3、移除了英文语言的支持。
+    4、恢复了Tutorial结束界面中“下一关”的按钮。
