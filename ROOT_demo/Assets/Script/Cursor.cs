@@ -16,6 +16,7 @@ namespace ROOT
 
         private bool ShowMesh
         {
+            get => GetComponentInChildren<MeshRenderer>().enabled;
             set => GetComponentInChildren<MeshRenderer>().enabled = value;
         }
 
@@ -46,6 +47,10 @@ namespace ROOT
 
         public void SetIndMesh()
         {
+            if (!ShowMesh)
+            {
+                ShowMesh = true;
+            }
             _meshFilter.mesh = IndicatorMesh;
         }
     }
