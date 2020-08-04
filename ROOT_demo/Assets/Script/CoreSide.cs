@@ -195,7 +195,7 @@ namespace ROOT
         }
     }
 
-    public partial class CurrencyIOCalculator : MonoBehaviour
+    public partial class BoardDataCollector : MonoBehaviour
     {
         private float perDriverIncome = 5.0f;
         private Dictionary<CoreType, float> costByCore;

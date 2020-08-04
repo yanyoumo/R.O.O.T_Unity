@@ -12,7 +12,7 @@ namespace ROOT
         public Func<Unit, RotationDirection, SideType, bool> ConnectionRequirement;
     }
 
-    public partial class CurrencyIOCalculator : MonoBehaviour
+    public partial class BoardDataCollector : MonoBehaviour
     {
         public Board m_Board;
 
@@ -241,7 +241,6 @@ namespace ROOT
                             Debug.Assert(false, "ERROR");
                             break;
                         }
-                        //TODO 现在CPU本身不能传递网络信号？
                     } while (tmp != farthestUnit.LastNetworkPos);
                 }
 

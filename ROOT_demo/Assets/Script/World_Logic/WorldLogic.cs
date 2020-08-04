@@ -420,7 +420,7 @@ namespace ROOT
             return newPos;
         }
 
-        private static void UpdateShopBuy(ShopMgr shopMgr,in ControllingPack ctrlPack, ref bool boughtOnce)
+        private static void UpdateShopBuy(ShopMgr shopMgr, in ControllingPack ctrlPack, ref bool boughtOnce)
         {
             if (!boughtOnce)
             {
@@ -508,14 +508,16 @@ namespace ROOT
             }
         }
 
-        internal static void UpdateCursor_Unit(GameAssets currentLevelAsset, in ControllingPack ctrlPack, out bool movedTile, out bool movedCursor)
+        internal static void UpdateCursor_Unit(GameAssets currentLevelAsset, in ControllingPack ctrlPack,
+            out bool movedTile, out bool movedCursor)
         {
             //这个还要能够处理enableCursor是false的情况。
             //相当于现在这个函数是Cursor和Unit混在一起的，可能还需要拆开。
             movedTile = false;
             movedCursor = false;
 
-            var validAction = currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos) && currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos);
+            var validAction = currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos) &&
+                              currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos);
             var extractedCommand = ctrlPack.CtrlCMD & (ControllingCommand.Drag | ControllingCommand.Move);
 
             if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Drag) && validAction)
@@ -535,6 +537,7 @@ namespace ROOT
                 currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
                 movedCursor = true;
             }
+
             if (currentLevelAsset.CursorEnabled && movedCursor)
             {
                 currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
@@ -543,7 +546,8 @@ namespace ROOT
             }
         }
 
-        internal static ControllingPack UpdateInputScheme(GameAssets currentLevelAsset, out bool movedTile, out bool movedCursor, ref bool boughtOnce)
+        internal static ControllingPack UpdateInputScheme(GameAssets currentLevelAsset, out bool movedTile,
+            out bool movedCursor, ref bool boughtOnce)
         {
             movedTile = false;
             movedCursor = false;
@@ -559,6 +563,7 @@ namespace ROOT
                 {
                     WorldController.GetCommand_KM(currentLevelAsset, out ctrlPack);
                 }
+
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
                 {
                     ctrlPack.SetFlag(ControllingCommand.NextButton);
@@ -568,18 +573,17 @@ namespace ROOT
             return ctrlPack;
         }
 
-        internal static void UpdateCurrency(GameAssets currentLevelAsset)
+        internal static void UpdateBoardData(GameAssets currentLevelAsset)
         {
             currentLevelAsset.DeltaCurrency = 0.0f;
-            currentLevelAsset.DeltaCurrency += currentLevelAsset.CurrencyIoCalculator.CalculateProcessorScore();
-            currentLevelAsset.DeltaCurrency += currentLevelAsset.CurrencyIoCalculator.CalculateServerScore();
-            currentLevelAsset.DeltaCurrency -= currentLevelAsset.CurrencyIoCalculator.CalculateCost();
+            currentLevelAsset.DeltaCurrency += currentLevelAsset.BoardDataCollector.CalculateProcessorScore();
+            currentLevelAsset.DeltaCurrency += currentLevelAsset.BoardDataCollector.CalculateServerScore();
+            currentLevelAsset.DeltaCurrency -= currentLevelAsset.BoardDataCollector.CalculateCost();
 
             if (currentLevelAsset.LCDCurrencyEnabled)
             {
                 currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
-                currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(),
-                    RowEnum.CurrentMoney);
+                currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(), RowEnum.CurrentMoney);
                 currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.DeltaCurrency, RowEnum.DeltaMoney);
             }
         }
@@ -612,46 +616,33 @@ namespace ROOT
             }
         }
 
-        public static void UpdateLogic(GameAssets currentLevelAsset,out ControllingPack ctrlPack, out bool movedTile, out bool movedCursor)
+        public static void UpdateLogic(GameAssets currentLevelAsset, out ControllingPack ctrlPack, out bool movedTile, out bool movedCursor)
         {
+            //其实这个流程问题不是特别大、主要是各种flag要整理
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = false;
             movedCursor = false;
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+
+            if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
+
+            ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset.BoughtOnce);
+
+            if (currentLevelAsset.InputEnabled)
             {
-                if (currentLevelAsset.DestroyerEnabled)
-                {
-                    UpdateDestoryer(currentLevelAsset);
-                }
+                if (currentLevelAsset.ShopEnabled) UpdateShopBuy(currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset.BoughtOnce);
 
-                ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset.BoughtOnce);
+                UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
 
-                if (currentLevelAsset.InputEnabled)
-                {
-                    if (currentLevelAsset.ShopEnabled)
-                    {
-                        UpdateShopBuy(currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset.BoughtOnce);
-                    }
-                    UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
-                    if (currentLevelAsset.RotateEnabled) //旋转的动画先没有吧。
-                    {
-                        UpdateRotate(currentLevelAsset, in ctrlPack);
-                    }
-                    currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
-                }
+                if (currentLevelAsset.RotateEnabled) UpdateRotate(currentLevelAsset, in ctrlPack);
 
-                movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
-
-                if (currentLevelAsset.CurrencyEnabled)
-                {
-                    UpdateCurrency(currentLevelAsset);
-                }
-
-                if (currentLevelAsset.CycleEnabled)
-                {
-                    UpdateCycle(currentLevelAsset, movedTile);
-                }
+                currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
             }
+
+            movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
+
+            if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
+            if (currentLevelAsset.CycleEnabled) UpdateCycle(currentLevelAsset, movedTile);
         }
     }
 }

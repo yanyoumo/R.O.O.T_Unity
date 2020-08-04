@@ -47,7 +47,7 @@ namespace ROOT
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
 
-        internal CurrencyIOCalculator CurrencyIoCalculator;
+        internal BoardDataCollector BoardDataCollector;
         internal GameStateMgr GameStateMgr;
         internal ShopMgr ShopMgr;
         internal IWarningDestoryer WarningDestoryer;
@@ -138,18 +138,30 @@ namespace ROOT
 
         //Lvl-Logic实际用的判断逻辑。
         public bool Playing { get; private set;  }
-        protected bool LogicFrameAnimeFrameToggle = true;
+        protected bool Animating = false;
         protected bool ReadyToGo = false;
         protected bool ReferenceOk = false;
         protected bool PendingCleanUp;
 
         protected float AnimationTimerOrigin = 0.0f;//都是秒
-        protected float AnimationDuration = 0.1f;//都是秒
+        protected readonly float AnimationDuration = 0.1f;//都是秒
 
         public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC;//这个游戏的这两个参数是写死的
         public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL;//但是别的游戏的这个值多少是需要重写的。
 
         //public abstract LevelType GetLevelType { get; }
+
+        private Cursor cursor => LevelAsset.Cursor;
+        private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
+        //private float animationLerper => animationTimer / AnimationDuration;
+        private float AnimationLerper
+        {
+            get
+            {
+                float res=animationTimer / AnimationDuration;
+                return Mathf.Min(res, 1.0f);
+            }
+        }
 
         protected virtual void UpdateLogicLevelReference()
         {
@@ -284,6 +296,64 @@ namespace ROOT
             return shouldCycle;
         }
 
+        IEnumerator Animate()
+        {
+            while (AnimationLerper < 1.0f)
+            {
+                if (LevelAsset.AnimationPendingObj.Count > 0)
+                {
+                    foreach (var moveableBase in LevelAsset.AnimationPendingObj)
+                    {
+                        if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
+                        {
+                            moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition,
+                                PosSetFlag.CurrentAndLerping);
+                        }
+                        else
+                        {
+                            moveableBase.LerpingBoardPosition = moveableBase.LerpBoardPos(AnimationLerper);
+                        }
+                    }
+
+                }
+
+                //加上允许手动步进后，这个逻辑就应该独立出来了。
+                if (LevelAsset.MovedTileAni)
+                {
+                    if (LevelAsset.ShopMgr)
+                    {
+                        LevelAsset.ShopMgr.ShopUpdateAnimation(AnimationLerper);
+                    }
+                }
+
+                LevelAsset.GameBoard.UpdateBoardAnimation();
+                cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+                yield return 0;
+            }
+
+            foreach (var moveableBase in LevelAsset.AnimationPendingObj)
+            {
+                //完成后的pingpong
+                moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
+            }
+
+            if (LevelAsset.MovedTileAni)
+            {
+                if (LevelAsset.GameBoard != null)
+                {
+                    LevelAsset.GameBoard.UpdateBoardPostAnimation();
+                }
+
+                if (LevelAsset.ShopMgr)
+                {
+                    LevelAsset.ShopMgr.ShopPostAnimationUpdate();
+                }
+            }
+
+            Animating = false;
+            yield break;
+        }
+
         //原则上这个不让被重载。
         protected virtual void Update()
         {
@@ -300,13 +370,8 @@ namespace ROOT
             System.Diagnostics.Debug.Assert(LevelAsset.GameBoard != null, nameof(LevelAsset.GameBoard) + " != null");
             var pressedAny = Input.anyKeyDown;
             _ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
-            if (LogicFrameAnimeFrameToggle)
+            if (!Animating)
             {
-                //更新Lvl信息
-                //更新物理
-                //检查Asset。
-                
-                AnimationTimerOrigin = Time.timeSinceLevelLoad;
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
                 WorldLogic.UpdateLogic(LevelAsset,out _ctrlPack, out var movedTile, out var movedCursor);
@@ -316,73 +381,14 @@ namespace ROOT
                     UpdateGameOverStatus(LevelAsset);
                 }
                 bool shouldCycle = ShouldCycle(in _ctrlPack, in pressedAny, in movedTile, in movedCursor);
-                LogicFrameAnimeFrameToggle = !shouldCycle;
-                if (!LogicFrameAnimeFrameToggle)
+                Animating = shouldCycle;
+                if (Animating)
                 {
+                    AnimationTimerOrigin = Time.timeSinceLevelLoad;
                     LevelAsset.MovedTileAni = movedTile;
                     LevelAsset.MovedCursorAni = movedCursor;
+                    StartCoroutine(Animate());//这里完成后会把Animating设回来。
                 }
-            }
-            else
-            {
-                var cursor = LevelAsset.Cursor;
-
-                var animationTimer = Time.timeSinceLevelLoad - AnimationTimerOrigin;
-                var animationLerper = animationTimer / AnimationDuration;
-                if (LevelAsset.AnimationPendingObj.Count > 0)
-                {
-                    animationLerper = Mathf.Min(animationLerper, 1.0f);
-                    foreach (var moveableBase in LevelAsset.AnimationPendingObj)
-                    {
-                        //
-                        if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
-                        {
-                            moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.CurrentAndLerping);
-                        }
-                        else
-                        {
-                            moveableBase.LerpingBoardPosition = moveableBase.LerpBoardPos(animationLerper);
-                        }
-                    }
-
-                }
-
-                //加上允许手动步进后，这个逻辑就应该独立出来了。
-                if (LevelAsset.MovedTileAni)
-                {
-                    if (LevelAsset.ShopMgr)
-                    {
-                        LevelAsset.ShopMgr.ShopUpdateAnimation(animationLerper);
-                    }
-                }
-
-                if (animationLerper >= 1.0f)
-                {
-                    //AnimationEnding
-                    foreach (var moveableBase in LevelAsset.AnimationPendingObj)
-                    {
-                        //完成后的pingpong
-                        moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
-                    }
-
-                    if (LevelAsset.MovedTileAni)
-                    {
-                        if (LevelAsset.GameBoard != null)
-                        {
-                            LevelAsset.GameBoard.UpdateBoardPostAnimation();
-                        }
-
-                        if (LevelAsset.ShopMgr)
-                        {
-                            LevelAsset.ShopMgr.ShopPostAnimationUpdate();
-                        }
-                    }
-
-                    LogicFrameAnimeFrameToggle = true;
-                }
-
-                LevelAsset.GameBoard.UpdateBoardAnimation();
-                cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
             }
             if (LevelAsset.HintEnabled)
             {
@@ -438,8 +444,8 @@ namespace ROOT
         }
         protected void InitCurrencyIoMgr()
         {
-            LevelAsset.CurrencyIoCalculator = gameObject.AddComponent<CurrencyIOCalculator>();
-            LevelAsset.CurrencyIoCalculator.m_Board = LevelAsset.GameBoard;
+            LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
+            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
         }
         protected void InitCursor(Vector2Int pos)
         {
