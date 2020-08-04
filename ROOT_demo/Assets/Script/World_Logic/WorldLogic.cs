@@ -18,6 +18,7 @@ namespace ROOT
         PlayHint = 0b_00010000,
         SignalHint = 0b_00100000,
         NextButton = 0b_01000000,
+        CycleNext = 0b_10000000,
     }
 
     public struct ControllingPack
@@ -100,6 +101,9 @@ namespace ROOT
         private static bool swiping = false;
         private static Vector2 _moveVal = Vector2.zero;
         private static Unit _touchingUnit = null;
+        private static readonly float _holdThreadhold = 0.5f;
+        private static float _holdTimer = 0.0f;
+        private static bool _holdAntiSpam = false;
 
         private static GameObject GetTouchedOnGameObject(in Touch touch)
         {
@@ -245,6 +249,7 @@ namespace ROOT
                                         ctrlPack.SetFlag(ControllingCommand.Buy);
                                         ctrlPack.ShopID = tmpTouchingUnit.ShopID;
                                     }
+
                                     if (touchedGo != null)
                                     {
                                         if (touchedGo.CompareTag("HelpScreen"))
@@ -257,6 +262,36 @@ namespace ROOT
                                             {
                                                 ctrlPack.SetFlag(ControllingCommand.NextButton);
                                             }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        switch (touch.phase)
+                                        {
+                                            case TouchPhase.Began:
+                                                _holdTimer = 0.0f;
+                                                break;
+                                            case TouchPhase.Stationary:
+                                            {
+                                                _holdTimer += Time.deltaTime;
+                                                if (!_holdAntiSpam)
+                                                {
+                                                    if (_holdTimer >= _holdThreadhold)
+                                                    {
+                                                            //Debug.Log("Hold Detected");
+                                                            ctrlPack.SetFlag(ControllingCommand.CycleNext);
+                                                            _holdAntiSpam = true;
+                                                    }
+                                                }
+
+                                                break;
+                                            }
+                                            case TouchPhase.Canceled:
+                                            case TouchPhase.Moved:
+                                            case TouchPhase.Ended:
+                                                _holdTimer = 0.0f;
+                                                _holdAntiSpam = false;
+                                                break;
                                         }
                                     }
                                 }
@@ -332,6 +367,11 @@ namespace ROOT
             if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL))
             {
                 ctrlPack.SetFlag(ControllingCommand.PlayHint);
+            }
+
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CYCLENEXT))
+            {
+                ctrlPack.SetFlag(ControllingCommand.CycleNext);
             }
 
             bool anyBuy = false;
@@ -555,8 +595,7 @@ namespace ROOT
 
             if (movedTile)
             {
-                currentLevelAsset.GameStateMgr.PerMove(new ScoreSet(),
-                    new PerMoveData(currentLevelAsset.DeltaCurrency, 1));
+                currentLevelAsset.GameStateMgr.PerMove(new ScoreSet(), new PerMoveData(currentLevelAsset.DeltaCurrency, 1));
                 if (currentLevelAsset.BoughtOnce)
                 {
                     currentLevelAsset.BoughtOnce = false;
@@ -601,6 +640,8 @@ namespace ROOT
                     }
                     currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
                 }
+
+                movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
 
                 if (currentLevelAsset.CurrencyEnabled)
                 {

@@ -20,6 +20,7 @@ namespace ROOT
         public static readonly string INPUT_BUTTON_NAME_HINTHDD = "HintHDD";
         public static readonly string INPUT_BUTTON_NAME_HINTNET = "HintNetwork";
         public static readonly string INPUT_BUTTON_NAME_HINTCTRL = "HintControl";
+        public static readonly string INPUT_BUTTON_NAME_CYCLENEXT = "CycleNext";
 
         public static readonly string INPUT_BUTTON_NAME_SHOPBUY1 = "ShopBuy1";
         public static readonly string INPUT_BUTTON_NAME_SHOPBUY2 = "ShopBuy2";

@@ -166,7 +166,7 @@ namespace ROOT
 
         protected virtual void UpdateLogicLevelReference()
         {
-            LevelAsset.CursorTemplate = Resources.Load("Cursor/Prefab/Cursor", typeof(GameObject)) as GameObject;
+            LevelAsset.CursorTemplate = Resources.Load<GameObject>("Cursor/Prefab/Cursor");
             LevelAsset.GameBoard = FindObjectOfType<Board>();
             LevelAsset.Owner = this;
             LevelAsset.LevelType = this.GetLevelType;
@@ -348,6 +348,23 @@ namespace ROOT
             cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
             yield return null;
         }
+
+        private bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile,
+            in bool movedCursor)
+        {
+            bool shouldCycle = false;
+            if (StartGameMgr.UseTouchScreen)
+            {
+                shouldCycle = movedTile|ctrlPack.HasFlag(ControllingCommand.CycleNext);
+            }
+            else
+            {
+                shouldCycle = (pressedAny & (movedTile | movedCursor)) | ctrlPack.HasFlag(ControllingCommand.CycleNext);
+            }
+
+            return shouldCycle;
+        }
+
         //原则上这个不让被重载。
         protected virtual void Update()
         {
@@ -382,14 +399,8 @@ namespace ROOT
                 {
                     UpdateGameOverStatus(LevelAsset);
                 }
-                if (StartGameMgr.UseTouchScreen)
-                {
-                    LogicFrameAnimeFrameToggle = !movedTile;
-                }
-                else
-                {
-                    LogicFrameAnimeFrameToggle = !(pressedAny & (movedTile | movedCursor));
-                }
+                bool shouldCycle = ShouldCycle(in _ctrlPack, in pressedAny, in movedTile, in movedCursor);
+                LogicFrameAnimeFrameToggle = !shouldCycle;
                 if (!LogicFrameAnimeFrameToggle)
                 {
                     LevelAsset.MovedTileAni = movedTile;
@@ -419,12 +430,14 @@ namespace ROOT
                         }
                     }
 
-                    if (LevelAsset.MovedTileAni)
+                }
+
+                //加上允许手动步进后，这个逻辑就应该独立出来了。
+                if (LevelAsset.MovedTileAni)
+                {
+                    if (LevelAsset.ShopMgr)
                     {
-                        if (LevelAsset.ShopMgr)
-                        {
-                            LevelAsset.ShopMgr.ShopUpdateAnimation(animationLerper);
-                        }
+                        LevelAsset.ShopMgr.ShopUpdateAnimation(animationLerper);
                     }
                 }
 
