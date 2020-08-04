@@ -15,20 +15,14 @@ namespace ROOT
         public GameObject UnitTemplate; //TODO 应该要改成AssetLoad那种
 
         public Board GameBoard;
-        /*
-         *D C
-         *A B
-         */
         public GameStateMgr CurrentGameStateMgr;
 
         private GameObject[] _items;
         private float[] _prices;
 
         private Vector3[] currentPosS;
-        //private Vector3[] lerpingingPosS;
         private Vector3[] nextPosS;
 
-        //public Text[] ItemPriceTexts;
         public TextMeshPro[] ItemPriceTexts_TMP;
 
         private readonly Vector3 _posA = new Vector3(2.273f, 0.718f, -2.801f);

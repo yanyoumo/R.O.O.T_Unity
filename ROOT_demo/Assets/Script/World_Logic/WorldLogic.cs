@@ -508,8 +508,7 @@ namespace ROOT
             }
         }
 
-        internal static void UpdateCursor_Unit(GameAssets currentLevelAsset, in ControllingPack ctrlPack,
-            out bool movedTile, out bool movedCursor)
+        internal static void UpdateCursor_Unit(GameAssets currentLevelAsset, in ControllingPack ctrlPack, out bool movedTile, out bool movedCursor)
         {
             //这个还要能够处理enableCursor是false的情况。
             //相当于现在这个函数是Cursor和Unit混在一起的，可能还需要拆开。

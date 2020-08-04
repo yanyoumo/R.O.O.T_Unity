@@ -6,9 +6,9 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    public class ShortEndingLevelMgr : BaseLevelMgr
+    public class ShortEndingLevelLogic : LevelLogic
     {
-        public override LevelType GetLevelType => LevelType.SimpleLevel;
+        //public override LevelType GetLevelType => LevelType.SimpleLevel;
 
         public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
         {
@@ -32,7 +32,6 @@ namespace ROOT
             LevelAsset.StartingPerMoveData = perMoveData;
 
             ReadyToGo = true;
-            InvokeGameStartedEvent();
         }
 
         protected void InitCursor(Vector2Int pos)

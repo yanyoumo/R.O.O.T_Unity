@@ -940,7 +940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d96fb4d7af0f19b44b5a322675fd1f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TutorialActionAssetLib: {fileID: 0}
+  LevelActionAssetLib: {fileID: 0}
 --- !u!1 &879229356
 GameObject:
   m_ObjectHideFlags: 0
@@ -2607,9 +2607,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}
-      propertyPath: EditorInputScheme
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: LevelTouchActionAssetLib
+      value: 
+      objectReference: {fileID: 11400000, guid: 1c40bbc2eb0145e4897f0dee37cd186e,
+        type: 2}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: LevelActionAssetLib
+      value: 
+      objectReference: {fileID: 11400000, guid: 403dd5900f3f3cf4c84f16bb73547a85,
+        type: 2}
     - target: {fileID: 2835144725562628124, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}
       propertyPath: m_LocalPosition.x

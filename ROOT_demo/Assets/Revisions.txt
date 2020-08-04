@@ -19,6 +19,10 @@ Major Update:
     更新：
     修复：
 	TODO:
+		1、游戏LevelLogic的重新整理。
+		2、ActionAsset的Object功能的整理。
+	想TutorialManager目前的所有对逻辑的微调是不是需要整合起来。
+
 		
 想了这么半天，终于想明白现在ROOT卡在哪了。首先我先大言不惭地说一句，这款游戏多少还是做到了【上手易、深度够】这一特点，要不然也不会有那位老哥。
 但是根据“解决问题”学说，此时分析Root的问题其实就很明显了。目前的Gameplay是一个过关的“工具”。但是现在这个“世界”并没有足够的问题来解决。
@@ -39,3 +43,14 @@ Major Update:
 	将所有端口的数据完全量化，例如：有XXXX个单位的一般数据、XXXX个单位的网络数据；等等
 	然后再棋盘中，设计一些特定（可以是固定的）的单元，上面有一些特定的端口。其中需要一些特定的数据。
 	其中的要求就是某个接口要接收某些特定的数据，并且要持续一定量的时间。
+
+首先需要关卡框架的重建、但是目前来看，整个框架的确不需要大改(顶多改改名)。
+ActionAsset里面存储的LevelType完全去掉。LevelLogic和其派生类都不需要移除，只不过每个派生类需要挂在一个Prefab上面。
+ActionAsset里面存储对应GameObject。
+
+现在的Level系统的框架是：
+每个Level都需要一个独立ActionAsset。
+这个ActionAsset里面储存这个Level独立的数据+此Level的LevelLogic
+	*注1，此LevelLogic作为一个有对应Mono的Prefab成为引用
+	*注2，类似的关卡可以共用一套LevelLogic，例如某一Tutorial的KM和Touch版
+所有的Level的Asset将作为序列储存为AssetLib进行管理。

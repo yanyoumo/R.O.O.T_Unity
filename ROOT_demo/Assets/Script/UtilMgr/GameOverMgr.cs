@@ -47,7 +47,7 @@ namespace ROOT
 
         void UpdateUIContent()
         {
-            if (LevelMasterManager.IsTutorialLevel(_lastGameAssets.LevelType))
+            if (_lastGameAssets.Owner.IsTutorialLevel)
             {
                 if (LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset) == null)
                 {
@@ -63,6 +63,7 @@ namespace ROOT
             else
             {
                 BackButton.onClick.AddListener(Back);
+                OtherButton.interactable = false;//TODO 先关了
                 OtherButton.onClick.AddListener(GameRestart);
                 OtherButtonLocalize.Term = ScriptTerms.Restart;
                 EndingTitleLocalize.Term = ScriptTerms.GameOver;
@@ -96,14 +97,15 @@ namespace ROOT
 
         public void NextTutorial()
         {
-            TutorialActionAsset nextTutorialActionAsset = LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset);
-            LevelMasterManager.Instance.LoadLevelThenPlay(nextTutorialActionAsset.LevelType, nextTutorialActionAsset);//这里不好整。
+            LevelActionAsset nextLevelActionAsset = LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset);
+            //LevelMasterManager.Instance.LoadLevelThenPlay(nextLevelActionAsset.LevelType, nextLevelActionAsset);//这里不好整。
+            LevelMasterManager.Instance.LoadLevelThenPlay(nextLevelActionAsset.LevelLogic, nextLevelActionAsset);//这里不好整。
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
         }
 
         public void GameRestart()
         {
-            LevelMasterManager.Instance.LoadLevelThenPlay(_lastGameAssets.LevelType, new ScoreSet(),new PerMoveData());
+            //LevelMasterManager.Instance.LoadLevelThenPlay(_lastGameAssets.LevelType, new ScoreSet(),new PerMoveData());
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
         }
 

@@ -13,10 +13,18 @@ namespace ROOT
             Destroy(transform.gameObject);
         }
 
-        public BaseLevelMgr SpawnLevelLogic<T>() where T : BaseLevelMgr
+        public LevelLogic SpawnLevelLogic<T>() where T : LevelLogic
         {
             var o = new GameObject("LevelLogic");
             var gameMgr = o.AddComponent<T>(); //加哪个Level就是玩哪关。
+            StartCoroutine(KillNextFrame());
+            return gameMgr;
+        }
+
+        public LevelLogic SpawnLevelLogic(GameObject levelLogicPrefab)
+        {
+            var go=Instantiate(levelLogicPrefab);
+            var gameMgr = go.GetComponentInChildren<LevelLogic>();
             StartCoroutine(KillNextFrame());
             return gameMgr;
         }

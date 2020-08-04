@@ -21,7 +21,7 @@ namespace ROOT
         void Step();
     }
 
-    public partial class TutorialDestroyerMgr : BaseTutorialMgr
+    public partial class TutorialDestroyerLogic : TutorialLogic
     {
         private void ForceSetWarningDestoryer(Vector2Int nextIncome)
         {
@@ -29,7 +29,7 @@ namespace ROOT
             obj?.ForceSetDestoryer(nextIncome);
         }
 
-        public override LevelType GetLevelType => LevelType.TutorialActionDestroyer;
+        //public override LevelType GetLevelType => LevelType.TutorialActionDestroyer;
     }
 
     public class MeteoriteBomber: IWarningDestoryer

@@ -35,8 +35,10 @@ namespace ROOT
             iPadPro4Gen,//2732x2048-1.33-4:3
         }*/
 
-        public TutorialActionAssetLib TutorialActionAssetLib;
-        public TutorialActionAssetLib TutorialTouchActionAssetLib;
+        public LevelActionAssetLib LevelActionAssetLib;
+        public LevelActionAssetLib LevelTouchActionAssetLib;
+        public LevelActionAssetLib ClassicGameActionAssetLib;
+        public LevelActionAssetLib CareerGameActionAssetLib;
 
         public SupportedScreenRatio PCSimulateDevice;
         public InputScheme EditorInputScheme;
@@ -131,15 +133,13 @@ namespace ROOT
             Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
             StartCoroutine(LoadLevelMasterSceneAndSetActive());
 
-            //LevelLib.Instance.LockedLibin();
-            LevelLib.Instance.TutorialActionAssetLib = UseTouchScreen ? TutorialTouchActionAssetLib : TutorialActionAssetLib;
-
-            LevelLib.Instance.LockedLibin();
+            LevelLib.Instance.LevelActionAssetLib = UseTouchScreen ? LevelTouchActionAssetLib : LevelActionAssetLib;
+            LevelLib.Instance.LockInLib();
         }
 
         public void GameStart()
         {
-            LevelMasterManager.Instance.LoadLevelThenPlay<DefaultLevelMgr>();
+            LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib.TutorialActionAssetList[0].LevelLogic, ClassicGameActionAssetLib.TutorialActionAssetList[0]);
             SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
         }
 

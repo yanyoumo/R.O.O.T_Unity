@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    public abstract class BaseTutorialMgr : BaseLevelMgr
+    public abstract class TutorialLogic : LevelLogic
     {
         protected int ActionIndex { get; private set; } = -1;
         protected int LastActionCount { get; private set; } = 0;
-        public TutorialActionAsset TutorialActionAsset;
+        public LevelActionAsset LevelActionAsset;
         protected bool ShowText
         {
             set => LevelAsset.HintMaster.RequestedShowTutorialContent = value;
@@ -102,15 +102,15 @@ namespace ROOT
         }
         protected void DealStepMgr()
         {
-            int actionLength = TutorialActionAsset.Actions.Length;
+            int actionLength = LevelActionAsset.Actions.Length;
             for (int i = LastActionCount; i < actionLength; i++)
             {
-                if (TutorialActionAsset.Actions[i].ActionIdx > ActionIndex)
+                if (LevelActionAsset.Actions[i].ActionIdx > ActionIndex)
                 {
                     LastActionCount = i;
                     break;
                 }
-                DealStep(TutorialActionAsset.Actions[i]);
+                DealStep(LevelActionAsset.Actions[i]);
             }
         }
 
