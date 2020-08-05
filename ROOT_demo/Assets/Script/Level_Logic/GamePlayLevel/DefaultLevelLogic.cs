@@ -300,6 +300,7 @@ namespace ROOT
         {
             while (AnimationLerper < 1.0f)
             {
+                yield return 0;
                 if (LevelAsset.AnimationPendingObj.Count > 0)
                 {
                     foreach (var moveableBase in LevelAsset.AnimationPendingObj)
@@ -328,7 +329,6 @@ namespace ROOT
 
                 LevelAsset.GameBoard.UpdateBoardAnimation();
                 cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
-                yield return 0;
             }
 
             foreach (var moveableBase in LevelAsset.AnimationPendingObj)

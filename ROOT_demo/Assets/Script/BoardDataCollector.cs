@@ -14,6 +14,9 @@ namespace ROOT
 
     public partial class BoardDataCollector : MonoBehaviour
     {
+        public static int MaxNormalDepth;
+        public static int MaxNetworkDepth;
+
         public Board m_Board;
 
         public void Awake()
@@ -21,7 +24,7 @@ namespace ROOT
             InitIncomeCost();
         }
 
-        private float CalculateProcessorScoreSingleDir(UnitBase unit, Vector2Int hostKey, RotationDirection direction)
+        private float CalculateProcessorScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
         {
             var score = 0.0f;
             var side = unit.GetWorldSpaceUnitSide(direction);
@@ -33,12 +36,11 @@ namespace ROOT
                     var nextGo = m_Board.FindUnitUnderBoardPos(nextKey);
                     Debug.Assert(nextGo != null);
                     var nextUnit = nextGo.GetComponentInChildren<Unit>();
-                    var otherSide =
-                        nextUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(direction));
+                    var otherSide = nextUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(direction));
 
                     if (otherSide == SideType.Connection)
                     {
-                        score = CalculateProcessorScoreCore(nextKey);
+                        score = CalculateProcessorScoreCore(nextKey, Utils.GetInvertDirection(direction), depth+1);
                     }
                 }
             }
@@ -46,7 +48,7 @@ namespace ROOT
             return score;
         }
 
-        private float CalculateProcessorScoreCore(Vector2Int hostKey)
+        private float CalculateProcessorScoreCore(Vector2Int hostKey,RotationDirection dir,int depth)
         {
             var score = 0.0f;
             m_Board.Units.TryGetValue(hostKey, out var currentUnit);
@@ -61,12 +63,16 @@ namespace ROOT
                         unit.InHddGrid = true;
                     }
 
+                    unit.InHddSignalGrid = true;
                     unit.Visited = true;
 
-                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.North);
-                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.East);
-                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.South);
-                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.West);
+                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.North, depth);
+                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.East, depth);
+                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.South, depth);
+                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.West, depth);
+
+                    unit.SignalFromDir = dir;
+                    unit.HardDiskVal = (int) score;
                 }
             }
             else
@@ -87,9 +93,11 @@ namespace ROOT
                 var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
                 unit.Visited = false;
                 unit.InHddGrid = false;
+                unit.InHddSignalGrid = false;
                 if (unit.UnitCore == CoreType.Processor)
                 {
                     unit.InHddGrid = true;
+                    unit.InHddSignalGrid = true;
                     processorKeys.Add(keyValuePair.Key);
                     //现在是设计为任何接续到任何一个CPU上的硬盘都算分。但是只能算一次，就是一个集群中有两个CPU也只能算一次分。
                 }
@@ -108,15 +116,17 @@ namespace ROOT
                     var unit = go.GetComponentInChildren<Unit>();
                     if (!unit.Visited)
                     {
-                        driverCount += CalculateProcessorScoreCore(processorKey);
+                        //CPU的这个方位用不着。
+                        driverCount += CalculateProcessorScoreCore(processorKey,RotationDirection.North,0);
                     }
                 }
 
+                MaxNormalDepth = (int)driverCount;
                 return driverCount * GetPerDriverIncome();
             }
         }
 
-        private void CalculateServerScoreSingleDir(UnitBase unit, Vector2Int hostKey, RotationDirection direction,int depth)
+        private void CalculateServerScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction,int depth)
         {
             var side = unit.GetWorldSpaceUnitSide(direction);
             if (side == SideType.Connection)
@@ -144,18 +154,18 @@ namespace ROOT
             if (currentUnit != null)
             {
                 var unit = currentUnit.GetComponentInChildren<Unit>();
-                if (unit.IntA > depth || unit.IntA == -1)
+                if (unit.ServerDepth > depth || unit.ServerDepth == -1)
                 {
                     unit.Visited = true;
                     unit.LastNetworkPos = srcPos;
                     if (unit.UnitCore == CoreType.NetworkCable)
                     {
                         depth++;
-                        unit.IntA = depth;
+                        unit.ServerDepth = depth;
                     }
                     else
                     {
-                        unit.IntA = depth;
+                        unit.ServerDepth = depth;
                     }
 
                     CalculateServerScoreSingleDir(unit, hostKey, RotationDirection.North, depth);
@@ -181,7 +191,7 @@ namespace ROOT
                 var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
                 unit.Visited = false;
                 unit.InServerGrid = false;
-                unit.IntA = -1;
+                unit.ServerDepth = -1;
                 if (unit.UnitCore == CoreType.Server)
                 {
                     serverKeys.Add(keyValuePair.Key); //现在处理了，取其中一个，是对于任意一个Server中必要最长的。
@@ -198,7 +208,7 @@ namespace ROOT
                 foreach (var key in serverKeys)
                 {
                     m_Board.Units.TryGetValue(key, out var currentServerUnit);
-                    currentServerUnit.GetComponentInChildren<Unit>().IntA = -1;
+                    currentServerUnit.GetComponentInChildren<Unit>().ServerDepth = -1;
 
                     CalculateServerScoreCore(key, 0, key); //这是在服务器本身上面调的，没有Srckey，或者说就是它本身。
                 }
@@ -210,13 +220,13 @@ namespace ROOT
                     //讲道理，如果两个Server被串在一起，就是应该只有半个的距离：最远Unit应该是任何一个Server中必要最长的。
                     var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
                     //这个max被顶起来了下不去了，之前没有考虑另一个Server会给这个数据降下来的可能。
-                    if (unit.IntA > maxLength)
+                    if (unit.ServerDepth > maxLength)
                     {
-                        maxLength = unit.IntA;
+                        maxLength = unit.ServerDepth;
                         farthestUnitPos = keyValuePair.Key;
                     }
 
-                    //unit.IntA = -1;？？为什么？
+                    //unit.ServerDepth = -1;？？为什么？
                 }
 
                 int maxCount = 1000;
@@ -253,6 +263,7 @@ namespace ROOT
                     }
                 }
 
+                MaxNetworkDepth = (int)maxLength;
                 return GetServerIncomeByLength((int) maxLength);
             }
         }
