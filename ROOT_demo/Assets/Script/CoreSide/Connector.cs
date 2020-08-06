@@ -11,17 +11,7 @@ namespace ROOT
 
         public bool UseScrVersion
         {
-            set
-            {
-                if (value)
-                {
-                    StubMesh.mesh = ScrStub;
-                }
-                else
-                {
-                    StubMesh.mesh = DestStub;
-                }
-            }
+            set => StubMesh.mesh = value ? ScrStub : DestStub;
         }
 
         private bool _hided;

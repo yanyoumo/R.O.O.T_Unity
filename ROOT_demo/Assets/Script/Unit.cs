@@ -54,7 +54,9 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
-        public int ShopID { get; internal set; } = -1;
+        public bool StationUnit = false;
+        public Dictionary<RotationDirection, Tuple<int, int>> StationRequirement;
+        public int ShopID { get; internal set; } = -1;  
         protected string UnitName { get; }
 
         public CoreType UnitCore { get; protected set; }
@@ -66,10 +68,6 @@ namespace ROOT
         private Material _coreMat;
 
         private MeshRenderer _coreMeshRenderer;
-        /*private MeshRenderer _localNorthSideMeshRenderer;
-        private MeshRenderer _localEastSideMeshRenderer;
-        private MeshRenderer _localSouthSideMeshRenderer;
-        private MeshRenderer _localWestSideMeshRenderer;*/
         public Dictionary<RotationDirection, Connector> ConnectorLocalDir;
         public Connector _localNorthConnector;
         public Connector _localEastConnector;
@@ -80,12 +78,18 @@ namespace ROOT
         private Transform _coreTransform;
 
         private Dictionary<CoreType, string> _coreMatNameDic;
-        //private Dictionary<SideType, Color> _sideMatColorDic;
 
         public Mesh DtoDSideMesh;
         public Mesh DtoSSideMesh;
 
         public Board GameBoard;
+
+        public void SetupStationUnit()
+        {
+            Immovable = true;
+            StationUnit = true;
+            //TODO 设置StationRequirement
+        }
 
         protected Unit()
         {
@@ -112,6 +116,7 @@ namespace ROOT
         public bool InHddSignalGrid; //for scoring purpose
         public bool InServerGrid; //for scoring purpose
         public bool InServerSignalGrid { get; set; } //for scoring purpose
+        public int NetworkVal=> BoardDataCollector.MaxNetworkDepth - ServerDepth + 1;
 
         //Rotation使用的世界方向的。
         public Dictionary<RotationDirection, ConnectionData> WorldNeighboringData { protected set; get; }
@@ -257,6 +262,7 @@ namespace ROOT
 
             _coreMatNameDic = new Dictionary<CoreType, string>();
             //_sideMatColorDic = new Dictionary<SideType, Color>();
+            Immovable = false;
             InitDic();
         }
 
@@ -379,15 +385,16 @@ namespace ROOT
                         {
                             if (UnitCoreGenre == CoreGenre.Destination)
                             {
-                                if (data.OtherUnit != null)
+                                Unit otherUnit = data.OtherUnit;
+                                if (otherUnit != null)
                                 {
                                     bool noHideHDD = InHddSignalGrid && (currentSideDirection == SignalFromDir) && (HardDiskVal != 0);
-                                    bool noHideNet = InServerGrid && (ServerDepth >= data.OtherUnit.ServerDepth) && (data.OtherUnit.InServerGrid);
+                                    bool noHideNet = InServerGrid && (ServerDepth >= otherUnit.ServerDepth) && (otherUnit.InServerGrid);
 
-                                    bool otherNoHideHDD = data.OtherUnit.InHddSignalGrid && (Utils.GetInvertDirection(currentSideDirection) == data.OtherUnit.SignalFromDir) && (data.OtherUnit.HardDiskVal != 0);
-                                    bool otherNoHideNet = data.OtherUnit.InServerGrid && (data.OtherUnit.ServerDepth >= ServerDepth) && (InServerGrid);
+                                    bool otherNoHideHDD = otherUnit.InHddSignalGrid && (Utils.GetInvertDirection(currentSideDirection) == otherUnit.SignalFromDir) && (otherUnit.HardDiskVal != 0);
+                                    bool otherNoHideNet = otherUnit.InServerGrid && (otherUnit.ServerDepth >= ServerDepth) && (InServerGrid);
 
-                                    if (data.OtherUnit.HardDiskVal == 0 && UnitCore != CoreType.HardDrive)
+                                    if (otherUnit.HardDiskVal == 0 && UnitCore != CoreType.HardDrive)
                                     {
                                         Connector.NormalSignalVal = 0;
                                     }
@@ -395,7 +402,7 @@ namespace ROOT
                                     {
                                         if (UnitCore != CoreType.HardDrive)
                                         {
-                                            Connector.NormalSignalVal = Math.Min(HardDiskVal, data.OtherUnit.HardDiskVal);
+                                            Connector.NormalSignalVal = Math.Min(HardDiskVal, otherUnit.HardDiskVal);
                                         }
                                         else
                                         {
@@ -409,34 +416,31 @@ namespace ROOT
                                     }
                                     else
                                     {
-                                        int SV = BoardDataCollector.MaxNetworkDepth - ServerDepth + 1;
                                         if (UnitCore != CoreType.NetworkCable)
                                         {
-                                            SV--;
+                                            Connector.NetworkSignalVal = NetworkVal-1;
                                         }
-                                        Connector.NetworkSignalVal = SV;
+                                        else
+                                        {
+                                            Connector.NetworkSignalVal = NetworkVal;
+                                        }
                                     }
 
                                     bool noHide = noHideHDD || noHideNet; //有可能算出来两边都显示（？），的确，常见
                                     bool otherNoHide = otherNoHideHDD || otherNoHideNet; //有可能算出来两边都显示（？），的确，常见
                                     if (noHide && otherNoHide)
                                     {
-                                        int myData = (CurrentBoardPosition.x * 10 + CurrentBoardPosition.y);
-                                        int otherData = (data.OtherUnit.CurrentBoardPosition.x * 10 + data.OtherUnit.CurrentBoardPosition.y);
-
-                                        if (data.OtherUnit.UnitCore == CoreType.Server || data.OtherUnit.UnitCore == CoreType.Processor)
+                                        if (otherUnit.UnitCore == CoreType.Server || otherUnit.UnitCore == CoreType.Processor)
                                         {
                                             noHide = true;
                                         }
                                         else
                                         {
-                                            noHide = (myData > otherData);
+                                            noHide = (PosHash > otherUnit.PosHash);
                                             if (noHide)
                                             {
-                                                int SV = BoardDataCollector.MaxNetworkDepth - ServerDepth + 1;
-                                                int otherSV = BoardDataCollector.MaxNetworkDepth - data.OtherUnit.ServerDepth + 1;
-                                                Connector.NetworkSignalVal = Math.Min(SV,otherSV);
-                                                Connector.NormalSignalVal = Math.Min(HardDiskVal, data.OtherUnit.HardDiskVal);
+                                                Connector.NetworkSignalVal = Math.Min(NetworkVal, otherUnit.NetworkVal);
+                                                Connector.NormalSignalVal = Math.Min(HardDiskVal, otherUnit.HardDiskVal);
                                             }
                                         }
                                     }

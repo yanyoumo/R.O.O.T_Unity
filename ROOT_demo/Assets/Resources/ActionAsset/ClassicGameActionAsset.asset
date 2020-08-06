@@ -16,4 +16,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 0}
   LevelLogic: {fileID: 4449706927188418236, guid: ce475b4900026b44eab5f0922c030f71,
     type: 3}
+  levelType: 2
   Actions: []
+  InitialCurrency: 0
+  InitialTime: 0

@@ -523,14 +523,17 @@ namespace ROOT
             if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Drag) && validAction)
             {
                 var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
-                System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-                var movingUnit = unit.GetComponentInChildren<Unit>();
-                movingUnit.Move(ctrlPack.CommandDir);
-                currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(ctrlPack.CurrentPos);
-                currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
-                currentLevelAsset.AnimationPendingObj.Add(movingUnit);
-                movedTile = true;
-                movedCursor = true;
+                if (!unit.GetComponentInChildren<Unit>().StationUnit)
+                {
+                    System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
+                    var movingUnit = unit.GetComponentInChildren<Unit>();
+                    movingUnit.Move(ctrlPack.CommandDir);
+                    currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(ctrlPack.CurrentPos);
+                    currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
+                    currentLevelAsset.AnimationPendingObj.Add(movingUnit);
+                    movedTile = true;
+                    movedCursor = true;
+                }
             }
             else if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Move))
             {

@@ -10,6 +10,13 @@ using UnityEngine;
 namespace ROOT
 {
 
+    public enum LevelType
+    {
+        Tutorial,
+        Career,
+        Classic
+    }
+
     public enum TutorialActionType
     {
         Text,
@@ -51,10 +58,20 @@ namespace ROOT
         public Sprite Thumbnail;
         [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab")]
         public GameObject LevelLogic;
+        [EnumToggleButtons]
+        public LevelType levelType;
 
         [Header("Actions")]
+        [ShowIf("levelType", LevelType.Tutorial)]
         public TutorialActionData[] Actions;
 
+        [ShowIf("levelType", LevelType.Classic)]
+        [Range(0,10000)]
+        public int InitialCurrency;
+        [ShowIf("levelType", LevelType.Classic)]
+        [Range(0,100)]
+        public int InitialTime;
+        
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
     }
 }

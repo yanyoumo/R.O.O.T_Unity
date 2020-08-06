@@ -193,6 +193,7 @@ namespace ROOT
             var goD = Instantiate(UnitTemplate);
             goD.name = "Unit_" + Hash128.Compute(vector2IntD.ToString());
             goD.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntD);
+            //goD.GetComponentInChildren<Unit>().SetupStationUnit();
             Units.Add(vector2IntD, goD);
             goD.GetComponentInChildren<Unit>().InitUnit(CoreType.Server,
                 new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
