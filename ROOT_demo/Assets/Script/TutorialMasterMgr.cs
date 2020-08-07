@@ -14,7 +14,7 @@ namespace ROOT
         private TextMeshProUGUI content;
         private bool Loading = false;
 
-        private LevelActionAsset[] ActionAssetList => LevelLib.Instance.TutorialActionAssetList;
+        private LevelActionAsset[] ActionAssetList => LevelLib.Instance.ActionAssetList;
         private int ActionAssetCount => LevelLib.Instance.TutorialActionAssetCount;
 
         void Start()

@@ -591,7 +591,7 @@ namespace ROOT
             }
         }
 
-        internal static void UpdateCycle(GameAssets currentLevelAsset, bool movedTile = true)
+        internal static void UpdateCycle(GameAssets currentLevelAsset, bool shouldCycle = true)
         {
             if (currentLevelAsset.LCDTimeEnabled)
             {
@@ -599,8 +599,10 @@ namespace ROOT
                 currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetTimeRatio(), RowEnum.Time);
             }
 
-            if (movedTile)
+            if (shouldCycle)
             {
+                currentLevelAsset._StepCount++;
+                currentLevelAsset.TimeLine.Step();
                 currentLevelAsset.GameStateMgr.PerMove(new ScoreSet(), new PerMoveData(currentLevelAsset.DeltaCurrency, 1));
                 if (currentLevelAsset.BoughtOnce)
                 {

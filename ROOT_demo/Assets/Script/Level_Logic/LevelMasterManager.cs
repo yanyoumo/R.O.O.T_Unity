@@ -59,6 +59,11 @@ namespace ROOT
                 mgr.LevelActionAsset = actionAsset;
                 mgr.LevelAsset.ActionAsset = actionAsset;
             }
+            if (_gameLogic is CareerLevelLogic mgr1)
+            {
+                Debug.Assert(actionAsset != null);
+                mgr1.LevelAsset.ActionAsset = actionAsset;
+            }
             _lls = null;
             loadSceneAsync = SceneManager.LoadSceneAsync(_gameLogic.LEVEL_ART_SCENE_ID, LoadSceneMode.Additive);
             yield return _gameLogic.UpdateArtLevelReference(loadSceneAsync);//这里是第二次的LinkLevel。匹配ArtScene里面的引用//和第三次的Init里面的UpdateReference。通过根引用去查找其他引用。

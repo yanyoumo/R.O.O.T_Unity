@@ -2605,18 +2605,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
-        type: 3}
-      propertyPath: LevelTouchActionAssetLib
-      value: 
-      objectReference: {fileID: 11400000, guid: 1c40bbc2eb0145e4897f0dee37cd186e,
-        type: 2}
-    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
-        type: 3}
-      propertyPath: LevelActionAssetLib
-      value: 
-      objectReference: {fileID: 11400000, guid: 403dd5900f3f3cf4c84f16bb73547a85,
-        type: 2}
     - target: {fileID: 2835144725562628124, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}
       propertyPath: m_LocalPosition.x

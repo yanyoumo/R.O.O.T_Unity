@@ -12,6 +12,6 @@ namespace ROOT
     public class LevelActionAssetLib : ScriptableObject
     {
         [ShowInInspector]
-        public LevelActionAsset[] TutorialActionAssetList;
+        public LevelActionAsset[] ActionAssetList;
     }
 }

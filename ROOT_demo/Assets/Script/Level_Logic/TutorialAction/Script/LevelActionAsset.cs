@@ -71,7 +71,10 @@ namespace ROOT
         [ShowIf("levelType", LevelType.Classic)]
         [Range(0,100)]
         public int InitialTime;
-        
+
+        [ShowIf("levelType", LevelType.Career)]
+        public TimeLineToken[] TimeLineTokens;
+
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
     }
 }

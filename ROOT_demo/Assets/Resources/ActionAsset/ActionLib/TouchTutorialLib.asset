@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d73b3f86fb8a344a648e6d4532b625, type: 3}
   m_Name: TouchTutorialLib
   m_EditorClassIdentifier: 
-  TutorialActionAssetList:
+  ActionAssetList:
   - {fileID: 11400000, guid: 48d4ae12b4af735458b264edff7e4d28, type: 2}
   - {fileID: 11400000, guid: f13b50dbb788d2141b98eeb228f457b6, type: 2}
   - {fileID: 11400000, guid: 8a70857a7c4e4904697dcf49921973a8, type: 2}
-  - {fileID: 11400000, guid: 08f85a5cbc51da94388ea28ec657253a, type: 2}
+  - {fileID: 11400000, guid: 9517afa17aab9ef44bbd5c8c7457503c, type: 2}
   - {fileID: 11400000, guid: 7a6a5c3bc57d2ba49b2c0b32060f34c1, type: 2}

@@ -12,18 +12,18 @@ namespace ROOT
         public static LevelLib Instance { get { return _instance; } }
 
         public LevelActionAssetLib LevelActionAssetLib;
-        public LevelActionAsset[] TutorialActionAssetList => LevelActionAssetLib.TutorialActionAssetList;
-        public int TutorialActionAssetCount => LevelActionAssetLib.TutorialActionAssetList.Length;
+        public LevelActionAsset[] ActionAssetList => LevelActionAssetLib.ActionAssetList;
+        public int TutorialActionAssetCount => LevelActionAssetLib.ActionAssetList.Length;
 
         public LevelActionAsset GetNextTutorialActionAsset(in LevelActionAsset asset)
         {
-            for (var i = 0; i < TutorialActionAssetList.Length; i++)
+            for (var i = 0; i < ActionAssetList.Length; i++)
             {
-                if (TutorialActionAssetList[i].Equals(asset))
+                if (ActionAssetList[i].Equals(asset))
                 {
                     if (i + 1 < TutorialActionAssetCount)
                     {
-                        return TutorialActionAssetList[i + 1];
+                        return ActionAssetList[i + 1];
                     }
 
                     return null;

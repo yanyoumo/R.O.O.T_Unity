@@ -27,6 +27,7 @@ namespace ROOT
             LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
             LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
+            LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
             //_tutorialMainText = FindObjectOfType<TutorialMainTextFrame>();
             PopulateArtLevelReference();
         }

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d73b3f86fb8a344a648e6d4532b625, type: 3}
   m_Name: ClassicLevelLib
   m_EditorClassIdentifier: 
-  TutorialActionAssetList:
+  ActionAssetList:
   - {fileID: 11400000, guid: b41eb37303821614b9319022e05d010d, type: 2}

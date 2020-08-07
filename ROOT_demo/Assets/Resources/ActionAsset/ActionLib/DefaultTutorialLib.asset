@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d73b3f86fb8a344a648e6d4532b625, type: 3}
   m_Name: DefaultTutorialLib
   m_EditorClassIdentifier: 
-  TutorialActionAssetList:
+  ActionAssetList:
   - {fileID: 11400000, guid: 23055b243c854b3488cdf6cf6fd31d79, type: 2}
   - {fileID: 11400000, guid: 584366cad1a9e4d43baa43e813e4bd58, type: 2}
   - {fileID: 11400000, guid: 8a70857a7c4e4904697dcf49921973a8, type: 2}

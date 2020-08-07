@@ -30,6 +30,7 @@ namespace ROOT
     /// </summary>
     public sealed class GameAssets//ASSET 这里不应该有任何之际逻辑（有些便于操作的除外
     {
+        public int _StepCount = 0;
         /// <summary>
         /// 裁判同时要担任神使，神要通过这里影响世界。
         /// </summary>
@@ -43,6 +44,7 @@ namespace ROOT
         public Board GameBoard;
         public DataScreen DataScreen;
         public HintMaster HintMaster;
+        public TimeLine TimeLine;
 
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
@@ -144,7 +146,7 @@ namespace ROOT
         protected bool PendingCleanUp;
 
         protected float AnimationTimerOrigin = 0.0f;//都是秒
-        protected readonly float AnimationDuration = 0.1f;//都是秒
+        public static readonly float AnimationDuration = 0.1f;//都是秒
 
         public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC;//这个游戏的这两个参数是写死的
         public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL;//但是别的游戏的这个值多少是需要重写的。
@@ -188,12 +190,6 @@ namespace ROOT
             Destroy(obj);
         }
 
-        /*protected void InvokeGameStartedEvent()
-        {
-            //LevelMasterManager.Instance
-            //GameStarted?.Invoke();
-        }*/
-
         /// <summary>
         /// 需要允许各个Level去自定义如何Link。
         /// </summary>
@@ -209,6 +205,7 @@ namespace ROOT
             LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
             LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
+            LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
