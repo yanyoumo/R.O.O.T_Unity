@@ -17,13 +17,21 @@ Major Update:
 Build Version:0.2/00088
 Major Update:
     更新：
-		1、在单元接口上添加了信号数值的提示
+		1、在单元接口上添加了信号数值的提示。
+		2、添加了时间线玩法。
     修复：
 	TODO:
 		1、游戏LevelLogic的重新整理。
 		2、ActionAsset的Object功能的整理。
 	想TutorialManager目前的所有对逻辑的微调是不是需要整合起来。
 
+
+Build Version:0.2/00178
+Major Update:
+    更新：
+    修复：
+		1、时间线计分的错误
+	TODO:
 
 *我没有提供足够的问题供玩家解决		
 

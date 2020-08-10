@@ -106,8 +106,10 @@ namespace ROOT
             }
             else
             {
-                bool valA=(Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore())>=NormalRval);
-                bool valB=(Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore())>=NetworkRval);
+                currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int harDriverCountInt);
+                bool valA=(harDriverCountInt >= NormalRval);
+                currentLevelAsset.BoardDataCollector.CalculateServerScore(out int NetworkCountInt);
+                bool valB=(NetworkCountInt >= NetworkRval);
                 currentLevelAsset.TimeLine.RequirementSatisfied = valA && valB;
             }
 

@@ -83,7 +83,7 @@ namespace ROOT
             return score;
         }
 
-        public float CalculateProcessorScore()
+        public float CalculateProcessorScore(out int driverCountInt)
         {
             var driverCount = 0.0f;
             var processorKeys = new List<Vector2Int>();
@@ -105,6 +105,7 @@ namespace ROOT
 
             if (processorKeys.Count == 0)
             {
+                driverCountInt = 0;
                 return 0.0f;
             }
             else
@@ -121,7 +122,8 @@ namespace ROOT
                     }
                 }
 
-                MaxNormalDepth = (int)driverCount;
+                MaxNormalDepth = (int) driverCount;
+                driverCountInt = (int) driverCount;
                 return driverCount * GetPerDriverIncome();
             }
         }
@@ -180,7 +182,7 @@ namespace ROOT
             }
         }
 
-        public float CalculateServerScore()
+        public float CalculateServerScore(out int networkCount)
         {
             var maxLength = 0.0f;
             var farthestUnitPos = Vector2Int.zero;
@@ -200,6 +202,7 @@ namespace ROOT
 
             if (serverKeys.Count == 0)
             {
+                networkCount = 0;
                 return 0.0f;
             }
             else
@@ -264,6 +267,7 @@ namespace ROOT
                 }
 
                 MaxNetworkDepth = (int)maxLength;
+                networkCount = (int)maxLength;
                 return GetServerIncomeByLength((int) maxLength);
             }
         }
