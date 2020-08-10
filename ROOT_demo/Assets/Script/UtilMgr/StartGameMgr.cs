@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.iOS;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace ROOT
 {
@@ -140,7 +141,9 @@ namespace ROOT
         public void GameStart()
         {
             //LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib.ActionAssetList[0].LevelLogic, ClassicGameActionAssetLib.ActionAssetList[0]);
-            LevelMasterManager.Instance.LoadLevelThenPlay(CareerGameActionAssetLib.ActionAssetList[0].LevelLogic, CareerGameActionAssetLib.ActionAssetList[0]);
+            Random.InitState((int)(Time.time*1000));
+            int IDX=Mathf.FloorToInt(Random.value * CareerGameActionAssetLib.ActionAssetList.Length);
+            LevelMasterManager.Instance.LoadLevelThenPlay(CareerGameActionAssetLib.ActionAssetList[IDX].LevelLogic, CareerGameActionAssetLib.ActionAssetList[IDX]);
             SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
         }
 
