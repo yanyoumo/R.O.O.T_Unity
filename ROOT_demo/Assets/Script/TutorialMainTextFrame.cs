@@ -99,7 +99,6 @@ namespace ROOT
                 NextExtendedLLE.Term = ScriptTerms.KMHintExtend;
             }
         }
-
         IEnumerator Animate(bool shouldShow)
         {
             Animating = true;

@@ -119,13 +119,34 @@ namespace ROOT
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(board_pos.ToString());
             var unit = go.GetComponentInChildren<Unit>();
-            /*unit.CurrentBoardPosition = board_pos;
-            unit.NextBoardPosition = board_pos;*/
             unit.InitPosWithAnimation(board_pos);
             unit.InitUnit(core, sides);
             return go;
         }
 
+        public void CreateUnitOnBoard(UnitGist unitGist)
+        {
+            var unitGO = Instantiate(UnitTemplate);
+            unitGO.name = "Unit_" + Hash128.Compute(unitGist.Pos.ToString());
+            Unit unit = unitGO.GetComponentInChildren<Unit>();
+            unit.InitPosWithAnimation(unitGist.Pos);
+            Units.Add(unitGist.Pos, unitGO);
+            unit.InitUnit(unitGist.Core, unitGist.Sides, this);
+            if (unitGist.IsStation)
+            {
+                unit.SetupStationUnit();
+            }
+        }
+
+        public void InitBoardWAsset(LevelActionAsset actionAsset)
+        {
+            foreach (var unitGist in actionAsset.InitalBoard)
+            {
+                CreateUnitOnBoard(unitGist);
+            }
+        }
+
+        [Obsolete]
         public void InitBoardRealStart()
         {
             Vector2Int[] startingArray =
@@ -170,8 +191,7 @@ namespace ROOT
             goA.name = "Unit_" + Hash128.Compute(vector2IntA.ToString());
             goA.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntA);
             Units.Add(vector2IntA, goA);
-            goA.GetComponentInChildren<Unit>().InitUnit(CoreType.Processor,
-                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
+            goA.GetComponentInChildren<Unit>().InitUnit(CoreType.Processor, new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
 
             Vector2Int vector2IntB = new Vector2Int(5, 5);
             var goB = Instantiate(UnitTemplate);

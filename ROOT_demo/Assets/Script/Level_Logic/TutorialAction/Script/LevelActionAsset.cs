@@ -5,6 +5,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
 using UnityEngine;
 
 namespace ROOT
@@ -25,6 +26,18 @@ namespace ROOT
         ShowText,
         HideText,
         End,
+    }
+
+    [Serializable]
+    public struct UnitGist
+    {
+        [Header("Basic")]
+        public CoreType Core;
+        public SideType[] Sides;
+
+        [Header("OnBoardInfo")]
+        public Vector2Int Pos;
+        public bool IsStation;
     }
 
     [Serializable]
@@ -56,15 +69,17 @@ namespace ROOT
         public string TitleTerm;
         [AssetSelector(Filter = "t:Sprite",Paths= "Assets/Resources/UIThumbnail/TutorialThumbnail")]
         public Sprite Thumbnail;
+        [Required]
         [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab")]
         public GameObject LevelLogic;
         [EnumToggleButtons]
         public LevelType levelType;
 
-        [Header("Actions")]
+        [Header("Tutorial")]
         [ShowIf("levelType", LevelType.Tutorial)]
         public TutorialActionData[] Actions;
 
+        [Header("Classic")]
         [ShowIf("levelType", LevelType.Classic)]
         [Range(0,10000)]
         public int InitialCurrency;
@@ -72,8 +87,12 @@ namespace ROOT
         [Range(0,100)]
         public int InitialTime;
 
+        [Header("Career")]
         [ShowIf("levelType", LevelType.Career)]
         public TimeLineToken[] TimeLineTokens;
+        [Space]
+        [ShowIf("levelType", LevelType.Career)]
+        public UnitGist[] InitalBoard;
 
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
     }

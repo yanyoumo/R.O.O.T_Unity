@@ -152,5 +152,10 @@ namespace ROOT
             SceneManager.LoadSceneAsync(StaticName.SCENE_ID_TUTORIAL, LoadSceneMode.Additive);
             SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
         }
+
+        public void CareerStart()
+        {
+            Debug.Log("CareerStart");
+        }
     }
 }

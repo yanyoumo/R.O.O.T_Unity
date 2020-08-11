@@ -45,3 +45,20 @@ MonoBehaviour:
     type: 3
     RequireAmount: 0
     Range: {x: 60, y: -1}
+  InitalBoard:
+  - Core: 0
+    Sides: 00000000000000000000000000000000
+    Pos: {x: 2, y: 3}
+    IsStation: 1
+  - Core: 0
+    Sides: 00000000000000000000000000000000
+    Pos: {x: 3, y: 2}
+    IsStation: 1
+  - Core: 2
+    Sides: 01000000000000000000000001000000
+    Pos: {x: 3, y: 3}
+    IsStation: 1
+  - Core: 5
+    Sides: 00000000010000000100000000000000
+    Pos: {x: 2, y: 2}
+    IsStation: 1

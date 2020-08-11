@@ -54,7 +54,7 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
-        public bool StationUnit = false;
+        public bool StationUnit { get; private set; }
         public Dictionary<RotationDirection, Tuple<int, int>> StationRequirement;
         public int ShopID { get; internal set; } = -1;  
         protected string UnitName { get; }
@@ -261,7 +261,7 @@ namespace ROOT
             _unitRotation = RotationDirection.North;
 
             _coreMatNameDic = new Dictionary<CoreType, string>();
-            //_sideMatColorDic = new Dictionary<SideType, Color>();
+            //_sideMatColorDic = new Dictionary<Sides, Color>();
             Immovable = false;
             InitDic();
         }

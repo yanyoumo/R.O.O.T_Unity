@@ -251,9 +251,9 @@ namespace ROOT
 
         public void UpdateNext()
         {
-            SideType[] sidesA =
+            Sides[] sidesA =
             {
-                SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection
+                Sides.NoConnection, Sides.Connection, Sides.Connection, Sides.Connection
             };
             switch (_tutorialContentCounter)
             {

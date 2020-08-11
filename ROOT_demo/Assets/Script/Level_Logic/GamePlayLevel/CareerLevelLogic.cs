@@ -31,7 +31,8 @@ namespace ROOT
             InitDestoryer();
             InitCursor(new Vector2Int(2, 3));
             LevelAsset.EnableAllCoreFunctionAndFeature();
-            LevelAsset.GameBoard.InitBoardRealStart();
+            //LevelAsset.GameBoard.InitBoardRealStart();
+            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
             StartShop();
 
