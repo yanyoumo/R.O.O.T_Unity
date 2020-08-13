@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -120,6 +121,14 @@ namespace ROOT
 
         //Rotation使用的世界方向的。
         public Dictionary<RotationDirection, ConnectionData> WorldNeighboringData { protected set; get; }
+
+        public bool AnyConnection
+        {
+            get
+            {
+                return WorldNeighboringData.Where(keyValuePair => keyValuePair.Value.HasConnector).Any(keyValuePair => keyValuePair.Value.Connected);
+            }
+        }
 
         [HideInInspector]
         public readonly RotationDirection[] RotationList =

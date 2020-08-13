@@ -29,34 +29,36 @@ namespace ROOT
 
     public class TutorialLevelSelectionMainMenu : MonoBehaviour
     {
+        private Vector2Int posZero = new Vector2Int(210, -295);
+        private int displaceX = 200;
+        private int displaceY = -320;
+        private int lineCount = 9;
         public GameObject TutorialQuadTemplate;
-
-        public RectTransform TutorialQuadPos1;
-        public RectTransform TutorialQuadPos2;
-        public RectTransform TutorialQuadPos3;
-        public RectTransform TutorialQuadPos4;
-        public RectTransform TutorialQuadPos5;
-        public RectTransform TutorialQuadPos6;
+        public RectTransform TutorialQuadRoot;
 
         private RectTransform[] TutorialQuadPosS;
         private TutorialLevelSelectionQuad[] TutorialQuadS;
 
+        private int QuadCount = 18;
+
         void Awake()
         {
-            TutorialQuadPosS = new[]
+            TutorialQuadPosS = new RectTransform[QuadCount];
+            for (int i = 0; i < QuadCount; i++)
             {
-                TutorialQuadPos1,
-                TutorialQuadPos2,
-                TutorialQuadPos3,
-                TutorialQuadPos4,
-                TutorialQuadPos5,
-                TutorialQuadPos6,
-            };
+                var GO = new GameObject("TutorialUI" + (i + 1), typeof(RectTransform));
+                GO.transform.SetParent(TutorialQuadRoot);
+                GO.transform.localPosition = new Vector3(posZero.x + i%lineCount * displaceX, posZero.y + (i / lineCount) * displaceY, 0);
+                GO.transform.localScale = Vector3.one;
+                GO.GetComponent<RectTransform>().anchorMin = new Vector2(0, 1);
+                GO.GetComponent<RectTransform>().anchorMax = new Vector2(0, 1);
+                TutorialQuadPosS[i] = GO.GetComponent<RectTransform>();
+            }
         }
 
         public Button[] InitTutorialLevelSelectionMainMenu(TutorialQuadDataPack[] data)
         {
-            Debug.Assert(data.Length < 7);
+            //Debug.Assert(data.Length < 19);
             Button[] res = new Button[data.Length];
             TutorialQuadS = new TutorialLevelSelectionQuad[data.Length];
             for (var i = 0; i < data.Length; i++)

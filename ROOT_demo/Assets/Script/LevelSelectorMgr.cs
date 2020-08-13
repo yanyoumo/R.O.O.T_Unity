@@ -7,15 +7,16 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    public sealed partial class TutorialMasterMgr : MonoBehaviour
+    public sealed partial class LevelSelectorMgr : MonoBehaviour
     {
         public GameObject TutorialCanvas;
         TutorialQuadDataPack[] _dataS;
         private TextMeshProUGUI content;
         private bool Loading = false;
+        public bool IsCareer = false;
 
-        private LevelActionAsset[] ActionAssetList => LevelLib.Instance.ActionAssetList;
-        private int ActionAssetCount => LevelLib.Instance.TutorialActionAssetCount;
+        private LevelActionAsset[] ActionAssetList => IsCareer ? LevelLib.Instance.CareerActionAssetList : LevelLib.Instance.TutorialActionAssetList;
+        private int ActionAssetCount => ActionAssetList.Length;
 
         void Start()
         {
@@ -39,7 +40,7 @@ namespace ROOT
         {
             LevelMasterManager.Instance.LoadLevelThenPlay(ActionAssetList[buttonId].LevelLogic,ActionAssetList[buttonId]);
             yield return 0;
-            SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_TUTORIAL);
+            SceneManager.UnloadSceneAsync(IsCareer ? StaticName.SCENE_ID_CAREER : StaticName.SCENE_ID_TUTORIAL);
         }
 
         public void ButtonsListener(int buttonId, TextMeshProUGUI _content)

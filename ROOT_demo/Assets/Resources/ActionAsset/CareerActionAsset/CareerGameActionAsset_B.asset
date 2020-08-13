@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: CareerGameActionAsset_B
   m_EditorClassIdentifier: 
-  TitleTerm: 
+  TitleTerm: Level_3
   Thumbnail: {fileID: 0}
   LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
     type: 3}
@@ -37,3 +37,4 @@ MonoBehaviour:
     type: 0
     RequireAmount: 4
     Range: {x: 20, y: -1}
+  InitalBoard: []

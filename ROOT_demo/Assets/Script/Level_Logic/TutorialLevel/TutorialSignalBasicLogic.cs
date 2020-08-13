@@ -30,6 +30,8 @@ namespace ROOT
             }
         }
 
+        protected override string MainGoalEntryContent { get; }
+
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             //教程的结束一般都是在DealStep里面处理。

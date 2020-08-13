@@ -1,8 +1,47 @@
-﻿Key,Type,Desc,English,Chinese (Simplified)
-PlayLevel,Text,,Play,游玩关卡
-StartGame,Text,,Start Game,开始游戏
-Tutorial,Text,TutorialMenuButton,Tutorial,新手指南
-TutorialActionShop,Text,,About Shop,关于商店
-TutorialBasicControl,Text,,Basic Control,基本操作
-TutorialGoalAndCycle,Text,,Goal/Cycle,目标及周期
-TutorialSignalBasic,Text,,Signal Basic,信号基础
+﻿Key,Type,Desc,Chinese (Simplified),English
+Back,Text,,返回,Back
+BasicControl_KM,Text,,"【方向键】：移动光标
+【方向键】+【空格】：拖动单元
+【左Shift】：旋转单元
+【TAB】：查看数据范围","<b>[Arrows]:</b> Move Cursor
+<b>[Arrows+SpaceBar]:</b> Drag Unit
+<b>[Left-Shift]:</b> Rotate Unit
+<b>[TAB]:</b> Visualize Signal"
+BasicControl_Touch,Text,,"【滑动单元】：拖动单元
+【双击单元】：旋转单元
+【双指按住】：查看数据范围","<b>[Swipe on Unit]:</b>Drag Unit
+<b>[DoubleTap on Unit]:</b>Rotate Unit
+<b>[DoubleFinger Hold]:</b>Visualize Signal"
+CareerButton,Text,,生涯模式,Career
+EndingMessageNormal_EarnedMoney,Text,,时间到了，你赚了{[VALUE]}块钱[i2p_Zero]时间到了，但你没赚钱,"Time Up, and you earned {[VALUE]} money[i2p_Zero]Time Up, and you earned no money"
+EndingMessageNormal_NoEarnedMoney,Text,,时间到了，你赔了{[VALUE]}块钱[i2p_Zero]时间到了，但你也没赔钱,"Time Up, and you lost {[VALUE]} money[i2p_Zero]Time Up, but you haven't lost money"
+EndingMessageNormal_NoMoney,Text,,你没钱了！,You've run out of money.
+EndingMessageTutorial,Text,,本节教程结束~,This section of tutorial has concluded
+GameOver,Text,,游戏结束,GAME OVER
+HForHint_KM,Text,,按住<b>[H]</b>键查看操作说明,Hold <b>[H]</b> for controlling
+HForHint_Touch,Text,,按住这里查看操作说明,Hold Here for Hint
+KMHintCollapsed,Text,,按<b>回车</b>继续,按<b>回车</b>继续
+KMHintExtend,Text,,按<b>[回车]</b>继续,按<b>[回车]</b>继续
+NextTutorial,Text,,下一教程,Next
+PlayLevel,Text,,游玩关卡,Play
+ReleaseToReturn_KM,Text,,松开以返回,Release to Hide
+Restart,Text,,重新开始,Restart
+StartGame,Text,,<b>开始游戏</b>,<b>Start Game</b>
+TouchHintCollapsed,Text,,点<b>这里</b>继续,点<b>这里</b>继续
+TouchHintExtend,Text,,点<b>[这里]</b>继续,点<b>[这里]</b>继续
+Tutorial,Text,,<b>新手指南</b>,<b>Tutorial</b>
+TutorialBasicControl,Text,,第一天上班,First Day to Work
+TutorialSignalBasic,Text,,用点儿脑子,Use your Brain
+TutorialGoalAndCycle,Text,,时间不等人,Time awaits
+TutorialShop,Text,,买买买,Shut up and TMM
+TutorialShop_Currency,Text,,别瞎花钱,Watch your wallet
+TutorialSignalBasic_Adv,Text,,来点儿别的,Some new trick
+TutorialDestroyer,Text,,搁一起呢？,Put it all together
+TutorialDestroyer,Text,,别太放松,Heads Up!
+TutorialSectionOver,Text,,此段教程结束,Section Over
+Level_1,Text,,第一关,Level 1
+Level_2,Text,,第二关,Level 2
+Level_3,Text,,第三关,Level 3
+Level_4,Text,,第四关,Level 4
+Level_5,Text,,第五关,Level 5
+TutorialGoal,Text,,任务目标:,Need to do:

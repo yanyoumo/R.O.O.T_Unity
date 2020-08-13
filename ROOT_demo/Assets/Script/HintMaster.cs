@@ -6,6 +6,11 @@ namespace ROOT
 {
     public partial class HintMaster : MonoBehaviour
     {
+        public bool ShouldShowCheckList
+        {
+            set => TutorialCheckList.gameObject.SetActive(value);
+        }
+
         private bool _tutorialMainTextFrameSuppressed = false;
 
         public bool HideTutorialFrame

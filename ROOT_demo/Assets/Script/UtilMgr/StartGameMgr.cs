@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.iOS;
 using UnityEngine.SceneManagement;
@@ -21,6 +22,14 @@ namespace ROOT
         TouchScreen,
     }
 
+    public partial class LevelLib : MonoBehaviour
+    {
+        internal LevelActionAssetLib TutorialLevelActionAssetLib;
+        //internal LevelActionAssetLib CareerLevelActionAssetLib;
+        //public LevelActionAsset[] CareerActionAssetList => CareerLevelActionAssetLib.ActionAssetList;
+        public LevelActionAsset[] CareerActionAssetList { internal set;get; }
+    }
+
     public class StartGameMgr : MonoBehaviour
     {
         /*public enum SupportedDevice
@@ -36,8 +45,8 @@ namespace ROOT
             iPadPro4Gen,//2732x2048-1.33-4:3
         }*/
 
-        public LevelActionAssetLib LevelActionAssetLib;
-        public LevelActionAssetLib LevelTouchActionAssetLib;
+        public LevelActionAssetLib TutorialActionAssetLib;
+        public LevelActionAssetLib TutorialTouchActionAssetLib;
         public LevelActionAssetLib ClassicGameActionAssetLib;
         public LevelActionAssetLib CareerGameActionAssetLib;
 
@@ -134,28 +143,34 @@ namespace ROOT
             Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
             StartCoroutine(LoadLevelMasterSceneAndSetActive());
 
-            LevelLib.Instance.LevelActionAssetLib = UseTouchScreen ? LevelTouchActionAssetLib : LevelActionAssetLib;
+            LevelLib.Instance.TutorialLevelActionAssetLib = UseTouchScreen ? TutorialTouchActionAssetLib : TutorialActionAssetLib;
+            LevelActionAsset[] tutorialArray= UseTouchScreen ? TutorialTouchActionAssetLib.ActionAssetList : TutorialActionAssetLib.ActionAssetList;
+            int LevelLengthCount = tutorialArray.Length + CareerGameActionAssetLib.ActionAssetList.Length;
+            LevelLib.Instance.CareerActionAssetList = new LevelActionAsset[LevelLengthCount];
+            for (var i = 0; i < LevelLengthCount; i++)
+            {
+                var tmp = i<tutorialArray.Length ? tutorialArray[i] : CareerGameActionAssetLib.ActionAssetList[i- tutorialArray.Length];
+                LevelLib.Instance.CareerActionAssetList[i] = tmp;
+            }
             LevelLib.Instance.LockInLib();
         }
 
         public void GameStart()
         {
-            //LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib.ActionAssetList[0].LevelLogic, ClassicGameActionAssetLib.ActionAssetList[0]);
-            Random.InitState((int)(Time.time*1000));
-            int IDX=Mathf.FloorToInt(Random.value * CareerGameActionAssetLib.ActionAssetList.Length);
-            LevelMasterManager.Instance.LoadLevelThenPlay(CareerGameActionAssetLib.ActionAssetList[IDX].LevelLogic, CareerGameActionAssetLib.ActionAssetList[IDX]);
+            LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib.ActionAssetList[0].LevelLogic, ClassicGameActionAssetLib.ActionAssetList[0]);
             SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
         }
 
         public void TutorialStart()
         {
-            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_TUTORIAL, LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
+            /*SceneManager.LoadSceneAsync(StaticName.SCENE_ID_TUTORIAL, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));*/
         }
 
         public void CareerStart()
         {
-            Debug.Log("CareerStart");
+            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREER, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
         }
     }
 }

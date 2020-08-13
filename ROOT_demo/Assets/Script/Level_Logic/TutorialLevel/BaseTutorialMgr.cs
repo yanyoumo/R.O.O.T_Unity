@@ -7,12 +7,22 @@ namespace ROOT
 {
     public abstract class TutorialLogic : LevelLogic
     {
+        protected bool ActionEnded { get; private set; } = false;
         protected int ActionIndex { get; private set; } = -1;
         protected int LastActionCount { get; private set; } = 0;
+
+        protected abstract string MainGoalEntryContent { get; }
+        protected virtual string SecondaryGoalEntryContent { get; } = "";
+
         public LevelActionAsset LevelActionAsset;
         protected bool ShowText
         {
             set => LevelAsset.HintMaster.RequestedShowTutorialContent = value;
+        }
+
+        protected bool ShowCheckList
+        {
+            set => LevelAsset.HintMaster.ShouldShowCheckList = value;
         }
 
         protected abstract override bool UpdateGameOverStatus(GameAssets currentLevelAsset);
@@ -28,8 +38,15 @@ namespace ROOT
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
             LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
+            //LevelAsset.tutorialCheckList = FindObjectOfType<TutorialCheckList>();
             //_tutorialMainText = FindObjectOfType<TutorialMainTextFrame>();
             PopulateArtLevelReference();
+        }
+
+        public override void PopulateArtLevelReference()
+        {
+            base.PopulateArtLevelReference();
+            LevelAsset.HintMaster.TutorialCheckList.SetupEntryContent(MainGoalEntryContent, SecondaryGoalEntryContent);
         }
 
         public abstract override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = default);
@@ -89,13 +106,19 @@ namespace ROOT
                     CreateUnitOnBoard(data);
                     break;
                 case TutorialActionType.End:
-                    LevelMasterManager.Instance.LevelFinished(LevelAsset);
+                    ActionEnded = true;
                     break;
                 case TutorialActionType.ShowText:
                     ShowText = true;
                     break;
                 case TutorialActionType.HideText:
                     ShowText = false;
+                    break;
+                case TutorialActionType.ShowCheckList:
+                    ShowCheckList = true;
+                    break;
+                case TutorialActionType.HideCheckList:
+                    ShowCheckList = false;
                     break;
                 default:
                     throw new NotImplementedException();
@@ -117,19 +140,23 @@ namespace ROOT
 
         protected override void Update()
         {
-            base.Update();//严格来说ControlPack在这里搞定了。
+            base.Update(); //严格来说ControlPack在这里搞定了。
 
             if (ReadyToGo)
             {
-                if (ActionIndex == -1)
+                if (!ActionEnded)
                 {
-                    StepForward();
-                    DealStepMgr();
-                }
-                if (CtrlPack.HasFlag(ControllingCommand.NextButton))
-                {
-                    StepForward();
-                    DealStepMgr();
+                    if (ActionIndex == -1)
+                    {
+                        StepForward();
+                        DealStepMgr();
+                    }
+
+                    if (CtrlPack.HasFlag(ControllingCommand.NextButton))
+                    {
+                        StepForward();
+                        DealStepMgr();
+                    }
                 }
             }
         }

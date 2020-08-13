@@ -12,7 +12,6 @@ namespace ROOT
         public TutorialMainTextFrame TutorialMainTextFrame;
     }
 
-    //TODO 这个东西不知道是不是要和另外那个联合起来，要不然这个管理很不利。
     public class TutorialMainTextFrame : MonoBehaviour
     {
         public TextMeshPro ContentText;

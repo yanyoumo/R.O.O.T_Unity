@@ -17,78 +17,6 @@ MonoBehaviour:
     UserAgreesToHaveItInsideThePluginsFolder: 0
     GoogleLiveSyncIsUptoDate: 1
     mTerms:
-    - Term: PlayLevel
-      TermType: 0
-      Description: text on button that start level
-      Languages:
-      - "\u6E38\u73A9\u5173\u5361"
-      - Play
-      Flags: 0000
-      Languages_Touch: []
-    - Term: StartGame
-      TermType: 0
-      Description: Main start game button
-      Languages:
-      - "<b>\u5F00\u59CB\u6E38\u620F</b>"
-      - <b>Start Game</b>
-      Flags: 0000
-      Languages_Touch: []
-    - Term: Tutorial
-      TermType: 0
-      Description: Main start tutorial button
-      Languages:
-      - "<b>\u65B0\u624B\u6307\u5357</b>"
-      - <b>Tutorial</b>
-      Flags: 0000
-      Languages_Touch: []
-    - Term: TutorialBasicControl
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u57FA\u672C\u64CD\u4F5C"
-      - Basic Control
-      Flags: 0000
-      Languages_Touch: []
-    - Term: TutorialGoalAndCycle
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u76EE\u6807\u53CA\u5468\u671F"
-      - Goal/Cycle
-      Flags: 0000
-      Languages_Touch: []
-    - Term: TutorialSignalBasic
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u4FE1\u53F7\u57FA\u7840"
-      - Signal Basic
-      Flags: 0000
-      Languages_Touch: []
-    - Term: TutorialDestroyer
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u5173\u4E8E\u707E\u96BE"
-      - Destroyer
-      Flags: 0000
-      Languages_Touch: []
-    - Term: TutorialShop
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u5173\u4E8E\u5546\u5E97"
-      - About Shop
-      Flags: 0000
-      Languages_Touch: []
-    - Term: Restart
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u91CD\u65B0\u5F00\u59CB"
-      - Restart
-      Flags: 0000
-      Languages_Touch: []
     - Term: Back
       TermType: 0
       Description: 
@@ -97,28 +25,40 @@ MonoBehaviour:
       - Back
       Flags: 0000
       Languages_Touch: []
-    - Term: NextTutorial
+    - Term: BasicControl_KM
       TermType: 0
       Description: 
       Languages:
-      - "\u4E0B\u4E00\u6559\u7A0B"
-      - Next
+      - "\u3010\u65B9\u5411\u952E\u3011\uFF1A\u79FB\u52A8\u5149\u6807\n\u3010\u65B9\u5411\u952E\u3011+\u3010\u7A7A\u683C\u3011\uFF1A\u62D6\u52A8\u5355\u5143\n\u3010\u5DE6Shift\u3011\uFF1A\u65CB\u8F6C\u5355\u5143\n\u3010TAB\u3011\uFF1A\u67E5\u770B\u6570\u636E\u8303\u56F4"
+      - '<b>[Arrows]:</b> Move Cursor
+
+        <b>[Arrows+SpaceBar]:</b> Drag Unit
+
+        <b>[Left-Shift]:</b>
+        Rotate Unit
+
+        <b>[TAB]:</b> Visualize Signal'
       Flags: 0000
       Languages_Touch: []
-    - Term: TutorialSectionOver
+    - Term: BasicControl_Touch
       TermType: 0
       Description: 
       Languages:
-      - "\u6B64\u6BB5\u6559\u7A0B\u7ED3\u675F"
-      - Section Over
+      - "\u3010\u6ED1\u52A8\u5355\u5143\u3011\uFF1A\u62D6\u52A8\u5355\u5143\n\u3010\u53CC\u51FB\u5355\u5143\u3011\uFF1A\u65CB\u8F6C\u5355\u5143\n\u3010\u53CC\u6307\u6309\u4F4F\u3011\uFF1A\u67E5\u770B\u6570\u636E\u8303\u56F4"
+      - '<b>[Swipe on Unit]:</b>Drag Unit
+
+        <b>[DoubleTap on Unit]:</b>Rotate
+        Unit
+
+        <b>[DoubleFinger Hold]:</b>Visualize Signal'
       Flags: 0000
       Languages_Touch: []
-    - Term: GameOver
+    - Term: CareerButton
       TermType: 0
       Description: 
       Languages:
-      - "\u6E38\u620F\u7ED3\u675F"
-      - GAME OVER
+      - "\u751F\u6DAF\u6A21\u5F0F"
+      - Career
       Flags: 0000
       Languages_Touch: []
     - Term: EndingMessageNormal_EarnedMoney
@@ -155,32 +95,12 @@ MonoBehaviour:
       - This section of tutorial has concluded
       Flags: 0000
       Languages_Touch: []
-    - Term: BasicControl_KM
+    - Term: GameOver
       TermType: 0
       Description: 
       Languages:
-      - "\u3010\u65B9\u5411\u952E\u3011\uFF1A\u79FB\u52A8\u5149\u6807\n\u3010\u65B9\u5411\u952E\u3011+\u3010\u7A7A\u683C\u3011\uFF1A\u62D6\u52A8\u5355\u5143\n\u3010\u5DE6Shift\u3011\uFF1A\u65CB\u8F6C\u5355\u5143\n\u3010TAB\u3011\uFF1A\u67E5\u770B\u6570\u636E\u8303\u56F4"
-      - '<b>[Arrows]:</b> Move Cursor
-
-        <b>[Arrows+SpaceBar]:</b> Drag Unit
-
-        <b>[Left-Shift]:</b>
-        Rotate Unit
-
-        <b>[TAB]:</b> Visualize Signal'
-      Flags: 0000
-      Languages_Touch: []
-    - Term: BasicControl_Touch
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u3010\u6ED1\u52A8\u5355\u5143\u3011\uFF1A\u62D6\u52A8\u5355\u5143\n\u3010\u53CC\u51FB\u5355\u5143\u3011\uFF1A\u65CB\u8F6C\u5355\u5143\n\u3010\u53CC\u6307\u6309\u4F4F\u3011\uFF1A\u67E5\u770B\u6570\u636E\u8303\u56F4"
-      - '<b>[Swipe on Unit]:</b>Drag Unit
-
-        <b>[DoubleTap on Unit]:</b>Rotate
-        Unit
-
-        <b>[DoubleFinger Hold]:</b>Visualize Signal'
+      - "\u6E38\u620F\u7ED3\u675F"
+      - GAME OVER
       Flags: 0000
       Languages_Touch: []
     - Term: HForHint_KM
@@ -191,44 +111,12 @@ MonoBehaviour:
       - Hold <b>[H]</b> for controlling
       Flags: 0000
       Languages_Touch: []
-    - Term: ReleaseToReturn_KM
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u677E\u5F00\u4EE5\u8FD4\u56DE"
-      - Release to Hide
-      Flags: 0000
-      Languages_Touch: []
     - Term: HForHint_Touch
       TermType: 0
       Description: 
       Languages:
       - "\u6309\u4F4F\u8FD9\u91CC\u67E5\u770B\u64CD\u4F5C\u8BF4\u660E"
       - Hold Here for Hint
-      Flags: 0000
-      Languages_Touch: []
-    - Term: TouchHintExtend
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u70B9<b>[\u8FD9\u91CC]</b>\u7EE7\u7EED"
-      - "\u70B9<b>[\u8FD9\u91CC]</b>\u7EE7\u7EED"
-      Flags: 0000
-      Languages_Touch: []
-    - Term: TouchHintCollapsed
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u70B9<b>\u8FD9\u91CC</b>\u7EE7\u7EED"
-      - "\u70B9<b>\u8FD9\u91CC</b>\u7EE7\u7EED"
-      Flags: 0000
-      Languages_Touch: []
-    - Term: KMHintExtend
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u6309<b>[\u56DE\u8F66]</b>\u7EE7\u7EED"
-      - "\u6309<b>[\u56DE\u8F66]</b>\u7EE7\u7EED"
       Flags: 0000
       Languages_Touch: []
     - Term: KMHintCollapsed
@@ -239,12 +127,188 @@ MonoBehaviour:
       - "\u6309<b>\u56DE\u8F66</b>\u7EE7\u7EED"
       Flags: 0000
       Languages_Touch: []
-    - Term: CareerButton
+    - Term: KMHintExtend
       TermType: 0
       Description: 
       Languages:
-      - "\u751F\u6DAF\u6A21\u5F0F"
-      - Career
+      - "\u6309<b>[\u56DE\u8F66]</b>\u7EE7\u7EED"
+      - "\u6309<b>[\u56DE\u8F66]</b>\u7EE7\u7EED"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: NextTutorial
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E0B\u4E00\u6559\u7A0B"
+      - Next
+      Flags: 0000
+      Languages_Touch: []
+    - Term: PlayLevel
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6E38\u73A9\u5173\u5361"
+      - Play
+      Flags: 0000
+      Languages_Touch: []
+    - Term: ReleaseToReturn_KM
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u677E\u5F00\u4EE5\u8FD4\u56DE"
+      - Release to Hide
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Restart
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u91CD\u65B0\u5F00\u59CB"
+      - Restart
+      Flags: 0000
+      Languages_Touch: []
+    - Term: StartGame
+      TermType: 0
+      Description: 
+      Languages:
+      - "<b>\u5F00\u59CB\u6E38\u620F</b>"
+      - <b>Start Game</b>
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TouchHintCollapsed
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u70B9<b>\u8FD9\u91CC</b>\u7EE7\u7EED"
+      - "\u70B9<b>\u8FD9\u91CC</b>\u7EE7\u7EED"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TouchHintExtend
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u70B9<b>[\u8FD9\u91CC]</b>\u7EE7\u7EED"
+      - "\u70B9<b>[\u8FD9\u91CC]</b>\u7EE7\u7EED"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Tutorial
+      TermType: 0
+      Description: 
+      Languages:
+      - "<b>\u65B0\u624B\u6307\u5357</b>"
+      - <b>Tutorial</b>
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialBasicControl
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u7B2C\u4E00\u5929\u4E0A\u73ED"
+      - First Day to Work
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialSignalBasic
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u7528\u70B9\u513F\u8111\u5B50"
+      - Use your Brain
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialGoalAndCycle
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u65F6\u95F4\u4E0D\u7B49\u4EBA"
+      - Time awaits
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialShop
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E70\u4E70\u4E70"
+      - Shut up and TMM
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialShop_Currency
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u522B\u778E\u82B1\u94B1"
+      - Watch your wallet
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialSignalBasic_Adv
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6765\u70B9\u513F\u522B\u7684"
+      - Some new trick
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialDestroyer
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u522B\u592A\u653E\u677E"
+      - Heads Up!
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialSectionOver
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6B64\u6BB5\u6559\u7A0B\u7ED3\u675F"
+      - Section Over
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Level_1
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u7B2C\u4E00\u5173"
+      - Level 1
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Level_2
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u7B2C\u4E8C\u5173"
+      - Level 2
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Level_3
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u7B2C\u4E09\u5173"
+      - Level 3
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Level_4
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u7B2C\u56DB\u5173"
+      - Level 4
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Level_5
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u7B2C\u4E94\u5173"
+      - Level 5
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialGoal
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4EFB\u52A1\u76EE\u6807:"
+      - 'Need to do:'
       Flags: 0000
       Languages_Touch: []
     CaseInsensitiveTerms: 0

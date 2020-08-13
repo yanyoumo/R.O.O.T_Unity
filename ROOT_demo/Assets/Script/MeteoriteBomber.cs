@@ -30,6 +30,7 @@ namespace ROOT
         }
 
         //public override LevelType GetLevelType => LevelType.TutorialActionDestroyer;
+        protected override string MainGoalEntryContent { get; }
     }
 
     public class MeteoriteBomber: IWarningDestoryer

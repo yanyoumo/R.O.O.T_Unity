@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using I2.Loc;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -20,12 +21,15 @@ namespace ROOT
 
     public enum TutorialActionType
     {
+        //这个的顺序不能变！
         Text,
         CreateUnit,
         CreateCursor,
         ShowText,
         HideText,
         End,
+        ShowCheckList,
+        HideCheckList,
     }
 
     [Serializable]

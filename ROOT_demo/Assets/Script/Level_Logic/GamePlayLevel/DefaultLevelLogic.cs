@@ -45,6 +45,7 @@ namespace ROOT
         public DataScreen DataScreen;
         public HintMaster HintMaster;
         public TimeLine TimeLine;
+        //public TutorialCheckList tutorialCheckList;
 
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
@@ -206,6 +207,7 @@ namespace ROOT
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
             LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
+            //LevelAsset.tutorialCheckList = FindObjectOfType<TutorialCheckList>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }

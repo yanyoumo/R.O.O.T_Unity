@@ -986,7 +986,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d96fb4d7af0f19b44b5a322675fd1f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelActionAssetLib: {fileID: 0}
 --- !u!1 &879229356
 GameObject:
   m_ObjectHideFlags: 0
@@ -1576,7 +1575,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1134568278}
   m_OnClick:
     m_PersistentCalls:
@@ -1643,7 +1642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481ab606793a67349be805c13febeba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mTarget: {fileID: 1064452755}
+  mTarget: {fileID: 1093330217}
   mAlignment_RTL: 514
   mAlignment_LTR: 514
   mAlignmentWasRTL: 0

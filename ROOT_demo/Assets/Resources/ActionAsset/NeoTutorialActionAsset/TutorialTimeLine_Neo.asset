@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
+  m_Name: TutorialTimeLine_Neo
+  m_EditorClassIdentifier: 
+  TitleTerm: TutorialGoalAndCycle
+  Thumbnail: {fileID: 0}
+  LevelLogic: {fileID: 3354999926667516179, guid: 0fadf09469c1dec4183a5dc39ab2ba48,
+    type: 3}
+  levelType: 1
+  Actions:
+  - ActionIdx: 0
+    ActionType: 3
+    Text: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  - ActionIdx: 0
+    ActionType: 7
+    Text: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  - ActionIdx: 0
+    ActionType: 0
+    Text: "\u4ECA\u5929\u6765\u8BB2\u89E3\u4E00\u4E0B\u65F6\u95F4\u7EBF."
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  - ActionIdx: 1
+    ActionType: 0
+    Text: "\u5C4F\u5E55\u7684\u53F3\u4FA7,\u6709\u4E00\u6839\u65F6\u95F4\u7EBF."
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  - ActionIdx: 2
+    ActionType: 0
+    Text: "\u4F60\u5728\u68CB\u76D8\u4E0A\u7684\u64CD\u4F5C\u5C31\u4F1A\u4F7F\u5F97\u65F6\u95F4\u7EBF\u524D\u8FDB\u4E00\u6B65\u3002"
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  - ActionIdx: 2
+    ActionType: 1
+    Text: 
+    Pos: {x: -1, y: -1}
+    Core: 4
+    Sides: 00000000010000000000000001000000
+  - ActionIdx: 2
+    ActionType: 1
+    Text: 
+    Pos: {x: -1, y: -1}
+    Core: 4
+    Sides: 00000000000000000000000001000000
+  - ActionIdx: 2
+    ActionType: 1
+    Text: 
+    Pos: {x: -1, y: -1}
+    Core: 4
+    Sides: 01000000010000000000000000000000
+  - ActionIdx: 2
+    ActionType: 1
+    Text: 
+    Pos: {x: -1, y: -1}
+    Core: 4
+    Sides: 01000000010000000100000000000000
+  - ActionIdx: 2
+    ActionType: 1
+    Text: 
+    Pos: {x: -1, y: -1}
+    Core: 5
+    Sides: 01000000010000000100000000000000
+  - ActionIdx: 3
+    ActionType: 0
+    Text: AAAA
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  - ActionIdx: 4
+    ActionType: 0
+    Text: BBBB
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  - ActionIdx: 5
+    ActionType: 5
+    Text: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  InitialCurrency: 0
+  InitialTime: 0
+  TimeLineTokens:
+  - TokenID: 0
+    type: 3
+    RequireAmount: 0
+    Range: {x: 15, y: -1}
+  InitalBoard: []

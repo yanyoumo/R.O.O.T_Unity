@@ -10,11 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38d73b3f86fb8a344a648e6d4532b625, type: 3}
-  m_Name: DefaultTutorialLib
+  m_Name: TutorialLib
   m_EditorClassIdentifier: 
   ActionAssetList:
-  - {fileID: 11400000, guid: 23055b243c854b3488cdf6cf6fd31d79, type: 2}
-  - {fileID: 11400000, guid: 584366cad1a9e4d43baa43e813e4bd58, type: 2}
-  - {fileID: 11400000, guid: 8a70857a7c4e4904697dcf49921973a8, type: 2}
-  - {fileID: 11400000, guid: 9517afa17aab9ef44bbd5c8c7457503c, type: 2}
-  - {fileID: 11400000, guid: 7a6a5c3bc57d2ba49b2c0b32060f34c1, type: 2}
+  - {fileID: 11400000, guid: 0976af7dd8cae2a45a7e07d58fdf1e36, type: 2}
+  - {fileID: 11400000, guid: 0f09c10bd9f781148a7708ed697e597f, type: 2}
+  - {fileID: 11400000, guid: 7ab282b8548eb2343ac606e17e6da279, type: 2}
