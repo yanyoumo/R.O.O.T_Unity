@@ -9,8 +9,8 @@ namespace ROOT
 {
     public class TutorialBasicSignalNeo : TutorialLogic
     {
-        private bool LevelCompleted = false;
-        private bool PlayerRequestedEnd = false;
+        /*private bool LevelCompleted = false;
+        private bool PlayerRequestedEnd = false;*/
 
         protected override void Update()
         {
@@ -79,30 +79,6 @@ namespace ROOT
 
 
             ReadyToGo = true;
-        }
-
-        /// <summary>
-        /// 如果对通用动作没有重载的话，就是直接使用父类的。父类要是没有的话，会抛出NotImplementedException。
-        /// </summary>
-        /// <param name="data">输入的TutorialActionData</param>
-        /*protected override void DealStep(TutorialActionData data)
-        {
-            try
-            {
-                base.DealStep(data);
-            }
-            catch (NotImplementedException)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-        }*/
-
-        protected void InitCursor(Vector2Int pos)
-        {
-            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
-            Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
     }
 }

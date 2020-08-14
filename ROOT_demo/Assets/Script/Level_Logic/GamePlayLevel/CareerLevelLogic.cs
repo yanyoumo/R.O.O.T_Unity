@@ -14,8 +14,6 @@ namespace ROOT
     {
         //public override LevelType GetLevelType => LevelType.PlayLevel;
 
-        public int RequirementSatisfiedCycleCount = 0;
-
         public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
@@ -44,6 +42,7 @@ namespace ROOT
             {
                 LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);
             }
+            LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
         }
 
         protected void InitDestoryer()
@@ -73,53 +72,12 @@ namespace ROOT
             cursor.InitPosWithAnimation(pos);
             cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
-        
+
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
-            //这个函数就很接近裁判要做的事儿了。
-            int NormalRval=0;
-            int NetworkRval=0;
-
-            foreach (var actionAssetTimeLineToken in currentLevelAsset.ActionAsset.TimeLineTokens)
-            {
-                if (actionAssetTimeLineToken.InRange(currentLevelAsset._StepCount))
-                {
-                    if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
-                    {
-                        //TODO 这里还要判断满足了多少周期。
-                        PendingCleanUp = true;
-                        LevelMasterManager.Instance.LevelFinished(LevelAsset);
-                        return true;
-                    }
-                    else if(actionAssetTimeLineToken.type == TimeLineTokenType.RequireNormal)
-                    {
-                        NormalRval += actionAssetTimeLineToken.RequireAmount;
-                    }
-                    else if (actionAssetTimeLineToken.type == TimeLineTokenType.RequireNetwork)
-                    {
-                        NetworkRval += actionAssetTimeLineToken.RequireAmount;
-                    }
-                }
-            }
-            if (NormalRval==0&&NetworkRval==0)
-            {
-                currentLevelAsset.TimeLine.RequirementSatisfied = true;
-            }
-            else
-            {
-                currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int harDriverCountInt);
-                bool valA=(harDriverCountInt >= NormalRval);
-                currentLevelAsset.BoardDataCollector.CalculateServerScore(out int NetworkCountInt);
-                bool valB=(NetworkCountInt >= NetworkRval);
-                currentLevelAsset.TimeLine.RequirementSatisfied = valA && valB;
-            }
-
-            if (currentLevelAsset.TimeLine.RequirementSatisfied)
-            {
-                RequirementSatisfiedCycleCount++;
-            }
-
-            return false;
+            bool res= UpdateCareerGameOverStatus(currentLevelAsset);
+            LevelAsset.TimeLine.SetCurrentCount = RequirementSatisfiedCycleCount;
+            return res;
         }
 
         protected override void Update()

@@ -72,13 +72,5 @@ namespace ROOT
                 }
             }
         }
-
-        protected void InitCursor(Vector2Int pos)
-        {
-            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
-            Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
-        }
     }
 }

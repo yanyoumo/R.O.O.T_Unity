@@ -40,6 +40,18 @@ namespace ROOT
     //[ExecuteInEditMode]
     public class TimeLine : MonoBehaviour
     {
+        public TimeLineGoalMarker GoalMarker;
+
+        public int SetGoalCount
+        {
+            set => GoalMarker.TargetCount = value;
+        }
+
+        public int SetCurrentCount  
+        {
+            set => GoalMarker.CurrentCount = value;
+        }
+
         public MeshRenderer ArrowRenderer;
         private bool _requirementSatisfied;
         public bool RequirementSatisfied

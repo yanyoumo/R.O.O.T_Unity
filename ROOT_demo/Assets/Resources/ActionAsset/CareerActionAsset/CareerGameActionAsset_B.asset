@@ -38,3 +38,4 @@ MonoBehaviour:
     RequireAmount: 4
     Range: {x: 20, y: -1}
   InitalBoard: []
+  TargetCount: 15

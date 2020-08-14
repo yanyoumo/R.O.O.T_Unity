@@ -13,9 +13,9 @@ namespace ROOT
 
     public class DataScreen : MonoBehaviour
     {
-        public LCDRow CurrentMoneyLCDRow;
-        public LCDRow DeltaMoneyLCDRow;
-        public LCDRow TimeLCDRow;
+        public LCDRow CurrentMoneyLcdRow;
+        public LCDRow DeltaMoneyLcdRow;
+        public LCDRow TimeLcdRow;
 
         public MeshRenderer CurrentMoneyIcon;
         public MeshRenderer DeltaMoneyIcon;
@@ -28,23 +28,30 @@ namespace ROOT
             SetAlertLevel(1.0f, RowEnum.Time);
         }
 
-        public void SetLCD(float number,RowEnum row)
+        /*public void AnimateSetLcd(float number, RowEnum row)
         {
-            SetLCD(Mathf.FloorToInt(number), row);
+            SetLcd(Mathf.FloorToInt(number), row);
+        }*/
+
+        public void SetLcd(float number,RowEnum row)
+        {
+            SetLcd(Mathf.FloorToInt(number), row);
         }
 
-        public void SetLCD(int number, RowEnum row)
+        public void SetLcd(int number, RowEnum row)
         {
             switch (row)
             {
                 case RowEnum.CurrentMoney:
-                    CurrentMoneyLCDRow.SetNumber(Mathf.Abs(number), number >= 0);
+                    CurrentMoneyLcdRow.SetAniNumber(number);
+                    //CurrentMoneyLcdRow.SetNumber(number);
                     break;
                 case RowEnum.DeltaMoney:
-                    DeltaMoneyLCDRow.SetNumber(Mathf.Abs(number), number >= 0);
+                    DeltaMoneyLcdRow.SetAniNumber(number);
+                    //DeltaMoneyLcdRow.SetNumber(number);
                     break;
                 case RowEnum.Time:
-                    TimeLCDRow.SetNumber(Mathf.Abs(number), number >= 0);
+                    TimeLcdRow.SetNumber(number);//一直都是一步，就不用了。
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(row), row, null);

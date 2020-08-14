@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TutorialTimeLine_Neo
   m_EditorClassIdentifier: 
   TitleTerm: TutorialGoalAndCycle
-  Thumbnail: {fileID: 0}
+  Thumbnail: {fileID: 21300000, guid: 6dc37bd1b8c05f448932aa74775355be, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: 0fadf09469c1dec4183a5dc39ab2ba48,
     type: 3}
   levelType: 1
@@ -51,42 +51,72 @@ MonoBehaviour:
   - ActionIdx: 2
     ActionType: 1
     Text: 
-    Pos: {x: -1, y: -1}
+    Pos: {x: 3, y: 1}
     Core: 4
-    Sides: 00000000010000000000000001000000
+    Sides: 00000000010000000100000000000000
   - ActionIdx: 2
     ActionType: 1
     Text: 
-    Pos: {x: -1, y: -1}
+    Pos: {x: 4, y: 3}
     Core: 4
-    Sides: 00000000000000000000000001000000
+    Sides: 00000000010000000000000000000000
   - ActionIdx: 2
     ActionType: 1
     Text: 
-    Pos: {x: -1, y: -1}
+    Pos: {x: 1, y: 5}
     Core: 4
-    Sides: 01000000010000000000000000000000
+    Sides: 00000000000000000100000001000000
   - ActionIdx: 2
     ActionType: 1
     Text: 
-    Pos: {x: -1, y: -1}
+    Pos: {x: 0, y: 0}
     Core: 4
     Sides: 01000000010000000100000000000000
   - ActionIdx: 2
     ActionType: 1
     Text: 
-    Pos: {x: -1, y: -1}
+    Pos: {x: 2, y: 3}
     Core: 5
-    Sides: 01000000010000000100000000000000
+    Sides: 01000000010000000000000001000000
   - ActionIdx: 3
     ActionType: 0
-    Text: AAAA
+    Text: "\u5982\u679C\u65F6\u95F4\u7EBF\u8FDB\u5C55\u5230<b>[\u9ED1\u8272]</b>,\u90A3\u5C31\u8BF4\u660E\u4F60\u65F6\u95F4\u5230\u4E86."
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 4
     ActionType: 0
-    Text: BBBB
+    Text: "\u6240\u4EE5\u8BF4,\u5728\u505A\u5404\u79CD\u64CD\u4F5C\u7684\u65F6\u5019,\u90FD\u76EF\u7740\u70B9\u65F6\u95F4\u7EBF."
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  - ActionIdx: 5
+    ActionType: 1
+    Text: 
+    Pos: {x: 3, y: 2}
+    Core: 4
+    Sides: 00000000010000000100000000000000
+  - ActionIdx: 5
+    ActionType: 1
+    Text: 
+    Pos: {x: 5, y: 5}
+    Core: 4
+    Sides: 01000000000000000100000000000000
+  - ActionIdx: 5
+    ActionType: 1
+    Text: 
+    Pos: {x: 5, y: 0}
+    Core: 4
+    Sides: 00000000010000000000000000000000
+  - ActionIdx: 5
+    ActionType: 4
+    Text: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    Sides: 
+  - ActionIdx: 5
+    ActionType: 6
+    Text: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
@@ -102,5 +132,6 @@ MonoBehaviour:
   - TokenID: 0
     type: 3
     RequireAmount: 0
-    Range: {x: 15, y: -1}
+    Range: {x: 20, y: -1}
   InitalBoard: []
+  TargetCount: 0

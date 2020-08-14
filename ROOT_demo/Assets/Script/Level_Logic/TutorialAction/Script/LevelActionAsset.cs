@@ -97,6 +97,9 @@ namespace ROOT
         [Space]
         [ShowIf("levelType", LevelType.Career)]
         public UnitGist[] InitalBoard;
+        [ShowIf("levelType", LevelType.Career)]
+        [Range(0, 100)]
+        public int TargetCount;
 
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
     }

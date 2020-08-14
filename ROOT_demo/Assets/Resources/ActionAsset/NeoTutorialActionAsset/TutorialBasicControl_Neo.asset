@@ -16,7 +16,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: f8294d4198f323b4cbd32bb90215b4fb, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: 7adc5e295115e85488339a30c9a13691,
     type: 3}
-  levelType: 0
+  levelType: 1
   Actions:
   - ActionIdx: 0
     ActionType: 3
@@ -118,3 +118,4 @@ MonoBehaviour:
   InitialTime: 0
   TimeLineTokens: []
   InitalBoard: []
+  TargetCount: 0

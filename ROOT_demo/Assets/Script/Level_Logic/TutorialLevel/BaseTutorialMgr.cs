@@ -11,6 +11,9 @@ namespace ROOT
         protected int ActionIndex { get; private set; } = -1;
         protected int LastActionCount { get; private set; } = 0;
 
+        protected bool LevelCompleted = false;
+        protected bool PlayerRequestedEnd = false;
+
         protected abstract string MainGoalEntryContent { get; }
         protected virtual string SecondaryGoalEntryContent { get; } = "";
 
@@ -136,6 +139,14 @@ namespace ROOT
                 }
                 DealStep(LevelActionAsset.Actions[i]);
             }
+        }
+
+        protected void InitCursor(Vector2Int pos)
+        {
+            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
+            Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
+            cursor.InitPosWithAnimation(pos);
+            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
 
         protected override void Update()

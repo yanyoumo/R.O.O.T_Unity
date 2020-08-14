@@ -10,34 +10,56 @@ namespace ROOT
     //TODO
     public class TutorialTimeLineNeo : TutorialLogic
     {
-        private bool LevelCompleted = false;
-        private bool PlayerRequestedEnd = false;
+        /*private bool LevelCompleted = false;
+        private bool PlayerRequestedEnd = false;*/
+        private bool OnceFlagA = false;
+        private bool OnceFlagB = false;
 
         protected override void Update()
         {
             base.Update();
 
+
             if (ReadyToGo)
             {
                 if (ActionIndex == 2)
                 {
-                    Debug.Assert(LevelAsset.ActionAsset.TimeLineTokens.Length > 0);
-                    LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);
+                    Debug.Log("HERE");
+                    if (!OnceFlagA)
+                    {
+                        OnceFlagA = true;
+                        Debug.Assert(LevelAsset.ActionAsset.TimeLineTokens.Length > 0);
+                        LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);
+                    }
                 }
             }
 
             if (ActionEnded)
             {
-                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = LevelCompleted = AllUnitConnected();
+                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = AllUnitConnected();
+                LevelAsset.HintMaster.TutorialCheckList.SecondaryGoalCompleted = !OnceFlagB;
+                LevelCompleted = (!OnceFlagB) && AllUnitConnected();
             }
 
             if (LevelCompleted)
             {
                 PlayerRequestedEnd = CtrlPack.HasFlag(ControllingCommand.NextButton);
             }
+
+            foreach (var actionAssetTimeLineToken in LevelAsset.ActionAsset.TimeLineTokens)
+            {
+                if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
+                {
+                    if (actionAssetTimeLineToken.InRange(LevelAsset._StepCount))
+                    {
+                        OnceFlagB = true;
+                    }
+                }
+            }
         }
 
-        protected override string MainGoalEntryContent => "将所有接收端单元都链接至发送端";
+        protected override string MainGoalEntryContent => "将接收端单元都链至发送端";
+        protected override string SecondaryGoalEntryContent => "在时间线结束之前完成任务";
 
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
@@ -87,33 +109,9 @@ namespace ROOT
             LevelAsset.HintEnabled = true;
             LevelAsset.CurrencyEnabled = true;
             LevelAsset.GameOverEnabled = true;
-
-
+            LevelAsset.CycleEnabled = true;
+            
             ReadyToGo = true;
-        }
-
-        /// <summary>
-        /// 如果对通用动作没有重载的话，就是直接使用父类的。父类要是没有的话，会抛出NotImplementedException。
-        /// </summary>
-        /// <param name="data">输入的TutorialActionData</param>
-        /*protected override void DealStep(TutorialActionData data)
-        {
-            try
-            {
-                base.DealStep(data);
-            }
-            catch (NotImplementedException)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-        }*/
-
-        protected void InitCursor(Vector2Int pos)
-        {
-            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
-            Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
     }
 }

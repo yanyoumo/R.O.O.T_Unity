@@ -585,9 +585,13 @@ namespace ROOT
 
             if (currentLevelAsset.LCDCurrencyEnabled)
             {
-                currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
+                currentLevelAsset.DataScreen.SetLcd(currentLevelAsset.GameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
                 currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(), RowEnum.CurrentMoney);
-                currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.DeltaCurrency, RowEnum.DeltaMoney);
+            }
+
+            if (currentLevelAsset.LCDDeltaCurrencyEnabled)
+            {
+                currentLevelAsset.DataScreen.SetLcd(currentLevelAsset.DeltaCurrency, RowEnum.DeltaMoney);
             }
         }
 
@@ -595,7 +599,7 @@ namespace ROOT
         {
             if (currentLevelAsset.LCDTimeEnabled)
             {
-                currentLevelAsset.DataScreen.SetLCD(currentLevelAsset.GameStateMgr.GetGameTime(), RowEnum.Time);
+                currentLevelAsset.DataScreen.SetLcd(currentLevelAsset.GameStateMgr.GetGameTime(), RowEnum.Time);
                 currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetTimeRatio(), RowEnum.Time);
             }
 

@@ -434,7 +434,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145128176}
-  m_LocalRotation: {x: 0.6919061, y: -0.0054274714, z: -0.005663104, w: 0.7219449}
+  m_LocalRotation: {x: 0.6919061, y: -0.00542747, z: -0.0056631025, w: 0.7219449}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2139,7 +2139,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelpScreen: {fileID: 5972217544483716586}
-  ShouldShowCheckList: 0
   TutorialMainTextFrame: {fileID: 242932730}
   TutorialCheckList: {fileID: 6586758792657791196}
 --- !u!1 &406740841
@@ -3948,7 +3947,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 884686625}
-  m_LocalRotation: {x: 0.6995316, y: -0.0054872874, z: -0.005605164, w: 0.7145586}
+  m_LocalRotation: {x: 0.69953156, y: -0.0054872865, z: -0.0056051644, w: 0.71455866}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4277,7 +4276,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.69953156, y: -0.0054872874, z: -0.0056051635, w: 0.71455866}
+  m_LocalRotation: {x: 0.69953156, y: -0.0054872874, z: -0.0056051644, w: 0.7145588}
   m_LocalPosition: {x: -0.01781255, y: 24.996923, z: -0.9200011}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -5113,9 +5112,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6267af0287423704eaf998c948afc267, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentMoneyLCDRow: {fileID: 6160794715798958234}
-  DeltaMoneyLCDRow: {fileID: 6160794715798958233}
-  TimeLCDRow: {fileID: 6160794715798958232}
+  CurrentMoneyLcdRow: {fileID: 6160794715798958234}
+  DeltaMoneyLcdRow: {fileID: 6160794715798958233}
+  TimeLcdRow: {fileID: 6160794715798958232}
   CurrentMoneyIcon: {fileID: 1350586789}
   DeltaMoneyIcon: {fileID: 828762299}
   TimeIcon: {fileID: 983952643}

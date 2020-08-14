@@ -311,6 +311,14 @@ MonoBehaviour:
       - 'Need to do:'
       Flags: 0000
       Languages_Touch: []
+    - Term: TutorialTimeAdv
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u8BE5\u5E72\u6D3B\u4E86"
+      - Time to work
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 

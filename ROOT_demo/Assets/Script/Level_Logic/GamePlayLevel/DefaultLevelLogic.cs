@@ -76,6 +76,7 @@ namespace ROOT
         public bool GameOverEnabled = true;
         //UtilsFlag
         public bool LCDCurrencyEnabled = true;
+        public bool LCDDeltaCurrencyEnabled = true;
         public bool LCDTimeEnabled = true;
         public bool HintEnabled = true;
         public bool ForceHddConnectionHint = false;
@@ -108,6 +109,7 @@ namespace ROOT
             RotateEnabled = true;
             ShopEnabled = true;
             LCDCurrencyEnabled = true;
+            LCDDeltaCurrencyEnabled = true;
             LCDTimeEnabled = true;
             CurrencyEnabled = true;
             DestroyerEnabled = true;
@@ -122,6 +124,7 @@ namespace ROOT
             RotateEnabled = false;
             ShopEnabled = false;
             LCDCurrencyEnabled = false;
+            LCDDeltaCurrencyEnabled = false;
             LCDTimeEnabled = false;
             CurrencyEnabled = false;
             DestroyerEnabled = false;
@@ -133,6 +136,8 @@ namespace ROOT
 
     public abstract class LevelLogic : MonoBehaviour//LEVEL-LOGIC/每一关都有一个这个类。
     {
+        private bool _noRequirement;
+        protected int RequirementSatisfiedCycleCount = 0;
         public bool IsTutorialLevel=false;
         //ASSET
         protected internal GameAssets LevelAsset;
@@ -381,6 +386,14 @@ namespace ROOT
                 }
                 bool shouldCycle = ShouldCycle(in _ctrlPack, in pressedAny, in movedTile, in movedCursor);
                 Animating = shouldCycle;
+                if (shouldCycle && movedTile&& (!_noRequirement))
+                {
+                    if (LevelAsset.TimeLine.RequirementSatisfied)
+                    {
+                        RequirementSatisfiedCycleCount++;
+                    }
+                }
+
                 if (Animating)
                 {
                     AnimationTimerOrigin = Time.timeSinceLevelLoad;
@@ -395,6 +408,52 @@ namespace ROOT
                 LevelAsset.HintMaster.UpdateHintMaster(_ctrlPack);
             }
         }
+
+        protected bool UpdateCareerGameOverStatus(GameAssets currentLevelAsset)
+        {
+            //这个函数就很接近裁判要做的事儿了。
+            int NormalRval = 0;
+            int NetworkRval = 0;
+
+            foreach (var actionAssetTimeLineToken in currentLevelAsset.ActionAsset.TimeLineTokens)
+            {
+                if (actionAssetTimeLineToken.InRange(currentLevelAsset._StepCount))
+                {
+                    if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
+                    {
+                        //TODO 这里还要判断满足了多少周期。
+                        PendingCleanUp = true;
+                        LevelMasterManager.Instance.LevelFinished(LevelAsset);
+                        return true;
+                    }
+                    else if (actionAssetTimeLineToken.type == TimeLineTokenType.RequireNormal)
+                    {
+                        NormalRval += actionAssetTimeLineToken.RequireAmount;
+                    }
+                    else if (actionAssetTimeLineToken.type == TimeLineTokenType.RequireNetwork)
+                    {
+                        NetworkRval += actionAssetTimeLineToken.RequireAmount;
+                    }
+                }
+            }
+            if (NormalRval == 0 && NetworkRval == 0)
+            {
+                _noRequirement = true;
+                currentLevelAsset.TimeLine.RequirementSatisfied = true;
+            }
+            else
+            {
+                _noRequirement = false;
+                currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int harDriverCountInt);
+                bool valA = (harDriverCountInt >= NormalRval);
+                currentLevelAsset.BoardDataCollector.CalculateServerScore(out int NetworkCountInt);
+                bool valB = (NetworkCountInt >= NetworkRval);
+                currentLevelAsset.TimeLine.RequirementSatisfied = valA && valB;
+            }
+
+            return false;
+        }
+
     }
 
     public class DefaultLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
