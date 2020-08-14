@@ -45,17 +45,17 @@ namespace ROOT
             return false;
         }
 
-        public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
+        public override void InitLevel()
         {
             Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
             LevelAsset.GameBoard.UpdateBoardAnimation();
-            LevelAsset.StartingScoreSet = new ScoreSet();
-            LevelAsset.StartingPerMoveData = new PerMoveData();
+            //LevelAsset.StartingScoreSet = new ScoreSet();
+            //LevelAsset.StartingPerMoveData = new PerMoveData();
 
-            LevelAsset.GameStateMgr = new StandardGameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.StartingScoreSet, LevelAsset.StartingPerMoveData);
+            LevelAsset.GameStateMgr = new GameStateMgr();
+            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
 
             LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;

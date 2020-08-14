@@ -65,7 +65,7 @@ namespace ROOT
             LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
         }
 
-        public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
+        public override void InitLevel()
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
@@ -74,11 +74,11 @@ namespace ROOT
             LevelAsset.DeltaCurrency = 0.0f;
 
             LevelAsset.DeltaCurrency = 0.0f;
-            LevelAsset.GameStateMgr = new StandardGameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(new ScoreSet(1000,999), new PerMoveData());
+            LevelAsset.GameStateMgr = new GameStateMgr();
+            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
-            LevelAsset.StartingScoreSet = new ScoreSet(1000, 999);
-            LevelAsset.StartingPerMoveData = new PerMoveData();
+            //LevelAsset.StartingScoreSet = new ScoreSet(1000, 999);
+            //LevelAsset.StartingPerMoveData = new PerMoveData();
             InitCursor(new Vector2Int(2, 3));
 
             //TODO 还要把成本去掉。（这个时候还不教学成本

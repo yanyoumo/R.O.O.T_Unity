@@ -17,7 +17,7 @@ namespace ROOT
         protected abstract string MainGoalEntryContent { get; }
         protected virtual string SecondaryGoalEntryContent { get; } = "";
 
-        public LevelActionAsset LevelActionAsset;
+        public LevelActionAsset LevelActionAsset => LevelAsset.ActionAsset;
         protected bool ShowText
         {
             set => LevelAsset.HintMaster.RequestedShowTutorialContent = value;
@@ -52,7 +52,7 @@ namespace ROOT
             LevelAsset.HintMaster.TutorialCheckList.SetupEntryContent(MainGoalEntryContent, SecondaryGoalEntryContent);
         }
 
-        public abstract override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = default);
+        public abstract override void InitLevel();
 
         protected void CreateUnitOnBoard(TutorialActionData data)
         {

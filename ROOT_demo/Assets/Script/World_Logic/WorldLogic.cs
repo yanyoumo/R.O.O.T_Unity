@@ -607,7 +607,7 @@ namespace ROOT
             {
                 currentLevelAsset._StepCount++;
                 currentLevelAsset.TimeLine.Step();
-                currentLevelAsset.GameStateMgr.PerMove(new ScoreSet(), new PerMoveData(currentLevelAsset.DeltaCurrency, 1));
+                currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
                 if (currentLevelAsset.BoughtOnce)
                 {
                     currentLevelAsset.BoughtOnce = false;

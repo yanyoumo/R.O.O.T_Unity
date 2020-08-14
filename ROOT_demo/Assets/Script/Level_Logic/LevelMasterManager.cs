@@ -53,17 +53,7 @@ namespace ROOT
             AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDTIVELOGIC, LoadSceneMode.Additive);
             yield return StartCoroutine(FindLlsAfterLoad(loadSceneAsync));
             _gameLogic = _lls.SpawnLevelLogic(LevelLogicPrefab);//这里Level-logic的Awake就进行初始化了。主要是LevelLogic的实例去拿CoreLogic场景里面的东西。
-            if (_gameLogic is TutorialLogic mgr)
-            {
-                Debug.Assert(actionAsset != null);
-                mgr.LevelActionAsset = actionAsset;
-                mgr.LevelAsset.ActionAsset = actionAsset;
-            }
-            if (_gameLogic is CareerLevelLogic mgr1)
-            {
-                Debug.Assert(actionAsset != null);
-                mgr1.LevelAsset.ActionAsset = actionAsset;
-            }
+            _gameLogic.LevelAsset.ActionAsset = actionAsset;
             _lls = null;
             loadSceneAsync = SceneManager.LoadSceneAsync(_gameLogic.LEVEL_ART_SCENE_ID, LoadSceneMode.Additive);
             yield return _gameLogic.UpdateArtLevelReference(loadSceneAsync);//这里是第二次的LinkLevel。匹配ArtScene里面的引用//和第三次的Init里面的UpdateReference。通过根引用去查找其他引用。
@@ -71,7 +61,7 @@ namespace ROOT
             Debug.Assert(_gameLogic.CheckReference());
             Debug.Assert(!_gameLogic.Playing);
 #endif
-            _gameLogic.InitLevel(new ScoreSet(), new PerMoveData());//最后的初始化和启动游戏，运行此之前，需要的引用必须齐整。
+            _gameLogic.InitLevel();//最后的初始化和启动游戏，运行此之前，需要的引用必须齐整。
         }
 
         public void LoadLevelThenPlay(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)

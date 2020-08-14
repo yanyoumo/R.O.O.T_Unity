@@ -14,7 +14,7 @@ namespace ROOT
     {
         //public override LevelType GetLevelType => LevelType.PlayLevel;
 
-        public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
+        public override void InitLevel()
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
@@ -22,22 +22,20 @@ namespace ROOT
             InitCurrencyIoMgr();
             LevelAsset.DeltaCurrency = 0.0f;
 
-            LevelAsset.GameStateMgr = new StandardGameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
+            LevelAsset.GameStateMgr = new GameStateMgr();
+            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
 
             InitShop();
             InitDestoryer();
             InitCursor(new Vector2Int(2, 3));
             LevelAsset.EnableAllCoreFunctionAndFeature();
-            //LevelAsset.GameBoard.InitBoardRealStart();
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
             StartShop();
 
             ReadyToGo = true;
 
-            LevelAsset.StartingScoreSet = scoreSet;
-            LevelAsset.StartingPerMoveData = perMoveData;
+//LevelAsset.StartingPerMoveData = new PerMoveData();
             if (LevelAsset.ActionAsset.TimeLineTokens.Length>0)
             {
                 LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);

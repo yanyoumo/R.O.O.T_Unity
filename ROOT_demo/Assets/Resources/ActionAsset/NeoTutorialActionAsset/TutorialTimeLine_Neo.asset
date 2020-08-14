@@ -128,6 +128,7 @@ MonoBehaviour:
     Sides: 
   InitialCurrency: 0
   InitialTime: 0
+  GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
   TimeLineTokens:
   - TokenID: 0
     type: 3

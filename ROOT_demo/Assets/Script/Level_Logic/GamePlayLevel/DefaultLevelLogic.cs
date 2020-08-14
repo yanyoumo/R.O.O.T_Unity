@@ -36,8 +36,8 @@ namespace ROOT
         /// </summary>
         public LevelLogic Owner;
         public LevelActionAsset ActionAsset;
-        public ScoreSet StartingScoreSet;
-        public PerMoveData StartingPerMoveData;
+        //public ScoreSet StartingScoreSet;
+        //public PerMoveData StartingPerMoveData;
         //这些引用在Asset外面要设好，在WRD-LOGIC里面也要处理。
         public GameObject CursorTemplate;
         public GameObject ItemPriceRoot;
@@ -216,7 +216,7 @@ namespace ROOT
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
-        public abstract void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData());
+        public abstract void InitLevel();
 
         public virtual bool CheckReference()
         {
@@ -259,7 +259,7 @@ namespace ROOT
         protected virtual bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             //这个函数就很接近裁判要做的事儿了。
-            if (currentLevelAsset.GameStateMgr.EndGameCheck(new ScoreSet(), new PerMoveData()))
+            if (currentLevelAsset.GameStateMgr.EndGameCheck())
             {
                 PendingCleanUp = true;
                 LevelMasterManager.Instance.LevelFinished(LevelAsset);
@@ -460,7 +460,7 @@ namespace ROOT
     {
         //public override LevelType GetLevelType => LevelType.PlayLevel;
 
-        public override void InitLevel(ScoreSet scoreSet = null, PerMoveData perMoveData = new PerMoveData())
+        public override void InitLevel()
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
@@ -468,8 +468,8 @@ namespace ROOT
             InitCurrencyIoMgr();
             LevelAsset.DeltaCurrency = 0.0f;
 
-            LevelAsset.GameStateMgr = new StandardGameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(scoreSet ?? new ScoreSet(), perMoveData);
+            LevelAsset.GameStateMgr = new GameStateMgr();
+            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
 
             InitShop();
             InitDestoryer();
@@ -481,8 +481,8 @@ namespace ROOT
 
             ReadyToGo = true;
 
-            LevelAsset.StartingScoreSet = scoreSet;
-            LevelAsset.StartingPerMoveData = perMoveData;
+            //LevelAsset.StartingScoreSet = scoreSet;
+//LevelAsset.StartingPerMoveData = new PerMoveData();
             LevelAsset.ActionAsset = null;
         }
         protected void InitDestoryer()

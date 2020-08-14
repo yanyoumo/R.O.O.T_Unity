@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ROOT
 {
-    public sealed class ScoreSet
+    internal sealed class ScoreSet
     {
         public float Currency;
         public int GameTime;
@@ -18,7 +18,7 @@ namespace ROOT
 
         public bool ChangeCurrency(float delta)
         {
-            if (delta>=0)
+            if (delta >= 0)
             {
                 Currency += delta;
                 return true;
@@ -28,6 +28,7 @@ namespace ROOT
                 return ForceSpendCurrency(Mathf.Abs(delta));
             }
         }
+
         //price应该是个正数
         public bool SpendCurrency(float price)
         {
@@ -38,137 +39,82 @@ namespace ROOT
             else
             {
                 Currency -= price;
-                Debug.Assert(Currency>=0);
+                Debug.Assert(Currency >= 0);
                 return true;
             }
         }
+
         public bool ForceSpendCurrency(float price)
         {
             Currency -= price;
             return (Currency >= 0);
         }
+
         public void AddCurrency(float income)
         {
             Currency += income;
         }
+
         public void TimePass()
         {
             GameTime--;
         }
     }
 
-    public struct PerMoveData
+    public sealed class GameStateMgr
     {
-        public float DeltaCurrency;
-        public int DeltaTime;
-        public PerMoveData(float deltaCurrency, int deltaTime)
+        public float StartingMoney { private set; get; }
+        public int StartingTime { private set; get; }
+        private ScoreSet _gameScoreSet;
+        private GameModeAsset StartingGameMode;
+
+        public bool SpendCurrency(float price)
         {
-            DeltaCurrency = deltaCurrency;
-            DeltaTime = deltaTime;
-        }
-    }
-
-    public interface IGameLoopStepCheck
-    {
-        void InitGameMode(ScoreSet initScoreSet, PerMoveData perMoveData);
-        bool PerMove(ScoreSet initScoreSet, PerMoveData perMoveData);
-        bool EndGameCheck(ScoreSet initScoreSet, PerMoveData perMoveData);
-    }
-
-    public abstract class GameStateMgr: IGameLoopStepCheck
-    {
-        public float StartingMoney { protected set; get; }
-        public int StartingTime { protected set; get; }
-        public ScoreSet GameScoreSet { protected set; get; }
-
-        public virtual bool SpendCurrency(float price)
-        {
-            return GameScoreSet.SpendCurrency(price);
+            return _gameScoreSet.SpendCurrency(price);
         }
 
-        public virtual void AddCurrency(float income)
+        public void AddCurrency(float income)
         {
-            GameScoreSet.AddCurrency(income);
+            _gameScoreSet.AddCurrency(income);
         }
 
         public float GetCurrency()
         {
-            return GameScoreSet.Currency;
+            return _gameScoreSet.Currency;
         }
 
         public int GetGameTime()
         {
-            return GameScoreSet.GameTime;
+            return _gameScoreSet.GameTime;
         }
 
         public float GetCurrencyRatio()
         {
-            return GameScoreSet.Currency / StartingMoney;
+            return _gameScoreSet.Currency / StartingMoney;
         }
 
         public float GetTimeRatio()
         {
-            return GameScoreSet.GameTime / (float) StartingTime;
+            return _gameScoreSet.GameTime / (float) StartingTime;
         }
 
-        public abstract void InitGameMode(ScoreSet initScoreSet, PerMoveData perMoveData);
-        public abstract bool PerMove(ScoreSet initScoreSet, PerMoveData perMoveData);
-        public abstract bool EndGameCheck(ScoreSet initScoreSet, PerMoveData perMoveData);
-
-        public static GameStateMgr GenerateGameStateMgrByType(Type type)
+        public void InitGameMode(GameModeAsset startingGameMode)
         {
-            if (type==typeof(StandardGameStateMgr))
-            {
-                return new StandardGameStateMgr();
-            }
-            else if (type == typeof(InfiniteGameStateMgr))
-            {
-                return new InfiniteGameStateMgr();
-            }
-
-            throw new NotImplementedException();
+            StartingMoney = startingGameMode.InitialCurrency;
+            StartingTime = startingGameMode.InitialTime;
+            StartingGameMode = startingGameMode;
+            _gameScoreSet = new ScoreSet(StartingMoney, StartingTime);
         }
-    }
 
-    public class StandardGameStateMgr : GameStateMgr
-    {
-        public override void InitGameMode(ScoreSet initScoreSet, PerMoveData perMoveData)
+        public bool PerMove(float DeltaCurrency)
         {
-            StartingMoney = initScoreSet.Currency;
-            StartingTime = initScoreSet.GameTime;
-            GameScoreSet = initScoreSet;
+            _gameScoreSet.TimePass();
+            return _gameScoreSet.ChangeCurrency(DeltaCurrency);
         }
 
-        public override bool PerMove(ScoreSet initScoreSet, PerMoveData perMoveData)
-        {
-            GameScoreSet.TimePass();
-            return GameScoreSet.ChangeCurrency(perMoveData.DeltaCurrency);
-        }
-
-        public override bool EndGameCheck(ScoreSet initScoreSet, PerMoveData perMoveData)
+        public bool EndGameCheck()
         {
             return (GetCurrency() < 0) || (GetGameTime() <= 0);
-        }
-    }
-
-    public class InfiniteGameStateMgr : GameStateMgr
-    {
-        //TODO 这个东西的界面表现可以再优化一下。
-        public override void InitGameMode(ScoreSet initScoreSet, PerMoveData perMoveData)
-        {
-            StartingMoney = initScoreSet.Currency;
-            StartingTime = initScoreSet.GameTime;
-            GameScoreSet = initScoreSet;
-        }
-
-        public override bool PerMove(ScoreSet initScoreSet, PerMoveData perMoveData)
-        {
-            return true;
-        }
-
-        public override bool EndGameCheck(ScoreSet initScoreSet, PerMoveData perMoveData)
-        {
-            return false;
         }
     }
 }

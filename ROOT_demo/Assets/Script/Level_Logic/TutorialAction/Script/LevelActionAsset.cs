@@ -78,19 +78,14 @@ namespace ROOT
         public GameObject LevelLogic;
         [EnumToggleButtons]
         public LevelType levelType;
+        [Required]
+        [AssetSelector(Paths = "Assets/Resources/GameMode")]
+        public GameModeAsset GameModeAsset;
 
         [Header("Tutorial")]
         [ShowIf("levelType", LevelType.Tutorial)]
         public TutorialActionData[] Actions;
-
-        [Header("Classic")]
-        [ShowIf("levelType", LevelType.Classic)]
-        [Range(0,10000)]
-        public int InitialCurrency;
-        [ShowIf("levelType", LevelType.Classic)]
-        [Range(0,100)]
-        public int InitialTime;
-
+        
         [Header("Career")]
         [ShowIf("levelType", LevelType.Career)]
         public TimeLineToken[] TimeLineTokens;
