@@ -231,7 +231,7 @@ namespace ROOT
         {
             if (_items[idx])
             {
-                if (CurrentGameStateMgr.SpendCurrency(_prices[idx]*_priceCof[idx]))
+                if (CurrentGameStateMgr.SpendShopCurrency(_prices[idx]*_priceCof[idx]))
                 {
                     //TODO 因为是立刻送，所以目前还是闪现。
                     _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;

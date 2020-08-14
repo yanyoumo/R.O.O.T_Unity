@@ -14,8 +14,8 @@ namespace ROOT
         [Range(0, 100)]
         public int InitialTime=30;
 
-        public bool ShopCoat=true;
-        public bool UnitCoat = true;
+        public bool ShopCost=true;
+        public bool UnitCost = true;
         public bool InfiniteTime = false;
     }
 }

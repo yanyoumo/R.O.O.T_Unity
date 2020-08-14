@@ -66,11 +66,18 @@ namespace ROOT
         public float StartingMoney { private set; get; }
         public int StartingTime { private set; get; }
         private ScoreSet _gameScoreSet;
-        private GameModeAsset StartingGameMode;
+        private GameModeAsset _startingGameMode;
 
-        public bool SpendCurrency(float price)
+        public bool SpendShopCurrency(float price)
         {
-            return _gameScoreSet.SpendCurrency(price);
+            if (_startingGameMode.ShopCost)
+            {
+                return _gameScoreSet.SpendCurrency(price);
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public void AddCurrency(float income)
@@ -102,14 +109,21 @@ namespace ROOT
         {
             StartingMoney = startingGameMode.InitialCurrency;
             StartingTime = startingGameMode.InitialTime;
-            StartingGameMode = startingGameMode;
+            _startingGameMode = startingGameMode;
             _gameScoreSet = new ScoreSet(StartingMoney, StartingTime);
         }
 
-        public bool PerMove(float DeltaCurrency)
+        public bool PerMove(float deltaCurrency)
         {
             _gameScoreSet.TimePass();
-            return _gameScoreSet.ChangeCurrency(DeltaCurrency);
+            if (_startingGameMode.UnitCost)
+            {
+                return _gameScoreSet.ChangeCurrency(deltaCurrency);
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public bool EndGameCheck()
