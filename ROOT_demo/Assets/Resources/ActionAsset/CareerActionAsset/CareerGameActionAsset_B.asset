@@ -17,9 +17,8 @@ MonoBehaviour:
   LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
     type: 3}
   levelType: 1
+  GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
   Actions: []
-  InitialCurrency: 0
-  InitialTime: 0
   TimeLineTokens:
   - TokenID: 0
     type: 3

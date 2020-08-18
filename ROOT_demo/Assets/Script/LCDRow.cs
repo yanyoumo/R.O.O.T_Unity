@@ -50,7 +50,7 @@ namespace ROOT
 
         public void SetAniNumber(int nextNumber)
         {
-            Debug.Log("Here");
+            //Debug.Log("Here");
             if (nextNumber!=lastNum&&!Animating)
             {
                 Animating = true;

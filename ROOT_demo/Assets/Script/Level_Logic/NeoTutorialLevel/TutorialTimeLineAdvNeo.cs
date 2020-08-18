@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    //TODO
     public class TutorialTimeLineAdvNeo : TutorialLogic
     {
         /*private bool LevelCompleted = false;
@@ -24,21 +23,22 @@ namespace ROOT
             {
                 if (ActionIndex == 2)
                 {
-                    Debug.Log("HERE");
+                    //Debug.Log("HERE");
                     if (!OnceFlagA)
                     {
                         OnceFlagA = true;
-                        Debug.Assert(LevelAsset.ActionAsset.TimeLineTokens.Length > 0);
                         LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);
+                        LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
                     }
                 }
             }
 
             if (ActionEnded)
             {
-                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = AllUnitConnected();
+                bool timeLineGood = RequirementSatisfiedCycleCount >= LevelAsset.ActionAsset.TargetCount;
+                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = timeLineGood;
                 LevelAsset.HintMaster.TutorialCheckList.SecondaryGoalCompleted = !OnceFlagB;
-                LevelCompleted = (!OnceFlagB) && AllUnitConnected();
+                LevelCompleted = (!OnceFlagB) && timeLineGood;
             }
 
             if (LevelCompleted)
@@ -63,6 +63,8 @@ namespace ROOT
 
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
+            base.UpdateCareerGameOverStatus(currentLevelAsset);
+            LevelAsset.TimeLine.SetCurrentCount = RequirementSatisfiedCycleCount;
             if (LevelCompleted && PlayerRequestedEnd)
             {
                 PendingCleanUp = true;
@@ -97,10 +99,11 @@ namespace ROOT
             LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.GameStateMgr = new GameStateMgr();
             LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
+            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
-            //LevelAsset.StartingScoreSet = new ScoreSet();
-            //LevelAsset.StartingPerMoveData = new PerMoveData();
             InitCursor(new Vector2Int(2, 3));
+            InitShop();
+            StartShop();
 
             LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;
@@ -110,7 +113,10 @@ namespace ROOT
             LevelAsset.CurrencyEnabled = true;
             LevelAsset.GameOverEnabled = true;
             LevelAsset.CycleEnabled = true;
-            
+            LevelAsset.ShopEnabled = true;
+            LevelAsset.LCDCurrencyEnabled = true;
+
+
             ReadyToGo = true;
         }
     }

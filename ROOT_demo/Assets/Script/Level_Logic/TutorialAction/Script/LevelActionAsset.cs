@@ -82,6 +82,10 @@ namespace ROOT
         [AssetSelector(Paths = "Assets/Resources/GameMode")]
         public GameModeAsset GameModeAsset;
 
+        public bool ExcludedShop=false;
+        [ShowIf("@this.ExcludedShop==true")]
+        public List<CoreType> ShopExcludedType;
+
         [Header("Tutorial")]
         [ShowIf("levelType", LevelType.Tutorial)]
         public TutorialActionData[] Actions;

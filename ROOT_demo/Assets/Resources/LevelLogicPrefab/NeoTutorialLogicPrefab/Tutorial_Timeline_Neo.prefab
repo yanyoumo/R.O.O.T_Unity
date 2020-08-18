@@ -44,4 +44,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsTutorialLevel: 1
-  LevelActionAsset: {fileID: 0}

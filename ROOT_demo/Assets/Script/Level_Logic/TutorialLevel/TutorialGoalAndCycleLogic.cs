@@ -27,7 +27,6 @@ namespace ROOT
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             //教程的结束一般都是在DealStep里面处理。
-            //TODO 这里开启时间后，DealStep的结束和WorldLogic的结束逻辑就有可能冲突。
             return false;
         }
 

@@ -257,8 +257,7 @@ namespace ROOT
                 totalWeight += weight;
             }
 
-            Debug.Assert((Mathf.Abs(totalWeight - 1) < 1e-3) && (lib.Count > 0),
-                "totalWeight=" + totalWeight + "||lib.Count=" + lib.Count);
+            Debug.Assert((Mathf.Abs(totalWeight - 1) < 1e-3) && (lib.Count > 0), "totalWeight=" + totalWeight + "||lib.Count=" + lib.Count);
             float val = Random.value;
             LastRandom = val;
             totalWeight = 0;

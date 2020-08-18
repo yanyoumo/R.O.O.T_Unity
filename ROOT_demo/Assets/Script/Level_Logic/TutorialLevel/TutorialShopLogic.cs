@@ -32,7 +32,6 @@ namespace ROOT
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             //教程的结束一般都是在DealStep里面处理。
-            //TODO 这里开启时间后，DealStep的结束和WorldLogic的结束逻辑就有可能冲突。
             return false;
         }
 
@@ -86,16 +85,6 @@ namespace ROOT
         {
             LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
             LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
-        }
-
-        protected void InitShop()
-        {
-            LevelAsset.ShopMgr = gameObject.AddComponent<ShopMgr>();
-            LevelAsset.ShopMgr.UnitTemplate = LevelAsset.GameBoard.UnitTemplate;
-            LevelAsset.ShopMgr.ShopInit();
-            LevelAsset.ShopMgr.ItemPriceTexts_TMP = new[] { LevelAsset.Item1PriceTmp, LevelAsset.Item2PriceTmp, LevelAsset.Item3PriceTmp, LevelAsset.Item4PriceTmp };
-            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
-            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
         }
     }
 }

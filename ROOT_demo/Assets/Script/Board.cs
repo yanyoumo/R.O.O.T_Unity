@@ -305,17 +305,22 @@ namespace ROOT
             }
         }
 
-        public bool TryDeleteCertainUnit(Vector2Int pos)
+        public bool TryDeleteCertainNoStationUnit(Vector2Int pos,out CoreType? destoryedCore)
         {
             if (CheckBoardPosValidAndFilled(pos))
             {
                 //Debug.Log("Destorying=" + pos.ToString());
                 Units.TryGetValue(pos, out GameObject go);
-                Destroy(go);
-                Units.Remove(pos);
-                UpdateBoard();
-                return true;
+                if (!go.GetComponentInChildren<Unit>().StationUnit)
+                {
+                    destoryedCore = go.GetComponentInChildren<Unit>().UnitCore;
+                    Destroy(go);
+                    Units.Remove(pos);
+                    UpdateBoard();
+                    return true;
+                }
             }
+            destoryedCore = null;
             return false;
         }
 

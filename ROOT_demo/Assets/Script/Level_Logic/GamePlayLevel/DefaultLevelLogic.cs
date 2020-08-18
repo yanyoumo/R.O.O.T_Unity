@@ -45,6 +45,7 @@ namespace ROOT
         public DataScreen DataScreen;
         public HintMaster HintMaster;
         public TimeLine TimeLine;
+        public CoreType? DestoryedCoreType;
         //public TutorialCheckList tutorialCheckList;
 
         internal GameObject GameCursor;
@@ -82,7 +83,12 @@ namespace ROOT
         public bool ForceHddConnectionHint = false;
         public bool ForceServerConnectionHint = false;
         //internal flag 
-        internal bool BoughtOnce = false;
+        internal bool _boughtOnce = false;
+        public bool BoughtOnce
+        {
+            get => _boughtOnce;
+            internal set => _boughtOnce = value;
+        }
         internal bool MovedTileAni = false;
         internal bool MovedCursorAni = false;
         internal List<MoveableBase> AnimationPendingObj;
@@ -409,6 +415,8 @@ namespace ROOT
             }
         }
 
+        
+
         protected bool UpdateCareerGameOverStatus(GameAssets currentLevelAsset)
         {
             //这个函数就很接近裁判要做的事儿了。
@@ -422,8 +430,11 @@ namespace ROOT
                     if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
                     {
                         //TODO 这里还要判断满足了多少周期。
-                        PendingCleanUp = true;
-                        LevelMasterManager.Instance.LevelFinished(LevelAsset);
+                        if (!IsTutorialLevel)
+                        {
+                            PendingCleanUp = true;
+                            LevelMasterManager.Instance.LevelFinished(LevelAsset);
+                        }
                         return true;
                     }
                     else if (actionAssetTimeLineToken.type == TimeLineTokenType.RequireNormal)
@@ -462,7 +473,7 @@ namespace ROOT
 
         public override void InitLevel()
         {
-            Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
+            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
             InitCurrencyIoMgr();
@@ -472,19 +483,17 @@ namespace ROOT
             LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
 
             InitShop();
+            StartShop();
             InitDestoryer();
             InitCursor(new Vector2Int(2, 3));
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.InitBoardRealStart();
             LevelAsset.GameBoard.UpdateBoardAnimation();
-            StartShop();
+            LevelAsset.ActionAsset = null;
 
             ReadyToGo = true;
-
-            //LevelAsset.StartingScoreSet = scoreSet;
-//LevelAsset.StartingPerMoveData = new PerMoveData();
-            LevelAsset.ActionAsset = null;
         }
+
         protected void InitDestoryer()
         {
             LevelAsset.WarningDestoryer = new MeteoriteBomber();

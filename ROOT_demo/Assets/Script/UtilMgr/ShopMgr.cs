@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -48,6 +49,24 @@ namespace ROOT
 
         private readonly float[] _priceCof = { 0.8f, 1.0f, 1.2f, 1.5f };
 
+        public List<CoreType> excludedTypes=new List<CoreType>();
+
+        private void NormalizeDicVal(ref Dictionary<CoreType, float> lib)
+        {
+            float totalWeight = 0;
+            foreach (var weight in lib.Values)
+            {
+                totalWeight += weight;
+            }
+            if (!(Mathf.Abs(totalWeight - 1) < 1e-3))
+            {
+                var keys = lib.Keys.ToArray().Clone() as CoreType[];
+                foreach (var coreType in keys)
+                {
+                    lib[coreType] /= totalWeight;
+                }
+            }
+        }
 
         private CoreType GenerateRandomCore()
         {
@@ -64,6 +83,17 @@ namespace ROOT
             {
                 lib = _nandServerProcessorCoreWeight;
             }
+            if (excludedTypes.Count>0)
+            {
+                foreach (var excludedType in excludedTypes)
+                {
+                    if (lib.TryGetValue(excludedType,out float value))
+                    {
+                        lib.Remove(excludedType);
+                    }
+                }
+            }
+            NormalizeDicVal(ref lib);
             return Utils.GenerateWeightedRandom(lib);
         }
 

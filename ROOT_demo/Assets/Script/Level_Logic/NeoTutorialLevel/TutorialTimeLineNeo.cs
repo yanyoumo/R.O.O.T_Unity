@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    //TODO
     public class TutorialTimeLineNeo : TutorialLogic
     {
         /*private bool LevelCompleted = false;
@@ -24,7 +23,6 @@ namespace ROOT
             {
                 if (ActionIndex == 2)
                 {
-                    Debug.Log("HERE");
                     if (!OnceFlagA)
                     {
                         OnceFlagA = true;
@@ -98,8 +96,6 @@ namespace ROOT
             LevelAsset.GameStateMgr = new GameStateMgr();
             LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
-            //LevelAsset.StartingScoreSet = new ScoreSet();
-            //LevelAsset.StartingPerMoveData = new PerMoveData();
             InitCursor(new Vector2Int(2, 3));
 
             LevelAsset.DisableAllCoreFunctionAndFeature();
@@ -110,7 +106,9 @@ namespace ROOT
             LevelAsset.CurrencyEnabled = true;
             LevelAsset.GameOverEnabled = true;
             LevelAsset.CycleEnabled = true;
-            
+
+            LevelAsset.TimeLine.SetNoCount();
+
             ReadyToGo = true;
         }
     }

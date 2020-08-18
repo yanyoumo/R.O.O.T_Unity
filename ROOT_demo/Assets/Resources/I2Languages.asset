@@ -223,6 +223,14 @@ MonoBehaviour:
       - Time awaits
       Flags: 0000
       Languages_Touch: []
+    - Term: TutorialTimeAdv
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u8BE5\u5E72\u6D3B\u4E86"
+      - Time to work
+      Flags: 0000
+      Languages_Touch: []
     - Term: TutorialShop
       TermType: 0
       Description: 
@@ -245,6 +253,14 @@ MonoBehaviour:
       Languages:
       - "\u6765\u70B9\u513F\u522B\u7684"
       - Some new trick
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TutorialComplexSignal
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6401\u4E00\u8D77\u5462\uFF1F"
+      - Put it all together
       Flags: 0000
       Languages_Touch: []
     - Term: TutorialDestroyer
@@ -309,14 +325,6 @@ MonoBehaviour:
       Languages:
       - "\u4EFB\u52A1\u76EE\u6807:"
       - 'Need to do:'
-      Flags: 0000
-      Languages_Touch: []
-    - Term: TutorialTimeAdv
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u8BE5\u5E72\u6D3B\u4E86"
-      - Time to work
       Flags: 0000
       Languages_Touch: []
     CaseInsensitiveTerms: 0

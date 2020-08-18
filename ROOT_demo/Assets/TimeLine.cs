@@ -42,6 +42,12 @@ namespace ROOT
     {
         public TimeLineGoalMarker GoalMarker;
 
+        public void SetNoCount()
+        {
+            SetGoalCount = 0;
+            SetCurrentCount = 0;
+        }
+
         public int SetGoalCount
         {
             set => GoalMarker.TargetCount = value;

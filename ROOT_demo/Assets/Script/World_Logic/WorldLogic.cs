@@ -620,7 +620,7 @@ namespace ROOT
 
                 if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
                 {
-                    currentLevelAsset.WarningDestoryer.Step();
+                    currentLevelAsset.WarningDestoryer.Step(out currentLevelAsset.DestoryedCoreType);
                 }
             }
         }
@@ -635,11 +635,11 @@ namespace ROOT
 
             if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
 
-            ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset.BoughtOnce);
+            ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset._boughtOnce);
 
             if (currentLevelAsset.InputEnabled)
             {
-                if (currentLevelAsset.ShopEnabled) UpdateShopBuy(currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset.BoughtOnce);
+                if (currentLevelAsset.ShopEnabled) UpdateShopBuy(currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset._boughtOnce);
 
                 UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
 

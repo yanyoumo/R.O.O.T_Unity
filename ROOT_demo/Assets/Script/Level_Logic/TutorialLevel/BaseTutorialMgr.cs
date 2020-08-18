@@ -13,6 +13,7 @@ namespace ROOT
 
         protected bool LevelCompleted = false;
         protected bool PlayerRequestedEnd = false;
+        protected bool PlayerRequestedQuit = false;
 
         protected abstract string MainGoalEntryContent { get; }
         protected virtual string SecondaryGoalEntryContent { get; } = "";
@@ -171,5 +172,26 @@ namespace ROOT
                 }
             }
         }
+
+        protected void InitShop()
+        {
+            LevelAsset.ShopMgr = gameObject.AddComponent<ShopMgr>();
+            LevelAsset.ShopMgr.UnitTemplate = LevelAsset.GameBoard.UnitTemplate;
+            LevelAsset.ShopMgr.ShopInit();
+            LevelAsset.ShopMgr.ItemPriceTexts_TMP = new[] { LevelAsset.Item1PriceTmp, LevelAsset.Item2PriceTmp, LevelAsset.Item3PriceTmp, LevelAsset.Item4PriceTmp };
+            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
+            if (LevelActionAsset.ExcludedShop)
+            {
+                LevelAsset.ShopMgr.excludedTypes = LevelActionAsset.ShopExcludedType;
+            }
+        }
+
+        protected void ForceSetWarningDestoryer(Vector2Int nextIncome)
+        {
+            MeteoriteBomber obj = LevelAsset.WarningDestoryer as MeteoriteBomber;
+            obj?.ForceSetDestoryer(nextIncome);
+        }
+
     }
 }

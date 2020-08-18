@@ -19,17 +19,11 @@ namespace ROOT
         void Init(int counterLoopMedian = 4, int counterLoopVariance = 1);
         void RequestUpStrikeCount(int requestAmount);//外界可以申请对这一系统的攻击力度加码。
         void Step();
+        void Step(out CoreType? destoryedCore);
     }
 
     public partial class TutorialDestroyerLogic : TutorialLogic
     {
-        private void ForceSetWarningDestoryer(Vector2Int nextIncome)
-        {
-            MeteoriteBomber obj= LevelAsset.WarningDestoryer as MeteoriteBomber;
-            obj?.ForceSetDestoryer(nextIncome);
-        }
-
-        //public override LevelType GetLevelType => LevelType.TutorialActionDestroyer;
         protected override string MainGoalEntryContent { get; }
     }
 
@@ -109,6 +103,12 @@ namespace ROOT
 
         public virtual void Step()
         {
+            Step(out CoreType? destoryedCore);
+        }
+
+        public virtual void Step(out CoreType? destoryedCore)
+        {
+            destoryedCore = null;
             //这里计算的节奏意外地关键。
             if (Counter == 0)
             {
@@ -119,7 +119,8 @@ namespace ROOT
                 //Debug.Log("Aiming=" + NextIncome.ToString());
                 foreach (var nextIncome in NextIncomes)
                 {
-                    GameBoard.TryDeleteCertainUnit(nextIncome);
+                    //TODO 这里要传达出来是否摧毁了某个Unit
+                    GameBoard.TryDeleteCertainNoStationUnit(nextIncome, out destoryedCore);
                 }
                 //得摧毁之后才更新数据。
                 GenerateNewIncomes();

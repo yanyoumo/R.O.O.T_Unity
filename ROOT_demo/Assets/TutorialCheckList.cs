@@ -21,8 +21,22 @@ namespace ROOT
         public TutorialGoalEntry SecondaryEntry;
 
         public Transform PressReturnToComplete;
+        public Transform PressESCToReturn;
 
         private bool _hasSecondaryEntry = false;
+
+        private bool _tutorialFailed;
+        public bool TutorialFailed
+        {
+            set
+            {
+                _tutorialFailed = value;
+                if (_tutorialFailed)
+                {
+                    PressESCToReturn.gameObject.SetActive(true);
+                }
+            }
+        }
 
         private void CheckCompleted()
         {
@@ -60,6 +74,7 @@ namespace ROOT
             SecondaryEntry = Instantiate(EntryTemplate, SecondaryEntryRoot).GetComponent<TutorialGoalEntry>();
             MainEntry.Completed = false;
             SecondaryEntry.Completed = false;
+            PressESCToReturn.gameObject.SetActive(false);
         }
 
         public void SetupEntryContent(string mainEntryContent,string secondaryEntryContent = "")
@@ -73,14 +88,6 @@ namespace ROOT
             else
             {
                 SecondaryEntry.gameObject.SetActive(false);
-            }
-        }
-
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                
             }
         }
     }

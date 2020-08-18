@@ -7,11 +7,15 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    //TODO!!
     public class TutorialShopNeo : TutorialLogic
     {
+        private int BoughtCount = 0;
+        private readonly int BoughtCountTarget = 5;
+
         protected override void Update()
         {
+            bool haventBought = LevelAsset.BoughtOnce;
+
             base.Update();
 
             if (ReadyToGo)
@@ -32,18 +36,23 @@ namespace ROOT
                 }
             }
 
-            if (ActionEnded)
+            if (!haventBought&&LevelAsset.BoughtOnce)
             {
-                LevelCompleted = false;
+                BoughtCount++;
             }
 
+            if (ActionEnded)
+            {
+                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = LevelCompleted = (BoughtCount >= BoughtCountTarget);
+            }
+            
             if (LevelCompleted)
             {
                 PlayerRequestedEnd = CtrlPack.HasFlag(ControllingCommand.NextButton);
             }
         }
 
-        protected override string MainGoalEntryContent => "成功购买5个单元";
+        protected override string MainGoalEntryContent => "购买5个单元";
 
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
@@ -77,11 +86,8 @@ namespace ROOT
             LevelAsset.GameStateMgr = new GameStateMgr();
             LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
-            //LevelAsset.StartingScoreSet = new ScoreSet(1000, 999);
-            //LevelAsset.StartingPerMoveData = new PerMoveData();
             InitCursor(new Vector2Int(2, 3));
 
-            //TODO 还要把成本去掉。（这个时候还不教学成本
             LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;
             LevelAsset.CursorEnabled = true;
@@ -91,17 +97,9 @@ namespace ROOT
             LevelAsset.GameOverEnabled = true;
             LevelAsset.CycleEnabled = true;
 
-            ReadyToGo = true;
-        }
+            LevelAsset.TimeLine.SetNoCount();
 
-        protected void InitShop()
-        {
-            LevelAsset.ShopMgr = gameObject.AddComponent<ShopMgr>();
-            LevelAsset.ShopMgr.UnitTemplate = LevelAsset.GameBoard.UnitTemplate;
-            LevelAsset.ShopMgr.ShopInit();
-            LevelAsset.ShopMgr.ItemPriceTexts_TMP = new[] { LevelAsset.Item1PriceTmp, LevelAsset.Item2PriceTmp, LevelAsset.Item3PriceTmp, LevelAsset.Item4PriceTmp };
-            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
-            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
+            ReadyToGo = true;
         }
     }
 }

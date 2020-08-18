@@ -16,6 +16,10 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: f6a8f0c8d3c9cfa46b57cf90ef50a9cb, type: 3}
   LevelLogic: {fileID: 5321189387016280695, guid: 2880cec4f7eae0c4a945a4c82f11ffb2,
     type: 3}
+  levelType: 0
+  GameModeAsset: {fileID: 0}
+  ExcludedShop: 0
+  ShopExcludedType: 
   Actions:
   - ActionIdx: 0
     ActionType: 3
@@ -113,3 +117,6 @@ MonoBehaviour:
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
+  TimeLineTokens: []
+  InitalBoard: []
+  TargetCount: 0
