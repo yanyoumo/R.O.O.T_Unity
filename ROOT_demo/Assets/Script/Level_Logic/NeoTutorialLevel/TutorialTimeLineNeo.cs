@@ -9,11 +9,6 @@ namespace ROOT
 {
     public class TutorialTimeLineNeo : TutorialLogic
     {
-        /*private bool LevelCompleted = false;
-        private bool PlayerRequestedEnd = false;*/
-        private bool OnceFlagA = false;
-        private bool OnceFlagB = false;
-
         protected override void Update()
         {
             base.Update();
@@ -58,31 +53,6 @@ namespace ROOT
 
         protected override string MainGoalEntryContent => "将接收端单元都链至发送端";
         protected override string SecondaryGoalEntryContent => "在时间线结束之前完成任务";
-
-        protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
-        {
-            if (LevelCompleted && PlayerRequestedEnd)
-            {
-                PendingCleanUp = true;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private bool AllUnitConnected()
-        {
-            return LevelAsset.GameBoard.Units.All(gameBoardUnit => gameBoardUnit.Value.GetComponentInChildren<Unit>().AnyConnection);
-        }
-
-        protected void InitCurrencyIoMgr()
-        {
-            LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
-            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
-        }
 
         public override void InitLevel()
         {

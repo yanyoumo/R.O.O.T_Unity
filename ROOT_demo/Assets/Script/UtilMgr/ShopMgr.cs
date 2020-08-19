@@ -13,7 +13,7 @@ namespace ROOT
 {
     public sealed partial class ShopMgr:MonoBehaviour
     {
-        public GameObject UnitTemplate; //TODO 应该要改成AssetLoad那种
+        public GameObject UnitTemplate;
 
         public Board GameBoard;
         public GameStateMgr CurrentGameStateMgr;

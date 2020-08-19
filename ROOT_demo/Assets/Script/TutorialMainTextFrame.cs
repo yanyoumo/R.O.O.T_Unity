@@ -75,7 +75,7 @@ namespace ROOT
         void Awake()
         {
             Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, DistanceFromCamera));
-            Debug.Log(pos);
+            //Debug.Log(pos);
             float ZeroX = pos.x;
             Vector3 currentPos = transform.position;
             float camZ = 25;
@@ -87,6 +87,7 @@ namespace ROOT
             transform.position = currentPos;
             PosXNotShow = ZeroX - 4.21f;
             PosXShow = ZeroX + 4.71f;
+
             if (StartGameMgr.UseTouchScreen)
             {
                 NextCollapsedLLE.Term = ScriptTerms.TouchHintCollapsed;

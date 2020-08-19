@@ -13,9 +13,12 @@ namespace I2.Loc
 		public static string EndingMessageNormal_NoEarnedMoney 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageNormal_NoEarnedMoney"); } }
 		public static string EndingMessageNormal_NoMoney 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageNormal_NoMoney"); } }
 		public static string EndingMessageTutorial 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageTutorial"); } }
+		public static string EndingMessageTutorialFailed 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageTutorialFailed"); } }
 		public static string GameOver 		{ get{ return LocalizationManager.GetTranslation ("GameOver"); } }
 		public static string HForHint_KM 		{ get{ return LocalizationManager.GetTranslation ("HForHint_KM"); } }
 		public static string HForHint_Touch 		{ get{ return LocalizationManager.GetTranslation ("HForHint_Touch"); } }
+		public static string KMEnterToComplete 		{ get{ return LocalizationManager.GetTranslation ("KMEnterToComplete"); } }
+		public static string KMEnterToReturn 		{ get{ return LocalizationManager.GetTranslation ("KMEnterToReturn"); } }
 		public static string KMHintCollapsed 		{ get{ return LocalizationManager.GetTranslation ("KMHintCollapsed"); } }
 		public static string KMHintExtend 		{ get{ return LocalizationManager.GetTranslation ("KMHintExtend"); } }
 		public static string Level_1 		{ get{ return LocalizationManager.GetTranslation ("Level_1"); } }
@@ -24,14 +27,18 @@ namespace I2.Loc
 		public static string Level_4 		{ get{ return LocalizationManager.GetTranslation ("Level_4"); } }
 		public static string Level_5 		{ get{ return LocalizationManager.GetTranslation ("Level_5"); } }
 		public static string NextTutorial 		{ get{ return LocalizationManager.GetTranslation ("NextTutorial"); } }
+		public static string NextTutorialFailed 		{ get{ return LocalizationManager.GetTranslation ("NextTutorialFailed"); } }
 		public static string PlayLevel 		{ get{ return LocalizationManager.GetTranslation ("PlayLevel"); } }
 		public static string ReleaseToReturn_KM 		{ get{ return LocalizationManager.GetTranslation ("ReleaseToReturn_KM"); } }
 		public static string Restart 		{ get{ return LocalizationManager.GetTranslation ("Restart"); } }
 		public static string StartGame 		{ get{ return LocalizationManager.GetTranslation ("StartGame"); } }
 		public static string TouchHintCollapsed 		{ get{ return LocalizationManager.GetTranslation ("TouchHintCollapsed"); } }
 		public static string TouchHintExtend 		{ get{ return LocalizationManager.GetTranslation ("TouchHintExtend"); } }
+		public static string TouchToComplete 		{ get{ return LocalizationManager.GetTranslation ("TouchToComplete"); } }
+		public static string TouchToReturn 		{ get{ return LocalizationManager.GetTranslation ("TouchToReturn"); } }
 		public static string Tutorial 		{ get{ return LocalizationManager.GetTranslation ("Tutorial"); } }
 		public static string TutorialBasicControl 		{ get{ return LocalizationManager.GetTranslation ("TutorialBasicControl"); } }
+		public static string TutorialComplexSignal 		{ get{ return LocalizationManager.GetTranslation ("TutorialComplexSignal"); } }
 		public static string TutorialDestroyer 		{ get{ return LocalizationManager.GetTranslation ("TutorialDestroyer"); } }
 		public static string TutorialGoal 		{ get{ return LocalizationManager.GetTranslation ("TutorialGoal"); } }
 		public static string TutorialGoalAndCycle 		{ get{ return LocalizationManager.GetTranslation ("TutorialGoalAndCycle"); } }
@@ -54,9 +61,12 @@ namespace I2.Loc
 		public const string EndingMessageNormal_NoEarnedMoney = "EndingMessageNormal_NoEarnedMoney";
 		public const string EndingMessageNormal_NoMoney = "EndingMessageNormal_NoMoney";
 		public const string EndingMessageTutorial = "EndingMessageTutorial";
+		public const string EndingMessageTutorialFailed = "EndingMessageTutorialFailed";
 		public const string GameOver = "GameOver";
 		public const string HForHint_KM = "HForHint_KM";
 		public const string HForHint_Touch = "HForHint_Touch";
+		public const string KMEnterToComplete = "KMEnterToComplete";
+		public const string KMEnterToReturn = "KMEnterToReturn";
 		public const string KMHintCollapsed = "KMHintCollapsed";
 		public const string KMHintExtend = "KMHintExtend";
 		public const string Level_1 = "Level_1";
@@ -65,14 +75,18 @@ namespace I2.Loc
 		public const string Level_4 = "Level_4";
 		public const string Level_5 = "Level_5";
 		public const string NextTutorial = "NextTutorial";
+		public const string NextTutorialFailed = "NextTutorialFailed";
 		public const string PlayLevel = "PlayLevel";
 		public const string ReleaseToReturn_KM = "ReleaseToReturn_KM";
 		public const string Restart = "Restart";
 		public const string StartGame = "StartGame";
 		public const string TouchHintCollapsed = "TouchHintCollapsed";
 		public const string TouchHintExtend = "TouchHintExtend";
+		public const string TouchToComplete = "TouchToComplete";
+		public const string TouchToReturn = "TouchToReturn";
 		public const string Tutorial = "Tutorial";
 		public const string TutorialBasicControl = "TutorialBasicControl";
+		public const string TutorialComplexSignal = "TutorialComplexSignal";
 		public const string TutorialDestroyer = "TutorialDestroyer";
 		public const string TutorialGoal = "TutorialGoal";
 		public const string TutorialGoalAndCycle = "TutorialGoalAndCycle";

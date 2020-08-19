@@ -10,10 +10,6 @@ namespace ROOT
     //TODO TutorialDestoryerNeo 还没做。
     public class TutorialDestoryerNeo : TutorialLogic
     {
-        private bool OnceFlagA = false;
-        private bool OnceFlagB = false;
-        private bool Faild = false;
-
         IEnumerator ForceWindingDestroyer()
         {
             while (LevelAsset.WarningDestoryer.GetStatus() != WarningDestoryerStatus.Striking)
@@ -26,7 +22,6 @@ namespace ROOT
         protected override void Update()
         {
             base.Update();
-
 
             if (ReadyToGo)
             {
@@ -47,12 +42,12 @@ namespace ROOT
                 {
                     if (LevelAsset.DestoryedCoreType != CoreType.PCB)
                     {
-                        Faild = true;
+                        LevelFailed = true;
                         OnceFlagA = true;
                     }
                 }
                 bool bComplete = RidOfPCBUnit();
-                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = !OnceFlagA; //TODO 检测是没有过摧毁。
+                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = !OnceFlagA;
                 LevelAsset.HintMaster.TutorialCheckList.SecondaryGoalCompleted = bComplete;
                 LevelCompleted = (!OnceFlagA) && bComplete;
             }
@@ -62,13 +57,9 @@ namespace ROOT
                 PlayerRequestedEnd = CtrlPack.HasFlag(ControllingCommand.NextButton);
             }
 
-            if (Faild)
+            if (LevelFailed)
             {
                 PlayerRequestedQuit = CtrlPack.HasFlag(ControllingCommand.NextButton);
-            }
-
-            if (Faild)
-            {
                 LevelAsset.HintMaster.TutorialCheckList.TutorialFailed = true;
             }
         }
@@ -84,25 +75,9 @@ namespace ROOT
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             base.UpdateCareerGameOverStatus(currentLevelAsset);
-            LevelAsset.TimeLine.SetCurrentCount = RequirementSatisfiedCycleCount;
-            if (LevelCompleted && PlayerRequestedEnd)
-            {
-                PendingCleanUp = true;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return base.UpdateGameOverStatus(currentLevelAsset);
         }
-
-        protected void InitCurrencyIoMgr()
-        {
-            LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
-            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
-        }
-
+        
         protected void InitDestoryer()
         {
             LevelAsset.WarningDestoryer = new MeteoriteBomber();

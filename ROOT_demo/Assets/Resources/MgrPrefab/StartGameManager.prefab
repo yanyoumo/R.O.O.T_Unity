@@ -45,11 +45,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TutorialActionAssetLib: {fileID: 11400000, guid: 403dd5900f3f3cf4c84f16bb73547a85,
     type: 2}
-  TutorialTouchActionAssetLib: {fileID: 11400000, guid: 1c40bbc2eb0145e4897f0dee37cd186e,
+  TutorialTouchActionAssetLib: {fileID: 11400000, guid: 403dd5900f3f3cf4c84f16bb73547a85,
     type: 2}
   ClassicGameActionAssetLib: {fileID: 11400000, guid: 500fdf419d3c43c44abd730a5608cd55,
     type: 2}
   CareerGameActionAssetLib: {fileID: 11400000, guid: 16e75e99f0b23df4e8b0d31948256960,
     type: 2}
   PCSimulateDevice: 1
-  EditorInputScheme: 0
+  EditorInputScheme: 1

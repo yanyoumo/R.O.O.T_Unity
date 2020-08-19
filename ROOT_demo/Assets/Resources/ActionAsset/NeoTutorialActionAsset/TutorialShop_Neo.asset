@@ -16,7 +16,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: 1c53b8690023ede4cbb1fce9a88255ab, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: 67ea98eb82b4b834ca79f3020299ed59,
     type: 3}
-  levelType: 1
+  levelType: 0
   GameModeAsset: {fileID: 11400000, guid: b32e8c0e297860f41bd07f944a545ea4, type: 2}
   ExcludedShop: 1
   ShopExcludedType: 000000000100000002000000
@@ -24,72 +24,96 @@ MonoBehaviour:
   - ActionIdx: 0
     ActionType: 3
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 0
     ActionType: 7
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 0
     ActionType: 0
     Text: "\u4E4B\u524D\u6240\u6709\u5355\u5143\u90FD\u662F\u7CFB\u7EDF\u7ED9\u4F60\u7684,\u4E4B\u540E\u4E0D\u4F1A\u6709\u8FD9\u79CD\u597D\u4E8B\u513F."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 1
     ActionType: 0
     Text: "\u5F53\u7136,\u4E5F\u4E0D\u4EE3\u8868\u5C31\u4E0D\u4F1A\u6709\u65B0\u7684\u5355\u5143,\u56E0\u4E3A\u4F60\u53EF\u4EE5\u81EA\u5DF1\u53BB\u4E70\u4E86\uFF01"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 2
     ActionType: 0
     Text: "\u53F3\u4E0B\u89D2\u5C31\u662F\u5546\u5E97,\u4F7F\u7528\u6570\u5B57\u952E\u5C31\u53EF\u4EE5\u8D2D\u4E70\u5BF9\u5E94\u7684\u5355\u5143\u4E86."
+    DoppelgangerToggle: 1
+    DoppelgangerText: "\u53F3\u4E0B\u89D2\u5C31\u662F\u5546\u5E97,\u76F4\u63A5\u70B9\u51FB\u5C31\u53EF\u4EE5\u8D2D\u4E70\u5BF9\u5E94\u7684\u5355\u5143\u4E86."
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 3
     ActionType: 0
     Text: "\u5F53\u7136\u662F\u8981\u82B1\u94B1\u7684,\u53F3\u4E0A\u89D2\u663E\u793A\u7684\u5C31\u662F\u4F60\u73B0\u6709\u7684\u91D1\u94B1,\u4ECA\u5929\u7CFB\u7EDF\u5148\u76F4\u63A5\u7ED9\u4F60\u4E00\u4E9B."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 4
     ActionType: 0
     Text: "\u4F46\u662F\u6BCF\u4E2A\u65F6\u523B\u4F60\u53EA\u80FD\u8D2D\u4E70\u4E00\u6B21;\u5E76\u4E14\u6BCF\u4E2A\u65F6\u523B\u5546\u5E97\u90FD\u4F1A\u5237\u65B0"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 5
     ActionType: 0
     Text: "\u5546\u5E97\u662F\u8FD9\u6837\u5237\u65B0\u7684:1\u53F7\u4F4D\u4E0A\u9762\u7684\u5355\u5143\u4F1A\u88AB\u79FB\u9664;\u540E\u9762\u8FDB\u884C\u8865\u4F4D,\u800C\u4E14\u8D8A\u63A5\u8FD11\u53F7\u4F4D,\u5B83\u7684\u4EF7\u683C\u4F1A\u8D8A\u4FBF\u5B9C!"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 6
     ActionType: 0
     Text: "\u6240\u4EE5,\u4ECA\u5929\u4F60\u4E0D\u7528\u5728\u610F\u522B\u7684,\u4E70\u4E70\u4E70\u5C31\u597D\u4E86\uFF01"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 7
     ActionType: 4
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 7
     ActionType: 6
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 7
     ActionType: 5
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 

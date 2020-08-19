@@ -73,21 +73,22 @@ namespace ROOT
             }
         }
 
-        private GameOverMgr GOM;
+        private GameOverMgr _gameOverMgr;
 
-        IEnumerator FindGOMAfterLoad()
+        private IEnumerator FindGameOverMgrAfterLoad()
         {
-            while (GOM == null)
+            while (_gameOverMgr == null)
             {
-                GOM = FindObjectOfType<GameOverMgr>();
+                _gameOverMgr = FindObjectOfType<GameOverMgr>();
                 yield return 0;
             }
         }
-        IEnumerator SendLastGameAssetsToGameOverMgr(GameAssets lastGameAssets)
+
+        private IEnumerator SendLastGameAssetsToGameOverMgr(GameAssets lastGameAssets)
         {
-            yield return StartCoroutine(FindGOMAfterLoad());
-            Debug.Assert(GOM!=null);
-            GOM.LastGameAssets = lastGameAssets;
+            yield return StartCoroutine(FindGameOverMgrAfterLoad());
+            System.Diagnostics.Debug.Assert(_gameOverMgr != null, nameof(_gameOverMgr) + " != null");
+            _gameOverMgr.LastGameAssets = lastGameAssets;
         }
 
         /// <summary>

@@ -9,10 +9,8 @@ using UnityEngine.UI;
 
 namespace ROOT
 {
-    //TODO 这货要变成由GameMasterManager直接管理的一环。
     public class GameOverMgr : MonoBehaviour
     {
-
         //可以把LevelAsset整建制传进来。
         private GameAssets _lastGameAssets;
         public GameAssets LastGameAssets
@@ -24,18 +22,13 @@ namespace ROOT
                 UpdateUIContent();
             }
         }
-        //public TextMeshProUGUI EndingTitle;
         public Localize EndingTitleLocalize;
         public Localize EndingMessageLocalize;
         public LocalizationParamsManager EndingMessageParam;
-        //public TextMeshProUGUI EndingMessage;
 
         public Button BackButton;
-        //public Text BackButtonText;
         public Button OtherButton;
         public Localize OtherButtonLocalize;
-        //private LevelType nextLevelType;
-        //public Text OtherButtonText;
 
         void GameOverSceneLoaded(Scene scene,LoadSceneMode loadSceneMode)
         {
@@ -49,16 +42,26 @@ namespace ROOT
         {
             if (_lastGameAssets.Owner.IsTutorialLevel)
             {
-                if (LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset) == null)
-                {
-                    OtherButton.interactable = false;//没有下一关了。
-                }
+                System.Diagnostics.Debug.Assert(_lastGameAssets.TutorialCompleted != null, "_lastGameAssets.TutorialCompleted != null");
+                bool tutorialCompleted = _lastGameAssets.TutorialCompleted.Value;
                 BackButton.onClick.AddListener(Back);
-                OtherButton.onClick.AddListener(NextTutorial);
-                OtherButtonLocalize.Term = ScriptTerms.NextTutorial;
-
                 EndingTitleLocalize.Term = ScriptTerms.TutorialSectionOver;
-                EndingMessageLocalize.Term = ScriptTerms.EndingMessageTutorial;
+                if (tutorialCompleted)
+                {
+                    if (LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset) == null)
+                    {
+                        OtherButton.interactable = false;//没有下一关了。
+                    }
+                    OtherButton.onClick.AddListener(NextTutorial);
+                    OtherButtonLocalize.Term = ScriptTerms.NextTutorial;
+                    EndingMessageLocalize.Term = ScriptTerms.EndingMessageTutorial;
+                }
+                else
+                {
+                    OtherButton.interactable = false;
+                    OtherButtonLocalize.Term = ScriptTerms.NextTutorialFailed;
+                    EndingMessageLocalize.Term = ScriptTerms.EndingMessageTutorialFailed;
+                }
             }
             else
             {
@@ -98,20 +101,18 @@ namespace ROOT
         public void NextTutorial()
         {
             LevelActionAsset nextLevelActionAsset = LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset);
-            //LevelMasterManager.Instance.LoadLevelThenPlay(nextLevelActionAsset.LevelType, nextLevelActionAsset);//这里不好整。
-            LevelMasterManager.Instance.LoadLevelThenPlay(nextLevelActionAsset.LevelLogic, nextLevelActionAsset);//这里不好整。
+            LevelMasterManager.Instance.LoadLevelThenPlay(nextLevelActionAsset.LevelLogic, nextLevelActionAsset);
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
         }
 
         public void GameRestart()
         {
-            //LevelMasterManager.Instance.LoadLevelThenPlay(_lastGameAssets.LevelType, new ScoreSet(),new PerMoveData());
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
         }
 
         public void Back()
         {
-            for (int i = 0; i < SceneManager.sceneCount; i++)
+            for (var i = 0; i < SceneManager.sceneCount; i++)
             {
                 if (SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_GAMEOVER) != SceneManager.GetSceneAt(i))
                 {

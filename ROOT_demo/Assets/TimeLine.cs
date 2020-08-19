@@ -214,7 +214,6 @@ namespace ROOT
                 }
             }
             MarkerCount ++;
-            //TODO 这样整出来的有一个Wrap的Offset。看看咋回事儿。
             int i = MarkerCount / SubDivision;
             int j = MarkerCount % SubDivision;
             float x3 = UnitLength * i + (UnitLength / SubDivision) * j;

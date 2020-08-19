@@ -327,6 +327,54 @@ MonoBehaviour:
       - 'Need to do:'
       Flags: 0000
       Languages_Touch: []
+    - Term: EndingMessageTutorialFailed
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u672C\u8282\u6559\u7A0B\u672A\u5B8C\u6210"
+      - This section of tutorial is not finished
+      Flags: 0000
+      Languages_Touch: []
+    - Term: NextTutorialFailed
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u518D\u8BD5\u4E00\u4E0B"
+      - Retry
+      Flags: 0000
+      Languages_Touch: []
+    - Term: KMEnterToReturn
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6309\"\u56DE\u8F66\"\u4EE5\u8FD4\u56DE"
+      - Press "Enter" to Return
+      Flags: 0000
+      Languages_Touch: []
+    - Term: KMEnterToComplete
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6309\"\u56DE\u8F66\"\u4EE5\u5B8C\u6210\u4EFB\u52A1"
+      - Press "Enter" to Complete
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TouchToReturn
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6309\u8FD9\u91CC\u4EE5\u8FD4\u56DE"
+      - Touch HERE to Return
+      Flags: 0000
+      Languages_Touch: []
+    - Term: TouchToComplete
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6309\u8FD9\u91CC\u4EE5\u5B8C\u6210\u4EFB\u52A1"
+      - Touch HERE to Complete
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 

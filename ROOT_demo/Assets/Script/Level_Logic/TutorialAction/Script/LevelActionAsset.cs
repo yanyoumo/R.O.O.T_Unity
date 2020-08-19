@@ -49,12 +49,22 @@ namespace ROOT
     {
         [HorizontalGroup("Split")]
         [VerticalGroup("Split/Left")]
+        [LabelWidth(80)]
         public int ActionIdx;
         [EnumPaging]
         [VerticalGroup("Split/Right")]
         public TutorialActionType ActionType;
         [ShowIf("ActionType", TutorialActionType.Text)]
+        [LabelWidth(30)]
         public string Text;
+        [ShowIf("ActionType", TutorialActionType.Text)]
+        [HorizontalGroup("Doppelganger")]
+        [LabelWidth(135)]
+        public bool DoppelgangerToggle;
+        [ShowIf("@this.ActionType==TutorialActionType.Text&&this.DoppelgangerToggle")]
+        [HorizontalGroup("Doppelganger")]
+        [LabelWidth(135)]
+        public string DoppelgangerText;
         [ShowIf("@this.ActionType==TutorialActionType.CreateUnit||this.ActionType==TutorialActionType.CreateCursor")]
         public Vector2Int Pos;
         [ShowIf("ActionType", TutorialActionType.CreateUnit)]

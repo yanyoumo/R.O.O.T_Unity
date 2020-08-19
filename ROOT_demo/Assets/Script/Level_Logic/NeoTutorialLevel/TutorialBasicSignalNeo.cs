@@ -28,31 +28,6 @@ namespace ROOT
 
         protected override string MainGoalEntryContent => "将所有接收端单元都链接至发送端";
 
-        protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
-        {
-            if (LevelCompleted && PlayerRequestedEnd)
-            {
-                PendingCleanUp = true;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private bool AllUnitConnected()
-        {
-            return LevelAsset.GameBoard.Units.All(gameBoardUnit => gameBoardUnit.Value.GetComponentInChildren<Unit>().AnyConnection);
-        }
-
-        protected void InitCurrencyIoMgr()
-        {
-            LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
-            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
-        }
-
         public override void InitLevel()
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……

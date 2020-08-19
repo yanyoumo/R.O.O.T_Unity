@@ -1,27 +1,29 @@
 ﻿Key,Type,Desc,Chinese (Simplified),English
-Back,Text,,返回,Back
-BasicControl_KM,Text,,"【方向键】：移动光标
+Back,Text,返回主菜单的按钮名称,返回,Back
+BasicControl_KM,Text,游戏内容显示的操作提示（键盘版）,"【方向键】：移动光标
 【方向键】+【空格】：拖动单元
 【左Shift】：旋转单元
 【TAB】：查看数据范围","<b>[Arrows]:</b> Move Cursor
 <b>[Arrows+SpaceBar]:</b> Drag Unit
 <b>[Left-Shift]:</b> Rotate Unit
 <b>[TAB]:</b> Visualize Signal"
-BasicControl_Touch,Text,,"【滑动单元】：拖动单元
+BasicControl_Touch,Text,游戏内容显示的操作提示（触屏版）,"【滑动单元】：拖动单元
 【双击单元】：旋转单元
 【双指按住】：查看数据范围","<b>[Swipe on Unit]:</b>Drag Unit
 <b>[DoubleTap on Unit]:</b>Rotate Unit
 <b>[DoubleFinger Hold]:</b>Visualize Signal"
-CareerButton,Text,,生涯模式,Career
-EndingMessageNormal_EarnedMoney,Text,,时间到了，你赚了{[VALUE]}块钱[i2p_Zero]时间到了，但你没赚钱,"Time Up, and you earned {[VALUE]} money[i2p_Zero]Time Up, and you earned no money"
-EndingMessageNormal_NoEarnedMoney,Text,,时间到了，你赔了{[VALUE]}块钱[i2p_Zero]时间到了，但你也没赔钱,"Time Up, and you lost {[VALUE]} money[i2p_Zero]Time Up, but you haven't lost money"
-EndingMessageNormal_NoMoney,Text,,你没钱了！,You've run out of money.
+CareerButton,Text,开始生涯模式按钮名称,生涯模式,Career
+EndingMessageNormal_EarnedMoney,Text,游戏结束时，显示的内容,时间到了，你赚了{[VALUE]}块钱[i2p_Zero]时间到了，但你没赚钱,"Time Up, and you earned {[VALUE]} money[i2p_Zero]Time Up, and you earned no money"
+EndingMessageNormal_NoEarnedMoney,Text,游戏结束时，显示的内容,时间到了，你赔了{[VALUE]}块钱[i2p_Zero]时间到了，但你也没赔钱,"Time Up, and you lost {[VALUE]} money[i2p_Zero]Time Up, but you haven't lost money"
+EndingMessageNormal_NoMoney,Text,游戏结束时，显示的内容,你没钱了！,You've run out of money.
 EndingMessageTutorial,Text,,本节教程结束~,This section of tutorial has concluded
+EndingMessageTutorialFailed,Text,,本节教程未完成,This section of tutorial is not finished
 GameOver,Text,,游戏结束,GAME OVER
 HForHint_KM,Text,,按住<b>[H]</b>键查看操作说明,Hold <b>[H]</b> for controlling
 HForHint_Touch,Text,,按住这里查看操作说明,Hold Here for Hint
 KMHintCollapsed,Text,,按<b>回车</b>继续,按<b>回车</b>继续
 KMHintExtend,Text,,按<b>[回车]</b>继续,按<b>[回车]</b>继续
+NextTutorialFailed,Text,,再试一下,Retry
 NextTutorial,Text,,下一教程,Next
 PlayLevel,Text,,游玩关卡,Play
 ReleaseToReturn_KM,Text,,松开以返回,Release to Hide
@@ -46,3 +48,7 @@ Level_3,Text,,第三关,Level 3
 Level_4,Text,,第四关,Level 4
 Level_5,Text,,第五关,Level 5
 TutorialGoal,Text,,任务目标:,Need to do:
+KMEnterToReturn,Text,,"按""回车""以返回","Press ""Enter"" to Return"
+KMEnterToComplete,Text,,"按""回车""以完成任务","Press ""Enter"" to Complete"
+TouchToReturn,Text,,按这里以返回,Touch HERE to Return
+TouchToComplete,Text,,按这里以完成任务,Touch HERE to Complete

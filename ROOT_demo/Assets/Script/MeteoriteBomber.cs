@@ -22,11 +22,6 @@ namespace ROOT
         void Step(out CoreType? destoryedCore);
     }
 
-    public partial class TutorialDestroyerLogic : TutorialLogic
-    {
-        protected override string MainGoalEntryContent { get; }
-    }
-
     public class MeteoriteBomber: IWarningDestoryer
     {
         public Board GameBoard;
@@ -119,7 +114,6 @@ namespace ROOT
                 //Debug.Log("Aiming=" + NextIncome.ToString());
                 foreach (var nextIncome in NextIncomes)
                 {
-                    //TODO 这里要传达出来是否摧毁了某个Unit
                     GameBoard.TryDeleteCertainNoStationUnit(nextIncome, out destoryedCore);
                 }
                 //得摧毁之后才更新数据。

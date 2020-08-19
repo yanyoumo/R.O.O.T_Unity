@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -35,9 +36,8 @@ namespace ROOT
         /// 裁判同时要担任神使，神要通过这里影响世界。
         /// </summary>
         public LevelLogic Owner;
+        public bool? TutorialCompleted = null;
         public LevelActionAsset ActionAsset;
-        //public ScoreSet StartingScoreSet;
-        //public PerMoveData StartingPerMoveData;
         //这些引用在Asset外面要设好，在WRD-LOGIC里面也要处理。
         public GameObject CursorTemplate;
         public GameObject ItemPriceRoot;
@@ -46,7 +46,6 @@ namespace ROOT
         public HintMaster HintMaster;
         public TimeLine TimeLine;
         public CoreType? DestoryedCoreType;
-        //public TutorialCheckList tutorialCheckList;
 
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
@@ -184,7 +183,7 @@ namespace ROOT
             LevelAsset.Owner = this;
         }
 
-        void Awake()
+        protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
             UpdateLogicLevelReference();
@@ -429,7 +428,6 @@ namespace ROOT
                 {
                     if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
                     {
-                        //TODO 这里还要判断满足了多少周期。
                         if (!IsTutorialLevel)
                         {
                             PendingCleanUp = true;

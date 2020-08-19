@@ -10,15 +10,15 @@ namespace ROOT
     [Flags]
     public enum ControllingCommand
     {
-        Nop = 0b_00000000,
-        Move = 0b_00000001,
-        Drag = 0b_00000010,
-        Rotate = 0b_00000100,
-        Buy = 0b_00001000,
-        PlayHint = 0b_00010000,
-        SignalHint = 0b_00100000,
-        NextButton = 0b_01000000,
-        CycleNext = 0b_10000000,
+        Nop = 0b_0000000000,
+        Move = 0b_0000000001,
+        Drag = 0b_0000000010,
+        Rotate = 0b_0000000100,
+        Buy = 0b_0000001000,
+        PlayHint = 0b_0000010000,
+        SignalHint = 0b_0000100000,
+        NextButton = 0b_0001000000,
+        CycleNext = 0b_0010000000,
     }
 
     public struct ControllingPack

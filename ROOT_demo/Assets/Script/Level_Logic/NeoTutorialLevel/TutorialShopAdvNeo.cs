@@ -9,8 +9,6 @@ namespace ROOT
 {
     public class TutorialShopAdvNeo : TutorialLogic
     {
-        private bool OnceFlagB = false;
-
         protected override void Update()
         {
             base.Update();
@@ -44,34 +42,21 @@ namespace ROOT
                 {
                     if (actionAssetTimeLineToken.InRange(LevelAsset._StepCount))
                     {
+                        LevelFailed = true;
                         OnceFlagB = true;
                     }
                 }
+            }
+
+            if (LevelFailed)
+            {
+                PlayerRequestedQuit = CtrlPack.HasFlag(ControllingCommand.NextButton);
+                LevelAsset.HintMaster.TutorialCheckList.TutorialFailed = true;
             }
         }
 
         protected override string MainGoalEntryContent => "将这个棋盘扭亏为盈";
         protected override string SecondaryGoalEntryContent => "在时间线结束之前完成任务";
-
-        protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
-        {
-            if (LevelCompleted && PlayerRequestedEnd)
-            {
-                PendingCleanUp = true;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        protected void InitCurrencyIoMgr()
-        {
-            LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
-            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
-        }
 
         public override void InitLevel()
         {

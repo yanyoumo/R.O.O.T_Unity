@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using I2.Loc;
 using UnityEngine;
 
 namespace ROOT
@@ -9,6 +10,7 @@ namespace ROOT
         public TutorialCheckList TutorialCheckList;
     }
 
+    //TODO 还没有处理触摸屏适配。
     public class TutorialCheckList : MonoBehaviour
     {
         //这个触摸判断不应该在这里判断。
@@ -22,6 +24,9 @@ namespace ROOT
 
         public Transform PressReturnToComplete;
         public Transform PressESCToReturn;
+
+        public Localize passedLLE;
+        public Localize failedLLE;
 
         private bool _hasSecondaryEntry = false;
 
@@ -75,6 +80,16 @@ namespace ROOT
             MainEntry.Completed = false;
             SecondaryEntry.Completed = false;
             PressESCToReturn.gameObject.SetActive(false);
+            if (StartGameMgr.UseTouchScreen)
+            {
+                passedLLE.Term = ScriptTerms.TouchToComplete;
+                failedLLE.Term = ScriptTerms.TouchToReturn;
+            }
+            else
+            {
+                passedLLE.Term = ScriptTerms.KMEnterToComplete;
+                failedLLE.Term = ScriptTerms.KMEnterToReturn;
+            }
         }
 
         public void SetupEntryContent(string mainEntryContent,string secondaryEntryContent = "")

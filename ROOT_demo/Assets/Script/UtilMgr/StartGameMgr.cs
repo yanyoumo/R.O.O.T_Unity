@@ -46,7 +46,6 @@ namespace ROOT
         }*/
 
         public LevelActionAssetLib TutorialActionAssetLib;
-        public LevelActionAssetLib TutorialTouchActionAssetLib;
         public LevelActionAssetLib ClassicGameActionAssetLib;
         public LevelActionAssetLib CareerGameActionAssetLib;
 
@@ -143,8 +142,8 @@ namespace ROOT
             Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
             StartCoroutine(LoadLevelMasterSceneAndSetActive());
 
-            LevelLib.Instance.TutorialLevelActionAssetLib = UseTouchScreen ? TutorialTouchActionAssetLib : TutorialActionAssetLib;
-            LevelActionAsset[] tutorialArray= UseTouchScreen ? TutorialTouchActionAssetLib.ActionAssetList : TutorialActionAssetLib.ActionAssetList;
+            LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
+            LevelActionAsset[] tutorialArray= TutorialActionAssetLib.ActionAssetList;
             int LevelLengthCount = tutorialArray.Length + CareerGameActionAssetLib.ActionAssetList.Length;
             LevelLib.Instance.CareerActionAssetList = new LevelActionAsset[LevelLengthCount];
             for (var i = 0; i < LevelLengthCount; i++)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,8 +13,12 @@ namespace ROOT
         protected int LastActionCount { get; private set; } = 0;
 
         protected bool LevelCompleted = false;
+        protected bool LevelFailed = false;
         protected bool PlayerRequestedEnd = false;
         protected bool PlayerRequestedQuit = false;
+
+        protected bool OnceFlagA = false;
+        protected bool OnceFlagB = false;
 
         protected abstract string MainGoalEntryContent { get; }
         protected virtual string SecondaryGoalEntryContent { get; } = "";
@@ -29,7 +34,26 @@ namespace ROOT
             set => LevelAsset.HintMaster.ShouldShowCheckList = value;
         }
 
-        protected abstract override bool UpdateGameOverStatus(GameAssets currentLevelAsset);
+        protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
+        {
+            if (LevelCompleted && PlayerRequestedEnd)
+            {
+                PendingCleanUp = true;
+                LevelAsset.TutorialCompleted = true;
+                LevelMasterManager.Instance.LevelFinished(LevelAsset);
+                return true;
+            }else if (LevelFailed && PlayerRequestedQuit)
+            {
+                PendingCleanUp = true;
+                LevelAsset.TutorialCompleted = false;
+                LevelMasterManager.Instance.LevelFinished(LevelAsset);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public override IEnumerator UpdateArtLevelReference(AsyncOperation aOP)
         {
@@ -42,8 +66,6 @@ namespace ROOT
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
             LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
-            //LevelAsset.tutorialCheckList = FindObjectOfType<TutorialCheckList>();
-            //_tutorialMainText = FindObjectOfType<TutorialMainTextFrame>();
             PopulateArtLevelReference();
         }
 
@@ -104,7 +126,14 @@ namespace ROOT
             switch (data.ActionType)
             {
                 case TutorialActionType.Text:
-                    DisplayText(data.Text);
+                    if (data.DoppelgangerToggle)
+                    {
+                        DisplayText(StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text);
+                    }
+                    else
+                    {
+                        DisplayText(data.Text);
+                    }
                     break;
                 case TutorialActionType.CreateUnit:
                     CreateUnitOnBoard(data);
@@ -150,6 +179,12 @@ namespace ROOT
             cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
 
+        protected sealed override void Awake()
+        {
+            base.Awake();
+            LevelAsset.TutorialCompleted = false;
+        }
+
         protected override void Update()
         {
             base.Update(); //严格来说ControlPack在这里搞定了。
@@ -193,5 +228,15 @@ namespace ROOT
             obj?.ForceSetDestoryer(nextIncome);
         }
 
+        protected void InitCurrencyIoMgr()
+        {
+            LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
+            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
+        }
+
+        protected bool AllUnitConnected()
+        {
+            return LevelAsset.GameBoard.Units.All(gameBoardUnit => gameBoardUnit.Value.GetComponentInChildren<Unit>().AnyConnection);
+        }
     }
 }

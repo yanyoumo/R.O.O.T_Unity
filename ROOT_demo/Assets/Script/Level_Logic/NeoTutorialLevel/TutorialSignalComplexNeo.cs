@@ -9,11 +9,6 @@ namespace ROOT
 {
     public class TutorialSignalComplexNeo : TutorialLogic
     {
-        /*private bool LevelCompleted = false;
-        private bool PlayerRequestedEnd = false;*/
-        private bool OnceFlagA = false;
-        private bool OnceFlagB = false;
-
         protected override void Update()
         {
             base.Update();
@@ -52,9 +47,16 @@ namespace ROOT
                 {
                     if (actionAssetTimeLineToken.InRange(LevelAsset._StepCount))
                     {
+                        LevelFailed = true;
                         OnceFlagB = true;
                     }
                 }
+            }
+
+            if (LevelFailed)
+            {
+                PlayerRequestedQuit = CtrlPack.HasFlag(ControllingCommand.NextButton);
+                LevelAsset.HintMaster.TutorialCheckList.TutorialFailed = true;
             }
         }
 
@@ -64,23 +66,7 @@ namespace ROOT
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             base.UpdateCareerGameOverStatus(currentLevelAsset);
-            LevelAsset.TimeLine.SetCurrentCount = RequirementSatisfiedCycleCount;
-            if (LevelCompleted && PlayerRequestedEnd)
-            {
-                PendingCleanUp = true;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        protected void InitCurrencyIoMgr()
-        {
-            LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
-            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
+            return base.UpdateGameOverStatus(currentLevelAsset);
         }
 
         public override void InitLevel()

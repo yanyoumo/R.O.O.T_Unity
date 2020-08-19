@@ -54,26 +54,6 @@ namespace ROOT
 
         protected override string MainGoalEntryContent => "购买5个单元";
 
-        protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
-        {
-            if (LevelCompleted && PlayerRequestedEnd)
-            {
-                PendingCleanUp = true;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        protected void InitCurrencyIoMgr()
-        {
-            LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
-            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
-        }
-
         public override void InitLevel()
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……

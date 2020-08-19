@@ -16,119 +16,155 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: 6dc37bd1b8c05f448932aa74775355be, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: 0fadf09469c1dec4183a5dc39ab2ba48,
     type: 3}
-  levelType: 1
+  levelType: 0
+  GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
+  ExcludedShop: 0
+  ShopExcludedType: 
   Actions:
   - ActionIdx: 0
     ActionType: 3
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 0
     ActionType: 7
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 0
     ActionType: 0
     Text: "\u4ECA\u5929\u6765\u8BB2\u89E3\u4E00\u4E0B\u65F6\u95F4\u7EBF."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 1
     ActionType: 0
     Text: "\u5C4F\u5E55\u7684\u53F3\u4FA7,\u6709\u4E00\u6839\u65F6\u95F4\u7EBF."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 2
     ActionType: 0
     Text: "\u4F60\u5728\u68CB\u76D8\u4E0A\u7684\u64CD\u4F5C\u5C31\u4F1A\u4F7F\u5F97\u65F6\u95F4\u7EBF\u524D\u8FDB\u4E00\u6B65\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 2
     ActionType: 1
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 3, y: 1}
     Core: 4
     Sides: 00000000010000000100000000000000
   - ActionIdx: 2
     ActionType: 1
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 4, y: 3}
     Core: 4
     Sides: 00000000010000000000000000000000
   - ActionIdx: 2
     ActionType: 1
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 1, y: 5}
     Core: 4
     Sides: 00000000000000000100000001000000
   - ActionIdx: 2
     ActionType: 1
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 4
     Sides: 01000000010000000100000000000000
   - ActionIdx: 2
     ActionType: 1
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 2, y: 3}
     Core: 5
     Sides: 01000000010000000000000001000000
   - ActionIdx: 3
     ActionType: 0
     Text: "\u5982\u679C\u65F6\u95F4\u7EBF\u8FDB\u5C55\u5230<b>[\u9ED1\u8272]</b>,\u90A3\u5C31\u8BF4\u660E\u4F60\u65F6\u95F4\u5230\u4E86."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 4
     ActionType: 0
     Text: "\u6240\u4EE5\u8BF4,\u5728\u505A\u5404\u79CD\u64CD\u4F5C\u7684\u65F6\u5019,\u90FD\u76EF\u7740\u70B9\u65F6\u95F4\u7EBF."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 5
     ActionType: 1
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 3, y: 2}
     Core: 4
     Sides: 00000000010000000100000000000000
   - ActionIdx: 5
     ActionType: 1
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 5, y: 5}
     Core: 4
     Sides: 01000000000000000100000000000000
   - ActionIdx: 5
     ActionType: 1
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 5, y: 0}
     Core: 4
     Sides: 00000000010000000000000000000000
   - ActionIdx: 5
     ActionType: 4
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 5
     ActionType: 6
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
   - ActionIdx: 5
     ActionType: 5
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     Sides: 
-  InitialCurrency: 0
-  InitialTime: 0
-  GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
   TimeLineTokens:
   - TokenID: 0
     type: 3

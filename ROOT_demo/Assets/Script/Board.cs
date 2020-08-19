@@ -17,7 +17,7 @@ namespace ROOT
         private readonly float _boardPhysicalOriginX = -3.1f - 1.75f-2.0f;
         private readonly float _boardPhysicalOriginY = -3.1f;
 
-        public GameObject UnitTemplate; //TODO 应该要改成AssetLoad那种
+        public GameObject UnitTemplate;
 
         public Dictionary<Vector2Int, GameObject> Units { get; private set; }
 
