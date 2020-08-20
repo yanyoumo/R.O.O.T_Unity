@@ -75,7 +75,6 @@ namespace ROOT
         void Awake()
         {
             Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, DistanceFromCamera));
-            //Debug.Log(pos);
             float ZeroX = pos.x;
             Vector3 currentPos = transform.position;
             float camZ = 25;
