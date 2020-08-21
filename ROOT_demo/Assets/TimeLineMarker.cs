@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace ROOT
 {
-    //[ExecuteInEditMode]
     public class TimeLineMarker : MonoBehaviour
     {
         public bool PendingKill = false;

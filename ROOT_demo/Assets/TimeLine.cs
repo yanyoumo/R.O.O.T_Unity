@@ -40,6 +40,8 @@ namespace ROOT
     //[ExecuteInEditMode]
     public class TimeLine : MonoBehaviour
     {
+        //BUG network的标记会随机从应有的位置上漂移。因：基于ctrl的强制跳过功能，提前计算了StepCount。
+        //BUG 即——开始游戏的时候StepCount已经不是0了。
         public TimeLineGoalMarker GoalMarker;
 
         public void SetNoCount()
@@ -140,8 +142,8 @@ namespace ROOT
                         //TODO 最后一个Token会支楞出去，但是先不用管
                         var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
                         token.GetComponent<TimeLineTokenQuad>().SetQuadShape(UnitLength, SubDivision,timeLineToken.type, i, timeLineTokens.Count, j);
-                        token.GetComponent<TimeLineTokenQuad>().markerID = markerCount;
-                        token.GetComponent<TimeLineTokenQuad>().token = timeLineToken;
+                        token.GetComponent<TimeLineTokenQuad>().MarkerID = markerCount;
+                        token.GetComponent<TimeLineTokenQuad>().Token = timeLineToken;
                         i++;
                     }
                 }
@@ -217,7 +219,6 @@ namespace ROOT
             int i = MarkerCount / SubDivision;
             int j = MarkerCount % SubDivision;
             float x3 = UnitLength * i + (UnitLength / SubDivision) * j;
-            //float x5 = TimeLineMarkerExiting.transform.localPosition.x;
             float x4 = x3 + xMin;
             if (x4 <= TimeLineMarkerEntering.localPosition.x)
             {
@@ -237,11 +238,6 @@ namespace ROOT
         void Awake()
         {
             RequirementSatisfied = false;
-        }
-
-        void OnEnable()
-        {
-            //InitTimeLine();
         }
     }
 }

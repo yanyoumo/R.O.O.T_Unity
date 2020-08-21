@@ -4,6 +4,7 @@ using Cinemachine;
 using I2.Loc;
 using TMPro;
 using UnityEngine;
+// ReSharper disable DelegateSubtraction
 
 namespace ROOT
 {
@@ -22,6 +23,7 @@ namespace ROOT
         public AnimationCurve Curve;
         private readonly float ShowTime = 0.1f;
         private float _showTimer = 0.1f;
+        private bool ChangedCam = false;
 
         public string Content
         {
@@ -72,21 +74,19 @@ namespace ROOT
             }
         }
 
+        void UpdatePosition()
+        {
+            CameraAdaptToScreen.CameraUpdated -= UpdatePosition;
+            transform.position = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, Screen.height, 20));
+            float ZeroX = transform.position.x;
+            PosXNotShow = ZeroX - 4.21f - 4.71f;
+            PosXShow = ZeroX;
+            ChangedCam = true;
+        }
+
         void Awake()
         {
-            Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, DistanceFromCamera));
-            float ZeroX = pos.x;
-            Vector3 currentPos = transform.position;
-            float camZ = 25;
-            if (StartGameMgr.DetectedScreenRatio==SupportedScreenRatio.XGA)
-            {
-                camZ = 30;
-            }
-            currentPos.y = camZ - DistanceFromCamera;
-            transform.position = currentPos;
-            PosXNotShow = ZeroX - 4.21f;
-            PosXShow = ZeroX + 4.71f;
-
+            CameraAdaptToScreen.CameraUpdated += UpdatePosition;
             if (StartGameMgr.UseTouchScreen)
             {
                 NextCollapsedLLE.Term = ScriptTerms.TouchHintCollapsed;
@@ -100,6 +100,11 @@ namespace ROOT
         }
         IEnumerator Animate(bool shouldShow)
         {
+            if (!ChangedCam)
+            {            
+                //HACK 这个东西调整位置的时候和Crane的调整有一个竞争冒险效应，在调第一次这个Animate的时候，还没有初始化，就只能在这儿强制调一下。
+                UpdatePosition();
+            }
             Animating = true;
             Vector3 pos = transform.position;
             while (true)

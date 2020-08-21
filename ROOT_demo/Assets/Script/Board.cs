@@ -46,15 +46,6 @@ namespace ROOT
                 this._boardPhysicalOriginY + boardPos.y * this._boardPhysicalLength);
         }
 
-        [Obsolete]
-        public void UpdateUnitBoardPos(Vector2Int oldKey)
-        {
-            Units.TryGetValue(oldKey,out var unit);
-            Units.Remove(oldKey);
-            System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-            Units.Add(unit.GetComponentInChildren<Unit>().CurrentBoardPosition,unit);
-        }
-
         public void UpdateUnitBoardPosAnimation(Vector2Int oldKey)
         {
             Units.TryGetValue(oldKey, out var unit);//这里get出来和上面拿到的Unit不是一个？？
@@ -144,79 +135,6 @@ namespace ROOT
             {
                 CreateUnitOnBoard(unitGist);
             }
-        }
-
-        [Obsolete]
-        public void InitBoardRealStart()
-        {
-            Vector2Int[] startingArray =
-                {
-                    new Vector2Int(0, 1),
-                    //new Vector2Int(0, 2),
-                    //new Vector2Int(0, 3),
-                    new Vector2Int(0, 4),
-
-                    new Vector2Int(5, 1),
-                    //new Vector2Int(5, 2),
-                    //new Vector2Int(5, 3),
-                    new Vector2Int(5, 4),
-
-                    new Vector2Int(1, 0),
-                    //new Vector2Int(2, 0),
-                    //new Vector2Int(3, 0),
-                    new Vector2Int(4, 0),
-
-                    new Vector2Int(1, 5),
-                    //new Vector2Int(2, 5),
-                    //new Vector2Int(3, 5),
-                    new Vector2Int(4, 5),
-                };
-            foreach (var vector2Int in startingArray)
-            {              
-                var go = Instantiate(UnitTemplate);
-                if (go == null)
-                {
-                    Debug.Assert(true, "Empty Template");
-                    continue;
-                };
-                go.name = "Unit_" + Hash128.Compute(vector2Int.ToString());
-                go.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2Int);
-                Units.Add(vector2Int, go);
-                go.GetComponentInChildren<Unit>().InitUnit(CoreType.PCB,
-                    new[] { SideType.NoConnection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection },this);
-            }
-
-            Vector2Int vector2IntA=new Vector2Int(0,0);
-            var goA = Instantiate(UnitTemplate);
-            goA.name = "Unit_" + Hash128.Compute(vector2IntA.ToString());
-            goA.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntA);
-            Units.Add(vector2IntA, goA);
-            goA.GetComponentInChildren<Unit>().InitUnit(CoreType.Processor, new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
-
-            Vector2Int vector2IntB = new Vector2Int(5, 5);
-            var goB = Instantiate(UnitTemplate);
-            goB.name = "Unit_" + Hash128.Compute(vector2IntB.ToString());
-            goB.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntB);
-            Units.Add(vector2IntB, goB);
-            goB.GetComponentInChildren<Unit>().InitUnit(CoreType.Processor,
-                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
-
-            Vector2Int vector2IntC = new Vector2Int(0, 5);
-            var goC = Instantiate(UnitTemplate);
-            goC.name = "Unit_" + Hash128.Compute(vector2IntC.ToString());
-            goC.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntC);
-            Units.Add(vector2IntC, goC);
-            goC.GetComponentInChildren<Unit>().InitUnit(CoreType.Server,
-                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
-
-            Vector2Int vector2IntD = new Vector2Int(5, 0);
-            var goD = Instantiate(UnitTemplate);
-            goD.name = "Unit_" + Hash128.Compute(vector2IntD.ToString());
-            goD.GetComponentInChildren<Unit>().InitPosWithAnimation(vector2IntD);
-            //goD.GetComponentInChildren<Unit>().SetupStationUnit();
-            Units.Add(vector2IntD, goD);
-            goD.GetComponentInChildren<Unit>().InitUnit(CoreType.Server,
-                new[] { SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection }, this);
         }
 
         public bool CheckBoardPosValid(Vector2Int mVector2Int)
@@ -374,34 +292,6 @@ namespace ROOT
                     }
                 }
             }
-        }
-
-        public void ForceChangeUnitCoreType(TutorialMgr invoker)
-        {
-            Debug.Assert(invoker,"这个函数只能在教程里面调。");
-            foreach (var key in Units.Keys)
-            {
-                if (CheckBoardPosValidAndFilled(key))
-                {
-                    Units.TryGetValue(key, out GameObject go);
-                    Destroy(go);
-                }
-            }
-            Units=new Dictionary<Vector2Int, GameObject>();
-            SideType[] sidesA =
-            {
-                SideType.NoConnection, SideType.Connection, SideType.Connection, SideType.Connection
-            };
-            GameObject goA = InitUnit(new Vector2Int(2, 2), CoreType.Server,Utils.Shuffle(sidesA));
-            GameObject goB = InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable,Utils.Shuffle(sidesA));
-            GameObject goC = InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable, Utils.Shuffle(sidesA));
-            GameObject goD = InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable, Utils.Shuffle(sidesA));
-            GameObject goE = InitUnit(new Vector2Int(2, 2), CoreType.NetworkCable, Utils.Shuffle(sidesA));
-            DeliverUnitRandomPlace(goA);
-            DeliverUnitRandomPlace(goB);
-            DeliverUnitRandomPlace(goC);
-            DeliverUnitRandomPlace(goD);
-            DeliverUnitRandomPlace(goE);
         }
     }
 }

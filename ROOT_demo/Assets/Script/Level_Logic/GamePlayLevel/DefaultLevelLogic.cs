@@ -31,7 +31,7 @@ namespace ROOT
     /// </summary>
     public sealed class GameAssets//ASSET 这里不应该有任何之际逻辑（有些便于操作的除外
     {
-        public int _StepCount = 0;
+        public int StepCount = 0;
         /// <summary>
         /// 裁判同时要担任神使，神要通过这里影响世界。
         /// </summary>
@@ -217,7 +217,6 @@ namespace ROOT
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
             LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
-            //LevelAsset.tutorialCheckList = FindObjectOfType<TutorialCheckList>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
@@ -424,7 +423,7 @@ namespace ROOT
 
             foreach (var actionAssetTimeLineToken in currentLevelAsset.ActionAsset.TimeLineTokens)
             {
-                if (actionAssetTimeLineToken.InRange(currentLevelAsset._StepCount))
+                if (actionAssetTimeLineToken.InRange(currentLevelAsset.StepCount))
                 {
                     if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
                     {
@@ -467,8 +466,6 @@ namespace ROOT
 
     public class DefaultLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
-        //public override LevelType GetLevelType => LevelType.PlayLevel;
-
         public override void InitLevel()
         {
             Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
@@ -485,7 +482,6 @@ namespace ROOT
             InitDestoryer();
             InitCursor(new Vector2Int(2, 3));
             LevelAsset.EnableAllCoreFunctionAndFeature();
-            LevelAsset.GameBoard.InitBoardRealStart();
             LevelAsset.GameBoard.UpdateBoardAnimation();
             LevelAsset.ActionAsset = null;
 

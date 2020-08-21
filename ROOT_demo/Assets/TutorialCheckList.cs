@@ -75,10 +75,16 @@ namespace ROOT
 
         private readonly float DistanceFromCamera = 20.0f;
 
-        void Awake()
+        void UpdatePosition()
         {
+            CameraAdaptToScreen.CameraUpdated -= UpdatePosition;
             Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, DistanceFromCamera));
             transform.localPosition = pos;
+        }
+
+        void Awake()
+        {
+            CameraAdaptToScreen.CameraUpdated += UpdatePosition;
             MainEntry = Instantiate(EntryTemplate, MainEntryRoot).GetComponent<TutorialGoalEntry>();
             SecondaryEntry = Instantiate(EntryTemplate, SecondaryEntryRoot).GetComponent<TutorialGoalEntry>();
             MainEntry.Completed = false;

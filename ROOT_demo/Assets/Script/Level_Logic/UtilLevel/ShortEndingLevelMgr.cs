@@ -25,7 +25,7 @@ namespace ROOT
             LevelAsset.GameOverEnabled = true;
 
             InitCursor(new Vector2Int(2, 3));
-            LevelAsset.GameBoard.InitBoardRealStart();
+            //LevelAsset.GameBoard.InitBoardRealStart();
             LevelAsset.GameBoard.UpdateBoardAnimation();
 
             //LevelAsset.StartingScoreSet = scoreSet;

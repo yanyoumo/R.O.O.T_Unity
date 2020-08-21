@@ -9,7 +9,19 @@ namespace ROOT
 {
     public class CameraAdaptToScreen : MonoBehaviour
     {
+        public delegate void CameraDelegate();
+        public static CameraDelegate CameraUpdated;
+
         public CinemachineFreeLook Crane;
+
+        IEnumerator DelayedDelegate()
+        {
+            yield return 0;
+            yield return 0;
+            yield return 0;
+            CameraUpdated();
+            Destroy(this);
+        }
 
         void Awake()
         {
@@ -26,19 +38,7 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException();
             }
 
-            Destroy(this);
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            StartCoroutine(DelayedDelegate());
         }
     }
 }

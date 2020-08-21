@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 
@@ -7,13 +8,11 @@ namespace ROOT
 {
     public class TimeLineTokenQuad : MonoBehaviour
     {
-        public TimeLineToken token;
+        [HideInInspector]
+        public TimeLineToken Token;
+        //[Readonlyin]
+        public int MarkerID;
 
-        public int markerID;
-
-        /*public int rangMin;
-        public int rangMax;
-        public int RequiredVal;*/
         private readonly float baseTokenHeight = 0.38f;
         public Transform QuadTransform;
         public TextMeshPro valMarkerNormal;
@@ -38,7 +37,7 @@ namespace ROOT
 
         public void SetValMarker(int val)
         {
-            if (token.type == TimeLineTokenType.RequireNormal)
+            if (Token.type == TimeLineTokenType.RequireNormal)
             {
                 valMarkerNormal.enabled = true;
                 valMarkerNormal.text = val.ToString();
@@ -74,27 +73,27 @@ namespace ROOT
         public void Update()
         {
             DisableValMarker();
-            if (token.type == TimeLineTokenType.RequireNormal || token.type == TimeLineTokenType.RequireNetwork)
+            if (Token.type == TimeLineTokenType.RequireNormal || Token.type == TimeLineTokenType.RequireNetwork)
             {
-                if (markerID == token.Range.x)
+                if (MarkerID == Token.Range.x)
                 {
-                    if (token.Range.x >= TimeLine.StepCount)
+                    if (Token.Range.x >= TimeLine.StepCount)
                     {
-                        SetValMarker(token.RequireAmount);
+                        SetValMarker(Token.RequireAmount);
                     }
                 }
-                else if (markerID <= token.Range.y)
+                else if (MarkerID <= Token.Range.y)
                 {
-                    if (markerID == TimeLine.StepCount)
+                    if (MarkerID == TimeLine.StepCount)
                     {
-                        SetValMarker(token.RequireAmount);
+                        SetValMarker(Token.RequireAmount);
                     }
                 }
-                else if (token.Range.y == -1)
+                else if (Token.Range.y == -1)
                 {
-                    if (markerID == TimeLine.StepCount)
+                    if (MarkerID == TimeLine.StepCount)
                     {
-                        SetValMarker(token.RequireAmount);
+                        SetValMarker(Token.RequireAmount);
                     }
                 }
             }

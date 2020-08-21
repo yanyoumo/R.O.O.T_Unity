@@ -43,11 +43,18 @@ namespace ROOT
             {
                 if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
                 {
-                    if (actionAssetTimeLineToken.InRange(LevelAsset._StepCount))
+                    if (actionAssetTimeLineToken.InRange(LevelAsset.StepCount))
                     {
+                        LevelFailed = true;
                         OnceFlagB = true;
                     }
                 }
+            }
+
+            if (LevelFailed)
+            {
+                PlayerRequestedQuit = CtrlPack.HasFlag(ControllingCommand.NextButton);
+                LevelAsset.HintMaster.TutorialCheckList.TutorialFailed = true;
             }
         }
 

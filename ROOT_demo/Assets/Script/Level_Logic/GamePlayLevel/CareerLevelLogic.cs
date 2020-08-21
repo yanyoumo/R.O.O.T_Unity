@@ -87,7 +87,7 @@ namespace ROOT
             {
                 if (actionAssetTimeLineToken.type == TimeLineTokenType.DestoryerIncome)
                 {
-                    LevelAsset.DestroyerEnabled = actionAssetTimeLineToken.InRange(LevelAsset._StepCount);
+                    LevelAsset.DestroyerEnabled = actionAssetTimeLineToken.InRange(LevelAsset.StepCount);
                     if (LevelAsset.DestroyerEnabled)
                     {
                         break;

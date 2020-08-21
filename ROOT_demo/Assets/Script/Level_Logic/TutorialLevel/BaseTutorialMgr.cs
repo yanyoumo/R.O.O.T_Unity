@@ -34,6 +34,51 @@ namespace ROOT
             set => LevelAsset.HintMaster.ShouldShowCheckList = value;
         }
 
+        #region TextProcess
+
+        public static string TmpColorBlueXml(string content)
+        {
+            return TmpColorXml(content, Color.blue);
+        }
+
+        public static string TmpColorGreenXml(string content)
+        {
+            return TmpColorXml(content, Color.green * 0.35f);
+        }
+
+        public static string TmpColorXml(string content, Color col)
+        {
+            var hexCol = ColorUtility.ToHtmlStringRGB(col);
+            return "<color=#" + hexCol + ">" + content + "</color>";
+        }
+
+        public static string TmpColorBold(string content)
+        {
+            return "<b>" + content + "</b>";
+        }
+
+        public static string TmpBracket(string content)
+        {
+            return "[" + content + "]";
+        }
+
+        public static string TmpBracketAndBold(string content)
+        {
+            return TmpColorBold("[" + content + "]");
+        }
+
+        public static string TMPNormalDataCompo()
+        {
+            return TmpBracketAndBold(TmpColorGreenXml("一般数据"));
+        }
+
+        public static string TMPNetworkDataCompo()
+        {
+            return TmpBracketAndBold(TmpColorBlueXml("网络数据"));
+        }
+
+        #endregion
+
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             if (LevelCompleted && PlayerRequestedEnd)
@@ -103,11 +148,13 @@ namespace ROOT
             Text = Text.Replace("方形", "<b>[方形]</b>");
             Text = Text.Replace("圆形", "<b>[圆形]</b>");
             Text = Text.Replace("周期", "<b>[周期]</b>");
-            Text = Text.Replace("一般数据", TutorialActionBase.TMPNormalDataCompo());
-            Text = Text.Replace("网络数据", TutorialActionBase.TMPNetworkDataCompo());
-            Text = Text.Replace("收入/损失",
-                TutorialActionBase.TmpBracketAndBold(TutorialActionBase.TmpColorXml("收入", Color.green * 0.4f) + "/" +
-                                                     TutorialActionBase.TmpColorRedXml("损失")));
+            Text = Text.Replace("一般数据", TMPNormalDataCompo());
+            Text = Text.Replace("网络数据", TMPNetworkDataCompo());
+            Text = Text.Replace("收入/损失", TmpBracketAndBold(TmpColorXml("收入", Color.green * 0.4f) + "/" + TmpColorGreenXml("损失")));
+            Text = Text.Replace("绿色", TmpBracketAndBold(TmpColorXml("绿色", Color.green * 0.4f)));
+            Text = Text.Replace("红色", TmpColorXml("红色", Color.red));
+            ColorUtility.TryParseHtmlString("#71003E", out Color col);
+            Text = Text.Replace("深紫色", TmpColorXml("深紫色", col));
             return Text;
         }
 

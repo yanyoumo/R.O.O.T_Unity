@@ -605,7 +605,8 @@ namespace ROOT
 
             if (shouldCycle)
             {
-                currentLevelAsset._StepCount++;
+                //BUG 这里会因为ctrl的介入记录错误的StepCount
+                currentLevelAsset.StepCount++;
                 currentLevelAsset.TimeLine.Step();
                 currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
                 if (currentLevelAsset.BoughtOnce)

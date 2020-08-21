@@ -59,8 +59,8 @@ MonoBehaviour:
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 2, y: 1}
-    Core: 5
-    Sides: 01000000010000000000000001000000
+    Core: 4
+    Sides: 01000000010000000100000000000000
   - ActionIdx: 2
     ActionType: 0
     Text: "\u7136\u540E,\u8FD9\u4E2A\u662F\u4F60\u7684\u5149\u6807"
@@ -116,7 +116,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 4
-    Sides: 01000000010000000000000001000000
+    Sides: 00000000010000000100000001000000
   - ActionIdx: 6
     ActionType: 6
     Text: 
@@ -132,7 +132,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 4
-    Sides: 01000000000000000100000001000000
+    Sides: 00000000010000000100000001000000
   - ActionIdx: 6
     ActionType: 1
     Text: 
