@@ -182,6 +182,19 @@ namespace ROOT
 
             #endregion
         }
+
+        /// <summary>
+        /// this function would calculate the total price
+        /// </summary>
+        /// <param name="unitPrice">the unit price of product</param>
+        /// <returns>total price</returns>
+        public float calculateTotalPrice(out float unitPrice)
+        {
+            float postalPrice = 10.0f;
+            unitPrice = 10.0f;
+            float totalPrice = unitPrice + postalPrice;
+            return totalPrice;
+        }
     }
 
     public partial class BoardDataCollector : MonoBehaviour
