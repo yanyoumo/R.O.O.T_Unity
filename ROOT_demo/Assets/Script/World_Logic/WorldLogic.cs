@@ -32,6 +32,11 @@ namespace ROOT
         public Vector2Int NextPos;
         public int ShopID;
 
+        public void MaskFlag(ControllingCommand a)
+        {
+            CtrlCMD &= a;
+        }
+
         public bool HasFlag(ControllingCommand a)
         {
             return (CtrlCMD & a) == a;
@@ -461,6 +466,7 @@ namespace ROOT
                     //目前商店上的价格写的是随机送的价格，即要送货再加X元，随机送不加价。
                     if (ctrlPack.HasFlag(ControllingCommand.BuyCanceled))
                     {
+                        shopMgr.ResetPendingBuy();
                         currentLevelAsset.BuyingCursor = false;
                         currentLevelAsset.BuyingID = -1;
                     }
@@ -619,6 +625,14 @@ namespace ROOT
                 }
             }
 
+            if (currentLevelAsset.BuyingCursor)
+            {
+                ctrlPack.MaskFlag(ControllingCommand.BuyRandom
+                                  | ControllingCommand.BuyCanceled
+                                  | ControllingCommand.BuyConfirm
+                                  | ControllingCommand.Move);
+            }
+
             return ctrlPack;
         }
 
@@ -700,7 +714,7 @@ namespace ROOT
             }
 
             movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
-            currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
+            currentLevelAsset.HintMaster.ShouldShowShopHint = currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
 
             if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
             if (currentLevelAsset.CycleEnabled) UpdateCycle(currentLevelAsset, movedTile);

@@ -55,9 +55,49 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
+        public Material BuyingMat;
+        public Material ImmovableMat;
+        public override bool Immovable
+        {
+            set
+            {
+                _immovable = value;
+                AdditionalClampMesh.material = ImmovableMat;
+                AdditionalClampMesh.enabled = _immovable;
+            }
+            get => _immovable;
+        }
+        public MeshRenderer AdditionalClampMesh;
         public bool StationUnit { get; private set; }
         public Dictionary<RotationDirection, Tuple<int, int>> StationRequirement;
-        public int ShopID { get; internal set; } = -1;  
+        private int _shopID = -1;
+        public int ShopID {
+            get => _shopID;
+            internal set
+            {
+                _shopID = value;
+                if (value==-1)
+                {
+                    SetPendingBuying = false;
+                }
+            }
+        }
+        public bool SetPendingBuying
+        {
+            set
+            {
+                if (value)
+                {
+                    Debug.Assert(ShopID != -1);
+                    AdditionalClampMesh.material = BuyingMat;
+                    AdditionalClampMesh.enabled = true;
+                }
+                else
+                {
+                    AdditionalClampMesh.enabled = false;
+                }
+            }
+        }
         protected string UnitName { get; }
 
         public CoreType UnitCore { get; protected set; }
@@ -107,6 +147,7 @@ namespace ROOT
             _coreMatNameDic.Add(CoreType.NetworkCable, GlobalResourcePath.UNIT_NETCABLE_MAT_NAME);
             _coreMatNameDic.Add(CoreType.Processor, GlobalResourcePath.UNIT_PROCESSOR_MAT_NAME);
             _coreMatNameDic.Add(CoreType.Server, GlobalResourcePath.UNIT_SERVER_MAT_NAME);
+            _coreMatNameDic.Add(CoreType.HQ, GlobalResourcePath.UNIT_HQ_MAT_NAME);//TODO HQ的核心还没有实际材质
         }
 
         public RotationDirection SignalFromDir;

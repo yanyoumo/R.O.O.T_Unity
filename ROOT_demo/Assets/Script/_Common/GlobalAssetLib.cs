@@ -13,5 +13,6 @@ namespace ROOT
         public static string UNIT_NETCABLE_MAT_NAME = "UnitCore_Cable";
         public static string UNIT_HDD_MAT_NAME = "UnitCore_HDD";
         public static string UNIT_PCB_MAT_NAME = "UnitCore_PCB";
+        public static string UNIT_HQ_MAT_NAME = "UnitCore_HQ";
     }
 }

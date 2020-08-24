@@ -70,6 +70,7 @@ namespace ROOT
 
         private CoreType GenerateRandomCore()
         {
+            //这里不会生成HQ核心。
             Dictionary<CoreType, float> lib= _defaultCoreWeight;
             if (GameBoard.GetCountByType(CoreType.Server)<1)
             {
@@ -257,12 +258,24 @@ namespace ROOT
             }
         }
 
+        public void ResetPendingBuy()
+        {
+            foreach (var item in _items)
+            {
+                item.GetComponentInChildren<Unit>().SetPendingBuying = false;
+            }
+        }
+
         public bool RequestBuy(int idx)
         {
             if (_items[idx])
             {
                 float totalPrice = _prices[idx] * _priceCof[idx];
-                return (CurrentGameStateMgr.GetCurrency() >= totalPrice);
+                if (CurrentGameStateMgr.GetCurrency() >= totalPrice)
+                {
+                    _items[idx].GetComponentInChildren<Unit>().SetPendingBuying = true;
+                    return true;
+                }
             }
             return false;
         }
@@ -278,7 +291,7 @@ namespace ROOT
                 float postalPrice = 10.0f;
                 float totalPrice = unitPrice + postalPrice;
                 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                //V/^ 范围的代码输入一个unitPrice之后输出一个totalPrice。
+                //V/^ 范围的代码输入一个unitPrice之后输出一个totalPrice。并且需要使用out输出差价。
                 //在常规的游戏设计中，一般都是程序员设计一个框架，之后由策划在其他一小片简单的代码部分进行制定代码。
                 //对于这个框架，需要在CoreSide.cs文件中的partial ShopMgr类中建立新的函数并且完善yml-summary。
                 //并且函数里面添加placeHolder逻辑。
@@ -287,7 +300,10 @@ namespace ROOT
 
                 if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
                 {
+                    //TODO 因为是立刻送，所以目前还是闪现。
                     _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;
+                    //RISK 现在购买的Unit无法移动。
+                    _items[idx].gameObject.GetComponentInChildren<Unit>().SetupStationUnit();
                     GameBoard.DeliverUnitAssignedPlace(_items[idx], pos);
                     _items[idx] = null;
                     return true;

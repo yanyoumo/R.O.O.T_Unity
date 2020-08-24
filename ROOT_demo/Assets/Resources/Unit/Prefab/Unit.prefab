@@ -338,7 +338,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729dec68926cbf34da144e2b436836dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ImmovableRenderer: {fileID: 5168225995973686400}
+  BuyingMat: {fileID: 2100000, guid: c2504203b500373419174027cdccfc0c, type: 2}
+  ImmovableMat: {fileID: 2100000, guid: 541e53b91680b4649ae7774c1b9da4b7, type: 2}
+  AdditionalClampMesh: {fileID: 5168225995973686400}
   _localNorthConnector: {fileID: 7880363094986583513}
   _localEastConnector: {fileID: 8039069398988845131}
   _localWestConnector: {fileID: 6997640945046645840}
@@ -1194,7 +1196,7 @@ GameObject:
   - component: {fileID: 4027976208786639652}
   - component: {fileID: 5168225995973686400}
   m_Layer: 0
-  m_Name: ImmovableClamper
+  m_Name: FrameworkMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

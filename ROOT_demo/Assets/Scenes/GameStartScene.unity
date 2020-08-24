@@ -3024,7 +3024,7 @@ PrefabInstance:
     - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}
       propertyPath: PCSimulateDevice
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2835144725562628124, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}

@@ -223,6 +223,21 @@ namespace ROOT
             }
         }
 
+        public bool TryDeleteCertainUnit(Vector2Int pos, out CoreType? destoryedCore)
+        {
+            if (CheckBoardPosValidAndFilled(pos))
+            {
+                Units.TryGetValue(pos, out GameObject go);
+                destoryedCore = go.GetComponentInChildren<Unit>().UnitCore;
+                Destroy(go);
+                Units.Remove(pos);
+                UpdateBoard();
+                return true;
+            }
+            destoryedCore = null;
+            return false;
+        }
+
         public bool TryDeleteCertainNoStationUnit(Vector2Int pos,out CoreType? destoryedCore)
         {
             if (CheckBoardPosValidAndFilled(pos))

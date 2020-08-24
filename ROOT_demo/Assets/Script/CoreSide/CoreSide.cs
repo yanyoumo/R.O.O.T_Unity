@@ -15,6 +15,7 @@ namespace ROOT
         Processor,
         Cooler,
         BackPlate,
+        HQ,
         CORETYPECOUNT
     }
 
@@ -45,7 +46,12 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
-        protected readonly CoreType[] SourceCoreTypeLib = { CoreType.Server, CoreType.Processor };
+        protected readonly CoreType[] SourceCoreTypeLib =
+        {
+            CoreType.Server,
+            CoreType.Processor,
+            CoreType.HQ
+        };
 
         public CoreGenre GetCoreGenreByCoreType(CoreType coreType)
         {
@@ -78,9 +84,7 @@ namespace ROOT
             _priceBySide = new Dictionary<SideType, float>()
             {
                 {SideType.NoConnection,2.0f },
-                //{Sides.Firewall,8.0f },
                 {SideType.Connection,6.0f },
-                //{Sides.SerialConnector,6.0f },
             };
         }
 
@@ -102,35 +106,30 @@ namespace ROOT
             {
                 {SideType.NoConnection, 0.75f},
                 {SideType.Connection, 0.25f},
-                //{Sides.SerialConnector, 0.25f},
             };
 
             _processorSideWeight = new Dictionary<SideType, float>()
             {
                 {SideType.NoConnection, 0.5f},
                 {SideType.Connection, 0.5f},
-                //{Sides.SerialConnector, 0.2f},
             };
 
             _serverSideWeight = new Dictionary<SideType, float>()
             {
                 {SideType.NoConnection, 0.5f},
                 {SideType.Connection, 0.5f},
-                //{Sides.SerialConnector, 0.5f},
             };
 
             _hddSideWeight = new Dictionary<SideType, float>()
             {
                 {SideType.NoConnection, 0.6f},
                 {SideType.Connection, 0.4f},
-                //{Sides.SerialConnector, 0.3f},
             };
 
             _netCableSideWeight = new Dictionary<SideType, float>()
             {
                 {SideType.NoConnection, 0.8f},
                 {SideType.Connection, 0.2f},
-                //{Sides.SerialConnector, 0.3f},
             };
 
             _sideWeightLib=new Dictionary<CoreType, Dictionary<SideType, float>>()

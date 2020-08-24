@@ -83,6 +83,8 @@ namespace ROOT
             }
         }
 
+        public override bool Immovable { get; set; }
+
         public override void UpdateTransform(Vector3 pos)
         {
             Vector3 cursorPos=new Vector3(pos.x,0.26f,pos.z);

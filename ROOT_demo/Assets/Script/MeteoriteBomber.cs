@@ -114,6 +114,7 @@ namespace ROOT
                 //Debug.Log("Aiming=" + NextIncome.ToString());
                 foreach (var nextIncome in NextIncomes)
                 {
+                    //GameBoard.TryDeleteCertainUnit(nextIncome, out destoryedCore);
                     GameBoard.TryDeleteCertainNoStationUnit(nextIncome, out destoryedCore);
                 }
                 //得摧毁之后才更新数据。

@@ -20,17 +20,8 @@ namespace ROOT
 
     public abstract class MoveableBase : MonoBehaviour//, IPlaceable
     {
-        public MeshRenderer ImmovableRenderer;
-        private bool _immovable = false;
-        public bool Immovable
-        {
-            set
-            {
-                _immovable = value;
-                ImmovableRenderer.enabled = _immovable;
-            }
-            get => _immovable;
-        }
+        protected bool _immovable = false;
+        public abstract bool Immovable { set; get; }
         public Vector2Int CurrentBoardPosition { get;protected set; }
         public Vector2Int NextBoardPosition { get; protected set; }
         public Vector2 LerpingBoardPosition { get; set; }

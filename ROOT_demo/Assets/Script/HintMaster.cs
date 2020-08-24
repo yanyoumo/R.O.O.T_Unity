@@ -6,6 +6,11 @@ namespace ROOT
 {
     public partial class HintMaster : MonoBehaviour
     {
+        public bool ShouldShowShopHint
+        {
+            set => shopPostalHint.gameObject.SetActive(value);
+        }
+
         public bool ShouldShowCheckList
         {
             set => TutorialCheckList.gameObject.SetActive(value);
