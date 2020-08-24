@@ -84,7 +84,8 @@ namespace ROOT
             LevelAsset.LCDCurrencyEnabled=true;
             LevelAsset.LCDDeltaCurrencyEnabled = true;
             
-            LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);
+            LevelAsset.StepCount = 0;
+            LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             LevelAsset.TimeLine.SetNoCount();
 
             ReadyToGo = true;

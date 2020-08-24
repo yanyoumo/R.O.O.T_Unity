@@ -10,15 +10,18 @@ namespace ROOT
     [Flags]
     public enum ControllingCommand
     {
-        Nop = 0b_0000000000,
-        Move = 0b_0000000001,
-        Drag = 0b_0000000010,
-        Rotate = 0b_0000000100,
-        Buy = 0b_0000001000,
-        PlayHint = 0b_0000010000,
-        SignalHint = 0b_0000100000,
-        NextButton = 0b_0001000000,
-        CycleNext = 0b_0010000000,
+        Nop = 0b_00000000000,
+        Move = 0b_00000000001,
+        Drag = 0b_00000000010,
+        Rotate = 0b_00000000100,
+        Buy = 0b_00000001000,
+        PlayHint = 0b_00000010000,
+        SignalHint = 0b_00000100000,
+        NextButton = 0b_00001000000,
+        CycleNext = 0b_00010000000,
+        BuyCanceled = 0b_00100000000,
+        BuyConfirm = 0b_01000000000,
+        BuyRandom = 0b_10000000000,
     }
 
     public struct ControllingPack
@@ -190,6 +193,7 @@ namespace ROOT
 
         internal static void GetCommand_Touch(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
+            //TODO 商店的新版流程还没弄。
             //先特么只考虑一个手指的情况。
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (Input.touchCount > 0)
@@ -374,6 +378,21 @@ namespace ROOT
                 ctrlPack.SetFlag(ControllingCommand.CycleNext);
             }
 
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCANCELED))
+            {
+                ctrlPack.SetFlag(ControllingCommand.BuyCanceled);
+            }
+
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
+            {
+                ctrlPack.SetFlag(ControllingCommand.BuyConfirm);
+            }
+
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
+            {
+                ctrlPack.SetFlag(ControllingCommand.BuyRandom);
+            }
+
             bool anyBuy = false;
             if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY1))
             {
@@ -420,21 +439,53 @@ namespace ROOT
             return newPos;
         }
 
-        private static void UpdateShopBuy(ShopMgr shopMgr, in ControllingPack ctrlPack, ref bool boughtOnce)
+        private static void UpdateShopBuy(GameAssets currentLevelAsset, ShopMgr shopMgr, in ControllingPack ctrlPack,
+            ref bool boughtOnce)
         {
             if (!boughtOnce)
             {
                 var successBought = false;
 
-                if (ctrlPack.HasFlag(ControllingCommand.Buy))
+                //TODO 需要处理在选择送货地址时不许做其他操作(移动、旋转、跳过等)的逻辑。
+                //TODO 购买失败还是需要一些提示（之前也没有）
+                //TODO 购买的时候显示定位和随机和取消的操作提示，定位上要显示添加的价格。
+                //TODO 玩家在选择送货地址的时候，要标记出哪个是准备要购买的（利用station类似的系统）
+                if (!currentLevelAsset.BuyingCursor)
                 {
-                    successBought = shopMgr.Buy(ctrlPack.ShopID);
+                    if (ctrlPack.HasFlag(ControllingCommand.Buy))
+                    {
+                        //商店系统要大改，首先先选择一个单元，先判断能不能买。
+                        currentLevelAsset.BuyingCursor = shopMgr.RequestBuy(ctrlPack.ShopID);
+                        currentLevelAsset.BuyingID = ctrlPack.ShopID;
+                    }
+                }
+                else
+                {
+                    //然后进入送货地址选择的位置时候，这个时候玩家可以取消也可以选择随机
+                    //如果随机的话，比送过价格要低一些。
+                    //目前商店上的价格写的是随机送的价格，即要送货再加X元，随机送不加价。
+                    if (ctrlPack.HasFlag(ControllingCommand.BuyCanceled))
+                    {
+                        currentLevelAsset.BuyingCursor = false;
+                        currentLevelAsset.BuyingID = -1;
+                    }
+                    else if (ctrlPack.HasFlag(ControllingCommand.BuyConfirm))
+                    {
+                        //试图本地购买。
+                        successBought=shopMgr.BuyToPos(currentLevelAsset.BuyingID,currentLevelAsset.Cursor.CurrentBoardPosition);
+                        currentLevelAsset.BuyingCursor = false;
+                        currentLevelAsset.BuyingID = -1;
+                    }
+                    else if (ctrlPack.HasFlag(ControllingCommand.BuyRandom))
+                    {
+                        //试图随机购买。
+                        successBought = shopMgr.BuyToRandom(currentLevelAsset.BuyingID);
+                        currentLevelAsset.BuyingCursor = false;
+                        currentLevelAsset.BuyingID = -1;
+                    }
                 }
 
-                if (successBought)
-                {
-                    boughtOnce = true;
-                }
+                boughtOnce = successBought;
             }
         }
 
@@ -605,7 +656,8 @@ namespace ROOT
 
             if (shouldCycle)
             {
-                //BUG 这里会因为ctrl的介入记录错误的StepCount
+                //HACK Timeline的StepCount已经整合到这里，可以在一些LevelLogic里面统一 重置了。
+                //HACK 因为玩家有可能在开始按动ctrl，于是在相关教程中，在开启时间轴的时候StepCount会清零。
                 currentLevelAsset.StepCount++;
                 currentLevelAsset.TimeLine.Step();
                 currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
@@ -640,7 +692,10 @@ namespace ROOT
 
             if (currentLevelAsset.InputEnabled)
             {
-                if (currentLevelAsset.ShopEnabled) UpdateShopBuy(currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset._boughtOnce);
+                if (currentLevelAsset.ShopEnabled)
+                {
+                    UpdateShopBuy(currentLevelAsset, currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset._boughtOnce);
+                }
 
                 UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
 
@@ -650,6 +705,7 @@ namespace ROOT
             }
 
             movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
+            currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
 
             if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
             if (currentLevelAsset.CycleEnabled) UpdateCycle(currentLevelAsset, movedTile);

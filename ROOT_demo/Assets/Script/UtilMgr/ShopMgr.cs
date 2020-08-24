@@ -257,7 +257,35 @@ namespace ROOT
             }
         }
 
-        public bool Buy(int idx)
+        public bool RequestBuy(int idx)
+        {
+            if (_items[idx])
+            {
+                float totalPrice = _prices[idx] * _priceCof[idx];
+                return (CurrentGameStateMgr.GetCurrency() >= totalPrice);
+            }
+            return false;
+        }
+
+        public bool BuyToPos(int idx, Vector2Int pos)
+        {
+            if (_items[idx])
+            {
+                float unitPrice = _prices[idx] * _priceCof[idx];
+                float postalPrice = 10.0f; //TODO 邮费系统还要设计
+                float totalPrice = unitPrice + postalPrice;
+                if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
+                {
+                    _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;
+                    GameBoard.DeliverUnitAssignedPlace(_items[idx], pos);
+                    _items[idx] = null;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool BuyToRandom(int idx)
         {
             if (_items[idx])
             {

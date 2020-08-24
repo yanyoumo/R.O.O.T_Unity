@@ -109,7 +109,8 @@ namespace ROOT
             LevelAsset.DestroyerEnabled = true;
             LevelAsset.CycleEnabled = true;
 
-            LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);
+            LevelAsset.StepCount = 0;
+            LevelAsset.TimeLine.InitWithAssets(LevelAsset);
 
             ReadyToGo = true;
         }

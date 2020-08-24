@@ -26,6 +26,9 @@ namespace ROOT
         public static readonly string INPUT_BUTTON_NAME_SHOPBUY2 = "ShopBuy2";
         public static readonly string INPUT_BUTTON_NAME_SHOPBUY3 = "ShopBuy3";
         public static readonly string INPUT_BUTTON_NAME_SHOPBUY4 = "ShopBuy4";
+        public static readonly string INPUT_BUTTON_NAME_SHOPCANCELED = "ShopCancel";
+        public static readonly string INPUT_BUTTON_NAME_SHOPCONFIRM = "ShopConfirm";
+        public static readonly string INPUT_BUTTON_NAME_SHOPRANDOM = "ShopRandom";
 
         public static readonly string INPUT_BUTTON_NAME_QUIT = "Quit";
         public static readonly string INPUT_BUTTON_NAME_NEXT = "Next";

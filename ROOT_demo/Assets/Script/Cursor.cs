@@ -10,9 +10,58 @@ namespace ROOT
         protected Transform RootTransform;
         private MeshFilter _meshFilter;
         public Material tm;
+        private string defaultColor = "#5FD2D6";
 
         public Mesh CursorMesh;
         public Mesh IndicatorMesh;
+        private float blinkTimer = 0.0f;
+        private float blinkDuration = 1.0f;
+
+        private Coroutine BlinkingCoroutine = null;
+
+        private bool _targeting;
+        public bool Targeting
+        {
+            set
+            {
+                _targeting = value;
+                ToggleBlinking();
+            }
+            get => _targeting;
+        }
+
+        private void ToggleBlinking()
+        {
+            if (_targeting)
+            {
+                if (BlinkingCoroutine == null)
+                {
+                    BlinkingCoroutine = StartCoroutine(TargetingBlinking());
+                }
+
+            }
+            else
+            {
+                if (BlinkingCoroutine != null)
+                {
+                    StopCoroutine(BlinkingCoroutine);
+                    ColorUtility.TryParseHtmlString(defaultColor, out var colB);
+                    tm.color = colB;
+                    BlinkingCoroutine = null;
+                }
+            }
+        }
+
+        private IEnumerator TargetingBlinking()
+        {
+            while (true)
+            {
+                yield return 0;
+                ColorUtility.TryParseHtmlString(defaultColor, out var colB);
+                var val = 0.5f * (Mathf.Sin(Time.time * 9.0f) + 1);
+                tm.color = Color.Lerp(Color.green, colB, val);
+            }
+        }
 
         private bool ShowMesh
         {

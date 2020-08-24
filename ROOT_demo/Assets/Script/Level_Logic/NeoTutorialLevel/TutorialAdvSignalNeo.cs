@@ -22,7 +22,8 @@ namespace ROOT
                     if (!OnceFlagA)
                     {
                         OnceFlagA = true;
-                        LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);
+                        LevelAsset.StepCount = 0;
+                        LevelAsset.TimeLine.InitWithAssets(LevelAsset);
                         LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
                     }
                 }

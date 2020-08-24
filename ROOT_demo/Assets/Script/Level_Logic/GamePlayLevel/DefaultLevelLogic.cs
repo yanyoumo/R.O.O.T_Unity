@@ -31,7 +31,10 @@ namespace ROOT
     /// </summary>
     public sealed class GameAssets//ASSET 这里不应该有任何之际逻辑（有些便于操作的除外
     {
+        //TODO 每局游戏只应该只有这么个一个StepCount，TimeLine那个值应该从这里读取。
         public int StepCount = 0;
+        public bool BuyingCursor = false;
+        public int BuyingID = -1;
         /// <summary>
         /// 裁判同时要担任神使，神要通过这里影响世界。
         /// </summary>

@@ -35,10 +35,11 @@ namespace ROOT
 
             ReadyToGo = true;
 
-//LevelAsset.StartingPerMoveData = new PerMoveData();
+            //LevelAsset.StartingPerMoveData = new PerMoveData();
             if (LevelAsset.ActionAsset.TimeLineTokens.Length>0)
             {
-                LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);
+                LevelAsset.StepCount = 0;
+                LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             }
             LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
         }

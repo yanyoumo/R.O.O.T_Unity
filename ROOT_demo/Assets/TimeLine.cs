@@ -40,9 +40,8 @@ namespace ROOT
     //[ExecuteInEditMode]
     public class TimeLine : MonoBehaviour
     {
-        //BUG network的标记会随机从应有的位置上漂移。因：基于ctrl的强制跳过功能，提前计算了StepCount。
-        //BUG 即——开始游戏的时候StepCount已经不是0了。
         public TimeLineGoalMarker GoalMarker;
+        private GameAssets _currentGameAsset;
 
         public void SetNoCount()
         {
@@ -85,7 +84,8 @@ namespace ROOT
         public readonly int SubDivision = 5;
         public int MarkerCount;
         public int TotalCount;
-        public static int StepCount;
+
+        public int StepCount => _currentGameAsset.StepCount;
 
         protected float AnimationTimerOrigin = 0.0f;//都是秒
         private float animationTimer => Time.time - AnimationTimerOrigin;
@@ -117,7 +117,7 @@ namespace ROOT
         {
             int i = 0;
             float baseTokenHeight = 0.38f;
-            float TokenHeight = baseTokenHeight;
+            float tokenHeight = baseTokenHeight;
 
             List<TimeLineToken> timeLineTokens=new List<TimeLineToken>();
             foreach (var timeLineToken in TimeLineTokens)
@@ -130,9 +130,10 @@ namespace ROOT
 
             if (timeLineTokens.Count > 0)
             {
+                var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
+                token.GetComponent<TimeLineTokenQuad>().owner = this;
                 if (HasEnding(timeLineTokens))
                 {
-                    var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
                     token.GetComponent<TimeLineTokenQuad>().SetEndingQuadShape(UnitLength, SubDivision, j);
                 }
                 else
@@ -140,8 +141,8 @@ namespace ROOT
                     foreach (var timeLineToken in timeLineTokens)
                     {
                         //TODO 最后一个Token会支楞出去，但是先不用管
-                        var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
-                        token.GetComponent<TimeLineTokenQuad>().SetQuadShape(UnitLength, SubDivision,timeLineToken.type, i, timeLineTokens.Count, j);
+                        token.GetComponent<TimeLineTokenQuad>().SetQuadShape(UnitLength, SubDivision,
+                            timeLineToken.type, i, timeLineTokens.Count, j);
                         token.GetComponent<TimeLineTokenQuad>().MarkerID = markerCount;
                         token.GetComponent<TimeLineTokenQuad>().Token = timeLineToken;
                         i++;
@@ -191,7 +192,7 @@ namespace ROOT
         //[Button("Step")]
         public void Step()
         {
-            StepCount++;
+            //StepCount++;
             Vector3 orgPos = TimeLineMarkerRoot.transform.localPosition;
             StartCoroutine(StepAnmation(orgPos));
         }
@@ -229,9 +230,11 @@ namespace ROOT
             }
         }
 
-        public void InitWithTokens(TimeLineToken[] _TimeLineTokens)
+        public void InitWithAssets(GameAssets levelAsset)
         {
-            TimeLineTokens = _TimeLineTokens;
+            _currentGameAsset = levelAsset;
+            Debug.Assert(_currentGameAsset.StepCount == 0);
+            TimeLineTokens = levelAsset.ActionAsset.TimeLineTokens;
             InitTimeLine();
         }
 

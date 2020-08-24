@@ -27,7 +27,8 @@ namespace ROOT
                         InitShop();
                         StartShop();
                         LevelAsset.ShopEnabled = true;
-                        LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);
+                        LevelAsset.StepCount = 0;
+                        LevelAsset.TimeLine.InitWithAssets(LevelAsset);
                     }
                 }
                 else if (ActionIndex == 3)

@@ -8,6 +8,7 @@ namespace ROOT
 {
     public class TimeLineTokenQuad : MonoBehaviour
     {
+        public TimeLine owner;
         [HideInInspector]
         public TimeLineToken Token;
         //[Readonlyin]
@@ -77,21 +78,21 @@ namespace ROOT
             {
                 if (MarkerID == Token.Range.x)
                 {
-                    if (Token.Range.x >= TimeLine.StepCount)
+                    if (Token.Range.x >= owner.StepCount)
                     {
                         SetValMarker(Token.RequireAmount);
                     }
                 }
                 else if (MarkerID <= Token.Range.y)
                 {
-                    if (MarkerID == TimeLine.StepCount)
+                    if (MarkerID == owner.StepCount)
                     {
                         SetValMarker(Token.RequireAmount);
                     }
                 }
                 else if (Token.Range.y == -1)
                 {
-                    if (MarkerID == TimeLine.StepCount)
+                    if (MarkerID == owner.StepCount)
                     {
                         SetValMarker(Token.RequireAmount);
                     }

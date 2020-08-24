@@ -22,7 +22,8 @@ namespace ROOT
                     {
                         OnceFlagA = true;
                         Debug.Assert(LevelAsset.ActionAsset.TimeLineTokens.Length > 0);
-                        LevelAsset.TimeLine.InitWithTokens(LevelAsset.ActionAsset.TimeLineTokens);
+                        LevelAsset.StepCount = 0;
+                        LevelAsset.TimeLine.InitWithAssets(LevelAsset);
                     }
                 }
             }
