@@ -9,7 +9,7 @@ using UnityEngine.Assertions.Must;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
-//TODO https://shimo.im/docs/Dd86KXTqHJpqxwYX
+// https://shimo.im/docs/Dd86KXTqHJpqxwYX
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
 namespace ROOT
 {
@@ -31,7 +31,6 @@ namespace ROOT
     /// </summary>
     public sealed class GameAssets//ASSET 这里不应该有任何之际逻辑（有些便于操作的除外
     {
-        //TODO 每局游戏只应该只有这么个一个StepCount，TimeLine那个值应该从这里读取。
         public int StepCount = 0;
         public bool BuyingCursor = false;
         public int BuyingID = -1;

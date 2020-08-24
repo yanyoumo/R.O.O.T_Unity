@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    //TODO TutorialDestoryerNeo 还没做。
     public class TutorialDestoryerNeo : TutorialLogic
     {
         IEnumerator ForceWindingDestroyer()

@@ -66,7 +66,7 @@ namespace ROOT
             else
             {
                 BackButton.onClick.AddListener(Back);
-                OtherButton.interactable = false;//TODO 先关了
+                OtherButton.interactable = false;//HACK 先关了
                 OtherButton.onClick.AddListener(GameRestart);
                 OtherButtonLocalize.Term = ScriptTerms.Restart;
                 EndingTitleLocalize.Term = ScriptTerms.GameOver;

@@ -272,8 +272,19 @@ namespace ROOT
             if (_items[idx])
             {
                 float unitPrice = _prices[idx] * _priceCof[idx];
-                float postalPrice = 10.0f; //TODO 邮费系统还要设计
+
+                //TODO Yuxuan 设计邮费系统框架。
+                //VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+                float postalPrice = 10.0f;
                 float totalPrice = unitPrice + postalPrice;
+                //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                //V/^ 范围的代码输入一个unitPrice之后输出一个totalPrice。
+                //在常规的游戏设计中，一般都是程序员设计一个框架，之后由策划在其他一小片简单的代码部分进行制定代码。
+                //对于这个框架，需要在CoreSide.cs文件中的partial ShopMgr类中建立新的函数并且完善yml-summary。
+                //并且函数里面添加placeHolder逻辑。
+                //**这个TODO很简单，不用想太多，就是简单的在别的文件里面声明一个函数并且调一下，
+                //**主要是要传达游戏行业中，程序员和策划进行互动的一种方式。以及partial class的一种应用。
+
                 if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
                 {
                     _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;

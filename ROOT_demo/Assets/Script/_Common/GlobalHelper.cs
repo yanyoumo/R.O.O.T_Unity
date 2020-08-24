@@ -69,19 +69,21 @@ namespace ROOT
         public static readonly string LOCAL_SOUTH_SIDE_MESH_RENDERER_NAME = "LocalSouthSide";
         public static readonly string LOCAL_WEST_SIDE_MESH_RENDERER_NAME = "LocalWestSide";
     }
-    /*public static class RootEVENT
-    { 
-        public delegate void GameMajorEvent();
-        public delegate void TutorialStartEvent(TutorialActionBase tutorialAction);
-        public delegate void GameStartEvent(ScoreSet scoreSet, PerMoveData _perMoveData,Type gameStateType);
-    }*/
 
     public static class Utils
     {
         public static float LastRandom = 0.0f;
 
+        /// <summary>
+        /// Array的洗牌函数，将一个Array的内容重组。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array">需要被洗牌的数组</param>
+        /// <returns>进行洗牌完毕的数组</returns>
         public static T[] Shuffle<T>(T[] array)
         {
+            //TODO Digong 优化算法，并且新建一个基于Enumerable的Overload，完成变体后标记此函数为Obsolete，新函数需要有yml-summary
+            //因为C#传递Array都是pass-by-reference，旧版算法没有细节处理，新算法和Enumerable版本需要保证输入不被修改（添加[in]修饰符 ）
             int n = array.Length;
             while (n > 1)
             {
@@ -252,8 +254,7 @@ namespace ROOT
         [CanBeNull]
         public static T GenerateWeightedRandom<T>(Dictionary<T, float> lib)
         {
-            //有这个东西啊，不要小看他，这个很牛逼的。
-            //各种分布都可以有的。
+            //有这个东西啊，不要小看他，这个很牛逼的；各种分布都可以有的。
             float totalWeight = 0;
             foreach (var weight in lib.Values)
             {
@@ -396,102 +397,4 @@ namespace ROOT
             return ConnectionMeshType.NoChange;
         }
     }
-
-
-    /*public abstract partial class TutorialActionBase
-    {
-        public static string TmpColorBlueXml(string content)
-        {
-            return TmpColorXml(content, Color.blue);
-        }
-
-        public static string TmpColorGreenXml(string content)
-        {
-            return TmpColorXml(content, Color.green * 0.35f);
-        }
-
-        public static string TmpColorXml(string content, Color col)
-        {
-            var hexCol = ColorUtility.ToHtmlStringRGB(col);
-            return "<color=#" + hexCol + ">" + content + "</color>";
-        }
-
-        public static string TmpColorBold(string content)
-        {
-            return "<b>" + content + "</b>";
-        }
-
-        public static string TmpBracket(string content)
-        {
-            return "[" + content + "]";
-        }
-
-        public static string TmpBracketAndBold(string content)
-        {
-            return TmpColorBold("[" + content + "]");
-        }
-
-        public static string TMPNormalDataCompo()
-        {
-            return TmpBracketAndBold(TmpColorGreenXml("一般数据"));
-        }
-
-        public static string TMPNetworkDataCompo()
-        {
-            return TmpBracketAndBold(TmpColorBlueXml("网络数据"));
-        }
-    }
-
-    public sealed partial class TutorialMgr : MonoBehaviour
-    {
-
-        string TmpColorBlueXml(string content)
-        {
-            return TmpColorXml(content, Color.blue);
-        }
-
-        string TmpColorRedXml(string content)
-        {
-            return TmpColorXml(content, Color.red);
-        }
-
-        string TmpColorXml(string content, Color col)
-        {
-            var hexCol = ColorUtility.ToHtmlStringRGB(col);
-            return "<color=#" + hexCol + "> " + content + " </color> ";
-        }
-
-        string TmpColorBold(string content)
-        {
-            return "<b> " + content + " </b> ";
-        }
-
-        string TmpBracket(string content)
-        {
-            return "[" + content + "]";
-        }
-
-        string TmpBracketAndBold(string content)
-        {
-            return "[" + TmpColorBold(content) + "]";
-        }
-
-        string TMPNormalDataCompo()
-        {
-            return TmpBracketAndBold(TmpColorRedXml("一般数据"));
-        }
-
-        string TMPNetworkDataCompo()
-        {
-            return TmpBracketAndBold(TmpColorBlueXml("网络数据"));
-        }
-
-        void Awake()
-        {
-            string[] _tutorialContent = new[]
-            {
-
-            };
-        }
-    }*/
 }

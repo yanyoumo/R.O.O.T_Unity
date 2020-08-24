@@ -59,7 +59,7 @@ namespace ROOT
 
         public void RequestUpStrikeCount(int requestAmount)
         {
-            //TODO 这个函数肯定是异步调的，这里要保证这个东西不乱加。
+            //这个函数肯定是异步调的，这里要保证这个东西不乱加。
         }
 
         public void Init(int counterLoopMedian = 4, int counterLoopVariance = 1)
@@ -134,7 +134,7 @@ namespace ROOT
             }
             else if (Counter > 1)
             {
-                //TODO: "Striked waiting for next" State.   
+                //TODO "Striked waiting for next" State.   
                 Status = WarningDestoryerStatus.Dormant;
             }
             else

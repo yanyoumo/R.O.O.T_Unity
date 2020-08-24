@@ -57,7 +57,7 @@ namespace ROOT
         public void UpdateUnitBoardPosAnimation_Touch(Unit unit)
         {
             //这里get出来和上面拿到的Unit不是一个？？
-            //TODO 用这个弄了一下，但是不知道为什么。
+            //RISK 用这个弄了一下，但是不知道为什么。
             Units.Remove(unit.CurrentBoardPosition);
             System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
             Units.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit.gameObject);

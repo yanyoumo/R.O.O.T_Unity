@@ -118,11 +118,6 @@ namespace ROOT
             return null;
         }
 
-        /// <summary>
-        /// 检测时候触碰了一个Unit.
-        /// </summary>
-        /// <param name="touch">输入Touch结构体</param>
-        /// <returns>得到的Unit，如果没有则返回null</returns>
         private static Unit GetTouchedOnUnit(in GameObject go)
         {
             if (go != null && go.CompareTag("Unit"))
@@ -193,7 +188,7 @@ namespace ROOT
 
         internal static void GetCommand_Touch(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
-            //TODO 商店的新版流程还没弄。
+            //商店的新版流程正在弄。
             //先特么只考虑一个手指的情况。
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (Input.touchCount > 0)
@@ -447,9 +442,9 @@ namespace ROOT
                 var successBought = false;
 
                 //TODO 需要处理在选择送货地址时不许做其他操作(移动、旋转、跳过等)的逻辑。
-                //TODO 购买失败还是需要一些提示（之前也没有）
-                //TODO 购买的时候显示定位和随机和取消的操作提示，定位上要显示添加的价格。
-                //TODO 玩家在选择送货地址的时候，要标记出哪个是准备要购买的（利用station类似的系统）
+                //购买失败还是需要一些提示（之前也没有）
+                //购买的时候显示定位和随机和取消的操作提示，定位上要显示添加的价格。
+                //玩家在选择送货地址的时候，要标记出哪个是准备要购买的（利用station类似的系统）
                 if (!currentLevelAsset.BuyingCursor)
                 {
                     if (ctrlPack.HasFlag(ControllingCommand.Buy))
@@ -657,7 +652,7 @@ namespace ROOT
             if (shouldCycle)
             {
                 //HACK Timeline的StepCount已经整合到这里，可以在一些LevelLogic里面统一 重置了。
-                //HACK 因为玩家有可能在开始按动ctrl，于是在相关教程中，在开启时间轴的时候StepCount会清零。
+                //因为玩家有可能在开始按动ctrl，于是在相关教程中，在开启时间轴的时候StepCount会清零。
                 currentLevelAsset.StepCount++;
                 currentLevelAsset.TimeLine.Step();
                 currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);

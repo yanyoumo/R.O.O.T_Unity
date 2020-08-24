@@ -102,7 +102,7 @@ namespace ROOT
         {
             if (!ChangedCam)
             {            
-                //HACK 这个东西调整位置的时候和Crane的调整有一个竞争冒险效应，在调第一次这个Animate的时候，还没有初始化，就只能在这儿强制调一下。
+                //RISK 这个东西调整位置的时候和Crane的调整有一个竞争冒险效应，在调第一次这个Animate的时候，还没有初始化，就只能在这儿强制调一下。
                 UpdatePosition();
             }
             Animating = true;

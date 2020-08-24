@@ -140,7 +140,7 @@ namespace ROOT
                 {
                     foreach (var timeLineToken in timeLineTokens)
                     {
-                        //TODO 最后一个Token会支楞出去，但是先不用管
+                        //RISK 最后一个Token会支楞出去，但是先不用管
                         token.GetComponent<TimeLineTokenQuad>().SetQuadShape(UnitLength, SubDivision,
                             timeLineToken.type, i, timeLineTokens.Count, j);
                         token.GetComponent<TimeLineTokenQuad>().MarkerID = markerCount;
