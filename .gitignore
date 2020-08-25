@@ -71,3 +71,4 @@ crashlytics-build.properties
 
 /Art_Assets/**/*
 ROOT_demo/Packages/packages-lock.json
+ROOT_demo/Assets/Revisions.txt
