@@ -296,8 +296,8 @@ namespace ROOT
                 //**这个TODO很简单，不用想太多，就是简单的在别的文件里面声明一个函数并且调一下，
                 //**主要是要传达游戏行业中，程序员和策划进行互动的一种方式。以及partial class的一种应用。
                 float diff = 0.0f;
-                float totalPrice = calculateTotalPrice(unitPrice, out diff);
 
+                float totalPrice = CalculateTotalPrice(unitPrice, out diff);
 
                 if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
                 {
