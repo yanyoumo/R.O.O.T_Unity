@@ -58,8 +58,8 @@ sysinfo.txt
 
 # Builds
 *.apk
-/ROOT_demo/**/*.unitypackage
-/ROOT_demo/**/*.unitypackage.meta
+*.unitypackage
+*.unitypackage.meta
 
 *.zip
 *.rar
