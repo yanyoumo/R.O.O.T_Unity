@@ -53,6 +53,7 @@ namespace ROOT
         }
     }
 
+    //TODO Digong Default的工作，熟悉Unit这个类的代码，未来工作会围绕这个类展开。
     public partial class Unit : MoveableBase
     {
         public Material BuyingMat;
@@ -129,7 +130,6 @@ namespace ROOT
         {
             Immovable = true;
             StationUnit = true;
-            //TODO 设置StationRequirement
         }
 
         protected Unit()
@@ -379,7 +379,7 @@ namespace ROOT
                     {
                         connectionData.HasConnector = true;
                         Vector2Int otherUnitPos = GetNeigbourCoord(currentSideDirection);
-                        GameBoard.Units.TryGetValue(otherUnitPos, out GameObject value);
+                        GameBoard.UnitsGameObjects.TryGetValue(otherUnitPos, out GameObject value);
                         if (value != null)
                         {
                             Unit otherUnit = value.GetComponentInChildren<Unit>();

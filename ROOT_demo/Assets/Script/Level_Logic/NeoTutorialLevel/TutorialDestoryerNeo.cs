@@ -11,7 +11,7 @@ namespace ROOT
     {
         IEnumerator ForceWindingDestroyer()
         {
-            while (LevelAsset.WarningDestoryer.GetStatus() != WarningDestoryerStatus.Striking)
+            while (LevelAsset.WarningDestoryer.GetStatus != WarningDestoryerStatus.Striking)
             {
                 yield return 0;
                 LevelAsset.WarningDestoryer.Step();
@@ -68,7 +68,7 @@ namespace ROOT
 
         private bool RidOfPCBUnit()
         {
-            return LevelAsset.GameBoard.Units.All(gameBoardUnit => gameBoardUnit.Value.GetComponentInChildren<Unit>().UnitCore != CoreType.PCB);
+            return LevelAsset.GameBoard.UnitsGameObjects.All(gameBoardUnit => gameBoardUnit.Value.GetComponentInChildren<Unit>().UnitCore != CoreType.PCB);
         }
 
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)

@@ -283,7 +283,7 @@ namespace ROOT
 
         protected bool AllUnitConnected()
         {
-            return LevelAsset.GameBoard.Units.All(gameBoardUnit => gameBoardUnit.Value.GetComponentInChildren<Unit>().AnyConnection);
+            return LevelAsset.GameBoard.UnitsGameObjects.All(gameBoardUnit => gameBoardUnit.Value.GetComponentInChildren<Unit>().AnyConnection);
         }
     }
 }

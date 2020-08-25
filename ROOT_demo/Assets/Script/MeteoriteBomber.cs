@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace ROOT
 {
@@ -14,7 +16,8 @@ namespace ROOT
     public interface IWarningDestoryer
     {
         void SetBoard(ref Board gameBoard);
-        WarningDestoryerStatus GetStatus();
+        WarningDestoryerStatus GetStatus { get; }
+        Color GetWaringColor { get; }
         Vector2Int[] NextStrikingPos(out int count);
         void Init(int counterLoopMedian = 4, int counterLoopVariance = 1);
         void RequestUpStrikeCount(int requestAmount);//外界可以申请对这一系统的攻击力度加码。
@@ -24,6 +27,7 @@ namespace ROOT
 
     public class MeteoriteBomber: IWarningDestoryer
     {
+        private const float ComplexModeRandomRatio = 0.2f;
         public Board GameBoard;
         public int NextStrikingCount { internal set; get; }
 
@@ -38,7 +42,7 @@ namespace ROOT
         public int Counter { private set; get; }
         public int CounterLoopMedian { private set; get; }
         public int CounterLoopVariance { private set; get; }
-        public static readonly int MinLoopStep=3;
+        public const int MinLoopStep=3;
 
         public Vector2Int[] NextIncomes { private set; get; }
 
@@ -53,7 +57,8 @@ namespace ROOT
             NextIncomes = new Vector2Int[NextStrikingCount];
             for (int i = 0; i < NextStrikingCount; i++)
             {
-                NextIncomes[i] = PureRandomTarget();
+                //NextIncomes[i] = PureRandomTarget();
+                NextIncomes[i] = ComplexRandomTarget();
             }
         }
 
@@ -82,6 +87,27 @@ namespace ROOT
         {
             int variance=Mathf.FloorToInt(Random.Range(-CounterLoopVariance, CounterLoopVariance));
             return Mathf.Max(CounterLoopMedian + variance, MinLoopStep);
+        }
+
+        private Vector2Int ComplexRandomTarget()
+        {
+            return Random.value <= ComplexModeRandomRatio ? PureRandomTarget() : (RandomUnitTarget() ?? PureRandomTarget());
+        }
+
+        /// <summary>
+        /// 选出随机单元作为单元
+        /// </summary>
+        /// <returns>如果棋盘上没有单位，则返回null</returns>
+        private Vector2Int? RandomUnitTarget()
+        {
+            if (GameBoard.RandomUnit == null)
+            {
+                return null;
+            }
+            else
+            {
+                return GameBoard.RandomUnit.CurrentBoardPosition;
+            }
         }
 
         private Vector2Int PureRandomTarget()
@@ -144,9 +170,23 @@ namespace ROOT
             }
         }
 
-        public virtual WarningDestoryerStatus GetStatus()
+        public virtual WarningDestoryerStatus GetStatus => Status;
+
+        public Color GetWaringColor
         {
-            return Status;
+            get
+            {
+                switch (Status)
+                {
+                    case WarningDestoryerStatus.Warning:
+                        return Color.yellow;
+                    case WarningDestoryerStatus.Striking:
+                        ColorUtility.TryParseHtmlString("#FF3300", out Color col);
+                        return col;
+                    default:
+                        throw new IndexOutOfRangeException();
+                }
+            }
         }
 
         public virtual Vector2Int[] NextStrikingPos(out int count)

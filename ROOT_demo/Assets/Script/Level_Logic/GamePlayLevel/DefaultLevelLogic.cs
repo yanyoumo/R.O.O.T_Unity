@@ -276,6 +276,9 @@ namespace ROOT
                 return false;
             }
         }
+
+        //TODO Yuxuan 清理此函数，以及其调用的所有Obsolete函数，在调用此函数的部分使用注释标记。
+        [Obsolete]
         protected virtual void UpdateSignalHint(in ControllingPack ctrlPack)
         {
             LevelAsset.GameBoard.ResetUnitEmission();

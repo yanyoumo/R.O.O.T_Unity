@@ -7,6 +7,7 @@ using ROOT;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Random = System.Random;
 
 namespace ROOT
 {
@@ -19,7 +20,19 @@ namespace ROOT
 
         public GameObject UnitTemplate;
 
-        public Dictionary<Vector2Int, GameObject> Units { get; private set; }
+        public Dictionary<Vector2Int, GameObject> UnitsGameObjects { get; private set; }
+
+        public int GetUnitCount => UnitsGameObjects.Count;
+
+        public Unit[] Units => UnitsGameObjects.Values.Select(unitsValue => unitsValue.GetComponentInChildren<Unit>()).ToArray();
+
+        public Unit[] FindUnitWithCoreType(CoreType type)
+        {
+            return Units.Where(u => u.UnitCore == type).ToArray();
+        }
+
+        [CanBeNull]
+        public Unit RandomUnit => GetUnitCount == 0 ? null : Units[Mathf.FloorToInt(UnityEngine.Random.value * Units.Length)];
 
         [CanBeNull]
         public GameObject FindUnitUnderBoardPos(Vector2Int boardPos)
@@ -30,7 +43,7 @@ namespace ROOT
                 return null;
             }
 
-            return Units.TryGetValue(boardPos, out var go) ? go : null;
+            return UnitsGameObjects.TryGetValue(boardPos, out var go) ? go : null;
         }
 
         [Obsolete]
@@ -48,29 +61,27 @@ namespace ROOT
 
         public void UpdateUnitBoardPosAnimation(Vector2Int oldKey)
         {
-            Units.TryGetValue(oldKey, out var unit);//这里get出来和上面拿到的Unit不是一个？？
-            Units.Remove(oldKey);
+            UnitsGameObjects.TryGetValue(oldKey, out var unit);//这里get出来和上面拿到的Unit不是一个？？
+            UnitsGameObjects.Remove(oldKey);
             System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-            Units.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit);
+            UnitsGameObjects.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit);
         }
 
         public void UpdateUnitBoardPosAnimation_Touch(Unit unit)
         {
             //这里get出来和上面拿到的Unit不是一个？？
             //RISK 用这个弄了一下，但是不知道为什么。
-            Units.Remove(unit.CurrentBoardPosition);
+            UnitsGameObjects.Remove(unit.CurrentBoardPosition);
             System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-            Units.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit.gameObject);
+            UnitsGameObjects.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit.gameObject);
         }
 
         public void UpdateBoardInit()
         {
             foreach (var unit in Units)
             {
-                if (unit.Value == null) continue;
-                var mUnit = unit.Value.GetComponentInChildren<Unit>();
-                mUnit.UpdateTransform(GetFloatTransform(mUnit.CurrentBoardPosition));
-                mUnit.UpdateWorldRotationTransform();
+                unit.UpdateTransform(GetFloatTransform(unit.CurrentBoardPosition));
+                unit.UpdateWorldRotationTransform();
             }
         }
 
@@ -78,9 +89,7 @@ namespace ROOT
         {
             foreach (var unit in Units)
             {
-                if (unit.Value == null) continue;
-                var mUnit = unit.Value.GetComponentInChildren<Unit>();
-                mUnit.UpdateWorldRotationTransform();
+                unit.UpdateWorldRotationTransform();
             }
         }
 
@@ -88,10 +97,8 @@ namespace ROOT
         {
             foreach (var unit in Units)
             {
-                if (unit.Value == null) continue;
-                var mUnit = unit.Value.GetComponentInChildren<Unit>();
-                mUnit.UpdateTransform(GetFloatTransformAnimation(mUnit.LerpingBoardPosition));
-                mUnit.UpdateWorldRotationTransform();
+                unit.UpdateTransform(GetFloatTransformAnimation(unit.LerpingBoardPosition));
+                unit.UpdateWorldRotationTransform();
             }
         }
 
@@ -99,9 +106,7 @@ namespace ROOT
         {
             foreach (var unit in Units)
             {
-                if (unit.Value == null) continue;
-                var mUnit = unit.Value.GetComponentInChildren<Unit>();
-                mUnit.UpdateNeighboringDataAndSideMesh();
+                unit.UpdateNeighboringDataAndSideMesh();
             }
         }
 
@@ -121,7 +126,7 @@ namespace ROOT
             unitGO.name = "Unit_" + Hash128.Compute(unitGist.Pos.ToString());
             Unit unit = unitGO.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(unitGist.Pos);
-            Units.Add(unitGist.Pos, unitGO);
+            UnitsGameObjects.Add(unitGist.Pos, unitGO);
             unit.InitUnit(unitGist.Core, unitGist.Sides, this);
             if (unitGist.IsStation)
             {
@@ -144,22 +149,17 @@ namespace ROOT
 
         public bool CheckBoardPosValidAndEmpty(Vector2Int mVector2Int)
         {
-            return (!Units.ContainsKey(mVector2Int))&&CheckBoardPosValid(mVector2Int);
+            return (!UnitsGameObjects.ContainsKey(mVector2Int))&&CheckBoardPosValid(mVector2Int);
         }
 
         public bool CheckBoardPosValidAndFilled(Vector2Int mVector2Int)
         {
-            return (Units.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
-        }
-
-        public int GetUnitCount()
-        {
-            return Units.Count;
+            return (UnitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
         }
 
         void Awake()
         {
-            Units=new Dictionary<Vector2Int, GameObject>();
+            UnitsGameObjects=new Dictionary<Vector2Int, GameObject>();
         }
 
         public Vector2Int[] GetAllEmptySpace()
@@ -184,7 +184,7 @@ namespace ROOT
             {
                 unit.GetComponentInChildren<Unit>().InitPosWithAnimation(AssignedPos);
                 unit.GetComponentInChildren<Unit>().GameBoard = this;
-                Units.Add(AssignedPos, unit);
+                UnitsGameObjects.Add(AssignedPos, unit);
                 UpdateBoardInit();
                 return true;
             }
@@ -207,7 +207,7 @@ namespace ROOT
             Vector2Int randomPlace = Utils.GenerateWeightedRandom(emptyPlace);
             unit.GetComponentInChildren<Unit>().InitPosWithAnimation(randomPlace);
             unit.GetComponentInChildren<Unit>().GameBoard = this;
-            Units.Add(randomPlace, unit);          
+            UnitsGameObjects.Add(randomPlace, unit);          
             UpdateBoardInit();
             deliveringPos = randomPlace;
             return true;
@@ -215,7 +215,7 @@ namespace ROOT
 
         public void UpdateBoard()
         {
-            foreach (var unit in Units)
+            foreach (var unit in UnitsGameObjects)
             {
                 if (unit.Value == null) continue;
                 var mUnit = unit.Value.GetComponentInChildren<Unit>();
@@ -227,10 +227,10 @@ namespace ROOT
         {
             if (CheckBoardPosValidAndFilled(pos))
             {
-                Units.TryGetValue(pos, out GameObject go);
+                UnitsGameObjects.TryGetValue(pos, out GameObject go);
                 destoryedCore = go.GetComponentInChildren<Unit>().UnitCore;
                 Destroy(go);
-                Units.Remove(pos);
+                UnitsGameObjects.Remove(pos);
                 UpdateBoard();
                 return true;
             }
@@ -242,13 +242,12 @@ namespace ROOT
         {
             if (CheckBoardPosValidAndFilled(pos))
             {
-                //Debug.Log("Destorying=" + pos.ToString());
-                Units.TryGetValue(pos, out GameObject go);
+                UnitsGameObjects.TryGetValue(pos, out GameObject go);
                 if (!go.GetComponentInChildren<Unit>().StationUnit)
                 {
                     destoryedCore = go.GetComponentInChildren<Unit>().UnitCore;
                     Destroy(go);
-                    Units.Remove(pos);
+                    UnitsGameObjects.Remove(pos);
                     UpdateBoard();
                     return true;
                 }
@@ -259,29 +258,22 @@ namespace ROOT
 
         public int GetCountByType(CoreType coreType)
         {
-            int res = 0;
-            foreach (var unit in Units)
-            {
-                if (unit.Value.GetComponentInChildren<Unit>().UnitCore == coreType)
-                {
-                    res++;
-                }
-            }
-            return res;
+            return FindUnitWithCoreType(coreType).Length;
         }
 
         public void ResetUnitEmission()
         {
-            foreach (var unit in Units)
+            foreach (var unit in UnitsGameObjects)
             {
                 unit.Value.GetComponentInChildren<Unit>().SetCoreEmissive(Color.black);
             }
         }
-
+        
+        [Obsolete]
         public void DisplayConnectedHDDUnit()
         {
             float time = Time.timeSinceLevelLoad;
-            foreach (var unit in Units)
+            foreach (var unit in UnitsGameObjects)
             {
                 if (unit.Value.GetComponentInChildren<Unit>().InHddGrid)
                 {
@@ -291,10 +283,11 @@ namespace ROOT
             }
         }
 
+        [Obsolete]
         public void DisplayConnectedServerUnit()
         {
             float time = Time.timeSinceLevelLoad;
-            foreach (var unit in Units)
+            foreach (var unit in UnitsGameObjects)
             {
                 Unit unitComp = unit.Value.GetComponentInChildren<Unit>();
                 if (unitComp.UnitCore==CoreType.NetworkCable||unitComp.UnitCore==CoreType.Server)

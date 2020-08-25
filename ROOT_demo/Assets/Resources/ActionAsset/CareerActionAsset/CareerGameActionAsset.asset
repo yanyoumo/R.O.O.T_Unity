@@ -16,7 +16,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 0}
   LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
     type: 3}
-  levelType: 2
+  levelType: 1
   GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
   ExcludedShop: 0
   ShopExcludedType: 
@@ -50,17 +50,21 @@ MonoBehaviour:
   - Core: 0
     Sides: 00000000000000000000000000000000
     Pos: {x: 2, y: 3}
-    IsStation: 1
+    IsStation: 0
   - Core: 0
     Sides: 00000000000000000000000000000000
     Pos: {x: 3, y: 2}
-    IsStation: 1
+    IsStation: 0
   - Core: 2
     Sides: 01000000000000000000000001000000
     Pos: {x: 3, y: 3}
-    IsStation: 1
+    IsStation: 0
   - Core: 5
     Sides: 00000000010000000100000000000000
     Pos: {x: 2, y: 2}
-    IsStation: 1
+    IsStation: 0
+  - Core: 8
+    Sides: 00000000000000000000000000000000
+    Pos: {x: 0, y: 0}
+    IsStation: 0
   TargetCount: 15
