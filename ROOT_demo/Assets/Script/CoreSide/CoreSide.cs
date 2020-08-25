@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 
 namespace ROOT
@@ -181,6 +182,19 @@ namespace ROOT
             };
 
             #endregion
+        }
+
+        /// <summary>
+        /// this function would calculate the total price
+        /// </summary>
+        /// <param name="unitPrice">the unit price of product</param>
+        /// <returns>total price</returns>
+        public float calculateTotalPrice(float unitPrice, out float diff)
+        {
+            diff = 10.0f;
+            float totalPrice = unitPrice + diff;
+
+            return totalPrice;
         }
     }
 
