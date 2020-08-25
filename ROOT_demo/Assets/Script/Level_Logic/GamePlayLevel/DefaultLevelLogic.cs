@@ -277,7 +277,7 @@ namespace ROOT
             }
         }
 
-        //TODO Yuxuan 清理此函数，以及其调用的所有Obsolete函数，在调用此函数的部分使用注释标记。
+        //TODO Digong 移除此函数，以及所有仅在此函数逻辑链中使用的变量和函数，并且在原来调用此函数的部分使用注释标记。
         [Obsolete]
         protected virtual void UpdateSignalHint(in ControllingPack ctrlPack)
         {
