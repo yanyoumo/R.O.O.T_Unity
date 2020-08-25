@@ -191,7 +191,7 @@ namespace ROOT
             }
         }
 
-        //TODO Yuxuan Default的工作，熟悉这个函数的代码，未来工作会围绕触摸屏的适配展开。
+        //TODO Digong Default的工作，熟悉这个函数的代码，未来工作会围绕触摸屏的适配展开。
         internal static void GetCommand_Touch(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
             //商店的新版流程正在弄。
