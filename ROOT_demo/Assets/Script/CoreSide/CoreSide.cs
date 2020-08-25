@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 
 namespace ROOT
@@ -188,11 +189,11 @@ namespace ROOT
         /// </summary>
         /// <param name="unitPrice">the unit price of product</param>
         /// <returns>total price</returns>
-        public float calculateTotalPrice(out float unitPrice)
+        public float calculateTotalPrice(float unitPrice, out float diff)
         {
-            float postalPrice = 10.0f;
-            unitPrice = 10.0f;
-            float totalPrice = unitPrice + postalPrice;
+            diff = 10.0f;
+            float totalPrice = unitPrice + diff;
+
             return totalPrice;
         }
     }

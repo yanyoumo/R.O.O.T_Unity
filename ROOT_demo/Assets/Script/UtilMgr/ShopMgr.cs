@@ -295,7 +295,8 @@ namespace ROOT
                 //并且函数里面添加placeHolder逻辑。
                 //**这个TODO很简单，不用想太多，就是简单的在别的文件里面声明一个函数并且调一下，
                 //**主要是要传达游戏行业中，程序员和策划进行互动的一种方式。以及partial class的一种应用。
-               float totalPrice = calculateTotalPrice(out unitPrice);
+                float diff = 0;
+                float totalPrice = calculateTotalPrice(unitPrice, out diff);
 
                 if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
                 {
