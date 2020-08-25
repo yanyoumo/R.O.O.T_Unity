@@ -189,11 +189,10 @@ namespace ROOT
         /// </summary>
         /// <param name="unitPrice">the unit price of product</param>
         /// <returns>total price</returns>
-        public float calculateTotalPrice(float unitPrice, out float diff)
+        public float CalculateTotalPrice(float unitPrice, out float postalPrice)
         {
-            diff = 10.0f;
-            float totalPrice = unitPrice + diff;
-
+            postalPrice = 10.0f;
+            float totalPrice = unitPrice + postalPrice;
             return totalPrice;
         }
     }
