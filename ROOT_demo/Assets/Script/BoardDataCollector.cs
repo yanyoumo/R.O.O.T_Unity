@@ -51,7 +51,7 @@ namespace ROOT
         private float CalculateProcessorScoreCore(Vector2Int hostKey,RotationDirection dir,int depth)
         {
             var score = 0.0f;
-            m_Board.Units.TryGetValue(hostKey, out var currentUnit);
+            m_Board.UnitsGameObjects.TryGetValue(hostKey, out var currentUnit);
             if (currentUnit != null)
             {
                 var unit = currentUnit.GetComponentInChildren<Unit>();
@@ -88,7 +88,7 @@ namespace ROOT
             var driverCount = 0.0f;
             var processorKeys = new List<Vector2Int>();
 
-            foreach (var keyValuePair in m_Board.Units)
+            foreach (var keyValuePair in m_Board.UnitsGameObjects)
             {
                 var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
                 unit.Visited = false;
@@ -152,7 +152,7 @@ namespace ROOT
         private void CalculateServerScoreCore(Vector2Int hostKey, int currentDepth, Vector2Int srcPos)
         {
             var depth = currentDepth;
-            m_Board.Units.TryGetValue(hostKey, out var currentUnit);
+            m_Board.UnitsGameObjects.TryGetValue(hostKey, out var currentUnit);
             if (currentUnit != null)
             {
                 var unit = currentUnit.GetComponentInChildren<Unit>();
@@ -188,7 +188,7 @@ namespace ROOT
             var farthestUnitPos = Vector2Int.zero;
             var serverKeys = new List<Vector2Int>();
 
-            foreach (var keyValuePair in m_Board.Units)
+            foreach (var keyValuePair in m_Board.UnitsGameObjects)
             {
                 var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
                 unit.Visited = false;
@@ -210,13 +210,13 @@ namespace ROOT
                 //score += 0.0f;//只有服务器没分儿
                 foreach (var key in serverKeys)
                 {
-                    m_Board.Units.TryGetValue(key, out var currentServerUnit);
+                    m_Board.UnitsGameObjects.TryGetValue(key, out var currentServerUnit);
                     currentServerUnit.GetComponentInChildren<Unit>().ServerDepth = -1;
 
                     CalculateServerScoreCore(key, 0, key); //这是在服务器本身上面调的，没有Srckey，或者说就是它本身。
                 }
 
-                foreach (var keyValuePair in m_Board.Units)
+                foreach (var keyValuePair in m_Board.UnitsGameObjects)
                 {
                     //之所以第二个Server没有再计算是因为他的IntA被写了，所以就不再计算了。
                     //两个Server被串在一起后，肯定有一个（随机）会被完全剔出计算流程。
@@ -242,7 +242,7 @@ namespace ROOT
                     Unit farthestUnit;
                     do
                     {
-                        m_Board.Units.TryGetValue(farthestUnitPos, out var currentUnit);
+                        m_Board.UnitsGameObjects.TryGetValue(farthestUnitPos, out var currentUnit);
                         Debug.Assert(currentUnit);
                         farthestUnit = currentUnit.GetComponentInChildren<Unit>();
                         farthestUnit.InServerGrid = true;
@@ -257,7 +257,7 @@ namespace ROOT
                     } while (tmp != farthestUnit.LastNetworkPos);
                 }
 
-                foreach (var keyValuePair in m_Board.Units)
+                foreach (var keyValuePair in m_Board.UnitsGameObjects)
                 {
                     var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
                     if (unit.UnitCore == CoreType.Server)
@@ -276,7 +276,7 @@ namespace ROOT
         public float CalculateCost()
         {
             float cost = 0.0f;
-            foreach (var value in m_Board.Units.Values)
+            foreach (var value in m_Board.UnitsGameObjects.Values)
             {
                 var unit = value.GetComponentInChildren<Unit>();
                 cost += GetCostByCore(unit.UnitCore);

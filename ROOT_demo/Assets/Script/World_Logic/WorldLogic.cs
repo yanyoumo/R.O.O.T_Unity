@@ -191,6 +191,7 @@ namespace ROOT
             }
         }
 
+        //TODO Yuxuan Default的工作，熟悉这个函数的代码，未来工作会围绕触摸屏的适配展开。
         internal static void GetCommand_Touch(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
             //商店的新版流程正在弄。
@@ -378,21 +379,29 @@ namespace ROOT
                 ctrlPack.SetFlag(ControllingCommand.CycleNext);
             }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCANCELED))
+            if (currentLevelAsset.BuyingCursor)
             {
-                ctrlPack.SetFlag(ControllingCommand.BuyCanceled);
-            }
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCANCELED))
+                {
+                    ctrlPack.SetFlag(ControllingCommand.BuyCanceled);
+                }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
-            {
-                ctrlPack.SetFlag(ControllingCommand.BuyConfirm);
-            }
+                if (WorldController.GetCommandDir(out ctrlPack.CommandDir))
+                {
+                    Unit[] HQUnits = currentLevelAsset.GameBoard.FindUnitWithCoreType(CoreType.HQ);
+                    if (HQUnits.Length > 0)
+                    {
+                        ctrlPack.NextPos = HQUnits[0].GetCoord(ctrlPack.CommandDir);
+                        ctrlPack.SetFlag(ControllingCommand.BuyConfirm);
+                    }
+                }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
-            {
-                ctrlPack.SetFlag(ControllingCommand.BuyRandom);
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
+                {
+                    ctrlPack.SetFlag(ControllingCommand.BuyRandom);
+                }
             }
-
+            
             bool anyBuy = false;
             if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY1))
             {
@@ -446,10 +455,11 @@ namespace ROOT
             {
                 var successBought = false;
 
-                //TODO 需要处理在选择送货地址时不许做其他操作(移动、旋转、跳过等)的逻辑。
-                //购买失败还是需要一些提示（之前也没有）
+                //需要处理在选择送货地址时不许做其他操作(移动、旋转、跳过等)的逻辑。
                 //购买的时候显示定位和随机和取消的操作提示，定位上要显示添加的价格。
                 //玩家在选择送货地址的时候，要标记出哪个是准备要购买的（利用station类似的系统）
+                //TODO 购买失败还是需要一些提示（之前也没有）
+                //TEMP 基于HQ购买的还需要将指针处理一下。
                 if (!currentLevelAsset.BuyingCursor)
                 {
                     if (ctrlPack.HasFlag(ControllingCommand.Buy))
@@ -473,9 +483,15 @@ namespace ROOT
                     else if (ctrlPack.HasFlag(ControllingCommand.BuyConfirm))
                     {
                         //试图本地购买。
-                        successBought=shopMgr.BuyToPos(currentLevelAsset.BuyingID,currentLevelAsset.Cursor.CurrentBoardPosition);
-                        currentLevelAsset.BuyingCursor = false;
-                        currentLevelAsset.BuyingID = -1;
+                        if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos))
+                        {
+                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.NextPos);
+                            if (successBought)
+                            {
+                                currentLevelAsset.BuyingCursor = false;
+                                currentLevelAsset.BuyingID = -1;
+                            }
+                        }
                     }
                     else if (ctrlPack.HasFlag(ControllingCommand.BuyRandom))
                     {
@@ -485,9 +501,20 @@ namespace ROOT
                         currentLevelAsset.BuyingID = -1;
                     }
                 }
-
                 boughtOnce = successBought;
             }
+        }
+
+        internal static GameObject CreateIndicator(GameAssets currentLevelAsset,Vector2Int pos,Color col)
+        {
+            GameObject indicator= currentLevelAsset.Owner.WorldLogicRequestInstantiate(currentLevelAsset.CursorTemplate);
+            Cursor indicatorCursor = indicator.GetComponent<Cursor>();
+            indicatorCursor.SetIndMesh();
+            indicatorCursor.InitPosWithAnimation(pos);
+            UpdateCursorPos(currentLevelAsset);
+            indicatorCursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransform(indicatorCursor.CurrentBoardPosition));
+            indicatorCursor.CursorColor = col;
+            return indicator;
         }
 
         internal static void UpdateDestoryer(GameAssets currentLevelAsset)
@@ -504,34 +531,14 @@ namespace ROOT
                 }
             }
 
-            if (currentLevelAsset.WarningDestoryer.GetStatus() != WarningDestoryerStatus.Dormant)
+            if (currentLevelAsset.WarningDestoryer.GetStatus != WarningDestoryerStatus.Dormant)
             {
                 var incomings = currentLevelAsset.WarningDestoryer.NextStrikingPos(out var count);
                 currentLevelAsset.WarningGo = new GameObject[count];
                 for (var i = 0; i < count; i++)
                 {
-                    currentLevelAsset.WarningGo[i] =
-                        currentLevelAsset.Owner.WorldLogicRequestInstantiate(currentLevelAsset.CursorTemplate);
-                    var mIndCursor = currentLevelAsset.WarningGo[i].GetComponent<Cursor>();
-                    mIndCursor.SetIndMesh();
-                    mIndCursor.InitPosWithAnimation(incomings[i]);
-                    UpdateCursorPos(currentLevelAsset);
-                    mIndCursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransform(mIndCursor.CurrentBoardPosition));
-
-                    var tm = currentLevelAsset.WarningGo[i].GetComponentInChildren<MeshRenderer>().material;
-
-                    if (currentLevelAsset.WarningDestoryer.GetStatus() == WarningDestoryerStatus.Warning)
-                    {
-                        tm.SetColor("_Color", Color.yellow);
-                    }
-                    else if (currentLevelAsset.WarningDestoryer.GetStatus() == WarningDestoryerStatus.Striking)
-                    {
-                        tm.SetColor("_Color", new Color(1.0f, 0.2f, 0.0f));
-                    }
-                    else
-                    {
-                        Debug.Assert(false, "Internal Error");
-                    }
+                    Color col = currentLevelAsset.WarningDestoryer.GetWaringColor;
+                    currentLevelAsset.WarningGo[i] = CreateIndicator(currentLevelAsset, incomings[i], col);
                 }
             }
         }
@@ -629,8 +636,7 @@ namespace ROOT
             {
                 ctrlPack.MaskFlag(ControllingCommand.BuyRandom
                                   | ControllingCommand.BuyCanceled
-                                  | ControllingCommand.BuyConfirm
-                                  | ControllingCommand.Move);
+                                  | ControllingCommand.BuyConfirm);
             }
 
             return ctrlPack;

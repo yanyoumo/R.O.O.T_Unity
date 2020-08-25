@@ -141,8 +141,7 @@ namespace ROOT
                     foreach (var timeLineToken in timeLineTokens)
                     {
                         //RISK 最后一个Token会支楞出去，但是先不用管
-                        token.GetComponent<TimeLineTokenQuad>().SetQuadShape(UnitLength, SubDivision,
-                            timeLineToken.type, i, timeLineTokens.Count, j);
+                        token.GetComponent<TimeLineTokenQuad>().SetQuadShape(UnitLength, SubDivision, timeLineToken.type, i, timeLineTokens.Count, j);
                         token.GetComponent<TimeLineTokenQuad>().MarkerID = markerCount;
                         token.GetComponent<TimeLineTokenQuad>().Token = timeLineToken;
                         i++;
@@ -178,7 +177,7 @@ namespace ROOT
             }
         }
 
-        IEnumerator StepAnmation(Vector3 orgPos)
+        IEnumerator StepAnimation(Vector3 orgPos)
         {
             AnimationTimerOrigin = Time.time;
             while (AnimationLerper < 1.0f)
@@ -194,7 +193,7 @@ namespace ROOT
         {
             //StepCount++;
             Vector3 orgPos = TimeLineMarkerRoot.transform.localPosition;
-            StartCoroutine(StepAnmation(orgPos));
+            StartCoroutine(StepAnimation(orgPos));
         }
 
         void Update()

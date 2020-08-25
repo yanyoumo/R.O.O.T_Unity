@@ -276,6 +276,9 @@ namespace ROOT
                 return false;
             }
         }
+
+        //TODO Digong 移除此函数，以及所有仅在此函数逻辑链中使用的变量和函数，并且在原来调用此函数的部分使用注释标记。
+        [Obsolete]
         protected virtual void UpdateSignalHint(in ControllingPack ctrlPack)
         {
             LevelAsset.GameBoard.ResetUnitEmission();

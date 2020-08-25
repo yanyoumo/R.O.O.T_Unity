@@ -12,6 +12,11 @@ namespace ROOT
         public Material tm;
         private string defaultColor = "#5FD2D6";
 
+        public Color CursorColor
+        {
+            set => tm.color = value;
+        }
+
         public Mesh CursorMesh;
         public Mesh IndicatorMesh;
         private float blinkTimer = 0.0f;

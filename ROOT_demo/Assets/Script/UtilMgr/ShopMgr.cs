@@ -185,7 +185,6 @@ namespace ROOT
         {
             _items = new GameObject[4];
             _prices = new float[_items.Length];
-            //ItemPriceTexts = new Text[_items.Length];
             ItemPriceTexts_TMP = new TextMeshPro[_items.Length];
             currentPosS = new Vector3[_items.Length];
             nextPosS = new Vector3[_items.Length];
@@ -211,7 +210,7 @@ namespace ROOT
 
         public void ShopPreAnimationUpdate()
         {
-            ShopUpdateStack();//还需要一个价格的衰减//这个在视觉上必须是顺序的。
+            ShopUpdateStack();
 
             for (int i = 0; i < _items.Length; i++)
             {
@@ -300,10 +299,9 @@ namespace ROOT
 
                 if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
                 {
-                    //TODO 因为是立刻送，所以目前还是闪现。
                     _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;
-                    //RISK 现在购买的Unit无法移动。
-                    _items[idx].gameObject.GetComponentInChildren<Unit>().SetupStationUnit();
+                    //RISK00 现在购买的Unit无法移动。
+                    //_items[idx].gameObject.GetComponentInChildren<Unit>().SetupStationUnit();
                     GameBoard.DeliverUnitAssignedPlace(_items[idx], pos);
                     _items[idx] = null;
                     return true;
@@ -318,7 +316,6 @@ namespace ROOT
             {
                 if (CurrentGameStateMgr.SpendShopCurrency(_prices[idx]*_priceCof[idx]))
                 {
-                    //TODO 因为是立刻送，所以目前还是闪现。
                     _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;
                     GameBoard.DeliverUnitRandomPlace(_items[idx]);
                     _items[idx] = null;

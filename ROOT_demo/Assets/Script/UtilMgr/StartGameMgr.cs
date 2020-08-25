@@ -25,8 +25,6 @@ namespace ROOT
     public partial class LevelLib : MonoBehaviour
     {
         internal LevelActionAssetLib TutorialLevelActionAssetLib;
-        //internal LevelActionAssetLib CareerLevelActionAssetLib;
-        //public LevelActionAsset[] CareerActionAssetList => CareerLevelActionAssetLib.ActionAssetList;
         public LevelActionAsset[] CareerActionAssetList { internal set;get; }
     }
 
