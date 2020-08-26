@@ -2,7 +2,7 @@
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/Todo/TodoPatterns/=1157D08C39D6EF4986EC7C9AD5F4D5E6/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/Todo/TodoPatterns/=1157D08C39D6EF4986EC7C9AD5F4D5E6/Color/@EntryValue">WindowText</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/Todo/TodoPatterns/=1157D08C39D6EF4986EC7C9AD5F4D5E6/MatchComments/@EntryValue">True</s:Boolean>
-	<s:String x:Key="/Default/PatternsAndTemplates/Todo/TodoPatterns/=1157D08C39D6EF4986EC7C9AD5F4D5E6/Name/@EntryValue">Rick</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/Todo/TodoPatterns/=1157D08C39D6EF4986EC7C9AD5F4D5E6/Name/@EntryValue">Risk</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/Todo/TodoPatterns/=1157D08C39D6EF4986EC7C9AD5F4D5E6/Pattern/@EntryValue">(?&lt;=\W|^)(?&lt;TAG&gt;RISK)(\W|$)(.*)</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/Todo/TodoPatterns/=1157D08C39D6EF4986EC7C9AD5F4D5E6/TodoIconStyle/@EntryValue">Warning</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/Todo/TodoPatterns/=4386F01B791C56499C7EA059B55FFB54/CaseSensitive/@EntryValue">True</s:Boolean>

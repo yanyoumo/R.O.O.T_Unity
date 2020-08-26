@@ -375,6 +375,39 @@ MonoBehaviour:
       - Touch HERE to Complete
       Flags: 0000
       Languages_Touch: []
+    - Term: AdvShop_KM
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u53F3Shift:\u968F\u673A\u4F4D\u7F6E\u2014\u2014\uFF08+0\u5143\uFF09\\n\n\u65B9\u5411\u952E:HQ\u5468\u8FB9\u4F4D\u7F6E
+        \u2014\u2014\uFF08+10\u5143\uFF09"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: AdvShop_Touch
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u5F85\u5B9A\u3002"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: AdvShop_2_KM
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u5F85\u5B9A\u3002"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: AdvShop_2_Touch
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u5F85\u5B9A\u3002"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
