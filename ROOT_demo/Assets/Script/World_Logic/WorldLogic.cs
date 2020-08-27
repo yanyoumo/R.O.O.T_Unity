@@ -650,9 +650,9 @@ namespace ROOT
         {
             //RISK 想着改回来
             currentLevelAsset.DeltaCurrency = 1.0f;
-            /*currentLevelAsset.DeltaCurrency = 0.0f;
             currentLevelAsset.DeltaCurrency += currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A);
             currentLevelAsset.DeltaCurrency += currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B);
+            /*currentLevelAsset.DeltaCurrency = 0.0f;
             currentLevelAsset.DeltaCurrency -= currentLevelAsset.BoardDataCollector.CalculateCost();*/
 
             if (currentLevelAsset.LCDCurrencyEnabled)
