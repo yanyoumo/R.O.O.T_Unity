@@ -277,22 +277,6 @@ namespace ROOT
             }
         }
 
-        //TODO Digong 移除此函数，以及所有仅在此函数逻辑链中使用的变量和函数，并且在原来调用此函数的部分使用注释标记。
-        [Obsolete]
-        protected virtual void UpdateSignalHint(in ControllingPack ctrlPack)
-        {
-            LevelAsset.GameBoard.ResetUnitEmission();
-            var pressed = ctrlPack.HasFlag(ControllingCommand.SignalHint);
-            if (pressed || LevelAsset.ForceHddConnectionHint)
-            {
-                LevelAsset.GameBoard.DisplayConnectedHDDUnit();
-            }
-
-            if (pressed || LevelAsset.ForceServerConnectionHint)
-            {
-                LevelAsset.GameBoard.DisplayConnectedServerUnit();
-            }
-        }
 
         private bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
         {
@@ -413,7 +397,7 @@ namespace ROOT
             }
             if (LevelAsset.HintEnabled)
             {
-                UpdateSignalHint(_ctrlPack);
+                //UpdateSignalHint(_ctrlPack);
                 LevelAsset.HintMaster.UpdateHintMaster(_ctrlPack);
             }
         }

@@ -82,8 +82,6 @@ namespace ROOT
         /// <returns>进行洗牌完毕的数组</returns>
         public static T[] Shuffle<T>(T[] array)
         {
-            //TODO Digong 优化算法，并且新建一个基于Enumerable的Overload，完成变体后标记此函数为Obsolete，新函数需要有yml-summary
-            //因为C#传递Array都是pass-by-reference，旧版算法没有细节处理，新算法和Enumerable版本需要保证输入不被修改（添加[in]修饰符 ）
             int n = array.Length;
             while (n > 1)
             {

@@ -191,7 +191,8 @@ namespace ROOT
             }
         }
 
-        //TODO Yuxuan Default的工作，熟悉这个函数的代码，未来工作会围绕触摸屏的适配展开。
+        //TODO Digong 熟悉这个函数的代码，未来工作会围绕触摸屏的适配展开。
+        //更新触摸屏的控制逻辑，需要和键盘版同步。（先熟悉代码和特性，具体控制逻辑待定
         internal static void GetCommand_Touch(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
             //商店的新版流程正在弄。
@@ -213,7 +214,7 @@ namespace ROOT
                     Debug.Log("touch.tapCount ==" + touch.tapCount);
                     if (touch.tapCount >= 2)
                     {
-                        //f^ck，在DoubleTap前会出现一次SingleTap
+                        //f[ʌ]ck，在DoubleTap前会出现一次SingleTap
                         //日，在接收到doubleTap前就已经被Swipe挪走了。
                         //在识别到是双击前，就已经完成一次单击了。 
                         //就是这里处理是：双击单元

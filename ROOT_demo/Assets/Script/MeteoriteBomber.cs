@@ -91,7 +91,7 @@ namespace ROOT
 
         private Vector2Int ComplexRandomTarget()
         {
-            return Random.value <= ComplexModeRandomRatio ? PureRandomTarget() : (RandomUnitTarget() ?? PureRandomTarget());
+            return (Random.value <=  ComplexModeRandomRatio) ? PureRandomTarget() : (RandomUnitTarget() ?? PureRandomTarget());
         }
 
         /// <summary>

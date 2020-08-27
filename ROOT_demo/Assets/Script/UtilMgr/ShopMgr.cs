@@ -298,6 +298,7 @@ namespace ROOT
                 float diff = 0.0f;
                 float totalPrice = calculateTotalPrice(unitPrice, out diff);
 
+
                 if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
                 {
                     _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;

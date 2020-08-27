@@ -5,6 +5,10 @@ namespace I2.Loc
 	public static class ScriptLocalization
 	{
 
+		public static string AdvShop_2_KM 		{ get{ return LocalizationManager.GetTranslation ("AdvShop_2_KM"); } }
+		public static string AdvShop_2_Touch 		{ get{ return LocalizationManager.GetTranslation ("AdvShop_2_Touch"); } }
+		public static string AdvShop_KM 		{ get{ return LocalizationManager.GetTranslation ("AdvShop_KM"); } }
+		public static string AdvShop_Touch 		{ get{ return LocalizationManager.GetTranslation ("AdvShop_Touch"); } }
 		public static string Back 		{ get{ return LocalizationManager.GetTranslation ("Back"); } }
 		public static string BasicControl_KM 		{ get{ return LocalizationManager.GetTranslation ("BasicControl_KM"); } }
 		public static string BasicControl_Touch 		{ get{ return LocalizationManager.GetTranslation ("BasicControl_Touch"); } }
@@ -53,6 +57,10 @@ namespace I2.Loc
     public static class ScriptTerms
 	{
 
+		public const string AdvShop_2_KM = "AdvShop_2_KM";
+		public const string AdvShop_2_Touch = "AdvShop_2_Touch";
+		public const string AdvShop_KM = "AdvShop_KM";
+		public const string AdvShop_Touch = "AdvShop_Touch";
 		public const string Back = "Back";
 		public const string BasicControl_KM = "BasicControl_KM";
 		public const string BasicControl_Touch = "BasicControl_Touch";
