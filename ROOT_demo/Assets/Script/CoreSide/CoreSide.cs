@@ -191,8 +191,9 @@ namespace ROOT
         /// <returns>total price</returns>
         public float CalculateTotalPrice(float unitPrice, out float postalPrice)
         {
-            float totalPrice = Mathf.Ceil(Mathf.FloorToInt(unitPrice) * 1.3f);
-            postalPrice = totalPrice - unitPrice;
+            //float totalPrice = Mathf.Ceil(Mathf.FloorToInt(unitPrice) * 1.3f);
+            postalPrice = 4.0f;
+            float totalPrice = unitPrice + postalPrice;
             return totalPrice;
         }
     }

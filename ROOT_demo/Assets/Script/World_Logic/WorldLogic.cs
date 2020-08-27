@@ -387,14 +387,16 @@ namespace ROOT
                     ctrlPack.SetFlag(ControllingCommand.BuyCanceled);
                 }
 
-                if (WorldController.GetCommandDir(out ctrlPack.CommandDir))
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
                 {
-                    Unit[] HQUnits = currentLevelAsset.GameBoard.FindUnitWithCoreType(CoreType.HQ);
+                    currentLevelAsset.ShopMgr.RequestBuy(currentLevelAsset.BuyingID);
+                    //currentLevelAsset.ShopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.CurrentPos);
+                    /*Unit[] HQUnits = currentLevelAsset.GameBoard.FindUnitWithCoreType(CoreType.HQ);
                     if (HQUnits.Length > 0)
                     {
                         ctrlPack.NextPos = HQUnits[0].GetCoord(ctrlPack.CommandDir);
+                    }*/
                         ctrlPack.SetFlag(ControllingCommand.BuyConfirm);
-                    }
                 }
 
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
@@ -484,9 +486,9 @@ namespace ROOT
                     else if (ctrlPack.HasFlag(ControllingCommand.BuyConfirm))
                     {
                         //试图本地购买。
-                        if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos))
+                        if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.CurrentPos))
                         {
-                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.NextPos);
+                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.CurrentPos);
                             if (successBought)
                             {
                                 currentLevelAsset.BuyingCursor = false;
@@ -637,7 +639,8 @@ namespace ROOT
             {
                 ctrlPack.MaskFlag(ControllingCommand.BuyRandom
                                   | ControllingCommand.BuyCanceled
-                                  | ControllingCommand.BuyConfirm);
+                                  | ControllingCommand.BuyConfirm
+                                  | ControllingCommand.Move);
             }
 
             return ctrlPack;
@@ -645,10 +648,12 @@ namespace ROOT
 
         internal static void UpdateBoardData(GameAssets currentLevelAsset)
         {
-            currentLevelAsset.DeltaCurrency = 0.0f;
+            //RISK 想着改回来
+            currentLevelAsset.DeltaCurrency = 1.0f;
+            /*currentLevelAsset.DeltaCurrency = 0.0f;
             currentLevelAsset.DeltaCurrency += currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A);
             currentLevelAsset.DeltaCurrency += currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B);
-            currentLevelAsset.DeltaCurrency -= currentLevelAsset.BoardDataCollector.CalculateCost();
+            currentLevelAsset.DeltaCurrency -= currentLevelAsset.BoardDataCollector.CalculateCost();*/
 
             if (currentLevelAsset.LCDCurrencyEnabled)
             {
