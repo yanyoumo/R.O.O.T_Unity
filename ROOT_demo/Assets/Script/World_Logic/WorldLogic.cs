@@ -387,16 +387,14 @@ namespace ROOT
                     ctrlPack.SetFlag(ControllingCommand.BuyCanceled);
                 }
 
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
+                if (WorldController.GetCommandDir(out ctrlPack.CommandDir))
                 {
-                    currentLevelAsset.ShopMgr.RequestBuy(currentLevelAsset.BuyingID);
-                    //currentLevelAsset.ShopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.CurrentPos);
-                    /*Unit[] HQUnits = currentLevelAsset.GameBoard.FindUnitWithCoreType(CoreType.HQ);
+                    Unit[] HQUnits = currentLevelAsset.GameBoard.FindUnitWithCoreType(CoreType.HQ);
                     if (HQUnits.Length > 0)
                     {
                         ctrlPack.NextPos = HQUnits[0].GetCoord(ctrlPack.CommandDir);
-                    }*/
                         ctrlPack.SetFlag(ControllingCommand.BuyConfirm);
+                    }
                 }
 
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
@@ -486,9 +484,9 @@ namespace ROOT
                     else if (ctrlPack.HasFlag(ControllingCommand.BuyConfirm))
                     {
                         //试图本地购买。
-                        if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.CurrentPos))
+                        if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos))
                         {
-                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.CurrentPos);
+                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.NextPos);
                             if (successBought)
                             {
                                 currentLevelAsset.BuyingCursor = false;
@@ -639,8 +637,7 @@ namespace ROOT
             {
                 ctrlPack.MaskFlag(ControllingCommand.BuyRandom
                                   | ControllingCommand.BuyCanceled
-                                  | ControllingCommand.BuyConfirm
-                                  | ControllingCommand.Move);
+                                  | ControllingCommand.BuyConfirm);
             }
 
             return ctrlPack;
