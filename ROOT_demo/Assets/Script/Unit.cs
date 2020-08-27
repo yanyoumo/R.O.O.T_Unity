@@ -34,7 +34,6 @@ namespace ROOT
 
     public sealed partial class ShopMgr : MonoBehaviour
     {
-
         private GameObject InitUnitShop(CoreType core, SideType[] sides, out float price, int ID)
         {
             var go = Instantiate(UnitTemplate);
