@@ -73,19 +73,19 @@ namespace ROOT
         {
             _priceByCore = new Dictionary<CoreType, float>()
             {
-                {CoreType.PCB, 1.0f},
-                {CoreType.NetworkCable, 2.0f},
-                {CoreType.Server, 3.0f},
-                {CoreType.Bridge, 4.0f},
-                {CoreType.HardDrive, 2.0f},
-                {CoreType.Processor, 3.0f},
-                {CoreType.Cooler, 3.0f},
-                {CoreType.BackPlate, 1.0f},
+                {CoreType.PCB, 10.0f},
+                {CoreType.NetworkCable, 20.0f},
+                {CoreType.Server, 30.0f},
+                {CoreType.Bridge, 40.0f},
+                {CoreType.HardDrive, 20.0f},
+                {CoreType.Processor, 30.0f},
+                {CoreType.Cooler, 30.0f},
+                {CoreType.BackPlate, 10.0f},
             };
             _priceBySide = new Dictionary<SideType, float>()
             {
-                {SideType.NoConnection,0.0f },
-                {SideType.Connection,1.0f },
+                {SideType.NoConnection,2.0f },
+                {SideType.Connection,6.0f },
             };
         }
 

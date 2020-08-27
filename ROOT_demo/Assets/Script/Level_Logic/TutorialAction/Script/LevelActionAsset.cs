@@ -79,9 +79,6 @@ namespace ROOT
     [CreateAssetMenu(fileName = "NewActionAsset")]
     public class LevelActionAsset : ScriptableObject
     {
-        //TODO Yuxuan 开游戏，随便截四张图，作为关卡选择的Thumbnail，Icon大小为256*256.
-        //参考Assets/Resources/UIThumbnail/TutorialThumbnail里面已有的文件。
-        //之后将Icon分别赋予CareerGameActionAsset及ABC共四个Asset上面。
         [Header("Basic Data")]
         public string TitleTerm;
         [AssetSelector(Filter = "t:Sprite",Paths= "Assets/Resources/UIThumbnail/TutorialThumbnail")]
