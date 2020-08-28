@@ -203,9 +203,8 @@ namespace ROOT
         /// <returns>total price</returns>
         public float CalculateTotalPrice(float unitPrice, out float postalPrice)
         {
-            float totalPrice = Mathf.Ceil(Mathf.FloorToInt(unitPrice) * 1.3f);
-            postalPrice = totalPrice - unitPrice;
-            return totalPrice;
+            postalPrice = 0.0f;
+            return unitPrice;
         }
     }
 
