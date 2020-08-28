@@ -17,7 +17,7 @@ MonoBehaviour:
   LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
     type: 3}
   levelType: 1
-  GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
+  GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
@@ -90,9 +90,5 @@ MonoBehaviour:
   - Core: 5
     Sides: 01000000010000000100000001000000
     Pos: {x: 5, y: 5}
-    IsStation: 0
-  - Core: 8
-    Sides: 00000000000000000000000000000000
-    Pos: {x: 2, y: 2}
     IsStation: 0
   TargetCount: 10

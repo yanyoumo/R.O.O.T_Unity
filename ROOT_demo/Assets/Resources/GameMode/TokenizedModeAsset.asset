@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitialCurrency: 12
   InitialTime: 30
-  ShopCost: 0
-  UnitCost: 0
-  InfiniteTime: 1
+  ShopCost: 1
+  UnitCost: 1
+  InfiniteTime: 0

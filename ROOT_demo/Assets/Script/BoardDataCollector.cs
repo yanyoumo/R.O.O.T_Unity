@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ROOT
@@ -124,7 +125,7 @@ namespace ROOT
 
                 MaxNormalDepth = (int) driverCount;
                 driverCountInt = (int) driverCount;
-                return driverCount * GetPerDriverIncome();
+                return Mathf.FloorToInt(driverCount * GetPerDriverIncome);
             }
         }
 
@@ -257,13 +258,9 @@ namespace ROOT
                     } while (tmp != farthestUnit.LastNetworkPos);
                 }
 
-                foreach (var keyValuePair in m_Board.UnitsGameObjects)
+                foreach (var unit1 in m_Board.Units.Where(unit=> (unit.UnitCore == CoreType.Server)))
                 {
-                    var unit = keyValuePair.Value.GetComponentInChildren<Unit>();
-                    if (unit.UnitCore == CoreType.Server)
-                    {
-                        unit.InServerGrid = true;
-                    }
+                    unit1.InServerGrid = true;
                 }
 
                 MaxNetworkDepth = (int)maxLength;
@@ -272,17 +269,22 @@ namespace ROOT
             }
         }
 
+        private float CalculateBasicCost()
+        {
+            return m_Board.Units.Sum(unit => GetCostByCore(unit.UnitCore));
+        }
+
+        private float CalculateTokenizedCost()
+        {
+            return TokenizedCostList(m_Board.GetUnitCount);
+        }
+
         //这个返回的也是正数。
+        //Tokenize后，这个逻辑要换。
         public float CalculateCost()
         {
-            float cost = 0.0f;
-            foreach (var value in m_Board.UnitsGameObjects.Values)
-            {
-                var unit = value.GetComponentInChildren<Unit>();
-                cost += GetCostByCore(unit.UnitCore);
-            }
-
-            return cost;
+            return CalculateTokenizedCost();
+            //return CalculateBasicCost();
         }
     }
 }

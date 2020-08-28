@@ -19,6 +19,7 @@ namespace ROOT
         public GameStateMgr CurrentGameStateMgr;
 
         private GameObject[] _items;
+        private Unit[] _itemUnit => _items.Select(unit => unit.GetComponentInChildren<Unit>()).ToArray();
         private float[] _prices;
 
         private Vector3[] currentPosS;
@@ -46,8 +47,6 @@ namespace ROOT
 
         //KeySide minCount
         private Dictionary<CoreType, Tuple<SideType, int>> _keySideLib;
-
-        private readonly float[] _priceCof = { 0.8f, 1.0f, 1.2f, 1.5f };
 
         public List<CoreType> excludedTypes=new List<CoreType>();
 
@@ -253,23 +252,34 @@ namespace ROOT
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
                 _items[i].gameObject.GetComponentInChildren<Unit>().ShopID = i;
-                ItemPriceTexts_TMP[i].text = Utils.PaddingNum3Digit(_prices[i] * _priceCof[i]);
+                ItemPriceTexts_TMP[i].text = Utils.PaddingNum3Digit(_prices[i] * _priceShopDiscount[i]);
             }
         }
 
         public void ResetPendingBuy()
         {
-            foreach (var item in _items)
+            foreach (var unit in _itemUnit)
             {
-                item.GetComponentInChildren<Unit>().SetPendingBuying = false;
+                unit.SetPendingBuying = false;
             }
+        }
+
+        /// <summary>
+        /// 计算单位本身的价格，不含邮费。
+        /// </summary>
+        /// <param name="idx">商店ID</param>
+        /// <returns>除了邮费的总价</returns>
+        private float UnitPrice(int idx)
+        {
+            //目前这个状态仍然计算垃圾模组的系数和基价。
+            return _prices[idx] * _priceShopDiscount[idx] * PriceMultiplier(GameBoard.GetUnitCount);
         }
 
         public bool RequestBuy(int idx)
         {
             if (_items[idx])
             {
-                float totalPrice = _prices[idx] * _priceCof[idx];
+                var totalPrice = UnitPrice(idx);
                 if (CurrentGameStateMgr.GetCurrency() >= totalPrice)
                 {
                     _items[idx].GetComponentInChildren<Unit>().SetPendingBuying = true;
@@ -283,8 +293,8 @@ namespace ROOT
         {
             if (_items[idx])
             {
-                float unitPrice = _prices[idx] * _priceCof[idx];
-                float totalPrice = CalculateTotalPrice(unitPrice, out float diff);
+                var unitPrice = UnitPrice(idx);
+                var totalPrice = CalculateTotalPrice(unitPrice, out float postalPrice);
 
                 if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
                 {
@@ -301,7 +311,7 @@ namespace ROOT
         {
             if (_items[idx])
             {
-                if (CurrentGameStateMgr.SpendShopCurrency(_prices[idx]*_priceCof[idx]))
+                if (CurrentGameStateMgr.SpendShopCurrency(_prices[idx]*_priceShopDiscount[idx]))
                 {
                     _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;
                     GameBoard.DeliverUnitRandomPlace(_items[idx]);
