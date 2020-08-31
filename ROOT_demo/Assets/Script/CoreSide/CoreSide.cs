@@ -75,7 +75,7 @@ namespace ROOT
 
         public float PriceMultiplier(int unitCount)
         {
-            float multiplierDelPerUnit = 0.7f / 36.0f;
+            float multiplierDelPerUnit = 3.5f / 36.0f;
             return multiplierDelPerUnit * unitCount + 1.0f;
         }
 
@@ -196,14 +196,9 @@ namespace ROOT
             #endregion
         }
 
-        /// <summary>
-        /// this function would calculate the total price
-        /// </summary>
-        /// <param name="unitPrice">the unit price of product</param>
-        /// <returns>total price</returns>
-        public float CalculateTotalPrice(float unitPrice, out float postalPrice)
+        public int CalculatePostalPrice(int unitPrice, out int postalPrice)
         {
-            float totalPrice = Mathf.Ceil(Mathf.FloorToInt(unitPrice) * 1.3f);
+            var totalPrice = Mathf.FloorToInt(unitPrice * 1.6f);
             postalPrice = totalPrice - unitPrice;
             return totalPrice;
         }
@@ -211,7 +206,7 @@ namespace ROOT
 
     public partial class BoardDataCollector : MonoBehaviour
     {
-        private float perDriverIncome = 1.5f;
+        private float perDriverIncome = 2.0f;
         private Dictionary<CoreType, float> costByCore;
 
         private float TokenizedCostList(int count)

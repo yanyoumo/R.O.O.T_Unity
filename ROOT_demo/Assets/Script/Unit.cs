@@ -34,7 +34,7 @@ namespace ROOT
 
     public sealed partial class ShopMgr : MonoBehaviour
     {
-        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float price, int ID)
+        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
@@ -46,7 +46,7 @@ namespace ROOT
             _priceBySide.TryGetValue(sides[1], out float sidePrice1);
             _priceBySide.TryGetValue(sides[2], out float sidePrice2);
             _priceBySide.TryGetValue(sides[3], out float sidePrice3);
-            price = corePrice + sidePrice0 + sidePrice1 + sidePrice2 + sidePrice3;
+            hardwarePrice = corePrice + sidePrice0 + sidePrice1 + sidePrice2 + sidePrice3;
             unit.ShopID = ID;
             return go;
         }

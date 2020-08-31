@@ -23,6 +23,7 @@ namespace ROOT
         public Dictionary<Vector2Int, GameObject> UnitsGameObjects { get; private set; }
 
         public int GetUnitCount => UnitsGameObjects.Count;
+        public int GetNonPCBUnitCount => Units.Count(unit => unit.UnitCore != CoreType.PCB);
 
         public Unit[] Units => UnitsGameObjects.Values.Select(unitsValue => unitsValue.GetComponentInChildren<Unit>()).ToArray();
 
