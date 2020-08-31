@@ -7,6 +7,7 @@ TagManager:
   - Unit
   - TutorialTextFrame
   - HelpScreen
+  - AdvShopPanel
   layers:
   - Default
   - TransparentFX
