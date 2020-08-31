@@ -71,7 +71,7 @@ namespace ROOT
 
     public sealed partial class ShopMgr : MonoBehaviour
     {
-        private float StationaryRate => 0.8f;
+        private float StationaryRate => (1 - (GameBoard.GetUnitCount / 36.0f))*0.8f;
 
         private float StationaryDiscount(SideType[] sides)
         {

@@ -47,7 +47,7 @@ namespace ROOT
             }
         }
 
-        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float price, int ID)
+        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
@@ -58,12 +58,12 @@ namespace ROOT
             if (Random.value <= StationaryRate)
             {
                 unit.SetupStationUnit();
-                price = StationaryDiscount(sides);
+                hardwarePrice = StationaryDiscount(sides);
             }
             else
             {
                 _priceByCore.TryGetValue(core, out var corePrice);
-                price = corePrice + sides.Sum(TryGetPrice);
+                hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
 
             unit.ShopID = ID;
@@ -101,6 +101,7 @@ namespace ROOT
                 }
             }
         }
+
         public bool SetPendingBuying
         {
             set
@@ -113,10 +114,18 @@ namespace ROOT
                 }
                 else
                 {
-                    AdditionalClampMesh.enabled = false;
+                    if (!StationUnit)
+                    {
+                        AdditionalClampMesh.enabled = false;
+                    }
+                    else
+                    {
+                        AdditionalClampMesh.material = ImmovableMat;
+                    }
                 }
             }
         }
+
         protected string UnitName { get; }
 
         public CoreType UnitCore { get; protected set; }
