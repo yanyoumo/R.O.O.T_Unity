@@ -21,11 +21,27 @@ namespace ROOT
         //   4a:AdvShop_Text对应为：AdvShop_KM和AdvShop_Touch
         //   4b:AdvShop_Text_2对应为：AdvShop_2_KM和AdvShop_2_Touch
 
-        public Localize Localizer;
+        public Localize AdvShopTextLocalizer;
+        public Localize AdvShopTextTwoLocalizer;
         public LocalizationParamsManager LocalizerMessageParam;
         public int PostalPrice
         {
             set => LocalizerMessageParam.SetParameterValue("VALUE", value + "");
+        }
+
+        void Start()
+        {
+            //
+            if (StartGameMgr.UseTouchScreen)
+            {
+                AdvShopTextLocalizer.SetTerm(ScriptTerms.AdvShop_Touch);
+                AdvShopTextTwoLocalizer.SetTerm(ScriptTerms.AdvShop_2_Touch);
+            }
+            else
+            {
+                AdvShopTextLocalizer.SetTerm(ScriptTerms.AdvShop_KM);
+                AdvShopTextTwoLocalizer.SetTerm(ScriptTerms.AdvShop_2_KM);
+            }
         }
     }
 }
