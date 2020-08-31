@@ -19,7 +19,7 @@ MonoBehaviour:
     mTerms:
     - Term: Back
       TermType: 0
-      Description: 
+      Description: "\u8FD4\u56DE\u4E3B\u83DC\u5355\u7684\u6309\u94AE\u540D\u79F0"
       Languages:
       - "\u8FD4\u56DE"
       - Back
@@ -27,7 +27,7 @@ MonoBehaviour:
       Languages_Touch: []
     - Term: BasicControl_KM
       TermType: 0
-      Description: 
+      Description: "\u6E38\u620F\u5185\u5BB9\u663E\u793A\u7684\u64CD\u4F5C\u63D0\u793A\uFF08\u952E\u76D8\u7248\uFF09"
       Languages:
       - "\u3010\u65B9\u5411\u952E\u3011\uFF1A\u79FB\u52A8\u5149\u6807\n\u3010\u65B9\u5411\u952E\u3011+\u3010\u7A7A\u683C\u3011\uFF1A\u62D6\u52A8\u5355\u5143\n\u3010\u5DE6Shift\u3011\uFF1A\u65CB\u8F6C\u5355\u5143\n\u3010TAB\u3011\uFF1A\u67E5\u770B\u6570\u636E\u8303\u56F4"
       - '<b>[Arrows]:</b> Move Cursor
@@ -42,7 +42,7 @@ MonoBehaviour:
       Languages_Touch: []
     - Term: BasicControl_Touch
       TermType: 0
-      Description: 
+      Description: "\u6E38\u620F\u5185\u5BB9\u663E\u793A\u7684\u64CD\u4F5C\u63D0\u793A\uFF08\u89E6\u5C4F\u7248\uFF09"
       Languages:
       - "\u3010\u6ED1\u52A8\u5355\u5143\u3011\uFF1A\u62D6\u52A8\u5355\u5143\n\u3010\u53CC\u51FB\u5355\u5143\u3011\uFF1A\u65CB\u8F6C\u5355\u5143\n\u3010\u53CC\u6307\u6309\u4F4F\u3011\uFF1A\u67E5\u770B\u6570\u636E\u8303\u56F4"
       - '<b>[Swipe on Unit]:</b>Drag Unit
@@ -55,7 +55,7 @@ MonoBehaviour:
       Languages_Touch: []
     - Term: CareerButton
       TermType: 0
-      Description: 
+      Description: "\u5F00\u59CB\u751F\u6DAF\u6A21\u5F0F\u6309\u94AE\u540D\u79F0"
       Languages:
       - "\u751F\u6DAF\u6A21\u5F0F"
       - Career
@@ -63,7 +63,7 @@ MonoBehaviour:
       Languages_Touch: []
     - Term: EndingMessageNormal_EarnedMoney
       TermType: 0
-      Description: 
+      Description: "\u6E38\u620F\u7ED3\u675F\u65F6\uFF0C\u663E\u793A\u7684\u5185\u5BB9"
       Languages:
       - "\u65F6\u95F4\u5230\u4E86\uFF0C\u4F60\u8D5A\u4E86{[VALUE]}\u5757\u94B1[i2p_Zero]\u65F6\u95F4\u5230\u4E86\uFF0C\u4F46\u4F60\u6CA1\u8D5A\u94B1"
       - Time Up, and you earned {[VALUE]} money[i2p_Zero]Time Up, and you earned
@@ -72,7 +72,7 @@ MonoBehaviour:
       Languages_Touch: []
     - Term: EndingMessageNormal_NoEarnedMoney
       TermType: 0
-      Description: 
+      Description: "\u6E38\u620F\u7ED3\u675F\u65F6\uFF0C\u663E\u793A\u7684\u5185\u5BB9"
       Languages:
       - "\u65F6\u95F4\u5230\u4E86\uFF0C\u4F60\u8D54\u4E86{[VALUE]}\u5757\u94B1[i2p_Zero]\u65F6\u95F4\u5230\u4E86\uFF0C\u4F46\u4F60\u4E5F\u6CA1\u8D54\u94B1"
       - Time Up, and you lost {[VALUE]} money[i2p_Zero]Time Up, but you haven't lost
@@ -81,7 +81,7 @@ MonoBehaviour:
       Languages_Touch: []
     - Term: EndingMessageNormal_NoMoney
       TermType: 0
-      Description: 
+      Description: "\u6E38\u620F\u7ED3\u675F\u65F6\uFF0C\u663E\u793A\u7684\u5185\u5BB9"
       Languages:
       - "\u4F60\u6CA1\u94B1\u4E86\uFF01"
       - You've run out of money.
@@ -93,6 +93,14 @@ MonoBehaviour:
       Languages:
       - "\u672C\u8282\u6559\u7A0B\u7ED3\u675F~"
       - This section of tutorial has concluded
+      Flags: 0000
+      Languages_Touch: []
+    - Term: EndingMessageTutorialFailed
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u672C\u8282\u6559\u7A0B\u672A\u5B8C\u6210"
+      - This section of tutorial is not finished
       Flags: 0000
       Languages_Touch: []
     - Term: GameOver
@@ -133,6 +141,14 @@ MonoBehaviour:
       Languages:
       - "\u6309<b>[\u56DE\u8F66]</b>\u7EE7\u7EED"
       - "\u6309<b>[\u56DE\u8F66]</b>\u7EE7\u7EED"
+      Flags: 0000
+      Languages_Touch: []
+    - Term: NextTutorialFailed
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u518D\u8BD5\u4E00\u4E0B"
+      - Retry
       Flags: 0000
       Languages_Touch: []
     - Term: NextTutorial
@@ -327,22 +343,6 @@ MonoBehaviour:
       - 'Need to do:'
       Flags: 0000
       Languages_Touch: []
-    - Term: EndingMessageTutorialFailed
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u672C\u8282\u6559\u7A0B\u672A\u5B8C\u6210"
-      - This section of tutorial is not finished
-      Flags: 0000
-      Languages_Touch: []
-    - Term: NextTutorialFailed
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u518D\u8BD5\u4E00\u4E0B"
-      - Retry
-      Flags: 0000
-      Languages_Touch: []
     - Term: KMEnterToReturn
       TermType: 0
       Description: 
@@ -375,6 +375,15 @@ MonoBehaviour:
       - Touch HERE to Complete
       Flags: 0000
       Languages_Touch: []
+    - Term: AdvShop_NOHQ_KM
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u53F3Shift:\u968F\u673A\u4F4D\u7F6E\u2014\u2014\uFF08+0\u5143)\\n\u56DE\u8F66\u952E:\u5149\u6807\u4F4D\u7F6E
+        \u2014\u2014\uFF08+X\u5143\uFF09"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
     - Term: AdvShop_KM
       TermType: 0
       Description: 
@@ -396,7 +405,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u5F85\u5B9A\u3002"
+      - "\u5DE6Alt\u53D6\u6D88\u8D2D\u4E70"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -405,15 +414,6 @@ MonoBehaviour:
       Description: 
       Languages:
       - "\u5F85\u5B9A\u3002"
-      - Pending
-      Flags: 0000
-      Languages_Touch: []
-    - Term: AdvShop_NOHQ_KM
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u53F3Shift:\u968F\u673A\u4F4D\u7F6E\u2014\u2014\uFF08+0\u5143)\n\u56DE\u8F66\u952E:\u5149\u6807\u4F4D\u7F6E
-        \u2014\u2014\uFF08+{[VALUE]}\u5143\uFF09"
       - Pending
       Flags: 0000
       Languages_Touch: []

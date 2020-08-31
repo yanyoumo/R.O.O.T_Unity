@@ -353,9 +353,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db9ea7219db6f414c9d469175bad4d19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Localizer: {fileID: 4564808225820130844}
-  LocalizerTwo: {fileID: 2282502658465029981}
-  LocalizerMessageParam: {fileID: 0}
+  AdvShopTextLocalizer: {fileID: 4564808225820130844}
+  AdvShopTextTwoLocalizer: {fileID: 2282502658465029981}
+  LocalizerMessageParam: {fileID: 1319393915}
 --- !u!65 &3350411043807602868
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -397,6 +397,7 @@ GameObject:
   - component: {fileID: 5390711700369701514}
   - component: {fileID: 5390711700369701517}
   - component: {fileID: 4564808225820130844}
+  - component: {fileID: 1319393915}
   m_Layer: 0
   m_Name: AdvShop_Text
   m_TagString: Untagged
@@ -595,3 +596,19 @@ MonoBehaviour:
   mGUI_ShowCallback: 0
   mLocalizeTarget: {fileID: 0}
   mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
+--- !u!114 &1319393915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390711700369701519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9586cfd190ca384a8dd72aa92c86152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Params:
+  - Name: VALUE
+    Value: 3
+  _IsGlobalManager: 0
