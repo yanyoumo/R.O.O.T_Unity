@@ -76,8 +76,8 @@ namespace ROOT
             get
             {
                 //这个东西需要仔仔细细的调整数据。线形也要仔细调整。
-                const float initialRate = 0.7f;
-                const float curveRate = 0.5f;
+                const float initialRate = 0.8f;
+                const float curveRate = 0.75f;
                 var val = (1 - Mathf.Pow(currentLevelAsset.LevelProgress, curveRate)) * initialRate;
                 return Mathf.Clamp01(val);
             }
