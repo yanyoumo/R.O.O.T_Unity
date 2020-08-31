@@ -56,5 +56,5 @@ AdvShop_NOHQ_KM,Text,,右Shift:随机位置——（+0元)\n回车键:光标位�
 AdvShop_KM,Text,,"右Shift:随机位置——（+0元）\n
 方向键:HQ周边位置 ——（+10元）",Pending
 AdvShop_Touch,Text,,待定。,Pending
-AdvShop_2_KM,Text,,待定。,Pending
+AdvShop_2_KM,Text,,左Alt取消购买,Pending
 AdvShop_2_Touch,Text,,待定。,Pending

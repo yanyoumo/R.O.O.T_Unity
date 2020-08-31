@@ -729,8 +729,15 @@ namespace ROOT
             }
 
             movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
-            currentLevelAsset.HintMaster.ShouldShowShopHint = currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
-            if (currentLevelAsset.Cursor.Targeting)
+            if (currentLevelAsset.InputEnabled)
+            {
+                currentLevelAsset.HintMaster.ShouldShowShopHint = currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
+            }
+            else
+            {
+                currentLevelAsset.HintMaster.ShouldShowShopHint = currentLevelAsset.BuyingCursor;
+            }
+            if (currentLevelAsset.BuyingCursor)
             {
                 if (postalPrice != -1)
                 {

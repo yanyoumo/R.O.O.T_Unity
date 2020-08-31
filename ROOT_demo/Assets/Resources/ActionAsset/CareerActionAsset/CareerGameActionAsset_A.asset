@@ -18,8 +18,8 @@ MonoBehaviour:
     type: 3}
   levelType: 0
   GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
-  ExcludedShop: 0
-  ShopExcludedType: 
+  ExcludedShop: 1
+  ShopExcludedType: 0500000002000000
   Actions: []
   TimeLineTokens:
   - TokenID: 0

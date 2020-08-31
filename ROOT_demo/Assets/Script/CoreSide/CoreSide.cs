@@ -237,8 +237,15 @@ namespace ROOT
 
         private float TokenizedCostList(int count)
         {
+            return (float)count;//为了今天测试，还是一个单元1元钱的逻辑。
+        }
+
+        /*private float TokenizedCostList(int count)
+        {
+            //这个数值太不直观了。
             //这个不太对，就是这个Cost的价格除了线性增长外，应该只有轻微的调整，单元价格应该在购买的时候越来越贵。
             //TODO 感觉这种量化的数据后，具体花销是多少一定要打出来。
+            //需要让玩家清楚的知晓成本是多少。
             //0-1-3-5-7-09-11-13-15-17-18-19-20-22-25-27-30-32-34-36+
             //0-1-3-6-8-10-13-16-18-22-23-25-26-29-35-38-45-48-51-54
             Dictionary<int, int> tokenizedVal = new Dictionary<int, int>()
@@ -273,7 +280,7 @@ namespace ROOT
             }
 
             return maxVal;
-        }
+        }*/
 
         private void InitIncomeCost()
         {
