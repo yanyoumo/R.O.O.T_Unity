@@ -274,7 +274,7 @@ namespace ROOT
             //目前这个状态仍然计算垃圾模组的系数和基价。
             //HACK 在基价已经比较便宜的时候，这个算完后可能为0.
             var val= _hardwarePrices[idx] * _priceShopDiscount[idx] * PriceMultiplier(GameBoard.GetUnitCount);
-            return Mathf.Max(val, 1.01f);
+            return Mathf.FloorToInt(Mathf.Max(val, 1.01f));
         }
 
         public bool RequestBuy(int idx,out int postalPrice)
