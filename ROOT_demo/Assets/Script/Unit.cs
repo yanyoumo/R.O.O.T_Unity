@@ -47,8 +47,6 @@ namespace ROOT
             }
         }
 
-        private float StationaryRate => 0.8f;
-
         private GameObject InitUnitShop(CoreType core, SideType[] sides, out float price, int ID)
         {
             var go = Instantiate(UnitTemplate);
@@ -56,12 +54,16 @@ namespace ROOT
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(Vector2Int.zero);
             unit.InitUnit(core, sides);
-            _priceByCore.TryGetValue(core, out var corePrice);
-            price = corePrice + sides.Sum(TryGetPrice);
 
             if (Random.value <= StationaryRate)
             {
                 unit.SetupStationUnit();
+                price = StationaryDiscount(sides);
+            }
+            else
+            {
+                _priceByCore.TryGetValue(core, out var corePrice);
+                price = corePrice + sides.Sum(TryGetPrice);
             }
 
             unit.ShopID = ID;

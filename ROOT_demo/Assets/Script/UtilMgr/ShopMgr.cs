@@ -20,7 +20,7 @@ namespace ROOT
 
         private GameObject[] _items;
         private Unit[] _itemUnit => _items.Select(unit => unit.GetComponentInChildren<Unit>()).ToArray();
-        private float[] _prices;
+        private float[] _hardwarePrices;
 
         private Vector3[] currentPosS;
         private Vector3[] nextPosS;
@@ -153,8 +153,8 @@ namespace ROOT
                         {
                             _items[j] = _items[i];
                             _items[i] = null;
-                            _prices[j] = _prices[i];
-                            _prices[i] = -1;
+                            _hardwarePrices[j] = _hardwarePrices[i];
+                            _hardwarePrices[i] = -1;
                             currentPosS[j] = currentPosS[i];
                             break;
                         }
@@ -176,14 +176,14 @@ namespace ROOT
             for (int i = 0; i < _items.Length; i++)
             {
                 CoreType core = GenerateRandomCore();
-                _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i],i);
+                _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i],i);
             }
         }*/
 
         public void ShopInit()
         {
             _items = new GameObject[4];
-            _prices = new float[_items.Length];
+            _hardwarePrices = new float[_items.Length];
             ItemPriceTexts_TMP = new TextMeshPro[_items.Length];
             currentPosS = new Vector3[_items.Length];
             nextPosS = new Vector3[_items.Length];
@@ -246,13 +246,13 @@ namespace ROOT
                 if (!_items[i])
                 {
                     CoreType core = GenerateRandomCore();
-                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i], i);
+                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i);
                     currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
                 _items[i].gameObject.GetComponentInChildren<Unit>().ShopID = i;
-                ItemPriceTexts_TMP[i].text = Utils.PaddingNum3Digit(_prices[i] * _priceShopDiscount[i]);
+                ItemPriceTexts_TMP[i].text = Utils.PaddingNum3Digit(_hardwarePrices[i] * _priceShopDiscount[i]);
             }
         }
 
@@ -272,7 +272,7 @@ namespace ROOT
         private float UnitPrice(int idx)
         {
             //目前这个状态仍然计算垃圾模组的系数和基价。
-            return _prices[idx] * _priceShopDiscount[idx] * PriceMultiplier(GameBoard.GetUnitCount);
+            return _hardwarePrices[idx] * _priceShopDiscount[idx] * PriceMultiplier(GameBoard.GetUnitCount);
         }
 
         public bool RequestBuy(int idx)
@@ -311,7 +311,7 @@ namespace ROOT
         {
             if (_items[idx])
             {
-                if (CurrentGameStateMgr.SpendShopCurrency(_prices[idx]*_priceShopDiscount[idx]))
+                if (CurrentGameStateMgr.SpendShopCurrency(_hardwarePrices[idx]*_priceShopDiscount[idx]))
                 {
                     _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;
                     GameBoard.DeliverUnitRandomPlace(_items[idx]);
