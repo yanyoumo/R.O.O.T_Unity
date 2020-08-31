@@ -32,9 +32,6 @@ namespace ROOT
             {
                 _instance = this;
             }
-
-            Random.InitState(Mathf.FloorToInt(Time.time));
-            //先写在这儿。
             _gameGlobalStatus = new GameGlobalStatus { CurrentGameStatus = GameStatus.Starting };
         }
         IEnumerator FindLlsAfterLoad(AsyncOperation aOP)

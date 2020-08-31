@@ -164,23 +164,6 @@ namespace ROOT
             }
         }
 
-        /*public void ShopUpdateRandom()
-        {
-            foreach (var item in _items)
-            {
-                if (item)
-                {
-                    Destroy(item.gameObject);
-                }
-            }
-            _items = new GameObject[4];
-            for (int i = 0; i < _items.Length; i++)
-            {
-                CoreType core = GenerateRandomCore();
-                _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i],i);
-            }
-        }*/
-
         public void ShopInit(GameAssets _currentLevelAsset)
         {
             _items = new GameObject[4];
@@ -199,15 +182,6 @@ namespace ROOT
             ShopPreAnimationUpdate();
             ShopPostAnimationUpdate();
         }
-
-        /*public void ShopInitPos()
-        {
-            for (int i = 0; i < _items.Length; i++)
-            {
-                currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
-                nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
-            }
-        }*/
 
         public void ShopPreAnimationUpdate()
         {

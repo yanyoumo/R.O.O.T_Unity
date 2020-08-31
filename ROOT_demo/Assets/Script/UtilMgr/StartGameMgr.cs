@@ -76,6 +76,9 @@ namespace ROOT
 
         void Awake()
         {
+            //这里不能用Time.time，因为Awake和游戏运行时间差距一般很小且固定。所以这里要去调系统时间
+            //RISK 这里可能需要去测试iOS的系统，目前没有测，测了后删掉。
+            Random.InitState(DateTime.UtcNow.Millisecond);
 #if UNITY_EDITOR
             Input.simulateMouseWithTouches = true;
             DetectedScreenRatio = PCSimulateDevice;
@@ -139,12 +142,11 @@ namespace ROOT
 #endif
             Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
             StartCoroutine(LoadLevelMasterSceneAndSetActive());
-
             LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
             LevelActionAsset[] tutorialArray= TutorialActionAssetLib.ActionAssetList;
-            int LevelLengthCount = tutorialArray.Length + CareerGameActionAssetLib.ActionAssetList.Length;
-            LevelLib.Instance.CareerActionAssetList = new LevelActionAsset[LevelLengthCount];
-            for (var i = 0; i < LevelLengthCount; i++)
+            int levelLengthCount = tutorialArray.Length + CareerGameActionAssetLib.ActionAssetList.Length;
+            LevelLib.Instance.CareerActionAssetList = new LevelActionAsset[levelLengthCount];
+            for (var i = 0; i < levelLengthCount; i++)
             {
                 var tmp = i<tutorialArray.Length ? tutorialArray[i] : CareerGameActionAssetLib.ActionAssetList[i- tutorialArray.Length];
                 LevelLib.Instance.CareerActionAssetList[i] = tmp;
