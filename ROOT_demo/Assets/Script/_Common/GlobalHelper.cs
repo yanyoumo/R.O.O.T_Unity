@@ -260,7 +260,7 @@ namespace ROOT
             }
 
             Debug.Assert((Mathf.Abs(totalWeight - 1) < 1e-3) && (lib.Count > 0), "totalWeight=" + totalWeight + "||lib.Count=" + lib.Count);
-            float val = Random.value;
+            var val = Random.value;
             LastRandom = val;
             totalWeight = 0;
             foreach (var keyValuePair in lib)

@@ -29,20 +29,26 @@ namespace ROOT
     {
         private const float ComplexModeRandomRatio = 0.2f;
         public Board GameBoard;
+        //public GameAssets CurrentLevelAsset=>GameBoard.owner;
         public int NextStrikingCount { internal set; get; }
 
-        //TODO 具体的提高Strike数据的逻辑还没定，现在就很简单的每4次加一次。
-        public const int NextStrikeUpCounter = 4;
+        //现在是每NextStrikeUpCounter的StrikeLevel提高，每次StrikeLevel多攻击一发，中间值和偏移值降低。
+        public const int NextStrikeUpCounter = 3;
         public int HasStrikedTimes { private set; get; }//这个是攻击了多少次
         public int HasStrikedCount { private set; get; }//这个是攻击了多少发（可能一次好几发）
-
 
         private WarningDestoryerStatus Status;
 
         public int Counter { private set; get; }
-        public int CounterLoopMedian { private set; get; }
-        public int CounterLoopVariance { private set; get; }
-        public const int MinLoopStep=3;
+        public int StartingMedian { private set; get; }
+        public int StartingVariance { private set; get; }
+
+        private int StrikeLevel => Mathf.RoundToInt(HasStrikedTimes / (float) NextStrikeUpCounter);
+
+        private int LoopMedian => Math.Max(StartingMedian - StrikeLevel, MinLoopStep);
+        private int LoopVariance => Math.Max(StartingVariance - StrikeLevel, 0);
+
+        public const int MinLoopStep=2;
 
         public Vector2Int[] NextIncomes { private set; get; }
 
@@ -67,11 +73,11 @@ namespace ROOT
             //这个函数肯定是异步调的，这里要保证这个东西不乱加。
         }
 
-        public void Init(int counterLoopMedian = 4, int counterLoopVariance = 1)
+        public void Init(int startingMedian = 4, int startingVariance = 1)
         {
             NextStrikingCount = 1;
-            CounterLoopMedian = counterLoopMedian;
-            CounterLoopVariance = counterLoopVariance;
+            StartingMedian = startingMedian;
+            StartingVariance = startingVariance;
 
             HasStrikedTimes = 0;
             HasStrikedCount = 0;
@@ -82,11 +88,15 @@ namespace ROOT
             GenerateNewIncomes();
             Debug.Assert(GameBoard);
         }
-
+        
         private int GenerateNextLoop()
         {
-            int variance=Mathf.FloorToInt(Random.Range(-CounterLoopVariance, CounterLoopVariance));
-            return Mathf.Max(CounterLoopMedian + variance, MinLoopStep);
+            var variance = 0;
+            if (LoopVariance != 0)
+            {
+                variance = Mathf.RoundToInt(Random.Range(-LoopVariance, LoopVariance));
+            }
+            return Mathf.Max(LoopMedian + variance, MinLoopStep);
         }
 
         private Vector2Int ComplexRandomTarget()
@@ -140,8 +150,9 @@ namespace ROOT
                 //Debug.Log("Aiming=" + NextIncome.ToString());
                 foreach (var nextIncome in NextIncomes)
                 {
-                    //GameBoard.TryDeleteCertainUnit(nextIncome, out destoryedCore);
-                    GameBoard.TryDeleteCertainNoStationUnit(nextIncome, out destoryedCore);
+                    //因为商店会销售静态单元，所以又可以摧毁了。
+                    GameBoard.TryDeleteCertainUnit(nextIncome, out destoryedCore);
+                    //GameBoard.TryDeleteCertainNoStationUnit(nextIncome, out destoryedCore);
                 }
                 //得摧毁之后才更新数据。
                 GenerateNewIncomes();
