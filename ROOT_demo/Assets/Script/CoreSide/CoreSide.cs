@@ -71,6 +71,14 @@ namespace ROOT
 
     public sealed partial class ShopMgr : MonoBehaviour
     {
+        private float StationaryRate => (1 - (GameBoard.GetUnitCount / 36.0f))*0.8f;
+
+        private float StationaryDiscount(SideType[] sides)
+        {
+            //静态单元的价格就是端口的数量。
+            return sides.Count(side => side == SideType.Connection);
+        }
+
         private readonly float[] _priceShopDiscount = {0.5f, 0.67f, 0.8f, 1.0f};
 
         public float PriceMultiplier(int unitCount)

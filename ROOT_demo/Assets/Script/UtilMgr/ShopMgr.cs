@@ -163,7 +163,7 @@ namespace ROOT
             }
         }
 
-        public void ShopUpdateRandom()
+        /*public void ShopUpdateRandom()
         {
             foreach (var item in _items)
             {
@@ -178,7 +178,7 @@ namespace ROOT
                 CoreType core = GenerateRandomCore();
                 _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i],i);
             }
-        }
+        }*/
 
         public void ShopInit()
         {
@@ -198,14 +198,14 @@ namespace ROOT
             ShopPostAnimationUpdate();
         }
 
-        public void ShopInitPos()
+        /*public void ShopInitPos()
         {
             for (int i = 0; i < _items.Length; i++)
             {
                 currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                 nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
             }
-        }
+        }*/
 
         public void ShopPreAnimationUpdate()
         {
@@ -233,7 +233,7 @@ namespace ROOT
                 }
             }
         }
-
+        
         public void ShopPostAnimationUpdate()
         {
             for (int i = 0; i < _items.Length; i++)
@@ -272,7 +272,9 @@ namespace ROOT
         private int UnitRetailPrice(int idx)
         {
             //目前这个状态仍然计算垃圾模组的系数和基价。
-            return Mathf.RoundToInt(_hardwarePrices[idx] * _priceShopDiscount[idx] * PriceMultiplier(GameBoard.GetUnitCount));
+            //HACK 在基价已经比较便宜的时候，这个算完后可能为0.
+            var val= _hardwarePrices[idx] * _priceShopDiscount[idx] * PriceMultiplier(GameBoard.GetUnitCount);
+            return Mathf.Max(val, 1.01f);
         }
 
         public bool RequestBuy(int idx,out int postalPrice)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace ROOT
 {
@@ -34,6 +35,17 @@ namespace ROOT
 
     public sealed partial class ShopMgr : MonoBehaviour
     {
+        private float TryGetPrice(SideType side)
+        {
+            if (_priceBySide.TryGetValue(side, out var sidePrice0))
+            {
+                return sidePrice0;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
         private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID)
         {
             var go = Instantiate(UnitTemplate);
@@ -41,12 +53,16 @@ namespace ROOT
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(Vector2Int.zero);
             unit.InitUnit(core, sides);
-            _priceByCore.TryGetValue(core, out float corePrice);
-            _priceBySide.TryGetValue(sides[0], out float sidePrice0);
-            _priceBySide.TryGetValue(sides[1], out float sidePrice1);
-            _priceBySide.TryGetValue(sides[2], out float sidePrice2);
-            _priceBySide.TryGetValue(sides[3], out float sidePrice3);
-            hardwarePrice = corePrice + sidePrice0 + sidePrice1 + sidePrice2 + sidePrice3;
+            if (Random.value <= StationaryRate)
+            {
+                unit.SetupStationUnit();
+                hardwarePrice = StationaryDiscount(sides);
+            }
+            else
+            {
+                _priceByCore.TryGetValue(core, out var corePrice);
+                hardwarePrice = corePrice + sides.Sum(TryGetPrice);
+            }
             unit.ShopID = ID;
             return go;
         }
@@ -82,6 +98,7 @@ namespace ROOT
                 }
             }
         }
+
         public bool SetPendingBuying
         {
             set
@@ -94,10 +111,18 @@ namespace ROOT
                 }
                 else
                 {
-                    AdditionalClampMesh.enabled = false;
+                    if (!StationUnit)
+                    {
+                        AdditionalClampMesh.enabled = false;
+                    }
+                    else
+                    {
+                        AdditionalClampMesh.material = ImmovableMat;
+                    }
                 }
             }
         }
+
         protected string UnitName { get; }
 
         public CoreType UnitCore { get; protected set; }
@@ -133,6 +158,7 @@ namespace ROOT
 
         protected Unit()
         {
+            //RISK Mono的构造器有用吗？但是懒得测，也不想删掉。
             UnitName = "";
         }
 
