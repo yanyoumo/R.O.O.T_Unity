@@ -14,6 +14,7 @@ namespace ROOT
     public sealed partial class ShopMgr:MonoBehaviour
     {
         public GameObject UnitTemplate;
+        private GameAssets currentLevelAsset;
 
         public Board GameBoard;
         public GameStateMgr CurrentGameStateMgr;
@@ -180,13 +181,14 @@ namespace ROOT
             }
         }*/
 
-        public void ShopInit()
+        public void ShopInit(GameAssets _currentLevelAsset)
         {
             _items = new GameObject[4];
             _hardwarePrices = new float[_items.Length];
             ItemPriceTexts_TMP = new TextMeshPro[_items.Length];
             currentPosS = new Vector3[_items.Length];
             nextPosS = new Vector3[_items.Length];
+            currentLevelAsset = _currentLevelAsset;
         }
 
         public void ShopStart()
@@ -271,20 +273,19 @@ namespace ROOT
         /// <returns>除了邮费的总价</returns>
         private int UnitRetailPrice(int idx)
         {
-            //目前这个状态仍然计算垃圾模组的系数和基价。
-            //HACK 在基价已经比较便宜的时候，这个算完后可能为0.
-            var val= _hardwarePrices[idx] * _priceShopDiscount[idx] * PriceMultiplier(GameBoard.GetUnitCount);
-            return Mathf.FloorToInt(Mathf.Max(val, 1.01f));
+            //现在使用时间节奏调整价格。
+            var val = Mathf.FloorToInt(_hardwarePrices[idx] * _priceShopDiscount[idx] * PriceMultiplier(currentLevelAsset.LevelProgress));
+            //在基价已经比较便宜的时候，这个算完后可能为0.
+            return Math.Max(val, 1);
         }
 
-        public bool RequestBuy(int idx,out int postalPrice)
+        public bool RequestBuy(int idx, out int postalPrice)
         {
             postalPrice = -1;
             if (_items[idx])
             {
                 var totalPrice = UnitRetailPrice(idx);
-                //TODO 邮费也应该越来越贵。
-                CalculatePostalPrice(totalPrice, out postalPrice);
+                CalculatePostalPrice(totalPrice,currentLevelAsset.LevelProgress, out postalPrice);
                 if (CurrentGameStateMgr.GetCurrency() >= totalPrice)
                 {
                     _items[idx].GetComponentInChildren<Unit>().SetPendingBuying = true;
@@ -294,17 +295,24 @@ namespace ROOT
             return false;
         }
 
-        public bool BuyToPos(int idx, Vector2Int pos)
+        public bool BuyToPos(int idx, Vector2Int pos,bool crash=false)
         {
             if (_items[idx])
             {
                 var unitPrice = UnitRetailPrice(idx);
-                var totalPrice = CalculatePostalPrice(unitPrice, out int postalPrice);
+                var totalPrice = CalculatePostalPrice(unitPrice, currentLevelAsset.LevelProgress, out int postalPrice);
 
                 if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
                 {
                     _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;
-                    GameBoard.DeliverUnitAssignedPlace(_items[idx], pos);
+                    if (crash)
+                    {
+                        GameBoard.DeliverUnitAssignedPlaceCrash(_items[idx], pos);
+                    }
+                    else
+                    {
+                        GameBoard.DeliverUnitAssignedPlace(_items[idx], pos);
+                    }
                     _items[idx] = null;
                     return true;
                 }

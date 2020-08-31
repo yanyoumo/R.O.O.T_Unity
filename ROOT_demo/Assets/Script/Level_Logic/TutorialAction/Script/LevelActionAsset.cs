@@ -111,5 +111,24 @@ namespace ROOT
         public int TargetCount;
 
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
+
+        /// <summary>
+        /// 获得改时间线上End前玩家可以玩的步长。
+        /// </summary>
+        [HideInInspector]
+        public int PlayableCount
+        {
+            get
+            {
+                if (TimeLineTokens.Any(token => token.type == TimeLineTokenType.Ending))
+                {
+                    return TimeLineTokens.Where(token => token.type == TimeLineTokenType.Ending).ToArray()[0].Range.x;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
     }
 }
