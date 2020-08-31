@@ -163,7 +163,7 @@ namespace ROOT
             }
         }
 
-        public void ShopUpdateRandom()
+        /*public void ShopUpdateRandom()
         {
             foreach (var item in _items)
             {
@@ -178,7 +178,7 @@ namespace ROOT
                 CoreType core = GenerateRandomCore();
                 _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _prices[i],i);
             }
-        }
+        }*/
 
         public void ShopInit()
         {
@@ -198,14 +198,14 @@ namespace ROOT
             ShopPostAnimationUpdate();
         }
 
-        public void ShopInitPos()
+        /*public void ShopInitPos()
         {
             for (int i = 0; i < _items.Length; i++)
             {
                 currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                 nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
             }
-        }
+        }*/
 
         public void ShopPreAnimationUpdate()
         {
@@ -233,7 +233,7 @@ namespace ROOT
                 }
             }
         }
-
+        
         public void ShopPostAnimationUpdate()
         {
             for (int i = 0; i < _items.Length; i++)
