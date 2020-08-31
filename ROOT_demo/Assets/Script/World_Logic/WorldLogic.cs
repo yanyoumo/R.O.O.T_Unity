@@ -387,14 +387,9 @@ namespace ROOT
                     ctrlPack.SetFlag(ControllingCommand.BuyCanceled);
                 }
 
-                if (WorldController.GetCommandDir(out ctrlPack.CommandDir))
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
                 {
-                    Unit[] HQUnits = currentLevelAsset.GameBoard.FindUnitWithCoreType(CoreType.HQ);
-                    if (HQUnits.Length > 0)
-                    {
-                        ctrlPack.NextPos = HQUnits[0].GetCoord(ctrlPack.CommandDir);
-                        ctrlPack.SetFlag(ControllingCommand.BuyConfirm);
-                    }
+                    ctrlPack.SetFlag(ControllingCommand.BuyConfirm);
                 }
 
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
@@ -450,8 +445,9 @@ namespace ROOT
         }
 
         private static void UpdateShopBuy(GameAssets currentLevelAsset, ShopMgr shopMgr, in ControllingPack ctrlPack,
-            ref bool boughtOnce)
+            ref bool boughtOnce,out int postalPrice)
         {
+            postalPrice = -1;
             if (!boughtOnce)
             {
                 var successBought = false;
@@ -466,7 +462,7 @@ namespace ROOT
                     if (ctrlPack.HasFlag(ControllingCommand.Buy))
                     {
                         //商店系统要大改，首先先选择一个单元，先判断能不能买。
-                        currentLevelAsset.BuyingCursor = shopMgr.RequestBuy(ctrlPack.ShopID);
+                        currentLevelAsset.BuyingCursor = shopMgr.RequestBuy(ctrlPack.ShopID,out postalPrice);
                         currentLevelAsset.BuyingID = ctrlPack.ShopID;
                     }
                 }
@@ -484,9 +480,9 @@ namespace ROOT
                     else if (ctrlPack.HasFlag(ControllingCommand.BuyConfirm))
                     {
                         //试图本地购买。
-                        if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos))
+                        if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.CurrentPos))
                         {
-                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.NextPos);
+                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.CurrentPos);
                             if (successBought)
                             {
                                 currentLevelAsset.BuyingCursor = false;
@@ -637,7 +633,8 @@ namespace ROOT
             {
                 ctrlPack.MaskFlag(ControllingCommand.BuyRandom
                                   | ControllingCommand.BuyCanceled
-                                  | ControllingCommand.BuyConfirm);
+                                  | ControllingCommand.BuyConfirm
+                                  | ControllingCommand.Move);
             }
 
             return ctrlPack;
@@ -701,6 +698,7 @@ namespace ROOT
             movedTile = false;
             movedCursor = false;
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+            var postalPrice = -1;
 
             if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
 
@@ -710,7 +708,7 @@ namespace ROOT
             {
                 if (currentLevelAsset.ShopEnabled)
                 {
-                    UpdateShopBuy(currentLevelAsset, currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset._boughtOnce);
+                    UpdateShopBuy(currentLevelAsset, currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset._boughtOnce,out postalPrice);
                 }
 
                 UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
@@ -722,6 +720,13 @@ namespace ROOT
 
             movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
             currentLevelAsset.HintMaster.ShouldShowShopHint = currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
+            if (currentLevelAsset.Cursor.Targeting)
+            {
+                if (postalPrice != -1)
+                {
+                    currentLevelAsset.HintMaster.ShopHintPostalPrice = postalPrice;
+                }
+            }
 
             if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
             if (currentLevelAsset.CycleEnabled) UpdateCycle(currentLevelAsset, movedTile);

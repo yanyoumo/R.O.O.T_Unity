@@ -276,7 +276,7 @@ namespace ROOT
 
         private float CalculateTokenizedCost()
         {
-            return TokenizedCostList(m_Board.GetUnitCount);
+            return TokenizedCostList(m_Board.GetNonPCBUnitCount);
         }
 
         //这个返回的也是正数。

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using I2.Loc;
 using UnityEngine;
 
 namespace ROOT
@@ -19,5 +20,12 @@ namespace ROOT
         //4、在脚本中Start部分，根据是否使用触摸屏切换对应Localizer的Term
         //   4a:AdvShop_Text对应为：AdvShop_KM和AdvShop_Touch
         //   4b:AdvShop_Text_2对应为：AdvShop_2_KM和AdvShop_2_Touch
+
+        public Localize Localizer;
+        public LocalizationParamsManager LocalizerMessageParam;
+        public int PostalPrice
+        {
+            set => LocalizerMessageParam.SetParameterValue("VALUE", value + "");
+        }
     }
 }

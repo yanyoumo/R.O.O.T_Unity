@@ -46,7 +46,6 @@ namespace ROOT
                 throw new ArgumentOutOfRangeException();
             }
         }
-
         private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID)
         {
             var go = Instantiate(UnitTemplate);
@@ -54,7 +53,6 @@ namespace ROOT
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(Vector2Int.zero);
             unit.InitUnit(core, sides);
-
             if (Random.value <= StationaryRate)
             {
                 unit.SetupStationUnit();
@@ -65,7 +63,6 @@ namespace ROOT
                 _priceByCore.TryGetValue(core, out var corePrice);
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
-
             unit.ShopID = ID;
             return go;
         }

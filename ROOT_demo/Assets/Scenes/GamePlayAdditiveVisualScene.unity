@@ -4540,6 +4540,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1060670243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d96a6c3ea7d28744aacc367115a71af5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mTarget: {fileID: 1359142379}
 --- !u!1 &1096935492
 GameObject:
   m_ObjectHideFlags: 0
@@ -5585,6 +5598,8 @@ GameObject:
   - component: {fileID: 1359142378}
   - component: {fileID: 1359142380}
   - component: {fileID: 1359142379}
+  - component: {fileID: 1359142381}
+  - component: {fileID: 1359142382}
   m_Layer: 0
   m_Name: AdvShop_Text
   m_TagString: Untagged
@@ -5631,7 +5646,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u53F3Shift:\u968F\u673A\u4F4D\u7F6E\n\u65B9\u5411\u952E:HQ\u5468\u8FB9\u4F4D\u7F6E "
+  m_text: "\u53F3Shift:\u968F\u673A\u4F4D\u7F6E\u2014\u2014\uFF08+0\u5143)\n\u56DE\u8F66\u952E:\u5149\u6807\u4F4D\u7F6E\u2014\u2014\uFF08+10\u5143\uFF09"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -5744,6 +5759,60 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1359142381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359142377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mTerm: AdvShop_NOHQ_KM
+  mTermSecondary: 
+  PrimaryTermModifier: 0
+  SecondaryTermModifier: 0
+  TermPrefix: 
+  TermSuffix: 
+  LocalizeOnAwake: 1
+  IgnoreRTL: 0
+  MaxCharactersInRTL: 0
+  IgnoreNumbersInRTL: 1
+  CorrectAlignmentForRTL: 1
+  AddSpacesToJoinedLanguages: 0
+  AllowLocalizedParameters: 1
+  TranslatedObjects: []
+  LocalizeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  AlwaysForceLocalize: 0
+  LocalizeCallBack:
+    Target: {fileID: 0}
+    MethodName: 
+  mGUI_ShowReferences: 0
+  mGUI_ShowTems: 1
+  mGUI_ShowCallback: 0
+  mLocalizeTarget: {fileID: 1060670243}
+  mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_Label
+--- !u!114 &1359142382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359142377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9586cfd190ca384a8dd72aa92c86152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Params:
+  - Name: VALUE
+    Value: 10
+  _IsGlobalManager: 0
 --- !u!1 &1368177025
 GameObject:
   m_ObjectHideFlags: 0
@@ -7614,6 +7683,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db9ea7219db6f414c9d469175bad4d19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Localizer: {fileID: 1359142381}
+  LocalizerMessageParam: {fileID: 1359142382}
 --- !u!1 &1970709874
 GameObject:
   m_ObjectHideFlags: 0

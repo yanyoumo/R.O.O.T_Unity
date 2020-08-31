@@ -252,7 +252,7 @@ namespace ROOT
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
                 _items[i].gameObject.GetComponentInChildren<Unit>().ShopID = i;
-                ItemPriceTexts_TMP[i].text = Utils.PaddingNum3Digit(_hardwarePrices[i] * _priceShopDiscount[i]);
+                ItemPriceTexts_TMP[i].text = Utils.PaddingNum3Digit(UnitRetailPrice(i));
             }
         }
 
@@ -269,7 +269,7 @@ namespace ROOT
         /// </summary>
         /// <param name="idx">商店ID</param>
         /// <returns>除了邮费的总价</returns>
-        private float UnitPrice(int idx)
+        private int UnitRetailPrice(int idx)
         {
             //目前这个状态仍然计算垃圾模组的系数和基价。
             //HACK 在基价已经比较便宜的时候，这个算完后可能为0.
@@ -277,11 +277,14 @@ namespace ROOT
             return Mathf.Max(val, 1.01f);
         }
 
-        public bool RequestBuy(int idx)
+        public bool RequestBuy(int idx,out int postalPrice)
         {
+            postalPrice = -1;
             if (_items[idx])
             {
-                var totalPrice = UnitPrice(idx);
+                var totalPrice = UnitRetailPrice(idx);
+                //TODO 邮费也应该越来越贵。
+                CalculatePostalPrice(totalPrice, out postalPrice);
                 if (CurrentGameStateMgr.GetCurrency() >= totalPrice)
                 {
                     _items[idx].GetComponentInChildren<Unit>().SetPendingBuying = true;
@@ -295,8 +298,8 @@ namespace ROOT
         {
             if (_items[idx])
             {
-                var unitPrice = UnitPrice(idx);
-                var totalPrice = CalculateTotalPrice(unitPrice, out float postalPrice);
+                var unitPrice = UnitRetailPrice(idx);
+                var totalPrice = CalculatePostalPrice(unitPrice, out int postalPrice);
 
                 if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
                 {
