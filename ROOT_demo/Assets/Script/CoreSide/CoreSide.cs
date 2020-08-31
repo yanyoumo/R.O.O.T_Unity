@@ -71,7 +71,17 @@ namespace ROOT
 
     public sealed partial class ShopMgr : MonoBehaviour
     {
-        private float StationaryRate => (1 - (GameBoard.GetUnitCount / 36.0f))*0.8f;
+        private float StationaryRate
+        {
+            get
+            {
+                //这个东西需要仔仔细细的调整数据。线形也要仔细调整。
+                const float initialRate = 0.7f;
+                const float curveRate = 0.5f;
+                var val = (1 - Mathf.Pow(currentLevelAsset.LevelProgress, curveRate)) * initialRate;
+                return Mathf.Clamp01(val);
+            }
+        }
 
         private float StationaryDiscount(SideType[] sides)
         {
@@ -81,10 +91,10 @@ namespace ROOT
 
         private readonly float[] _priceShopDiscount = {0.5f, 0.67f, 0.8f, 1.0f};
 
-        public float PriceMultiplier(int unitCount)
+        public float PriceMultiplier(float gameProgress)
         {
-            float multiplierDelPerUnit = 3.5f / 36.0f;
-            return multiplierDelPerUnit * unitCount + 1.0f;
+            const float maxMultiplier = 3.5f;
+            return maxMultiplier * gameProgress + 1.0f;
         }
 
         public void InitPrice()
@@ -204,9 +214,17 @@ namespace ROOT
             #endregion
         }
 
-        public int CalculatePostalPrice(int unitPrice, out int postalPrice)
+        private float PostalMultiplier(float gameProgress)
         {
-            var totalPrice = Mathf.FloorToInt(unitPrice * 1.6f);
+            const float baseMul = 1.6f;
+            const float maxMul = 2.2f;
+            return Mathf.Lerp(baseMul, maxMul, gameProgress);
+        }
+
+        public int CalculatePostalPrice(int unitPrice,float gameProgress, out int postalPrice)
+        {
+            //邮费也应该越来越贵。
+            var totalPrice = Mathf.FloorToInt(unitPrice * PostalMultiplier(gameProgress));
             postalPrice = totalPrice - unitPrice;
             return totalPrice;
         }
@@ -248,7 +266,7 @@ namespace ROOT
             };
             Debug.Assert(count >= 0);
             var maxKey = tokenizedVal.Keys.Where(val => (val >= count)).Min();
-            tokenizedVal.TryGetValue(maxKey, out int maxVal);
+            tokenizedVal.TryGetValue(maxKey, out var maxVal);
             if (tokenizedVal.All(val => (val.Value < count)))
             {
                 return tokenizedVal.Values.Max();

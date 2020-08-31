@@ -179,6 +179,16 @@ namespace ROOT
             return res.ToArray();
         }
 
+        public bool DeliverUnitAssignedPlaceCrash(GameObject unit, Vector2Int AssignedPos)
+        {
+            if (!CheckBoardPosValidAndEmpty(AssignedPos))
+            {
+                TryDeleteCertainUnit(AssignedPos);
+            }
+
+            return DeliverUnitAssignedPlace(unit, AssignedPos);
+        }
+
         public bool DeliverUnitAssignedPlace(GameObject unit, Vector2Int AssignedPos)
         {
             if (CheckBoardPosValidAndEmpty(AssignedPos))
@@ -222,6 +232,11 @@ namespace ROOT
                 var mUnit = unit.Value.GetComponentInChildren<Unit>();
                 mUnit.UpdateNeighboringDataAndSideMesh();
             }
+        }
+
+        public bool TryDeleteCertainUnit(Vector2Int pos)
+        {
+            return TryDeleteCertainUnit(pos, out var destoryedCore);
         }
 
         public bool TryDeleteCertainUnit(Vector2Int pos, out CoreType? destoryedCore)

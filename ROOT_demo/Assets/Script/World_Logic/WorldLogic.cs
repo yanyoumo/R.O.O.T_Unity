@@ -444,7 +444,9 @@ namespace ROOT
             return newPos;
         }
 
-        private static void UpdateShopBuy(GameAssets currentLevelAsset, ShopMgr shopMgr, in ControllingPack ctrlPack,
+        private static void UpdateShopBuy(
+            GameAssets currentLevelAsset, ShopMgr shopMgr, 
+            in ControllingPack ctrlPack, bool crashable,
             ref bool boughtOnce,out int postalPrice)
         {
             postalPrice = -1;
@@ -462,7 +464,7 @@ namespace ROOT
                     if (ctrlPack.HasFlag(ControllingCommand.Buy))
                     {
                         //商店系统要大改，首先先选择一个单元，先判断能不能买。
-                        currentLevelAsset.BuyingCursor = shopMgr.RequestBuy(ctrlPack.ShopID,out postalPrice);
+                        currentLevelAsset.BuyingCursor = shopMgr.RequestBuy(ctrlPack.ShopID, out postalPrice);
                         currentLevelAsset.BuyingID = ctrlPack.ShopID;
                     }
                 }
@@ -480,9 +482,13 @@ namespace ROOT
                     else if (ctrlPack.HasFlag(ControllingCommand.BuyConfirm))
                     {
                         //试图本地购买。
-                        if (currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.CurrentPos))
+                        var requirement = crashable ? 
+                                currentLevelAsset.GameBoard.CheckBoardPosValid(ctrlPack.CurrentPos) :
+                                currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.CurrentPos);
+
+                        if (requirement)
                         {
-                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.CurrentPos);
+                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.CurrentPos, crashable);
                             if (successBought)
                             {
                                 currentLevelAsset.BuyingCursor = false;
@@ -498,6 +504,7 @@ namespace ROOT
                         currentLevelAsset.BuyingID = -1;
                     }
                 }
+
                 boughtOnce = successBought;
             }
         }
@@ -605,7 +612,8 @@ namespace ROOT
             }
         }
 
-        internal static ControllingPack UpdateInputScheme(GameAssets currentLevelAsset, out bool movedTile,
+        internal static ControllingPack UpdateInputScheme(
+            GameAssets currentLevelAsset, out bool movedTile,
             out bool movedCursor, ref bool boughtOnce)
         {
             movedTile = false;
@@ -697,6 +705,7 @@ namespace ROOT
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = false;
             movedCursor = false;
+            var crashable = true;
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             var postalPrice = -1;
 
@@ -708,7 +717,8 @@ namespace ROOT
             {
                 if (currentLevelAsset.ShopEnabled)
                 {
-                    UpdateShopBuy(currentLevelAsset, currentLevelAsset.ShopMgr, in ctrlPack, ref currentLevelAsset._boughtOnce,out postalPrice);
+                    UpdateShopBuy(currentLevelAsset, currentLevelAsset.ShopMgr, in ctrlPack, crashable,
+                        ref currentLevelAsset._boughtOnce, out postalPrice);
                 }
 
                 UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);

@@ -83,7 +83,7 @@ namespace ROOT
         private float UnitLengthScaling = 3.0f;
         public readonly int SubDivision = 5;
         public int MarkerCount;
-        public int TotalCount;
+        private int TotalCount;
 
         public int StepCount => _currentGameAsset.StepCount;
 

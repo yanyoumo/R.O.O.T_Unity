@@ -276,6 +276,7 @@ namespace ROOT
 
         private float CalculateTokenizedCost()
         {
+            //HACK 先把Progress从0~1映射到0~36
             return TokenizedCostList(m_Board.GetNonPCBUnitCount);
         }
 
