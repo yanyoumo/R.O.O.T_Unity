@@ -16,7 +16,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: 6a65727d6cebf18419b06ffd46b11c0c, type: 3}
   LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
     type: 3}
-  levelType: 0
+  levelType: 2
   GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
   ExcludedShop: 1
   ShopExcludedType: 0500000002000000

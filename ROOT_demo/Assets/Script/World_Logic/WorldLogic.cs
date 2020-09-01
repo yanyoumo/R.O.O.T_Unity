@@ -661,10 +661,13 @@ namespace ROOT
             cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
             currentLevelAsset.DeltaCurrency = inCome - cost;
 
-            if ((inCome != lastInCome)|| (cost != lastCost))
+            if (currentLevelAsset.CostLine != null)
             {
-                currentLevelAsset.CostLine.Income = Mathf.FloorToInt(inCome);
-                currentLevelAsset.CostLine.Cost = Mathf.FloorToInt(cost);
+                if ((inCome != lastInCome) || (cost != lastCost))
+                {
+                    currentLevelAsset.CostLine.Income = Mathf.FloorToInt(inCome);
+                    currentLevelAsset.CostLine.Cost = Mathf.FloorToInt(cost);
+                }
             }
 
             lastInCome = inCome;
