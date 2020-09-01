@@ -195,6 +195,7 @@ namespace ROOT
         //更新触摸屏的控制逻辑，需要和键盘版同步。（先熟悉代码和特性，具体控制逻辑待定
         internal static void GetCommand_Touch(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
+            //滑动这边，滑动过长会失效，这个也是个很神奇的bug，有空要看看
             //商店的新版流程正在弄。
             //先特么只考虑一个手指的情况。
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
