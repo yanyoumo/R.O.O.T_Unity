@@ -648,17 +648,34 @@ namespace ROOT
             return ctrlPack;
         }
 
+        //TEMP 每次修改这两个值的时候才应该改一次。
+        private static int lastInCome = -1;
+        private static int lastCost = -1;
+
         internal static void UpdateBoardData(GameAssets currentLevelAsset)
         {
-            currentLevelAsset.DeltaCurrency = 0.0f;
-            currentLevelAsset.DeltaCurrency += currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A);
-            currentLevelAsset.DeltaCurrency += currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B);
-            currentLevelAsset.DeltaCurrency -= currentLevelAsset.BoardDataCollector.CalculateCost();
+            int inCome = 0;
+            int cost = 0;
+            inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
+            inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
+            cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
+            currentLevelAsset.DeltaCurrency = inCome - cost;
+
+            if ((inCome != lastInCome)|| (cost != lastCost))
+            {
+                currentLevelAsset.CostLine.Income = Mathf.FloorToInt(inCome);
+                currentLevelAsset.CostLine.Cost = Mathf.FloorToInt(cost);
+            }
+
+            lastInCome = inCome;
+            lastCost = cost;
+
 
             if (currentLevelAsset.LCDCurrencyEnabled)
             {
                 currentLevelAsset.DataScreen.SetLcd(currentLevelAsset.GameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
-                currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(), RowEnum.CurrentMoney);
+                currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(),
+                    RowEnum.CurrentMoney);
             }
 
             if (currentLevelAsset.LCDDeltaCurrencyEnabled)

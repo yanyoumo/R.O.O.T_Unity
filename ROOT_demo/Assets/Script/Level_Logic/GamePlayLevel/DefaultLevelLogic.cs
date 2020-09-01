@@ -48,6 +48,7 @@ namespace ROOT
         public DataScreen DataScreen;
         public HintMaster HintMaster;
         public TimeLine TimeLine;
+        public CostLine CostLine;
         public CoreType? DestoryedCoreType;
 
         internal GameObject GameCursor;
@@ -220,6 +221,7 @@ namespace ROOT
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
             LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
+            LevelAsset.CostLine = FindObjectOfType<CostLine>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
