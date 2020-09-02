@@ -109,6 +109,10 @@ namespace ROOT
         [ShowIf("levelType", LevelType.Career)]
         [Range(0, 100)]
         public int TargetCount;
+        [ShowIf("levelType", LevelType.Career)]
+        [ShowInInspector]
+        [SerializeField]
+        public Vector2Int[] StationaryRateList;
 
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
 

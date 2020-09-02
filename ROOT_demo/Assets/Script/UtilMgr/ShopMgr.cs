@@ -13,6 +13,11 @@ namespace ROOT
 {
     public sealed partial class ShopMgr:MonoBehaviour
     {
+        private int totalCount = 0;
+        private int countOffset = 0;
+        private int localOffset => (totalCount - countOffset);
+        private bool[] stationaryArray;
+        private bool nomoreStationary = false;
         public GameObject UnitTemplate;
         private GameAssets currentLevelAsset;
 
@@ -178,6 +183,8 @@ namespace ROOT
         {
             InitPrice();
             InitSideCoreWeight();
+
+            totalCount = 0;
 
             ShopPreAnimationUpdate();
             ShopPostAnimationUpdate();

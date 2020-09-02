@@ -46,6 +46,60 @@ namespace ROOT
                 throw new ArgumentOutOfRangeException();
             }
         }
+        /// <summary>
+        /// 生成新的静态单元Flag的Array。
+        /// </summary>
+        /// <returns>来提示是否还有新的Array</returns>
+        private bool GenerateStationaryArray()
+        {
+            var srList = currentLevelAsset.ActionAsset.StationaryRateList ?? DefaultStationaryRateList;
+            if (StationaryRateListLastIndex>= srList.Length)
+            {
+                return false;
+            }
+            var vec = srList[StationaryRateListLastIndex];
+            if (vec.x == 0 && vec.y == 0)
+            {
+                return false;
+            }
+
+            stationaryArray = new bool[vec.x];
+            for (var i = 0; i < stationaryArray.Length; i++)
+            {
+                stationaryArray[i] = (i < vec.y);
+            }
+
+            Utils.Shuffle(stationaryArray);
+            StationaryRateListLastIndex++;
+            return true;
+        }
+        /// <summary>
+        /// 根据现有的状态来决定下一个单元是否应该是静态的。
+        /// </summary>
+        private bool ShouldStationary
+        {
+            get
+            {
+                var forceNewArray = false;
+                if (nomoreStationary) return false;
+                if (stationaryArray != null && localOffset == stationaryArray.Length)
+                {
+                    countOffset = totalCount;
+                    forceNewArray = true;
+                }
+
+                if (stationaryArray == null || forceNewArray)
+                {
+                    if (!GenerateStationaryArray())
+                    {
+                        nomoreStationary = true;
+                        return false;
+                    }
+                }
+                return stationaryArray[localOffset];
+            }
+        }
+
         private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID)
         {
             var go = Instantiate(UnitTemplate);
@@ -53,7 +107,7 @@ namespace ROOT
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(Vector2Int.zero);
             unit.InitUnit(core, sides);
-            if (Random.value <= StationaryRate)
+            if (ShouldStationary)
             {
                 unit.SetupStationUnit();
                 hardwarePrice = StationaryDiscount(sides);
@@ -64,6 +118,7 @@ namespace ROOT
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
             unit.ShopID = ID;
+            totalCount++;
             return go;
         }
     }
