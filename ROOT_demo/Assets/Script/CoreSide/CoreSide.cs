@@ -113,7 +113,7 @@ namespace ROOT
 
         public float PriceMultiplier(float gameProgress)
         {
-            const float maxMultiplier = 3.5f;
+            const float maxMultiplier = 7.0f;//这个目前来看要十分高，可能到高达两位数。
             return maxMultiplier * gameProgress + 1.0f;
         }
 

@@ -123,7 +123,6 @@ namespace ROOT
         }
     }
 
-    //TODO Digong Default的工作，熟悉Unit这个类的代码，未来工作会围绕这个类展开。
     public partial class Unit : MoveableBase
     {
         public Material BuyingMat;
@@ -230,7 +229,7 @@ namespace ROOT
             _coreMatNameDic.Add(CoreType.HQ, GlobalResourcePath.UNIT_HQ_MAT_NAME);//TODO HQ的核心还没有实际材质
         }
 
-        public RotationDirection SignalFromDir;
+        public RotationDirection SignalFromDir; 
         public bool Visited { get; set; } //for scoring purpose
         public int ServerDepth;//for scoring purpose
         public int HardDiskVal; //for scoring purpose
@@ -268,10 +267,9 @@ namespace ROOT
         private void InitConnector(Connector connector, SideType sideType)
         {
             connector.UseScrVersion = (UnitCoreGenre == CoreGenre.Source);
-            //connector.UseScrVersion = true;
             connector.gameObject.SetActive(sideType == SideType.Connection);
-            connector.NormalSignalVal = 3;
-            connector.NetworkSignalVal = 5;
+            connector.NormalSignalVal = 0;
+            connector.NetworkSignalVal = 0;
         }
 
         //North,South,West,East

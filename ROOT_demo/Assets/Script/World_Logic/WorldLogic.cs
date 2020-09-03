@@ -191,7 +191,6 @@ namespace ROOT
             }
         }
 
-        //TODO Digong 熟悉这个函数的代码，未来工作会围绕触摸屏的适配展开。
         //更新触摸屏的控制逻辑，需要和键盘版同步。（先熟悉代码和特性，具体控制逻辑待定
         internal static void GetCommand_Touch(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {

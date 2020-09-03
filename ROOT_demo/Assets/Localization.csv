@@ -52,9 +52,9 @@ KMEnterToReturn,Text,,"按""回车""以返回","Press ""Enter"" to Return"
 KMEnterToComplete,Text,,"按""回车""以完成任务","Press ""Enter"" to Complete"
 TouchToReturn,Text,,按这里以返回,Touch HERE to Return
 TouchToComplete,Text,,按这里以完成任务,Touch HERE to Complete
-AdvShop_NOHQ_KM,Text,,右Shift:随机位置——（+0元)\n回车键:光标位置 ——（+{[VALUE]}元）,Pending
-AdvShop_KM,Text,,"右Shift:随机位置——（+0元）\n
-方向键:HQ周边位置 ——（+10元）",Pending
-AdvShop_Touch,Text,,待定。,Pending
+AdvShop_KM,Text,,"右Shift:随机位置——（+0元)
+回车键:光标位置 ——（+{[VALUE]}元）",Pending
+AdvShop_Touch,Text,,"按这里:随机位置——（+0元)
+点击棋盘位置:棋盘位置 ——（+{[VALUE]}元）",Pending
 AdvShop_2_KM,Text,,左Alt取消购买,Pending
-AdvShop_2_Touch,Text,,待定。,Pending
+AdvShop_2_Touch,Text,,按这里取消购买,Pending
