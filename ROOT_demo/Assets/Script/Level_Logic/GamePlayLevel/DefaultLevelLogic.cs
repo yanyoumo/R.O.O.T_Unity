@@ -60,11 +60,6 @@ namespace ROOT
         internal IWarningDestoryer WarningDestoryer;
         internal GameObject[] WarningGo;
 
-        internal TextMeshPro Item1PriceTmp;
-        internal TextMeshPro Item2PriceTmp;
-        internal TextMeshPro Item3PriceTmp;
-        internal TextMeshPro Item4PriceTmp;
-
         public float DeltaCurrency { get; internal set; }
 
         //CoreFunctionFlag
@@ -222,6 +217,7 @@ namespace ROOT
             LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
             LevelAsset.CostLine = FindObjectOfType<CostLine>();
+            LevelAsset.ShopMgr = FindObjectOfType<ShopMgr>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
@@ -231,34 +227,10 @@ namespace ROOT
         {
             bool res = true;
             res &= (LevelAsset.DataScreen != null);
-            res &= (LevelAsset.Item1PriceTmp != null);
-            res &= (LevelAsset.Item2PriceTmp != null);
-            res &= (LevelAsset.Item3PriceTmp != null);
-            res &= (LevelAsset.Item4PriceTmp != null);
             return res;
         }
         public virtual void PopulateArtLevelReference()
         {
-            var tempT = LevelAsset.ItemPriceRoot.GetComponentsInChildren<TextMeshPro>();
-            foreach (var text in tempT)
-            {
-                if (text.gameObject.name == "UnitAPrice_1")
-                {
-                    LevelAsset.Item1PriceTmp = text;
-                }
-                if (text.gameObject.name == "UnitAPrice_2")
-                {
-                    LevelAsset.Item2PriceTmp = text;
-                }
-                if (text.gameObject.name == "UnitAPrice_3")
-                {
-                    LevelAsset.Item3PriceTmp = text;
-                }
-                if (text.gameObject.name == "UnitAPrice_4")
-                {
-                    LevelAsset.Item4PriceTmp = text;
-                }
-            }
             ReferenceOk = CheckReference();
         }
         protected virtual void StartShop()
@@ -488,10 +460,7 @@ namespace ROOT
         }
         protected void InitShop()
         {
-            LevelAsset.ShopMgr = gameObject.AddComponent<ShopMgr>();
-            LevelAsset.ShopMgr.UnitTemplate = LevelAsset.GameBoard.UnitTemplate;
             LevelAsset.ShopMgr.ShopInit(LevelAsset);
-            LevelAsset.ShopMgr.ItemPriceTexts_TMP = new[] { LevelAsset.Item1PriceTmp, LevelAsset.Item2PriceTmp, LevelAsset.Item3PriceTmp, LevelAsset.Item4PriceTmp };
             LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
             LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
         }

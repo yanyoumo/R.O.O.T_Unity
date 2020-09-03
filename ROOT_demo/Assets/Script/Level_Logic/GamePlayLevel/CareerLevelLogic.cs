@@ -52,10 +52,7 @@ namespace ROOT
         }
         protected void InitShop()
         {
-            LevelAsset.ShopMgr = gameObject.AddComponent<ShopMgr>();
-            LevelAsset.ShopMgr.UnitTemplate = LevelAsset.GameBoard.UnitTemplate;
             LevelAsset.ShopMgr.ShopInit(LevelAsset);
-            LevelAsset.ShopMgr.ItemPriceTexts_TMP = new[] { LevelAsset.Item1PriceTmp, LevelAsset.Item2PriceTmp, LevelAsset.Item3PriceTmp, LevelAsset.Item4PriceTmp };
             LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
             LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
             if (LevelAsset.ActionAsset.ExcludedShop)

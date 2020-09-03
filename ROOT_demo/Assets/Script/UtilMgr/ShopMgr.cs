@@ -31,6 +31,7 @@ namespace ROOT
         private Vector3[] currentPosS;
         private Vector3[] nextPosS;
 
+        [SerializeField]
         public TextMeshPro[] ItemPriceTexts_TMP;
 
         private readonly Vector3 _posA = new Vector3(2.273f, 0.718f, -2.801f);
@@ -173,7 +174,7 @@ namespace ROOT
         {
             _items = new GameObject[4];
             _hardwarePrices = new float[_items.Length];
-            ItemPriceTexts_TMP = new TextMeshPro[_items.Length];
+            //ItemPriceTexts_TMP = new TextMeshPro[_items.Length];
             currentPosS = new Vector3[_items.Length];
             nextPosS = new Vector3[_items.Length];
             currentLevelAsset = _currentLevelAsset;
