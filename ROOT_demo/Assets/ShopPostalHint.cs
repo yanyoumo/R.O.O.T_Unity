@@ -22,7 +22,6 @@ namespace ROOT
 
         void Start()
         {
-            //
             if (StartGameMgr.UseTouchScreen)
             {
                 AdvShopTextLocalizer.SetTerm(ScriptTerms.AdvShop_Touch);

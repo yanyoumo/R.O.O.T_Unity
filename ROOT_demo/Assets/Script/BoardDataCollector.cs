@@ -129,6 +129,16 @@ namespace ROOT
             }
         }
 
+        #region 服务器计分标准
+        //TODO Digong 学习并优化服务器计分部分代码。
+        //积分原则：只统计从任意一服务器延伸出的必要最长信号长度。
+        //积分结果：1、参考CalculateServerScore函数中约270行左右的return
+        //        将之前得出必要最长信号长度(int)输入GetServerIncomeByLength函数后返回。
+        //        2、必要最长信号长度填充入networkCount及MaxNetworkDepth变量。
+        //        3、正确填充Unit类中“服务器计分”相关变量节。
+        //备注：1、请注意处于必要最长信号上但是并不是Network的unit的深度，要保证其最后LED显示正确。
+        //     2、请将定义于本节外的所有函数视为黑盒。
+        //     3、在本节内可以定义任何新函数，但请补充xml-summary。
         private void CalculateServerScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction,int depth)
         {
             var side = unit.GetWorldSpaceUnitSide(direction);
@@ -149,7 +159,6 @@ namespace ROOT
                 }
             }
         }
-
         private void CalculateServerScoreCore(Vector2Int hostKey, int currentDepth, Vector2Int srcPos)
         {
             var depth = currentDepth;
@@ -182,7 +191,6 @@ namespace ROOT
                 Debug.Assert(true);
             }
         }
-
         public float CalculateServerScore(out int networkCount)
         {
             var maxLength = 0.0f;
@@ -263,11 +271,12 @@ namespace ROOT
                     unit1.InServerGrid = true;
                 }
 
-                MaxNetworkDepth = (int)maxLength;
-                networkCount = (int)maxLength;
+                networkCount = MaxNetworkDepth = (int)maxLength;
                 return GetServerIncomeByLength((int) maxLength);
             }
         }
+
+        #endregion
 
         private float CalculateBasicCost()
         {

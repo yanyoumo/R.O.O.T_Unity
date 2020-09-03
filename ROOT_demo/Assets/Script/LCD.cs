@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace ROOT
 {
-    //[ExecuteInEditMode]
     public class LCD : MonoBehaviour
     {
         public int digit = 0;
