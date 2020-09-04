@@ -34,8 +34,11 @@ namespace ROOT
         [SerializeField]
         public TextMeshPro[] ItemPriceTexts_TMP;
 
-        private readonly Vector3 _posA = new Vector3(2.273f, 0.718f, -2.801f);
-        private float _posDisplace = (6.78f - 2.273f) / 3.0f;
+        public Transform PlacementPosA;
+        public Transform PlacementPosB;
+
+        private Vector3 _posA => PlacementPosA.position;
+        private float _posDisplace => Vector3.Distance(PlacementPosA.position, PlacementPosB.position);
 
         private Dictionary<CoreType, float> _priceByCore;
         private Dictionary<SideType, float> _priceBySide;
@@ -235,8 +238,9 @@ namespace ROOT
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
-                _items[i].gameObject.GetComponentInChildren<Unit>().ShopID = i;
-                ItemPriceTexts_TMP[i].text = Utils.PaddingNum3Digit(UnitRetailPrice(i));
+
+                _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, -1, null);
+                ItemPriceTexts_TMP[i].text = Utils.PaddingNum2Digit(UnitRetailPrice(i));
             }
         }
 
@@ -286,7 +290,7 @@ namespace ROOT
 
                 if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
                 {
-                    _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;
+                    _items[idx].gameObject.GetComponentInChildren<Unit>().UnsetShop();
                     if (crash)
                     {
                         GameBoard.DeliverUnitAssignedPlaceCrash(_items[idx], pos);
@@ -308,7 +312,7 @@ namespace ROOT
             {
                 if (CurrentGameStateMgr.SpendShopCurrency(_hardwarePrices[idx]*_priceShopDiscount[idx]))
                 {
-                    _items[idx].gameObject.GetComponentInChildren<Unit>().ShopID = -1;
+                    _items[idx].gameObject.GetComponentInChildren<Unit>().UnsetShop();
                     GameBoard.DeliverUnitRandomPlace(_items[idx]);
                     _items[idx] = null;
                     return true;

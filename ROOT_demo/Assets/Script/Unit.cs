@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -117,7 +118,8 @@ namespace ROOT
                 _priceByCore.TryGetValue(core, out var corePrice);
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
-            unit.ShopID = ID;
+
+            unit.SetShop(ID, Mathf.FloorToInt(hardwarePrice), totalCount % 2 == 0);
             totalCount++;
             return go;
         }
@@ -125,6 +127,21 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
+        //TODO 自带的标签问题还没有解决。
+        private int _retailPrice = -1;
+        public int RetailPrice
+        {
+            get => _retailPrice;
+            private set
+            {
+                _retailPrice = value;
+                //PriceTag.text = _retailPrice + "";
+            }
+        }
+
+        //public TextMeshPro PriceTag;
+        public Transform ShopBackPlane;
+        public MeshRenderer BackQuadRenderer;
         public Material BuyingMat;
         public Material ImmovableMat;
         public override bool Immovable
@@ -140,16 +157,26 @@ namespace ROOT
         public MeshRenderer AdditionalClampMesh;
         public bool StationUnit { get; private set; }
         public Dictionary<RotationDirection, Tuple<int, int>> StationRequirement;
-        private int _shopID = -1;
-        public int ShopID {
-            get => _shopID;
-            internal set
+        public int ShopID { get; private set; } = -1;
+
+        public void UnsetShop()
+        {
+            ShopID = -1;
+            SetPendingBuying = false;
+            ShopBackPlane.gameObject.SetActive(false);
+        }
+
+        public void SetShop(int shopID,int price,bool? showQuad)
+        {
+            ShopID = shopID;
+            if (price!=-1)
             {
-                _shopID = value;
-                if (value==-1)
-                {
-                    SetPendingBuying = false;
-                }
+                RetailPrice = price;
+            }
+            ShopBackPlane.gameObject.SetActive(true);
+            if (showQuad.HasValue)
+            {
+                BackQuadRenderer.enabled = showQuad.Value;
             }
         }
 
@@ -159,7 +186,7 @@ namespace ROOT
             {
                 if (value)
                 {
-                    Debug.Assert(ShopID != -1);
+                    //Debug.Assert(ShopID != -1);
                     AdditionalClampMesh.material = BuyingMat;
                     AdditionalClampMesh.enabled = true;
                 }
@@ -184,7 +211,7 @@ namespace ROOT
         public Dictionary<RotationDirection, SideType> UnitSides { get; protected set; }
 
         private RotationDirection _unitRotation;
-        private Transform _rootTransform;
+        private Transform _rootTransform=>transform.parent;
         private Material _coreMat;
 
         private MeshRenderer _coreMeshRenderer;
@@ -394,16 +421,13 @@ namespace ROOT
         protected virtual void Awake()
         {
             ShopID = -1;
-
-            _rootTransform = transform.parent;
-            Debug.Assert(_rootTransform != null, "Unit should use as prefab");
             CurrentBoardPosition = new Vector2Int(0, 0);
             UnitSides = new Dictionary<RotationDirection, SideType>();
             _unitRotation = RotationDirection.North;
 
             _coreMatNameDic = new Dictionary<CoreType, string>();
-            //_sideMatColorDic = new Dictionary<Sides, Color>();
             Immovable = false;
+            ShopBackPlane.gameObject.SetActive(false);
             InitDic();
         }
 
