@@ -127,19 +127,33 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
-        //TODO 自带的标签问题还没有解决。
+        private int _tier = 0;
+        public int Tier
+        {
+            get => _tier;
+            internal set
+            {
+                _tier = value;
+                TierTag.text = Utils.PaddingNum2Digit(_tier);
+                TierLEDs.Val = _tier;
+            }
+        }
         private int _retailPrice = -1;
         public int RetailPrice
         {
             get => _retailPrice;
-            private set
+            internal set
             {
                 _retailPrice = value;
-                //PriceTag.text = _retailPrice + "";
+                PriceTag.text = Utils.PaddingNum2Digit(_retailPrice);
             }
         }
 
-        //public TextMeshPro PriceTag;
+        public LEDArray TierLEDs;
+
+        public TextMeshPro TierTag;
+        public TextMeshPro PriceTag;
+
         public Transform ShopBackPlane;
         public MeshRenderer BackQuadRenderer;
         public Material BuyingMat;
@@ -208,6 +222,7 @@ namespace ROOT
 
         public CoreType UnitCore { get; protected set; }
         public CoreGenre UnitCoreGenre { get; protected set; }
+        public bool IsSource => UnitCoreGenre == CoreGenre.Source;
         public Dictionary<RotationDirection, SideType> UnitSides { get; protected set; }
 
         private RotationDirection _unitRotation;
@@ -235,12 +250,6 @@ namespace ROOT
         {
             Immovable = true;
             StationUnit = true;
-        }
-
-        protected Unit()
-        {
-            //RISK Mono的构造器有用吗？但是懒得测，也不想删掉。
-            UnitName = "";
         }
 
         public void InitDic()
@@ -377,6 +386,8 @@ namespace ROOT
                 {RotationDirection.South, _localSouthConnector},
                 {RotationDirection.West, _localWestConnector},
             };
+
+            TierLEDs.gameObject.SetActive(!IsSource);
         }
 
         public void SetCoreEmissive(Color color)
@@ -385,13 +396,13 @@ namespace ROOT
             _coreMeshRenderer.material.SetColor("_EmissionColor", color);
         }
 
-        public void InitUnit(CoreType core, SideType[] sides, Board gameBoard = null)
+        public void InitUnit(CoreType core, SideType[] sides, Board gameBoard = null, int tier = 0)
         {
             Debug.Assert(sides.Length == 4);
-            InitUnit(core, sides[0], sides[1], sides[2], sides[3], gameBoard);
+            InitUnit(core, sides[0], sides[1], sides[2], sides[3], tier, gameBoard);
         }
 
-        public void InitUnit(CoreType core, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide, Board gameBoard = null)
+        public void InitUnit(CoreType core, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide, int tier, Board gameBoard = null)
         {
             this.UnitCore = core;
             InitUnitMeshByCore(core);
@@ -414,6 +425,8 @@ namespace ROOT
             InServerGrid = false;
             InHddGrid = false;
             GameBoard = gameBoard;
+
+            Tier = tier;
 
             UpdateSideMesh();
         }
@@ -448,16 +461,14 @@ namespace ROOT
 
         public SideType GetLocalSpaceUnitSide(RotationDirection localDirection)
         {
-            SideType res = SideType.SIDETYPECOUNT;
-            UnitSides.TryGetValue(_unitRotation, out res);
+            UnitSides.TryGetValue(_unitRotation, out var res);
             return res;
         }
 
         public SideType GetWorldSpaceUnitSide(RotationDirection worldDirection)
         {
-            SideType res = SideType.SIDETYPECOUNT;
             var desiredLocalSideDirection = Utils.RotateDirectionBeforeRotation(worldDirection, _unitRotation);
-            UnitSides.TryGetValue(desiredLocalSideDirection, out res);
+            UnitSides.TryGetValue(desiredLocalSideDirection, out var res);
             return res;
         }
 

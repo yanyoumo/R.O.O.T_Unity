@@ -11,12 +11,12 @@ namespace ROOT
 
         public void TurnOn()
         {
-            GetComponent<MeshRenderer>().material.color = TurnOnColor;
+            GetComponentInChildren<MeshRenderer>().material.color = TurnOnColor;
         }
 
         public void TurnOff()
         {
-            GetComponent<MeshRenderer>().material.color = _turnOffColor;
+            GetComponentInChildren<MeshRenderer>().material.color = _turnOffColor;
         }
     }
 }

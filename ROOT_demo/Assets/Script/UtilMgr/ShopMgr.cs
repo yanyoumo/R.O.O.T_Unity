@@ -31,9 +31,6 @@ namespace ROOT
         private Vector3[] currentPosS;
         private Vector3[] nextPosS;
 
-        [SerializeField]
-        public TextMeshPro[] ItemPriceTexts_TMP;
-
         public Transform PlacementPosA;
         public Transform PlacementPosB;
 
@@ -217,6 +214,7 @@ namespace ROOT
                 if (_items[i])
                 {
                     _items[i].gameObject.transform.position = lerpVec3(currentPosS[i], nextPosS[i], lerp);
+                    _items[i].gameObject.GetComponentInChildren<Unit>().RetailPrice = Mathf.FloorToInt(Random.value * 100.0f);
                 }
             }
         }
@@ -239,8 +237,7 @@ namespace ROOT
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
 
-                _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, -1, null);
-                ItemPriceTexts_TMP[i].text = Utils.PaddingNum2Digit(UnitRetailPrice(i));
+                _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, UnitRetailPrice(i), null);
             }
         }
 
