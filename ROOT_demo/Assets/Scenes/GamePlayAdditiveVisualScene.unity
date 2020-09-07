@@ -523,7 +523,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145128176}
-  m_LocalRotation: {x: 0.6919061, y: -0.0054274714, z: -0.005663104, w: 0.7219449}
+  m_LocalRotation: {x: 0.6919061, y: -0.00542747, z: -0.0056631025, w: 0.7219449}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2247,7 +2247,7 @@ PrefabInstance:
     - target: {fileID: 4626825242898912663, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4626825243096802196, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
@@ -2262,7 +2262,7 @@ PrefabInstance:
     - target: {fileID: 4626825243096802198, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4626825243096802199, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
@@ -2712,7 +2712,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1146871196}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 33.1}
+  m_LocalPosition: {x: 0, y: 0, z: 36.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1032545744}
@@ -2722,8 +2722,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 38.2, y: 0.020001173}
-  m_SizeDelta: {x: 86.28, y: 16.7}
+  m_AnchoredPosition: {x: 37.33, y: 0.020001173}
+  m_SizeDelta: {x: 84.60428, y: 24.273468}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1146871198
 MonoBehaviour:
@@ -2745,7 +2745,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u65CB\u8F6C\u4E0D\u4F1A\u63A8\u8FDB\u5468\u671F\uFF0C\u6BCF\u4E2A\u5468\u671F\u8FDB\u884C\u4E00\u6B21\u4EF7\u683C\u7ED3\u7B97\uFF1B\\n\u6BCF\u4E2A\u5468\u671F\u53EA\u80FD\u8D2D\u4E70\u4E00\u6B21\u5546\u54C1\u3002\n"
+  m_text: "\u6BCF\u4E2A\u5468\u671F\u8FDB\u884C\u4E00\u6B21\u4EF7\u683C\u7ED3\u7B97,
+    \u65CB\u8F6C<b><color=#FF5733>\u4E0D\u4F1A</color></b>\u63A8\u8FDB\u5468\u671F\uFF1B\\n\u6BCF\u4E2A\u5468\u671F<b><color=#FF5733>\u53EA\u80FD\u8D2D\u4E70\u4E00\u6B21</color></b>\u5546\u54C1\u3002\n\u5546\u5E97\u4E2D\u6709<color=#9D33FF>\u7D2B\u8272\u6846</color>\u6846\u4F4F\u7684\u5355\u4F4D\u4EF7\u683C\u4F1A\u4FBF\u5B9C\uFF0C\u4F46\u662F\u8D2D\u4E70\u540E<b><color=#FF5733>\u65E0\u6CD5\u79FB\u52A8</color></b>\uFF08\u4F46\u53EF\u4EE5\u65CB\u8F6C\uFF09\u3002\r\n\n\u5C4F\u5E55\u53F3\u4FA7\u4E2D\u95F4\u7684\u7A97\u4E3A\u4EFB\u52A1\u65F6\u95F4\u8F74\uFF0C\u4F1A\u9884\u544A\u672C\u5173\u56DE\u5408\u7684\u6570\u636E\u9700\u6C42\u548C\u5929\u707E\u3002\u4E0D\u540C\u9700\u6C42\u6709\u6570\u91CF\u8981\u6C42\uFF0C\u6EE1\u8DB3\u4E00\u56DE\u5408\u8981\u6C42\u5B8C\u6210\u4EFB\u52A1\u52A0\u4E00\uFF0C\u76F4\u81F3\u52A0\u6EE1\u5B8C\u6210\u3002\n\n\u65F6\u95F4\u8F74\u4E0A\u4E0D\u540C\u989C\u8272\u4EE3\u8868\u4E86\u4E0D\u540C\u8981\u6C42\uFF1A\r\n\u3010<color=#2DFF3F>\u7EFF\u8272</color>\u3011:\u9700\u8981\u4E00\u822C\u6570\u636E\uFF0C\u9700\u6C42\u6570\u91CF\u53C2\u8003\u5927\u6570\u5B57
+    \n\u3010<color=#2D39FF>\u84DD\u8272</color>\u3011:\u9700\u8981\u7F51\u7EDC\u6570\u636E\uFF0C\u9700\u6C42\u6570\u91CF\u53C2\u8003\u5C0F\u6570\u5B57
+    \n\u3010<color=#FF1515>\u7EA2\u8272</color>\u3011:\u6709\u5929\u707E\r\n\u3010\u9ED1\u8272\u3011\u56DE\u5408\u7ED3\u675F\n\r\n\u5355\u5143\u63A5\u53E3\u4E0ALED\u663E\u793A\u7684\u4E3A\u6D41\u901A\u6570\u636E\u7C7B\u578B\u548C\u6D41\u91CF\u4E2A\u6570\n\u3010<color=#2DFF3F>\u7EFF\u8272</color>\u3011\uFF1A\u4E00\u822C\u6570\u636E
+    \u3010<color=#2D39FF>\u84DD\u8272</color>\u3011\uFF1A\u7F51\u7EDC\u6570\u636E"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -2757,7 +2761,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
+  m_enableVertexGradient: 1
   m_colorMode: 3
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
@@ -3800,7 +3804,7 @@ PrefabInstance:
     - target: {fileID: 4626825242898912663, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4626825243096802196, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
@@ -3815,7 +3819,7 @@ PrefabInstance:
     - target: {fileID: 4626825243096802198, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4626825243096802199, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
@@ -4340,7 +4344,7 @@ PrefabInstance:
     - target: {fileID: 4626825242898912663, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4626825243096802196, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
@@ -4355,7 +4359,7 @@ PrefabInstance:
     - target: {fileID: 4626825243096802198, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4626825243096802199, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
@@ -5706,7 +5710,7 @@ PrefabInstance:
     - target: {fileID: 4626825242898912663, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4626825243096802196, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
@@ -5721,7 +5725,7 @@ PrefabInstance:
     - target: {fileID: 4626825243096802198, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4626825243096802199, guid: 855622941e05ee24f823cbc7e16f80b5,
         type: 3}
