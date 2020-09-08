@@ -265,15 +265,15 @@ namespace ROOT
                                         }
                                     }
 
+                                    int val = 1;
                                     if (flag == false)
                                     {
-                                        if (length < maxLength)
+                                        if (length+val < maxLength)
                                             resPath = GeneratePath(startPoint,otherUnit, vis);
                                         isEnd = true;
                                         goto END_CHECK;
                                     }
 
-                                    int val = 1;
                                     networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(otherUnit, length + val,
                                         AddPath(otherUnit, vis2)));
                                 }
