@@ -238,7 +238,6 @@ namespace ROOT
                 Queue<Tuple<Unit, int, ulong>> networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
                 networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0,
                     1ul << Utils.Vector2Int2Int(startPoint.CurrentBoardPosition)));
-                bool isEnd = false;
                 while (networkCableQueue.Count != 0)
                 {
                     var (now, length, vis) = networkCableQueue.Dequeue();
@@ -270,8 +269,7 @@ namespace ROOT
                                     {
                                         if (length+val < maxLength)
                                             resPath = GeneratePath(startPoint,otherUnit, vis);
-                                        isEnd = true;
-                                        goto END_CHECK;
+                                        goto END_SPOT;
                                     }
 
                                     networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(otherUnit, length + val,
@@ -284,11 +282,8 @@ namespace ROOT
                             }
                         }
                     }
-                    END_CHECK:
-                        if (isEnd == true)
-                            break;
                 }
-
+                END_SPOT: ;
             }
             networkCount = maxLength;
             return GetServerIncomeByLength(maxLength);
