@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditorInternal.VR;
 using UnityEngine;
 
 namespace ROOT
@@ -191,6 +192,109 @@ namespace ROOT
                 Debug.Assert(true);
             }
         }
+
+        public static List<Unit> GeneratePath(Unit start, Unit end, ulong vis)
+        {
+            List<Unit> res=new List<Unit>();
+            var now = start;
+            while (now != end)
+            {
+                res.Add(now);
+                vis = RemovePath(now,vis);
+                foreach (var keyValuePair in now.WorldNeighboringData)
+                {
+                    var otherUnit = keyValuePair.Value.OtherUnit;
+                    if (IsVis(otherUnit, vis))
+                    {
+                        now = otherUnit;
+                        break;
+                    }
+                }
+            }
+            res.Add(end);
+            return res;
+        }
+
+        public static bool IsVis(Unit now,ulong vis)
+        {
+            return (vis & (ulong) Utils.Vector2Int2Int(now.CurrentBoardPosition)) != 0ul;
+        }
+
+        public static ulong AddPath(Unit now, ulong vis)
+        {
+            return vis ^ (ulong) Utils.Vector2Int2Int(now.CurrentBoardPosition);
+        }
+        public static ulong RemovePath(Unit now, ulong vis)
+        {
+            return AddPath(now, vis);
+        }
+        public float CalculateServerScore(out int networkCount)
+        {
+            var serverList = m_Board.FindUnitWithCoreType(CoreType.Server);
+            int maxLength = 36;
+            List<Unit> resPath=new List<Unit>();
+            foreach (var startPoint in serverList)
+            {
+                Queue<Tuple<Unit, int, ulong>> networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
+                networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0,
+                    1ul << Utils.Vector2Int2Int(startPoint.CurrentBoardPosition)));
+                bool isEnd = false;
+                while (networkCableQueue.Count != 0)
+                {
+                    var (now, length, vis) = networkCableQueue.Dequeue();
+                    Queue<Tuple<Unit, ulong>> hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
+                    hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(now, vis));
+                    while (hardDriveQueue.Count != 0)
+                    {
+                        var (now2, vis2) = hardDriveQueue.Dequeue();
+                        foreach (var keyValuePair in now2.WorldNeighboringData)
+                        {
+                            var otherUnit = keyValuePair.Value.OtherUnit;
+                            if (!IsVis(otherUnit,vis2))
+                            {
+                                if (otherUnit.UnitCore == CoreType.NetworkCable)
+                                {
+                                    bool flag = false;
+                                    foreach (var tmp in now.WorldNeighboringData)
+                                    {
+                                        var anotherUnit = tmp.Value.OtherUnit;
+                                        if (IsVis(anotherUnit, vis2) == false && anotherUnit.UnitCore == CoreType.NetworkCable)
+                                        {
+                                            flag = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (flag == false)
+                                    {
+                                        if (length < maxLength)
+                                            resPath = GeneratePath(startPoint,otherUnit, vis);
+                                        isEnd = true;
+                                        goto END_CHECK;
+                                    }
+
+                                    int val = 1;
+                                    networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(otherUnit, length + val,
+                                        AddPath(otherUnit, vis2)));
+                                }
+                                else
+                                {
+                                    hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(otherUnit, AddPath(otherUnit, vis2)));
+                                }
+                            }
+                        }
+                    }
+                    END_CHECK:
+                        if (isEnd == true)
+                            break;
+                }
+
+            }
+            networkCount = maxLength;
+            return GetServerIncomeByLength(maxLength);
+        }
+        [Obsolete]
+        /*
         public float CalculateServerScore(out int networkCount)
         {
             var maxLength = 0.0f;
@@ -275,7 +379,7 @@ namespace ROOT
                 return GetServerIncomeByLength((int) maxLength);
             }
         }
-
+        */
         #endregion
 
         private float CalculateBasicCost()
