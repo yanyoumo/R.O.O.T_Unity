@@ -247,7 +247,7 @@ namespace ROOT
                         foreach (var keyValuePair in now2.WorldNeighboringData)
                         {
                             var otherUnit = keyValuePair.Value.OtherUnit;
-                            if (!IsVis(otherUnit, vis2))
+                            if (otherUnit != null && IsVis(otherUnit, vis2) == false)
                             {
                                 if (otherUnit.UnitCore == CoreType.NetworkCable)
                                 {
@@ -255,7 +255,7 @@ namespace ROOT
                                     foreach (var tmp in otherUnit.WorldNeighboringData)
                                     {
                                         var anotherUnit = tmp.Value.OtherUnit;
-                                        if (IsVis(anotherUnit, vis2) == false && anotherUnit.UnitCore == CoreType.NetworkCable)
+                                        if (anotherUnit != null && IsVis(anotherUnit, vis2) == false && anotherUnit.UnitCore == CoreType.NetworkCable)
                                         {
                                             flag = true;
                                             break;
