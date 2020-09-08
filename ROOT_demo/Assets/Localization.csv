@@ -3,15 +3,19 @@ Back,Text,返回主菜单的按钮名称,返回,Back
 BasicControl_KM,Text,游戏内容显示的操作提示（键盘版）,"【方向键】：移动光标
 【方向键】+【空格】：拖动单元
 【左Shift】：旋转单元
-【TAB】：查看数据范围","<b>[Arrows]:</b> Move Cursor
+【TAB】：查看数据范围
+【点击左Ctrl】：可强制演进一步。","<b>[Arrows]:</b> Move Cursor
 <b>[Arrows+SpaceBar]:</b> Drag Unit
 <b>[Left-Shift]:</b> Rotate Unit
-<b>[TAB]:</b> Visualize Signal"
+<b>[TAB]:</b> Visualize Signal
+<b>[Left Ctrl]:</b> Force to move to next round"
 BasicControl_Touch,Text,游戏内容显示的操作提示（触屏版）,"【滑动单元】：拖动单元
 【双击单元】：旋转单元
-【双指按住】：查看数据范围","<b>[Swipe on Unit]:</b>Drag Unit
+【双指按住】：查看数据范围
+【按住屏幕中空白位置】：可强制演进一步。","<b>[Swipe on Unit]:</b>Drag Unit
 <b>[DoubleTap on Unit]:</b>Rotate Unit
-<b>[DoubleFinger Hold]:</b>Visualize Signal"
+<b>[DoubleFinger Hold]:</b>Visualize Signal
+<b>[Hold on Empty spot]:</b>Force to move to next round"
 CareerButton,Text,开始生涯模式按钮名称,生涯模式,Career
 EndingMessageNormal_EarnedMoney,Text,游戏结束时，显示的内容,时间到了，你赚了{[VALUE]}块钱[i2p_Zero]时间到了，但你没赚钱,"Time Up, and you earned {[VALUE]} money[i2p_Zero]Time Up, and you earned no money"
 EndingMessageNormal_NoEarnedMoney,Text,游戏结束时，显示的内容,时间到了，你赔了{[VALUE]}块钱[i2p_Zero]时间到了，但你也没赔钱,"Time Up, and you lost {[VALUE]} money[i2p_Zero]Time Up, but you haven't lost money"
