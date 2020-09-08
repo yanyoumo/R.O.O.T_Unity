@@ -670,6 +670,13 @@ namespace ROOT
                 }
             }
 
+            if (currentLevelAsset.CostChart != null)
+            {
+                currentLevelAsset.CostChart.IncomeVal = Mathf.FloorToInt(inCome);
+                currentLevelAsset.CostChart.CostVal = Mathf.FloorToInt(cost);
+                currentLevelAsset.CostChart.BenefitVal = inCome - cost;
+            }
+
             lastInCome = inCome;
             lastCost = cost;
 

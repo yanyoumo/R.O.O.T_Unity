@@ -16,7 +16,8 @@ namespace ROOT
     //      GamePlayAdditiveVisualScene => HintTextA (1)
     //的文本框中。
     //备注：需要高度重写和重排版文本内容，仅保留其含义即可。
-    //2、现在如下信息进入：Localization.xlsx中，
+    //2、参考静态类ScriptLocalization，创建颜色库（一个新的静态类）。将使用的到的颜色使用HEX string储存起来。
+    //3（优先级下移）、现在如下信息进入：Localization.xlsx中，
     //的BasicControl_KM和BasicControl_Touch节中（包括英文内容）。
     //信息：
     //{点击左Ctrl可强制演进一步。（键鼠版）

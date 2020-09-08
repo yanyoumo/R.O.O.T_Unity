@@ -285,7 +285,6 @@ namespace ROOT
         /// 具体显示LED的field，即，最接近服务器的该数值应为全部深度，最枝端的显示值需要为1。
         /// </summary>
         public int NetworkVal=> BoardDataCollector.MaxNetworkDepth - ServerDepth + 1;
-
         #endregion
 
         //Rotation使用的世界方向的。
@@ -307,9 +306,6 @@ namespace ROOT
             RotationDirection.South,
             RotationDirection.West
         };
-
-        /*[HideInInspector]
-        public Dictionary<RotationDirection, MeshRenderer> MeshRendererLocalDir;*/
 
         [HideInInspector] public Vector2Int LastNetworkPos = Vector2Int.zero;
 

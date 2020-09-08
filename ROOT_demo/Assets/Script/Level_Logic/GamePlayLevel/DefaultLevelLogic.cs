@@ -49,6 +49,7 @@ namespace ROOT
         public HintMaster HintMaster;
         public TimeLine TimeLine;
         public CostLine CostLine;
+        public CostChart CostChart;
         public CoreType? DestoryedCoreType;
 
         internal GameObject GameCursor;
@@ -218,6 +219,7 @@ namespace ROOT
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
             LevelAsset.CostLine = FindObjectOfType<CostLine>();
             LevelAsset.ShopMgr = FindObjectOfType<ShopMgr>();
+            LevelAsset.CostChart = FindObjectOfType<CostChart>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
