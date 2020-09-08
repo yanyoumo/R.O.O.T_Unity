@@ -42,7 +42,7 @@ namespace ROOT
 
                     if (otherSide == SideType.Connection)
                     {
-                        score = CalculateProcessorScoreCore(nextKey, Utils.GetInvertDirection(direction), depth+1);
+                        score = CalculateProcessorScoreCore(nextKey, Utils.GetInvertDirection(direction), depth + 1);
                     }
                 }
             }
@@ -50,7 +50,7 @@ namespace ROOT
             return score;
         }
 
-        private float CalculateProcessorScoreCore(Vector2Int hostKey,RotationDirection dir,int depth)
+        private float CalculateProcessorScoreCore(Vector2Int hostKey, RotationDirection dir, int depth)
         {
             var score = 0.0f;
             m_Board.UnitsGameObjects.TryGetValue(hostKey, out var currentUnit);
@@ -74,7 +74,7 @@ namespace ROOT
                     score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.West, depth);
 
                     unit.SignalFromDir = dir;
-                    unit.HardDiskVal = (int) score;
+                    unit.HardDiskVal = (int)score;
                 }
             }
             else
@@ -120,12 +120,12 @@ namespace ROOT
                     if (!unit.Visited)
                     {
                         //CPU的这个方位用不着。
-                        driverCount += CalculateProcessorScoreCore(processorKey,RotationDirection.North,0);
+                        driverCount += CalculateProcessorScoreCore(processorKey, RotationDirection.North, 0);
                     }
                 }
 
-                MaxNormalDepth = (int) driverCount;
-                driverCountInt = (int) driverCount;
+                MaxNormalDepth = (int)driverCount;
+                driverCountInt = (int)driverCount;
                 return Mathf.FloorToInt(driverCount * GetPerDriverIncome);
             }
         }
@@ -140,7 +140,7 @@ namespace ROOT
         //备注：1、请注意处于必要最长信号上但是并不是Network的unit的深度，要保证其最后LED显示正确。
         //     2、请将定义于本节外的所有函数视为黑盒。
         //     3、在本节内可以定义任何新函数，但请补充xml-summary。
-        private void CalculateServerScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction,int depth)
+        private void CalculateServerScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
         {
             var side = unit.GetWorldSpaceUnitSide(direction);
             if (side == SideType.Connection)
@@ -195,12 +195,12 @@ namespace ROOT
 
         public static List<Unit> GeneratePath(Unit start, Unit end, ulong vis)
         {
-            List<Unit> res=new List<Unit>();
+            List<Unit> res = new List<Unit>();
             var now = start;
             while (now != end)
             {
                 res.Add(now);
-                vis = RemovePath(now,vis);
+                vis = RemovePath(now, vis);
                 foreach (var keyValuePair in now.WorldNeighboringData)
                 {
                     var otherUnit = keyValuePair.Value.OtherUnit;
@@ -215,14 +215,14 @@ namespace ROOT
             return res;
         }
 
-        public static bool IsVis(Unit now,ulong vis)
+        public static bool IsVis(Unit now, ulong vis)
         {
-            return (vis & (ulong) Utils.Vector2Int2Int(now.CurrentBoardPosition)) != 0ul;
+            return (vis & (ulong)Utils.Vector2Int2Int(now.CurrentBoardPosition)) != 0ul;
         }
 
         public static ulong AddPath(Unit now, ulong vis)
         {
-            return vis ^ (ulong) Utils.Vector2Int2Int(now.CurrentBoardPosition);
+            return vis ^ (ulong)Utils.Vector2Int2Int(now.CurrentBoardPosition);
         }
         public static ulong RemovePath(Unit now, ulong vis)
         {
@@ -232,7 +232,7 @@ namespace ROOT
         {
             var serverList = m_Board.FindUnitWithCoreType(CoreType.Server);
             int maxLength = 36;
-            List<Unit> resPath=new List<Unit>();
+            List<Unit> resPath = new List<Unit>();
             foreach (var startPoint in serverList)
             {
                 Queue<Tuple<Unit, int, ulong>> networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
@@ -249,7 +249,7 @@ namespace ROOT
                         foreach (var keyValuePair in now2.WorldNeighboringData)
                         {
                             var otherUnit = keyValuePair.Value.OtherUnit;
-                            if (!IsVis(otherUnit,vis2))
+                            if (!IsVis(otherUnit, vis2))
                             {
                                 if (otherUnit.UnitCore == CoreType.NetworkCable)
                                 {
@@ -267,8 +267,8 @@ namespace ROOT
                                     int val = 1;
                                     if (flag == false)
                                     {
-                                        if (length+val < maxLength)
-                                            resPath = GeneratePath(startPoint,otherUnit, vis);
+                                        if (length + val < maxLength)
+                                            resPath = GeneratePath(startPoint, otherUnit, vis);
                                         goto END_SPOT;
                                     }
 
@@ -283,7 +283,7 @@ namespace ROOT
                         }
                     }
                 }
-                END_SPOT: ;
+            END_SPOT:;
             }
             networkCount = maxLength;
             return GetServerIncomeByLength(maxLength);
