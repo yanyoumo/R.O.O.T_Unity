@@ -7,7 +7,7 @@ namespace ROOT
 {
     public class SimplerCubeLED : SingleLED
     {
-        public TextMeshPro LumpedText;
+        //public TextMeshPro LumpedText;
         public Transform LEDRoot;
         public MeshRenderer LED;
 
@@ -26,7 +26,7 @@ namespace ROOT
             LED.material.color = _turnOffColor;
         }
 
-        public void InitLED(int val = -1)
+        /*public void InitLED(int val = -1)
         {
             if (val == -1)
             {
@@ -36,6 +36,6 @@ namespace ROOT
             {
                 LumpedText.text = val + "";
             }
-        }
+        }*/
     }
 }

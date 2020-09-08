@@ -52,6 +52,7 @@ namespace ROOT
             }
             get => _normalSignalVal;
         }
+        
         public int NetworkSignalVal
         {
             set

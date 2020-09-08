@@ -551,8 +551,10 @@ namespace ROOT
                         var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
                         ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
                         Connector.Connected = data.Connected;
-                        Connector.NormalSignalVal = 0;
-                        Connector.NetworkSignalVal = 0;
+                        var NormalSignalValtmp = 0;
+                        var NetworkSignalValtmp = 0;
+                        /*Connector.NormalSignalVal = 0;
+                        Connector.NetworkSignalVal = 0;*/
                         if (data.Connected)
                         {
                             if (UnitCoreGenre == CoreGenre.Destination)
@@ -568,33 +570,33 @@ namespace ROOT
 
                                     if (otherUnit.HardDiskVal == 0 && UnitCore != CoreType.HardDrive)
                                     {
-                                        Connector.NormalSignalVal = 0;
+                                        NormalSignalValtmp = 0;
                                     }
                                     else
                                     {
                                         if (UnitCore != CoreType.HardDrive)
                                         {
-                                            Connector.NormalSignalVal = Math.Min(HardDiskVal, otherUnit.HardDiskVal);
+                                            NormalSignalValtmp = Math.Min(HardDiskVal, otherUnit.HardDiskVal);
                                         }
                                         else
                                         {
-                                            Connector.NormalSignalVal = HardDiskVal;
+                                            NormalSignalValtmp = HardDiskVal;
                                         }
                                     }
 
                                     if (ServerDepth == -1 || !InServerGrid)
                                     {
-                                        Connector.NetworkSignalVal = 0;
+                                        NetworkSignalValtmp = 0;
                                     }
                                     else
                                     {
                                         if (UnitCore != CoreType.NetworkCable)
                                         {
-                                            Connector.NetworkSignalVal = NetworkVal-1;
+                                            NetworkSignalValtmp = NetworkVal-1;
                                         }
                                         else
                                         {
-                                            Connector.NetworkSignalVal = NetworkVal;
+                                            NetworkSignalValtmp = NetworkVal;
                                         }
                                     }
 
@@ -611,8 +613,8 @@ namespace ROOT
                                             noHide = (PosHash > otherUnit.PosHash);
                                             if (noHide)
                                             {
-                                                Connector.NetworkSignalVal = Math.Min(NetworkVal, otherUnit.NetworkVal);
-                                                Connector.NormalSignalVal = Math.Min(HardDiskVal, otherUnit.HardDiskVal);
+                                                NetworkSignalValtmp = Math.Min(NetworkVal, otherUnit.NetworkVal);
+                                                NormalSignalValtmp = Math.Min(HardDiskVal, otherUnit.HardDiskVal);
                                             }
                                         }
                                     }
@@ -626,6 +628,8 @@ namespace ROOT
                                 Connector.Hided = true;
                             }
                         }
+                        Connector.NormalSignalVal = NormalSignalValtmp;
+                        Connector.NetworkSignalVal = NetworkSignalValtmp;
                     }
                 }
             }
