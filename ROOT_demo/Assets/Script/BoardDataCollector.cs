@@ -195,7 +195,7 @@ namespace ROOT
 
         public static List<Unit> GeneratePath(Unit start, Unit end, ulong vis)
         {
-            List<Unit> res = new List<Unit>();
+            var res = new List<Unit>();
             var now = start;
             while (now != end)
             {
@@ -217,12 +217,12 @@ namespace ROOT
 
         public static bool IsVis(Unit now, ulong vis)
         {
-            return (vis & (ulong)Utils.Vector2Int2Int(now.CurrentBoardPosition)) != 0ul;
+            return (vis & (1ul << Utils.Vector2Int2Int(now.CurrentBoardPosition))) != 0ul;
         }
 
         public static ulong AddPath(Unit now, ulong vis)
         {
-            return vis ^ (ulong)Utils.Vector2Int2Int(now.CurrentBoardPosition);
+            return vis ^ (1ul << Utils.Vector2Int2Int(now.CurrentBoardPosition));
         }
         public static ulong RemovePath(Unit now, ulong vis)
         {
@@ -231,17 +231,16 @@ namespace ROOT
         public float CalculateServerScore(out int networkCount)
         {
             var serverList = m_Board.FindUnitWithCoreType(CoreType.Server);
-            int maxLength = 36;
-            List<Unit> resPath = new List<Unit>();
+            var maxLength = 36;
+            var resPath = new List<Unit>();
             foreach (var startPoint in serverList)
             {
-                Queue<Tuple<Unit, int, ulong>> networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
-                networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0,
-                    1ul << Utils.Vector2Int2Int(startPoint.CurrentBoardPosition)));
+                var networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
+                networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0, AddPath(startPoint, 0ul)));
                 while (networkCableQueue.Count != 0)
                 {
                     var (now, length, vis) = networkCableQueue.Dequeue();
-                    Queue<Tuple<Unit, ulong>> hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
+                    var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
                     hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(now, vis));
                     while (hardDriveQueue.Count != 0)
                     {
@@ -283,8 +282,11 @@ namespace ROOT
                         }
                     }
                 }
-            END_SPOT:;
+                END_SPOT:;
             }
+
+            if (maxLength == 36)
+                maxLength = 0;
             networkCount = maxLength;
             return GetServerIncomeByLength(maxLength);
         }
