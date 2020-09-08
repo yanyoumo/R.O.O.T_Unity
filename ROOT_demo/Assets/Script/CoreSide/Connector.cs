@@ -46,7 +46,7 @@ namespace ROOT
         {
             set
             {
-                int val = Mathf.Clamp(value, 0, 9);
+                var val = value;
                 _normalSignalVal = val;
                 NormalSignalArray.Val = val;
             }
@@ -56,7 +56,7 @@ namespace ROOT
         {
             set
             {
-                int val = Mathf.Clamp(value, 0, 9);
+                var val = value;
                 _networkSignalVal = val;
                 NetworkSignalArray.Val = val;
             }

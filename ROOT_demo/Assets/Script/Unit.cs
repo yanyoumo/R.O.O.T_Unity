@@ -149,7 +149,7 @@ namespace ROOT
             }
         }
 
-        public LEDArray TierLEDs;
+        public SimpleLEDArray TierLEDs;
 
         public TextMeshPro TierTag;
         public TextMeshPro PriceTag;

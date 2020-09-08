@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using ROOT;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
 {
-    public class LEDArray : MonoBehaviour
+    public abstract class LEDArray : MonoBehaviour
     {
+        public Color LEDColor;
         [ShowInInspector]
-        public SignalLED[] _LEDArray;
+        public SingleLED[] _LEDArray;
+        public abstract int Val { set; }
+    }
 
-        public int Val
+    public class SimpleLEDArray : LEDArray
+    {
+        public override int Val
         {
             set
             {
@@ -32,6 +38,7 @@ namespace ROOT
         void Awake()
         {
             Val = 0;
+            _LEDArray.ForEach(LED => LED.TurnOnColor = LEDColor);
         }
     }
 }

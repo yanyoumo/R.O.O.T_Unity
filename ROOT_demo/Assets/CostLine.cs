@@ -141,7 +141,7 @@ namespace ROOT
                 {
                     var go = Instantiate(CubeLEDTemplate, LumpedLEDRoot);
                     LumpedLED = go.GetComponent<CubeLED>();
-                    LumpedLED.On = true;
+                    LumpedLED.TurnOn();
                 }
 
                 LumpedLED.InitLED(LumpedVal);
@@ -171,12 +171,12 @@ namespace ROOT
                 UpdateMaxIncome();
                 UpdateLEDArray();
 
-                cubeLEDs.ForEach(led => led.On = false);
+                cubeLEDs.ForEach(led => led.TurnOff());
                 for (var i = 0; i < cubeLEDs.Count; i++)
                 {
                     if (i < ReminderIncome)
                     {
-                        cubeLEDs[i].On = true;
+                        cubeLEDs[i].TurnOn();
                     }
                 }
 
@@ -224,21 +224,6 @@ namespace ROOT
         {
             HigherCostArrowRoot.gameObject.SetActive(false);
             LowerCostArrowRoot.gameObject.SetActive(false);
-            
-            /*Income = 24;
-            Cost = 64;*/
-        }
-
-        void Update()
-        {
-            /*Income = (Time.frameCount / 60);
-            Cost = income - 2;*/
-            //Debug.Log(ReminderMaxIncome);
-            /*if (Time.frameCount%60==0)
-            {
-                int val= Income = UnityEngine.Random.Range(0, 70);
-                Debug.Log(val);
-            }*/
         }
     }
 }
