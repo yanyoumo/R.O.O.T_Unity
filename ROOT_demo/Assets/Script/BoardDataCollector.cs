@@ -230,10 +230,9 @@ namespace ROOT
         }
         public float CalculateServerScore(out int networkCount)
         {
-            var serverList = m_Board.FindUnitWithCoreType(CoreType.Server);
             var maxLength = 36;
             var resPath = new List<Unit>();
-            foreach (var startPoint in serverList)
+            foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
             {
                 var networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
                 networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0, AddPath(startPoint, 0ul)));
@@ -253,7 +252,7 @@ namespace ROOT
                                 if (otherUnit.UnitCore == CoreType.NetworkCable)
                                 {
                                     bool flag = false;
-                                    foreach (var tmp in now.WorldNeighboringData)
+                                    foreach (var tmp in otherUnit.WorldNeighboringData)
                                     {
                                         var anotherUnit = tmp.Value.OtherUnit;
                                         if (IsVis(anotherUnit, vis2) == false && anotherUnit.UnitCore == CoreType.NetworkCable)
@@ -267,7 +266,10 @@ namespace ROOT
                                     if (flag == false)
                                     {
                                         if (length + val < maxLength)
+                                        {
+                                            maxLength = length + val;
                                             resPath = GeneratePath(startPoint, otherUnit, vis);
+                                        }
                                         goto END_SPOT;
                                     }
 
@@ -282,7 +284,7 @@ namespace ROOT
                         }
                     }
                 }
-                END_SPOT:;
+            END_SPOT:;
             }
 
             if (maxLength == 36)
