@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.Utilities;
 using UnityEditorInternal.VR;
 using UnityEngine;
 
@@ -200,11 +201,12 @@ namespace ROOT
             while (now != end)
             {
                 res.Add(now);
+                now.InServerGrid = true;
                 vis = RemovePath(now, vis);
                 foreach (var keyValuePair in now.WorldNeighboringData)
                 {
                     var otherUnit = keyValuePair.Value.OtherUnit;
-                    if (IsVis(otherUnit, vis))
+                    if (otherUnit != null && IsVis(otherUnit, vis))
                     {
                         now = otherUnit;
                         break;
@@ -212,6 +214,9 @@ namespace ROOT
                 }
             }
             res.Add(end);
+            var length = 0;
+            for (int i = res.Count - 1; i >= 0; --i)
+                res[i].ServerDepth = ++length;
             return res;
         }
 
@@ -230,10 +235,13 @@ namespace ROOT
         }
         public float CalculateServerScore(out int networkCount)
         {
-            var maxLength = 36;
+            int maxCount = m_Board.BoardLength * m_Board.BoardLength;
+            var maxLength = maxCount;
             var resPath = new List<Unit>();
             foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
             {
+                m_Board.Units.ForEach(unit => unit.InServerGrid = unit.Visited = false);
+                startPoint.Visited = true;
                 var networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
                 networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0, AddPath(startPoint, 0ul)));
                 while (networkCableQueue.Count != 0)
@@ -249,7 +257,7 @@ namespace ROOT
                             var otherUnit = keyValuePair.Value.OtherUnit;
                             if (otherUnit != null && IsVis(otherUnit, vis2) == false)
                             {
-                                if (otherUnit.UnitCore == CoreType.NetworkCable)
+                                if (otherUnit.UnitCore == CoreType.NetworkCable && otherUnit.Visited == false)
                                 {
                                     bool flag = false;
                                     foreach (var tmp in otherUnit.WorldNeighboringData)
@@ -273,6 +281,7 @@ namespace ROOT
                                         goto END_SPOT;
                                     }
 
+                                    otherUnit.Visited = true;
                                     networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(otherUnit, length + val,
                                         AddPath(otherUnit, vis2)));
                                 }
@@ -284,12 +293,12 @@ namespace ROOT
                         }
                     }
                 }
-            END_SPOT:;
+                END_SPOT:;
             }
 
-            if (maxLength == 36)
+            if (maxLength == maxCount)
                 maxLength = 0;
-            networkCount = maxLength;
+            MaxNetworkDepth = networkCount = maxLength;
             return GetServerIncomeByLength(maxLength);
         }
         [Obsolete]
