@@ -101,13 +101,13 @@ namespace ROOT
             }
         }
 
-        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID)
+        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID, int _cost,int tier)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(Vector2Int.zero);
-            unit.InitUnit(core, sides);
+            unit.InitUnit(core, sides, tier);
             if (ShouldStationary)
             {
                 unit.SetupStationUnit();
@@ -119,7 +119,7 @@ namespace ROOT
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
 
-            unit.SetShop(ID, Mathf.FloorToInt(hardwarePrice), totalCount % 2 == 0);
+            unit.SetShop(ID, Mathf.FloorToInt(hardwarePrice), _cost, totalCount % 2 == 0);
             totalCount++;
             return go;
         }
@@ -127,6 +127,8 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
+        public int Cost { get; internal set; } = 0;
+
         private int _tier = 0;
         public int Tier
         {
@@ -152,6 +154,7 @@ namespace ROOT
         public SimpleLEDArray TierLEDs;
 
         public TextMeshPro TierTag;
+        public TextMeshPro CostTag;
         public TextMeshPro PriceTag;
 
         public Transform ShopBackPlane;
@@ -180,17 +183,24 @@ namespace ROOT
             ShopBackPlane.gameObject.SetActive(false);
         }
 
-        public void SetShop(int shopID,int price,bool? showQuad)
+        public void SetShop(int shopID, int price, int _cost, bool? showQuad)
         {
             ShopID = shopID;
-            if (price!=-1)
+            if (price != -1)
             {
                 RetailPrice = price;
             }
+
             ShopBackPlane.gameObject.SetActive(true);
             if (showQuad.HasValue)
             {
                 BackQuadRenderer.enabled = showQuad.Value;
+            }
+
+            if (_cost != -1)
+            {
+                Cost = _cost;
+                CostTag.text = Utils.PaddingNum2Digit(Cost);
             }
         }
 
@@ -265,10 +275,15 @@ namespace ROOT
             _coreMatNameDic.Add(CoreType.HQ, GlobalResourcePath.UNIT_HQ_MAT_NAME);//TODO HQ的核心还没有实际材质
         }
 
-        public RotationDirection SignalFromDir; 
+        [ReadOnly]
+        public RotationDirection SignalFromDir;
+        [ReadOnly]
         public bool Visited { get; set; } //for scoring purpose
+        [ReadOnly]
         public int HardDiskVal; //for scoring purpose
+        [ReadOnly]
         public bool InHddGrid { get; set; } //for scoring purpose
+        [ReadOnly]
         public bool InHddSignalGrid; //for scoring purpose
 
         #region 服务器计分
@@ -276,10 +291,12 @@ namespace ROOT
         /// 记录服务器信号深度的变量，和服务器相连的Network该数值应该为1.
         /// 可以作为中间量、即使不处于最长序列该值不必清除。
         /// </summary>
+        [ReadOnly]
         public int ServerDepth;//for scoring purpose
         /// <summary>
         /// 标记一次计分后，本单元是否处于必要最长序列中。不处于的需要显式记为false。
         /// </summary>
+        [ReadOnly]
         public bool InServerGrid; //for scoring purpose
         /// <summary>
         /// 具体显示LED的field，即，最接近服务器的该数值应为全部深度，最枝端的显示值需要为1。
@@ -392,7 +409,7 @@ namespace ROOT
             _coreMeshRenderer.material.SetColor("_EmissionColor", color);
         }
 
-        public void InitUnit(CoreType core, SideType[] sides, Board gameBoard = null, int tier = 0)
+        public void InitUnit(CoreType core, SideType[] sides, int tier, Board gameBoard = null)
         {
             Debug.Assert(sides.Length == 4);
             InitUnit(core, sides[0], sides[1], sides[2], sides[3], tier, gameBoard);

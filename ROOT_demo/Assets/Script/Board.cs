@@ -111,13 +111,13 @@ namespace ROOT
             }
         }
 
-        public GameObject InitUnit(Vector2Int board_pos,CoreType core,SideType[] sides)
+        public GameObject InitUnit(Vector2Int board_pos,CoreType core,SideType[] sides,int Tier)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(board_pos.ToString());
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(board_pos);
-            unit.InitUnit(core, sides);
+            unit.InitUnit(core, sides, Tier);
             return go;
         }
 
@@ -128,7 +128,7 @@ namespace ROOT
             Unit unit = unitGO.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(unitGist.Pos);
             UnitsGameObjects.Add(unitGist.Pos, unitGO);
-            unit.InitUnit(unitGist.Core, unitGist.Sides, this);
+            unit.InitUnit(unitGist.Core, unitGist.Sides, unitGist.Tier, this);
             if (unitGist.IsStation)
             {
                 unit.SetupStationUnit();

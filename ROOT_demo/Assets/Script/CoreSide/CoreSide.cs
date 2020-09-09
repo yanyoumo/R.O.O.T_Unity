@@ -71,6 +71,22 @@ namespace ROOT
 
     public sealed partial class ShopMgr : MonoBehaviour
     {
+        /// <summary>
+        /// 从Tier获取单元各种数据的倍率。
+        /// </summary>
+        /// <param name="Tier">位于哪个Tier</param>
+        /// <returns>依次为（分数、购买价格、Cost）的float Tuple</returns>
+        private Tuple<float, float, float> TierMultiplier(int Tier)
+        {
+            //目前对Tier进行设定：
+            //先确定需要由Tier影响的内容：
+            //分数、购买价格、Cost。
+            var SignalMultipler = (float)Tier;
+            var PriceMultipler = 1.0f + 0.1f * Tier;
+            var CostMultipler = 1.0f + 0.5f * Tier;
+            return new Tuple<float, float, float>(SignalMultipler, PriceMultipler, CostMultipler);
+        }
+
         private int StationaryRateListLastIndex = 0;
         //因为静态单位对游戏体验还是太重要了，不能随便放给随机。还是要控制起来。
         //使用一堆Tuple来控制，<x,y>指代为x个里面有y个静态的，并且是依次的，
@@ -254,53 +270,6 @@ namespace ROOT
     {
         private float perDriverIncome = 2.0f;
         private Dictionary<CoreType, float> costByCore;
-
-        private float TokenizedCostList(int count)
-        {
-            return (float)count;//为了今天测试，还是一个单元1元钱的逻辑。
-        }
-
-        /*private float TokenizedCostList(int count)
-        {
-            //这个数值太不直观了。
-            //这个不太对，就是这个Cost的价格除了线性增长外，应该只有轻微的调整，单元价格应该在购买的时候越来越贵。
-            //TODO 感觉这种量化的数据后，具体花销是多少一定要打出来。
-            //需要让玩家清楚的知晓成本是多少。
-            //0-1-3-5-7-09-11-13-15-17-18-19-20-22-25-27-30-32-34-36+
-            //0-1-3-6-8-10-13-16-18-22-23-25-26-29-35-38-45-48-51-54
-            Dictionary<int, int> tokenizedVal = new Dictionary<int, int>()
-            {
-                {0, 0},
-                {1, 1},
-                {3, 3},
-                {5, 6},
-                {7, 8},
-                {9, 10},
-                {11, 13},
-                {13, 16},
-                {15, 18},
-                {17, 22},
-                {18, 23},
-                {19, 25},
-                {20, 26},
-                {22, 29},
-                {25, 35},
-                {27, 38},
-                {30, 45},
-                {32, 48},
-                {34, 51},
-                {36, 54},
-            };
-            Debug.Assert(count >= 0);
-            var maxKey = tokenizedVal.Keys.Where(val => (val >= count)).Min();
-            tokenizedVal.TryGetValue(maxKey, out var maxVal);
-            if (tokenizedVal.All(val => (val.Value < count)))
-            {
-                return tokenizedVal.Values.Max();
-            }
-
-            return maxVal;
-        }*/
 
         private void InitIncomeCost()
         {

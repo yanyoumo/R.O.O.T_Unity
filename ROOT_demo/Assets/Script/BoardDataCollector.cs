@@ -386,17 +386,16 @@ namespace ROOT
             return m_Board.Units.Sum(unit => GetCostByCore(unit.UnitCore));
         }
 
-        private float CalculateTokenizedCost()
+        private float CalculateTieredCost()
         {
-            //HACK 先把Progress从0~1映射到0~36
-            return TokenizedCostList(m_Board.GetNonPCBUnitCount);
+            return m_Board.Units.Sum(unit => unit.Cost);
         }
 
         //这个返回的也是正数。
         //Tokenize后，这个逻辑要换。
         public float CalculateCost()
         {
-            return CalculateTokenizedCost();
+            return CalculateTieredCost();
             //return CalculateBasicCost();
         }
     }
