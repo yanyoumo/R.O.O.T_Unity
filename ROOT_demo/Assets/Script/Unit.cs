@@ -101,13 +101,13 @@ namespace ROOT
             }
         }
 
-        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID)
+        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID, int _cost,int tier)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(Vector2Int.zero);
-            unit.InitUnit(core, sides);
+            unit.InitUnit(core, sides, tier);
             if (ShouldStationary)
             {
                 unit.SetupStationUnit();
@@ -119,7 +119,7 @@ namespace ROOT
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
 
-            unit.SetShop(ID, Mathf.FloorToInt(hardwarePrice), totalCount % 2 == 0);
+            unit.SetShop(ID, Mathf.FloorToInt(hardwarePrice), _cost, totalCount % 2 == 0);
             totalCount++;
             return go;
         }
@@ -127,6 +127,8 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
+        public int Cost { get; internal set; } = 0;
+
         private int _tier = 0;
         public int Tier
         {
@@ -152,6 +154,7 @@ namespace ROOT
         public SimpleLEDArray TierLEDs;
 
         public TextMeshPro TierTag;
+        public TextMeshPro CostTag;
         public TextMeshPro PriceTag;
 
         public Transform ShopBackPlane;
@@ -180,17 +183,24 @@ namespace ROOT
             ShopBackPlane.gameObject.SetActive(false);
         }
 
-        public void SetShop(int shopID,int price,bool? showQuad)
+        public void SetShop(int shopID, int price, int _cost, bool? showQuad)
         {
             ShopID = shopID;
-            if (price!=-1)
+            if (price != -1)
             {
                 RetailPrice = price;
             }
+
             ShopBackPlane.gameObject.SetActive(true);
             if (showQuad.HasValue)
             {
                 BackQuadRenderer.enabled = showQuad.Value;
+            }
+
+            if (_cost != -1)
+            {
+                Cost = _cost;
+                CostTag.text = Utils.PaddingNum2Digit(Cost);
             }
         }
 
@@ -399,7 +409,7 @@ namespace ROOT
             _coreMeshRenderer.material.SetColor("_EmissionColor", color);
         }
 
-        public void InitUnit(CoreType core, SideType[] sides, Board gameBoard = null, int tier = 0)
+        public void InitUnit(CoreType core, SideType[] sides, int tier, Board gameBoard = null)
         {
             Debug.Assert(sides.Length == 4);
             InitUnit(core, sides[0], sides[1], sides[2], sides[3], tier, gameBoard);

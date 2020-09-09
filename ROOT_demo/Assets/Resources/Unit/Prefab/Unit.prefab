@@ -82,7 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6094702ec27bd43b2508232f436450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LEDColor: {r: 0, g: 0, b: 0, a: 0}
+  LEDColor: {r: 1, g: 0.54386824, b: 0, a: 0}
   _LEDArray:
   - {fileID: 257226855241056173}
   - {fileID: 63229381388948871}
@@ -992,6 +992,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TierLEDs: {fileID: 814975058593057325}
   TierTag: {fileID: 1445302186819268858}
+  CostTag: {fileID: 5671821018749382508}
   PriceTag: {fileID: 5134071563668140108}
   ShopBackPlane: {fileID: 3879975519063178855}
   BackQuadRenderer: {fileID: 1664634026623689924}

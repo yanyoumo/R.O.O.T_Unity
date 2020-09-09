@@ -19,17 +19,18 @@ namespace ROOT
     {
         public override int Val
         {
+            //Val=[1,5]
             set
             {
                 for (var i1 = 0; i1 < _LEDArray.Length; i1++)
                 {
-                    if (i1 >= value)
+                    if (i1 < value)
                     {
-                        _LEDArray[i1].TurnOff();
+                        _LEDArray[i1].TurnOn();
                     }
                     else
                     {
-                        _LEDArray[i1].TurnOn();
+                        _LEDArray[i1].TurnOff();
                     }
                 }
             }
@@ -37,7 +38,7 @@ namespace ROOT
 
         void Awake()
         {
-            Val = 0;
+            Val = 3;
             _LEDArray.ForEach(LED => LED.TurnOnColor = LEDColor);
         }
     }

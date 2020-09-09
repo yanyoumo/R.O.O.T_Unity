@@ -38,11 +38,17 @@ namespace ROOT
         [Header("Basic")]
         public CoreType Core;
         public SideType[] Sides;
+        [Range(1,5)]
+        public int Tier;
 
         [Header("OnBoardInfo")]
         public Vector2Int Pos;
         public bool IsStation;
     }
+
+    //TODO Yuxuan 自行学习ScriptObject概念，使用跟随逻辑链学习本类的用途和使用方式。
+    //1、重新制作关卡“第三关”、“第四关”
+    //2、制作全新关卡“第五关”。
 
     [Serializable]
     public struct TutorialActionData
@@ -73,6 +79,9 @@ namespace ROOT
         [ShowIf("ActionType", TutorialActionType.CreateUnit)]
         [VerticalGroup("Split/Right")]
         public SideType[] Sides;
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
+        [Range(1,5)]
+        public int Tier;
     }
 
     [Serializable]

@@ -11,6 +11,46 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
+
+    public partial class BoardDataCollector : MonoBehaviour
+    {
+        internal int NthUnitCost(int N)
+        {
+            Dictionary<int, int> tokenizedVal = new Dictionary<int, int>()
+            {
+                {0, 0},
+                {1, 1},
+                {5, 2},
+                {10, 4},
+                {18, 8},
+                {24, 14},
+                {36, 23},
+            };
+
+            if (!tokenizedVal.Keys.All(i => i <= N))
+            {
+
+                var minKey = tokenizedVal.Keys.Where(i => i <= N).Max();
+                var maxKey = tokenizedVal.Keys.Where(i => i >= N).Min();
+                if (minKey == maxKey)
+                {
+                    return tokenizedVal[minKey];
+                }
+                else
+                {
+                    var minVal = tokenizedVal[minKey];
+                    var maxVal = tokenizedVal[maxKey];
+                    var normalizedCount = (N - minVal) / (float)(maxVal - minVal);
+                    return Mathf.RoundToInt(Mathf.Lerp(minVal, maxVal, normalizedCount));
+                }
+            }
+            else
+            {
+                return tokenizedVal[tokenizedVal.Keys.Max()];
+            }
+        }
+    }
+
     public sealed partial class ShopMgr:MonoBehaviour
     {
         private int totalCount = 0;
@@ -25,7 +65,16 @@ namespace ROOT
         public GameStateMgr CurrentGameStateMgr;
 
         private GameObject[] _items;
-        private Unit[] _itemUnit => _items.Select(unit => unit.GetComponentInChildren<Unit>()).ToArray();
+
+        private Unit[] _itemUnit
+        {
+            get
+            {
+                var res=_items.Select(unit => unit ? unit.GetComponentInChildren<Unit>() : null).ToArray();
+                return res;
+            }
+        }
+
         private float[] _hardwarePrices;
 
         private Vector3[] currentPosS;
@@ -218,7 +267,7 @@ namespace ROOT
                 }
             }
         }
-        
+
         public void ShopPostAnimationUpdate()
         {
             for (int i = 0; i < _items.Length; i++)
@@ -228,16 +277,21 @@ namespace ROOT
 
             for (int i = 0; i < _items.Length; i++)
             {
+                int _cost = currentLevelAsset.BoardDataCollector.NthUnitCost(GameBoard.GetUnitCount);
                 if (!_items[i])
                 {
                     CoreType core = GenerateRandomCore();
-                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i);
+                    int tier = totalCount % 5 + 1;//TODO 这个要和游戏进程联系起来。
+                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i, _cost, tier);
                     currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
-
-                _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, UnitRetailPrice(i), null);
+                else
+                {
+                    var (item1, item2, CostMultiplier) = TierMultiplier(_itemUnit[i].Tier);
+                    _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, UnitRetailPrice(i), Mathf.RoundToInt(_cost * CostMultiplier),  null);
+                }
             }
         }
 
@@ -256,8 +310,14 @@ namespace ROOT
         /// <returns>除了邮费的总价</returns>
         private int UnitRetailPrice(int idx)
         {
+
+            var (priceMutilpier, item2, item3) = TierMultiplier(_itemUnit[idx].Tier);
+            
             //现在使用时间节奏调整价格。
-            var val = Mathf.FloorToInt(_hardwarePrices[idx] * _priceShopDiscount[idx] * PriceMultiplier(currentLevelAsset.LevelProgress));
+            var val = Mathf.FloorToInt(_hardwarePrices[idx] *
+                                       _priceShopDiscount[idx] *
+                                       PriceMultiplier(currentLevelAsset.LevelProgress *
+                                                       priceMutilpier));
             //在基价已经比较便宜的时候，这个算完后可能为0.
             return Math.Max(val, 1);
         }

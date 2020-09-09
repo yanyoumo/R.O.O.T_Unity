@@ -124,7 +124,7 @@ namespace ROOT
 
         protected void CreateUnitOnBoard(TutorialActionData data)
         {
-            GameObject go = LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core, Utils.Shuffle(data.Sides));
+            GameObject go = LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core, Utils.Shuffle(data.Sides), data.Tier);
             if (data.Pos.x < 0 || data.Pos.y < 0)
             {
                 LevelAsset.GameBoard.DeliverUnitRandomPlace(go);
