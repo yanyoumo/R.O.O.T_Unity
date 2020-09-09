@@ -45,10 +45,12 @@ MonoBehaviour:
   InitalBoard:
   - Core: 5
     Sides: 01000000010000000100000001000000
+    Tier: 1
     Pos: {x: 2, y: 2}
     IsStation: 0
   - Core: 2
     Sides: 01000000010000000100000001000000
+    Tier: 1
     Pos: {x: 3, y: 3}
     IsStation: 0
   TargetCount: 10
