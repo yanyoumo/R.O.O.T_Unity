@@ -250,6 +250,11 @@ namespace ROOT
             #endregion
         }
 
+        private float TierProgress(float gameProgress)
+        {
+            return Mathf.Lerp(0, 6, gameProgress);
+        }
+
         private float PostalMultiplier(float gameProgress)
         {
             const float baseMul = 1.6f;

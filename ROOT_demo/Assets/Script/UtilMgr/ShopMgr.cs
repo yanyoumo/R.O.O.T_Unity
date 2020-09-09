@@ -281,7 +281,9 @@ namespace ROOT
                 if (!_items[i])
                 {
                     CoreType core = GenerateRandomCore();
-                    int tier = totalCount % 5 + 1;//TODO 这个要和游戏进程联系起来。Tier的计分部分，Server迪公去接，硬盘还得自己接。
+                    int tier = totalCount % 5 + 1;
+                    //TODO 这个要和游戏进程联系起来。
+                    //Tier的计分部分，Server迪公去接，硬盘还得自己接。
                     _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i, _cost, tier);
                     currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
