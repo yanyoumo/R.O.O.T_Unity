@@ -198,7 +198,8 @@ namespace ROOT
         {
             var res = new List<Unit>();
             var now = start;
-            while (now != end)
+            vis = AddPath(end, vis);
+            while (vis != 0ul)
             {
                 res.Add(now);
                 now.InServerGrid = true;
@@ -213,10 +214,15 @@ namespace ROOT
                     }
                 }
             }
-            res.Add(end);
+            Debug.Log("START " + start.CurrentBoardPosition.ToString() +
+                      "END " + end.CurrentBoardPosition.ToString() +
+                      "Len " + res.Count);
             var length = 0;
             for (int i = res.Count - 1; i >= 0; --i)
+            {
                 res[i].ServerDepth = ++length;
+                Debug.Log(res[i].CurrentBoardPosition.ToString());
+            }
             return res;
         }
 
@@ -244,26 +250,27 @@ namespace ROOT
                 startPoint.Visited = true;
                 var networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
                 networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0, AddPath(startPoint, 0ul)));
+                Debug.Log("ENQUE " + startPoint.CurrentBoardPosition.ToString());
                 while (networkCableQueue.Count != 0)
                 {
-                    var (now, length, vis) = networkCableQueue.Dequeue();
+                    var (networkCable, length, vis) = networkCableQueue.Dequeue();
                     var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
-                    hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(now, vis));
+                    hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
                     while (hardDriveQueue.Count != 0)
                     {
-                        var (now2, vis2) = hardDriveQueue.Dequeue();
-                        foreach (var keyValuePair in now2.WorldNeighboringData)
+                        var (hardDrive, vis2) = hardDriveQueue.Dequeue();
+                        foreach (var hardDriveNeighbor in hardDrive.WorldNeighboringData)
                         {
-                            var otherUnit = keyValuePair.Value.OtherUnit;
-                            if (otherUnit != null && IsVis(otherUnit, vis2) == false)
+                            var unitConnectedToHardDrive = hardDriveNeighbor.Value.OtherUnit;
+                            if (unitConnectedToHardDrive != null && IsVis(unitConnectedToHardDrive, vis2) == false)
                             {
-                                if (otherUnit.UnitCore == CoreType.NetworkCable && otherUnit.Visited == false)
+                                if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable && unitConnectedToHardDrive.Visited == false)
                                 {
                                     bool flag = false;
-                                    foreach (var tmp in otherUnit.WorldNeighboringData)
+                                    foreach (var networkCableNeighbor in unitConnectedToHardDrive.WorldNeighboringData)
                                     {
-                                        var anotherUnit = tmp.Value.OtherUnit;
-                                        if (anotherUnit != null && IsVis(anotherUnit, vis2) == false && anotherUnit.UnitCore == CoreType.NetworkCable)
+                                        var unitConnectedToNetworkCable = networkCableNeighbor.Value.OtherUnit;
+                                        if (unitConnectedToNetworkCable != null && IsVis(unitConnectedToNetworkCable, vis2) == false && unitConnectedToNetworkCable.UnitCore == CoreType.NetworkCable)
                                         {
                                             flag = true;
                                             break;
@@ -276,18 +283,19 @@ namespace ROOT
                                         if (length + val < maxLength)
                                         {
                                             maxLength = length + val;
-                                            resPath = GeneratePath(startPoint, otherUnit, vis);
+                                            resPath = GeneratePath(startPoint, unitConnectedToHardDrive, vis2);
                                         }
                                         goto END_SPOT;
                                     }
 
-                                    otherUnit.Visited = true;
-                                    networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(otherUnit, length + val,
-                                        AddPath(otherUnit, vis2)));
+                                    unitConnectedToHardDrive.Visited = true;
+                                    networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(unitConnectedToHardDrive, length + val,
+                                        AddPath(unitConnectedToHardDrive, vis2)));
+                                    Debug.Log("ENQUE " + unitConnectedToHardDrive.CurrentBoardPosition.ToString());
                                 }
                                 else
                                 {
-                                    hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(otherUnit, AddPath(otherUnit, vis2)));
+                                    hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive, AddPath(unitConnectedToHardDrive, vis2)));
                                 }
                             }
                         }
