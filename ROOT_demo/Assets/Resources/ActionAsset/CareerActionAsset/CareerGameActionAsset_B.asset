@@ -17,7 +17,7 @@ MonoBehaviour:
   LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
     type: 3}
   levelType: 1
-  GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
+  GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
@@ -38,5 +38,21 @@ MonoBehaviour:
     type: 0
     RequireAmount: 4
     Range: {x: 20, y: -1}
-  InitalBoard: []
+  InitalBoard:
+  - Core: 2
+    Sides: 01000000010000000100000000000000
+    Tier: 1
+    Pos: {x: 0, y: 0}
+    IsStation: 1
+  - Core: 8
+    Sides: 00000000000000000000000000000000
+    Tier: 1
+    Pos: {x: 2, y: 2}
+    IsStation: 0
   TargetCount: 15
+  StationaryRateList:
+  - {x: 12, y: 8}
+  - {x: 10, y: 5}
+  - {x: 8, y: 2}
+  - {x: 7, y: 1}
+  - {x: 0, y: 0}

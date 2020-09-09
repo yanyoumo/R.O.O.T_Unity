@@ -12,15 +12,72 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: CareerGameActionAsset_D
   m_EditorClassIdentifier: 
-  TitleTerm: 
-  Thumbnail: {fileID: 0}
-  LevelLogic: {fileID: 0}
-  levelType: 0
-  GameModeAsset: {fileID: 0}
+  TitleTerm: Level_5
+  Thumbnail: {fileID: 21300000, guid: 53e27874c263fec468d86516331a6776, type: 3}
+  LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
+    type: 3}
+  levelType: 1
+  GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
-  TimeLineTokens: []
-  InitalBoard: []
-  TargetCount: 0
+  TimeLineTokens:
+  - TokenID: 0
+    type: 0
+    RequireAmount: 0
+    Range: {x: 0, y: 3}
+  - TokenID: 1
+    type: 0
+    RequireAmount: 1
+    Range: {x: 3, y: 7}
+  - TokenID: 2
+    type: 2
+    RequireAmount: 4
+    Range: {x: 7, y: 12}
+  - TokenID: 3
+    type: 0
+    RequireAmount: 4
+    Range: {x: 7, y: 12}
+  - TokenID: 4
+    type: 1
+    RequireAmount: 3
+    Range: {x: 12, y: 15}
+  - TokenID: 5
+    type: 2
+    RequireAmount: 0
+    Range: {x: 14, y: 20}
+  - TokenID: 6
+    type: 0
+    RequireAmount: 8
+    Range: {x: 15, y: 20}
+  - TokenID: 7
+    type: 1
+    RequireAmount: 5
+    Range: {x: 18, y: 25}
+  - TokenID: 8
+    type: 3
+    RequireAmount: 0
+    Range: {x: 25, y: 28}
+  InitalBoard:
+  - Core: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 1
+    Pos: {x: 3, y: 3}
+    IsStation: 0
+  - Core: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 1
+    Pos: {x: 4, y: 4}
+    IsStation: 0
+  - Core: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 1
+    Pos: {x: 3, y: 4}
+    IsStation: 0
+  - Core: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 1
+    Pos: {x: 4, y: 3}
+    IsStation: 0
+  TargetCount: 10
   StationaryRateList: []
