@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.Utilities;
+using UnityEditorInternal.VR;
 using UnityEngine;
 
 namespace ROOT
@@ -41,7 +43,7 @@ namespace ROOT
 
                     if (otherSide == SideType.Connection)
                     {
-                        score = CalculateProcessorScoreCore(nextKey, Utils.GetInvertDirection(direction), depth+1);
+                        score = CalculateProcessorScoreCore(nextKey, Utils.GetInvertDirection(direction), depth + 1);
                     }
                 }
             }
@@ -49,7 +51,7 @@ namespace ROOT
             return score;
         }
 
-        private float CalculateProcessorScoreCore(Vector2Int hostKey,RotationDirection dir,int depth)
+        private float CalculateProcessorScoreCore(Vector2Int hostKey, RotationDirection dir, int depth)
         {
             var score = 0.0f;
             m_Board.UnitsGameObjects.TryGetValue(hostKey, out var currentUnit);
@@ -73,7 +75,7 @@ namespace ROOT
                     score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.West, depth);
 
                     unit.SignalFromDir = dir;
-                    unit.HardDiskVal = (int) score;
+                    unit.HardDiskVal = (int)score;
                 }
             }
             else
@@ -119,12 +121,12 @@ namespace ROOT
                     if (!unit.Visited)
                     {
                         //CPU的这个方位用不着。
-                        driverCount += CalculateProcessorScoreCore(processorKey,RotationDirection.North,0);
+                        driverCount += CalculateProcessorScoreCore(processorKey, RotationDirection.North, 0);
                     }
                 }
 
-                MaxNormalDepth = (int) driverCount;
-                driverCountInt = (int) driverCount;
+                MaxNormalDepth = (int)driverCount;
+                driverCountInt = (int)driverCount;
                 return Mathf.FloorToInt(driverCount * GetPerDriverIncome);
             }
         }
@@ -139,7 +141,7 @@ namespace ROOT
         //备注：1、请注意处于必要最长信号上但是并不是Network的unit的深度，要保证其最后LED显示正确。
         //     2、请将定义于本节外的所有函数视为黑盒。
         //     3、在本节内可以定义任何新函数，但请补充xml-summary。
-        private void CalculateServerScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction,int depth)
+        private void CalculateServerScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
         {
             var side = unit.GetWorldSpaceUnitSide(direction);
             if (side == SideType.Connection)
@@ -191,6 +193,122 @@ namespace ROOT
                 Debug.Assert(true);
             }
         }
+
+        public List<Unit> GeneratePath(Unit start, Unit end, ulong vis)
+        {
+            var res = new List<Unit>();
+            var now = start;
+            vis = AddPath(end, vis);
+            while (vis != 0ul)
+            {
+                res.Add(now);
+                now.InServerGrid = true;
+                vis = RemovePath(now, vis);
+                foreach (var keyValuePair in now.WorldNeighboringData)
+                {
+                    var otherUnit = keyValuePair.Value.OtherUnit;
+                    if (otherUnit != null && IsVis(otherUnit, vis))
+                    {
+                        now = otherUnit;
+                        break;
+                    }
+                }
+            }
+            //Debug.Log("START " + start.CurrentBoardPosition + "END " + end.CurrentBoardPosition + "Len " + res.Count);
+            var length = 0;
+            for (int i = res.Count - 1; i >= 0; --i)
+            {
+                res[i].ServerDepth = ++length;
+                //Debug.Log(res[i].CurrentBoardPosition.ToString());
+            }
+            return res;
+        }
+
+        public bool IsVis(Unit now, ulong vis)
+        {
+            return (vis & (1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition,m_Board.BoardLength))) != 0ul;
+        }
+
+        public ulong AddPath(Unit now, ulong vis)
+        {
+            return vis ^ (1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition, m_Board.BoardLength));
+        }
+        public ulong RemovePath(Unit now, ulong vis)
+        {
+            return AddPath(now, vis);
+        }
+        public float CalculateServerScore(out int networkCount)
+        {
+            int maxCount = m_Board.BoardLength * m_Board.BoardLength;
+            var maxLength = maxCount;
+            var resPath = new List<Unit>();
+            foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
+            {
+                m_Board.Units.ForEach(unit => unit.InServerGrid = unit.Visited = false);
+                startPoint.Visited = true;
+                var networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
+                networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0, AddPath(startPoint, 0ul)));
+                //Debug.Log("ENQUE " + startPoint.CurrentBoardPosition.ToString());
+                while (networkCableQueue.Count != 0)
+                {
+                    var (networkCable, length, vis) = networkCableQueue.Dequeue();
+                    var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
+                    hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
+                    while (hardDriveQueue.Count != 0)
+                    {
+                        var (hardDrive, vis2) = hardDriveQueue.Dequeue();
+                        foreach (var hardDriveNeighbor in hardDrive.WorldNeighboringData)
+                        {
+                            var unitConnectedToHardDrive = hardDriveNeighbor.Value.OtherUnit;
+                            if (unitConnectedToHardDrive != null && IsVis(unitConnectedToHardDrive, vis2) == false)
+                            {
+                                if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable && unitConnectedToHardDrive.Visited == false)
+                                {
+                                    bool flag = false;
+                                    foreach (var networkCableNeighbor in unitConnectedToHardDrive.WorldNeighboringData)
+                                    {
+                                        var unitConnectedToNetworkCable = networkCableNeighbor.Value.OtherUnit;
+                                        if (unitConnectedToNetworkCable != null && IsVis(unitConnectedToNetworkCable, vis2) == false && unitConnectedToNetworkCable.UnitCore == CoreType.NetworkCable)
+                                        {
+                                            flag = true;
+                                            break;
+                                        }
+                                    }
+
+                                    int val = 1;
+                                    if (flag == false)
+                                    {
+                                        if (length + val < maxLength)
+                                        {
+                                            maxLength = length + val;
+                                            resPath = GeneratePath(startPoint, unitConnectedToHardDrive, vis2);
+                                        }
+                                        goto END_SPOT;
+                                    }
+
+                                    unitConnectedToHardDrive.Visited = true;
+                                    networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(unitConnectedToHardDrive, length + val,
+                                        AddPath(unitConnectedToHardDrive, vis2)));
+                                    //Debug.Log("ENQUE " + unitConnectedToHardDrive.CurrentBoardPosition.ToString());
+                                }
+                                else
+                                {
+                                    hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive, AddPath(unitConnectedToHardDrive, vis2)));
+                                }
+                            }
+                        }
+                    }
+                }
+                END_SPOT:;
+            }
+
+            if (maxLength == maxCount) maxLength = 0;
+
+            MaxNetworkDepth = networkCount = maxLength;
+            return GetServerIncomeByLength(maxLength);
+        }
+        [Obsolete]
+        /*
         public float CalculateServerScore(out int networkCount)
         {
             var maxLength = 0.0f;
@@ -275,7 +393,7 @@ namespace ROOT
                 return GetServerIncomeByLength((int) maxLength);
             }
         }
-
+        */
         #endregion
 
         private float CalculateBasicCost()
