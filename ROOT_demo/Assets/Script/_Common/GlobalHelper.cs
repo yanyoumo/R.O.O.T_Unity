@@ -94,6 +94,10 @@ namespace ROOT
             return array;
         }
 
+        public static int Vector2Int2Int(Vector2Int pos)
+        {
+            return 6 * pos.x + pos.y;
+        }
         public static RotationDirection GetInvertDirection(RotationDirection orgRotationDirection)
         {
             switch (orgRotationDirection)
