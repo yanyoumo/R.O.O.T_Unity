@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -66,14 +67,8 @@ namespace ROOT
 
         private GameObject[] _items;
 
-        private Unit[] _itemUnit
-        {
-            get
-            {
-                var res=_items.Select(unit => unit ? unit.GetComponentInChildren<Unit>() : null).ToArray();
-                return res;
-            }
-        }
+        [CanBeNull]
+        private Unit[] _itemUnit => _items.Select(unit => unit ? unit.GetComponentInChildren<Unit>() : null).ToArray();
 
         private float[] _hardwarePrices;
 
@@ -281,16 +276,19 @@ namespace ROOT
                 if (!_items[i])
                 {
                     CoreType core = GenerateRandomCore();
-                    int tier = totalCount % 5 + 1;//TODO 这个要和游戏进程联系起来。Tier的计分部分，Server迪公去接，硬盘还得自己接。
+                    int tier = totalCount % 5 + 1;
+                    //Tier的计分部分，Server迪公去接，硬盘还得自己接。
+                    var (item1, item2, CostMultiplier) = TierMultiplier(tier);
+                    _cost = Mathf.RoundToInt(_cost * CostMultiplier);
                     _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i, _cost, tier);
+                    _itemUnit[i].SetShop(i, UnitRetailPrice(i), _cost, totalCount % 2 == 0);
                     currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
                 else
                 {
-                    var (item1, item2, CostMultiplier) = TierMultiplier(_itemUnit[i].Tier);
-                    _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, UnitRetailPrice(i), Mathf.RoundToInt(_cost * CostMultiplier),  null);
+                    _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, UnitRetailPrice(i), -1,  null);
                 }
             }
         }
@@ -311,13 +309,13 @@ namespace ROOT
         private int UnitRetailPrice(int idx)
         {
 
-            var (priceMutilpier, item2, item3) = TierMultiplier(_itemUnit[idx].Tier);
-            
+            var ( item1, priceMutilpier, item3) = TierMultiplier(_itemUnit[idx].Tier);
+
             //现在使用时间节奏调整价格。
             var val = Mathf.FloorToInt(_hardwarePrices[idx] *
                                        _priceShopDiscount[idx] *
-                                       PriceMultiplier(currentLevelAsset.LevelProgress *
-                                                       priceMutilpier));
+                                       PriceMultiplier(currentLevelAsset.LevelProgress) *
+                                       priceMutilpier);
             //在基价已经比较便宜的时候，这个算完后可能为0.
             return Math.Max(val, 1);
         }

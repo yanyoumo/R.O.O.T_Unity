@@ -118,8 +118,6 @@ namespace ROOT
                 _priceByCore.TryGetValue(core, out var corePrice);
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
-
-            unit.SetShop(ID, Mathf.FloorToInt(hardwarePrice), _cost, totalCount % 2 == 0);
             totalCount++;
             return go;
         }
@@ -127,6 +125,7 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
+        public TextMeshPro BillBoardText;
         public int Cost { get; internal set; } = 0;
 
         private int _tier = 0;
@@ -140,6 +139,7 @@ namespace ROOT
                 TierLEDs.Val = _tier;
             }
         }
+        private int _hardwarePrice = -1;
         private int _retailPrice = -1;
         public int RetailPrice
         {
@@ -183,12 +183,12 @@ namespace ROOT
             ShopBackPlane.gameObject.SetActive(false);
         }
 
-        public void SetShop(int shopID, int price, int _cost, bool? showQuad)
+        public void SetShop(int shopID, int retailPrice, int _cost, bool? showQuad)
         {
             ShopID = shopID;
-            if (price != -1)
+            if (retailPrice != -1)
             {
-                RetailPrice = price;
+                RetailPrice = retailPrice;
             }
 
             ShopBackPlane.gameObject.SetActive(true);
@@ -301,7 +301,7 @@ namespace ROOT
         /// <summary>
         /// 具体显示LED的field，即，最接近服务器的该数值应为全部深度，最枝端的显示值需要为1。
         /// </summary>
-        public int NetworkVal=> BoardDataCollector.MaxNetworkDepth - ServerDepth + 1;
+        public int NetworkVal=> ServerDepth;
         #endregion
 
         //Rotation使用的世界方向的。
@@ -568,85 +568,35 @@ namespace ROOT
                         var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
                         ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
                         Connector.Connected = data.Connected;
+                        var shouldHide = true;
                         var NormalSignalValtmp = 0;
                         var NetworkSignalValtmp = 0;
-                        /*Connector.NormalSignalVal = 0;
-                        Connector.NetworkSignalVal = 0;*/
                         if (data.Connected)
                         {
-                            if (UnitCoreGenre == CoreGenre.Destination)
+                            if (currentSideDirection == RotationDirection.West|| currentSideDirection == RotationDirection.South)
                             {
+                                // 所有单元只计算自己西侧和南侧的链接，这样就不存在双侧显示的问题了。
                                 Unit otherUnit = data.OtherUnit;
                                 if (otherUnit != null)
                                 {
-                                    bool noHideHDD = InHddSignalGrid && (currentSideDirection == SignalFromDir) && (HardDiskVal != 0);
-                                    bool noHideNet = InServerGrid && (ServerDepth >= otherUnit.ServerDepth) && (otherUnit.InServerGrid);
+                                    bool ShowHDDLED = InHddSignalGrid && otherUnit.InHddSignalGrid;
+                                    bool HasSolidHDDSigal = (SignalFromDir == currentSideDirection);
+                                    HasSolidHDDSigal |= (Utils.GetInvertDirection(otherUnit.SignalFromDir) == currentSideDirection);
+                                    ShowHDDLED &= HasSolidHDDSigal;
 
-                                    bool otherNoHideHDD = otherUnit.InHddSignalGrid && (Utils.GetInvertDirection(currentSideDirection) == otherUnit.SignalFromDir) && (otherUnit.HardDiskVal != 0);
-                                    bool otherNoHideNet = otherUnit.InServerGrid && (otherUnit.ServerDepth >= ServerDepth) && (InServerGrid);
+                                    bool ShowNetLED = InServerGrid && otherUnit.InServerGrid;
+                                    ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
 
-                                    if (otherUnit.HardDiskVal == 0 && UnitCore != CoreType.HardDrive)
-                                    {
-                                        NormalSignalValtmp = 0;
-                                    }
-                                    else
-                                    {
-                                        if (UnitCore != CoreType.HardDrive)
-                                        {
-                                            NormalSignalValtmp = Math.Min(HardDiskVal, otherUnit.HardDiskVal);
-                                        }
-                                        else
-                                        {
-                                            NormalSignalValtmp = HardDiskVal;
-                                        }
-                                    }
+                                    NormalSignalValtmp = ShowHDDLED ? Math.Min(HardDiskVal, otherUnit.HardDiskVal) : 0;
+                                    NetworkSignalValtmp = ShowNetLED ? Math.Min(NetworkVal, otherUnit.NetworkVal) : 0;
 
-                                    if (ServerDepth == -1 || !InServerGrid)
-                                    {
-                                        NetworkSignalValtmp = 0;
-                                    }
-                                    else
-                                    {
-                                        if (UnitCore != CoreType.NetworkCable)
-                                        {
-                                            NetworkSignalValtmp = NetworkVal-1;
-                                        }
-                                        else
-                                        {
-                                            NetworkSignalValtmp = NetworkVal;
-                                        }
-                                    }
-
-                                    bool noHide = noHideHDD || noHideNet; //有可能算出来两边都显示（？），的确，常见
-                                    bool otherNoHide = otherNoHideHDD || otherNoHideNet; //有可能算出来两边都显示（？），的确，常见
-                                    if (noHide && otherNoHide)
-                                    {
-                                        if (otherUnit.UnitCore == CoreType.Server || otherUnit.UnitCore == CoreType.Processor)
-                                        {
-                                            noHide = true;
-                                        }
-                                        else
-                                        {
-                                            noHide = (PosHash > otherUnit.PosHash);
-                                            if (noHide)
-                                            {
-                                                NetworkSignalValtmp = Math.Min(NetworkVal, otherUnit.NetworkVal);
-                                                NormalSignalValtmp = Math.Min(HardDiskVal, otherUnit.HardDiskVal);
-                                            }
-                                        }
-                                    }
-
-                                    Connector.Hided = !noHide;
+                                    shouldHide = !(ShowHDDLED || ShowNetLED);
                                 }
-                            }
-                            else
-                            {
-                                //Source不显示
-                                Connector.Hided = true;
                             }
                         }
                         Connector.NormalSignalVal = NormalSignalValtmp;
                         Connector.NetworkSignalVal = NetworkSignalValtmp;
+                        Connector.Hided = shouldHide;
                     }
                 }
             }
@@ -658,6 +608,9 @@ namespace ROOT
                     keyValuePair.Value.Connected = false;
                 }
             }
+
+            //TEMP 临时用这个测一下。
+            BillBoardText.text = HardDiskVal + "";
         }
 
         public void UpdateNeighboringDataAndSideMesh()

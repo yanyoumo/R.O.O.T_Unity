@@ -62,7 +62,8 @@ namespace ROOT
                 {
                     if (unit.UnitCore == CoreType.HardDrive)
                     {
-                        score += 1.0f;
+                        var (scoreMutiplier,item2,item3)=ShopMgr.TierMultiplier(unit.Tier);
+                        score += scoreMutiplier;
                         unit.InHddGrid = true;
                     }
 
@@ -194,7 +195,7 @@ namespace ROOT
             }
         }
 
-        public static List<Unit> GeneratePath(Unit start, Unit end, ulong vis)
+        public List<Unit> GeneratePath(Unit start, Unit end, ulong vis)
         {
             var res = new List<Unit>();
             var now = start;
@@ -214,9 +215,7 @@ namespace ROOT
                     }
                 }
             }
-            Debug.Log("START " + start.CurrentBoardPosition.ToString() +
-                      "END " + end.CurrentBoardPosition.ToString() +
-                      "Len " + res.Count);
+            Debug.Log("START " + start.CurrentBoardPosition + "END " + end.CurrentBoardPosition + "Len " + res.Count);
             var length = 0;
             for (int i = res.Count - 1; i >= 0; --i)
             {
@@ -225,20 +224,22 @@ namespace ROOT
             }
             return res;
         }
-
-        public static bool IsVis(Unit now, ulong vis)
+      
+        public bool IsVis(Unit now, ulong vis)
         {
-            return (vis & (1ul << Utils.Vector2Int2Int(now.CurrentBoardPosition))) != 0ul;
+            return (vis & (1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition,m_Board.BoardLength))) != 0ul;
         }
 
-        public static ulong AddPath(Unit now, ulong vis)
+        public ulong AddPath(Unit now, ulong vis)
         {
-            return vis ^ (1ul << Utils.Vector2Int2Int(now.CurrentBoardPosition));
+            return vis ^ (1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition, m_Board.BoardLength));
         }
-        public static ulong RemovePath(Unit now, ulong vis)
+
+        public ulong RemovePath(Unit now, ulong vis)
         {
             return AddPath(now, vis);
         }
+
         public float CalculateServerScore(out int networkCount)
         {
             int maxCount = m_Board.BoardLength * m_Board.BoardLength;
@@ -304,14 +305,14 @@ namespace ROOT
                 END_SPOT:;
             }
 
-            if (maxLength == maxCount)
-                maxLength = 0;
+            if (maxLength == maxCount) maxLength = 0;
+
             MaxNetworkDepth = networkCount = maxLength;
             return GetServerIncomeByLength(maxLength);
         }
+
         [Obsolete]
-        /*
-        public float CalculateServerScore(out int networkCount)
+        /*public float CalculateServerScore(out int networkCount)
         {
             var maxLength = 0.0f;
             var farthestUnitPos = Vector2Int.zero;
@@ -394,8 +395,8 @@ namespace ROOT
                 networkCount = MaxNetworkDepth = (int)maxLength;
                 return GetServerIncomeByLength((int) maxLength);
             }
-        }
-        */
+        }*/
+        
         #endregion
 
         private float CalculateBasicCost()
