@@ -76,7 +76,7 @@ namespace ROOT
         /// </summary>
         /// <param name="Tier">位于哪个Tier</param>
         /// <returns>依次为（分数、购买价格、Cost）的float Tuple</returns>
-        private Tuple<float, float, float> TierMultiplier(int Tier)
+        public static Tuple<float, float, float> TierMultiplier(int Tier)
         {
             //目前对Tier进行设定：
             //先确定需要由Tier影响的内容：
@@ -273,7 +273,7 @@ namespace ROOT
 
     public partial class BoardDataCollector : MonoBehaviour
     {
-        private float perDriverIncome = 2.0f;
+        private float perDriverIncome = 1.0f;
         private Dictionary<CoreType, float> costByCore;
 
         private void InitIncomeCost()
