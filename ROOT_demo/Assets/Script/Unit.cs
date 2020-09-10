@@ -127,6 +127,7 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
+        public TextMeshPro BillBoardText;
         public int Cost { get; internal set; } = 0;
 
         private int _tier = 0;
@@ -570,8 +571,6 @@ namespace ROOT
                         Connector.Connected = data.Connected;
                         var NormalSignalValtmp = 0;
                         var NetworkSignalValtmp = 0;
-                        /*Connector.NormalSignalVal = 0;
-                        Connector.NetworkSignalVal = 0;*/
                         if (data.Connected)
                         {
                             if (UnitCoreGenre == CoreGenre.Destination)
@@ -658,6 +657,9 @@ namespace ROOT
                     keyValuePair.Value.Connected = false;
                 }
             }
+
+            //TEMP 临时用这个测一下。
+            BillBoardText.text = ServerDepth + "";
         }
 
         public void UpdateNeighboringDataAndSideMesh()

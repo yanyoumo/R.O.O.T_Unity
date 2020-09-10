@@ -194,7 +194,7 @@ namespace ROOT
             }
         }
 
-        public static List<Unit> GeneratePath(Unit start, Unit end, ulong vis)
+        public List<Unit> GeneratePath(Unit start, Unit end, ulong vis)
         {
             var res = new List<Unit>();
             var now = start;
@@ -214,28 +214,26 @@ namespace ROOT
                     }
                 }
             }
-            Debug.Log("START " + start.CurrentBoardPosition.ToString() +
-                      "END " + end.CurrentBoardPosition.ToString() +
-                      "Len " + res.Count);
+            //Debug.Log("START " + start.CurrentBoardPosition + "END " + end.CurrentBoardPosition + "Len " + res.Count);
             var length = 0;
             for (int i = res.Count - 1; i >= 0; --i)
             {
                 res[i].ServerDepth = ++length;
-                Debug.Log(res[i].CurrentBoardPosition.ToString());
+                //Debug.Log(res[i].CurrentBoardPosition.ToString());
             }
             return res;
         }
 
-        public static bool IsVis(Unit now, ulong vis)
+        public bool IsVis(Unit now, ulong vis)
         {
-            return (vis & (1ul << Utils.Vector2Int2Int(now.CurrentBoardPosition))) != 0ul;
+            return (vis & (1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition,m_Board.BoardLength))) != 0ul;
         }
 
-        public static ulong AddPath(Unit now, ulong vis)
+        public ulong AddPath(Unit now, ulong vis)
         {
-            return vis ^ (1ul << Utils.Vector2Int2Int(now.CurrentBoardPosition));
+            return vis ^ (1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition, m_Board.BoardLength));
         }
-        public static ulong RemovePath(Unit now, ulong vis)
+        public ulong RemovePath(Unit now, ulong vis)
         {
             return AddPath(now, vis);
         }
@@ -250,7 +248,7 @@ namespace ROOT
                 startPoint.Visited = true;
                 var networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
                 networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0, AddPath(startPoint, 0ul)));
-                Debug.Log("ENQUE " + startPoint.CurrentBoardPosition.ToString());
+                //Debug.Log("ENQUE " + startPoint.CurrentBoardPosition.ToString());
                 while (networkCableQueue.Count != 0)
                 {
                     var (networkCable, length, vis) = networkCableQueue.Dequeue();
@@ -291,7 +289,7 @@ namespace ROOT
                                     unitConnectedToHardDrive.Visited = true;
                                     networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(unitConnectedToHardDrive, length + val,
                                         AddPath(unitConnectedToHardDrive, vis2)));
-                                    Debug.Log("ENQUE " + unitConnectedToHardDrive.CurrentBoardPosition.ToString());
+                                    //Debug.Log("ENQUE " + unitConnectedToHardDrive.CurrentBoardPosition.ToString());
                                 }
                                 else
                                 {
@@ -304,8 +302,8 @@ namespace ROOT
                 END_SPOT:;
             }
 
-            if (maxLength == maxCount)
-                maxLength = 0;
+            if (maxLength == maxCount) maxLength = 0;
+
             MaxNetworkDepth = networkCount = maxLength;
             return GetServerIncomeByLength(maxLength);
         }

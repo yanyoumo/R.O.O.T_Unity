@@ -925,7 +925,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4385619247227309112
 Transform:
   m_ObjectHideFlags: 0
@@ -990,6 +990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729dec68926cbf34da144e2b436836dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BillBoardText: {fileID: 8761583895662260726}
   TierLEDs: {fileID: 814975058593057325}
   TierTag: {fileID: 1445302186819268858}
   CostTag: {fileID: 5671821018749382508}
