@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.ExceptionServices;
 using JetBrains.Annotations;
 using ROOT;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -16,6 +17,143 @@ namespace ROOT
 
     public sealed class Board : MonoBehaviour
     {
+        #region 热力系统
+
+        //TEMP 热力系统一些临时测试的数据。
+        //public int minHeatSinkCount { get; private set; } = 12;
+        public int minHeatSinkCount=> fixedHeatSinkPos.Length;
+
+        private Vector2Int[] fixedHeatSinkPos =
+        {
+            new Vector2Int(1,2),
+            new Vector2Int(2,1),
+            new Vector2Int(1,3),
+            new Vector2Int(3,1),
+            new Vector2Int(4,2),
+            new Vector2Int(2,4),
+            new Vector2Int(4,3),
+            new Vector2Int(3,4),
+            new Vector2Int(0,0),
+            new Vector2Int(0,5),
+            new Vector2Int(5,0),
+            new Vector2Int(5,5),
+        };
+
+        private void InitHeatInfo()
+        {
+            BoardGirds=new Dictionary<Vector2Int, BoardGirdCell>();
+            for (var i = 0; i < BoardLength; i++)
+            {
+                for (var j = 0; j < BoardLength; j++)
+                {
+                    var go = Instantiate(BoardGridTemplate, BoardGridRoot);
+                    float GridLength = _boardPhysicalLength;
+                    Vector3 offset = new Vector3(i * GridLength, 0.0f, j * GridLength);
+                    go.transform.localPosition = BoardGridZeroing.position + offset;
+                    Vector2Int key = new Vector2Int(i, j);
+                    BoardGirds.Add(key, go.GetComponent<BoardGirdCell>());
+                }
+            }
+        }
+
+        private Vector2Int? FindFurthestHeatSink(in Vector2Int[] existingHeatSink)
+        {
+            Vector2 center = new Vector2((BoardLength - 1) / 2.0f, (BoardLength - 1) / 2.0f);
+            float distance = -1.0f;
+            Vector2Int? FurthestHeatSink=null;
+
+            for (int i = 0; i < BoardLength; i++)
+            {
+                for (int j = 0; j < BoardLength; j++)
+                {
+                    Vector2Int key = new Vector2Int(i, j);
+                    if (CheckBoardPosValidAndEmpty(key))
+                    {
+                        if (!existingHeatSink.Contains(key))
+                        {
+                            float tmpDistance = Vector2.Distance(key, center);
+                            if (tmpDistance>distance)
+                            {
+                                distance = tmpDistance;
+                                FurthestHeatSink = key;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return FurthestHeatSink;
+        }
+
+        private Vector2Int? FindAHeatSink(in Vector2Int[] existingHeatSink)
+        {
+            for (int i = 0; i < BoardLength; i++)
+            {
+                for (int j = 0; j < BoardLength; j++)
+                {
+                    Vector2Int key = new Vector2Int(i, j);
+                    if (CheckBoardPosValidAndEmpty(key))
+                    {
+                        if (!existingHeatSink.Contains(key))
+                        {
+                            return key;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 这里是检查时候又fix的HeatSink被占用。
+        /// </summary>
+        /// <returns>返回有多少个HeatSink格没有被满足，返回0即均满足。</returns>
+        public int CheckHeatSink()
+        {
+            BoardGirds.Values.ForEach(grid => grid.NormalOrHeatSink = false);
+            BoardGirds.ForEach(val => val.Value.NormalOrHeatSink = fixedHeatSinkPos.Contains(val.Key));
+            return fixedHeatSinkPos.Count(pos => CheckBoardPosValidAndEmpty(pos) == false);
+        }
+
+        /// <summary>
+        /// 游戏板扫描格点查看是否有可服务的HeatSink格
+        /// </summary>
+        /// <returns>返回有多少个HeatSink格没有被满足，返回0即均满足。</returns>
+        public int ScanHeatSink()
+        {
+            //RISK 这个是O(n2)的函数，千万不能每帧调，就是Per-move才调。
+            //购买抵达的时候应该也要算一次？
+            Vector2Int[] heatSinkPos = new Vector2Int[minHeatSinkCount];
+            for (var i = 0; i < heatSinkPos.Length; i++)
+            {
+                heatSinkPos[i] = new Vector2Int(-1, -1);
+            }
+            int noHeatSinkCount = 0;
+            BoardGirds.Values.ForEach(grid => grid.NormalOrHeatSink = false);
+
+            for (var i = 0; i < heatSinkPos.Length; i++)
+            {
+                var val = FindFurthestHeatSink(in heatSinkPos);
+                if (val.HasValue)
+                {
+                    heatSinkPos[i] = val.Value;
+                    BoardGirds[val.Value].NormalOrHeatSink = true;
+                }
+                else
+                {
+                    heatSinkPos[i] = new Vector2Int(-1, -1);
+                    noHeatSinkCount++;
+                }
+            }
+
+            return noHeatSinkCount;
+        }
+
+        public Dictionary<Vector2Int, BoardGirdCell> BoardGirds { get; private set; }
+
+        #endregion
+
         public readonly int BoardLength = 6;
         public int TotalBoardCount => BoardLength * BoardLength;
         private readonly float _boardPhysicalLength = 1.2f;
@@ -23,6 +161,9 @@ namespace ROOT
         private readonly float _boardPhysicalOriginY = -3.1f;
 
         public GameObject UnitTemplate;
+        public GameObject BoardGridTemplate;
+        public Transform BoardGridRoot;
+        public Transform BoardGridZeroing;
 
         public Dictionary<Vector2Int, GameObject> UnitsGameObjects { get; private set; }
 
@@ -258,6 +399,9 @@ namespace ROOT
         void Awake()
         {
             UnitsGameObjects = new Dictionary<Vector2Int, GameObject>();
+            InitHeatInfo();
+            CheckHeatSink();
+            //ScanHeatSink();
         }
 
         public Vector2Int[] GetAllEmptySpace()

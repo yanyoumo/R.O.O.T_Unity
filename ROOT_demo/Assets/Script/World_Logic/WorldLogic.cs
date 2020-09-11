@@ -651,6 +651,8 @@ namespace ROOT
         //TEMP 每次修改这两个值的时候才应该改一次。
         private static int lastInCome = -1;
         private static int lastCost = -1;
+        //TEMP 每一步应该才计算一次，帧间时都这么临时存着。
+        private static int occupiedHeatSink;
 
         internal static void UpdateBoardData(GameAssets currentLevelAsset)
         {
@@ -658,7 +660,9 @@ namespace ROOT
             int cost = 0;
             inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
             inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
-            cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
+            //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
+            //TEMP 现在只有热力消耗。
+            cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.minHeatSinkCount);
             currentLevelAsset.DeltaCurrency = inCome - cost;
 
             if (currentLevelAsset.CostLine != null)
@@ -702,12 +706,17 @@ namespace ROOT
                 currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetTimeRatio(), RowEnum.Time);
             }
 
+
+            //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
+            //总之稳了后，这个不能这么每帧调用。
+            occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink();
             if (shouldCycle)
             {
                 //HACK Timeline的StepCount已经整合到这里，可以在一些LevelLogic里面统一 重置了。
                 //因为玩家有可能在开始按动ctrl，于是在相关教程中，在开启时间轴的时候StepCount会清零。
                 currentLevelAsset.StepCount++;
                 currentLevelAsset.TimeLine.Step();
+                //occupiedHeatSink = currentLevelAsset.GameBoard.ScanHeatSink();
                 currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
                 if (currentLevelAsset.BoughtOnce)
                 {

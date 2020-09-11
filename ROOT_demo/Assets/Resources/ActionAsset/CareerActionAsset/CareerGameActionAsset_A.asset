@@ -19,39 +19,45 @@ MonoBehaviour:
   levelType: 1
   GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
   ExcludedShop: 1
-  ShopExcludedType: 0500000002000000
+  ShopExcludedType: 050000000200000001000000
   Actions: []
   TimeLineTokens:
   - TokenID: 0
     type: 0
     RequireAmount: 3
-    Range: {x: 5, y: 27}
+    Range: {x: 5, y: 15}
   - TokenID: 1
-    type: 1
-    RequireAmount: 4
-    Range: {x: 13, y: 30}
-  - TokenID: 2
+    type: 0
+    RequireAmount: 10
+    Range: {x: 15, y: 30}
+  - TokenID: 3
     type: 2
     RequireAmount: 0
-    Range: {x: 15, y: -1}
-  - TokenID: 3
-    type: 0
-    RequireAmount: 6
-    Range: {x: 35, y: -1}
+    Range: {x: 30, y: -1}
   - TokenID: 4
+    type: 0
+    RequireAmount: 30
+    Range: {x: 30, y: 60}
+  - TokenID: 6
+    type: 0
+    RequireAmount: 60
+    Range: {x: 60, y: -1}
+  - TokenID: 8
     type: 3
     RequireAmount: 0
-    Range: {x: 45, y: -1}
+    Range: {x: 90, y: -1}
   InitalBoard:
   - Core: 5
     Sides: 01000000010000000100000001000000
+    Tier: 0
     Pos: {x: 2, y: 2}
     IsStation: 0
   - Core: 2
     Sides: 01000000010000000100000001000000
+    Tier: 0
     Pos: {x: 3, y: 3}
     IsStation: 0
-  TargetCount: 10
+  TargetCount: 70
   StationaryRateList:
   - {x: 12, y: 8}
   - {x: 10, y: 5}

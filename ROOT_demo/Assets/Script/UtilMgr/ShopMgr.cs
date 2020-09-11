@@ -17,15 +17,16 @@ namespace ROOT
     {
         internal int NthUnitCost(int N)
         {
+            return 0;
             Dictionary<int, int> tokenizedVal = new Dictionary<int, int>()
             {
                 {0, 0},
                 {1, 1},
-                {5, 2},
-                {10, 4},
-                {18, 8},
-                {24, 14},
-                {36, 23},
+                {5, 1},
+                {10, 1},
+                {18, 2},
+                {24, 3},
+                {36, 6},
             };
 
             if (!tokenizedVal.Keys.All(i => i <= N))
@@ -276,9 +277,11 @@ namespace ROOT
                 if (!_items[i])
                 {
                     CoreType core = GenerateRandomCore();
-                    int tier = totalCount % 5 + 1;
-                    //Tier的计分部分，Server迪公去接，硬盘还得自己接。
+                    int tier = TierProgress(currentLevelAsset.LevelProgress);
+                    //Tier的计分部分，Server迪公去接.
+                    //硬盘已经接上去了。
                     var (item1, item2, CostMultiplier) = TierMultiplier(tier);
+                    CostMultiplier = 0.0f;
                     _cost = Mathf.RoundToInt(_cost * CostMultiplier);
                     _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i, _cost, tier);
                     _itemUnit[i].SetShop(i, UnitRetailPrice(i), _cost, totalCount % 2 == 0);

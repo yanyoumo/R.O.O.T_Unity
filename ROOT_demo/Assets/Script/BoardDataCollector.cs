@@ -239,7 +239,7 @@ namespace ROOT
             return AddPath(now, vis);
         }
 
-        public float CalculateServerScore(out int networkCount)
+        /*public float CalculateServerScore(out int networkCount)
         {
             int maxCount = m_Board.BoardLength * m_Board.BoardLength;
             var maxLength = maxCount;
@@ -308,10 +308,10 @@ namespace ROOT
 
             MaxNetworkDepth = networkCount = maxLength;
             return GetServerIncomeByLength(maxLength);
-        }
+        }*/
 
         [Obsolete]
-        /*public float CalculateServerScore(out int networkCount)
+        public float CalculateServerScore(out int networkCount)
         {
             var maxLength = 0.0f;
             var farthestUnitPos = Vector2Int.zero;
@@ -394,7 +394,7 @@ namespace ROOT
                 networkCount = MaxNetworkDepth = (int)maxLength;
                 return GetServerIncomeByLength((int) maxLength);
             }
-        }*/
+        }
         
         #endregion
 
