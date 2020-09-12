@@ -278,7 +278,9 @@ namespace ROOT
         [ReadOnly]
         public RotationDirection SignalFromDir;
         [ReadOnly]
-        public bool Visited { get; set; } //for scoring purpose
+        public bool Visited { get; set; } //for scoring purpose: dequeue
+        [ReadOnly]
+        public bool Visiting { get; set; } //for scoring purpose: enqueue
         [ReadOnly]
         public int HardDiskVal; //for scoring purpose
         [ReadOnly]
