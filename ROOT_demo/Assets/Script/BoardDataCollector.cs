@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace ROOT
 {
+    using networkCableStatus = Tuple<Unit, int, int, ulong>;
     public struct ScoreContext
     {
         public SideType ConnectionType;
@@ -157,19 +158,17 @@ namespace ROOT
                 foreach (var keyValuePair in now.WorldNeighboringData)
                 {
                     var otherUnit = keyValuePair.Value.OtherUnit;
-                    if (keyValuePair.Value.Connected && otherUnit != null && IsVis(otherUnit, vis))
+                    if (keyValuePair.Value.Connected && IsVis(otherUnit, vis))
                     {
                         now = otherUnit;
                         break;
                     }
                 }
             }
-            Debug.Log("START " + start.CurrentBoardPosition + "END " + end.CurrentBoardPosition + "Len " + res.Count);
             var length = 0;
             for (int i = res.Count - 1; i >= 0; --i)
             {
                 res[i].ServerDepth = ++length;
-                Debug.Log(res[i].CurrentBoardPosition.ToString());
             }
             return res;
         }
@@ -191,33 +190,47 @@ namespace ROOT
 
         public float CalculateServerScore(out int networkCount)
         {
+
             int maxCount = m_Board.BoardLength * m_Board.BoardLength;
             var maxLength = maxCount;
             var resPath = new List<Unit>();
+            var maxScore = Int32.MinValue;
+            var pre = new Dictionary<Unit, networkCableStatus>();
             foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
             {
                 m_Board.Units.ForEach(unit => unit.InServerGrid = unit.Visited = unit.Visiting = false);
                 startPoint.Visiting = true;
-                var networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
-                networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0, AddPath(startPoint, 0ul)));
-                //Debug.Log("start ENQUE1 " + startPoint.CurrentBoardPosition);
+                var networkCableQueue = new Queue<networkCableStatus>();
+                networkCableQueue.Enqueue(new networkCableStatus(startPoint, 0, 0, AddPath(startPoint, 0ul)));
                 while (networkCableQueue.Count != 0)
                 {
-                    var (networkCable, length, vis) = networkCableQueue.Dequeue();
+                    var (networkCable, length, score, vis) = networkCableQueue.Dequeue();
+                    if (pre.Count > 0 && length > pre.First().Value.Item2)
+                    {
+                        pre = new Dictionary<Unit, networkCableStatus>
+                        {
+                            {networkCable, new networkCableStatus(networkCable, length, score, vis)}
+                        };
+                    }
+                    else
+                    {
+                        pre.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
+                    }
+                    if (length > maxLength)
+                    {
+                        break;
+                    }
                     networkCable.Visited = true;
-                    //Debug.Log("DEQUE1 " + networkCable.CurrentBoardPosition);
                     var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
                     hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
-                    //Debug.Log("start ENQUE2 " + networkCable.CurrentBoardPosition);
                     var isLast = true;
                     while (hardDriveQueue.Count != 0)
                     {
                         var (hardDrive, vis2) = hardDriveQueue.Dequeue();
-                        //Debug.Log("DEQUE2 " + hardDrive.CurrentBoardPosition);
                         foreach (var hardDriveNeighbor in hardDrive.WorldNeighboringData)
                         {
                             var unitConnectedToHardDrive = hardDriveNeighbor.Value.OtherUnit;
-                            if (hardDriveNeighbor.Value.Connected && unitConnectedToHardDrive != null && IsVis(unitConnectedToHardDrive, vis2) == false)
+                            if (hardDriveNeighbor.Value.Connected && IsVis(unitConnectedToHardDrive, vis2) == false)
                             {
                                 if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable && unitConnectedToHardDrive.Visited == false)
                                 {
@@ -225,31 +238,50 @@ namespace ROOT
                                     if (unitConnectedToHardDrive.Visiting == false)
                                     {
                                         unitConnectedToHardDrive.Visiting = true;
-                                        int val = 1;
-                                        networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(unitConnectedToHardDrive, length + val,
+                                        networkCableQueue.Enqueue(new networkCableStatus(unitConnectedToHardDrive,
+                                            length + 1,
+                                            score + Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(unitConnectedToHardDrive.Tier).Item1),
                                             AddPath(unitConnectedToHardDrive, vis2)));
-                                        //Debug.Log("ENQUE1 " + unitConnectedToHardDrive.CurrentBoardPosition + unitConnectedToHardDrive.UnitCore);
                                     }
                                 }
                                 else
                                 {
                                     hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive, AddPath(unitConnectedToHardDrive, vis2)));
-                                    //Debug.Log("ENQUE2 " + unitConnectedToHardDrive.CurrentBoardPosition + unitConnectedToHardDrive.UnitCore);
                                 }
                             }
                         }
                     }
-                    if (isLast == true && length < maxLength && length != 0)
+                    if ((isLast == true && length < maxLength && length != 0) || (length == maxLength && score > maxScore))
                     {
+                        maxScore = score;
                         maxLength = length;
                         resPath = GeneratePath(startPoint, networkCable, vis);
-                        break;
+                        foreach (var lastNodeNeighbor in networkCable.WorldNeighboringData)
+                        {
+                            var unitConnectedToLastNodeNeighbor = lastNodeNeighbor.Value.OtherUnit;
+                            if (lastNodeNeighbor.Value.Connected)
+                            {
+                                if (pre.ContainsKey(unitConnectedToLastNodeNeighbor) && IsVis(networkCable,
+                                    pre[unitConnectedToLastNodeNeighbor].Item4))
+                                {
+                                    if (pre[unitConnectedToLastNodeNeighbor].Item3 +
+                                        Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(networkCable.Tier).Item1) > maxScore)
+                                    {
+                                        maxScore = pre[unitConnectedToLastNodeNeighbor].Item3 +
+                                                   Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(networkCable.Tier).Item1);
+                                        resPath = GeneratePath(startPoint, networkCable, AddPath(networkCable,
+                                            pre[unitConnectedToLastNodeNeighbor].Item4));
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
-
-            if (maxLength == maxCount) maxLength = 0;
-            //Debug.Log("ANS " + maxLength);
+            if (maxLength == maxCount)
+            {
+                maxLength = 0;
+            }
             MaxNetworkDepth = networkCount = maxLength;
             return GetServerIncomeByLength(maxLength);
         }
