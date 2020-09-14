@@ -199,6 +199,7 @@ namespace ROOT
         {
             var res = new List<Unit>();
             var now = start;
+            end.InServerGrid = true;
             vis = AddPath(end, vis);
             while (vis != 0ul)
             {
@@ -215,12 +216,12 @@ namespace ROOT
                     }
                 }
             }
-            Debug.Log("START " + start.CurrentBoardPosition + "END " + end.CurrentBoardPosition + "Len " + res.Count);
+            //Debug.Log("START " + start.CurrentBoardPosition + "END " + end.CurrentBoardPosition + "Len " + res.Count);
             var length = 0;
             for (int i = res.Count - 1; i >= 0; --i)
             {
                 res[i].ServerDepth = ++length;
-                Debug.Log(res[i].CurrentBoardPosition.ToString());
+                //Debug.Log(res[i].CurrentBoardPosition.ToString());
             }
             return res;
         }
@@ -251,20 +252,20 @@ namespace ROOT
                 startPoint.Visiting = true;
                 var networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
                 networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0, AddPath(startPoint, 0ul)));
-                Debug.Log("start ENQUE1 " + startPoint.CurrentBoardPosition);
+                //Debug.Log("start ENQUE1 " + startPoint.CurrentBoardPosition);
                 while (networkCableQueue.Count != 0)
                 {
                     var (networkCable, length, vis) = networkCableQueue.Dequeue();
                     networkCable.Visited = true;
-                    Debug.Log("DEQUE1 " + networkCable.CurrentBoardPosition);
+                    //Debug.Log("DEQUE1 " + networkCable.CurrentBoardPosition);
                     var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
                     hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
-                    Debug.Log("start ENQUE2 " + networkCable.CurrentBoardPosition);
+                    //Debug.Log("start ENQUE2 " + networkCable.CurrentBoardPosition);
                     var isLast = true;
                     while (hardDriveQueue.Count != 0)
                     {
                         var (hardDrive, vis2) = hardDriveQueue.Dequeue();
-                        Debug.Log("DEQUE2 " + hardDrive.CurrentBoardPosition);
+                        //Debug.Log("DEQUE2 " + hardDrive.CurrentBoardPosition);
                         foreach (var hardDriveNeighbor in hardDrive.WorldNeighboringData)
                         {
                             var unitConnectedToHardDrive = hardDriveNeighbor.Value.OtherUnit;
@@ -279,13 +280,13 @@ namespace ROOT
                                         int val = 1;
                                         networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(unitConnectedToHardDrive, length + val,
                                             AddPath(unitConnectedToHardDrive, vis2)));
-                                        Debug.Log("ENQUE1 " + unitConnectedToHardDrive.CurrentBoardPosition + unitConnectedToHardDrive.UnitCore);
+                                        //Debug.Log("ENQUE1 " + unitConnectedToHardDrive.CurrentBoardPosition + unitConnectedToHardDrive.UnitCore);
                                     }
                                 }
                                 else
                                 {
                                     hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive, AddPath(unitConnectedToHardDrive, vis2)));
-                                    Debug.Log("ENQUE2 " + unitConnectedToHardDrive.CurrentBoardPosition + unitConnectedToHardDrive.UnitCore);
+                                    //Debug.Log("ENQUE2 " + unitConnectedToHardDrive.CurrentBoardPosition + unitConnectedToHardDrive.UnitCore);
                                 }
                             }
                         }
@@ -300,7 +301,7 @@ namespace ROOT
             }
 
             if (maxLength == maxCount) maxLength = 0;
-            Debug.Log("ANS " + maxLength);
+            //Debug.Log("ANS " + maxLength);
             MaxNetworkDepth = networkCount = maxLength;
             return GetServerIncomeByLength(maxLength);
         }

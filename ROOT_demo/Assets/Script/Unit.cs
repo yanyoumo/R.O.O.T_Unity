@@ -23,14 +23,18 @@ namespace ROOT
         public bool HasConnector;
         public bool Connected;
         public CoreGenre ConnectedToGenre;
-        public Unit OtherUnit;
+        private Unit _otherUnit;
+        public Unit OtherUnit {
+            get => HasConnector && Connected ? _otherUnit : null;
+            set => _otherUnit = value;
+        }
 
         public ConnectionData(bool hasConnector = false)
         {
             HasConnector = hasConnector;
             Connected = false;
             ConnectedToGenre = CoreGenre.Other;
-            OtherUnit = null;
+            _otherUnit = null;
         }
     }
 
@@ -612,7 +616,7 @@ namespace ROOT
             }
 
             //TEMP 临时用这个测一下。
-            BillBoardText.text = HardDiskVal + "";
+            BillBoardText.text = InServerGrid + "";
         }
 
         public void UpdateNeighboringDataAndSideMesh()
