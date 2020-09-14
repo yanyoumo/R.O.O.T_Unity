@@ -1,7 +1,44 @@
 ﻿using System;
+using UnityEngine;
 
 namespace ROOT
 {
+    //TODO yuxuan 本次的工作为初步的UI设计和更新
+    //去往 https://assetstore.unity.com/
+    //搜索一些靠谱的UI套件、以效果优先，优先级高于价格。
+    //整体设计风格：
+    //      低饱和度电子风格。
+    public static class ColorUtilityWrapper
+    {
+        /// <summary>
+        /// Unity默认给的哪个TryParseHtmlString是out出来的，不好用，用这个Wrapper搞一下。
+        /// </summary>
+        /// <param name="htmlString"></param>
+        /// <returns>保证传出来一个Color，如果字符不正确则throw</returns>
+        public static Color ParseHtmlStringNotNull(string htmlString)
+        {
+            var col = ParseHtmlString(htmlString);
+            if (col.HasValue)
+            {
+                return col.Value;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        /// <summary>
+        /// Unity默认给的哪个TryParseHtmlString是out出来的，不好用，用这个Wrapper搞一下。
+        /// </summary>
+        /// <returns>如果转换失败返回的null</returns>
+        public static Color? ParseHtmlString(string htmlString)
+        {
+            bool res = ColorUtility.TryParseHtmlString(htmlString, out Color color);
+            return res ? (Color?) color : null;
+        }
+    }
+
     /// <summary>
     /// This class stores all the color code(HEX string) that have been used in this game
     /// the naming schema for this class would be:
@@ -14,10 +51,22 @@ namespace ROOT
     /// </summary>
     public static class ColorName
     {
-        public const string ROOT_EVENT_DISASTER_RED = "#FF1515";
+        private const string ROOT_MASTER_NETWORK = "#2D39FF";
+        private const string ROOT_MASTER_GENERAL = "#2DFF3F";
+        private const string ROOT_MASTER_DISASTER = "#FF1515";
+        
+        public static string ROOT_TIMELINE_GENERAL => ROOT_MASTER_GENERAL;
+        public static string ROOT_TIMELINE_NETWORK => ROOT_MASTER_NETWORK;
+        public static string ROOT_TIMELINE_DISASTER => ROOT_MASTER_DISASTER;
+        public const string ROOT_TIMELINE_ENDING = "#000000";
+
+        public static string ROOT_EVENT_DISASTER_RED => ROOT_MASTER_DISASTER;
         public const string ROOT_SHOP_CHEAP_PURPLE = "#9D33FF";
-        public const string ROOT_DATA_NETWORK_BLUE = "#2D39FF";
-        public const string ROOT_DATA_GENERAL_GREEN = "#2DFF3F";
+        public static string ROOT_DATA_NETWORK_BLUE => ROOT_MASTER_NETWORK;
+        public static string ROOT_DATA_GENERAL_GREEN => ROOT_MASTER_GENERAL;
         public const string ROOT_TEXT_EMPHASIZE_ORANGE = "#FF5733";
+
+        public const string ROOT_MAT_BOARDGRID_NORMAL = "#15182F";
+        public const string ROOT_MAT_BOARDGRID_HEATSINK = "#650011";
     }
 }

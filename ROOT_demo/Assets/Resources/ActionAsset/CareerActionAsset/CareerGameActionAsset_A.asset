@@ -25,33 +25,55 @@ MonoBehaviour:
   - TokenID: 0
     type: 0
     RequireAmount: 3
-    Range: {x: 5, y: 27}
+    Range: {x: 5, y: 15}
   - TokenID: 1
     type: 1
-    RequireAmount: 4
-    Range: {x: 13, y: 30}
+    RequireAmount: 2
+    Range: {x: 10, y: 20}
   - TokenID: 2
+    type: 0
+    RequireAmount: 10
+    Range: {x: 15, y: 30}
+  - TokenID: 3
+    type: 1
+    RequireAmount: 8
+    Range: {x: 20, y: 35}
+  - TokenID: 3
     type: 2
     RequireAmount: 0
-    Range: {x: 15, y: -1}
-  - TokenID: 3
-    type: 0
-    RequireAmount: 6
-    Range: {x: 35, y: -1}
+    Range: {x: 30, y: -1}
   - TokenID: 4
+    type: 0
+    RequireAmount: 30
+    Range: {x: 30, y: 60}
+  - TokenID: 5
+    type: 1
+    RequireAmount: 15
+    Range: {x: 35, y: 70}
+  - TokenID: 6
+    type: 0
+    RequireAmount: 60
+    Range: {x: 60, y: -1}
+  - TokenID: 7
+    type: 1
+    RequireAmount: 30
+    Range: {x: 70, y: -1}
+  - TokenID: 8
     type: 3
     RequireAmount: 0
-    Range: {x: 45, y: -1}
+    Range: {x: 90, y: -1}
   InitalBoard:
   - Core: 5
     Sides: 01000000010000000100000001000000
+    Tier: 0
     Pos: {x: 2, y: 2}
     IsStation: 0
   - Core: 2
     Sides: 01000000010000000100000001000000
+    Tier: 0
     Pos: {x: 3, y: 3}
     IsStation: 0
-  TargetCount: 10
+  TargetCount: 70
   StationaryRateList:
   - {x: 12, y: 8}
   - {x: 10, y: 5}

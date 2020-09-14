@@ -74,6 +74,11 @@ namespace ROOT
     {
         public static float LastRandom = 0.0f;
 
+        public static T RandomItem<T>(IEnumerable<T> enumerable)
+        {
+            return enumerable.ElementAt(Random.Range(0, enumerable.Count() - 1));
+        }
+
         /// <summary>
         /// Array的洗牌函数，将一个Array的内容重组。
         /// </summary>

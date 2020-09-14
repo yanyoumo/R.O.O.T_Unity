@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -27,6 +29,7 @@ namespace ROOT
 
     public class MeteoriteBomber: IWarningDestoryer
     {
+        public const int MaxStrikeCount = 3;
         private const float ComplexModeRandomRatio = 0.2f;
         public Board GameBoard;
         //public GameAssets CurrentLevelAsset=>GameBoard.owner;
@@ -48,7 +51,7 @@ namespace ROOT
         private int LoopMedian => Math.Max(StartingMedian - StrikeLevel, MinLoopStep);
         private int LoopVariance => Math.Max(StartingVariance - StrikeLevel, 0);
 
-        public const int MinLoopStep=2;
+        public const int MinLoopStep=5;
 
         public Vector2Int[] NextIncomes { private set; get; }
 
@@ -99,9 +102,72 @@ namespace ROOT
             return Mathf.Max(LoopMedian + variance, MinLoopStep);
         }
 
+        private float[] RandomMulexRatio = new[]
+        {
+            0.2f,
+            0.45f,
+            0.35f
+        };
+
         private Vector2Int ComplexRandomTarget()
         {
-            return (Random.value <=  ComplexModeRandomRatio) ? PureRandomTarget() : (RandomUnitTarget() ?? PureRandomTarget());
+            var rawTargets = new[]
+            {
+                PureRandomTarget(),
+                RandomUnitTarget(),
+                RandomHeatSinkUnitTarget(),
+            };
+            var dic = new Dictionary<Vector2Int, float>();
+            var totalRatio = 0.0f;
+            for (var i = 0; i < rawTargets.Length; i++)
+            {
+                var vector2Int = rawTargets[i];
+                if ((!vector2Int.HasValue)||(dic.ContainsKey(vector2Int.Value)))
+                    continue;
+                dic.Add(vector2Int.Value, RandomMulexRatio[i]);
+                totalRatio += RandomMulexRatio[i];
+            };
+            if (dic.Count==1)
+                return dic.Keys.ToArray()[0];
+            dic.Keys.ForEach(key => dic[key] /= totalRatio);
+
+            Vector2Int res;
+            const int countMax = 100;
+            var count = 0;
+            try
+            {
+                do
+                {
+                    res = Utils.GenerateWeightedRandom(dic);
+                    count++;
+                    if (count >= countMax)
+                        throw new ArithmeticException();
+                } while (res == new Vector2Int(-1, -1) || res == new Vector2Int(-2, -2));
+            }
+            catch (ArithmeticException)
+            {
+                Debug.LogWarning("随机生成流程未在规定时间内生成合理结果。");
+                res = PureRandomTarget();
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// 瞄准压住了HeatSink的单元打
+        /// </summary>
+        /// <returns>如果棋盘上没有压住HeatSink的单位，则返回null</returns>
+        private Vector2Int? RandomHeatSinkUnitTarget()
+        {
+            var oHunit = GameBoard.OverlapHeatSinkUnit;
+            if (oHunit != null)
+            {
+                return Utils.RandomItem(oHunit.Select(unit => unit.CurrentBoardPosition));
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -130,6 +196,7 @@ namespace ROOT
         private void UpdateNextStrikingCount()
         {
             NextStrikingCount = Mathf.FloorToInt(HasStrikedTimes / (float) NextStrikeUpCounter)+1;
+            NextStrikingCount = Mathf.Min(NextStrikingCount, MaxStrikeCount);
         }
 
         public virtual void Step()

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector.Editor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace ROOT
 {
@@ -250,9 +251,37 @@ namespace ROOT
             #endregion
         }
 
-        private float TierProgress(float gameProgress)
+        public static int HeatSinkCost(int occupiedHeatSink,int HeatSinkCount)
         {
-            return Mathf.Lerp(0, 6, gameProgress);
+            const float pow = 1.5f;
+            if (occupiedHeatSink==0)
+            {
+                //TEMP 使用的指数型就会造成这个问题，如果输入是0，得出的结果非0.
+                return 0;
+            }
+            float normalizedVal = Mathf.Pow(pow, occupiedHeatSink) / Mathf.Pow(pow, HeatSinkCount);
+            float maxCost = 300.0f;
+            return Mathf.RoundToInt(normalizedVal * maxCost);
+        }
+         
+        private int TierProgress(float gameProgress)
+        {
+            var fluctuationRate = 0.25f;
+            var fluctuation = 1.0f;
+            var baseTier = Mathf.Lerp(1, 6, gameProgress);
+            if (Random.value <= fluctuationRate)
+            {
+                if (Random.value <= 0.5)
+                {
+                    baseTier += fluctuation;
+                }
+                else
+                {
+                    baseTier -= fluctuation;
+                }
+            }
+
+            return Mathf.Clamp(Mathf.RoundToInt(baseTier), 1, 5);
         }
 
         private float PostalMultiplier(float gameProgress)

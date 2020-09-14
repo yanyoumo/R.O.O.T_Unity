@@ -46,10 +46,6 @@ namespace ROOT
         public bool IsStation;
     }
 
-    //TODO Yuxuan 自行学习ScriptObject概念，使用跟随逻辑链学习本类的用途和使用方式。
-    //1、重新制作关卡“第三关”、“第四关”
-    //2、制作全新关卡“第五关”。
-
     [Serializable]
     public struct TutorialActionData
     {
