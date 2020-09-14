@@ -662,7 +662,7 @@ namespace ROOT
             inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
             //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
             //TEMP 现在只有热力消耗。
-            cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.minHeatSinkCount);
+            cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
             currentLevelAsset.DeltaCurrency = inCome - cost;
 
             if (currentLevelAsset.CostLine != null)

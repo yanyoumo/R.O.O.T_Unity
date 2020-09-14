@@ -9,7 +9,7 @@ using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
-using Random = System.Random;
+using Random = UnityEngine.Random;
 
 namespace ROOT
 {
@@ -19,25 +19,16 @@ namespace ROOT
     {
         #region 热力系统
 
-        //TEMP 热力系统一些临时测试的数据。
-        //public int minHeatSinkCount { get; private set; } = 12;
-        public int minHeatSinkCount=> fixedHeatSinkPos.Length;
+        public HeatSinkPatternLib HeatSinkPatterns;
+        private int _currentHeatSinkPatternsID = 0;
 
-        private Vector2Int[] fixedHeatSinkPos =
+        public int MinHeatSinkCount=> FixedHeatSinkPos.Length;
+        private Vector2Int[] FixedHeatSinkPos => HeatSinkPatterns.Lib[_currentHeatSinkPatternsID].Lib.ToArray();
+
+        private void UpdatePatternID()
         {
-            new Vector2Int(1,2),
-            new Vector2Int(2,1),
-            new Vector2Int(1,3),
-            new Vector2Int(3,1),
-            new Vector2Int(4,2),
-            new Vector2Int(2,4),
-            new Vector2Int(4,3),
-            new Vector2Int(3,4),
-            new Vector2Int(0,0),
-            new Vector2Int(0,5),
-            new Vector2Int(5,0),
-            new Vector2Int(5,5),
-        };
+            _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Count - 1);
+        }
 
         private void InitHeatInfo()
         {
@@ -105,6 +96,9 @@ namespace ROOT
             return null;
         }
 
+        [CanBeNull]
+        public Unit[] OverlapHeatSinkUnit => CheckHeatSink() != 0 ? Units.Where(unit => FixedHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray() : null;
+
         /// <summary>
         /// 这里是检查时候又fix的HeatSink被占用。
         /// </summary>
@@ -112,8 +106,8 @@ namespace ROOT
         public int CheckHeatSink()
         {
             BoardGirds.Values.ForEach(grid => grid.NormalOrHeatSink = false);
-            BoardGirds.ForEach(val => val.Value.NormalOrHeatSink = fixedHeatSinkPos.Contains(val.Key));
-            return fixedHeatSinkPos.Count(pos => CheckBoardPosValidAndEmpty(pos) == false);
+            BoardGirds.ForEach(val => val.Value.NormalOrHeatSink = FixedHeatSinkPos.Contains(val.Key));
+            return FixedHeatSinkPos.Count(pos => CheckBoardPosValidAndEmpty(pos) == false);
         }
 
         /// <summary>
@@ -124,7 +118,7 @@ namespace ROOT
         {
             //RISK 这个是O(n2)的函数，千万不能每帧调，就是Per-move才调。
             //购买抵达的时候应该也要算一次？
-            Vector2Int[] heatSinkPos = new Vector2Int[minHeatSinkCount];
+            Vector2Int[] heatSinkPos = new Vector2Int[MinHeatSinkCount];
             for (var i = 0; i < heatSinkPos.Length; i++)
             {
                 heatSinkPos[i] = new Vector2Int(-1, -1);

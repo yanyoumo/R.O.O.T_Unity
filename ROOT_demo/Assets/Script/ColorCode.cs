@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace ROOT
 {
+    //TODO yuxuan 本次的工作为初步的UI设计和更新
+    //去往 https://assetstore.unity.com/
+    //搜索一些靠谱的UI套件、以效果优先，优先级高于价格。
+    //整体设计风格：
+    //      低饱和度电子风格。
     public static class ColorUtilityWrapper
     {
         /// <summary>
@@ -46,10 +51,19 @@ namespace ROOT
     /// </summary>
     public static class ColorName
     {
-        public const string ROOT_EVENT_DISASTER_RED = "#FF1515";
+        private const string ROOT_MASTER_NETWORK = "#2D39FF";
+        private const string ROOT_MASTER_GENERAL = "#2DFF3F";
+        private const string ROOT_MASTER_DISASTER = "#FF1515";
+        
+        public static string ROOT_TIMELINE_GENERAL => ROOT_MASTER_GENERAL;
+        public static string ROOT_TIMELINE_NETWORK => ROOT_MASTER_NETWORK;
+        public static string ROOT_TIMELINE_DISASTER => ROOT_MASTER_DISASTER;
+        public const string ROOT_TIMELINE_ENDING = "#000000";
+
+        public static string ROOT_EVENT_DISASTER_RED => ROOT_MASTER_DISASTER;
         public const string ROOT_SHOP_CHEAP_PURPLE = "#9D33FF";
-        public const string ROOT_DATA_NETWORK_BLUE = "#2D39FF";
-        public const string ROOT_DATA_GENERAL_GREEN = "#2DFF3F";
+        public static string ROOT_DATA_NETWORK_BLUE => ROOT_MASTER_NETWORK;
+        public static string ROOT_DATA_GENERAL_GREEN => ROOT_MASTER_GENERAL;
         public const string ROOT_TEXT_EMPHASIZE_ORANGE = "#FF5733";
 
         public const string ROOT_MAT_BOARDGRID_NORMAL = "#15182F";

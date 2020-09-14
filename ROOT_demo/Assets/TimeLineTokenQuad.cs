@@ -25,10 +25,7 @@ namespace ROOT
             set => GetComponentInChildren<MeshRenderer>().material.color = value;
         }
 
-        Color[] QuadColors =
-        {
-            Color.green, Color.blue, Color.red, Color.black,
-        };
+        private Color[] QuadColors;
 
         public void DisableValMarker()
         {
@@ -69,6 +66,17 @@ namespace ROOT
             transform.localScale = Vector3.one;
             QuadTransform.localScale = new Vector3(UnitLength / SubDivision, 1.0f, TokenHeight);
             DisableValMarker();
+        }
+
+        public void Awake()
+        {
+            QuadColors = new[]
+            {
+                ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_GENERAL),
+                ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_NETWORK),
+                ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_DISASTER),
+                ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_ENDING),
+            };
         }
 
         public void Update()

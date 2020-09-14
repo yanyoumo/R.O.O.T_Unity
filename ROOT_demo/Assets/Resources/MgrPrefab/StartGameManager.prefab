@@ -43,13 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9846e15c728d174ea24784b13e6d4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HeatSinkPatterns: {fileID: 11400000, guid: 1d512935b48b42b45a51784e5466eb82, type: 2}
   TutorialActionAssetLib: {fileID: 11400000, guid: 403dd5900f3f3cf4c84f16bb73547a85,
-    type: 2}
-  TutorialTouchActionAssetLib: {fileID: 11400000, guid: 403dd5900f3f3cf4c84f16bb73547a85,
     type: 2}
   ClassicGameActionAssetLib: {fileID: 11400000, guid: 500fdf419d3c43c44abd730a5608cd55,
     type: 2}
   CareerGameActionAssetLib: {fileID: 11400000, guid: 16e75e99f0b23df4e8b0d31948256960,
     type: 2}
   PCSimulateDevice: 1
-  EditorInputScheme: 1
+  EditorInputScheme: 0
