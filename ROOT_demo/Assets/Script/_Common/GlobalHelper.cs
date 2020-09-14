@@ -85,7 +85,7 @@ namespace ROOT
             int n = array.Length;
             while (n > 1)
             {
-                int k = (int) (Random.value * (n--));
+                int k = (int)(Random.value * (n--));
                 T temp = array[n];
                 array[n] = array[k];
                 array[k] = temp;
@@ -94,7 +94,7 @@ namespace ROOT
             return array;
         }
 
-        public static int UnrollVector2Int(Vector2Int pos,int width)
+        public static int UnrollVector2Int(Vector2Int pos, int width)
         {
             return width * pos.x + pos.y;
         }
