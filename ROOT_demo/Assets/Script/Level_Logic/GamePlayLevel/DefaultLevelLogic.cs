@@ -400,6 +400,7 @@ namespace ROOT
                         }
                         return true;
                     }
+                    //BUG 这里的计分似乎有Bug，不能完整的显示结果，咋一看没问题，但是有问题。
                     else if (actionAssetTimeLineToken.type == TimeLineTokenType.RequireNormal)
                     {
                         NormalRval += actionAssetTimeLineToken.RequireAmount;
