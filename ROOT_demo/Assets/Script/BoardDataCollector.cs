@@ -144,12 +144,10 @@ namespace ROOT
         //  3、寻找最长距离时，如果信号距离相等，则选择其中物理距离较短的（平均信号/物理密度较高的那个）。
         //  4、若信号距离相等、且密度相等，则随便选择一条。
         //并且对本系列函数补充部分注释。
-        public List<Unit> GeneratePath(Unit start, Unit end, ulong vis)
+        public void GeneratePath(Unit start, ulong vis)
         {
             var res = new List<Unit>();
             var now = start;
-            end.InServerGrid = true;
-            vis = AddPath(end, vis);
             while (vis != 0ul)
             {
                 res.Add(now);
@@ -170,7 +168,6 @@ namespace ROOT
             {
                 res[i].ServerDepth = ++length;
             }
-            return res;
         }
 
         public bool IsVis(Unit now, ulong vis)
@@ -193,7 +190,6 @@ namespace ROOT
 
             int maxCount = m_Board.BoardLength * m_Board.BoardLength;
             var maxLength = maxCount;
-            var resPath = new List<Unit>();
             var maxScore = Int32.MinValue;
             var pre = new Dictionary<Unit, networkCableStatus>();
             foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
@@ -255,7 +251,7 @@ namespace ROOT
                     {
                         maxScore = score;
                         maxLength = length;
-                        resPath = GeneratePath(startPoint, networkCable, vis);
+                        GeneratePath(startPoint, vis);
                         foreach (var lastNodeNeighbor in networkCable.WorldNeighboringData)
                         {
                             var unitConnectedToLastNodeNeighbor = lastNodeNeighbor.Value.OtherUnit;
@@ -269,7 +265,7 @@ namespace ROOT
                                     {
                                         maxScore = pre[unitConnectedToLastNodeNeighbor].Item3 +
                                                    Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(networkCable.Tier).Item1);
-                                        resPath = GeneratePath(startPoint, networkCable, AddPath(networkCable,
+                                        GeneratePath(startPoint, AddPath(networkCable,
                                             pre[unitConnectedToLastNodeNeighbor].Item4));
                                     }
                                 }
