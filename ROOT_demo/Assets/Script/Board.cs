@@ -25,7 +25,7 @@ namespace ROOT
         public int MinHeatSinkCount=> FixedHeatSinkPos.Length;
         private Vector2Int[] FixedHeatSinkPos => HeatSinkPatterns.Lib[_currentHeatSinkPatternsID].Lib.ToArray();
 
-        private void UpdatePatternID()
+        public void UpdatePatternID()
         {
             _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Count - 1);
         }

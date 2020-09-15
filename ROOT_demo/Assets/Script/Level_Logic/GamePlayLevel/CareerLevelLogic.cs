@@ -12,8 +12,6 @@ namespace ROOT
 {
     public class CareerLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
-        //public override LevelType GetLevelType => LevelType.PlayLevel;
-
         public override void InitLevel()
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
@@ -94,6 +92,10 @@ namespace ROOT
                     {
                         break;
                     }
+                }
+                else if (actionAssetTimeLineToken.type == TimeLineTokenType.HeatSinkSwitch)
+                {
+                    LevelAsset.GameBoard.UpdatePatternID();
                 }
             }
 
