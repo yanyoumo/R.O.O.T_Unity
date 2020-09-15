@@ -102,7 +102,7 @@ namespace ROOT
 
         public List<CoreType> excludedTypes=new List<CoreType>();
 
-        private void NormalizeDicVal(ref Dictionary<CoreType, float> lib)
+        public static void NormalizeDicVal<T>(ref Dictionary<T, float> lib)
         {
             float totalWeight = 0;
             foreach (var weight in lib.Values)
@@ -111,7 +111,7 @@ namespace ROOT
             }
             if (!(Mathf.Abs(totalWeight - 1) < 1e-3))
             {
-                var keys = lib.Keys.ToArray().Clone() as CoreType[];
+                var keys = lib.Keys.ToArray().Clone() as T[];
                 foreach (var coreType in keys)
                 {
                     lib[coreType] /= totalWeight;
