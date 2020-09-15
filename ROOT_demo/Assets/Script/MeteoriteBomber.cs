@@ -129,7 +129,8 @@ namespace ROOT
             };
             if (dic.Count==1)
                 return dic.Keys.ToArray()[0];
-            dic.Keys.ForEach(key => dic[key] /= totalRatio);
+
+            ShopMgr.NormalizeDicVal(ref dic);
 
             Vector2Int res;
             const int countMax = 100;
