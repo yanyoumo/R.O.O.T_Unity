@@ -53,18 +53,18 @@ namespace ROOT
         public void InitQuadShape(float unitLength, int subDivision, TimeLineToken[] token)
         {
             Token = token;
-            var max = token.Length;
-            token.Sort();
-            if (token.Any(tok=>tok.type == TimeLineTokenType.Ending))
+            var max = Token.Length;
+            Token.Sort();
+            if (Token.Any(tok=>tok.type == TimeLineTokenType.Ending))
             {
-                token = token.Where(tok => tok.type == TimeLineTokenType.Ending).ToArray();
+                Token = Token.Where(tok => tok.type == TimeLineTokenType.Ending).ToArray();
             }
             for (var i = 0; i < Token.Length; i++)
             {
                 var go = Instantiate(QuadTemplate, QuadTransform);
                 var tokenHeightUnit = baseTokenHeight / max;
                 var tokenHeight = tokenHeightUnit * (max - i);
-                go.GetComponent<MeshRenderer>().material.color = QuadColors[(int) token[i].type];
+                go.GetComponent<MeshRenderer>().material.color = QuadColors[(int)Token[i].type];
                 transform.localPosition = Vector3.zero;
                 transform.localScale = Vector3.one;
                 go.transform.localPosition = new Vector3((unitLength / subDivision) * 0.5f, yOffset * i, tokenHeight * 0.5f);
