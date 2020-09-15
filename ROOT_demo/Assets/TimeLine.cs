@@ -106,12 +106,18 @@ namespace ROOT
         protected float AnimationTimerOrigin = 0.0f; //都是秒
         private float animationTimer => Time.time - AnimationTimerOrigin;
 
+        float easeInOutCubic(float x)
+        {
+            return x < 0.5f ? 4.0f * x * x * x : 1.0f - Mathf.Pow(-2.0f * x + 2.0f, 3.0f) / 2.0f;
+        }
+
         private float AnimationLerper
         {
             get
             {
                 float res = animationTimer / LevelLogic.AnimationDuration;
-                return Mathf.Min(res, 1.0f);
+                res = Mathf.Clamp01(res);
+                return easeInOutCubic(res);
             }
         }
 
