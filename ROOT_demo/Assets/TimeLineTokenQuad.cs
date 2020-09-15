@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Linq;
+using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 
@@ -8,11 +8,14 @@ namespace ROOT
 {
     public class TimeLineTokenQuad : MonoBehaviour
     {
+        [ReadOnly]
         public TimeLine owner;
-        [HideInInspector]
-        public TimeLineToken Token;
-        //[Readonlyin]
+        [ReadOnly]
+        public TimeLineToken[] Token;
+        [ReadOnly]
         public int MarkerID;
+
+        public GameObject QuadTemplate;
 
         private readonly float baseTokenHeight = 0.38f;
         public Transform QuadTransform;
@@ -33,39 +36,40 @@ namespace ROOT
             valMarkerNetwork.enabled = false;
         }
 
-        public void SetValMarker(int val)
+        public void SetValMarker(int val, TimeLineTokenType type)
         {
-            if (Token.type == TimeLineTokenType.RequireNormal)
+            if (type == TimeLineTokenType.RequireNormal)
             {
                 valMarkerNormal.enabled = true;
                 valMarkerNormal.text = val.ToString();
             }
-            else
+            else if (type == TimeLineTokenType.RequireNetwork)
             {
                 valMarkerNetwork.enabled = true;
                 valMarkerNetwork.text = val.ToString();
             }
         }
 
-        public void SetQuadShape(float UnitLength, int SubDivision,TimeLineTokenType type, int val, int max, int j)
+        public void InitQuadShape(float unitLength, int subDivision, TimeLineToken[] token)
         {
-            float TokenHeightUnit = baseTokenHeight / max;
-            float TokenHeight = TokenHeightUnit * (max - val);
-            GetComponent<TimeLineTokenQuad>().QuadColor = QuadColors[(int)type];
-            transform.localPosition = new Vector3(0.0f, yOffset * val, 0.0f);
-            transform.localScale = Vector3.one;
-            QuadTransform.localScale = new Vector3(UnitLength / SubDivision, 1.0f, TokenHeight);
-            DisableValMarker();
-        }
-
-        public void SetEndingQuadShape(float UnitLength, int SubDivision, int j)
-        {
-            float TokenHeight = baseTokenHeight;
-            GetComponent<TimeLineTokenQuad>().QuadColor = Color.black;
-            transform.localPosition = new Vector3(0.0f, yOffset * 3, 0.0f);
-            transform.localScale = Vector3.one;
-            QuadTransform.localScale = new Vector3(UnitLength / SubDivision, 1.0f, TokenHeight);
-            DisableValMarker();
+            Token = token;
+            var max = token.Length;
+            token.Sort();
+            if (token.Any(tok=>tok.type == TimeLineTokenType.Ending))
+            {
+                token = token.Where(tok => tok.type == TimeLineTokenType.Ending).ToArray();
+            }
+            for (var i = 0; i < Token.Length; i++)
+            {
+                var go = Instantiate(QuadTemplate, QuadTransform);
+                var tokenHeightUnit = baseTokenHeight / max;
+                var tokenHeight = tokenHeightUnit * (max - i);
+                go.GetComponent<MeshRenderer>().material.color = QuadColors[(int) token[i].type];
+                transform.localPosition = Vector3.zero;
+                transform.localScale = Vector3.one;
+                go.transform.localPosition = new Vector3((unitLength / subDivision) * 0.5f, yOffset * i, tokenHeight * 0.5f);
+                go.transform.localScale = new Vector3(unitLength / subDivision, tokenHeight, 1.0f);
+            }
         }
 
         public void Awake()
@@ -79,33 +83,38 @@ namespace ROOT
             };
         }
 
-        public void Update()
+        private void SetSingleToken(TimeLineToken _token)
         {
-            DisableValMarker();
-            if (Token.type == TimeLineTokenType.RequireNormal || Token.type == TimeLineTokenType.RequireNetwork)
+            if (_token.type == TimeLineTokenType.RequireNormal || _token.type == TimeLineTokenType.RequireNetwork)
             {
-                if (MarkerID == Token.Range.x)
+                if (MarkerID == _token.Range.x)
                 {
-                    if (Token.Range.x >= owner.StepCount)
+                    if (_token.Range.x >= owner.StepCount)
                     {
-                        SetValMarker(Token.RequireAmount);
+                        SetValMarker(_token.RequireAmount, _token.type);
                     }
                 }
-                else if (MarkerID <= Token.Range.y)
+                else if (MarkerID <= _token.Range.y)
                 {
                     if (MarkerID == owner.StepCount)
                     {
-                        SetValMarker(Token.RequireAmount);
+                        SetValMarker(_token.RequireAmount, _token.type);
                     }
                 }
-                else if (Token.Range.y == -1)
+                else if (_token.Range.y == -1)
                 {
                     if (MarkerID == owner.StepCount)
                     {
-                        SetValMarker(Token.RequireAmount);
+                        SetValMarker(_token.RequireAmount, _token.type);
                     }
                 }
             }
+        }
+
+        public void Update()
+        {
+            DisableValMarker();
+            Token.ForEach(SetSingleToken);
         }
     }
 }
