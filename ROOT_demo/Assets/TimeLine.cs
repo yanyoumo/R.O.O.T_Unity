@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 
@@ -16,13 +18,26 @@ namespace ROOT
     }
 
     [Serializable]
-    public struct TimeLineToken
+    public class TimeLineToken: IComparable
     {
         public int TokenID;
         public TimeLineTokenType type;
         [ShowIf("@this.type==TimeLineTokenType.RequireNormal||this.type==TimeLineTokenType.RequireNetwork")]
         public int RequireAmount;
         public Vector2Int Range;//[Starting,Ending),Ending==-1 means Always
+
+        public int CompareTo(object obj)
+        {
+            switch (obj)
+            {
+                case null:
+                    return 1;
+                case TimeLineToken other:
+                    return (int) type - (int) other.type;
+                default:
+                    throw new ArgumentException("Object is not a TimeLineToken");
+            }
+        }
 
         public bool InRange(int count)
         {
@@ -54,13 +69,14 @@ namespace ROOT
             set => GoalMarker.TargetCount = value;
         }
 
-        public int SetCurrentCount  
+        public int SetCurrentCount
         {
             set => GoalMarker.CurrentCount = value;
         }
 
         public MeshRenderer ArrowRenderer;
         private bool _requirementSatisfied;
+
         public bool RequirementSatisfied
         {
             set
@@ -87,13 +103,14 @@ namespace ROOT
 
         public int StepCount => _currentGameAsset.StepCount;
 
-        protected float AnimationTimerOrigin = 0.0f;//都是秒
+        protected float AnimationTimerOrigin = 0.0f; //都是秒
         private float animationTimer => Time.time - AnimationTimerOrigin;
+
         private float AnimationLerper
         {
             get
             {
-                float res = animationTimer / DefaultLevelLogic.AnimationDuration;
+                float res = animationTimer / LevelLogic.AnimationDuration;
                 return Mathf.Min(res, 1.0f);
             }
         }
@@ -115,58 +132,30 @@ namespace ROOT
 
         void CheckToken(Transform MarkRoot, int j, int markerCount)
         {
-            int i = 0;
-            float baseTokenHeight = 0.38f;
-            float tokenHeight = baseTokenHeight;
+            var i = 0;
+            var timeLineTokens = TimeLineTokens.Where(timeLineToken => timeLineToken.InRange(markerCount)).ToList();
+            if (timeLineTokens.Count <= 0) return;
 
-            List<TimeLineToken> timeLineTokens=new List<TimeLineToken>();
-            foreach (var timeLineToken in TimeLineTokens)
-            {
-                if (timeLineToken.InRange(markerCount))
-                {
-                    timeLineTokens.Add(timeLineToken);
-                }
-            }
-
-            if (timeLineTokens.Count > 0)
-            {
-                var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
-                token.GetComponent<TimeLineTokenQuad>().owner = this;
-                if (HasEnding(timeLineTokens))
-                {
-                    token.GetComponent<TimeLineTokenQuad>().SetEndingQuadShape(UnitLength, SubDivision, j);
-                }
-                else
-                {
-                    foreach (var timeLineToken in timeLineTokens)
-                    {
-                        //RISK 最后一个Token会支楞出去，但是先不用管
-                        token.GetComponent<TimeLineTokenQuad>().SetQuadShape(UnitLength, SubDivision, timeLineToken.type, i, timeLineTokens.Count, j);
-                        token.GetComponent<TimeLineTokenQuad>().MarkerID = markerCount;
-                        token.GetComponent<TimeLineTokenQuad>().Token = timeLineToken;
-                        i++;
-                    }
-                }
-            }
+            var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
+            token.GetComponent<TimeLineTokenQuad>().owner = this;
+            token.GetComponent<TimeLineTokenQuad>().InitQuadShape(UnitLength, SubDivision, timeLineTokens.ToArray());
+            token.GetComponent<TimeLineTokenQuad>().MarkerID = markerCount;
         }
 
         void CreateMarker(int i, int j, int markerCount)
         {
             var marker = Instantiate(TimeLineMarkerTemplate, TimeLineMarkerRoot);
-            float x5 = UnitLength * i + (UnitLength / SubDivision) * (j);
-            marker.transform.localPosition = TimeLineMarkerZeroing.localPosition + new Vector3(x5, 0, 0);
+            var unitLocalX = UnitLength * i + (UnitLength / SubDivision) * (j);
+            marker.transform.localPosition = TimeLineMarkerZeroing.localPosition + new Vector3(unitLocalX, 0, 0);
             CheckToken(marker.transform, j, markerCount);
-            if (j != 0)
-            {
-                marker.GetComponent<TimeLineMarker>().TimeLineMarkerRoot.localScale = Vector3.one * 0.75f;
-            }
+            marker.GetComponent<TimeLineMarker>().UseMajorMark = (j == 0);
         }
 
         void InitTimeLine()
         {
-            TimeLineMarkerRoot.localPosition=Vector3.zero;
+            TimeLineMarkerRoot.localPosition = Vector3.zero;
             TotalCount = 0;
-            float x5=0;
+            float x5 = 0;
             while (x5 <= TimeLineMarkerEntering.localPosition.x || TotalCount == 0)
             {
                 int i = TotalCount / SubDivision;
@@ -183,47 +172,52 @@ namespace ROOT
             while (AnimationLerper < 1.0f)
             {
                 yield return 0;
-                TimeLineMarkerRoot.transform.localPosition = orgPos - new Vector3(UnitLength / SubDivision, 0, 0)*AnimationLerper;
+                TimeLineMarkerRoot.transform.localPosition =
+                    orgPos - new Vector3(UnitLength / SubDivision, 0, 0) * AnimationLerper;
             }
+
             TimeLineMarkerRoot.transform.localPosition = orgPos - new Vector3(UnitLength / SubDivision, 0, 0);
         }
 
-        //[Button("Step")]
         public void Step()
         {
-            //StepCount++;
             Vector3 orgPos = TimeLineMarkerRoot.transform.localPosition;
             StartCoroutine(StepAnimation(orgPos));
         }
 
+        private void UpdateMarkerExistence(TimeLineMarker tm, ref int markerCount, in float markerRootX)
+        {
+            if (tm.transform.localPosition.x + markerRootX <= TimeLineMarkerExiting.localPosition.x)
+                tm.PendingKill = true;
+            else
+                MarkerCount++;
+        }
+
+        private Tuple<int, int> UnrollMarker(int markerCount)
+        {
+            var i = markerCount / SubDivision;
+            var j = markerCount % SubDivision;
+            return new Tuple<int, int>(i, j);
+        }
+
         void Update()
         {
-            var markers = TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
-            float x2 = TimeLineMarkerRoot.transform.localPosition.x;
             MarkerCount = 0;
-            float xMin = float.MaxValue;
-            foreach (var timeLineMarker in markers)
+            var markers = TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
+            var markerRootX = TimeLineMarkerRoot.transform.localPosition.x;
+            var minMarkerX = markers.Length != 0
+                ? markers.Select(marker => marker.transform.localPosition.x).Min() + markerRootX
+                : 0;
+
+            markers.ForEach(marker => UpdateMarkerExistence(marker, ref MarkerCount, in markerRootX));
+            MarkerCount++;
+
+            var (i, j) = UnrollMarker(MarkerCount);
+            var unitLocalPosX = UnitLength * i + (UnitLength / SubDivision) * j;
+            var unitPosX = unitLocalPosX + minMarkerX;
+            if (unitPosX <= TimeLineMarkerEntering.localPosition.x)
             {
-                float x1 = timeLineMarker.transform.localPosition.x;
-                xMin = Math.Min(xMin, x1+x2);
-                if (x1 + x2 <= TimeLineMarkerExiting.localPosition.x)
-                {
-                    timeLineMarker.PendingKill = true;
-                }
-                else
-                {
-                    MarkerCount++;
-                }
-            }
-            MarkerCount ++;
-            int i = MarkerCount / SubDivision;
-            int j = MarkerCount % SubDivision;
-            float x3 = UnitLength * i + (UnitLength / SubDivision) * j;
-            float x4 = x3 + xMin;
-            if (x4 <= TimeLineMarkerEntering.localPosition.x)
-            {
-                int i1 = TotalCount / SubDivision;
-                int j1 = TotalCount % SubDivision;
+                var (i1, j1) = UnrollMarker(TotalCount);
                 CreateMarker(i1, j1, TotalCount);
                 TotalCount++;
             }
