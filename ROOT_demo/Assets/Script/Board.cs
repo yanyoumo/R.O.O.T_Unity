@@ -27,7 +27,11 @@ namespace ROOT
 
         public void UpdatePatternID()
         {
-            _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Count - 1);
+            var oldID = _currentHeatSinkPatternsID;
+            do
+            {
+                _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Count - 1);
+            } while (_currentHeatSinkPatternsID == oldID);
         }
 
         private void InitHeatInfo()

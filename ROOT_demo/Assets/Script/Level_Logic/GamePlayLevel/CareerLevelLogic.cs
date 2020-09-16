@@ -78,6 +78,7 @@ namespace ROOT
             return res;
         }
 
+        private int obsoletedID = -1;
         protected override void Update()
         {
             base.Update();
@@ -95,7 +96,10 @@ namespace ROOT
                 }
                 else if (actionAssetTimeLineToken.type == TimeLineTokenType.HeatSinkSwitch)
                 {
+                    if (!actionAssetTimeLineToken.InRange(LevelAsset.StepCount)) continue;
+                    if (obsoletedID == actionAssetTimeLineToken.TokenID) continue;
                     LevelAsset.GameBoard.UpdatePatternID();
+                    obsoletedID = actionAssetTimeLineToken.TokenID;
                 }
             }
 

@@ -3,11 +3,13 @@ using UnityEngine;
 
 namespace ROOT
 {
-    //TODO yuxuan 本次的工作为初步的UI设计和更新
-    //去往 https://assetstore.unity.com/
-    //搜索一些靠谱的UI套件、以效果优先，优先级高于价格。
-    //整体设计风格：
-    //      低饱和度电子风格。
+    //TODO yuxuan 本次的工作为设计新的HeatSink图样
+    //在DefaultHeatSinkPatternLib里面添加新的HeatSinkPattern
+    //命名直接接续现有的HeatSinkA/B/C等等。
+    //要求：
+    //  1、heatSink计数应该在10~18之间、闭区间。
+    //  2、设计出来的图样尽量对称。
+    //  3、2号要求并非必须，但是至少图样需要有规律、不允许随机化。
     public static class ColorUtilityWrapper
     {
         /// <summary>

@@ -80,6 +80,7 @@ namespace ROOT
                 ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_NETWORK),
                 ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_DISASTER),
                 ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_ENDING),
+                ColorUtilityWrapper.ParseHtmlStringNotNull("#FF8800"),
             };
         }
 
