@@ -156,7 +156,8 @@ namespace ROOT
                 foreach (var keyValuePair in now.WorldNeighboringData)
                 {
                     var otherUnit = keyValuePair.Value.OtherUnit;
-                    if (keyValuePair.Value.Connected && IsVis(otherUnit, vis))
+                    if (keyValuePair.Value.Connected &&
+                        IsVis(otherUnit, vis))
                     {
                         now = otherUnit;
                         break;
@@ -191,7 +192,7 @@ namespace ROOT
             int maxCount = m_Board.BoardLength * m_Board.BoardLength;
             var maxLength = maxCount;
             var maxScore = Int32.MinValue;
-            var pre = new Dictionary<Unit, networkCableStatus>();
+            var lastLevelDict = new Dictionary<Unit, networkCableStatus>();
             foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
             {
                 m_Board.Units.ForEach(unit => unit.InServerGrid = unit.Visited = unit.Visiting = false);
@@ -201,16 +202,17 @@ namespace ROOT
                 while (networkCableQueue.Count != 0)
                 {
                     var (networkCable, length, score, vis) = networkCableQueue.Dequeue();
-                    if (pre.Count > 0 && length > pre.First().Value.Item2)
+                    if (lastLevelDict.Count > 0 &&
+                        length > lastLevelDict.First().Value.Item2)
                     {
-                        pre = new Dictionary<Unit, networkCableStatus>
+                        lastLevelDict = new Dictionary<Unit, networkCableStatus>
                         {
                             {networkCable, new networkCableStatus(networkCable, length, score, vis)}
                         };
                     }
                     else
                     {
-                        pre.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
+                        lastLevelDict.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
                     }
                     if (length > maxLength)
                     {
@@ -226,18 +228,20 @@ namespace ROOT
                         foreach (var hardDriveNeighbor in hardDrive.WorldNeighboringData)
                         {
                             var unitConnectedToHardDrive = hardDriveNeighbor.Value.OtherUnit;
-                            if (hardDriveNeighbor.Value.Connected && IsVis(unitConnectedToHardDrive, vis2) == false)
+                            if (hardDriveNeighbor.Value.Connected &&
+                                IsVis(unitConnectedToHardDrive, vis2) == false)
                             {
-                                if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable && unitConnectedToHardDrive.Visited == false)
+                                if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable &&
+                                    unitConnectedToHardDrive.Visited == false)
                                 {
                                     isLast = false;
                                     if (unitConnectedToHardDrive.Visiting == false)
                                     {
                                         unitConnectedToHardDrive.Visiting = true;
                                         networkCableQueue.Enqueue(new networkCableStatus(unitConnectedToHardDrive,
-                                            length + 1,
-                                            score + Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(unitConnectedToHardDrive.Tier).Item1),
-                                            AddPath(unitConnectedToHardDrive, vis2)));
+                                                                length + 1,
+                                                                score + Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(unitConnectedToHardDrive.Tier).Item1),
+                                                                AddPath(unitConnectedToHardDrive, vis2)));
                                     }
                                 }
                                 else
@@ -247,7 +251,8 @@ namespace ROOT
                             }
                         }
                     }
-                    if ((isLast == true && length < maxLength && length != 0) || (length == maxLength && score > maxScore))
+                    if (isLast == true &&
+                        (length < maxLength && length != 0) || (length == maxLength && score > maxScore))
                     {
                         maxScore = score;
                         maxLength = length;
@@ -257,17 +262,14 @@ namespace ROOT
                             var unitConnectedToLastNodeNeighbor = lastNodeNeighbor.Value.OtherUnit;
                             if (lastNodeNeighbor.Value.Connected)
                             {
-                                if (pre.ContainsKey(unitConnectedToLastNodeNeighbor) && IsVis(networkCable,
-                                    pre[unitConnectedToLastNodeNeighbor].Item4))
+                                var lastNodeButOne = lastLevelDict[unitConnectedToLastNodeNeighbor];
+                                if (lastLevelDict.ContainsKey(unitConnectedToLastNodeNeighbor) &&
+                                    (lastNodeButOne.Item4 & vis) != lastNodeButOne.Item4 &&
+                                    IsVis(networkCable, lastNodeButOne.Item4) == false &&
+                                    lastNodeButOne.Item3 + Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(networkCable.Tier).Item1) > maxScore)
                                 {
-                                    if (pre[unitConnectedToLastNodeNeighbor].Item3 +
-                                        Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(networkCable.Tier).Item1) > maxScore)
-                                    {
-                                        maxScore = pre[unitConnectedToLastNodeNeighbor].Item3 +
-                                                   Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(networkCable.Tier).Item1);
-                                        GeneratePath(startPoint, AddPath(networkCable,
-                                            pre[unitConnectedToLastNodeNeighbor].Item4));
-                                    }
+                                    maxScore = lastNodeButOne.Item3 + Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(networkCable.Tier).Item1);
+                                    GeneratePath(startPoint, AddPath(networkCable, lastNodeButOne.Item4));
                                 }
                             }
                         }
