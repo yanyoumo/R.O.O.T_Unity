@@ -12,4 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caaa058e1f53b49429f09a49670a80b5, type: 3}
   m_Name: HeatSinkPatternG
   m_EditorClassIdentifier: 
-  Lib: []
+  Lib:
+  - {x: 1, y: 1}
+  - {x: 1, y: 2}
+  - {x: 1, y: 3}
+  - {x: 1, y: 4}
+  - {x: 2, y: 1}
+  - {x: 2, y: 4}
+  - {x: 3, y: 1}
+  - {x: 3, y: 4}
+  - {x: 4, y: 1}
+  - {x: 4, y: 2}
+  - {x: 4, y: 3}
+  - {x: 4, y: 4}
