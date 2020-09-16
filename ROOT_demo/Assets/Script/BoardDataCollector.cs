@@ -146,44 +146,49 @@ namespace ROOT
         //并且对本系列函数补充部分注释。
         public void GeneratePath(Unit start, ulong vis)
         {
-            var res = new List<Unit>();
+            var unitPathList = new List<Unit>();
             var now = start;
             while (vis != 0ul)
             {
-                res.Add(now);
+                unitPathList.Add(now);
                 now.InServerGrid = true;
                 vis = RemovePath(now, vis);
-                foreach (var keyValuePair in now.WorldNeighboringData)
+                foreach (var otherUnit in now.GetConnectedOtherUnit())
                 {
-                    var otherUnit = keyValuePair.Value.OtherUnit;
-                    if (keyValuePair.Value.Connected &&
-                        IsVis(otherUnit, vis))
+                    if (IsVis(otherUnit, vis))
                     {
                         now = otherUnit;
                         break;
                     }
                 }
             }
-            var length = 0;
-            for (int i = res.Count - 1; i >= 0; --i)
-            {
-                res[i].ServerDepth = ++length;
-            }
+            var length = unitPathList.Count;
+            unitPathList.ForEach(unit => unit.ServerDepth = length--);
+        }
+
+        public ulong UnitToBit64(Unit now)
+        {
+            return 1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition, m_Board.BoardLength);
         }
 
         public bool IsVis(Unit now, ulong vis)
         {
-            return (vis & (1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition, m_Board.BoardLength))) != 0ul;
+            return (vis & UnitToBit64(now)) != 0ul;
         }
 
         public ulong AddPath(Unit now, ulong vis)
         {
-            return vis ^ (1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition, m_Board.BoardLength));
+            return vis ^ UnitToBit64(now);
         }
 
         public ulong RemovePath(Unit now, ulong vis)
         {
             return AddPath(now, vis);
+        }
+
+        public static bool PathContains(ulong a, ulong b)
+        {
+            return (a & b) == b;
         }
 
         public float CalculateServerScore(out int networkCount)
@@ -225,11 +230,9 @@ namespace ROOT
                     while (hardDriveQueue.Count != 0)
                     {
                         var (hardDrive, vis2) = hardDriveQueue.Dequeue();
-                        foreach (var hardDriveNeighbor in hardDrive.WorldNeighboringData)
+                        foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit())
                         {
-                            var unitConnectedToHardDrive = hardDriveNeighbor.Value.OtherUnit;
-                            if (hardDriveNeighbor.Value.Connected &&
-                                IsVis(unitConnectedToHardDrive, vis2) == false)
+                            if (IsVis(unitConnectedToHardDrive, vis2) == false)
                             {
                                 if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable &&
                                     unitConnectedToHardDrive.Visited == false)
@@ -257,14 +260,12 @@ namespace ROOT
                         maxScore = score;
                         maxLength = length;
                         GeneratePath(startPoint, vis);
-                        foreach (var lastNodeNeighbor in networkCable.WorldNeighboringData)
+                        foreach (var unitConnectedToLastNodeNeighbor in networkCable.GetConnectedOtherUnit())
                         {
-                            var unitConnectedToLastNodeNeighbor = lastNodeNeighbor.Value.OtherUnit;
-                            if (lastNodeNeighbor.Value.Connected)
+                            if (lastLevelDict.ContainsKey(unitConnectedToLastNodeNeighbor))
                             {
                                 var lastNodeButOne = lastLevelDict[unitConnectedToLastNodeNeighbor];
-                                if (lastLevelDict.ContainsKey(unitConnectedToLastNodeNeighbor) &&
-                                    (lastNodeButOne.Item4 & vis) != lastNodeButOne.Item4 &&
+                                if (PathContains(vis, lastNodeButOne.Item4) == false &&
                                     IsVis(networkCable, lastNodeButOne.Item4) == false &&
                                     lastNodeButOne.Item3 + Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(networkCable.Tier).Item1) > maxScore)
                                 {
