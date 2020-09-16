@@ -562,6 +562,15 @@ namespace ROOT
             }
         }
 
+        /// <summary>
+        /// 获得相连的所有Unit
+        /// </summary>
+        /// <returns>所查询的Unit，如果没有相连的则返回零长Unit</returns>
+        public List<Unit> GetConnectedOtherUnit()
+        {
+            return WorldNeighboringData.Values.Where(data => data.Connected).Select(data => data.OtherUnit).ToList();
+        }
+
         public void UpdateSideMesh()
         {
             if (WorldNeighboringData != null)
