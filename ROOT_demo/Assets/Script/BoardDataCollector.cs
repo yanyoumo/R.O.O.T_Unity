@@ -276,10 +276,10 @@ namespace ROOT
             }
             if (maxLength == maxCount)
             {
-                maxLength = 0;
+                maxLength = maxScore = 0;
             }
-            MaxNetworkDepth = networkCount = maxLength;
-            return GetServerIncomeByLength(maxLength);
+            MaxNetworkDepth = networkCount = maxScore;
+            return GetServerIncomeByLength(maxScore);
         }
         #endregion
         private float CalculateBasicCost()
