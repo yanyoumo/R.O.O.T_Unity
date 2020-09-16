@@ -88,10 +88,9 @@ namespace ROOT
             {
                 if (actionAssetTimeLineToken.type == TimeLineTokenType.DestoryerIncome)
                 {
-                    LevelAsset.DestroyerEnabled = actionAssetTimeLineToken.InRange(LevelAsset.StepCount);
-                    if (LevelAsset.DestroyerEnabled)
+                    if (!LevelAsset.DestroyerEnabled)
                     {
-                        break;
+                        LevelAsset.DestroyerEnabled = actionAssetTimeLineToken.InRange(LevelAsset.StepCount);
                     }
                 }
                 else if (actionAssetTimeLineToken.type == TimeLineTokenType.HeatSinkSwitch)

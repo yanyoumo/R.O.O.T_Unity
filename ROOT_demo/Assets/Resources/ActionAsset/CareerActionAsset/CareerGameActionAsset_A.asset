@@ -55,18 +55,26 @@ MonoBehaviour:
     RequireAmount: 30
     Range: {x: 30, y: 60}
   - TokenID: 8
+    type: 4
+    RequireAmount: 0
+    Range: {x: 32, y: 33}
+  - TokenID: 9
     type: 1
     RequireAmount: 15
     Range: {x: 35, y: 70}
-  - TokenID: 9
+  - TokenID: 10
     type: 0
     RequireAmount: 60
     Range: {x: 60, y: -1}
-  - TokenID: 10
+  - TokenID: 11
+    type: 4
+    RequireAmount: 0
+    Range: {x: 65, y: 66}
+  - TokenID: 12
     type: 1
     RequireAmount: 30
     Range: {x: 70, y: -1}
-  - TokenID: 11
+  - TokenID: 13
     type: 3
     RequireAmount: 0
     Range: {x: 90, y: -1}

@@ -30,7 +30,7 @@ namespace ROOT
             var oldID = _currentHeatSinkPatternsID;
             do
             {
-                _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Count - 1);
+                _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Count);
             } while (_currentHeatSinkPatternsID == oldID);
         }
 
