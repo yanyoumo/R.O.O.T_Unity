@@ -961,8 +961,8 @@
             "filterName": "SuYuxuan_Log",
             "mainColor": {
                 "r": 0.0,
-                "g": 0.0,
-                "b": 1.0,
+                "g": 0.670588254928589,
+                "b": 0.0,
                 "a": 1.0
             },
             "isStandardFilter": false,
@@ -984,9 +984,9 @@
             "swallowStandard": true,
             "standardCanSwallow": false,
             "overrideStandardColors": true,
-            "overrideStandardIcon": true,
-            "collapseIconBackground": false,
-            "collapseIconSymbol": false,
+            "overrideStandardIcon": false,
+            "collapseIconBackground": true,
+            "collapseIconSymbol": true,
             "collapseIconLetter": false,
             "collapseIconTexture": false,
             "useIconBackground": true,
