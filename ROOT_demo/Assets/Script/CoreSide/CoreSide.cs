@@ -251,19 +251,23 @@ namespace ROOT
             #endregion
         }
 
-        public static int HeatSinkCost(int occupiedHeatSink,int HeatSinkCount)
+        public static int HeatSinkCost(int occupiedHeatSink, int HeatSinkCount)
         {
+            //目前是卡死单价、但是同一个Array全占满总价不同。
             const float pow = 1.5f;
-            if (occupiedHeatSink==0)
+            return Mathf.RoundToInt(Mathf.Pow(occupiedHeatSink, pow) - 1);
+            /*var heatSinkCount = 12;
+            const float pow = 1.5f;
+            if (occupiedHeatSink == 0)
             {
-                //TEMP 使用的指数型就会造成这个问题，如果输入是0，得出的结果非0.
                 return 0;
             }
-            float normalizedVal = Mathf.Pow(pow, occupiedHeatSink) / Mathf.Pow(pow, HeatSinkCount);
-            float maxCost = 300.0f;
-            return Mathf.RoundToInt(normalizedVal * maxCost);
+
+            var normalizedVal = Mathf.Pow(pow, occupiedHeatSink) / Mathf.Pow(pow, heatSinkCount);
+            var maxCost = 300.0f;
+            return Mathf.RoundToInt(normalizedVal * maxCost);*/
         }
-         
+
         private int TierProgress(float gameProgress)
         {
             var fluctuationRate = 0.25f;

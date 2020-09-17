@@ -31,37 +31,37 @@ MonoBehaviour:
     RequireAmount: 2
     Range: {x: 10, y: 20}
   - TokenID: 2
-    type: 4
-    RequireAmount: 0
-    Range: {x: 10, y: 11}
-  - TokenID: 3
     type: 0
     RequireAmount: 10
     Range: {x: 15, y: 30}
-  - TokenID: 4
+  - TokenID: 3
     type: 1
     RequireAmount: 8
     Range: {x: 20, y: 35}
-  - TokenID: 5
+  - TokenID: 4
     type: 4
     RequireAmount: 0
     Range: {x: 18, y: 19}
-  - TokenID: 6
+  - TokenID: 5
     type: 2
     RequireAmount: 0
     Range: {x: 30, y: -1}
-  - TokenID: 7
+  - TokenID: 6
     type: 0
     RequireAmount: 30
     Range: {x: 30, y: 60}
-  - TokenID: 8
+  - TokenID: 7
     type: 4
     RequireAmount: 0
     Range: {x: 32, y: 33}
-  - TokenID: 9
+  - TokenID: 8
     type: 1
     RequireAmount: 15
     Range: {x: 35, y: 70}
+  - TokenID: 9
+    type: 4
+    RequireAmount: 0
+    Range: {x: 40, y: 41}
   - TokenID: 10
     type: 0
     RequireAmount: 60
