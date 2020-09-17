@@ -191,6 +191,36 @@ namespace ROOT
             return (a & b) == b;
         }
 
+        public bool FindNextLevelNetworkCable(Queue<networkCableStatus> networkCableQueue,
+                                            Queue<Tuple<Unit, ulong>> hardDriveQueue,
+                                            int length,
+                                            int score)
+        {
+            bool isLast = true;
+            while (hardDriveQueue.Count != 0)
+            {
+                var (hardDrive, vis) = hardDriveQueue.Dequeue();
+                foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit().Where(unit => IsVis(unit, vis) == false))
+                {
+                    if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable &&
+                        unitConnectedToHardDrive.Visited == false)
+                    {
+                        isLast = false;
+                        if (unitConnectedToHardDrive.Visiting == false)
+                        {
+                            unitConnectedToHardDrive.Visiting = true;
+                            networkCableQueue.Enqueue(new networkCableStatus(unitConnectedToHardDrive,
+                                length + 1,
+                                score + Utils.GetUnitTierInt(unitConnectedToHardDrive),
+                                AddPath(unitConnectedToHardDrive, vis)));
+                        }
+                    }
+                    else
+                        hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive, AddPath(unitConnectedToHardDrive, vis)));
+                }
+            }
+            return isLast;
+        }
         public float CalculateServerScore(out int networkCount)
         {
 
@@ -216,62 +246,26 @@ namespace ROOT
                         };
                     }
                     else
-                    {
                         lastLevelDict.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
-                    }
                     if (length > maxLength)
-                    {
                         break;
-                    }
                     networkCable.Visited = true;
                     var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
                     hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
-                    var isLast = true;
-                    while (hardDriveQueue.Count != 0)
-                    {
-                        var (hardDrive, vis2) = hardDriveQueue.Dequeue();
-                        foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit())
-                        {
-                            if (IsVis(unitConnectedToHardDrive, vis2) == false)
-                            {
-                                if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable &&
-                                    unitConnectedToHardDrive.Visited == false)
-                                {
-                                    isLast = false;
-                                    if (unitConnectedToHardDrive.Visiting == false)
-                                    {
-                                        unitConnectedToHardDrive.Visiting = true;
-                                        networkCableQueue.Enqueue(new networkCableStatus(unitConnectedToHardDrive,
-                                                                length + 1,
-                                                                score + Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(unitConnectedToHardDrive.Tier).Item1),
-                                                                AddPath(unitConnectedToHardDrive, vis2)));
-                                    }
-                                }
-                                else
-                                {
-                                    hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive, AddPath(unitConnectedToHardDrive, vis2)));
-                                }
-                            }
-                        }
-                    }
-                    if (isLast == true &&
+                    if (FindNextLevelNetworkCable(networkCableQueue, hardDriveQueue, length, score) &&
                         (length < maxLength && length != 0) || (length == maxLength && score > maxScore))
                     {
                         maxScore = score;
                         maxLength = length;
                         GeneratePath(startPoint, vis);
-                        foreach (var unitConnectedToLastNodeNeighbor in networkCable.GetConnectedOtherUnit())
+                        foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit().Where(unit => lastLevelDict.ContainsKey(unit)))
                         {
-                            if (lastLevelDict.ContainsKey(unitConnectedToLastNodeNeighbor))
+                            var lastNodeButOne = lastLevelDict[unitConnectedToLastNode];
+                            if (PathContains(vis, lastNodeButOne.Item4) == false &&
+                                lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable) > maxScore)
                             {
-                                var lastNodeButOne = lastLevelDict[unitConnectedToLastNodeNeighbor];
-                                if (PathContains(vis, lastNodeButOne.Item4) == false &&
-                                    IsVis(networkCable, lastNodeButOne.Item4) == false &&
-                                    lastNodeButOne.Item3 + Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(networkCable.Tier).Item1) > maxScore)
-                                {
-                                    maxScore = lastNodeButOne.Item3 + Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(networkCable.Tier).Item1);
-                                    GeneratePath(startPoint, AddPath(networkCable, lastNodeButOne.Item4));
-                                }
+                                maxScore = lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable);
+                                GeneratePath(startPoint, AddPath(networkCable, lastNodeButOne.Item4));
                             }
                         }
                     }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -107,6 +108,11 @@ namespace ROOT
         public static int UnrollVector2Int(Vector2Int pos, int width)
         {
             return width * pos.x + pos.y;
+        }
+
+        public static int GetUnitTierInt(Unit now)
+        {
+            return Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(now.Tier).Item1);
         }
 
         public static RotationDirection GetInvertDirection(RotationDirection orgRotationDirection)
