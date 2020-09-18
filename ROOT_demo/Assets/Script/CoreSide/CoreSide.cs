@@ -255,17 +255,7 @@ namespace ROOT
         {
             //目前是卡死单价、但是同一个Array全占满总价不同。
             const float pow = 1.5f;
-            return Mathf.RoundToInt(Mathf.Pow(occupiedHeatSink, pow) - 1);
-            /*var heatSinkCount = 12;
-            const float pow = 1.5f;
-            if (occupiedHeatSink == 0)
-            {
-                return 0;
-            }
-
-            var normalizedVal = Mathf.Pow(pow, occupiedHeatSink) / Mathf.Pow(pow, heatSinkCount);
-            var maxCost = 300.0f;
-            return Mathf.RoundToInt(normalizedVal * maxCost);*/
+            return Mathf.CeilToInt(Mathf.Pow(pow, occupiedHeatSink) - 1);
         }
 
         private int TierProgress(float gameProgress)
