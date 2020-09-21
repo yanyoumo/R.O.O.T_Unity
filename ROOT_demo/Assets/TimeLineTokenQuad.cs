@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
@@ -11,10 +12,10 @@ namespace ROOT
         [ReadOnly]
         public TimeLine owner;
         [ReadOnly]
-        public TimeLineToken[] Token;
+        public RoundGist RoundGist;
         [ReadOnly]
         public int MarkerID;
-
+        
         public GameObject QuadTemplate;
 
         private readonly float baseTokenHeight = 0.38f;
@@ -50,25 +51,37 @@ namespace ROOT
             }
         }
 
-        public void InitQuadShape(float unitLength, int subDivision, TimeLineToken[] token)
+        private void InitSubtoken(int i,int max,float unitLength,int subDivision,int ColorID)
         {
-            Token = token;
-            var max = Token.Length;
-            Token.Sort();
-            if (Token.Any(tok=>tok.type == TimeLineTokenType.Ending))
+            var go = Instantiate(QuadTemplate, QuadTransform);
+            transform.localPosition = Vector3.zero;
+            transform.localScale = Vector3.one;
+            var tokenHeightUnit = baseTokenHeight / max;
+            var tokenHeight = tokenHeightUnit * (max - i);
+            go.GetComponent<MeshRenderer>().material.color = QuadColors[ColorID];
+            go.transform.localPosition = new Vector3((unitLength / subDivision) * 0.5f, yOffset * i, tokenHeight * 0.5f);
+            go.transform.localScale = new Vector3(unitLength / subDivision, tokenHeight, 1.0f);
+        }
+
+        public void InitQuadShape(float unitLength, int subDivision, RoundGist gist)
+        {
+            RoundGist = gist;
+            //TODO 没处理Ending的事情。
+
+            switch (gist.Type)
             {
-                Token = Token.Where(tok => tok.type == TimeLineTokenType.Ending).ToArray();
-            }
-            for (var i = 0; i < Token.Length; i++)
-            {
-                var go = Instantiate(QuadTemplate, QuadTransform);
-                var tokenHeightUnit = baseTokenHeight / max;
-                var tokenHeight = tokenHeightUnit * (max - i);
-                go.GetComponent<MeshRenderer>().material.color = QuadColors[(int)Token[i].type];
-                transform.localPosition = Vector3.zero;
-                transform.localScale = Vector3.one;
-                go.transform.localPosition = new Vector3((unitLength / subDivision) * 0.5f, yOffset * i, tokenHeight * 0.5f);
-                go.transform.localScale = new Vector3(unitLength / subDivision, tokenHeight, 1.0f);
+                case StageType.Shop:
+                    InitSubtoken(0, 1, unitLength, subDivision, 5);
+                    break;
+                case StageType.Require:
+                    InitSubtoken(0, 2, unitLength, subDivision, 0);
+                    InitSubtoken(1, 2, unitLength, subDivision, 1);
+                    break;
+                case StageType.Destoryer:
+                    InitSubtoken(0, 1, unitLength, subDivision, 2);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -81,7 +94,20 @@ namespace ROOT
                 ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_DISASTER),
                 ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_ENDING),
                 ColorUtilityWrapper.ParseHtmlStringNotNull("#FF8800"),
+                ColorUtilityWrapper.ParseHtmlStringNotNull("#0E195E"),
             };
+        }
+
+        private void SetVal()
+        {
+            if (RoundGist.Type == StageType.Require|| RoundGist.Type == StageType.Shop)
+            {
+                if (MarkerID == owner.StepCount)
+                {
+                    SetValMarker(RoundGist.Val0, TimeLineTokenType.RequireNormal);
+                    SetValMarker(RoundGist.Val1, TimeLineTokenType.RequireNetwork);
+                }
+            }
         }
 
         private void SetSingleToken(TimeLineToken _token)
@@ -115,7 +141,7 @@ namespace ROOT
         public void Update()
         {
             DisableValMarker();
-            Token.ForEach(SetSingleToken);
+            SetVal();
         }
     }
 }

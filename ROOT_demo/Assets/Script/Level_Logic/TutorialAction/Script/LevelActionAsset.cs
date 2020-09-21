@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using I2.Loc;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
-using Sirenix.Utilities.Editor;
+using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 
 namespace ROOT
@@ -44,6 +41,69 @@ namespace ROOT
         [Header("OnBoardInfo")]
         public Vector2Int Pos;
         public bool IsStation;
+    }
+
+    public enum StageType{
+        Shop,
+        Require,
+        Destoryer,
+    }
+
+    public struct RoundGist
+    {
+        public StageType Type;
+        public int Val0;
+        public int Val1;
+        public int Val2;
+    }
+
+    /// <summary>
+    /// 里面的长度由类似数据的状态管理，Token是base-0计数。
+    /// </summary>
+    [Serializable]
+    public struct RoundData
+    {
+        [Range(0,15)]
+        public int ShopLength;
+        [Range(0, 30)]
+        public int RequireLength;
+
+        public int NormalRequirement;
+        public int NetworkRequirement;
+
+        [Range(0, 10)]
+        public int DestoryerLength;
+
+        public int TotalLength => ShopLength + RequireLength + DestoryerLength;
+
+        public bool InRange(int truncatedCount)
+        {
+            return truncatedCount < TotalLength;
+        }
+
+        public StageType? CheckStage(int truncatedCount)
+        {
+            var dic=new List<Tuple<StageType, int>>()
+            {
+                new Tuple<StageType, int>(StageType.Shop,ShopLength),
+                new Tuple<StageType, int>(StageType.Require,RequireLength),
+                new Tuple<StageType, int>(StageType.Destoryer,DestoryerLength),
+            };
+
+            var idx = 0;
+            do
+            {
+                if (truncatedCount < dic[idx].Item2)
+                {
+                    return dic[idx].Item1;
+                }
+
+                truncatedCount -= dic[idx].Item2;
+                idx++;
+            } while (idx < dic.Count);
+
+            return null;
+        }
     }
 
     [Serializable]
@@ -105,9 +165,13 @@ namespace ROOT
         [ShowIf("levelType", LevelType.Tutorial)]
         public TutorialActionData[] Actions;
         
+        /*[Header("Career")]
+        [ShowIf("levelType", LevelType.Career)]
+        public TimeLineToken[] TimeLineTokens;*/
         [Header("Career")]
         [ShowIf("levelType", LevelType.Career)]
-        public TimeLineToken[] TimeLineTokens;
+        public RoundData[] RoundDatas;
+
         [Space]
         [ShowIf("levelType", LevelType.Career)]
         public UnitGist[] InitalBoard;
@@ -121,23 +185,70 @@ namespace ROOT
 
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
 
+        public bool HasEnded(int StepCount)
+        {
+            return StepCount >= PlayableCount;
+        }
+
         /// <summary>
         /// 获得改时间线上End前玩家可以玩的步长。
         /// </summary>
         [HideInInspector]
-        public int PlayableCount
+        public int PlayableCount => RoundDatas.Sum(round => round.TotalLength);
+
+        public int GetTruncatedCount(int TotalCount, out int RoundCount)
         {
-            get
+            if (RoundDatas.Length <= 0)
             {
-                if (TimeLineTokens.Any(token => token.type == TimeLineTokenType.Ending))
-                {
-                    return TimeLineTokens.Where(token => token.type == TimeLineTokenType.Ending).ToArray()[0].Range.x;
-                }
-                else
-                {
-                    return -1;
-                }
+                RoundCount = -1;
+                return -1;
             }
+
+            var res = TotalCount;
+
+            for (var i = 0; i < RoundDatas.Length; i++)
+            {
+                if (res < RoundDatas[i].TotalLength)
+                {
+                    RoundCount = i;
+                    return res;
+                }
+                res -= RoundDatas[i].TotalLength;
+
+            }
+
+            RoundCount = -1;
+            return -1;
+        }
+
+        [CanBeNull]
+        public RoundGist? GetRoundGistByStep(int stepCount)
+        {
+            var tCount = GetTruncatedCount(stepCount, out var Round);
+            if (tCount==-1) return null;
+            var round = RoundDatas[Round];
+            var type = round.CheckStage(tCount);
+            if (!type.HasValue) return null;
+            return ExtractGist(type.Value, round);
+        }
+
+        public static RoundGist ExtractGist(StageType type, RoundData round)
+        {
+            RoundGist roundGist = new RoundGist { Type = type };
+            switch (type)
+            {
+                case StageType.Shop:
+                case StageType.Require:
+                    roundGist.Val0 = round.NormalRequirement;
+                    roundGist.Val1 = round.NetworkRequirement;
+                    break;
+                case StageType.Destoryer:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+
+            return roundGist;
         }
     }
 }

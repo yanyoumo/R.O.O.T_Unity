@@ -16,6 +16,7 @@ namespace ROOT
         DestoryerIncome = 2,//Red
         Ending = 3,//Black
         HeatSinkSwitch = 4,//ICON
+        ShopOpened = 5,//
     }
 
     [Serializable]
@@ -117,29 +118,28 @@ namespace ROOT
             }
         }
 
-        public TimeLineToken[] TimeLineTokens;
-
-        bool HasEnding(List<TimeLineToken> timeLineTokens)
-        {
-            foreach (var timeLineToken in timeLineTokens)
-            {
-                if (timeLineToken.type == TimeLineTokenType.Ending)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        //public TimeLineToken[] TimeLineTokens;
+        public RoundData[] RoundDatas;
 
         void CheckToken(Transform MarkRoot, int j, int markerCount)
         {
-            var timeLineTokens = TimeLineTokens.Where(timeLineToken => timeLineToken.InRange(markerCount)).ToList();
-            if (timeLineTokens.Count <= 0) return;
+            //TODO 还要处理EndingToken的处理。
+            var truncatedCount = _currentGameAsset.ActionAsset.GetTruncatedCount(markerCount, out var RoundCount);
+
+            if (RoundCount >= RoundDatas.Length || RoundCount == -1)
+            {
+                return;
+            }
+
+            RoundData round = RoundDatas[RoundCount];
+            var stage = round.CheckStage(truncatedCount);
+            if (!stage.HasValue) return;
+
+            var roundGist = LevelActionAsset.ExtractGist(stage.Value, round);
 
             var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
             token.GetComponent<TimeLineTokenQuad>().owner = this;
-            token.GetComponent<TimeLineTokenQuad>().InitQuadShape(UnitLength, SubDivision, timeLineTokens.ToArray());
+            token.GetComponent<TimeLineTokenQuad>().InitQuadShape(UnitLength, SubDivision, roundGist);
             token.GetComponent<TimeLineTokenQuad>().MarkerID = markerCount;
         }
 
@@ -228,7 +228,7 @@ namespace ROOT
         {
             _currentGameAsset = levelAsset;
             Debug.Assert(_currentGameAsset.StepCount == 0);
-            TimeLineTokens = levelAsset.ActionAsset.TimeLineTokens;
+            RoundDatas = levelAsset.ActionAsset.RoundDatas;
             InitTimeLine();
         }
 

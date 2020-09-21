@@ -444,6 +444,15 @@ namespace ROOT
             return newPos;
         }
 
+        private static void UpdateShopBuy(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
+        {
+            //先简单一些，只允许随机购买。
+            if (ctrlPack.HasFlag(ControllingCommand.Buy) && currentLevelAsset.ShopMgr.ShopOpening)
+            {
+                currentLevelAsset.ShopMgr.BuyToRandom(ctrlPack.ShopID);
+            }
+        }
+
         private static void UpdateShopBuy(
             GameAssets currentLevelAsset, ShopMgr shopMgr, 
             in ControllingPack ctrlPack, bool crashable,
@@ -753,8 +762,8 @@ namespace ROOT
             {
                 if (currentLevelAsset.ShopEnabled)
                 {
-                    UpdateShopBuy(currentLevelAsset, currentLevelAsset.ShopMgr, in ctrlPack, crashable,
-                        ref currentLevelAsset._boughtOnce, out postalPrice);
+                    UpdateShopBuy(currentLevelAsset, ctrlPack);
+                    //UpdateShopBuy(currentLevelAsset, currentLevelAsset.ShopMgr, in ctrlPack, crashable, ref currentLevelAsset._boughtOnce, out postalPrice);
                 }
 
                 UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);

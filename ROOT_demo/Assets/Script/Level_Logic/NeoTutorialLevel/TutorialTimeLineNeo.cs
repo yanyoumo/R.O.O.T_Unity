@@ -21,7 +21,7 @@ namespace ROOT
                     if (!OnceFlagA)
                     {
                         OnceFlagA = true;
-                        Debug.Assert(LevelAsset.ActionAsset.TimeLineTokens.Length > 0);
+                        //Debug.Assert(LevelAsset.ActionAsset.TimeLineTokens.Length > 0);
                         LevelAsset.StepCount = 0;
                         LevelAsset.TimeLine.InitWithAssets(LevelAsset);
                     }
@@ -40,16 +40,10 @@ namespace ROOT
                 PlayerRequestedEnd = CtrlPack.HasFlag(ControllingCommand.NextButton);
             }
 
-            foreach (var actionAssetTimeLineToken in LevelAsset.ActionAsset.TimeLineTokens)
+            if (LevelActionAsset.HasEnded(LevelAsset.StepCount))
             {
-                if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
-                {
-                    if (actionAssetTimeLineToken.InRange(LevelAsset.StepCount))
-                    {
-                        LevelFailed = true;
-                        OnceFlagB = true;
-                    }
-                }
+                LevelFailed = true;
+                OnceFlagB = true;
             }
 
             if (LevelFailed)

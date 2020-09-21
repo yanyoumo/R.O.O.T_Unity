@@ -55,6 +55,17 @@ namespace ROOT
 
     public sealed partial class ShopMgr:MonoBehaviour
     {
+        public Transform ShopCoverRoot;
+        private bool _shopOpening;
+        public bool ShopOpening
+        {
+            set
+            {
+                _shopOpening = value;
+                ShopCoverRoot.gameObject.SetActive(!_shopOpening);
+            }
+            get => _shopOpening;
+        }
         private int totalCount = 0;
         private int countOffset = 0;
         private int localOffset => (totalCount - countOffset);
@@ -234,6 +245,7 @@ namespace ROOT
 
             ShopPreAnimationUpdate();
             ShopPostAnimationUpdate();
+            ShopOpening = false;
         }
 
         public void ShopPreAnimationUpdate()

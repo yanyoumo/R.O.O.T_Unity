@@ -329,6 +329,8 @@ namespace ROOT
         }
 
         //原则上这个不让被重载。
+        //TODO Digong需要了解一些主干的Update流程。
+        //未来需要将动画部分移动至随机位置。
         protected virtual void Update()
         {
             if ((!ReadyToGo) || (PendingCleanUp))
@@ -379,38 +381,38 @@ namespace ROOT
             }
         }
 
-        
-
         protected bool UpdateCareerGameOverStatus(GameAssets currentLevelAsset)
         {
             //这个函数就很接近裁判要做的事儿了。
-            int NormalRval = 0;
-            int NetworkRval = 0;
+            var NormalRval = 0;
+            var NetworkRval = 0;
+            var ShoudOpenShop = false;
 
-            foreach (var actionAssetTimeLineToken in currentLevelAsset.ActionAsset.TimeLineTokens)
+            var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
+            if (!roundGist.HasValue) return false;
+            var round = roundGist.Value;
+            
+            if (LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount))
             {
-                if (actionAssetTimeLineToken.InRange(currentLevelAsset.StepCount))
+                if (!IsTutorialLevel)
                 {
-                    if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
-                    {
-                        if (!IsTutorialLevel)
-                        {
-                            PendingCleanUp = true;
-                            LevelMasterManager.Instance.LevelFinished(LevelAsset);
-                        }
-                        return true;
-                    }
-                    //BUG 这里的计分似乎有Bug，不能完整的显示结果，咋一看没问题，但是有问题。
-                    else if (actionAssetTimeLineToken.type == TimeLineTokenType.RequireNormal)
-                    {
-                        NormalRval += actionAssetTimeLineToken.RequireAmount;
-                    }
-                    else if (actionAssetTimeLineToken.type == TimeLineTokenType.RequireNetwork)
-                    {
-                        NetworkRval += actionAssetTimeLineToken.RequireAmount;
-                    }
+                    PendingCleanUp = true;
+                    LevelMasterManager.Instance.LevelFinished(LevelAsset);
                 }
+                return true;
             }
+
+            //BUG 天灾可能在没有结束完成一次击发后时间结束的处理。
+            ShoudOpenShop = round.Type == StageType.Shop;
+
+            if (round.Type == StageType.Require)
+            {
+                NormalRval += round.Val0;
+                NetworkRval += round.Val1;
+            }
+            
+            LevelAsset.ShopMgr.ShopOpening = ShoudOpenShop;
+
             if (NormalRval == 0 && NetworkRval == 0)
             {
                 _noRequirement = true;
@@ -419,10 +421,10 @@ namespace ROOT
             else
             {
                 _noRequirement = false;
-                currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int harDriverCountInt);
-                bool valA = (harDriverCountInt >= NormalRval);
-                currentLevelAsset.BoardDataCollector.CalculateServerScore(out int NetworkCountInt);
-                bool valB = (NetworkCountInt >= NetworkRval);
+                currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out var harDriverCountInt);
+                var valA = (harDriverCountInt >= NormalRval);
+                currentLevelAsset.BoardDataCollector.CalculateServerScore(out var NetworkCountInt);
+                var valB = (NetworkCountInt >= NetworkRval);
                 currentLevelAsset.TimeLine.RequirementSatisfied = valA && valB;
             }
 
