@@ -42,8 +42,7 @@ namespace ROOT
 
         protected void InitDestoryer()
         {
-            LevelAsset.WarningDestoryer = new MeteoriteBomber();
-            LevelAsset.WarningDestoryer.SetBoard(ref LevelAsset.GameBoard);
+            LevelAsset.WarningDestoryer = new MeteoriteBomber {GameBoard = LevelAsset.GameBoard};
             LevelAsset.WarningDestoryer.Init(4, 1);
         }
         protected void InitShop()
@@ -81,12 +80,10 @@ namespace ROOT
         {
             base.Update();
 
-            LevelAsset.DestroyerEnabled = false;
             var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
             if (!roundGist.HasValue) return;
             var gist = roundGist.Value;
 
-            LevelAsset.DestroyerEnabled = (gist.Type == StageType.Destoryer);
             //TODO 目前这个还没有HeatSinkSwitch的处理。
             LevelAsset.LevelProgress = LevelAsset.StepCount / (float) LevelAsset.ActionAsset.PlayableCount;
         }

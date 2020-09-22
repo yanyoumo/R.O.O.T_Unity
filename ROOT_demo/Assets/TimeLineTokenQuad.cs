@@ -80,6 +80,9 @@ namespace ROOT
                 case StageType.Destoryer:
                     InitSubtoken(0, 1, unitLength, subDivision, 2);
                     break;
+                case StageType.Ending:
+                    InitSubtoken(0, 1, unitLength, subDivision, 3);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

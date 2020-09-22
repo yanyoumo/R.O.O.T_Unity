@@ -124,18 +124,27 @@ namespace ROOT
         void CheckToken(Transform MarkRoot, int j, int markerCount)
         {
             //TODO 还要处理EndingToken的处理。
-            var truncatedCount = _currentGameAsset.ActionAsset.GetTruncatedCount(markerCount, out var RoundCount);
-
-            if (RoundCount >= RoundDatas.Length || RoundCount == -1)
+            RoundGist roundGist = new RoundGist();
+            //BUG 这里会出一个Exception，但是似乎不影响运行。
+            if (_currentGameAsset.ActionAsset.HasEnded(markerCount))
             {
-                return;
+                roundGist.Type = StageType.Ending;
             }
+            else
+            {
+                var truncatedCount = _currentGameAsset.ActionAsset.GetTruncatedCount(markerCount, out var RoundCount);
 
-            RoundData round = RoundDatas[RoundCount];
-            var stage = round.CheckStage(truncatedCount);
-            if (!stage.HasValue) return;
+                if (RoundCount >= RoundDatas.Length || RoundCount == -1)
+                {
+                    return;
+                }
 
-            var roundGist = LevelActionAsset.ExtractGist(stage.Value, round);
+                RoundData round = RoundDatas[RoundCount];
+                var stage = round.CheckStage(truncatedCount);
+                if (!stage.HasValue) return;
+
+                roundGist = LevelActionAsset.ExtractGist(stage.Value, round);
+            }
 
             var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
             token.GetComponent<TimeLineTokenQuad>().owner = this;

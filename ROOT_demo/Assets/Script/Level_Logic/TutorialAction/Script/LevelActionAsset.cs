@@ -47,6 +47,7 @@ namespace ROOT
         Shop,
         Require,
         Destoryer,
+        Ending,
     }
 
     public struct RoundGist
@@ -71,7 +72,7 @@ namespace ROOT
         public int NormalRequirement;
         public int NetworkRequirement;
 
-        [Range(0, 10)]
+        [Range(0, 20)]
         public int DestoryerLength;
 
         public int TotalLength => ShopLength + RequireLength + DestoryerLength;

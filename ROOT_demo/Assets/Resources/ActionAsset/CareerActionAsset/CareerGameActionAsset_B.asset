@@ -22,16 +22,16 @@ MonoBehaviour:
   ShopExcludedType: 
   Actions: []
   RoundDatas:
-  - ShopLength: 5
+  - ShopLength: 6
     RequireLength: 10
     NormalRequirement: 3
     NetworkRequirement: 4
-    DestoryerLength: 5
+    DestoryerLength: 8
   - ShopLength: 3
     RequireLength: 7
     NormalRequirement: 7
     NetworkRequirement: 8
-    DestoryerLength: 6
+    DestoryerLength: 10
   - ShopLength: 4
     RequireLength: 12
     NormalRequirement: 24

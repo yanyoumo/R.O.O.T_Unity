@@ -402,7 +402,6 @@ namespace ROOT
                 return true;
             }
 
-            //BUG 天灾可能在没有结束完成一次击发后时间结束的处理。
             ShoudOpenShop = round.Type == StageType.Shop;
 
             if (round.Type == StageType.Require)
@@ -410,7 +409,15 @@ namespace ROOT
                 NormalRval += round.Val0;
                 NetworkRval += round.Val1;
             }
+
+            var ShouldDestoryer= (round.Type == StageType.Destoryer);
             
+            if (LevelAsset.DestroyerEnabled&&!ShouldDestoryer)
+            {
+                LevelAsset.WarningDestoryer.ForceReset();
+            }
+
+            LevelAsset.DestroyerEnabled = ShouldDestoryer;
             LevelAsset.ShopMgr.ShopOpening = ShoudOpenShop;
 
             if (NormalRval == 0 && NetworkRval == 0)
@@ -459,8 +466,7 @@ namespace ROOT
 
         protected void InitDestoryer()
         {
-            LevelAsset.WarningDestoryer = new MeteoriteBomber();
-            LevelAsset.WarningDestoryer.SetBoard(ref LevelAsset.GameBoard);
+            LevelAsset.WarningDestoryer = new MeteoriteBomber { GameBoard = LevelAsset.GameBoard };
             LevelAsset.WarningDestoryer.Init(5, 2);
         }
         protected void InitShop()

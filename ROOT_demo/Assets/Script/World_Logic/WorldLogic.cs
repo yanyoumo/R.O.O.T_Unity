@@ -530,7 +530,7 @@ namespace ROOT
             return indicator;
         }
 
-        internal static void UpdateDestoryer(GameAssets currentLevelAsset)
+        internal static void CleanDestoryer(GameAssets currentLevelAsset)
         {
             if (currentLevelAsset.WarningGo != null)
             {
@@ -543,7 +543,10 @@ namespace ROOT
                     }
                 }
             }
+        }
 
+        internal static void UpdateDestoryer(GameAssets currentLevelAsset)
+        {
             if (currentLevelAsset.WarningDestoryer.GetStatus != WarningDestoryerStatus.Dormant)
             {
                 var incomings = currentLevelAsset.WarningDestoryer.NextStrikingPos(out var count);
@@ -754,6 +757,7 @@ namespace ROOT
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             var postalPrice = -1;
 
+            CleanDestoryer(currentLevelAsset);
             if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
 
             ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset._boughtOnce);
