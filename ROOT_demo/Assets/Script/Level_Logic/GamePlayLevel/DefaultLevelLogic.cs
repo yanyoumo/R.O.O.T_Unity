@@ -417,8 +417,11 @@ namespace ROOT
                 LevelAsset.WarningDestoryer.ForceReset();
             }
 
+            //TODO 还要在这里弄好HeatSink的部分。而且TimeLine也得弄。
+
             LevelAsset.DestroyerEnabled = ShouldDestoryer;
             LevelAsset.ShopMgr.ShopOpening = ShoudOpenShop;
+            //LevelAsset.CurrencyEnabled = !ShoudOpenShop;//TODO 这个时候的成本面板怎么处理？
 
             if (NormalRval == 0 && NetworkRval == 0)
             {

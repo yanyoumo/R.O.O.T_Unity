@@ -38,7 +38,7 @@ namespace ROOT
         public int HasStrikedCount { private set; get; }//这个是攻击了多少发（可能一次好几发）
 
         public const int MaxStrikeCount = 3;
-        public const int NextStrikeUpCounter = 3;
+        public const int NextStrikeUpCounter = 2;
 
         public Board GameBoard { get; set; }
         
@@ -68,8 +68,23 @@ namespace ROOT
             NextIncomes = new Vector2Int[NextStrikingCount];
             for (int i = 0; i < NextStrikingCount; i++)
             {
-                //NextIncomes[i] = PureRandomTarget();
-                NextIncomes[i] = ComplexRandomTarget();
+                //只有
+                bool noSource = true;
+                Vector2Int pos;
+                do
+                {
+                    pos = ComplexRandomTarget();
+                    if (GameBoard.UnitsGameObjects.TryGetValue(pos, out var value))
+                    {
+                        noSource = (value.GetComponentInChildren<Unit>().UnitCoreGenre != CoreGenre.Source);
+                    }
+                    else
+                    {
+                        noSource = true;
+                    }
+                } while (!noSource);
+
+                NextIncomes[i] = pos;
             }
         }
         

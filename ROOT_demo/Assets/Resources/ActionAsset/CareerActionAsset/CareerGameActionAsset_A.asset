@@ -17,83 +17,31 @@ MonoBehaviour:
   LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
     type: 3}
   levelType: 1
-  GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
+  GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
   ExcludedShop: 1
   ShopExcludedType: 0500000002000000
   Actions: []
-  TimeLineTokens:
-  - TokenID: 0
-    type: 5
-    RequireAmount: 0
-    Range: {x: 0, y: 7}
-  - TokenID: 1
-    type: 0
-    RequireAmount: 3
-    Range: {x: 5, y: 10}
-  - TokenID: 2
-    type: 4
-    RequireAmount: 0
-    Range: {x: 7, y: 8}
-  - TokenID: 3
-    type: 1
-    RequireAmount: 2
-    Range: {x: 8, y: 16}
-  - TokenID: 4
-    type: 0
-    RequireAmount: 10
-    Range: {x: 10, y: 30}
-  - TokenID: 5
-    type: 4
-    RequireAmount: 0
-    Range: {x: 12, y: 13}
-  - TokenID: 6
-    type: 5
-    RequireAmount: 0
-    Range: {x: 14, y: 24}
-  - TokenID: 7
-    type: 1
-    RequireAmount: 5
-    Range: {x: 16, y: 40}
-  - TokenID: 8
-    type: 0
-    RequireAmount: 20
-    Range: {x: 30, y: 60}
-  - TokenID: 9
-    type: 2
-    RequireAmount: 0
-    Range: {x: 30, y: -1}
-  - TokenID: 10
-    type: 5
-    RequireAmount: 0
-    Range: {x: 32, y: 37}
-  - TokenID: 11
-    type: 4
-    RequireAmount: 0
-    Range: {x: 34, y: 35}
-  - TokenID: 12
-    type: 1
-    RequireAmount: 10
-    Range: {x: 40, y: 60}
-  - TokenID: 13
-    type: 5
-    RequireAmount: 0
-    Range: {x: 50, y: 60}
-  - TokenID: 14
-    type: 4
-    RequireAmount: 0
-    Range: {x: 55, y: 56}
-  - TokenID: 0
-    type: 0
-    RequireAmount: 30
-    Range: {x: 60, y: 90}
-  - TokenID: 0
-    type: 1
-    RequireAmount: 15
-    Range: {x: 60, y: -1}
-  - TokenID: 0
-    type: 3
-    RequireAmount: 0
-    Range: {x: 90, y: -1}
+  RoundDatas:
+  - ShopLength: 4
+    RequireLength: 10
+    NormalRequirement: 4
+    NetworkRequirement: 2
+    DestoryerLength: 8
+  - ShopLength: 2
+    RequireLength: 12
+    NormalRequirement: 8
+    NetworkRequirement: 5
+    DestoryerLength: 8
+  - ShopLength: 4
+    RequireLength: 14
+    NormalRequirement: 15
+    NetworkRequirement: 10
+    DestoryerLength: 12
+  - ShopLength: 3
+    RequireLength: 12
+    NormalRequirement: 25
+    NetworkRequirement: 15
+    DestoryerLength: 16
   InitalBoard:
   - Core: 5
     Sides: 01000000010000000100000001000000
@@ -105,7 +53,7 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 3, y: 3}
     IsStation: 0
-  TargetCount: 70
+  TargetCount: 12
   StationaryRateList:
   - {x: 12, y: 8}
   - {x: 10, y: 5}

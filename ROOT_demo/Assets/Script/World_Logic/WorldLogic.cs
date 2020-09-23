@@ -547,7 +547,9 @@ namespace ROOT
 
         internal static void UpdateDestoryer(GameAssets currentLevelAsset)
         {
-            if (currentLevelAsset.WarningDestoryer.GetStatus != WarningDestoryerStatus.Dormant)
+            //if (currentLevelAsset.WarningDestoryer.GetStatus != WarningDestoryerStatus.Dormant)
+            //TEMP 现在警告-1；
+            if (currentLevelAsset.WarningDestoryer.GetStatus == WarningDestoryerStatus.Striking)
             {
                 var incomings = currentLevelAsset.WarningDestoryer.NextStrikingPos(out var count);
                 currentLevelAsset.WarningGo = new GameObject[count];
