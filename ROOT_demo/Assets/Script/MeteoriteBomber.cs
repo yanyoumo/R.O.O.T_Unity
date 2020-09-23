@@ -161,7 +161,7 @@ namespace ROOT
         private Vector2Int? RandomHeatSinkUnitTarget()
         {
             var oHunit = GameBoard.OverlapHeatSinkUnit;
-            if (oHunit != null)
+            if (oHunit != null && oHunit.Length != 0)
             {
                 return Utils.RandomItem(oHunit.Select(unit => unit.CurrentBoardPosition));
             }
