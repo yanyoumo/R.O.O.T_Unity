@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
@@ -8,36 +9,41 @@ namespace ROOT
 {
     public class CostChart : MonoBehaviour
     {
-        public TextMeshPro Income;
-        public TextMeshPro PresentCost;
-        public TextMeshPro PendingCost;
-        public TextMeshPro Benefit;
+        public TextMeshPro Text;
+        [ReadOnly] public int Val;
 
-        public int IncomeVal
-        {
-            set => Income.text = Utils.PaddingNum3Digit(value);
-        }
+        private bool active = true;
 
-        public int CostVal
-        {
-            set => PresentCost.text = Utils.PaddingNum3Digit(value);
-        }
-
-        public int BenefitVal
+        public bool Active
         {
             set
             {
-                if (value >= 0)
+                active = value;
+                if (active)
                 {
-                    Benefit.text = Utils.PaddingNum3Digit(value);
-                    Benefit.color = Color.green;
+                    if (Val > 0)
+                    {
+                        Text.text = Utils.PaddingNum3Digit(Val);
+                        Text.color = Color.green;
+                    }
+                    else if (Val == 0)
+                    {
+                        Text.text = "000";
+                        Text.color = Color.red;
+                    }
+                    else
+                    {
+                        Text.text = "-" + Utils.PaddingNum2Digit(Math.Abs(Val));
+                        Text.color = Color.red;
+                    }
                 }
                 else
                 {
-                    Benefit.text = "-" + Utils.PaddingNum2Digit(Math.Abs(value));
-                    Benefit.color = Color.red;
+                    Text.text = "---";
+                    Text.color = Color.black;
                 }
             }
+            get => active;
         }
     }
 }

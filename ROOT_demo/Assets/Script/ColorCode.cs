@@ -3,13 +3,6 @@ using UnityEngine;
 
 namespace ROOT
 {
-    //TODO yuxuan 本次的工作为设计新的HeatSink图样
-    //在DefaultHeatSinkPatternLib里面添加新的HeatSinkPattern
-    //命名直接接续现有的HeatSinkA/B/C等等。
-    //要求：
-    //  1、heatSink计数应该在10~18之间、闭区间。
-    //  2、设计出来的图样尽量对称。
-    //  3、2号要求并非必须，但是至少图样需要有规律、不允许随机化。
     public static class ColorUtilityWrapper
     {
         /// <summary>
@@ -70,5 +63,8 @@ namespace ROOT
 
         public const string ROOT_MAT_BOARDGRID_NORMAL = "#15182F";
         public const string ROOT_MAT_BOARDGRID_HEATSINK = "#650011";
+
+        public const string ROOT_DESTORYER_STRIKING = "#FF3300";
+        public const string ROOT_DESTORYER_WARNING = "#FFEA04";
     }
 }

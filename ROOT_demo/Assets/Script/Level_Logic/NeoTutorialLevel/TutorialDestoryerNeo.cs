@@ -79,8 +79,7 @@ namespace ROOT
         
         protected void InitDestoryer()
         {
-            LevelAsset.WarningDestoryer = new MeteoriteBomber();
-            LevelAsset.WarningDestoryer.SetBoard(ref LevelAsset.GameBoard);
+            LevelAsset.WarningDestoryer = new MeteoriteBomber {GameBoard = LevelAsset.GameBoard};
             LevelAsset.WarningDestoryer.Init(5, 2);
         }
 

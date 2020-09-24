@@ -85,6 +85,7 @@ namespace ROOT
         {
             get
             {
+                return false;
                 var forceNewArray = false;
                 if (nomoreStationary) return false;
                 if (stationaryArray != null && localOffset == stationaryArray.Length)

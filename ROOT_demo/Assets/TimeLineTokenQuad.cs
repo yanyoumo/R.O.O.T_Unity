@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
@@ -11,10 +13,10 @@ namespace ROOT
         [ReadOnly]
         public TimeLine owner;
         [ReadOnly]
-        public TimeLineToken[] Token;
+        public RoundGist RoundGist;
         [ReadOnly]
         public int MarkerID;
-
+        
         public GameObject QuadTemplate;
 
         private readonly float baseTokenHeight = 0.38f;
@@ -50,25 +52,48 @@ namespace ROOT
             }
         }
 
-        public void InitQuadShape(float unitLength, int subDivision, TimeLineToken[] token)
+        private void InitSubtoken(int i,int max,float unitLength,int subDivision,int ColorID)
         {
-            Token = token;
-            var max = Token.Length;
-            Token.Sort();
-            if (Token.Any(tok=>tok.type == TimeLineTokenType.Ending))
+            var go = Instantiate(QuadTemplate, QuadTransform);
+            transform.localPosition = Vector3.zero;
+            transform.localScale = Vector3.one;
+            var tokenHeightUnit = baseTokenHeight / max;
+            var tokenHeight = tokenHeightUnit * (max - i);
+            go.GetComponent<MeshRenderer>().material.color = QuadColors[ColorID];
+            go.transform.localPosition = new Vector3((unitLength / subDivision) * 0.5f, yOffset * i, tokenHeight * 0.5f);
+            go.transform.localScale = new Vector3(unitLength / subDivision, tokenHeight, 1.0f);
+        }
+
+        public void InitQuadShape(float unitLength, int subDivision, RoundGist gist,bool HeatsinkSwitch)
+        {
+            RoundGist = gist;
+            var gistList = new List<int>();
+
+            switch (gist.Type)
             {
-                Token = Token.Where(tok => tok.type == TimeLineTokenType.Ending).ToArray();
+                case StageType.Shop:
+                    gistList.Add((int)TimeLineTokenType.ShopOpened);
+                    break;
+                case StageType.Require:
+                    gistList.Add((int)TimeLineTokenType.RequireNormal);
+                    gistList.Add((int)TimeLineTokenType.RequireNetwork);
+                    break;
+                case StageType.Destoryer:
+                    gistList.Add((int)TimeLineTokenType.DestoryerIncome);
+                    break;
+                case StageType.Ending:
+                    gistList.Add((int)TimeLineTokenType.Ending);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            for (var i = 0; i < Token.Length; i++)
+            if (HeatsinkSwitch)
             {
-                var go = Instantiate(QuadTemplate, QuadTransform);
-                var tokenHeightUnit = baseTokenHeight / max;
-                var tokenHeight = tokenHeightUnit * (max - i);
-                go.GetComponent<MeshRenderer>().material.color = QuadColors[(int)Token[i].type];
-                transform.localPosition = Vector3.zero;
-                transform.localScale = Vector3.one;
-                go.transform.localPosition = new Vector3((unitLength / subDivision) * 0.5f, yOffset * i, tokenHeight * 0.5f);
-                go.transform.localScale = new Vector3(unitLength / subDivision, tokenHeight, 1.0f);
+                gistList.Add((int)TimeLineTokenType.HeatSinkSwitch);
+            }
+            for (var i = 0; i < gistList.Count; i++)
+            {
+                InitSubtoken(i, gistList.Count, unitLength, subDivision, gistList[i]);
             }
         }
 
@@ -81,7 +106,20 @@ namespace ROOT
                 ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_DISASTER),
                 ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_ENDING),
                 ColorUtilityWrapper.ParseHtmlStringNotNull("#FF8800"),
+                ColorUtilityWrapper.ParseHtmlStringNotNull("#0E195E"),
             };
+        }
+
+        private void SetVal()
+        {
+            if (RoundGist.Type == StageType.Require|| RoundGist.Type == StageType.Shop)
+            {
+                if (MarkerID == owner.StepCount)
+                {
+                    SetValMarker(RoundGist.Val0, TimeLineTokenType.RequireNormal);
+                    SetValMarker(RoundGist.Val1, TimeLineTokenType.RequireNetwork);
+                }
+            }
         }
 
         private void SetSingleToken(TimeLineToken _token)
@@ -115,7 +153,7 @@ namespace ROOT
         public void Update()
         {
             DisableValMarker();
-            Token.ForEach(SetSingleToken);
+            SetVal();
         }
     }
 }
