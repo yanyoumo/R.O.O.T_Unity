@@ -254,7 +254,7 @@ namespace ROOT
         public static int HeatSinkCost(int occupiedHeatSink, int HeatSinkCount)
         {
             //目前是卡死单价、但是同一个Array全占满总价不同。
-            const float pow = 3.5f;
+            const float pow = 1.75f;
             return Mathf.CeilToInt(Mathf.Pow(pow, occupiedHeatSink) - 1);
         }
 
