@@ -66,6 +66,8 @@ namespace ROOT
         //CoreFunctionFlag
         public bool InputEnabled = true;
         public bool CurrencyEnabled = true;
+        public bool CurrencyIOEnabled = true;
+        public bool CurrencyIncomeEnabled = true;
         public bool CycleEnabled = true;
         //FeatureFunctionFlag
         public bool CursorEnabled = true;
@@ -111,6 +113,8 @@ namespace ROOT
         {
             InputEnabled = true;
             CursorEnabled = true;
+            CurrencyIOEnabled = true;
+            CurrencyIncomeEnabled = true;
             RotateEnabled = true;
             ShopEnabled = true;
             LCDCurrencyEnabled = true;
@@ -126,6 +130,8 @@ namespace ROOT
         {
             InputEnabled = false;
             CursorEnabled = false;
+            CurrencyIOEnabled = false;
+            CurrencyIncomeEnabled = false;
             RotateEnabled = false;
             ShopEnabled = false;
             LCDCurrencyEnabled = false;
@@ -381,12 +387,15 @@ namespace ROOT
             }
         }
 
+        int ObselateStepID = -1;
         protected bool UpdateCareerGameOverStatus(GameAssets currentLevelAsset)
         {
             //这个函数就很接近裁判要做的事儿了。
             var NormalRval = 0;
             var NetworkRval = 0;
             var ShoudOpenShop = false;
+            var ShoudCurrencyIO = false;
+            var ShoudCurrencyIncome = false;
 
             var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
             if (!roundGist.HasValue) return false;
@@ -403,6 +412,8 @@ namespace ROOT
             }
 
             ShoudOpenShop = round.Type == StageType.Shop;
+            ShoudCurrencyIncome = round.Type == StageType.Require;
+            ShoudCurrencyIO = (round.Type == StageType.Require || round.Type == StageType.Destoryer);
 
             if (round.Type == StageType.Require)
             {
@@ -410,17 +421,32 @@ namespace ROOT
                 NetworkRval += round.Val1;
             }
 
+            var tCount=LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
+            if (round.SwitchHeatsink(tCount))
+            {
+                if (ObselateStepID==-1||ObselateStepID != LevelAsset.StepCount)
+                {
+                    LevelAsset.GameBoard.UpdatePatternID();
+                }
+
+                ObselateStepID = LevelAsset.StepCount;
+            }
+
             var ShouldDestoryer= (round.Type == StageType.Destoryer);
-            
-            if (LevelAsset.DestroyerEnabled&&!ShouldDestoryer)
+
+            if (LevelAsset.DestroyerEnabled && !ShouldDestoryer)
             {
                 LevelAsset.WarningDestoryer.ForceReset();
             }
+
+
 
             //TODO 还要在这里弄好HeatSink的部分。而且TimeLine也得弄。
 
             LevelAsset.DestroyerEnabled = ShouldDestoryer;
             LevelAsset.ShopMgr.ShopOpening = ShoudOpenShop;
+            LevelAsset.CurrencyIncomeEnabled = ShoudCurrencyIncome;
+            LevelAsset.CurrencyIOEnabled = ShoudCurrencyIO;
             //LevelAsset.CurrencyEnabled = !ShoudOpenShop;//TODO 这个时候的成本面板怎么处理？
 
             if (NormalRval == 0 && NetworkRval == 0)

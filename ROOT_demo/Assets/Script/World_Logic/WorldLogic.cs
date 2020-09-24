@@ -10,18 +10,19 @@ namespace ROOT
     [Flags]
     public enum ControllingCommand
     {
-        Nop = 0b_00000000000,
-        Move = 0b_00000000001,
-        Drag = 0b_00000000010,
-        Rotate = 0b_00000000100,
-        Buy = 0b_00000001000,
-        PlayHint = 0b_00000010000,
-        SignalHint = 0b_00000100000,
-        NextButton = 0b_00001000000,
-        CycleNext = 0b_00010000000,
-        BuyCanceled = 0b_00100000000,
-        BuyConfirm = 0b_01000000000,
-        BuyRandom = 0b_10000000000,
+        Nop =         0b_000000000000,
+        Move =        0b_000000000001,
+        Drag =        0b_000000000010,
+        Rotate =      0b_000000000100,
+        Buy =         0b_000000001000,
+        PlayHint =    0b_000000010000,
+        SignalHint =  0b_000000100000,
+        NextButton =  0b_000001000000,
+        CycleNext =   0b_000010000000,
+        BuyCanceled = 0b_000100000000,
+        BuyConfirm =  0b_001000000000,
+        BuyRandom =   0b_010000000000,
+        RemoveUnit =  0b_100000000000,
     }
 
     public struct ControllingPack
@@ -358,6 +359,12 @@ namespace ROOT
             ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
             ctrlPack.NextPos = currentLevelAsset.Cursor.GetCoord(ctrlPack.CommandDir);
 
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_REMOVEUNIT))
+            {
+                ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
+                ctrlPack.SetFlag(ControllingCommand.RemoveUnit);
+            }
+
             if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT)&& ctrlPack.CtrlCMD == ControllingCommand.Nop)
             {
                 //移动和拖动的优先级比旋转高。
@@ -617,7 +624,13 @@ namespace ROOT
                 currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
                 movedCursor = true;
             }
-
+            else if(ctrlPack.HasFlag(ControllingCommand.RemoveUnit))
+            {
+                currentLevelAsset.GameBoard.TryDeleteCertainUnit(ctrlPack.CurrentPos);
+                movedTile = true;//RISK 这里可以调整删除单位是否强制移动。目前强制移动。
+                movedCursor = true;
+            }
+            
             if (currentLevelAsset.CursorEnabled && movedCursor)
             {
                 currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
@@ -672,11 +685,21 @@ namespace ROOT
         {
             int inCome = 0;
             int cost = 0;
-            inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
-            inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
-            //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
-            //TEMP 现在只有热力消耗。
-            cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
+            if (currentLevelAsset.CurrencyIOEnabled)
+            {
+                inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
+                inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
+                //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
+                //TEMP 现在只有热力消耗。
+                if (!currentLevelAsset.CurrencyIncomeEnabled)
+                {
+                    //RISK 现在在红色区间没有任何价格收入。靠谱吗？
+                    inCome = 0;
+                }
+                cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
+            }
+
+            currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
             currentLevelAsset.DeltaCurrency = inCome - cost;
 
             if (currentLevelAsset.CostLine != null)
@@ -690,9 +713,9 @@ namespace ROOT
 
             if (currentLevelAsset.CostChart != null)
             {
-                currentLevelAsset.CostChart.IncomeVal = Mathf.FloorToInt(inCome);
-                currentLevelAsset.CostChart.CostVal = Mathf.FloorToInt(cost);
-                currentLevelAsset.CostChart.BenefitVal = inCome - cost;
+                //currentLevelAsset.CostChart.IncomeVal = Mathf.FloorToInt(inCome);
+                //currentLevelAsset.CostChart.CostVal = Mathf.FloorToInt(cost);
+                currentLevelAsset.CostChart.Val = inCome - cost;
             }
 
             lastInCome = inCome;

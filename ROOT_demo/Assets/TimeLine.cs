@@ -120,10 +120,10 @@ namespace ROOT
 
         //public TimeLineToken[] TimeLineTokens;
         public RoundData[] RoundDatas;
+        public bool HasHeatsinkSwitch = false;
 
         void CheckToken(Transform MarkRoot, int j, int markerCount)
         {
-            //TODO 还要处理EndingToken的处理。
             RoundGist roundGist = new RoundGist();
             //BUG 这里会出一个Exception，但是似乎不影响运行。
             if (_currentGameAsset.ActionAsset.HasEnded(markerCount))
@@ -144,11 +144,12 @@ namespace ROOT
                 if (!stage.HasValue) return;
 
                 roundGist = LevelActionAsset.ExtractGist(stage.Value, round);
+                HasHeatsinkSwitch = roundGist.SwitchHeatsink(truncatedCount);
             }
 
             var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
             token.GetComponent<TimeLineTokenQuad>().owner = this;
-            token.GetComponent<TimeLineTokenQuad>().InitQuadShape(UnitLength, SubDivision, roundGist);
+            token.GetComponent<TimeLineTokenQuad>().InitQuadShape(UnitLength, SubDivision, roundGist, HasHeatsinkSwitch);
             token.GetComponent<TimeLineTokenQuad>().MarkerID = markerCount;
         }
 

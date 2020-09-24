@@ -22,26 +22,34 @@ MonoBehaviour:
   ShopExcludedType: 0500000002000000
   Actions: []
   RoundDatas:
-  - ShopLength: 4
-    RequireLength: 10
+  - ID: 0
+    ShopLength: 4
+    RequireLength: 18
     NormalRequirement: 4
     NetworkRequirement: 2
     DestoryerLength: 8
-  - ShopLength: 2
-    RequireLength: 12
+    HeatSinkSwitchCount: 2
+  - ID: 1
+    ShopLength: 2
+    RequireLength: 20
     NormalRequirement: 8
     NetworkRequirement: 5
     DestoryerLength: 8
-  - ShopLength: 4
-    RequireLength: 14
+    HeatSinkSwitchCount: 4
+  - ID: 2
+    ShopLength: 4
+    RequireLength: 28
     NormalRequirement: 15
     NetworkRequirement: 10
     DestoryerLength: 12
-  - ShopLength: 3
-    RequireLength: 12
-    NormalRequirement: 25
+    HeatSinkSwitchCount: 4
+  - ID: 3
+    ShopLength: 3
+    RequireLength: 28
+    NormalRequirement: 20
     NetworkRequirement: 15
     DestoryerLength: 16
+    HeatSinkSwitchCount: 4
   InitalBoard:
   - Core: 5
     Sides: 01000000010000000100000001000000
@@ -53,7 +61,7 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 3, y: 3}
     IsStation: 0
-  TargetCount: 12
+  TargetCount: 10
   StationaryRateList:
   - {x: 12, y: 8}
   - {x: 10, y: 5}

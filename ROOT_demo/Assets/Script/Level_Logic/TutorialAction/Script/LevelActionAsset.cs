@@ -52,10 +52,17 @@ namespace ROOT
 
     public struct RoundGist
     {
+        public int ID;
         public StageType Type;
         public int Val0;
         public int Val1;
         public int Val2;
+        public int[] HSSwTruncatedIdx;
+
+        public bool SwitchHeatsink(int tCount)
+        {
+            return HSSwTruncatedIdx != null && (HSSwTruncatedIdx[0] != -1 && HSSwTruncatedIdx.Contains(tCount));
+        }
     }
 
     /// <summary>
@@ -64,16 +71,26 @@ namespace ROOT
     [Serializable]
     public struct RoundData
     {
+        public int ID;
+
         [Range(0,15)]
         public int ShopLength;
+
+        [Space]
         [Range(0, 30)]
         public int RequireLength;
-
+        [Indent]
         public int NormalRequirement;
+        [Indent]
         public int NetworkRequirement;
 
+        [Space]
         [Range(0, 20)]
         public int DestoryerLength;
+
+        [Space]
+        [Range(0, 30)]
+        public int HeatSinkSwitchCount;//TODO 这个放是放了，但是下面还没接。
 
         public int TotalLength => ShopLength + RequireLength + DestoryerLength;
 
@@ -235,7 +252,7 @@ namespace ROOT
 
         public static RoundGist ExtractGist(StageType type, RoundData round)
         {
-            RoundGist roundGist = new RoundGist { Type = type };
+            var roundGist = new RoundGist {ID=round.ID,Type = type};
             switch (type)
             {
                 case StageType.Shop:
@@ -249,6 +266,14 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
 
+            try
+            {
+                Utils.SpreadOutLaying(round.HeatSinkSwitchCount, round.TotalLength, out roundGist.HSSwTruncatedIdx);
+            }
+            catch (ArgumentException)
+            {
+                roundGist.HSSwTruncatedIdx = new[] {-1};
+            }
             return roundGist;
         }
     }

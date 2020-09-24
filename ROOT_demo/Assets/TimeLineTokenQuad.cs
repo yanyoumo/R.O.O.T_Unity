@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -63,28 +64,36 @@ namespace ROOT
             go.transform.localScale = new Vector3(unitLength / subDivision, tokenHeight, 1.0f);
         }
 
-        public void InitQuadShape(float unitLength, int subDivision, RoundGist gist)
+        public void InitQuadShape(float unitLength, int subDivision, RoundGist gist,bool HeatsinkSwitch)
         {
             RoundGist = gist;
-            //TODO 没处理Ending的事情。
+            var gistList = new List<int>();
 
             switch (gist.Type)
             {
                 case StageType.Shop:
-                    InitSubtoken(0, 1, unitLength, subDivision, 5);
+                    gistList.Add((int)TimeLineTokenType.ShopOpened);
                     break;
                 case StageType.Require:
-                    InitSubtoken(0, 2, unitLength, subDivision, 0);
-                    InitSubtoken(1, 2, unitLength, subDivision, 1);
+                    gistList.Add((int)TimeLineTokenType.RequireNormal);
+                    gistList.Add((int)TimeLineTokenType.RequireNetwork);
                     break;
                 case StageType.Destoryer:
-                    InitSubtoken(0, 1, unitLength, subDivision, 2);
+                    gistList.Add((int)TimeLineTokenType.DestoryerIncome);
                     break;
                 case StageType.Ending:
-                    InitSubtoken(0, 1, unitLength, subDivision, 3);
+                    gistList.Add((int)TimeLineTokenType.Ending);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+            if (HeatsinkSwitch)
+            {
+                gistList.Add((int)TimeLineTokenType.HeatSinkSwitch);
+            }
+            for (var i = 0; i < gistList.Count; i++)
+            {
+                InitSubtoken(i, gistList.Count, unitLength, subDivision, gistList[i]);
             }
         }
 

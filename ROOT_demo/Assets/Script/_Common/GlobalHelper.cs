@@ -30,6 +30,7 @@ namespace ROOT
         public static readonly string INPUT_BUTTON_NAME_SHOPCANCELED = "ShopCancel";
         public static readonly string INPUT_BUTTON_NAME_SHOPCONFIRM = "ShopConfirm";
         public static readonly string INPUT_BUTTON_NAME_SHOPRANDOM = "ShopRandom";
+        public static readonly string INPUT_BUTTON_NAME_REMOVEUNIT = "RemoveUnit";
 
         public static readonly string INPUT_BUTTON_NAME_QUIT = "Quit";
         public static readonly string INPUT_BUTTON_NAME_NEXT = "Next";
@@ -254,6 +255,46 @@ namespace ROOT
         public static int GetSideCount(SideType side, SideType[] sides)
         {
             return sides.Count(sideType => sideType == side);
+        }
+
+        /// <summary>
+        /// 将一个整数尽可能以目标计数以整数平均分解
+        /// </summary>
+        /// <param name="targetCount">目标计数，大于等于1</param>
+        /// <param name="maxCount">总数，大于等于目标计数</param>
+        /// <param name="sum">将切分结果求和积分结果，最后一个数值就是总数</param>
+        /// <returns>将总数按照计数切分的结果</returns>
+        public static int[] SpreadOutLaying(int targetCount, int maxCount,out int[]sum)
+        {
+
+            if (targetCount<1|| targetCount> maxCount)
+            {
+                throw new ArgumentException("目标计数，大于等于1;总数，大于等于目标计数");
+            }
+
+            sum = new int[targetCount];
+            var resDiv = new int[targetCount];
+            var baseInterval = maxCount / targetCount;
+            var residue = maxCount - (baseInterval * targetCount);
+            for (int i = 0; i < targetCount; i++)
+            {
+                int interval = baseInterval;
+                if (targetCount-i<=residue)
+                {
+                    interval++;
+                }
+                resDiv[i] = interval;
+            }
+
+            for (var i = 0; i < sum.Length; i++)
+            {
+                for (var j = 0; j <= i; j++)
+                {
+                    sum[i] += resDiv[j];
+                }
+            }
+
+            return resDiv;
         }
 
         [CanBeNull]
