@@ -28,9 +28,9 @@ MonoBehaviour:
     NormalRequirement: 4
     NetworkRequirement: 2
     DestoryerLength: 8
-    HeatSinkSwitchCount: 2
+    HeatSinkSwitchCount: 0
   - ID: 1
-    ShopLength: 2
+    ShopLength: 4
     RequireLength: 20
     NormalRequirement: 8
     NetworkRequirement: 5
@@ -44,36 +44,7 @@ MonoBehaviour:
     DestoryerLength: 12
     HeatSinkSwitchCount: 4
   - ID: 3
-    ShopLength: 3
-    RequireLength: 28
-    NormalRequirement: 20
-    NetworkRequirement: 15
-    DestoryerLength: 16
-    HeatSinkSwitchCount: 4
-  RoundDatas:
-  - ID: 0
-    ShopLength: 4
-    RequireLength: 18
-    NormalRequirement: 4
-    NetworkRequirement: 2
-    DestoryerLength: 8
-    HeatSinkSwitchCount: 2
-  - ID: 1
-    ShopLength: 2
-    RequireLength: 20
-    NormalRequirement: 8
-    NetworkRequirement: 5
-    DestoryerLength: 8
-    HeatSinkSwitchCount: 4
-  - ID: 2
-    ShopLength: 4
-    RequireLength: 28
-    NormalRequirement: 15
-    NetworkRequirement: 10
-    DestoryerLength: 12
-    HeatSinkSwitchCount: 4
-  - ID: 3
-    ShopLength: 3
+    ShopLength: 5
     RequireLength: 28
     NormalRequirement: 20
     NetworkRequirement: 15
@@ -90,7 +61,7 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 3, y: 3}
     IsStation: 0
-  TargetCount: 10
+  TargetCount: 35
   StationaryRateList:
   - {x: 12, y: 8}
   - {x: 10, y: 5}
