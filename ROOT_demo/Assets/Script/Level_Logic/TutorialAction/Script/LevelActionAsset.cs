@@ -90,7 +90,7 @@ namespace ROOT
 
         [Space]
         [Range(0, 30)]
-        public int HeatSinkSwitchCount;//TODO 这个放是放了，但是下面还没接。
+        public int HeatSinkSwitchCount;
 
         public int TotalLength => ShopLength + RequireLength + DestoryerLength;
 

@@ -55,6 +55,10 @@ namespace ROOT
 
     public sealed partial class ShopMgr:MonoBehaviour
     {
+        public int SectionDuration = -1;
+        public int NormalMinRequire = -1;
+        public int NetworkMinRequire = -1;
+
         public Transform ShopCoverRoot;
         private bool _shopOpening;
         public bool ShopOpening

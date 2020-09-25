@@ -627,7 +627,7 @@ namespace ROOT
             else if(ctrlPack.HasFlag(ControllingCommand.RemoveUnit))
             {
                 currentLevelAsset.GameBoard.TryDeleteCertainUnit(ctrlPack.CurrentPos);
-                movedTile = true;//RISK 这里可以调整删除单位是否强制移动。目前强制移动。
+                //movedTile = true;//RISK 这里可以调整删除单位是否强制移动。目前不移动。
                 movedCursor = true;
             }
             
@@ -685,10 +685,14 @@ namespace ROOT
         {
             int inCome = 0;
             int cost = 0;
+
+            var tmpInComeA= Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
+            var tmpInComeB= Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
+
             if (currentLevelAsset.CurrencyIOEnabled)
             {
-                inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
-                inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
+                inCome += tmpInComeA;
+                inCome += tmpInComeB;
                 //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
                 //TEMP 现在只有热力消耗。
                 if (!currentLevelAsset.CurrencyIncomeEnabled)

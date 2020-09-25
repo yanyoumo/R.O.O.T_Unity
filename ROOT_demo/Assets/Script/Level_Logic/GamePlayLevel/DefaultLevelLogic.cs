@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Object = UnityEngine.Object;
 // https://shimo.im/docs/Dd86KXTqHJpqxwYX
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
@@ -444,10 +438,17 @@ namespace ROOT
             //TODO 还要在这里弄好HeatSink的部分。而且TimeLine也得弄。
 
             LevelAsset.DestroyerEnabled = ShouldDestoryer;
+            if (ShoudOpenShop)
+            {
+                
+            }
+            else
+            {
+                
+            }
             LevelAsset.ShopMgr.ShopOpening = ShoudOpenShop;
             LevelAsset.CurrencyIncomeEnabled = ShoudCurrencyIncome;
             LevelAsset.CurrencyIOEnabled = ShoudCurrencyIO;
-            //LevelAsset.CurrencyEnabled = !ShoudOpenShop;//TODO 这个时候的成本面板怎么处理？
 
             if (NormalRval == 0 && NetworkRval == 0)
             {
