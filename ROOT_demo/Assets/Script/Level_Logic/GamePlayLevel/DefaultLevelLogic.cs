@@ -45,6 +45,7 @@ namespace ROOT
         public CostLine CostLine;
         public CostChart CostChart;
         public CoreType? DestoryedCoreType;
+        public SignalPanel SignalPanel;
 
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
@@ -220,6 +221,7 @@ namespace ROOT
             LevelAsset.CostLine = FindObjectOfType<CostLine>();
             LevelAsset.ShopMgr = FindObjectOfType<ShopMgr>();
             LevelAsset.CostChart = FindObjectOfType<CostChart>();
+            LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
@@ -409,10 +411,10 @@ namespace ROOT
             ShoudCurrencyIncome = round.Type == StageType.Require;
             ShoudCurrencyIO = (round.Type == StageType.Require || round.Type == StageType.Destoryer);
 
-            if (round.Type == StageType.Require)
+            if (round.Type == StageType.Require|| round.Type == StageType.Shop)
             {
-                NormalRval += round.Val0;
-                NetworkRval += round.Val1;
+                NormalRval += round.normalReq;
+                NetworkRval += round.networkReq;
             }
 
             var tCount=LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
@@ -438,17 +440,11 @@ namespace ROOT
             //TODO 还要在这里弄好HeatSink的部分。而且TimeLine也得弄。
 
             LevelAsset.DestroyerEnabled = ShouldDestoryer;
-            if (ShoudOpenShop)
-            {
-                
-            }
-            else
-            {
-                
-            }
-            LevelAsset.ShopMgr.ShopOpening = ShoudOpenShop;
             LevelAsset.CurrencyIncomeEnabled = ShoudCurrencyIncome;
             LevelAsset.CurrencyIOEnabled = ShoudCurrencyIO;
+
+            int harDriverCountInt = 0;
+            int NetworkCountInt = 0;
 
             if (NormalRval == 0 && NetworkRval == 0)
             {
@@ -458,12 +454,35 @@ namespace ROOT
             else
             {
                 _noRequirement = false;
-                currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out var harDriverCountInt);
+                currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out harDriverCountInt);
                 var valA = (harDriverCountInt >= NormalRval);
-                currentLevelAsset.BoardDataCollector.CalculateServerScore(out var NetworkCountInt);
+                currentLevelAsset.BoardDataCollector.CalculateServerScore(out NetworkCountInt);
                 var valB = (NetworkCountInt >= NetworkRval);
                 currentLevelAsset.TimeLine.RequirementSatisfied = valA && valB;
             }
+
+            if (ShoudOpenShop)
+            {
+                if (!LevelAsset.ShopMgr.ShopOpening)
+                {
+                    var normalDataSurplus = NormalRval - harDriverCountInt;
+                    var networkDataSurplus = NetworkRval - NetworkCountInt;
+                    if (normalDataSurplus > 0 || networkDataSurplus > 0)
+                    {
+                        LevelAsset.ShopMgr.SetRequire(round.shopLength, normalDataSurplus, networkDataSurplus);
+                    }
+                }
+            }
+            else
+            {
+                LevelAsset.ShopMgr.ResetRequire();
+            }
+            LevelAsset.ShopMgr.ShopOpening = ShoudOpenShop;
+
+            LevelAsset.SignalPanel.TGTNormalSignal=NormalRval;
+            LevelAsset.SignalPanel.TGTNetworkSignal = NetworkRval;
+            LevelAsset.SignalPanel.CRTNormalSignal= harDriverCountInt;
+            LevelAsset.SignalPanel.CRTNetworkSignal = NetworkCountInt;
 
             return false;
         }

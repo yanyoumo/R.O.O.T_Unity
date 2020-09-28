@@ -52,12 +52,56 @@ namespace ROOT
             }
         }
     }
-
+    /// 其实无论如何怎么改，这里就只能做到：保证拼死寻找的玩家能够买满而已。
+    /// 
+    /// 
     public sealed partial class ShopMgr:MonoBehaviour
     {
-        public int SectionDuration = -1;
-        public int NormalMinRequire = -1;
-        public int NetworkMinRequire = -1;
+        private int _madateUnitCount = -1;
+        private int _normalMinRequire = -1;
+        private int _networkMinRequire = -1;
+        private int[] normalMadateArray = new[]{-1};
+        private int[] networkMadateArray = new[]{-1};
+        private int madateBaseTier = -1;
+        private int unitCountOffset = -1;
+
+        private int[] createMadateArray(int minCount,int dur)
+        {
+            var baseTier = TierProgress(currentLevelAsset.LevelProgress);
+            var minUnit = (minCount / baseTier) + ((minCount% baseTier) == 0 ? 0 : 1);
+            Utils.SpreadOutLaying(minUnit, dur, out var res);
+            return res;
+        }
+
+        public void SetRequire(int dur, int normal, int network)
+        {
+            _madateUnitCount = dur*4;
+            _normalMinRequire = normal;
+            _networkMinRequire = network;
+
+            if (_normalMinRequire != -1)
+            {
+                normalMadateArray = createMadateArray(_normalMinRequire, _madateUnitCount);
+            }
+
+            if (_networkMinRequire != -1)
+            {
+                networkMadateArray = createMadateArray(_networkMinRequire, _madateUnitCount);
+            }
+            madateBaseTier = TierProgress(currentLevelAsset.LevelProgress);
+            unitCountOffset = totalCount;
+        }
+
+        public void ResetRequire()
+        {
+            _madateUnitCount = -1;
+            _normalMinRequire = -1;
+            _networkMinRequire = -1;
+            normalMadateArray = new[] { -1 };
+            networkMadateArray = new[] { -1 };
+            madateBaseTier = -1;
+            unitCountOffset = -1;
+        }
 
         public Transform ShopCoverRoot;
         private bool _shopOpening;
@@ -214,7 +258,7 @@ namespace ROOT
             {
                 if (_items[i])
                 {
-                    for (int j = 0; j < _items.Length; j++)
+                    for (var j = 0; j < _items.Length; j++)
                     {
                         if (!_items[j])
                         {
@@ -256,7 +300,7 @@ namespace ROOT
         {
             ShopUpdateStack();
 
-            for (int i = 0; i < _items.Length; i++)
+            for (var i = 0; i < _items.Length; i++)
             {
                 nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
             }
@@ -270,7 +314,7 @@ namespace ROOT
 
         public void ShopUpdateAnimation(float lerp)
         {
-            for (int i = 0; i < _items.Length; i++)
+            for (var i = 0; i < _items.Length; i++)
             {
                 if (_items[i])
                 {
@@ -280,20 +324,39 @@ namespace ROOT
             }
         }
 
+        private CoreType GenerateCoreAndTier(out int tier)
+        {
+            var offsetedUnitCount = totalCount - unitCountOffset;
+            if (normalMadateArray.Contains(offsetedUnitCount))
+            {
+                tier = madateBaseTier;
+                return CoreType.HardDrive;
+            }
+            else if (networkMadateArray.Contains(offsetedUnitCount))
+            {
+                tier = madateBaseTier;
+                return CoreType.NetworkCable;
+            }
+            else
+            {
+                tier = TierProgress(currentLevelAsset.LevelProgress);
+                return GenerateRandomCore();
+            }
+        }
+
         public void ShopPostAnimationUpdate()
         {
-            for (int i = 0; i < _items.Length; i++)
+            for (var i = 0; i < _items.Length; i++)
             {
                 currentPosS[i] = new Vector3(nextPosS[i].x, nextPosS[i].y, nextPosS[i].z);
             }
 
-            for (int i = 0; i < _items.Length; i++)
+            for (var i = 0; i < _items.Length; i++)
             {
-                int _cost = currentLevelAsset.BoardDataCollector.NthUnitCost(GameBoard.GetUnitCount);
+                var _cost = currentLevelAsset.BoardDataCollector.NthUnitCost(GameBoard.GetUnitCount);
                 if (!_items[i])
                 {
-                    CoreType core = GenerateRandomCore();
-                    int tier = TierProgress(currentLevelAsset.LevelProgress);
+                    var core = GenerateCoreAndTier(out var tier);
                     //Tier的计分部分，Server迪公去接.
                     //硬盘已经接上去了。
                     var (item1, item2, CostMultiplier) = TierMultiplier(tier);

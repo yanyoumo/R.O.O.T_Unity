@@ -116,8 +116,8 @@ namespace ROOT
             {
                 if (MarkerID == owner.StepCount)
                 {
-                    SetValMarker(RoundGist.Val0, TimeLineTokenType.RequireNormal);
-                    SetValMarker(RoundGist.Val1, TimeLineTokenType.RequireNetwork);
+                    SetValMarker(RoundGist.normalReq, TimeLineTokenType.RequireNormal);
+                    SetValMarker(RoundGist.networkReq, TimeLineTokenType.RequireNetwork);
                 }
             }
         }

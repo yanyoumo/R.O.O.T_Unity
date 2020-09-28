@@ -38,6 +38,7 @@ namespace ROOT
                 LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             }
             LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
+            LevelAsset.SignalPanel.TGTtMission= LevelAsset.ActionAsset.TargetCount;
         }
 
         protected void InitDestoryer()
@@ -72,6 +73,7 @@ namespace ROOT
         {
             bool res= UpdateCareerGameOverStatus(currentLevelAsset);
             LevelAsset.TimeLine.SetCurrentCount = RequirementSatisfiedCycleCount;
+            LevelAsset.SignalPanel.CRTMission = RequirementSatisfiedCycleCount;
             return res;
         }
 

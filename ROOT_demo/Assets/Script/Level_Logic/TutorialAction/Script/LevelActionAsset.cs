@@ -54,9 +54,9 @@ namespace ROOT
     {
         public int ID;
         public StageType Type;
-        public int Val0;
-        public int Val1;
-        public int Val2;
+        public int normalReq;
+        public int networkReq;
+        public int shopLength;
         public int[] HSSwTruncatedIdx;
 
         public bool SwitchHeatsink(int tCount)
@@ -256,9 +256,13 @@ namespace ROOT
             switch (type)
             {
                 case StageType.Shop:
+                    roundGist.normalReq = round.NormalRequirement;
+                    roundGist.networkReq = round.NetworkRequirement;
+                    roundGist.shopLength = round.ShopLength;
+                    break;
                 case StageType.Require:
-                    roundGist.Val0 = round.NormalRequirement;
-                    roundGist.Val1 = round.NetworkRequirement;
+                    roundGist.normalReq = round.NormalRequirement;
+                    roundGist.networkReq = round.NetworkRequirement;
                     break;
                 case StageType.Destoryer:
                     break;

@@ -393,11 +393,6 @@ namespace ROOT
             }
         }
 
-        public static string PaddingNum2Digit(float input)
-        {
-            return PaddingNum2Digit(Mathf.FloorToInt(input));
-        }
-
         public static string PaddingNum2Digit(int input)
         {
             int inputInt = input;
