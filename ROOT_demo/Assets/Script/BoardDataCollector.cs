@@ -88,8 +88,15 @@ namespace ROOT
             return score;
         }
 
+        public List<List<Unit>> CalculateProcessorScoreFindSetA()
+        {
+            return null;
+        }
+
         public float CalculateProcessorScore(out int driverCountInt)
         {
+            CalculateProcessorScoreFindSetA();
+
             var driverCount = 0.0f;
             var processorKeys = new List<Vector2Int>();
 
