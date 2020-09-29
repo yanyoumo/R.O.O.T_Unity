@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
+using TMPro.EditorUtilities;
+using UnityEditor.UIElements;
 using UnityEditorInternal.VR;
 using UnityEngine;
 
@@ -87,9 +89,84 @@ namespace ROOT
 
             return score;
         }
+        List<Unit> FindEndLeavePoint()
+        {
+            var res = new List<Unit>();
+            m_Board.Units.ForEach(unit => unit.InServerGrid = unit.Visited = unit.Visiting = false);
+            foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
+            {
+                if (!startPoint.Visited)
+                {
+                    startPoint.Visiting = true;
+                    var networkCableQueue = new Queue<networkCableStatus>();
+                    networkCableQueue.Enqueue(new networkCableStatus(startPoint, 0, 0, AddPath(startPoint, 0ul)));
+                    while (networkCableQueue.Count != 0)
+                    {
+                        var (networkCable, length, score, vis) = networkCableQueue.Dequeue();
+                        networkCable.Visited = true;
+                        var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
+                        hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
+                        if (!FindNextLevelNetworkCable(networkCableQueue, hardDriveQueue, length, score))
+                        {
+                            res.Add(networkCable);
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+        public List<List<Unit>> CalculateProcessorScoreFindSetA()
+        {
+            int maxCount = m_Board.BoardLength * m_Board.BoardLength;
+            var res = new List<List<Unit>>();
+            var endLeavePoint = FindEndLeavePoint();
+            foreach (var startPoint in endLeavePoint)
+            {
+                var maxLength = maxCount;
+                m_Board.Units.ForEach(unit => unit.InServerGrid = unit.Visited = unit.Visiting = false);
+                startPoint.Visiting = true;
+                var networkCableQueue = new Queue<Tuple<Unit, int, ulong>>();
+                networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(startPoint, 0, 0ul));
+                while (networkCableQueue.Count != 0)
+                {
+                    var (networkCable, length, vis) = networkCableQueue.Dequeue();
+                    if (length > maxLength)
+                        break;
+                    networkCable.Visited = true;
+                    var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
+                    hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
+                    while (hardDriveQueue.Count != 0)
+                    {
+                        var (hardDrive, vis2) = hardDriveQueue.Dequeue();
+                        foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit().Where(unit => IsVis(unit, vis2) == false))
+                        {
+                            if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable &&
+                                unitConnectedToHardDrive.Visited == false &&
+                                unitConnectedToHardDrive.Visiting == false)
+                            {
+                                unitConnectedToHardDrive.Visiting = true;
+                                networkCableQueue.Enqueue(new Tuple<Unit, int, ulong>(unitConnectedToHardDrive,
+                                    length + 1,
+                                    AddPath(unitConnectedToHardDrive, vis2)));
+                            }
+                            else if (unitConnectedToHardDrive.UnitCore == CoreType.HardDrive)
+                                hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive, AddPath(unitConnectedToHardDrive, vis2)));
+                            else if (unitConnectedToHardDrive.UnitCore == CoreType.Server)
+                            {
+                                maxLength = length + 1;
+                                res.Add(GeneratePath(startPoint, AddPath(unitConnectedToHardDrive, vis2)));
+                            }
+                        }
+                    }
+                }
+            }
+            return res;
+        }
 
         public float CalculateProcessorScore(out int driverCountInt)
         {
+            CalculateProcessorScoreFindSetA();
+
             var driverCount = 0.0f;
             var processorKeys = new List<Vector2Int>();
 
@@ -144,12 +221,7 @@ namespace ROOT
         //  3、寻找最长距离时，如果信号距离相等，则选择其中物理距离较短的（平均信号/物理密度较高的那个）。
         //  4、若信号距离相等、且密度相等，则随便选择一条。
         //并且对本系列函数补充部分注释。
-        
-        /// 有想法将计分逻辑改成单纯的最长，因为感觉“必要最长”有些否定树状结构的现象。
-        /// 但是发现将 必要最长 调整为 绝对最长 可能缺乏一个比较Solid的定义。
-        /// **所有单位中，连接到任意一个服务器的最短距离的集合中最长的。 
-
-        public void GeneratePath(Unit start, ulong vis)
+        public List<Unit> GeneratePath(Unit start, ulong vis)
         {
             var unitPathList = new List<Unit>();
             var now = start;
@@ -169,6 +241,7 @@ namespace ROOT
             }
             var length = unitPathList.Count;
             unitPathList.ForEach(unit => unit.ServerDepth = length--);
+            return unitPathList;
         }
 
         public ulong UnitToBit64(Unit now)
@@ -228,7 +301,6 @@ namespace ROOT
         }
         public float CalculateServerScore(out int networkCount)
         {
-
             int maxCount = m_Board.BoardLength * m_Board.BoardLength;
             var maxLength = maxCount;
             var maxScore = Int32.MinValue;
