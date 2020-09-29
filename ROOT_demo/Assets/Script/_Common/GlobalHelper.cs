@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
+// ReSharper disable IdentifierTypo
 
 namespace ROOT
 {
@@ -23,10 +24,17 @@ namespace ROOT
         public static readonly string INPUT_BUTTON_NAME_HINTCTRL = "HintControl";
         public static readonly string INPUT_BUTTON_NAME_CYCLENEXT = "CycleNext";
 
+        public static readonly string INPUT_BUTTON_NAME_SHOPBUY0 = "ShopBuy0";
         public static readonly string INPUT_BUTTON_NAME_SHOPBUY1 = "ShopBuy1";
         public static readonly string INPUT_BUTTON_NAME_SHOPBUY2 = "ShopBuy2";
         public static readonly string INPUT_BUTTON_NAME_SHOPBUY3 = "ShopBuy3";
         public static readonly string INPUT_BUTTON_NAME_SHOPBUY4 = "ShopBuy4";
+        public static readonly string INPUT_BUTTON_NAME_SHOPBUY5 = "ShopBuy5";
+        public static readonly string INPUT_BUTTON_NAME_SHOPBUY6 = "ShopBuy6";
+        public static readonly string INPUT_BUTTON_NAME_SHOPBUY7 = "ShopBuy7";
+        public static readonly string INPUT_BUTTON_NAME_SHOPBUY8 = "ShopBuy8";
+        public static readonly string INPUT_BUTTON_NAME_SHOPBUY9 = "ShopBuy9";
+
         public static readonly string INPUT_BUTTON_NAME_SHOPCANCELED = "ShopCancel";
         public static readonly string INPUT_BUTTON_NAME_SHOPCONFIRM = "ShopConfirm";
         public static readonly string INPUT_BUTTON_NAME_SHOPRANDOM = "ShopRandom";

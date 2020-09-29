@@ -257,12 +257,12 @@ namespace ROOT
 
         protected void InitShop()
         {
-            LevelAsset.ShopMgr.ShopInit(LevelAsset);
-            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
-            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
+            LevelAsset.Shop.ShopInit(LevelAsset);
+            LevelAsset.Shop.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
             if (LevelActionAsset.ExcludedShop)
             {
-                LevelAsset.ShopMgr.excludedTypes = LevelActionAsset.ShopExcludedType;
+                LevelAsset.Shop.excludedTypes = LevelActionAsset.ShopExcludedType;
             }
         }
 

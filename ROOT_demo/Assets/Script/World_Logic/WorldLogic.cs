@@ -405,7 +405,12 @@ namespace ROOT
                 }
             }
             
-            bool anyBuy = false;
+            ShopBuyID(ref ctrlPack, out var anyBuy);
+        }
+
+        private static void ShopBuyID(ref ControllingPack ctrlPack, out bool anyBuy)
+        {
+            anyBuy = false;
             if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY1))
             {
                 anyBuy = true;
@@ -426,6 +431,37 @@ namespace ROOT
                 anyBuy = true;
                 ctrlPack.ShopID = 3;
             }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY5))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 4;
+            }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY6))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 5;
+            }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY7))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 6;
+            }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY8))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 7;
+            }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY9))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 8;
+            }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY0))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 9;
+            }
+
             if (anyBuy)
             {
                 ctrlPack.SetFlag(ControllingCommand.Buy);
@@ -454,14 +490,14 @@ namespace ROOT
         private static void UpdateShopBuy(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
             //先简单一些，只允许随机购买。
-            if (ctrlPack.HasFlag(ControllingCommand.Buy) && currentLevelAsset.ShopMgr.ShopOpening)
+            if (ctrlPack.HasFlag(ControllingCommand.Buy) && currentLevelAsset.Shop.ShopOpening)
             {
-                currentLevelAsset.ShopMgr.BuyToRandom(ctrlPack.ShopID);
+                currentLevelAsset.Shop.BuyToRandom(ctrlPack.ShopID);
             }
         }
 
         private static void UpdateShopBuy(
-            GameAssets currentLevelAsset, ShopMgr shopMgr, 
+            GameAssets currentLevelAsset, ShopBase shopMgr, 
             in ControllingPack ctrlPack, bool crashable,
             ref bool boughtOnce,out int postalPrice)
         {
@@ -766,7 +802,10 @@ namespace ROOT
 
                 if (currentLevelAsset.ShopEnabled)
                 {
-                    currentLevelAsset.ShopMgr.ShopPreAnimationUpdate();
+                    if (currentLevelAsset.Shop is IAnimatableShop shop)
+                    {
+                        shop.ShopPreAnimationUpdate();
+                    }
                 }
 
                 if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
@@ -796,7 +835,7 @@ namespace ROOT
                 if (currentLevelAsset.ShopEnabled)
                 {
                     UpdateShopBuy(currentLevelAsset, ctrlPack);
-                    //UpdateShopBuy(currentLevelAsset, currentLevelAsset.ShopMgr, in ctrlPack, crashable, ref currentLevelAsset._boughtOnce, out postalPrice);
+                    //UpdateShopBuy(currentLevelAsset, currentLevelAsset.Shop, in ctrlPack, crashable, ref currentLevelAsset._boughtOnce, out postalPrice);
                 }
 
                 UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);

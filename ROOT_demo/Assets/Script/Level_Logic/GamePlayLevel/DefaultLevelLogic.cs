@@ -52,7 +52,7 @@ namespace ROOT
 
         internal BoardDataCollector BoardDataCollector;
         internal GameStateMgr GameStateMgr;
-        internal ShopMgr ShopMgr;
+        internal ShopBase Shop;
         internal IWarningDestoryer WarningDestoryer;
         internal GameObject[] WarningGo;
 
@@ -219,7 +219,7 @@ namespace ROOT
             LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
             LevelAsset.CostLine = FindObjectOfType<CostLine>();
-            LevelAsset.ShopMgr = FindObjectOfType<ShopMgr>();
+            LevelAsset.Shop = FindObjectOfType<ShopBase>();
             LevelAsset.CostChart = FindObjectOfType<CostChart>();
             LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
@@ -239,7 +239,7 @@ namespace ROOT
         }
         protected virtual void StartShop()
         {
-            LevelAsset.ShopMgr.ShopStart();
+            LevelAsset.Shop.ShopStart();
         }
         protected virtual bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
@@ -297,9 +297,12 @@ namespace ROOT
                 //加上允许手动步进后，这个逻辑就应该独立出来了。
                 if (LevelAsset.MovedTileAni)
                 {
-                    if (LevelAsset.ShopMgr)
+                    if (LevelAsset.Shop)
                     {
-                        LevelAsset.ShopMgr.ShopUpdateAnimation(AnimationLerper);
+                        if (LevelAsset.Shop is IAnimatableShop shop)
+                        {
+                            shop.ShopUpdateAnimation(AnimationLerper);
+                        }
                     }
                 }
 
@@ -320,9 +323,12 @@ namespace ROOT
                     LevelAsset.GameBoard.UpdateBoardPostAnimation();
                 }
 
-                if (LevelAsset.ShopMgr)
+                if (LevelAsset.Shop)
                 {
-                    LevelAsset.ShopMgr.ShopPostAnimationUpdate();
+                    if (LevelAsset.Shop is IAnimatableShop shop)
+                    {
+                        shop.ShopPostAnimationUpdate();
+                    }
                 }
             }
 
@@ -461,23 +467,28 @@ namespace ROOT
                 currentLevelAsset.TimeLine.RequirementSatisfied = valA && valB;
             }
 
-            if (ShoudOpenShop)
+            if (LevelAsset.Shop is IRequirableShop shop)
             {
-                if (!LevelAsset.ShopMgr.ShopOpening)
+                if (ShoudOpenShop)
                 {
-                    var normalDataSurplus = NormalRval - harDriverCountInt;
-                    var networkDataSurplus = NetworkRval - NetworkCountInt;
-                    if (normalDataSurplus > 0 || networkDataSurplus > 0)
+                    if (!LevelAsset.Shop.ShopOpening)
                     {
-                        LevelAsset.ShopMgr.SetRequire(round.shopLength, normalDataSurplus, networkDataSurplus);
+                        var normalDataSurplus = NormalRval - harDriverCountInt;
+                        var networkDataSurplus = NetworkRval - NetworkCountInt;
+                        if (normalDataSurplus > 0 || networkDataSurplus > 0)
+                        {
+                            shop.SetRequire(round.shopLength, normalDataSurplus, networkDataSurplus);
+                        }
+
                     }
                 }
+                else
+                {
+                    shop.ResetRequire();
+                }
             }
-            else
-            {
-                LevelAsset.ShopMgr.ResetRequire();
-            }
-            LevelAsset.ShopMgr.ShopOpening = ShoudOpenShop;
+
+            LevelAsset.Shop.ShopOpening = ShoudOpenShop;
 
             LevelAsset.SignalPanel.TGTNormalSignal=NormalRval;
             LevelAsset.SignalPanel.TGTNetworkSignal = NetworkRval;
@@ -520,9 +531,9 @@ namespace ROOT
         }
         protected void InitShop()
         {
-            LevelAsset.ShopMgr.ShopInit(LevelAsset);
-            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
-            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
+            LevelAsset.Shop.ShopInit(LevelAsset);
+            LevelAsset.Shop.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
         }
         protected void InitCurrencyIoMgr()
         {
