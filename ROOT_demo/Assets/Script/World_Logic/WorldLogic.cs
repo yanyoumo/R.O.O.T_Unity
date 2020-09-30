@@ -404,8 +404,8 @@ namespace ROOT
                     ctrlPack.SetFlag(ControllingCommand.BuyRandom);
                 }
             }
-            
-            ShopBuyID(ref ctrlPack, out var anyBuy);
+
+            ShopBuyID(ref ctrlPack, out bool anyBuy);
         }
 
         private static void ShopBuyID(ref ControllingPack ctrlPack, out bool anyBuy)
@@ -487,13 +487,14 @@ namespace ROOT
             return newPos;
         }
 
-        private static void UpdateShopBuy(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
+        private static bool UpdateShopBuy(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
             //先简单一些，只允许随机购买。
             if (ctrlPack.HasFlag(ControllingCommand.Buy) && currentLevelAsset.Shop.ShopOpening)
             {
-                currentLevelAsset.Shop.BuyToRandom(ctrlPack.ShopID);
+                return currentLevelAsset.Shop.BuyToRandom(ctrlPack.ShopID);
             }
+            return false;
         }
 
         private static void UpdateShopBuy(
@@ -753,9 +754,8 @@ namespace ROOT
 
             if (currentLevelAsset.CostChart != null)
             {
-                //currentLevelAsset.CostChart.IncomeVal = Mathf.FloorToInt(inCome);
-                //currentLevelAsset.CostChart.CostVal = Mathf.FloorToInt(cost);
-                currentLevelAsset.CostChart.Val = inCome - cost;
+                currentLevelAsset.CostChart.IncomesVal = inCome - cost;
+                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
             }
 
             lastInCome = inCome;
@@ -832,17 +832,16 @@ namespace ROOT
 
             if (currentLevelAsset.InputEnabled)
             {
-                if (currentLevelAsset.ShopEnabled)
-                {
-                    UpdateShopBuy(currentLevelAsset, ctrlPack);
-                    //UpdateShopBuy(currentLevelAsset, currentLevelAsset.Shop, in ctrlPack, crashable, ref currentLevelAsset._boughtOnce, out postalPrice);
-                }
 
                 UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
-
                 if (currentLevelAsset.RotateEnabled) UpdateRotate(currentLevelAsset, in ctrlPack);
-
                 currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
+
+                if (currentLevelAsset.ShopEnabled)
+                {
+                    //RISK 这里让购买单元也变成强制移动一步。
+                    movedTile |= UpdateShopBuy(currentLevelAsset, ctrlPack);
+                }
             }
 
             movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);

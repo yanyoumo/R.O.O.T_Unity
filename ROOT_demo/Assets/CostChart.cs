@@ -9,10 +9,53 @@ namespace ROOT
 {
     public class CostChart : MonoBehaviour
     {
-        public TextMeshPro Text;
-        [ReadOnly] public int Val;
+        public TextMeshPro Currency;
+        public TextMeshPro Incomes;
+        private int _incomesVal;
+        private int _currencyVal;
+
+        [ReadOnly]
+        public int IncomesVal
+        {
+            set
+            {
+                _incomesVal = value;
+                UpdateIncomeVal();
+            }
+            get => _incomesVal;
+        }
+
+        [ReadOnly]
+        public int CurrencyVal
+        {
+            set
+            {
+                _currencyVal = value;
+                Currency.text = Utils.PaddingNum(_currencyVal, 4);
+            }
+            get => _currencyVal;
+        }
 
         private bool active = true;
+
+        private void UpdateIncomeVal()
+        {
+            if (IncomesVal > 0)
+            {
+                Incomes.text = Utils.PaddingNum(IncomesVal,3);
+                Incomes.color = Color.green;
+            }
+            else if (IncomesVal == 0)
+            {
+                Incomes.text = "000";
+                Incomes.color = Color.red;
+            }
+            else
+            {
+                Incomes.text = "-" + Utils.PaddingNum(Math.Abs(IncomesVal),2);
+                Incomes.color = Color.red;
+            }
+        }
 
         public bool Active
         {
@@ -21,26 +64,12 @@ namespace ROOT
                 active = value;
                 if (active)
                 {
-                    if (Val > 0)
-                    {
-                        Text.text = Utils.PaddingNum3Digit(Val);
-                        Text.color = Color.green;
-                    }
-                    else if (Val == 0)
-                    {
-                        Text.text = "000";
-                        Text.color = Color.red;
-                    }
-                    else
-                    {
-                        Text.text = "-" + Utils.PaddingNum2Digit(Math.Abs(Val));
-                        Text.color = Color.red;
-                    }
+                    UpdateIncomeVal();
                 }
                 else
                 {
-                    Text.text = "---";
-                    Text.color = Color.black;
+                    Incomes.text = "---";
+                    Incomes.color = Color.black;
                 }
             }
             get => active;

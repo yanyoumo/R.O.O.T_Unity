@@ -79,7 +79,7 @@ namespace ROOT
                 if (nomoreStationary) return false;
                 if (stationaryArray != null && localOffset == stationaryArray.Length)
                 {
-                    countOffset = totalCount;
+                    countOffset = TotalCount;
                     forceNewArray = true;
                 }
 
@@ -109,7 +109,7 @@ namespace ROOT
                 _priceByCore.TryGetValue(core, out var corePrice);
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
-            totalCount++;
+            TotalCount++;
             return go;
         }
     }
@@ -400,6 +400,11 @@ namespace ROOT
         {
             _coreMeshRenderer.material.EnableKeyword("_EMISSION"); //还是不懂，为什么每次设置前得Enable一下。
             _coreMeshRenderer.material.SetColor("_EmissionColor", color);
+        }
+
+        public void UpdateUnitTier(int tier)
+        {
+            Tier = tier;
         }
 
         public void InitUnit(CoreType core, SideType[] sides, int tier, Board gameBoard = null)

@@ -73,7 +73,7 @@ namespace ROOT
     {
         public int ID;
 
-        [Range(0,15)]
+        [Range(0,60)]
         public int ShopLength;
 
         [Space]

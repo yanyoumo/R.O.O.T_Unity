@@ -23,28 +23,28 @@ MonoBehaviour:
   Actions: []
   RoundDatas:
   - ID: 0
-    ShopLength: 4
+    ShopLength: 12
     RequireLength: 18
     NormalRequirement: 4
     NetworkRequirement: 2
     DestoryerLength: 8
     HeatSinkSwitchCount: 0
   - ID: 1
-    ShopLength: 4
+    ShopLength: 12
     RequireLength: 20
     NormalRequirement: 8
     NetworkRequirement: 5
     DestoryerLength: 8
     HeatSinkSwitchCount: 4
   - ID: 2
-    ShopLength: 4
+    ShopLength: 12
     RequireLength: 28
     NormalRequirement: 15
     NetworkRequirement: 10
     DestoryerLength: 12
     HeatSinkSwitchCount: 4
   - ID: 3
-    ShopLength: 5
+    ShopLength: 15
     RequireLength: 28
     NormalRequirement: 20
     NetworkRequirement: 15

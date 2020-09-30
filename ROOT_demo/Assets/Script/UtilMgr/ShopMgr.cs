@@ -82,7 +82,7 @@ namespace ROOT
 
         public abstract bool BuyToRandom(int idx);
 
-        protected int totalCount = 0;
+        protected int TotalCount = 0;
 
         protected GameObject[] _items;
 
@@ -111,7 +111,7 @@ namespace ROOT
             //先确定需要由Tier影响的内容：
             //分数、购买价格、Cost。
             var SignalMultipler = (float)Tier;
-            var PriceMultipler = 1.0f + 0.1f * Tier;
+            var PriceMultipler = 1.0f + 1.75f * (Tier - 1);
             var CostMultipler = 1.0f + 0.5f * Tier;
             return new Tuple<float, float, float>(SignalMultipler, PriceMultipler, CostMultipler);
         }
@@ -155,7 +155,7 @@ namespace ROOT
             _priceBySide = new Dictionary<SideType, float>()
             {
                 {SideType.NoConnection, 0.0f},
-                {SideType.Connection, 1.0f},
+                {SideType.Connection, 2.0f},
             };
         }
 
@@ -373,7 +373,7 @@ namespace ROOT
         }
 
         public abstract void ResetPendingBuy();
-        public abstract bool RequestBuy(int idx, out int postalPrice);
+        public abstract bool RequestBuy(int shopID, out int postalPrice);
         public abstract bool BuyToPos(int idx, Vector2Int pos, bool crash);
     }
 
@@ -423,7 +423,7 @@ namespace ROOT
                 networkMadateArray = createMadateArray(_networkMinRequire, _madateUnitCount);
             }
             madateBaseTier = TierProgress(currentLevelAsset.LevelProgress);
-            unitCountOffset = totalCount;
+            unitCountOffset = TotalCount;
         }
         public void ResetRequire()
         {
@@ -438,7 +438,7 @@ namespace ROOT
 
         public Transform ShopCoverRoot;
         private int countOffset = 0;
-        private int localOffset => (totalCount - countOffset);
+        private int localOffset => (TotalCount - countOffset);
         private bool[] stationaryArray;
         private bool nomoreStationary = false;
 
@@ -493,7 +493,7 @@ namespace ROOT
             InitPrice();
             InitSideCoreWeight();
 
-            totalCount = 0;
+            TotalCount = 0;
 
             ShopPreAnimationUpdate();
             ShopPostAnimationUpdate();
@@ -530,7 +530,7 @@ namespace ROOT
 
         private CoreType GenerateCoreAndTier(out int tier)
         {
-            var offsetedUnitCount = totalCount - unitCountOffset;
+            var offsetedUnitCount = TotalCount - unitCountOffset;
             if (normalMadateArray.Contains(offsetedUnitCount))
             {
                 tier = madateBaseTier;
@@ -565,7 +565,7 @@ namespace ROOT
                     CostMultiplier = 0.0f;
                     _cost = Mathf.RoundToInt(_cost * CostMultiplier);
                     _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i, _cost, tier);
-                    _itemUnit[i].SetShop(i, UnitRetailPrice(i), _cost, totalCount % 2 == 0);
+                    _itemUnit[i].SetShop(i, UnitRetailPrice(i), _cost, TotalCount % 2 == 0);
                     currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];
@@ -604,16 +604,16 @@ namespace ROOT
             return Math.Max(val, 1);
         }
 
-        public override bool RequestBuy(int idx, out int postalPrice)
+        public override bool RequestBuy(int shopID, out int postalPrice)
         {
             postalPrice = -1;
-            if (_items[idx])
+            if (_items[shopID])
             {
-                var totalPrice = UnitRetailPrice(idx);
+                var totalPrice = UnitRetailPrice(shopID);
                 CalculatePostalPrice(totalPrice,currentLevelAsset.LevelProgress, out postalPrice);
                 if (CurrentGameStateMgr.GetCurrency() >= totalPrice)
                 {
-                    _items[idx].GetComponentInChildren<Unit>().SetPendingBuying = true;
+                    _items[shopID].GetComponentInChildren<Unit>().SetPendingBuying = true;
                     return true;
                 }
             }

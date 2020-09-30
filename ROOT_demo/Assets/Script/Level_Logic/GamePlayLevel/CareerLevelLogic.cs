@@ -39,6 +39,7 @@ namespace ROOT
             }
             LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
             LevelAsset.SignalPanel.TGTtMission= LevelAsset.ActionAsset.TargetCount;
+            LevelAsset.HintMaster.ShouldShowCheckList = false;
         }
 
         protected void InitDestoryer()

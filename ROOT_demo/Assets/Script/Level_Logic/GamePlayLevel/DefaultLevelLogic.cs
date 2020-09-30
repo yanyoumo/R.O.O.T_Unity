@@ -479,7 +479,6 @@ namespace ROOT
                         {
                             shop.SetRequire(round.shopLength, normalDataSurplus, networkDataSurplus);
                         }
-
                     }
                 }
                 else

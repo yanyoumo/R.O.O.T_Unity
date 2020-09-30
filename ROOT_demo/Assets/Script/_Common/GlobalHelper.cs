@@ -345,9 +345,18 @@ namespace ROOT
             return default;
         }
 
-        public static string PaddingNum4Digit(float input)
+        public static string PaddingNum(int input, int digit)
         {
-            return PaddingNum4Digit(Mathf.FloorToInt(input));
+            switch (digit)
+            {
+                case 4:
+                    return PaddingNum4Digit(input);
+                case 3:
+                    return PaddingNum3Digit(input);
+                case 2:
+                    return PaddingNum2Digit(input);
+            }
+            throw new ArgumentException();
         }
 
         public static string PaddingNum4Digit(int input)

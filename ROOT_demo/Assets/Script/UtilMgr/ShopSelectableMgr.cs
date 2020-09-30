@@ -9,22 +9,54 @@ namespace ROOT
 {
     public class ShopSelectableMgr : ShopBase
     {
+        private void UpdateShopSelf()
+        {
+            for (var i = 0; i < _items.Length; i++)
+            {
+                var unit = _itemUnit[i];
+                if (i >= _items.Length - 2)
+                {
+                    Destroy(unit.transform.parent.gameObject);
+                    var offset = i - (_items.Length-1);
+                    CreatePremiumUnit(i, VerticalCount - 1, HorizontalCount - 2 - offset);
+                }
+                else
+                {
+                    unit.UpdateUnitTier(TierProgress(currentLevelAsset.LevelProgress));
+                    unit.SetShop(i, UnitRetailPrice(i, _itemUnit[i].Tier), 0, true);
+                }
+            }
+        }
+
+        public override bool ShopOpening
+        {
+            set
+            {
+                if (value && !_shopOpening)
+                {
+                    UpdateShopSelf();
+                }
+
+                DisplayRoot.gameObject.SetActive(value);
+                StaticContent.gameObject.SetActive(value);
+                _shopOpening = value;
+            }
+            get => _shopOpening;
+        }
 
         public Transform DisplayRoot;
+        public Transform StaticContent;
         private readonly float Offset = 1.589f;
         private readonly float OffsetX = -1.926f;
         private readonly int HorizontalCount = 4;
         private readonly int VerticalCount = 3;
+        private int MaxDisplayCount => (VerticalCount - 1) * HorizontalCount + 2;
         private readonly float YOffset=0.05f;
 
-        private int UnitRetailPrice(int idx)
+        private int UnitRetailPrice(int idx,int tier)
         {
-
-            var (item1, priceMutilpier, item3) = TierMultiplier(_itemUnit[idx].Tier);
-
-            //现在使用时间节奏调整价格。
+            var (item1, priceMutilpier, item3) = TierMultiplier(tier);
             var val = Mathf.FloorToInt(_hardwarePrices[idx] * priceMutilpier);
-            //在基价已经比较便宜的时候，这个算完后可能为0.
             return Math.Max(val, 1);
         }
 
@@ -42,14 +74,12 @@ namespace ROOT
             go.transform.parent = DisplayRoot;
             var unit = go.GetComponentInChildren<Unit>();
             hardwarePrice = UnitHardwarePrice(core, sides);
-            unit.SetShop(ID, hardwarePrice, _cost, true);
+            _hardwarePrices[ID] = hardwarePrice;
+            unit.SetShop(ID, UnitRetailPrice(ID,tier), _cost, true);
+            _items[ID] = go;
+            TotalCount++;
             return go;
         }
-
-        /*protected CoreType GeneratePremiumCoreAndTier(in int i, out int tier)
-        {
-
-        }*/
 
         protected CoreType GenerateSelfCoreAndTier(in int i,out int tier)
         {
@@ -103,17 +133,14 @@ namespace ROOT
             {
                 for (var j = 0; j < HorizontalCount; j++)
                 {
-                    var ID = j + VerticalCount * i;
                     if (i==VerticalCount-1)
                     {
                         if (j < HorizontalCount - 2) continue;
-                        CreatePremiumUnit(ID, i, j);
-                        totalCount++;
+                        CreatePremiumUnit(TotalCount, i, j);
                     }
                     else
                     {
-                        CreateSelfUnit(ID, i, j);
-                        totalCount++;
+                        CreateSelfUnit(TotalCount, i, j);
                     }
                 }
             }
@@ -122,27 +149,70 @@ namespace ROOT
         public override void ShopInit(GameAssets _currentLevelAsset)
         {
             currentLevelAsset = _currentLevelAsset;
+            _items = new GameObject[MaxDisplayCount];
+            _hardwarePrices = new float[MaxDisplayCount];
         }
         
         public override void ShopStart()
         {
+            //TODO 这个东西要调出来，就是每次开启的时候可能需要都得重新弄。
             InitPrice();
             InitSideCoreWeight();
             CreateSelfUnit();
         }
 
-        public override bool BuyToRandom(int idx)
+        private GameObject InitUnitShop(Unit SelfUnit)
         {
-            throw new NotImplementedException();
+            var go = Instantiate(UnitTemplate);
+            go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
+            var unit = go.GetComponentInChildren<Unit>();
+            unit.InitPosWithAnimation(Vector2Int.zero);
+            unit.InitUnit(SelfUnit.UnitCore, SelfUnit.UnitSides.Values.ToArray(), SelfUnit.Tier);
+            return go;
         }
 
-        public override bool RequestBuy(int idx, out int postalPrice)
+        public override bool BuyToRandom(int shopID)
         {
-            throw new NotImplementedException();
+            var itemID = ItemIDFromShopID(shopID);
+            if (!_items[itemID]) return false;
+
+            if (!CurrentGameStateMgr.SpendShopCurrency(UnitRetailPrice(itemID,_itemUnit[itemID].Tier))) return false;
+
+            if (_itemUnit != null)
+            {
+                GameBoard.DeliverUnitRandomPlace(InitUnitShop(_itemUnit[itemID]));
+                return true;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
         }
 
-        public override bool ShopOpening { get; set; }
+        private static int ItemIDFromShopID(in int shopID)
+        {
+            //Key:   1234567890
+            //ShopID:0123456789
+            //SelfID:1234567890
+            //ItemID:0123456789
+            //很蛋疼，但是为了操作和管理，这个还得弄。
+            return shopID;
+        }
 
+        public override bool RequestBuy(int shopID, out int postalPrice)
+        {
+            postalPrice = 0;
+            var itemID = ItemIDFromShopID(shopID);
+            if (!_items[itemID]) return false;
+
+            var totalPrice = UnitRetailPrice(itemID, _itemUnit[itemID].Tier);
+            if (CurrentGameStateMgr.GetCurrency() >= totalPrice)
+            {
+                _items[itemID].GetComponentInChildren<Unit>().SetPendingBuying = true;
+                return true;
+            }
+            return false;
+        }
 
         public override void ResetPendingBuy()
         {
