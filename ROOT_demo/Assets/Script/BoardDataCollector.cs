@@ -165,9 +165,8 @@ namespace ROOT
 
         public float CalculateProcessorScore(out int driverCountInt)
         {
-            var res=CalculateProcessorScoreFindSetA();
-
-            RootDebug.Watch(res.Count.ToString(), WatchID.YanYoumo_ExampleA);
+            //var res=CalculateProcessorScoreFindSetA();
+            //RootDebug.Watch(res.Count.ToString(), WatchID.YanYoumo_ExampleA);
 
             var driverCount = 0.0f;
             var processorKeys = new List<Vector2Int>();
