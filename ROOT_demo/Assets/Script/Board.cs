@@ -28,10 +28,13 @@ namespace ROOT
         public void UpdatePatternID()
         {
             var oldID = _currentHeatSinkPatternsID;
+            int max = 100;
+            int counter = 0;
             do
             {
+                counter++;
                 _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Count);
-            } while (_currentHeatSinkPatternsID == oldID);
+            } while (_currentHeatSinkPatternsID == oldID && counter <= max);
         }
 
         private void InitHeatInfo()
