@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Object = UnityEngine.Object;
 // https://shimo.im/docs/Dd86KXTqHJpqxwYX
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
@@ -51,13 +45,14 @@ namespace ROOT
         public CostLine CostLine;
         public CostChart CostChart;
         public CoreType? DestoryedCoreType;
+        public SignalPanel SignalPanel;
 
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
 
         internal BoardDataCollector BoardDataCollector;
         internal GameStateMgr GameStateMgr;
-        internal ShopMgr ShopMgr;
+        internal ShopBase Shop;
         internal IWarningDestoryer WarningDestoryer;
         internal GameObject[] WarningGo;
 
@@ -66,6 +61,8 @@ namespace ROOT
         //CoreFunctionFlag
         public bool InputEnabled = true;
         public bool CurrencyEnabled = true;
+        public bool CurrencyIOEnabled = true;
+        public bool CurrencyIncomeEnabled = true;
         public bool CycleEnabled = true;
         //FeatureFunctionFlag
         public bool CursorEnabled = true;
@@ -111,6 +108,8 @@ namespace ROOT
         {
             InputEnabled = true;
             CursorEnabled = true;
+            CurrencyIOEnabled = true;
+            CurrencyIncomeEnabled = true;
             RotateEnabled = true;
             ShopEnabled = true;
             LCDCurrencyEnabled = true;
@@ -126,6 +125,8 @@ namespace ROOT
         {
             InputEnabled = false;
             CursorEnabled = false;
+            CurrencyIOEnabled = false;
+            CurrencyIncomeEnabled = false;
             RotateEnabled = false;
             ShopEnabled = false;
             LCDCurrencyEnabled = false;
@@ -218,8 +219,9 @@ namespace ROOT
             LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
             LevelAsset.CostLine = FindObjectOfType<CostLine>();
-            LevelAsset.ShopMgr = FindObjectOfType<ShopMgr>();
+            LevelAsset.Shop = FindObjectOfType<ShopBase>();
             LevelAsset.CostChart = FindObjectOfType<CostChart>();
+            LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
@@ -237,7 +239,7 @@ namespace ROOT
         }
         protected virtual void StartShop()
         {
-            LevelAsset.ShopMgr.ShopStart();
+            LevelAsset.Shop.ShopStart();
         }
         protected virtual bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
@@ -295,9 +297,12 @@ namespace ROOT
                 //加上允许手动步进后，这个逻辑就应该独立出来了。
                 if (LevelAsset.MovedTileAni)
                 {
-                    if (LevelAsset.ShopMgr)
+                    if (LevelAsset.Shop)
                     {
-                        LevelAsset.ShopMgr.ShopUpdateAnimation(AnimationLerper);
+                        if (LevelAsset.Shop is IAnimatableShop shop)
+                        {
+                            shop.ShopUpdateAnimation(AnimationLerper);
+                        }
                     }
                 }
 
@@ -318,9 +323,12 @@ namespace ROOT
                     LevelAsset.GameBoard.UpdateBoardPostAnimation();
                 }
 
-                if (LevelAsset.ShopMgr)
+                if (LevelAsset.Shop)
                 {
-                    LevelAsset.ShopMgr.ShopPostAnimationUpdate();
+                    if (LevelAsset.Shop is IAnimatableShop shop)
+                    {
+                        shop.ShopPostAnimationUpdate();
+                    }
                 }
             }
 
@@ -329,6 +337,8 @@ namespace ROOT
         }
 
         //原则上这个不让被重载。
+        //TODO Digong需要了解一些主干的Update流程。
+        //未来需要将动画部分移动至随机位置。
         protected virtual void Update()
         {
             if ((!ReadyToGo) || (PendingCleanUp))
@@ -379,38 +389,69 @@ namespace ROOT
             }
         }
 
-        
-
+        int ObselateStepID = -1;
         protected bool UpdateCareerGameOverStatus(GameAssets currentLevelAsset)
         {
             //这个函数就很接近裁判要做的事儿了。
-            int NormalRval = 0;
-            int NetworkRval = 0;
+            var NormalRval = 0;
+            var NetworkRval = 0;
+            var ShoudOpenShop = false;
+            var ShoudCurrencyIO = false;
+            var ShoudCurrencyIncome = false;
 
-            foreach (var actionAssetTimeLineToken in currentLevelAsset.ActionAsset.TimeLineTokens)
+            var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
+            if (!roundGist.HasValue) return false;
+            var round = roundGist.Value;
+            
+            if (LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount))
             {
-                if (actionAssetTimeLineToken.InRange(currentLevelAsset.StepCount))
+                if (!IsTutorialLevel)
                 {
-                    if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
-                    {
-                        if (!IsTutorialLevel)
-                        {
-                            PendingCleanUp = true;
-                            LevelMasterManager.Instance.LevelFinished(LevelAsset);
-                        }
-                        return true;
-                    }
-                    //BUG 这里的计分似乎有Bug，不能完整的显示结果，咋一看没问题，但是有问题。
-                    else if (actionAssetTimeLineToken.type == TimeLineTokenType.RequireNormal)
-                    {
-                        NormalRval += actionAssetTimeLineToken.RequireAmount;
-                    }
-                    else if (actionAssetTimeLineToken.type == TimeLineTokenType.RequireNetwork)
-                    {
-                        NetworkRval += actionAssetTimeLineToken.RequireAmount;
-                    }
+                    PendingCleanUp = true;
+                    LevelMasterManager.Instance.LevelFinished(LevelAsset);
                 }
+                return true;
             }
+
+            ShoudOpenShop = round.Type == StageType.Shop;
+            ShoudCurrencyIncome = round.Type == StageType.Require;
+            ShoudCurrencyIO = (round.Type == StageType.Require || round.Type == StageType.Destoryer);
+
+            if (round.Type == StageType.Require|| round.Type == StageType.Shop)
+            {
+                NormalRval += round.normalReq;
+                NetworkRval += round.networkReq;
+            }
+
+            var tCount=LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
+            if (round.SwitchHeatsink(tCount))
+            {
+                if (ObselateStepID==-1||ObselateStepID != LevelAsset.StepCount)
+                {
+                    LevelAsset.GameBoard.UpdatePatternID();
+                }
+
+                ObselateStepID = LevelAsset.StepCount;
+            }
+
+            var ShouldDestoryer= (round.Type == StageType.Destoryer);
+
+            if (LevelAsset.DestroyerEnabled && !ShouldDestoryer)
+            {
+                LevelAsset.WarningDestoryer.ForceReset();
+            }
+
+
+
+            //TODO 还要在这里弄好HeatSink的部分。而且TimeLine也得弄。
+
+            LevelAsset.DestroyerEnabled = ShouldDestoryer;
+            LevelAsset.CurrencyIncomeEnabled = ShoudCurrencyIncome;
+            LevelAsset.CurrencyIOEnabled = ShoudCurrencyIO;
+
+            int harDriverCountInt = 0;
+            int NetworkCountInt = 0;
+
             if (NormalRval == 0 && NetworkRval == 0)
             {
                 _noRequirement = true;
@@ -419,12 +460,39 @@ namespace ROOT
             else
             {
                 _noRequirement = false;
-                currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int harDriverCountInt);
-                bool valA = (harDriverCountInt >= NormalRval);
-                currentLevelAsset.BoardDataCollector.CalculateServerScore(out int NetworkCountInt);
-                bool valB = (NetworkCountInt >= NetworkRval);
+                currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out harDriverCountInt);
+                var valA = (harDriverCountInt >= NormalRval);
+                currentLevelAsset.BoardDataCollector.CalculateServerScore(out NetworkCountInt);
+                var valB = (NetworkCountInt >= NetworkRval);
                 currentLevelAsset.TimeLine.RequirementSatisfied = valA && valB;
             }
+
+            if (LevelAsset.Shop is IRequirableShop shop)
+            {
+                if (ShoudOpenShop)
+                {
+                    if (!LevelAsset.Shop.ShopOpening)
+                    {
+                        var normalDataSurplus = NormalRval - harDriverCountInt;
+                        var networkDataSurplus = NetworkRval - NetworkCountInt;
+                        if (normalDataSurplus > 0 || networkDataSurplus > 0)
+                        {
+                            shop.SetRequire(round.shopLength, normalDataSurplus, networkDataSurplus);
+                        }
+                    }
+                }
+                else
+                {
+                    shop.ResetRequire();
+                }
+            }
+
+            LevelAsset.Shop.ShopOpening = ShoudOpenShop;
+
+            LevelAsset.SignalPanel.TGTNormalSignal=NormalRval;
+            LevelAsset.SignalPanel.TGTNetworkSignal = NetworkRval;
+            LevelAsset.SignalPanel.CRTNormalSignal= harDriverCountInt;
+            LevelAsset.SignalPanel.CRTNetworkSignal = NetworkCountInt;
 
             return false;
         }
@@ -457,15 +525,14 @@ namespace ROOT
 
         protected void InitDestoryer()
         {
-            LevelAsset.WarningDestoryer = new MeteoriteBomber();
-            LevelAsset.WarningDestoryer.SetBoard(ref LevelAsset.GameBoard);
+            LevelAsset.WarningDestoryer = new MeteoriteBomber { GameBoard = LevelAsset.GameBoard };
             LevelAsset.WarningDestoryer.Init(5, 2);
         }
         protected void InitShop()
         {
-            LevelAsset.ShopMgr.ShopInit(LevelAsset);
-            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
-            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
+            LevelAsset.Shop.ShopInit(LevelAsset);
+            LevelAsset.Shop.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
         }
         protected void InitCurrencyIoMgr()
         {

@@ -21,23 +21,27 @@ MonoBehaviour:
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
-  TimeLineTokens:
-  - TokenID: 0
-    type: 3
-    RequireAmount: 0
-    Range: {x: 25, y: 0}
-  - TokenID: 1
-    type: 0
-    RequireAmount: 2
-    Range: {x: 10, y: 15}
-  - TokenID: 2
-    type: 1
-    RequireAmount: 4
-    Range: {x: 16, y: -1}
-  - TokenID: 3
-    type: 0
-    RequireAmount: 4
-    Range: {x: 20, y: -1}
+  RoundDatas:
+  - ShopLength: 6
+    RequireLength: 10
+    NormalRequirement: 3
+    NetworkRequirement: 4
+    DestoryerLength: 8
+  - ShopLength: 3
+    RequireLength: 7
+    NormalRequirement: 7
+    NetworkRequirement: 8
+    DestoryerLength: 10
+  - ShopLength: 4
+    RequireLength: 12
+    NormalRequirement: 24
+    NetworkRequirement: 61
+    DestoryerLength: 3
+  - ShopLength: 4
+    RequireLength: 9
+    NormalRequirement: 15
+    NetworkRequirement: 20
+    DestoryerLength: 2
   InitalBoard:
   - Core: 2
     Sides: 01000000010000000100000000000000

@@ -17,67 +17,39 @@ MonoBehaviour:
   LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
     type: 3}
   levelType: 1
-  GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
+  GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
   ExcludedShop: 1
   ShopExcludedType: 0500000002000000
   Actions: []
-  TimeLineTokens:
-  - TokenID: 0
-    type: 0
-    RequireAmount: 3
-    Range: {x: 5, y: 15}
-  - TokenID: 1
-    type: 1
-    RequireAmount: 2
-    Range: {x: 10, y: 20}
-  - TokenID: 2
-    type: 4
-    RequireAmount: 0
-    Range: {x: 10, y: 11}
-  - TokenID: 3
-    type: 0
-    RequireAmount: 10
-    Range: {x: 15, y: 30}
-  - TokenID: 4
-    type: 1
-    RequireAmount: 8
-    Range: {x: 20, y: 35}
-  - TokenID: 5
-    type: 4
-    RequireAmount: 0
-    Range: {x: 18, y: 19}
-  - TokenID: 6
-    type: 2
-    RequireAmount: 0
-    Range: {x: 30, y: -1}
-  - TokenID: 7
-    type: 0
-    RequireAmount: 30
-    Range: {x: 30, y: 60}
-  - TokenID: 8
-    type: 4
-    RequireAmount: 0
-    Range: {x: 32, y: 33}
-  - TokenID: 9
-    type: 1
-    RequireAmount: 15
-    Range: {x: 35, y: 70}
-  - TokenID: 10
-    type: 0
-    RequireAmount: 60
-    Range: {x: 60, y: -1}
-  - TokenID: 11
-    type: 4
-    RequireAmount: 0
-    Range: {x: 65, y: 66}
-  - TokenID: 12
-    type: 1
-    RequireAmount: 30
-    Range: {x: 70, y: -1}
-  - TokenID: 13
-    type: 3
-    RequireAmount: 0
-    Range: {x: 90, y: -1}
+  RoundDatas:
+  - ID: 0
+    ShopLength: 9
+    RequireLength: 18
+    NormalRequirement: 4
+    NetworkRequirement: 2
+    DestoryerLength: 8
+    HeatSinkSwitchCount: 0
+  - ID: 1
+    ShopLength: 10
+    RequireLength: 20
+    NormalRequirement: 8
+    NetworkRequirement: 5
+    DestoryerLength: 8
+    HeatSinkSwitchCount: 4
+  - ID: 2
+    ShopLength: 9
+    RequireLength: 28
+    NormalRequirement: 15
+    NetworkRequirement: 10
+    DestoryerLength: 12
+    HeatSinkSwitchCount: 4
+  - ID: 3
+    ShopLength: 10
+    RequireLength: 28
+    NormalRequirement: 20
+    NetworkRequirement: 15
+    DestoryerLength: 16
+    HeatSinkSwitchCount: 4
   InitalBoard:
   - Core: 5
     Sides: 01000000010000000100000001000000
@@ -89,7 +61,7 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 3, y: 3}
     IsStation: 0
-  TargetCount: 70
+  TargetCount: 35
   StationaryRateList:
   - {x: 12, y: 8}
   - {x: 10, y: 5}

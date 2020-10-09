@@ -32,30 +32,29 @@ namespace ROOT
             StartShop();
 
             ReadyToGo = true;
-
-            //LevelAsset.StartingPerMoveData = new PerMoveData();
-            if (LevelAsset.ActionAsset.TimeLineTokens.Length>0)
+            if (LevelAsset.ActionAsset.RoundDatas.Length>0)
             {
                 LevelAsset.StepCount = 0;
                 LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             }
             LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
+            LevelAsset.SignalPanel.TGTtMission= LevelAsset.ActionAsset.TargetCount;
+            LevelAsset.HintMaster.ShouldShowCheckList = false;
         }
 
         protected void InitDestoryer()
         {
-            LevelAsset.WarningDestoryer = new MeteoriteBomber();
-            LevelAsset.WarningDestoryer.SetBoard(ref LevelAsset.GameBoard);
+            LevelAsset.WarningDestoryer = new MeteoriteBomber {GameBoard = LevelAsset.GameBoard};
             LevelAsset.WarningDestoryer.Init(4, 1);
         }
         protected void InitShop()
         {
-            LevelAsset.ShopMgr.ShopInit(LevelAsset);
-            LevelAsset.ShopMgr.CurrentGameStateMgr = LevelAsset.GameStateMgr;
-            LevelAsset.ShopMgr.GameBoard = LevelAsset.GameBoard;
+            LevelAsset.Shop.ShopInit(LevelAsset);
+            LevelAsset.Shop.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
             if (LevelAsset.ActionAsset.ExcludedShop)
             {
-                LevelAsset.ShopMgr.excludedTypes = LevelAsset.ActionAsset.ShopExcludedType;
+                LevelAsset.Shop.excludedTypes = LevelAsset.ActionAsset.ShopExcludedType;
             }
         }
         protected void InitCurrencyIoMgr()
@@ -75,6 +74,7 @@ namespace ROOT
         {
             bool res= UpdateCareerGameOverStatus(currentLevelAsset);
             LevelAsset.TimeLine.SetCurrentCount = RequirementSatisfiedCycleCount;
+            LevelAsset.SignalPanel.CRTMission = RequirementSatisfiedCycleCount;
             return res;
         }
 
@@ -83,25 +83,11 @@ namespace ROOT
         {
             base.Update();
 
-            LevelAsset.DestroyerEnabled = false;
-            foreach (var actionAssetTimeLineToken in LevelAsset.ActionAsset.TimeLineTokens)
-            {
-                if (actionAssetTimeLineToken.type == TimeLineTokenType.DestoryerIncome)
-                {
-                    if (!LevelAsset.DestroyerEnabled)
-                    {
-                        LevelAsset.DestroyerEnabled = actionAssetTimeLineToken.InRange(LevelAsset.StepCount);
-                    }
-                }
-                else if (actionAssetTimeLineToken.type == TimeLineTokenType.HeatSinkSwitch)
-                {
-                    if (!actionAssetTimeLineToken.InRange(LevelAsset.StepCount)) continue;
-                    if (obsoletedID == actionAssetTimeLineToken.TokenID) continue;
-                    LevelAsset.GameBoard.UpdatePatternID();
-                    obsoletedID = actionAssetTimeLineToken.TokenID;
-                }
-            }
+            var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
+            if (!roundGist.HasValue) return;
+            var gist = roundGist.Value;
 
+            //TODO 目前这个还没有HeatSinkSwitch的处理。
             LevelAsset.LevelProgress = LevelAsset.StepCount / (float) LevelAsset.ActionAsset.PlayableCount;
         }
     }

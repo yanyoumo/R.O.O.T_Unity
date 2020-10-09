@@ -53,54 +53,307 @@ namespace ROOT
         }
     }
 
-    public sealed partial class ShopMgr:MonoBehaviour
+    public interface IAnimatableShop
     {
-        private int totalCount = 0;
-        private int countOffset = 0;
-        private int localOffset => (totalCount - countOffset);
-        private bool[] stationaryArray;
-        private bool nomoreStationary = false;
-        public GameObject UnitTemplate;
-        private GameAssets currentLevelAsset;
+        void ShopPreAnimationUpdate();
+        void ShopUpdateAnimation(float lerp);
+        void ShopPostAnimationUpdate();
+    }
 
+    public interface IRequirableShop
+    {
+        void SetRequire(int dur, int normal, int network);
+        void ResetRequire();
+    }
+
+    public abstract class ShopBase : MonoBehaviour
+    {
+        public GameObject UnitTemplate;
+        protected GameAssets currentLevelAsset;
         public Board GameBoard;
         public GameStateMgr CurrentGameStateMgr;
+        public List<CoreType> excludedTypes = new List<CoreType>();
 
-        private GameObject[] _items;
+        public abstract void ShopInit(GameAssets _currentLevelAsset);
+        public abstract void ShopStart();
+
+        protected bool _shopOpening;
+        public abstract bool ShopOpening { get; set; }
+
+        public abstract bool BuyToRandom(int idx);
+
+        protected int TotalCount = 0;
+
+        protected GameObject[] _items;
 
         [CanBeNull]
-        private Unit[] _itemUnit => _items.Select(unit => unit ? unit.GetComponentInChildren<Unit>() : null).ToArray();
+        protected Unit[] _itemUnit => _items.Select(unit => unit ? unit.GetComponentInChildren<Unit>() : null).ToArray();
+        protected float[] _hardwarePrices;
 
-        private float[] _hardwarePrices;
+        protected GameObject InitUnitShopCore(CoreType core, SideType[] sides, int ID, int _cost, int tier)
+        {
+            var go = Instantiate(UnitTemplate);
+            go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
+            var unit = go.GetComponentInChildren<Unit>();
+            unit.InitPosWithAnimation(Vector2Int.zero);
+            unit.InitUnit(core, sides, tier);
+            return go;
+        }
 
-        private Vector3[] currentPosS;
-        private Vector3[] nextPosS;
+        /// <summary>
+        /// 从Tier获取单元各种数据的倍率。
+        /// </summary>
+        /// <param name="Tier">位于哪个Tier</param>
+        /// <returns>依次为（分数、购买价格、Cost）的float Tuple</returns>
+        public static Tuple<float, float, float> TierMultiplier(int Tier)
+        {
+            //目前对Tier进行设定：
+            //先确定需要由Tier影响的内容：
+            //分数、购买价格、Cost。
+            var SignalMultipler = (float)Tier;
+            var PriceMultipler = 1.0f + 1.75f * (Tier - 1);
+            var CostMultipler = 1.0f + 0.5f * Tier;
+            return new Tuple<float, float, float>(SignalMultipler, PriceMultipler, CostMultipler);
+        }
 
-        public Transform PlacementPosA;
-        public Transform PlacementPosB;
+        protected int TierProgress(float gameProgress)
+        {
+            var fluctuationRate = 0.25f;
+            var fluctuation = 1.0f;
+            var baseTier = Mathf.Lerp(1, 6, gameProgress);
+            if (Random.value <= fluctuationRate)
+            {
+                if (Random.value <= 0.5)
+                {
+                    baseTier += fluctuation;
+                }
+                else
+                {
+                    baseTier -= fluctuation;
+                }
+            }
 
-        private Vector3 _posA => PlacementPosA.position;
-        private float _posDisplace => Vector3.Distance(PlacementPosA.position, PlacementPosB.position);
+            return Mathf.Clamp(Mathf.RoundToInt(baseTier), 1, 5);
+        }
 
-        private Dictionary<CoreType, float> _priceByCore;
-        private Dictionary<SideType, float> _priceBySide;
+        protected Dictionary<CoreType, float> _priceByCore { private set; get; }
+        protected Dictionary<SideType, float> _priceBySide { private set; get; }
 
-        private Dictionary<SideType, float> _defaultSideWeight;
-        private Dictionary<SideType, float> _processorSideWeight;
-        private Dictionary<SideType, float> _serverSideWeight;
-        private Dictionary<SideType, float> _hddSideWeight;
-        private Dictionary<SideType, float> _netCableSideWeight;
+        public void InitPrice()
+        {
+            _priceByCore = new Dictionary<CoreType, float>()
+            {
+                {CoreType.PCB, 1.0f},
+                {CoreType.NetworkCable, 2.0f},
+                {CoreType.Server, 3.0f},
+                {CoreType.Bridge, 4.0f},
+                {CoreType.HardDrive, 2.0f},
+                {CoreType.Processor, 3.0f},
+                {CoreType.Cooler, 3.0f},
+                {CoreType.BackPlate, 1.0f},
+            };
+            _priceBySide = new Dictionary<SideType, float>()
+            {
+                {SideType.NoConnection, 0.0f},
+                {SideType.Connection, 2.0f},
+            };
+        }
 
-        private Dictionary<CoreType, float> _defaultCoreWeight;
-        private Dictionary<CoreType, float> _noServerCoreWeight;
-        private Dictionary<CoreType, float> _noProcessorCoreWeight;
-        private Dictionary<CoreType, float> _nandServerProcessorCoreWeight;
-        private Dictionary<CoreType, Dictionary<SideType, float>> _sideWeightLib;
+        protected float TryGetPrice(SideType side)
+        {
+            if (_priceBySide.TryGetValue(side, out var sidePrice0))
+            {
+                return sidePrice0;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        #region UnitSideWeight
+
+        protected Dictionary<SideType, float> _defaultSideWeight { private set; get; }
+        protected Dictionary<SideType, float> _processorSideWeight { private set; get; }
+        protected Dictionary<SideType, float> _serverSideWeight { private set; get; }
+        protected Dictionary<SideType, float> _hddSideWeight { private set; get; }
+        protected Dictionary<SideType, float> _netCableSideWeight { private set; get; }
+
+        protected Dictionary<CoreType, float> _defaultCoreWeight { private set; get; }
+        protected Dictionary<CoreType, float> _noServerCoreWeight { private set; get; }
+        protected Dictionary<CoreType, float> _noProcessorCoreWeight { private set; get; }
+        protected Dictionary<CoreType, float> _nandServerProcessorCoreWeight { private set; get; }
+        protected Dictionary<CoreType, Dictionary<SideType, float>> _sideWeightLib { private set; get; }
+
+        protected CoreType GenerateRandomCore()
+        {
+            //这里不会生成HQ核心。
+            Dictionary<CoreType, float> lib = _defaultCoreWeight;
+            if (GameBoard.GetCountByType(CoreType.Server) < 1)
+            {
+                lib = _noServerCoreWeight;
+            }
+            if (GameBoard.GetCountByType(CoreType.Processor) < 1)
+            {
+                lib = _noProcessorCoreWeight;
+            }
+            if ((GameBoard.GetCountByType(CoreType.Server) < 1) && (GameBoard.GetCountByType(CoreType.Processor) < 1))
+            {
+                lib = _nandServerProcessorCoreWeight;
+            }
+            if (excludedTypes.Count > 0)
+            {
+                foreach (var excludedType in excludedTypes)
+                {
+                    if (lib.TryGetValue(excludedType, out float value))
+                    {
+                        lib.Remove(excludedType);
+                    }
+                }
+            }
+            NormalizeDicVal(ref lib);
+            return Utils.GenerateWeightedRandom(lib);
+        }
+
+        protected SideType[] GenerateRandomSideArray(CoreType core = CoreType.PCB)
+        {
+            if (!_sideWeightLib.TryGetValue(core, out var lib))
+            {
+                Debug.Assert(false);
+                lib = _defaultSideWeight;
+            }
+            SideType[] res = new SideType[4];
+            const int cutoff = 1000;
+            int cutoffCounter = 0;
+            do
+            {
+                res[0] = Utils.GenerateWeightedRandom(lib);
+                res[1] = Utils.GenerateWeightedRandom(lib);
+                res[2] = Utils.GenerateWeightedRandom(lib);
+                res[3] = Utils.GenerateWeightedRandom(lib);
+                cutoffCounter++;
+                if (cutoffCounter >= cutoff)
+                {
+                    Debug.Assert(false, "Can't generate good Unit");
+                    break;
+                }
+            } while (!CheckConformKeySide(core, res));
+
+            return res;
+        }
+
 
         //KeySide minCount
-        private Dictionary<CoreType, Tuple<SideType, int>> _keySideLib;
+        protected Dictionary<CoreType, Tuple<SideType, int>> _keySideLib { private set; get; }
 
-        public List<CoreType> excludedTypes=new List<CoreType>();
+        public void InitSideCoreWeight()
+        {
+            _keySideLib = new Dictionary<CoreType, Tuple<SideType, int>>()
+            {
+                {CoreType.PCB, new Tuple<SideType, int>(SideType.NoConnection, 4)},
+                {CoreType.NetworkCable, new Tuple<SideType, int>(SideType.Connection, 2)},
+                {CoreType.Server, new Tuple<SideType, int>(SideType.Connection, 1)},
+                {CoreType.HardDrive, new Tuple<SideType, int>(SideType.Connection, 1)},
+                {CoreType.Processor, new Tuple<SideType, int>(SideType.Connection, 1)},
+            };
+
+            #region SideSection
+
+            //现在下面这个数据是除了关键接口去掉后，剩下的接口的概率。
+
+            _defaultSideWeight = new Dictionary<SideType, float>()
+            {
+                {SideType.NoConnection, 0.75f},
+                {SideType.Connection, 0.25f},
+            };
+
+            _processorSideWeight = new Dictionary<SideType, float>()
+            {
+                {SideType.NoConnection, 0.5f},
+                {SideType.Connection, 0.5f},
+            };
+
+            _serverSideWeight = new Dictionary<SideType, float>()
+            {
+                {SideType.NoConnection, 0.5f},
+                {SideType.Connection, 0.5f},
+            };
+
+            _hddSideWeight = new Dictionary<SideType, float>()
+            {
+                {SideType.NoConnection, 0.6f},
+                {SideType.Connection, 0.4f},
+            };
+
+            _netCableSideWeight = new Dictionary<SideType, float>()
+            {
+                {SideType.NoConnection, 0.8f},
+                {SideType.Connection, 0.2f},
+            };
+
+            _sideWeightLib = new Dictionary<CoreType, Dictionary<SideType, float>>()
+            {
+                {CoreType.Server, _serverSideWeight},
+                {CoreType.NetworkCable, _netCableSideWeight},
+                {CoreType.HardDrive, _hddSideWeight},
+                {CoreType.Processor, _processorSideWeight},
+            };
+
+            #endregion
+
+            #region CoreSection
+
+            _defaultCoreWeight = new Dictionary<CoreType, float>()
+            {
+                {CoreType.PCB, 0.00f},
+                {CoreType.Server, 0.05f},
+                {CoreType.NetworkCable, 0.45f},
+                {CoreType.HardDrive, 0.45f},
+                {CoreType.Processor, 0.05f},
+            };
+
+            _noServerCoreWeight = new Dictionary<CoreType, float>()
+            {
+                {CoreType.PCB, 0.00f},
+                {CoreType.Server, 0.45f},
+                {CoreType.NetworkCable, 0.25f},
+                {CoreType.HardDrive, 0.25f},
+                {CoreType.Processor, 0.05f},
+            };
+
+            _noProcessorCoreWeight = new Dictionary<CoreType, float>()
+            {
+                {CoreType.PCB, 0.00f},
+                {CoreType.Server, 0.05f},
+                {CoreType.NetworkCable, 0.25f},
+                {CoreType.HardDrive, 0.25f},
+                {CoreType.Processor, 0.45f},
+            };
+
+            _nandServerProcessorCoreWeight = new Dictionary<CoreType, float>()
+            {
+                {CoreType.PCB, 0.00f},
+                {CoreType.Server, 0.45f},
+                {CoreType.NetworkCable, 0.05f},
+                {CoreType.HardDrive, 0.05f},
+                {CoreType.Processor, 0.45f},
+            };
+
+            #endregion
+        }
+        #endregion
+
+        private bool CheckConformKeySide(CoreType core, SideType[] sides)
+        {
+
+            if (!_keySideLib.TryGetValue(core, out var data))
+            {
+                //no constrain always ok
+                return true;
+            }
+
+            return Utils.GetSideCount(data.Item1, sides) >= data.Item2;
+        }
 
         public static void NormalizeDicVal<T>(ref Dictionary<T, float> lib)
         {
@@ -119,74 +372,84 @@ namespace ROOT
             }
         }
 
-        private CoreType GenerateRandomCore()
+        public abstract void ResetPendingBuy();
+        public abstract bool RequestBuy(int shopID, out int postalPrice);
+        public abstract bool BuyToPos(int idx, Vector2Int pos, bool crash);
+    }
+
+    /// 其实无论如何怎么改，这里就只能做到：保证拼死寻找的玩家能够买满而已。
+    /// 
+    /// 
+    public sealed partial class ShopMgr: ShopBase, IAnimatableShop, IRequirableShop
+    {
+        public override bool ShopOpening
         {
-            //这里不会生成HQ核心。
-            Dictionary<CoreType, float> lib= _defaultCoreWeight;
-            if (GameBoard.GetCountByType(CoreType.Server)<1)
+            set
             {
-                lib = _noServerCoreWeight;
+                _shopOpening = value;
+                ShopCoverRoot.gameObject.SetActive(!_shopOpening);
             }
-            if (GameBoard.GetCountByType(CoreType.Processor) < 1)
-            {
-                lib = _noProcessorCoreWeight;
-            }
-            if ((GameBoard.GetCountByType(CoreType.Server) < 1)&& (GameBoard.GetCountByType(CoreType.Processor) < 1))
-            {
-                lib = _nandServerProcessorCoreWeight;
-            }
-            if (excludedTypes.Count>0)
-            {
-                foreach (var excludedType in excludedTypes)
-                {
-                    if (lib.TryGetValue(excludedType,out float value))
-                    {
-                        lib.Remove(excludedType);
-                    }
-                }
-            }
-            NormalizeDicVal(ref lib);
-            return Utils.GenerateWeightedRandom(lib);
+            get => _shopOpening;
         }
+        private int _madateUnitCount = -1;
+        private int _normalMinRequire = -1;
+        private int _networkMinRequire = -1;
+        private int[] normalMadateArray = new[]{-1};
+        private int[] networkMadateArray = new[]{-1};
+        private int madateBaseTier = -1;
+        private int unitCountOffset = -1;
 
-        private bool CheckConformKeySide(CoreType core, SideType[] sides)
+        private int[] createMadateArray(int minCount,int dur)
         {
-
-            if (!_keySideLib.TryGetValue(core, out var data))
-            {
-                //no constrain always ok
-                return true;
-            }
-
-            return Utils.GetSideCount(data.Item1, sides) >= data.Item2;
-        }
-
-        private SideType[] GenerateRandomSideArray(CoreType core=CoreType.PCB)
-        {
-            if (!_sideWeightLib.TryGetValue(core, out var lib))
-            {
-                Debug.Assert(false);
-                lib = _defaultSideWeight;
-            }
-            SideType[] res=new SideType[4];
-            const int cutoff = 1000;
-            int cutoffCounter = 0;
-            do
-            {
-                res[0] = Utils.GenerateWeightedRandom(lib);
-                res[1] = Utils.GenerateWeightedRandom(lib);
-                res[2] = Utils.GenerateWeightedRandom(lib);
-                res[3] = Utils.GenerateWeightedRandom(lib);
-                cutoffCounter++;
-                if (cutoffCounter >= cutoff)
-                {
-                    Debug.Assert(false, "Can't generate good Unit");
-                    break;
-                }
-            } while (!CheckConformKeySide(core, res));
-            
+            var baseTier = TierProgress(currentLevelAsset.LevelProgress);
+            var minUnit = (minCount / baseTier) + ((minCount% baseTier) == 0 ? 0 : 1);
+            Utils.SpreadOutLaying(minUnit, dur, out var res);
             return res;
         }
+
+        public void SetRequire(int dur, int normal, int network)
+        {
+            _madateUnitCount = dur*4;
+            _normalMinRequire = normal;
+            _networkMinRequire = network;
+
+            if (_normalMinRequire != -1)
+            {
+                normalMadateArray = createMadateArray(_normalMinRequire, _madateUnitCount);
+            }
+
+            if (_networkMinRequire != -1)
+            {
+                networkMadateArray = createMadateArray(_networkMinRequire, _madateUnitCount);
+            }
+            madateBaseTier = TierProgress(currentLevelAsset.LevelProgress);
+            unitCountOffset = TotalCount;
+        }
+        public void ResetRequire()
+        {
+            _madateUnitCount = -1;
+            _normalMinRequire = -1;
+            _networkMinRequire = -1;
+            normalMadateArray = new[] { -1 };
+            networkMadateArray = new[] { -1 };
+            madateBaseTier = -1;
+            unitCountOffset = -1;
+        }
+
+        public Transform ShopCoverRoot;
+        private int countOffset = 0;
+        private int localOffset => (TotalCount - countOffset);
+        private bool[] stationaryArray;
+        private bool nomoreStationary = false;
+
+        private Vector3[] currentPosS;
+        private Vector3[] nextPosS;
+
+        public Transform PlacementPosA;
+        public Transform PlacementPosB;
+
+        private Vector3 _posA => PlacementPosA.position;
+        private float _posDisplace => Vector3.Distance(PlacementPosA.position, PlacementPosB.position);
 
         public void ShopUpdateStack()
         {
@@ -199,7 +462,7 @@ namespace ROOT
             {
                 if (_items[i])
                 {
-                    for (int j = 0; j < _items.Length; j++)
+                    for (var j = 0; j < _items.Length; j++)
                     {
                         if (!_items[j])
                         {
@@ -215,7 +478,7 @@ namespace ROOT
             }
         }
 
-        public void ShopInit(GameAssets _currentLevelAsset)
+        public override void ShopInit(GameAssets _currentLevelAsset)
         {
             _items = new GameObject[4];
             _hardwarePrices = new float[_items.Length];
@@ -225,22 +488,23 @@ namespace ROOT
             currentLevelAsset = _currentLevelAsset;
         }
 
-        public void ShopStart()
+        public override void ShopStart()
         {
             InitPrice();
             InitSideCoreWeight();
 
-            totalCount = 0;
+            TotalCount = 0;
 
             ShopPreAnimationUpdate();
             ShopPostAnimationUpdate();
+            ShopOpening = false;
         }
 
         public void ShopPreAnimationUpdate()
         {
             ShopUpdateStack();
 
-            for (int i = 0; i < _items.Length; i++)
+            for (var i = 0; i < _items.Length; i++)
             {
                 nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
             }
@@ -254,7 +518,7 @@ namespace ROOT
 
         public void ShopUpdateAnimation(float lerp)
         {
-            for (int i = 0; i < _items.Length; i++)
+            for (var i = 0; i < _items.Length; i++)
             {
                 if (_items[i])
                 {
@@ -264,27 +528,44 @@ namespace ROOT
             }
         }
 
+        private CoreType GenerateCoreAndTier(out int tier)
+        {
+            var offsetedUnitCount = TotalCount - unitCountOffset;
+            if (normalMadateArray.Contains(offsetedUnitCount))
+            {
+                tier = madateBaseTier;
+                return CoreType.HardDrive;
+            }
+            else if (networkMadateArray.Contains(offsetedUnitCount))
+            {
+                tier = madateBaseTier;
+                return CoreType.NetworkCable;
+            }
+            else
+            {
+                tier = TierProgress(currentLevelAsset.LevelProgress);
+                return GenerateRandomCore();
+            }
+        }
+
         public void ShopPostAnimationUpdate()
         {
-            for (int i = 0; i < _items.Length; i++)
+            for (var i = 0; i < _items.Length; i++)
             {
                 currentPosS[i] = new Vector3(nextPosS[i].x, nextPosS[i].y, nextPosS[i].z);
             }
 
-            for (int i = 0; i < _items.Length; i++)
+            for (var i = 0; i < _items.Length; i++)
             {
-                int _cost = currentLevelAsset.BoardDataCollector.NthUnitCost(GameBoard.GetUnitCount);
+                var _cost = currentLevelAsset.BoardDataCollector.NthUnitCost(GameBoard.GetUnitCount);
                 if (!_items[i])
                 {
-                    CoreType core = GenerateRandomCore();
-                    int tier = TierProgress(currentLevelAsset.LevelProgress);
-                    //Tier的计分部分，Server迪公去接.
-                    //硬盘已经接上去了。
+                    var core = GenerateCoreAndTier(out var tier);
                     var (item1, item2, CostMultiplier) = TierMultiplier(tier);
                     CostMultiplier = 0.0f;
                     _cost = Mathf.RoundToInt(_cost * CostMultiplier);
                     _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i, _cost, tier);
-                    _itemUnit[i].SetShop(i, UnitRetailPrice(i), _cost, totalCount % 2 == 0);
+                    _itemUnit[i].SetShop(i, UnitRetailPrice(i), _cost, TotalCount % 2 == 0);
                     currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];
@@ -296,7 +577,7 @@ namespace ROOT
             }
         }
 
-        public void ResetPendingBuy()
+        public override void ResetPendingBuy()
         {
             foreach (var unit in _itemUnit)
             {
@@ -323,23 +604,23 @@ namespace ROOT
             return Math.Max(val, 1);
         }
 
-        public bool RequestBuy(int idx, out int postalPrice)
+        public override bool RequestBuy(int shopID, out int postalPrice)
         {
             postalPrice = -1;
-            if (_items[idx])
+            if (_items[shopID])
             {
-                var totalPrice = UnitRetailPrice(idx);
+                var totalPrice = UnitRetailPrice(shopID);
                 CalculatePostalPrice(totalPrice,currentLevelAsset.LevelProgress, out postalPrice);
                 if (CurrentGameStateMgr.GetCurrency() >= totalPrice)
                 {
-                    _items[idx].GetComponentInChildren<Unit>().SetPendingBuying = true;
+                    _items[shopID].GetComponentInChildren<Unit>().SetPendingBuying = true;
                     return true;
                 }
             }
             return false;
         }
 
-        public bool BuyToPos(int idx, Vector2Int pos,bool crash=false)
+        public override bool BuyToPos(int idx, Vector2Int pos,bool crash=false)
         {
             if (_items[idx])
             {
@@ -364,7 +645,7 @@ namespace ROOT
             return false;
         }
 
-        public bool BuyToRandom(int idx)
+        public override bool BuyToRandom(int idx)
         {
             if (_items[idx])
             {

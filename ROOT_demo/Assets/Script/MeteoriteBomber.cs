@@ -17,29 +17,32 @@ namespace ROOT
 
     public interface IWarningDestoryer
     {
-        void SetBoard(ref Board gameBoard);
+        Board GameBoard { set; }
+        //void SetBoard(ref Board gameBoard);
         WarningDestoryerStatus GetStatus { get; }
         Color GetWaringColor { get; }
         Vector2Int[] NextStrikingPos(out int count);
         void Init(int counterLoopMedian = 4, int counterLoopVariance = 1);
-        void RequestUpStrikeCount(int requestAmount);//外界可以申请对这一系统的攻击力度加码。
         void Step();
         void Step(out CoreType? destoryedCore);
+        void ForceReset();
     }
 
+    /// <summary>
+    /// 这套系统其实问题蛮大的，就是记忆性太强了，这些逻辑不好整理。
+    /// </summary>
     public class MeteoriteBomber: IWarningDestoryer
     {
-        public const int MaxStrikeCount = 3;
-        private const float ComplexModeRandomRatio = 0.2f;
-        public Board GameBoard;
-        //public GameAssets CurrentLevelAsset=>GameBoard.owner;
-        public int NextStrikingCount { internal set; get; }
-
         //现在是每NextStrikeUpCounter的StrikeLevel提高，每次StrikeLevel多攻击一发，中间值和偏移值降低。
-        public const int NextStrikeUpCounter = 3;
         public int HasStrikedTimes { private set; get; }//这个是攻击了多少次
         public int HasStrikedCount { private set; get; }//这个是攻击了多少发（可能一次好几发）
 
+        public const int MaxStrikeCount = 3;
+        public const int NextStrikeUpCounter = 2;
+
+        public Board GameBoard { get; set; }
+        
+        public int NextStrikingCount { internal set; get; }
         private WarningDestoryerStatus Status;
 
         public int Counter { private set; get; }
@@ -47,7 +50,6 @@ namespace ROOT
         public int StartingVariance { private set; get; }
 
         private int StrikeLevel => Mathf.RoundToInt(HasStrikedTimes / (float) NextStrikeUpCounter);
-
         private int LoopMedian => Math.Max(StartingMedian - StrikeLevel, MinLoopStep);
         private int LoopVariance => Math.Max(StartingVariance - StrikeLevel, 0);
 
@@ -66,16 +68,26 @@ namespace ROOT
             NextIncomes = new Vector2Int[NextStrikingCount];
             for (int i = 0; i < NextStrikingCount; i++)
             {
-                //NextIncomes[i] = PureRandomTarget();
-                NextIncomes[i] = ComplexRandomTarget();
+                //只有
+                bool noSource = true;
+                Vector2Int pos;
+                do
+                {
+                    pos = ComplexRandomTarget();
+                    if (GameBoard.UnitsGameObjects.TryGetValue(pos, out var value))
+                    {
+                        noSource = (value.GetComponentInChildren<Unit>().UnitCoreGenre != CoreGenre.Source);
+                    }
+                    else
+                    {
+                        noSource = true;
+                    }
+                } while (!noSource);
+
+                NextIncomes[i] = pos;
             }
         }
-
-        public void RequestUpStrikeCount(int requestAmount)
-        {
-            //这个函数肯定是异步调的，这里要保证这个东西不乱加。
-        }
-
+        
         public void Init(int startingMedian = 4, int startingVariance = 1)
         {
             NextStrikingCount = 1;
@@ -87,7 +99,6 @@ namespace ROOT
 
             Counter = GenerateNextLoop();
             Status = WarningDestoryerStatus.Dormant;
-            NextIncomes = new Vector2Int[NextStrikingCount];
             GenerateNewIncomes();
             Debug.Assert(GameBoard);
         }
@@ -101,6 +112,8 @@ namespace ROOT
             }
             return Mathf.Max(LoopMedian + variance, MinLoopStep);
         }
+
+        #region 瞄准部分，这次不用改
 
         private float[] RandomMulexRatio = new[]
         {
@@ -127,8 +140,7 @@ namespace ROOT
                 dic.Add(vector2Int.Value, RandomMulexRatio[i]);
                 totalRatio += RandomMulexRatio[i];
             };
-            if (dic.Count==1)
-                return dic.Keys.ToArray()[0];
+            if (dic.Count==1) return dic.Keys.ToArray()[0];
 
             ShopMgr.NormalizeDicVal(ref dic);
 
@@ -194,10 +206,19 @@ namespace ROOT
             return new Vector2Int(randX, randY);
         }
 
+        #endregion
+
         private void UpdateNextStrikingCount()
         {
             NextStrikingCount = Mathf.FloorToInt(HasStrikedTimes / (float) NextStrikeUpCounter)+1;
             NextStrikingCount = Mathf.Min(NextStrikingCount, MaxStrikeCount);
+        }
+
+        public void ForceReset()
+        {
+            Status = WarningDestoryerStatus.Dormant;
+            Counter = GenerateNextLoop();
+            GenerateNewIncomes();
         }
 
         public virtual void Step()
@@ -215,12 +236,11 @@ namespace ROOT
                 HasStrikedCount += NextStrikingCount;
                 UpdateNextStrikingCount();
                 Counter = GenerateNextLoop();
-                //Debug.Log("Aiming=" + NextIncome.ToString());
                 foreach (var nextIncome in NextIncomes)
                 {
                     //因为商店会销售静态单元，所以又可以摧毁了。
                     GameBoard.TryDeleteCertainUnit(nextIncome, out destoryedCore);
-                    //GameBoard.TryDeleteCertainNoStationUnit(nextIncome, out destoryedCore);
+                    //_gameBoard.TryDeleteCertainNoStationUnit(nextIncome, out destoryedCore);
                 }
                 //得摧毁之后才更新数据。
                 GenerateNewIncomes();
@@ -230,22 +250,17 @@ namespace ROOT
                 Counter--;
             }
 
-            if (Counter==1)
+            switch (Counter)
             {
-                Status = WarningDestoryerStatus.Warning;
-            }
-            else if (Counter == 0)
-            {
-                Status = WarningDestoryerStatus.Striking;
-            }
-            else if (Counter > 1)
-            {
-                //TODO "Striked waiting for next" State.   
-                Status = WarningDestoryerStatus.Dormant;
-            }
-            else
-            {
-                Status = WarningDestoryerStatus.Dormant;
+                case 1:
+                    Status = WarningDestoryerStatus.Warning;
+                    break;
+                case 0:
+                    Status = WarningDestoryerStatus.Striking;
+                    break;
+                default:
+                    Status = WarningDestoryerStatus.Dormant;
+                    break;
             }
         }
 
@@ -272,11 +287,6 @@ namespace ROOT
         {
             count = NextStrikingCount;
             return NextIncomes;
-        }
-
-        public void SetBoard(ref Board gameBoard)
-        {
-            GameBoard = gameBoard;
         }
     }
 }

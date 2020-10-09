@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 780a40190212bcd4c8ff27bafb2ef40e, type: 3}
   m_Name: TokenizedModeAsset
   m_EditorClassIdentifier: 
-  InitialCurrency: 12
+  InitialCurrency: 36
   InitialTime: 30
   ShopCost: 1
   UnitCost: 1

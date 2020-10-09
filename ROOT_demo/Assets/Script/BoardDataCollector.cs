@@ -190,7 +190,8 @@ namespace ROOT
 
         public float CalculateProcessorScore(out int driverCountInt)
         {
-            CalculateProcessorScoreFindSetA();
+            //var res=CalculateProcessorScoreFindSetA();
+            //RootDebug.Watch(res.Count.ToString(), WatchID.YanYoumo_ExampleA);
 
             var driverCount = 0.0f;
             var processorKeys = new List<Vector2Int>();
@@ -236,7 +237,7 @@ namespace ROOT
         }
 
         #region 服务器计分标准
-        //TODO Digong 服务器计分分数需要读取Unit.Tier参数。
+        //Digong 服务器计分分数需要读取Unit.Tier参数。
         //其提供信号深度为调用Shop.TierMultiplier中得出的SignalMultipler数值。
         //此时就出现了物理距离和信号距离两种距离。
         //一个Tier为3的单元目前提供1物理距离，提供3信号距离。

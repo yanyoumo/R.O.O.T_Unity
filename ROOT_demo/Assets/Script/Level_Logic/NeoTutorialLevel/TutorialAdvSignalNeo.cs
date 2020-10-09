@@ -42,17 +42,12 @@ namespace ROOT
                 PlayerRequestedEnd = CtrlPack.HasFlag(ControllingCommand.NextButton);
             }
 
-            foreach (var actionAssetTimeLineToken in LevelAsset.ActionAsset.TimeLineTokens)
+            if (LevelActionAsset.HasEnded(LevelAsset.StepCount))
             {
-                if (actionAssetTimeLineToken.type == TimeLineTokenType.Ending)
-                {
-                    if (actionAssetTimeLineToken.InRange(LevelAsset.StepCount))
-                    {
-                        LevelFailed = true;
-                        OnceFlagB = true;
-                    }
-                }
+                LevelFailed = true;
+                OnceFlagB = true;
             }
+
             if (LevelFailed)
             {
                 PlayerRequestedQuit = CtrlPack.HasFlag(ControllingCommand.NextButton);

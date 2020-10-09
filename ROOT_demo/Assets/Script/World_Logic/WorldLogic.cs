@@ -10,18 +10,19 @@ namespace ROOT
     [Flags]
     public enum ControllingCommand
     {
-        Nop = 0b_00000000000,
-        Move = 0b_00000000001,
-        Drag = 0b_00000000010,
-        Rotate = 0b_00000000100,
-        Buy = 0b_00000001000,
-        PlayHint = 0b_00000010000,
-        SignalHint = 0b_00000100000,
-        NextButton = 0b_00001000000,
-        CycleNext = 0b_00010000000,
-        BuyCanceled = 0b_00100000000,
-        BuyConfirm = 0b_01000000000,
-        BuyRandom = 0b_10000000000,
+        Nop =         0b_000000000000,
+        Move =        0b_000000000001,
+        Drag =        0b_000000000010,
+        Rotate =      0b_000000000100,
+        Buy =         0b_000000001000,
+        PlayHint =    0b_000000010000,
+        SignalHint =  0b_000000100000,
+        NextButton =  0b_000001000000,
+        CycleNext =   0b_000010000000,
+        BuyCanceled = 0b_000100000000,
+        BuyConfirm =  0b_001000000000,
+        BuyRandom =   0b_010000000000,
+        RemoveUnit =  0b_100000000000,
     }
 
     public struct ControllingPack
@@ -358,6 +359,12 @@ namespace ROOT
             ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
             ctrlPack.NextPos = currentLevelAsset.Cursor.GetCoord(ctrlPack.CommandDir);
 
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_REMOVEUNIT))
+            {
+                ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
+                ctrlPack.SetFlag(ControllingCommand.RemoveUnit);
+            }
+
             if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT)&& ctrlPack.CtrlCMD == ControllingCommand.Nop)
             {
                 //移动和拖动的优先级比旋转高。
@@ -397,8 +404,13 @@ namespace ROOT
                     ctrlPack.SetFlag(ControllingCommand.BuyRandom);
                 }
             }
-            
-            bool anyBuy = false;
+
+            ShopBuyID(ref ctrlPack, out bool anyBuy);
+        }
+
+        private static void ShopBuyID(ref ControllingPack ctrlPack, out bool anyBuy)
+        {
+            anyBuy = false;
             if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY1))
             {
                 anyBuy = true;
@@ -419,6 +431,37 @@ namespace ROOT
                 anyBuy = true;
                 ctrlPack.ShopID = 3;
             }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY5))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 4;
+            }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY6))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 5;
+            }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY7))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 6;
+            }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY8))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 7;
+            }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY9))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 8;
+            }
+            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY0))
+            {
+                anyBuy = true;
+                ctrlPack.ShopID = 9;
+            }
+
             if (anyBuy)
             {
                 ctrlPack.SetFlag(ControllingCommand.Buy);
@@ -444,8 +487,18 @@ namespace ROOT
             return newPos;
         }
 
+        private static bool UpdateShopBuy(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
+        {
+            //先简单一些，只允许随机购买。
+            if (ctrlPack.HasFlag(ControllingCommand.Buy) && currentLevelAsset.Shop.ShopOpening)
+            {
+                return currentLevelAsset.Shop.BuyToRandom(ctrlPack.ShopID);
+            }
+            return false;
+        }
+
         private static void UpdateShopBuy(
-            GameAssets currentLevelAsset, ShopMgr shopMgr, 
+            GameAssets currentLevelAsset, ShopBase shopMgr, 
             in ControllingPack ctrlPack, bool crashable,
             ref bool boughtOnce,out int postalPrice)
         {
@@ -521,7 +574,7 @@ namespace ROOT
             return indicator;
         }
 
-        internal static void UpdateDestoryer(GameAssets currentLevelAsset)
+        internal static void CleanDestoryer(GameAssets currentLevelAsset)
         {
             if (currentLevelAsset.WarningGo != null)
             {
@@ -534,8 +587,13 @@ namespace ROOT
                     }
                 }
             }
+        }
 
-            if (currentLevelAsset.WarningDestoryer.GetStatus != WarningDestoryerStatus.Dormant)
+        internal static void UpdateDestoryer(GameAssets currentLevelAsset)
+        {
+            //if (currentLevelAsset.WarningDestoryer.GetStatus != WarningDestoryerStatus.Dormant)
+            //TEMP 现在警告-1；
+            if (currentLevelAsset.WarningDestoryer.GetStatus == WarningDestoryerStatus.Striking)
             {
                 var incomings = currentLevelAsset.WarningDestoryer.NextStrikingPos(out var count);
                 currentLevelAsset.WarningGo = new GameObject[count];
@@ -603,7 +661,13 @@ namespace ROOT
                 currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
                 movedCursor = true;
             }
-
+            else if(ctrlPack.HasFlag(ControllingCommand.RemoveUnit))
+            {
+                currentLevelAsset.GameBoard.TryDeleteCertainUnit(ctrlPack.CurrentPos);
+                //movedTile = true;//RISK 这里可以调整删除单位是否强制移动。目前不移动。
+                movedCursor = true;
+            }
+            
             if (currentLevelAsset.CursorEnabled && movedCursor)
             {
                 currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
@@ -658,11 +722,25 @@ namespace ROOT
         {
             int inCome = 0;
             int cost = 0;
-            inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
-            inCome += Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
-            //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
-            //TEMP 现在只有热力消耗。
-            cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
+
+            var tmpInComeA= Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
+            var tmpInComeB= Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
+
+            if (currentLevelAsset.CurrencyIOEnabled)
+            {
+                inCome += tmpInComeA;
+                inCome += tmpInComeB;
+                //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
+                //TEMP 现在只有热力消耗。
+                if (!currentLevelAsset.CurrencyIncomeEnabled)
+                {
+                    //RISK 现在在红色区间没有任何价格收入。靠谱吗？
+                    inCome = 0;
+                }
+                cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
+            }
+
+            currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
             currentLevelAsset.DeltaCurrency = inCome - cost;
 
             if (currentLevelAsset.CostLine != null)
@@ -676,9 +754,8 @@ namespace ROOT
 
             if (currentLevelAsset.CostChart != null)
             {
-                currentLevelAsset.CostChart.IncomeVal = Mathf.FloorToInt(inCome);
-                currentLevelAsset.CostChart.CostVal = Mathf.FloorToInt(cost);
-                currentLevelAsset.CostChart.BenefitVal = inCome - cost;
+                currentLevelAsset.CostChart.IncomesVal = inCome - cost;
+                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
             }
 
             lastInCome = inCome;
@@ -725,7 +802,10 @@ namespace ROOT
 
                 if (currentLevelAsset.ShopEnabled)
                 {
-                    currentLevelAsset.ShopMgr.ShopPreAnimationUpdate();
+                    if (currentLevelAsset.Shop is IAnimatableShop shop)
+                    {
+                        shop.ShopPreAnimationUpdate();
+                    }
                 }
 
                 if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
@@ -745,23 +825,23 @@ namespace ROOT
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             var postalPrice = -1;
 
+            CleanDestoryer(currentLevelAsset);
             if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
 
             ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset._boughtOnce);
 
             if (currentLevelAsset.InputEnabled)
             {
-                if (currentLevelAsset.ShopEnabled)
-                {
-                    UpdateShopBuy(currentLevelAsset, currentLevelAsset.ShopMgr, in ctrlPack, crashable,
-                        ref currentLevelAsset._boughtOnce, out postalPrice);
-                }
 
                 UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
-
                 if (currentLevelAsset.RotateEnabled) UpdateRotate(currentLevelAsset, in ctrlPack);
-
                 currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
+
+                if (currentLevelAsset.ShopEnabled)
+                {
+                    //RISK 这里让购买单元也变成强制移动一步。
+                    movedTile |= UpdateShopBuy(currentLevelAsset, ctrlPack);
+                }
             }
 
             movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);

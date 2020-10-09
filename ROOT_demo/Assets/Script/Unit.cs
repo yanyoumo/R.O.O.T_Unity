@@ -38,19 +38,8 @@ namespace ROOT
         }
     }
 
-    public sealed partial class ShopMgr : MonoBehaviour
+    public sealed partial class ShopMgr : ShopBase
     {
-        private float TryGetPrice(SideType side)
-        {
-            if (_priceBySide.TryGetValue(side, out var sidePrice0))
-            {
-                return sidePrice0;
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-        }
         /// <summary>
         /// 生成新的静态单元Flag的Array。
         /// </summary>
@@ -85,11 +74,12 @@ namespace ROOT
         {
             get
             {
+                return false;
                 var forceNewArray = false;
                 if (nomoreStationary) return false;
                 if (stationaryArray != null && localOffset == stationaryArray.Length)
                 {
-                    countOffset = totalCount;
+                    countOffset = TotalCount;
                     forceNewArray = true;
                 }
 
@@ -107,11 +97,8 @@ namespace ROOT
 
         private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID, int _cost,int tier)
         {
-            var go = Instantiate(UnitTemplate);
-            go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
+            var go = InitUnitShopCore(core, sides, ID, _cost, tier);
             var unit = go.GetComponentInChildren<Unit>();
-            unit.InitPosWithAnimation(Vector2Int.zero);
-            unit.InitUnit(core, sides, tier);
             if (ShouldStationary)
             {
                 unit.SetupStationUnit();
@@ -122,7 +109,7 @@ namespace ROOT
                 _priceByCore.TryGetValue(core, out var corePrice);
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
-            totalCount++;
+            TotalCount++;
             return go;
         }
     }
@@ -413,6 +400,11 @@ namespace ROOT
         {
             _coreMeshRenderer.material.EnableKeyword("_EMISSION"); //还是不懂，为什么每次设置前得Enable一下。
             _coreMeshRenderer.material.SetColor("_EmissionColor", color);
+        }
+
+        public void UpdateUnitTier(int tier)
+        {
+            Tier = tier;
         }
 
         public void InitUnit(CoreType core, SideType[] sides, int tier, Board gameBoard = null)

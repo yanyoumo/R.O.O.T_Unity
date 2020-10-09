@@ -70,24 +70,8 @@ namespace ROOT
         }
     }
 
-    public sealed partial class ShopMgr : MonoBehaviour
+    public sealed partial class ShopMgr : ShopBase
     {
-        /// <summary>
-        /// 从Tier获取单元各种数据的倍率。
-        /// </summary>
-        /// <param name="Tier">位于哪个Tier</param>
-        /// <returns>依次为（分数、购买价格、Cost）的float Tuple</returns>
-        public static Tuple<float, float, float> TierMultiplier(int Tier)
-        {
-            //目前对Tier进行设定：
-            //先确定需要由Tier影响的内容：
-            //分数、购买价格、Cost。
-            var SignalMultipler = (float)Tier;
-            var PriceMultipler = 1.0f + 0.1f * Tier;
-            var CostMultipler = 1.0f + 0.5f * Tier;
-            return new Tuple<float, float, float>(SignalMultipler, PriceMultipler, CostMultipler);
-        }
-
         private int StationaryRateListLastIndex = 0;
         //因为静态单位对游戏体验还是太重要了，不能随便放给随机。还是要控制起来。
         //使用一堆Tuple来控制，<x,y>指代为x个里面有y个静态的，并且是依次的，
@@ -134,154 +118,11 @@ namespace ROOT
             return maxMultiplier * gameProgress + 1.0f;
         }
 
-        public void InitPrice()
+        public static int HeatSinkCost(int occupiedHeatSink, int HeatSinkCount)
         {
-
-            _priceByCore = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 1.0f},
-                {CoreType.NetworkCable, 2.0f},
-                {CoreType.Server, 3.0f},
-                {CoreType.Bridge, 4.0f},
-                {CoreType.HardDrive, 2.0f},
-                {CoreType.Processor, 3.0f},
-                {CoreType.Cooler, 3.0f},
-                {CoreType.BackPlate, 1.0f},
-            };
-            _priceBySide = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.0f},
-                {SideType.Connection, 1.0f},
-            };
-        }
-
-        public void InitSideCoreWeight()
-        {
-            _keySideLib = new Dictionary<CoreType, Tuple<SideType, int>>()
-            {
-                {CoreType.PCB, new Tuple<SideType, int>(SideType.NoConnection, 4)},
-                {CoreType.NetworkCable, new Tuple<SideType, int>(SideType.Connection, 2)},
-                {CoreType.Server, new Tuple<SideType, int>(SideType.Connection, 1)},
-                {CoreType.HardDrive, new Tuple<SideType, int>(SideType.Connection, 1)},
-                {CoreType.Processor, new Tuple<SideType, int>(SideType.Connection, 1)},
-            };
-
-            #region SideSection
-
-            //现在下面这个数据是除了关键接口去掉后，剩下的接口的概率。
-
-            _defaultSideWeight = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.75f},
-                {SideType.Connection, 0.25f},
-            };
-
-            _processorSideWeight = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.5f},
-                {SideType.Connection, 0.5f},
-            };
-
-            _serverSideWeight = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.5f},
-                {SideType.Connection, 0.5f},
-            };
-
-            _hddSideWeight = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.6f},
-                {SideType.Connection, 0.4f},
-            };
-
-            _netCableSideWeight = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.8f},
-                {SideType.Connection, 0.2f},
-            };
-
-            _sideWeightLib = new Dictionary<CoreType, Dictionary<SideType, float>>()
-            {
-                {CoreType.Server, _serverSideWeight},
-                {CoreType.NetworkCable, _netCableSideWeight},
-                {CoreType.HardDrive, _hddSideWeight},
-                {CoreType.Processor, _processorSideWeight},
-            };
-
-            #endregion
-
-            #region CoreSection
-
-            _defaultCoreWeight = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 0.00f},
-                {CoreType.Server, 0.05f},
-                {CoreType.NetworkCable, 0.45f},
-                {CoreType.HardDrive, 0.45f},
-                {CoreType.Processor, 0.05f},
-            };
-
-            _noServerCoreWeight = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 0.00f},
-                {CoreType.Server, 0.45f},
-                {CoreType.NetworkCable, 0.25f},
-                {CoreType.HardDrive, 0.25f},
-                {CoreType.Processor, 0.05f},
-            };
-
-            _noProcessorCoreWeight = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 0.00f},
-                {CoreType.Server, 0.05f},
-                {CoreType.NetworkCable, 0.25f},
-                {CoreType.HardDrive, 0.25f},
-                {CoreType.Processor, 0.45f},
-            };
-
-            _nandServerProcessorCoreWeight = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 0.00f},
-                {CoreType.Server, 0.45f},
-                {CoreType.NetworkCable, 0.05f},
-                {CoreType.HardDrive, 0.05f},
-                {CoreType.Processor, 0.45f},
-            };
-
-            #endregion
-        }
-
-        public static int HeatSinkCost(int occupiedHeatSink,int HeatSinkCount)
-        {
-            const float pow = 1.5f;
-            if (occupiedHeatSink==0)
-            {
-                //TEMP 使用的指数型就会造成这个问题，如果输入是0，得出的结果非0.
-                return 0;
-            }
-            float normalizedVal = Mathf.Pow(pow, occupiedHeatSink) / Mathf.Pow(pow, HeatSinkCount);
-            float maxCost = 300.0f;
-            return Mathf.RoundToInt(normalizedVal * maxCost);
-        }
-         
-        private int TierProgress(float gameProgress)
-        {
-            var fluctuationRate = 0.25f;
-            var fluctuation = 1.0f;
-            var baseTier = Mathf.Lerp(1, 6, gameProgress);
-            if (Random.value <= fluctuationRate)
-            {
-                if (Random.value <= 0.5)
-                {
-                    baseTier += fluctuation;
-                }
-                else
-                {
-                    baseTier -= fluctuation;
-                }
-            }
-
-            return Mathf.Clamp(Mathf.RoundToInt(baseTier), 1, 5);
+            //目前是卡死单价、但是同一个Array全占满总价不同。
+            const float pow = 1.75f;
+            return Mathf.CeilToInt(Mathf.Pow(pow, occupiedHeatSink) - 1);
         }
 
         private float PostalMultiplier(float gameProgress)
