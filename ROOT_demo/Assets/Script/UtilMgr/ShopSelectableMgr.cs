@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -14,11 +15,12 @@ namespace ROOT
             for (var i = 0; i < _items.Length; i++)
             {
                 var unit = _itemUnit[i];
-                if (i >= _items.Length - 2)
+                if (i >= _items.Length - PremiumCount)
                 {
                     Destroy(unit.transform.parent.gameObject);
-                    var offset = i - (_items.Length-1);
-                    CreatePremiumUnit(i, VerticalCount - 1, HorizontalCount - 2 - offset);
+                    // ReSharper disable once PossibleNullReferenceException
+                    var (i0, j0) = IDtoIJ(i);
+                    CreatePremiumUnit(i0, j0);
                 }
                 else
                 {
@@ -44,13 +46,54 @@ namespace ROOT
             get => _shopOpening;
         }
 
+        /// <summary>
+        /// 根据商店的基本设置从2D转换为线性的ID。
+        /// </summary>
+        /// <param name="i">输入 i</param>
+        /// <param name="j">输入 j</param>
+        /// <returns>如果此处不应该放置单位则返回-1</returns>
+        private int IJtoID(int i,int j)
+        {
+            var rawRes= j + i * HorizontalCount;
+            if (i < VerticalCount - 1)
+            {
+                return rawRes;
+            }
+            else
+            {
+                return j < EmptyCount ? -1 : rawRes - EmptyCount;
+            }
+        }
+
+        /// <summary>
+        /// 根据现有设置，从1D的ID转换为二维ID。
+        /// </summary>
+        /// <param name="ID">输入ID</param>
+        /// <returns>如果输入非法ID则返回null</returns>
+        [CanBeNull]
+        private Tuple<int, int> IDtoIJ(int ID)
+        {
+            if (ID >= TotalCount) return null;
+
+            var modID = (ID >= RetailCount) ? ID + EmptyCount : ID;
+
+            //if (ID >= RetailCount) modID += EmptyCount;
+
+            return new Tuple<int, int>(modID / HorizontalCount, modID % HorizontalCount);
+        }
+
         public Transform DisplayRoot;
         public Transform StaticContent;
         private readonly float Offset = 1.589f;
         private readonly float OffsetX = -1.926f;
         private readonly int HorizontalCount = 4;
         private readonly int VerticalCount = 3;
-        private int MaxDisplayCount => (VerticalCount - 1) * HorizontalCount + 2;
+        private readonly int PremiumCount = 2;
+
+        private int EmptyCount => HorizontalCount - PremiumCount;
+        private int RetailCount => HorizontalCount * (VerticalCount - 1);
+        private int MaxDisplayCount => (VerticalCount - 1) * HorizontalCount + PremiumCount;
+
         private readonly float YOffset=0.05f;
 
         private int UnitRetailPrice(int idx,int tier)
@@ -77,7 +120,6 @@ namespace ROOT
             _hardwarePrices[ID] = hardwarePrice;
             unit.SetShop(ID, UnitRetailPrice(ID,tier), _cost, true);
             _items[ID] = go;
-            TotalCount++;
             return go;
         }
 
@@ -110,15 +152,17 @@ namespace ROOT
             }
         }
 
-        private void CreateSelfUnit(int ID, int i, int j)
+        private void CreateSelfUnit(int i, int j)
         {
+            var ID = IJtoID(i, j);
             var core = GenerateSelfCoreAndTier(in i, out var tier);
             var go = InitUnitShop(core, GenerateSide(j), out var hardwarePrice, ID, 0, tier);
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
-        private void CreatePremiumUnit(int ID, int i, int j)
+        private void CreatePremiumUnit(int i, int j)
         {
+            var ID = IJtoID(i, j);
             var core = GenerateRandomCore();
             //TEMP 这个Tier到时候还是统一管理一下。
             var tier = TierProgress(currentLevelAsset.LevelProgress) + (Random.value > 0.5f ? 1 : 2);
@@ -133,14 +177,16 @@ namespace ROOT
             {
                 for (var j = 0; j < HorizontalCount; j++)
                 {
-                    if (i==VerticalCount-1)
+                    if (i == VerticalCount - 1)
                     {
                         if (j < HorizontalCount - 2) continue;
-                        CreatePremiumUnit(TotalCount, i, j);
+                        CreatePremiumUnit(i, j);
+                        TotalCount++;
                     }
                     else
                     {
-                        CreateSelfUnit(TotalCount, i, j);
+                        CreateSelfUnit(i, j);
+                        TotalCount++;
                     }
                 }
             }
@@ -155,7 +201,6 @@ namespace ROOT
         
         public override void ShopStart()
         {
-            //TODO 这个东西要调出来，就是每次开启的时候可能需要都得重新弄。
             InitPrice();
             InitSideCoreWeight();
             CreateSelfUnit();

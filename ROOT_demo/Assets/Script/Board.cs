@@ -28,8 +28,8 @@ namespace ROOT
         public void UpdatePatternID()
         {
             var oldID = _currentHeatSinkPatternsID;
-            int max = 100;
-            int counter = 0;
+            const int max = 100;
+            var counter = 0;
             do
             {
                 counter++;
@@ -45,10 +45,10 @@ namespace ROOT
                 for (var j = 0; j < BoardLength; j++)
                 {
                     var go = Instantiate(BoardGridTemplate, BoardGridRoot);
-                    float GridLength = _boardPhysicalLength;
-                    Vector3 offset = new Vector3(i * GridLength, 0.0f, j * GridLength);
+                    var gridLength = _boardPhysicalLength;
+                    var offset = new Vector3(i * gridLength, 0.0f, j * gridLength);
                     go.transform.localPosition = BoardGridZeroing.position + offset;
-                    Vector2Int key = new Vector2Int(i, j);
+                    var key = new Vector2Int(i, j);
                     BoardGirds.Add(key, go.GetComponent<BoardGirdCell>());
                 }
             }
