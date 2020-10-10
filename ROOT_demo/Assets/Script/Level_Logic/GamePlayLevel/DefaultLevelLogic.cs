@@ -351,22 +351,26 @@ namespace ROOT
             {
                 Playing = true;
             }
+
             System.Diagnostics.Debug.Assert(LevelAsset.GameBoard != null, nameof(LevelAsset.GameBoard) + " != null");
             var pressedAny = Input.anyKeyDown;
             _ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+            bool shouldCycle = false;
+            bool movedTile = false;
             if (!Animating)
             {
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
-                WorldLogic.UpdateLogic(LevelAsset,out _ctrlPack, out var movedTile, out var movedCursor);
+                WorldLogic.UpdateLogic(LevelAsset, out _ctrlPack, out movedTile, out var movedCursor);
 
                 if (LevelAsset.GameOverEnabled)
                 {
                     UpdateGameOverStatus(LevelAsset);
                 }
-                bool shouldCycle = ShouldCycle(in _ctrlPack, in pressedAny, in movedTile, in movedCursor);
+
+                shouldCycle = ShouldCycle(in _ctrlPack, in pressedAny, in movedTile, in movedCursor);
                 Animating = shouldCycle;
-                if (shouldCycle && movedTile&& (!_noRequirement))
+                if (shouldCycle && movedTile && (!_noRequirement))
                 {
                     if (LevelAsset.TimeLine.RequirementSatisfied)
                     {
@@ -379,17 +383,28 @@ namespace ROOT
                     AnimationTimerOrigin = Time.timeSinceLevelLoad;
                     LevelAsset.MovedTileAni = movedTile;
                     LevelAsset.MovedCursorAni = movedCursor;
-                    StartCoroutine(Animate());//这里完成后会把Animating设回来。
+                    StartCoroutine(Animate()); //这里完成后会把Animating设回来。
                 }
             }
+
             if (LevelAsset.HintEnabled)
             {
-                //UpdateSignalHint(_ctrlPack);
                 LevelAsset.HintMaster.UpdateHintMaster(_ctrlPack);
+            }
+
+            if (shouldCycle && movedTile)
+            {
+                var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
+
+                if (roundGist.HasValue && roundGist.Value.Type == StageType.Require)
+                {
+                    LevelAsset.GameBoard.UpdatePatternDiminishing();
+                }
             }
         }
 
         int ObselateStepID = -1;
+        private bool lastDestoryBool = false;
         protected bool UpdateCareerGameOverStatus(GameAssets currentLevelAsset)
         {
             //这个函数就很接近裁判要做的事儿了。
@@ -434,18 +449,24 @@ namespace ROOT
                 ObselateStepID = LevelAsset.StepCount;
             }
 
-            var ShouldDestoryer= (round.Type == StageType.Destoryer);
+            //TODO 这里还要识别ShouldDestoryer准备关闭前的机制。
+            var ShouldDestoryer = (round.Type == StageType.Destoryer);
 
             if (LevelAsset.DestroyerEnabled && !ShouldDestoryer)
             {
                 LevelAsset.WarningDestoryer.ForceReset();
             }
 
+            if (lastDestoryBool&&!ShouldDestoryer)
+            {
+                LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
+            }
+            lastDestoryBool = ShouldDestoryer;
 
+            //RISK 这里把Destroyer目前完全关了。
+            //LevelAsset.DestroyerEnabled = ShouldDestoryer;
+            LevelAsset.DestroyerEnabled = false;
 
-            //TODO 还要在这里弄好HeatSink的部分。而且TimeLine也得弄。
-
-            LevelAsset.DestroyerEnabled = ShouldDestoryer;
             LevelAsset.CurrencyIncomeEnabled = ShoudCurrencyIncome;
             LevelAsset.CurrencyIOEnabled = ShoudCurrencyIO;
 

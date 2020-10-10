@@ -21,20 +21,63 @@ namespace ROOT
 
         public HeatSinkPatternLib HeatSinkPatterns;
         private int _currentHeatSinkPatternsID = 0;
+        private int _currentHeatSinkDiminishingID = 0;
 
-        public int MinHeatSinkCount=> FixedHeatSinkPos.Length;
-        private Vector2Int[] FixedHeatSinkPos => HeatSinkPatterns.Lib[_currentHeatSinkPatternsID].Lib.ToArray();
+        public int MinHeatSinkCount=> ActualHeatSinkPos.Length;
+        private Vector2Int[] RawHeatSinkPos => HeatSinkPatterns.Lib[_currentHeatSinkPatternsID].Lib.ToArray();
+        private Vector2Int[] ActualHeatSinkPos => getActualHeatsink();
+        private int DiminishingStep => DiminishingCounter;//TODO 这里先放这里这个步长需要调整。
+        private int DiminishingCounter = -1;
+
+        private void TryDeleteIfFilledCertainUnit(Vector2Int pos)
+        {
+            if (CheckBoardPosValidAndFilled(pos))
+            {
+                TryDeleteCertainUnit(pos);
+            }
+        }
+
+        public void DestoryHeatsinkOverlappedUnit()
+        {
+            ActualHeatSinkPos.ForEach(TryDeleteIfFilledCertainUnit);
+        }
+
+        private Vector2Int[] getActualHeatsink()
+        {
+            if (DiminishingStep == -1) return RawHeatSinkPos;
+
+            var res = RawHeatSinkPos.ToList();
+            var dimList = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID].DiminishingList;
+            for (var i = 0; i < DiminishingStep; i++)
+            {
+                if (i < dimList.Count && res.Contains(dimList[i]))
+                {
+                    res.Remove(dimList[i]);
+                }
+            }
+
+            return res.ToArray();
+        }
+
+        public void UpdatePatternDiminishing()
+        {
+            DiminishingCounter++;
+        }
 
         public void UpdatePatternID()
         {
             var oldID = _currentHeatSinkPatternsID;
+            var oldDimID = _currentHeatSinkDiminishingID;
             const int max = 100;
             var counter = 0;
             do
             {
                 counter++;
-                _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Count);
-            } while (_currentHeatSinkPatternsID == oldID && counter <= max);
+                _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Lib.Count);
+                _currentHeatSinkDiminishingID = Random.Range(0, HeatSinkPatterns.DiminishingList.Count);
+            } while ((_currentHeatSinkDiminishingID == oldDimID || _currentHeatSinkPatternsID == oldID) && counter <= max);
+
+            DiminishingCounter = 0;
         }
 
         private void InitHeatInfo()
@@ -52,6 +95,8 @@ namespace ROOT
                     BoardGirds.Add(key, go.GetComponent<BoardGirdCell>());
                 }
             }
+
+            UpdatePatternID();
         }
 
         private Vector2Int? FindFurthestHeatSink(in Vector2Int[] existingHeatSink)
@@ -104,7 +149,7 @@ namespace ROOT
         }
 
         [CanBeNull]
-        public Unit[] OverlapHeatSinkUnit => CheckHeatSink() != 0 ? Units.Where(unit => FixedHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray() : null;
+        public Unit[] OverlapHeatSinkUnit => CheckHeatSink() != 0 ? Units.Where(unit => ActualHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray() : null;
 
         /// <summary>
         /// 这里是检查时候又fix的HeatSink被占用。
@@ -113,8 +158,8 @@ namespace ROOT
         public int CheckHeatSink()
         {
             BoardGirds.Values.ForEach(grid => grid.NormalOrHeatSink = false);
-            BoardGirds.ForEach(val => val.Value.NormalOrHeatSink = FixedHeatSinkPos.Contains(val.Key));
-            return FixedHeatSinkPos.Count(pos => CheckBoardPosValidAndEmpty(pos) == false);
+            BoardGirds.ForEach(val => val.Value.NormalOrHeatSink = ActualHeatSinkPos.Contains(val.Key));
+            return ActualHeatSinkPos.Count(pos => CheckBoardPosValidAndEmpty(pos) == false);
         }
 
         /// <summary>

@@ -22,3 +22,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: db18e8562c2f4f24aa336c502f352f37, type: 2}
   - {fileID: 11400000, guid: 32640b89e83a7ce44bebbd2975d0a8bf, type: 2}
   - {fileID: 11400000, guid: 3e3ef8edd71829a45b9945852dd3c2de, type: 2}
+  DiminishingList:
+  - {fileID: 11400000, guid: 7e95f183873b30e47b5cdb36ea9f41fd, type: 2}
+  - {fileID: 11400000, guid: ab7241dd338a2034692efcb74f6aa6bf, type: 2}

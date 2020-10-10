@@ -78,7 +78,7 @@ namespace ROOT
             return res;
         }
 
-        private int obsoletedID = -1;
+        private int _obsoletedID = -1;
         protected override void Update()
         {
             base.Update();
@@ -87,7 +87,6 @@ namespace ROOT
             if (!roundGist.HasValue) return;
             var gist = roundGist.Value;
 
-            //TODO 目前这个还没有HeatSinkSwitch的处理。
             LevelAsset.LevelProgress = LevelAsset.StepCount / (float) LevelAsset.ActionAsset.PlayableCount;
         }
     }

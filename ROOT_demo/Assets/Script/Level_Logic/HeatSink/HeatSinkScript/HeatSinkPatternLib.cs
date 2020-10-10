@@ -10,8 +10,6 @@ namespace ROOT
     public class HeatSinkPatternLib : ScriptableObject
     {
         public List<HeatSinkPattern> Lib;
-        public int Count => Lib.Count;
-
-
+        public List<HeatSinkDiminishing> DiminishingList;
     }
 }
