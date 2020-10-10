@@ -155,7 +155,7 @@ namespace ROOT
 
         #endregion
 
-        public readonly int BoardLength = 6;
+        public const int BoardLength = 6;
         public int TotalBoardCount => BoardLength * BoardLength;
         private readonly float _boardPhysicalLength = 1.2f;
         private readonly float _boardPhysicalOriginX = -3.1f - 1.75f-2.0f;

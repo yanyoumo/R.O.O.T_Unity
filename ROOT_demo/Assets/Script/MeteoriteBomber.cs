@@ -201,8 +201,8 @@ namespace ROOT
 
         private Vector2Int PureRandomTarget()
         {
-            int randX=Mathf.FloorToInt(GameBoard.BoardLength * Random.value); 
-            int randY=Mathf.FloorToInt(GameBoard.BoardLength * Random.value);
+            int randX=Mathf.FloorToInt(Board.BoardLength * Random.value); 
+            int randY=Mathf.FloorToInt(Board.BoardLength * Random.value);
             return new Vector2Int(randX, randY);
         }
 

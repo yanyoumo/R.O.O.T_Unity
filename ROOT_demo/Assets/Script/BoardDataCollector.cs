@@ -117,7 +117,7 @@ namespace ROOT
         }
         public List<List<Unit>> CalculateProcessorScoreFindSetA()
         {
-            int maxCount = m_Board.BoardLength * m_Board.BoardLength;
+            int maxCount = Board.BoardLength * Board.BoardLength;
             var res = new List<List<Unit>>();
             var endLeavePoint = FindEndLeavePoint();
             foreach (var startPoint in endLeavePoint)
@@ -247,7 +247,7 @@ namespace ROOT
 
         public ulong UnitToBit64(Unit now)
         {
-            return 1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition, m_Board.BoardLength);
+            return 1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition, Board.BoardLength);
         }
 
         public bool IsVis(Unit now, ulong vis)
@@ -302,7 +302,7 @@ namespace ROOT
         }
         public float CalculateServerScore(out int networkCount)
         {
-            int maxCount = m_Board.BoardLength * m_Board.BoardLength;
+            int maxCount = Board.BoardLength * Board.BoardLength;
             var maxLength = maxCount;
             var maxScore = Int32.MinValue;
             var lastLevelDict = new Dictionary<Unit, networkCableStatus>();
