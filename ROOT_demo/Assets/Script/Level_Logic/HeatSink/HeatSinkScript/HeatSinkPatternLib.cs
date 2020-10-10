@@ -6,10 +6,12 @@ using UnityEngine;
 
 namespace ROOT
 {
-    [CreateAssetMenu(fileName = "NewHeatSinkPatternLib")]
+    [CreateAssetMenu(fileName = "NewHeatSinkPatternLib", menuName = "HeatSink/New HeatSink PatternLib")]
     public class HeatSinkPatternLib : ScriptableObject
     {
         public List<HeatSinkPattern> Lib;
         public int Count => Lib.Count;
+
+
     }
 }

@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace ROOT
 {
-    [CreateAssetMenu(fileName = "NewHeatSinkPattern")]
+    [CreateAssetMenu(fileName = "NewHeatSinkDiminishing", menuName = "HeatSink/New HeatSink Diminishing")]
     [Serializable]
-    public class HeatSinkPattern : ScriptableObject
+    public class HeatSinkDiminishing : ScriptableObject
     {
         public List<Vector2Int> Lib;
         public int Count => Lib.Count;

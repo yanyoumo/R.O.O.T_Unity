@@ -88,9 +88,9 @@ namespace ROOT
         [Range(0, 20)]
         public int DestoryerLength;
 
-        [Space]
+        /*[Space]
         [Range(0, 30)]
-        public int HeatSinkSwitchCount;
+        public int HeatSinkSwitchCount;*/
 
         public int TotalLength => ShopLength + RequireLength + DestoryerLength;
 
@@ -159,7 +159,7 @@ namespace ROOT
     }
 
     [Serializable]
-    [CreateAssetMenu(fileName = "NewActionAsset")]
+    [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : ScriptableObject
     {
         [Header("Basic Data")]
@@ -270,14 +270,16 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
 
-            try
+            roundGist.HSSwTruncatedIdx = new[] {round.ShopLength + round.RequireLength};
+
+            /*try
             {
                 Utils.SpreadOutLaying(round.HeatSinkSwitchCount, round.TotalLength, out roundGist.HSSwTruncatedIdx);
             }
             catch (ArgumentException)
             {
                 roundGist.HSSwTruncatedIdx = new[] {-1};
-            }
+            }*/
             return roundGist;
         }
     }
