@@ -25,7 +25,7 @@ namespace ROOT
 
         public int MinHeatSinkCount=> ActualHeatSinkPos.Length;
         private Vector2Int[] RawHeatSinkPos => HeatSinkPatterns.Lib[_currentHeatSinkPatternsID].Lib.ToArray();
-        private Vector2Int[] ActualHeatSinkPos => getActualHeatsink();
+        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward();
         private int DiminishingStep => DiminishingCounter;//TODO 这里先放这里这个步长需要调整。
         private int DiminishingCounter = -1;
 
@@ -42,7 +42,30 @@ namespace ROOT
             ActualHeatSinkPos.ForEach(TryDeleteIfFilledCertainUnit);
         }
 
-        private Vector2Int[] getActualHeatsink()
+        private Vector2Int[] GetActualHeatSinkUpward()
+        {
+            //RISK 现在出来一个问题，就是基础图样加上这一轮添加后，有可能就堆满了。
+            //TODO 有办法，就是想办法在pattern里面储存“不能被填充”这种数据。
+            if (DiminishingStep == -1) return RawHeatSinkPos;
+
+            var res = RawHeatSinkPos.ToList();
+            var dimList = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID].DiminishingList;
+
+            for (var i = 0; i < DiminishingStep; i++)
+            {
+                if (i < dimList.Count && !res.Contains(dimList[i]))
+                {
+                    res.Add(dimList[i]);
+                }
+            }
+            return res.ToArray();
+        }
+
+        /// <summary>
+        /// 这个函数时往下减少HeatSink数量。
+        /// </summary>
+        /// <returns>计算完毕后的HeatSinkPattern</returns>
+        private Vector2Int[] GetActualHeatSinkDownward()
         {
             if (DiminishingStep == -1) return RawHeatSinkPos;
 
@@ -130,17 +153,14 @@ namespace ROOT
 
         private Vector2Int? FindAHeatSink(in Vector2Int[] existingHeatSink)
         {
-            for (int i = 0; i < BoardLength; i++)
+            for (var i = 0; i < BoardLength; i++)
             {
-                for (int j = 0; j < BoardLength; j++)
+                for (var j = 0; j < BoardLength; j++)
                 {
-                    Vector2Int key = new Vector2Int(i, j);
-                    if (CheckBoardPosValidAndEmpty(key))
+                    var key = new Vector2Int(i, j);
+                    if (CheckBoardPosValidAndEmpty(key)&&(!existingHeatSink.Contains(key)))
                     {
-                        if (!existingHeatSink.Contains(key))
-                        {
-                            return key;
-                        }
+                        return key;
                     }
                 }
             }

@@ -25,3 +25,8 @@ MonoBehaviour:
   DiminishingList:
   - {fileID: 11400000, guid: 7e95f183873b30e47b5cdb36ea9f41fd, type: 2}
   - {fileID: 11400000, guid: ab7241dd338a2034692efcb74f6aa6bf, type: 2}
+  - {fileID: 11400000, guid: d514a7c34096f44468138ee43391bbae, type: 2}
+  - {fileID: 11400000, guid: 84c52cad2afc16d4985e22c9f6125c4b, type: 2}
+  - {fileID: 11400000, guid: 75344463b9d70f94ba82fbf1ccd03cdf, type: 2}
+  - {fileID: 11400000, guid: 341973e897a424e448d43be1dac1ad33, type: 2}
+  - {fileID: 11400000, guid: ea29d2159f9a4554f81899fb8b3ab5e9, type: 2}

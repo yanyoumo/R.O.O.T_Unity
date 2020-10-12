@@ -459,6 +459,7 @@ namespace ROOT
 
             if (lastDestoryBool&&!ShouldDestoryer)
             {
+                //BUG 这个的触发实际和商店的切换HeatSink冲突了。
                 LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
             }
             lastDestoryBool = ShouldDestoryer;
