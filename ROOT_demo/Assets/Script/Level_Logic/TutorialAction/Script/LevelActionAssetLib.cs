@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace ROOT
 {
-    [CreateAssetMenu(fileName = "NewActionAssetLib")]
+    [CreateAssetMenu(fileName = "NewActionAssetLib", menuName = "ActionAsset/New ActionAssetLib")]
     public class LevelActionAssetLib : ScriptableObject
     {
         [ShowInInspector]

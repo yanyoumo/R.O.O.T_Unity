@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ROOT
 {
     [Serializable]
-    [CreateAssetMenu(fileName = "NewGameModeAsset")]
+    [CreateAssetMenu(fileName = "NewGameModeAsset", menuName = "ActionAsset/New GameModeAsset")]
     public class GameModeAsset : ScriptableObject
     {
         [Range(0, 10000)]

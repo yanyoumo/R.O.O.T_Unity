@@ -482,8 +482,8 @@ namespace ROOT
         private static Vector2Int ClampPosInBoard(Vector2Int pos, Board gameBoard)
         {
             var newPos = pos;
-            newPos.x = Mathf.Clamp(newPos.x, 0, gameBoard.BoardLength - 1);
-            newPos.y = Mathf.Clamp(newPos.y, 0, gameBoard.BoardLength - 1);
+            newPos.x = Mathf.Clamp(newPos.x, 0, Board.BoardLength - 1);
+            newPos.y = Mathf.Clamp(newPos.y, 0, Board.BoardLength - 1);
             return newPos;
         }
 

@@ -111,7 +111,7 @@ namespace ROOT
             //先确定需要由Tier影响的内容：
             //分数、购买价格、Cost。
             var SignalMultipler = (float)Tier;
-            var PriceMultipler = 1.0f + 1.75f * (Tier - 1);
+            var PriceMultipler = 1.0f + 1.55f * (Tier - 1);
             var CostMultipler = 1.0f + 0.5f * Tier;
             return new Tuple<float, float, float>(SignalMultipler, PriceMultipler, CostMultipler);
         }
