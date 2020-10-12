@@ -169,16 +169,33 @@ namespace ROOT
         }
 
         [CanBeNull]
-        public Unit[] OverlapHeatSinkUnit => CheckHeatSink() != 0 ? Units.Where(unit => ActualHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray() : null;
+        public Unit[] OverlapHeatSinkUnit => CheckHeatSink(StageType.Shop) != 0 ? Units.Where(unit => ActualHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray() : null;
 
         /// <summary>
         /// 这里是检查时候又fix的HeatSink被占用。
         /// </summary>
         /// <returns>返回有多少个HeatSink格没有被满足，返回0即均满足。</returns>
-        public int CheckHeatSink()
+        public int CheckHeatSink(StageType type)
         {
-            BoardGirds.Values.ForEach(grid => grid.NormalOrHeatSink = false);
-            BoardGirds.ForEach(val => val.Value.NormalOrHeatSink = ActualHeatSinkPos.Contains(val.Key));
+            //这里需要把status接进来，然后判是什么阶段的。
+            CellStatus targetingStatus;
+            switch (type)
+            {
+                case StageType.Shop:
+                    targetingStatus = CellStatus.Normal;
+                    break;
+                case StageType.Require:
+                    targetingStatus = CellStatus.Warning;
+                    break;
+                case StageType.Destoryer:
+                case StageType.Ending:
+                    targetingStatus = CellStatus.Sink;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+            BoardGirds.Values.ForEach(grid => grid.CellStatus = CellStatus.Normal);
+            BoardGirds.ForEach(val => val.Value.CellStatus = ActualHeatSinkPos.Contains(val.Key)? targetingStatus : CellStatus.Normal);
             return ActualHeatSinkPos.Count(pos => CheckBoardPosValidAndEmpty(pos) == false);
         }
 
@@ -196,7 +213,7 @@ namespace ROOT
                 heatSinkPos[i] = new Vector2Int(-1, -1);
             }
             int noHeatSinkCount = 0;
-            BoardGirds.Values.ForEach(grid => grid.NormalOrHeatSink = false);
+            BoardGirds.Values.ForEach(grid => grid.CellStatus = CellStatus.Normal);
 
             for (var i = 0; i < heatSinkPos.Length; i++)
             {
@@ -204,7 +221,7 @@ namespace ROOT
                 if (val.HasValue)
                 {
                     heatSinkPos[i] = val.Value;
-                    BoardGirds[val.Value].NormalOrHeatSink = true;
+                    BoardGirds[val.Value].CellStatus = CellStatus.Sink;
                 }
                 else
                 {
@@ -466,7 +483,7 @@ namespace ROOT
         {
             UnitsGameObjects = new Dictionary<Vector2Int, GameObject>();
             InitHeatInfo();
-            CheckHeatSink();
+            CheckHeatSink(StageType.Shop);
             //ScanHeatSink();
         }
 

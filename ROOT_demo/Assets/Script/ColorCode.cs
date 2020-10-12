@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
 
 namespace ROOT
 {
@@ -62,6 +64,7 @@ namespace ROOT
         public const string ROOT_TEXT_EMPHASIZE_ORANGE = "#FF5733";
 
         public const string ROOT_MAT_BOARDGRID_NORMAL = "#15182F";
+        public const string ROOT_MAT_BOARDGRID_WARNING = "#752412";
         public const string ROOT_MAT_BOARDGRID_HEATSINK = "#650011";
 
         public const string ROOT_DESTORYER_STRIKING = "#FF3300";

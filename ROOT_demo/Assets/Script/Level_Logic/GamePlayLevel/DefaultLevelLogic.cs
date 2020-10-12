@@ -357,11 +357,17 @@ namespace ROOT
             _ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             bool shouldCycle = false;
             bool movedTile = false;
+            var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
             if (!Animating)
             {
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
-                WorldLogic.UpdateLogic(LevelAsset, out _ctrlPack, out movedTile, out var movedCursor);
+                StageType stage = StageType.Shop;
+                if (roundGist.HasValue)
+                {
+                    stage = roundGist.Value.Type;
+                }
+                WorldLogic.UpdateLogic(LevelAsset,in stage, out _ctrlPack, out movedTile, out var movedCursor);
 
                 if (LevelAsset.GameOverEnabled)
                 {
@@ -394,8 +400,6 @@ namespace ROOT
 
             if (shouldCycle && movedTile)
             {
-                var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
-
                 if (roundGist.HasValue && roundGist.Value.Type == StageType.Require)
                 {
                     LevelAsset.GameBoard.UpdatePatternDiminishing();

@@ -775,7 +775,7 @@ namespace ROOT
             }
         }
 
-        internal static void UpdateCycle(GameAssets currentLevelAsset, bool shouldCycle = true)
+        internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type, bool shouldCycle = true)
         {
             if (currentLevelAsset.LCDTimeEnabled)
             {
@@ -786,7 +786,7 @@ namespace ROOT
 
             //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
             //总之稳了后，这个不能这么每帧调用。
-            occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink();
+            occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
             if (shouldCycle)
             {
                 //HACK Timeline的StepCount已经整合到这里，可以在一些LevelLogic里面统一 重置了。
@@ -815,7 +815,7 @@ namespace ROOT
             }
         }
 
-        public static void UpdateLogic(GameAssets currentLevelAsset, out ControllingPack ctrlPack, out bool movedTile, out bool movedCursor)
+        public static void UpdateLogic(GameAssets currentLevelAsset,in StageType type, out ControllingPack ctrlPack, out bool movedTile, out bool movedCursor)
         {
             //其实这个流程问题不是特别大、主要是各种flag要整理
             currentLevelAsset.DeltaCurrency = 0.0f;
@@ -862,7 +862,7 @@ namespace ROOT
             }
 
             if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
-            if (currentLevelAsset.CycleEnabled) UpdateCycle(currentLevelAsset, movedTile);
+            if (currentLevelAsset.CycleEnabled) UpdateCycle(currentLevelAsset, type, movedTile);
         }
     }
 }
