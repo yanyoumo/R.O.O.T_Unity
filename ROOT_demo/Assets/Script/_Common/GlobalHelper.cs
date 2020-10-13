@@ -24,16 +24,31 @@ namespace ROOT
         public static readonly string INPUT_BUTTON_NAME_HINTCTRL = "HintControl";
         public static readonly string INPUT_BUTTON_NAME_CYCLENEXT = "CycleNext";
 
-        public static readonly string INPUT_BUTTON_NAME_SHOPBUY0 = "ShopBuy0";
-        public static readonly string INPUT_BUTTON_NAME_SHOPBUY1 = "ShopBuy1";
-        public static readonly string INPUT_BUTTON_NAME_SHOPBUY2 = "ShopBuy2";
-        public static readonly string INPUT_BUTTON_NAME_SHOPBUY3 = "ShopBuy3";
-        public static readonly string INPUT_BUTTON_NAME_SHOPBUY4 = "ShopBuy4";
-        public static readonly string INPUT_BUTTON_NAME_SHOPBUY5 = "ShopBuy5";
-        public static readonly string INPUT_BUTTON_NAME_SHOPBUY6 = "ShopBuy6";
-        public static readonly string INPUT_BUTTON_NAME_SHOPBUY7 = "ShopBuy7";
-        public static readonly string INPUT_BUTTON_NAME_SHOPBUY8 = "ShopBuy8";
-        public static readonly string INPUT_BUTTON_NAME_SHOPBUY9 = "ShopBuy9";
+        private static readonly string INPUT_BUTTON_NAME_SHOPBUY0 = "ShopBuy0";
+        private static readonly string INPUT_BUTTON_NAME_SHOPBUY1 = "ShopBuy1";
+        private static readonly string INPUT_BUTTON_NAME_SHOPBUY2 = "ShopBuy2";
+        private static readonly string INPUT_BUTTON_NAME_SHOPBUY3 = "ShopBuy3";
+        private static readonly string INPUT_BUTTON_NAME_SHOPBUY4 = "ShopBuy4";
+        private static readonly string INPUT_BUTTON_NAME_SHOPBUY5 = "ShopBuy5";
+        private static readonly string INPUT_BUTTON_NAME_SHOPBUY6 = "ShopBuy6";
+        private static readonly string INPUT_BUTTON_NAME_SHOPBUY7 = "ShopBuy7";
+        private static readonly string INPUT_BUTTON_NAME_SHOPBUY8 = "ShopBuy8";
+        private static readonly string INPUT_BUTTON_NAME_SHOPBUY9 = "ShopBuy9";
+
+        public static readonly string[] INPUT_BUTTON_NAME_SHOPBUYS =
+        {
+            //这个字符串数组的顺序不能变，它的顺序就是ShopID。
+            INPUT_BUTTON_NAME_SHOPBUY1,
+            INPUT_BUTTON_NAME_SHOPBUY2,
+            INPUT_BUTTON_NAME_SHOPBUY3,
+            INPUT_BUTTON_NAME_SHOPBUY4,
+            INPUT_BUTTON_NAME_SHOPBUY5,
+            INPUT_BUTTON_NAME_SHOPBUY6,
+            INPUT_BUTTON_NAME_SHOPBUY7,
+            INPUT_BUTTON_NAME_SHOPBUY8,
+            INPUT_BUTTON_NAME_SHOPBUY9,
+            INPUT_BUTTON_NAME_SHOPBUY0,
+        };
 
         public static readonly string INPUT_BUTTON_NAME_SHOPCANCELED = "ShopCancel";
         public static readonly string INPUT_BUTTON_NAME_SHOPCONFIRM = "ShopConfirm";

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.iOS;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 

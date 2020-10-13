@@ -13,8 +13,6 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
-    using Direction= RotationDirection;
-
     public sealed class Board : MonoBehaviour
     {
         #region 热力系统
@@ -259,94 +257,6 @@ namespace ROOT
         {
             return pos.y * BoardLength + pos.x;
         }
-
-        #region ConnectionID部分
-
-        /// <summary>
-        /// 这段是一部分试图重构的数据结构，其目的是将棋盘上全部可能的链接编号并管理。
-        /// 但是在再次讨论后，发现毫无意义，于是就此弃之。
-        ///
-        /// 核心思路是从棋盘左下角开始将每个格点编号，并且将所有可能的格点之间的链接进行编号。
-        /// 编号逻辑是：
-        /// 单元南侧的链接编号是单元ID的二倍。（2n）
-        /// 单元东侧的链接编号是单元ID的二倍加一。(2n+1)
-        ///
-        /// 所有单元不去管理自己北侧和西侧的接口。（防止重复计算）
-        /// 这样的问题就是棋盘上Connection的链接是不连续的。
-        /// </summary>
-
-        public int ConnectionCount => 2 * BoardLength * (BoardLength - 1);
-        public Dictionary<int,bool> ConnectionShowing;//之所以要用Dic是因为Key不是连续的。
-        public int[] GetAllConnectionID(int boardID)
-        {
-            //这里不做ConnectionID合法性的判断，需要自行判断。
-            int A = GetConnectionID(boardID, Direction.North);
-            int B = GetConnectionID(boardID, Direction.West);
-            int C = GetConnectionID(boardID, Direction.South);
-            int D = GetConnectionID(boardID, Direction.East);
-            return new[] {A, B, C, D};
-        }
-        public int GetConnectionID(Vector2Int pos, Direction desiredWorldDirection)
-        {
-            return GetConnectionID(GetBoardID(pos), desiredWorldDirection);
-        }
-        public int GetConnectionID(int boardID, Direction desiredWorldDirection)
-        {
-            switch (desiredWorldDirection)
-            {
-                case RotationDirection.North:
-                    return 2 * (boardID + BoardLength);
-                case RotationDirection.East:
-                    return 2 * (boardID - 1) + 1;
-                case RotationDirection.West:
-                    return 2 * boardID + 1;
-                case RotationDirection.South:
-                    return 2 * boardID;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(desiredWorldDirection), desiredWorldDirection, null);
-            }
-        }
-        /// <summary>
-        /// 验证一个单元位置上链接ID是否合法
-        /// </summary>
-        /// <param name="boardID">单元ID</param>
-        /// <param name="connectionID">欲验证的ConnectionID</param>
-        /// <returns>此connection在本棋盘下是否合法</returns>
-        public bool CheckConnectionIDVaild(int boardID, int connectionID)
-        {
-            //这个函数有问题，如果之后要用的话，需要重写。
-            if (connectionID<0) return false;//0位置的左侧算出来就是负数（-2）。
-
-            if (connectionID>=2*BoardLength*BoardLength)return false;//除掉顶层的。
-
-            if (connectionID%2==0)
-            {
-                if ((connectionID / 2)<= BoardLength)
-                {
-                    return false;//除掉底层的。
-                }
-            }
-
-            var (IDA, IDB) = GetBoardIDFromConnectionID(connectionID);
-            return (IDA / BoardLength == IDB / BoardLength);//除掉两侧的。
-        }
-        public Tuple<int, int> GetBoardIDFromConnectionID(int connectionID)
-        {
-            //保证这个函数获得的ConnectionID是对的，需要让Unit去判断Connection是假的。
-            if (connectionID%2==0)
-            {
-                //EVEN
-                return new Tuple<int, int>(connectionID / 2, connectionID / 2 - BoardLength);
-            }
-            else
-            {
-                //ODD
-                int val = (connectionID - 1) / 2;
-                return new Tuple<int, int>(val, val + 1);
-            }
-        }
-
-        #endregion
 
         public Unit[] FindUnitWithCoreType(CoreType type)
         {

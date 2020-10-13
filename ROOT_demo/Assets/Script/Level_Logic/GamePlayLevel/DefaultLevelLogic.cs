@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -140,39 +141,43 @@ namespace ROOT
         }
     }
 
-    public abstract class LevelLogic : MonoBehaviour//LEVEL-LOGIC/每一关都有一个这个类。
+    public abstract class LevelLogic : MonoBehaviour //LEVEL-LOGIC/每一关都有一个这个类。
     {
         private bool _noRequirement;
         protected int RequirementSatisfiedCycleCount = 0;
-        public bool IsTutorialLevel=false;
+
+        public bool IsTutorialLevel = false;
+
         //ASSET
         protected internal GameAssets LevelAsset;
         private ControllingPack _ctrlPack;
         protected ControllingPack CtrlPack => _ctrlPack;
 
         //Lvl-Logic实际用的判断逻辑。
-        public bool Playing { get; private set;  }
+        public bool Playing { get; private set; }
         protected bool Animating = false;
         protected bool ReadyToGo = false;
         protected bool ReferenceOk = false;
         protected bool PendingCleanUp;
 
-        protected float AnimationTimerOrigin = 0.0f;//都是秒
-        public static readonly float AnimationDuration = 0.15f;//都是秒
+        protected float AnimationTimerOrigin = 0.0f; //都是秒
+        public static readonly float AnimationDuration = 0.15f; //都是秒
 
-        public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC;//这个游戏的这两个参数是写死的
-        public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL;//但是别的游戏的这个值多少是需要重写的。
+        public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
+        public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
 
         //public abstract LevelType GetLevelType { get; }
 
         private Cursor cursor => LevelAsset.Cursor;
+
         private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
+
         //private float animationLerper => animationTimer / AnimationDuration;
         private float AnimationLerper
         {
             get
             {
-                float res=animationTimer / AnimationDuration;
+                float res = animationTimer / AnimationDuration;
                 return Mathf.Min(res, 1.0f);
             }
         }
@@ -192,7 +197,7 @@ namespace ROOT
 
         //这两个函数是WorldLogic要通过LvlLogic去影响世界/因为Unity的规定。
         //这样不得不得出的结论就是裁判要兼任神使这一工作（是个隐坑
-        internal T WorldLogicRequestInstantiate<T>(T obj) where T: Object
+        internal T WorldLogicRequestInstantiate<T>(T obj) where T : Object
         {
             return Instantiate(obj);
         }
@@ -213,6 +218,7 @@ namespace ROOT
             {
                 yield return 0;
             }
+
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
             LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
@@ -225,6 +231,7 @@ namespace ROOT
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
+
         public abstract void InitLevel();
 
         public virtual bool CheckReference()
@@ -233,14 +240,17 @@ namespace ROOT
             res &= (LevelAsset.DataScreen != null);
             return res;
         }
+
         public virtual void PopulateArtLevelReference()
         {
             ReferenceOk = CheckReference();
         }
+
         protected virtual void StartShop()
         {
             LevelAsset.Shop.ShopStart();
         }
+
         protected virtual bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             //这个函数就很接近裁判要做的事儿了。
@@ -257,12 +267,13 @@ namespace ROOT
         }
 
 
-        private bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
+        private bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile,
+            in bool movedCursor)
         {
             bool shouldCycle = false;
             if (StartGameMgr.UseTouchScreen)
             {
-                shouldCycle = movedTile|ctrlPack.HasFlag(ControllingCommand.CycleNext);
+                shouldCycle = movedTile | ctrlPack.HasFlag(ControllingCommand.CycleNext);
             }
             else
             {
@@ -347,27 +358,24 @@ namespace ROOT
                 return;
             }
 
-            if (!Playing)
-            {
-                Playing = true;
-            }
+            if (!Playing) Playing = true;
 
             System.Diagnostics.Debug.Assert(LevelAsset.GameBoard != null, nameof(LevelAsset.GameBoard) + " != null");
-            var pressedAny = Input.anyKeyDown;
             _ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
-            bool shouldCycle = false;
-            bool movedTile = false;
+            bool shouldCycle = false, movedTile = false, pressedAny = Input.anyKeyDown;
             var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
+            var stage = roundGist?.Type ?? StageType.Shop;
+
             if (!Animating)
             {
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
-                StageType stage = StageType.Shop;
+                WorldLogic.UpdateLogic(LevelAsset, in stage, out _ctrlPack, out movedTile, out var movedCursor);
+
                 if (roundGist.HasValue)
                 {
-                    stage = roundGist.Value.Type;
+                    UpdateRoundStatus(LevelAsset, roundGist.Value);
                 }
-                WorldLogic.UpdateLogic(LevelAsset,in stage, out _ctrlPack, out movedTile, out var movedCursor);
 
                 if (LevelAsset.GameOverEnabled)
                 {
@@ -405,23 +413,12 @@ namespace ROOT
                     LevelAsset.GameBoard.UpdatePatternDiminishing();
                 }
             }
+
+            LevelAsset.LevelProgress = LevelAsset.StepCount / (float)LevelAsset.ActionAsset.PlayableCount;
         }
 
-        int ObselateStepID = -1;
-        private bool lastDestoryBool = false;
         protected bool UpdateCareerGameOverStatus(GameAssets currentLevelAsset)
         {
-            //这个函数就很接近裁判要做的事儿了。
-            var NormalRval = 0;
-            var NetworkRval = 0;
-            var ShoudOpenShop = false;
-            var ShoudCurrencyIO = false;
-            var ShoudCurrencyIncome = false;
-
-            var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
-            if (!roundGist.HasValue) return false;
-            var round = roundGist.Value;
-            
             if (LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount))
             {
                 if (!IsTutorialLevel)
@@ -431,79 +428,85 @@ namespace ROOT
                 }
                 return true;
             }
+            return false;
+        }
 
-            ShoudOpenShop = round.Type == StageType.Shop;
-            ShoudCurrencyIncome = round.Type == StageType.Require;
-            ShoudCurrencyIO = (round.Type == StageType.Require || round.Type == StageType.Destoryer);
+        int _obselateStepID = -1;
+        bool lastDestoryBool = false;
 
-            if (round.Type == StageType.Require|| round.Type == StageType.Shop)
+        protected void UpdateRoundStatus(GameAssets currentLevelAsset,RoundGist roundGist)
+        {
+            //这个函数就很接近裁判要做的事儿了。
+            int normalRval = 0, networkRval = 0;
+            bool shouldOpenShop, shouldCurrencyIo, shouldCurrencyIncome, shouldDestoryer;
+            var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
+
+            shouldOpenShop = roundGist.Type == StageType.Shop;
+            shouldCurrencyIncome = roundGist.Type == StageType.Require;
+            shouldCurrencyIo = (roundGist.Type == StageType.Require || roundGist.Type == StageType.Destoryer);
+            shouldDestoryer = (roundGist.Type == StageType.Destoryer);
+
+            if (roundGist.Type == StageType.Require || roundGist.Type == StageType.Shop)
             {
-                NormalRval += round.normalReq;
-                NetworkRval += round.networkReq;
+                normalRval += roundGist.normalReq;
+                networkRval += roundGist.networkReq;
             }
 
-            var tCount=LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
-            if (round.SwitchHeatsink(tCount))
+            if (roundGist.SwitchHeatsink(tCount))
             {
-                if (ObselateStepID==-1||ObselateStepID != LevelAsset.StepCount)
+                if (_obselateStepID == -1 || _obselateStepID != LevelAsset.StepCount)
                 {
                     LevelAsset.GameBoard.UpdatePatternID();
                 }
 
-                ObselateStepID = LevelAsset.StepCount;
+                _obselateStepID = LevelAsset.StepCount;
             }
 
-            //TODO 这里还要识别ShouldDestoryer准备关闭前的机制。
-            var ShouldDestoryer = (round.Type == StageType.Destoryer);
-
-            if (LevelAsset.DestroyerEnabled && !ShouldDestoryer)
+            if (LevelAsset.DestroyerEnabled && !shouldDestoryer)
             {
                 LevelAsset.WarningDestoryer.ForceReset();
             }
 
-            if (lastDestoryBool&&!ShouldDestoryer)
+            if (lastDestoryBool && !shouldDestoryer)
             {
-                //BUG 这个的触发实际和商店的切换HeatSink冲突了。
+                //RISK 这个的触发实际和商店的切换HeatSink冲突了。
                 LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
             }
-            lastDestoryBool = ShouldDestoryer;
+
+            lastDestoryBool = shouldDestoryer;
 
             //RISK 这里把Destroyer目前完全关了。
             //LevelAsset.DestroyerEnabled = ShouldDestoryer;
             LevelAsset.DestroyerEnabled = false;
+            LevelAsset.CurrencyIncomeEnabled = shouldCurrencyIncome;
+            LevelAsset.CurrencyIOEnabled = shouldCurrencyIo;
 
-            LevelAsset.CurrencyIncomeEnabled = ShoudCurrencyIncome;
-            LevelAsset.CurrencyIOEnabled = ShoudCurrencyIO;
+            int harDriverCountInt = 0, networkCountInt = 0;
+            _noRequirement = (normalRval == 0 && networkRval == 0);
 
-            int harDriverCountInt = 0;
-            int NetworkCountInt = 0;
-
-            if (NormalRval == 0 && NetworkRval == 0)
+            if (_noRequirement)
             {
-                _noRequirement = true;
                 currentLevelAsset.TimeLine.RequirementSatisfied = true;
             }
             else
             {
-                _noRequirement = false;
                 currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out harDriverCountInt);
-                var valA = (harDriverCountInt >= NormalRval);
-                currentLevelAsset.BoardDataCollector.CalculateServerScore(out NetworkCountInt);
-                var valB = (NetworkCountInt >= NetworkRval);
-                currentLevelAsset.TimeLine.RequirementSatisfied = valA && valB;
+                currentLevelAsset.BoardDataCollector.CalculateServerScore(out networkCountInt);
+                currentLevelAsset.TimeLine.RequirementSatisfied =
+                    (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
             }
 
             if (LevelAsset.Shop is IRequirableShop shop)
             {
-                if (ShoudOpenShop)
+                if (shouldOpenShop)
                 {
                     if (!LevelAsset.Shop.ShopOpening)
                     {
-                        var normalDataSurplus = NormalRval - harDriverCountInt;
-                        var networkDataSurplus = NetworkRval - NetworkCountInt;
+                        int normalDataSurplus = normalRval - harDriverCountInt,
+                            networkDataSurplus = networkRval - networkCountInt;
                         if (normalDataSurplus > 0 || networkDataSurplus > 0)
                         {
-                            shop.SetRequire(round.shopLength, normalDataSurplus, networkDataSurplus);
+                            shop.SetRequire(roundGist.shopLength, normalDataSurplus, networkDataSurplus);
                         }
                     }
                 }
@@ -513,16 +516,13 @@ namespace ROOT
                 }
             }
 
-            LevelAsset.Shop.ShopOpening = ShoudOpenShop;
+            LevelAsset.Shop.ShopOpening = shouldOpenShop;
 
-            LevelAsset.SignalPanel.TGTNormalSignal=NormalRval;
-            LevelAsset.SignalPanel.TGTNetworkSignal = NetworkRval;
-            LevelAsset.SignalPanel.CRTNormalSignal= harDriverCountInt;
-            LevelAsset.SignalPanel.CRTNetworkSignal = NetworkCountInt;
-
-            return false;
+            LevelAsset.SignalPanel.TGTNormalSignal = normalRval;
+            LevelAsset.SignalPanel.TGTNetworkSignal = networkRval;
+            LevelAsset.SignalPanel.CRTNormalSignal = harDriverCountInt;
+            LevelAsset.SignalPanel.CRTNetworkSignal = networkCountInt;
         }
-
     }
 
     public class DefaultLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。

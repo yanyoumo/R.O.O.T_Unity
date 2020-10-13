@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using CommandDir = ROOT.RotationDirection;
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
@@ -411,61 +409,18 @@ namespace ROOT
         private static void ShopBuyID(ref ControllingPack ctrlPack, out bool anyBuy)
         {
             anyBuy = false;
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY1))
+
+            for (var i = 0; i < StaticName.INPUT_BUTTON_NAME_SHOPBUYS.Length; i++)
             {
-                anyBuy = true;
-                ctrlPack.ShopID = 0;
-            }
-            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY2))
-            {
-                anyBuy = true;
-                ctrlPack.ShopID = 1;
-            }
-            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY3))
-            {
-                anyBuy = true;
-                ctrlPack.ShopID = 2;
-            }
-            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY4))
-            {
-                anyBuy = true;
-                ctrlPack.ShopID = 3;
-            }
-            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY5))
-            {
-                anyBuy = true;
-                ctrlPack.ShopID = 4;
-            }
-            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY6))
-            {
-                anyBuy = true;
-                ctrlPack.ShopID = 5;
-            }
-            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY7))
-            {
-                anyBuy = true;
-                ctrlPack.ShopID = 6;
-            }
-            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY8))
-            {
-                anyBuy = true;
-                ctrlPack.ShopID = 7;
-            }
-            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY9))
-            {
-                anyBuy = true;
-                ctrlPack.ShopID = 8;
-            }
-            else if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUY0))
-            {
-                anyBuy = true;
-                ctrlPack.ShopID = 9;
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUYS[i]))
+                {
+                    anyBuy = true;
+                    ctrlPack.ShopID = i;
+                    break;
+                }
             }
 
-            if (anyBuy)
-            {
-                ctrlPack.SetFlag(ControllingCommand.Buy);
-            }
+            if (anyBuy) ctrlPack.SetFlag(ControllingCommand.Buy);
         }
     }
 
@@ -819,13 +774,12 @@ namespace ROOT
         {
             //其实这个流程问题不是特别大、主要是各种flag要整理
             currentLevelAsset.DeltaCurrency = 0.0f;
-            movedTile = false;
-            movedCursor = false;
-            var crashable = true;
+            movedTile = movedCursor = false;
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             var postalPrice = -1;
 
             CleanDestoryer(currentLevelAsset);
+
             if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
 
             ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset._boughtOnce);

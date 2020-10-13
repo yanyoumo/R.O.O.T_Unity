@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.Assertions.Must;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Object = UnityEngine.Object;
+
 namespace ROOT
 {
     public class CareerLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
@@ -72,22 +65,16 @@ namespace ROOT
 
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
-            bool res= UpdateCareerGameOverStatus(currentLevelAsset);
+            var res= UpdateCareerGameOverStatus(currentLevelAsset);
             LevelAsset.TimeLine.SetCurrentCount = RequirementSatisfiedCycleCount;
             LevelAsset.SignalPanel.CRTMission = RequirementSatisfiedCycleCount;
             return res;
         }
 
-        private int _obsoletedID = -1;
-        protected override void Update()
+        //private int _obsoletedID = -1;
+        /*protected override void Update()
         {
             base.Update();
-
-            var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
-            if (!roundGist.HasValue) return;
-            var gist = roundGist.Value;
-
-            LevelAsset.LevelProgress = LevelAsset.StepCount / (float) LevelAsset.ActionAsset.PlayableCount;
-        }
+        }*/
     }
 }
