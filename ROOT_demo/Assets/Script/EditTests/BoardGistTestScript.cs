@@ -94,7 +94,7 @@ namespace Tests
                     randomX = Mathf.FloorToInt(Random.value * BoardLengthList[i]);
                     randomY = Mathf.FloorToInt(Random.value * BoardLengthList[i]);
                     diffPos = new Vector2Int(randomX, randomY);
-                } while (diffPos != pos);
+                } while (diffPos == pos);
                 var outCoreTypeB = boardGist.GetCoreType(diffPos);
                 Assert.Null(outCoreTypeB);
 
@@ -107,7 +107,7 @@ namespace Tests
                     var randbool = Random.value > 0.5;
                     var dir = RandomDir();
                     var success=boardGist.SetConnectivity(pos, dir, randbool);
-                    var outBool=boardGist.CheckConnectivity(pos, dir);
+                    var outBool=boardGist.GetConnectivity(pos, dir);
                     if (success)
                     {
                         Assert.True(outBool.HasValue);
@@ -143,13 +143,13 @@ namespace Tests
                     {
                         var nextPos = pos + Utils.ConvertDirectionToBoardPosOffset(randDir);
                         var invertDir = Utils.GetInvertDirection(randDir);
-                        var readRes = boardGist.CheckConnectivity(nextPos, invertDir);
+                        var readRes = boardGist.GetConnectivity(nextPos, invertDir);
                         Assert.True(readRes.HasValue, "HasValue:pos=" + pos + ",dir=" + randDir + ",next=" + nextPos + ",invDir=" + invertDir + ";");
                         Assert.AreEqual(randbool, readRes.Value, "readRes:pos=" + pos + ",dir=" + randDir + ";");
                     }
                     else
                     {
-                        var outBool = boardGist.CheckConnectivity(pos, randDir);
+                        var outBool = boardGist.GetConnectivity(pos, randDir);
                         Assert.False(outBool.HasValue);
                     }
                 }

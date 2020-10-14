@@ -7,11 +7,6 @@ using UnityEngine;
 namespace ROOT
 {
     using Direction = RotationDirection;
-
-    public partial class BoardGistTestScript
-    {
-    }
-    
     /// <summary>
     /// 这段是一部分试图重构的数据结构，其目的是将棋盘上全部可能的链接编号并管理。
     /// 但是在再次讨论后，发现毫无意义，于是就此弃之。
@@ -63,7 +58,7 @@ namespace ROOT
             return true;
         }
 
-        public bool? CheckConnectivity(Vector2Int Pos, Direction dir)
+        public bool? GetConnectivity(Vector2Int Pos, Direction dir)
         {
             var (boardID, conID) = PosDirToID(Pos, dir);
             return VaildConnectionOfUnit(boardID,conID) ? ConnectionList[conID] : null;
@@ -103,7 +98,7 @@ namespace ROOT
             }
         }
 
-        public int GetConnectionID(int boardID, Direction desiredWorldDirection)
+        private int GetConnectionID(int boardID, Direction desiredWorldDirection)
         {
             switch (desiredWorldDirection)
             {
