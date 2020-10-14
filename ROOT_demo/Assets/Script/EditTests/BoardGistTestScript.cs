@@ -1,14 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using ROOT;
 using UnityEngine;
 using UnityEngine.TestTools;
+using Random=UnityEngine.Random;
 
 namespace Tests
 {
-    public class BoardGistTestScript
+    public partial class BoardGistTestScript
     {
         private int[] BoardLengthList={2,3,4,5,6,7,8};
 
@@ -28,7 +30,7 @@ namespace Tests
         public void BoardGistGenerationTest()
         {
             // Use the Assert class to test conditions
-            for (var i = 0; i < BoardLengthList.Length; i++)
+            for(var i = 0; i < BoardLengthList.Length; i++)
             {
                 var boardGist = new BoardGist(BoardLengthList[i]);
                 for (var i1 = 0; i1 < boardGist.ConnectionList.Length; i1++)
@@ -45,6 +47,113 @@ namespace Tests
             }
         }
 
+        private CoreType RandomCore()
+        {
+            Array values = Enum.GetValues(typeof(CoreType));
+            CoreType randomBar = (CoreType) values.GetValue(Mathf.FloorToInt(Random.value * values.Length));
+            return randomBar;
+        }
 
+        private RotationDirection RandomDir()
+        {
+            var val = Random.value;
+            if (val<0.25f)
+            {
+                return RotationDirection.East;
+            }
+            else if (val < 0.5f)
+            {
+                return RotationDirection.South;
+            }
+            else if (val < 0.75f)
+            {
+                return RotationDirection.West;
+            }
+            else
+            {
+                return RotationDirection.North;
+            }
+        }
+
+        [Test]
+        public void BoardGistSimpleIOTest()
+        {
+            for (var i = 0; i < BoardLengthList.Length; i++)
+            {
+                var boardGist = new BoardGist(BoardLengthList[i]);
+                var randomX = Mathf.FloorToInt(Random.value * BoardLengthList[i]);
+                var randomY = Mathf.FloorToInt(Random.value * BoardLengthList[i]);
+                var pos = new Vector2Int(randomX, randomY);
+                var coreType = RandomCore();
+                boardGist.SetCoreType(pos, coreType);
+                var outCoreType = boardGist.GetCoreType(pos);
+                Assert.AreEqual(coreType, outCoreType);
+                Vector2Int diffPos;
+                do
+                {
+                    randomX = Mathf.FloorToInt(Random.value * BoardLengthList[i]);
+                    randomY = Mathf.FloorToInt(Random.value * BoardLengthList[i]);
+                    diffPos = new Vector2Int(randomX, randomY);
+                } while (diffPos != pos);
+                var outCoreTypeB = boardGist.GetCoreType(diffPos);
+                Assert.Null(outCoreTypeB);
+
+                var randomCount = 100;
+                for (var j = 0; j < randomCount; j++)
+                {
+                    randomX = Mathf.FloorToInt(Random.value * BoardLengthList[i]);
+                    randomY = Mathf.FloorToInt(Random.value * BoardLengthList[i]);
+                    pos = new Vector2Int(randomX, randomY);
+                    var randbool = Random.value > 0.5;
+                    var dir = RandomDir();
+                    var success=boardGist.SetConnectivity(pos, dir, randbool);
+                    var outBool=boardGist.CheckConnectivity(pos, dir);
+                    if (success)
+                    {
+                        Assert.True(outBool.HasValue);
+                        Assert.AreEqual(randbool, outBool.Value);
+                    }
+                    else
+                    {
+                        Assert.False(outBool.HasValue);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void BoardGistComplexIOTest()
+        {
+            for (var i = 0; i < BoardLengthList.Length; i++)
+            {
+                var boardGist = new BoardGist(BoardLengthList[i]);
+                var randomCount = 100;
+                for (var j = 0; j < randomCount; j++)
+                {
+                    var randomX = Mathf.FloorToInt(Random.value * BoardLengthList[i]);
+                    var randomY = Mathf.FloorToInt(Random.value * BoardLengthList[i]);
+                    var pos = new Vector2Int(randomX, randomY);
+
+                    var randDir = RandomDir();
+                    var randbool = Random.value > 0.5;
+
+                    var success = boardGist.SetConnectivity(pos, randDir, randbool);
+
+                    if (success)
+                    {
+                        var nextPos = pos + Utils.ConvertDirectionToBoardPosOffset(randDir);
+                        var invertDir = Utils.GetInvertDirection(randDir);
+                        var readRes = boardGist.CheckConnectivity(nextPos, invertDir);
+                        Assert.True(readRes.HasValue, "HasValue:pos=" + pos + ",dir=" + randDir + ",next=" + nextPos + ",invDir=" + invertDir + ";");
+                        Assert.AreEqual(randbool, readRes.Value, "readRes:pos=" + pos + ",dir=" + randDir + ";");
+                    }
+                    else
+                    {
+                        var outBool = boardGist.CheckConnectivity(pos, randDir);
+                        Assert.False(outBool.HasValue);
+                    }
+                }
+            }
+        }
     }
 }
