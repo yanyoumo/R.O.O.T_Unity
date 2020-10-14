@@ -177,6 +177,7 @@ namespace ROOT
             }
         }
 
+        //TODO 这里需要反向的Animation。
         IEnumerator StepAnimation(Vector3 orgPos)
         {
             AnimationTimerOrigin = Time.time;

@@ -26,6 +26,10 @@ namespace ROOT
         //RISK 一个大坑，bool？即使是null也会被解释为false而不是null。
         public bool?[] ConnectionList { get; }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="_boardLength">每个Gist都可以有个不同的板长。</param>
         public BoardGist(int _boardLength)
         {
             BoardLength = _boardLength;
@@ -39,16 +43,33 @@ namespace ROOT
             }
         }
         
+        /// <summary>
+        /// 设置某个位置上的CoreType
+        /// </summary>
+        /// <param name="Pos">所需的位置</param>
+        /// <param name="Core">所需的种类</param>
         public void SetCoreType(Vector2Int Pos, CoreType Core)
         {
             UnitList[PosToID(Pos)] = Core;
         }
 
+        /// <summary>
+        /// 获得某个位置上的CoreType
+        /// </summary>
+        /// <param name="Pos">所需的位置</param>
+        /// <returns>所查询的结果，如果没有Unit，则返回NULL</returns>
         public CoreType? GetCoreType(Vector2Int Pos)
         {
             return UnitList[PosToID(Pos)];
         }
 
+        /// <summary>
+        /// 给予Unit位置和方向设置某个接口的联通性
+        /// </summary>
+        /// <param name="Pos">输入Unit位置</param>
+        /// <param name="dir">输入方向</param>
+        /// <param name="Connectivity">设置成的联通性</param>
+        /// <returns>输入的位置和方向是否合法</returns>
         public bool SetConnectivity(Vector2Int Pos, Direction dir,bool Connectivity)
         {
             var (boardID, conID) = PosDirToID(Pos, dir);
@@ -58,6 +79,12 @@ namespace ROOT
             return true;
         }
 
+        /// <summary>
+        /// 根据输入的Unit位置和方向读取某个接口的联通性
+        /// </summary>
+        /// <param name="Pos">特定Unit位置</param>
+        /// <param name="dir">输入方向</param>
+        /// <returns>返回的联通性结果，如果输入的位置和方向不合法则返回NULL</returns>
         public bool? GetConnectivity(Vector2Int Pos, Direction dir)
         {
             var (boardID, conID) = PosDirToID(Pos, dir);

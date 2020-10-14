@@ -26,7 +26,7 @@ namespace ROOT
     /// </summary>
     public sealed class GameAssets//ASSET 这里不应该有任何之际逻辑（有些便于操作的除外
     {
-        public int StepCount = 0;
+        public int StepCount { set; get; }
         public float LevelProgress = 0.0f;
         public bool BuyingCursor = false;
         public int BuyingID = -1;

@@ -5,6 +5,22 @@ using CommandDir = ROOT.RotationDirection;
 
 namespace ROOT
 {
+    #region WorldCycler
+
+    /// <summary>
+    /// WorldLogic或者Controller还是要通过这个来影响Cycle，毕竟之后可以快速往前还能往后。
+    /// </summary>
+    internal static class WorldCycler
+    {
+
+    }
+
+    #endregion
+
+
+
+    #region WorldController
+
     [Flags]
     public enum ControllingCommand
     {
@@ -70,6 +86,11 @@ namespace ROOT
     //要把Asset和Logic，把Controller也要彻底拆开。
     internal static class WorldController
     {
+        /// <summary>
+        /// 技能系统要从这个地方接入。而且Cycle的管理部分要再整理起来。
+        /// 比较蛋疼的是，Cycle完整管理起来，需要有一个前置条件，就是：Animation系统要整理明白。
+        /// 就是Cycle系统要和现在耦合挺深的余下系统拆开，再Worldlogic里面再加一个夹层系统。
+        ///  </summary>
         private static float _moveValThreadhold = 0.1f;
         private static bool GetCommandDir(out CommandDir dir)
         {
@@ -283,9 +304,9 @@ namespace ROOT
                                                 {
                                                     if (_holdTimer >= _holdThreadhold)
                                                     {
-                                                            //Debug.Log("Hold Detected");
-                                                            ctrlPack.SetFlag(ControllingCommand.CycleNext);
-                                                            _holdAntiSpam = true;
+                                                        //Debug.Log("Hold Detected");
+                                                        ctrlPack.SetFlag(ControllingCommand.CycleNext);
+                                                        _holdAntiSpam = true;
                                                     }
                                                 }
 
@@ -345,7 +366,7 @@ namespace ROOT
         internal static void GetCommand_KM(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
-            if (WorldController.GetCommandDir(out ctrlPack.CommandDir))
+            if (GetCommandDir(out ctrlPack.CommandDir))
             {
                 ctrlPack.ReplaceFlag(ControllingCommand.Move); //Replace
                 if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT))
@@ -424,7 +445,8 @@ namespace ROOT
         }
     }
 
-
+    #endregion
+    
     //要把Asset和Logic彻底拆开。
     /// <summary>
     /// 世界本身的运行逻辑、应该类比于物理世界，高程度独立。
