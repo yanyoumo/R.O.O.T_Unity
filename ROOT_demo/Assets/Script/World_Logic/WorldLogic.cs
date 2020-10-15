@@ -13,20 +13,23 @@ namespace ROOT
     /// </summary>
     internal static class WorldCycler
     {
-        public static int Step
+        public static int Step => ActualStep;
+
+        /// <summary>
+        /// NULL: 不需要自动演进。
+        /// True: 需要自动往前演进。
+        /// False:需要自动逆向演进。
+        /// </summary>
+        public static bool? NeedAutoDriveStep
         {
             get
             {
-                if (ActualStep==ExpectedStep)
-                {
-                    return ActualStep;
-                }
-                throw new ArgumentException();
+                if (ActualStep==ExpectedStep) return null;
+                return ExpectedStep > ActualStep;
             }
         }
-
         private static int ActualStep;
-        private static int ExpectedStep;
+        public static int ExpectedStep { private set; get; }
 
         public static void InitCycler()
         {
@@ -37,13 +40,21 @@ namespace ROOT
         public static void SimpleStepUp()
         {
             ActualStep++;
-            ExpectedStep++;
+            //RISK 这个靠谱吗？不
+            if (ExpectedStep == ActualStep-1)
+            {
+                ExpectedStep++;
+            }
         }
 
         public static void SimpleStepDown()
         {
             ActualStep--;
-            ExpectedStep--;
+            //RISK 这个靠谱吗？不
+            if (ExpectedStep == ActualStep+1)
+            {
+                ExpectedStep--;
+            }
         }
 
         public static void ExpectedStepIncrement(int amount)
@@ -58,8 +69,6 @@ namespace ROOT
     }
 
     #endregion
-
-
 
     #region WorldController
 
@@ -467,6 +476,12 @@ namespace ROOT
             }
 
             ShopBuyID(ref ctrlPack, out bool anyBuy);
+
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                //TEMP 先这样，之后要和技能系统连一起。
+                WorldCycler.ExpectedStepIncrement(5);
+            }
         }
 
         private static void ShopBuyID(ref ControllingPack ctrlPack, out bool anyBuy)
@@ -513,13 +528,14 @@ namespace ROOT
             {
                 return currentLevelAsset.Shop.BuyToRandom(ctrlPack.ShopID);
             }
+
             return false;
         }
 
         private static void UpdateShopBuy(
-            GameAssets currentLevelAsset, ShopBase shopMgr, 
+            GameAssets currentLevelAsset, ShopBase shopMgr,
             in ControllingPack ctrlPack, bool crashable,
-            ref bool boughtOnce,out int postalPrice)
+            ref bool boughtOnce, out int postalPrice)
         {
             postalPrice = -1;
             if (!boughtOnce)
@@ -554,13 +570,14 @@ namespace ROOT
                     else if (ctrlPack.HasFlag(ControllingCommand.BuyConfirm))
                     {
                         //试图本地购买。
-                        var requirement = crashable ? 
-                                currentLevelAsset.GameBoard.CheckBoardPosValid(ctrlPack.CurrentPos) :
-                                currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.CurrentPos);
+                        var requirement = crashable
+                            ? currentLevelAsset.GameBoard.CheckBoardPosValid(ctrlPack.CurrentPos)
+                            : currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.CurrentPos);
 
                         if (requirement)
                         {
-                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.CurrentPos, crashable);
+                            successBought = shopMgr.BuyToPos(currentLevelAsset.BuyingID, ctrlPack.CurrentPos,
+                                crashable);
                             if (successBought)
                             {
                                 currentLevelAsset.BuyingCursor = false;
@@ -581,14 +598,16 @@ namespace ROOT
             }
         }
 
-        internal static GameObject CreateIndicator(GameAssets currentLevelAsset,Vector2Int pos,Color col)
+        internal static GameObject CreateIndicator(GameAssets currentLevelAsset, Vector2Int pos, Color col)
         {
-            GameObject indicator= currentLevelAsset.Owner.WorldLogicRequestInstantiate(currentLevelAsset.CursorTemplate);
+            GameObject indicator =
+                currentLevelAsset.Owner.WorldLogicRequestInstantiate(currentLevelAsset.CursorTemplate);
             Cursor indicatorCursor = indicator.GetComponent<Cursor>();
             indicatorCursor.SetIndMesh();
             indicatorCursor.InitPosWithAnimation(pos);
             UpdateCursorPos(currentLevelAsset);
-            indicatorCursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransform(indicatorCursor.CurrentBoardPosition));
+            indicatorCursor.UpdateTransform(
+                currentLevelAsset.GameBoard.GetFloatTransform(indicatorCursor.CurrentBoardPosition));
             indicatorCursor.CursorColor = col;
             return indicator;
         }
@@ -680,13 +699,13 @@ namespace ROOT
                 currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
                 movedCursor = true;
             }
-            else if(ctrlPack.HasFlag(ControllingCommand.RemoveUnit))
+            else if (ctrlPack.HasFlag(ControllingCommand.RemoveUnit))
             {
                 currentLevelAsset.GameBoard.TryDeleteCertainUnit(ctrlPack.CurrentPos);
                 //movedTile = true;//RISK 这里可以调整删除单位是否强制移动。目前不移动。
                 movedCursor = true;
             }
-            
+
             if (currentLevelAsset.CursorEnabled && movedCursor)
             {
                 currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
@@ -733,7 +752,9 @@ namespace ROOT
 
         //TEMP 每次修改这两个值的时候才应该改一次。
         private static int lastInCome = -1;
+
         private static int lastCost = -1;
+
         //TEMP 每一步应该才计算一次，帧间时都这么临时存着。
         private static int occupiedHeatSink;
 
@@ -742,8 +763,8 @@ namespace ROOT
             int inCome = 0;
             int cost = 0;
 
-            var tmpInComeA= Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
-            var tmpInComeB= Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
+            var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
+            var tmpInComeB = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
 
             if (currentLevelAsset.CurrencyIOEnabled)
             {
@@ -756,6 +777,7 @@ namespace ROOT
                     //RISK 现在在红色区间没有任何价格收入。靠谱吗？
                     inCome = 0;
                 }
+
                 cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
             }
 
@@ -774,7 +796,8 @@ namespace ROOT
             if (currentLevelAsset.CostChart != null)
             {
                 currentLevelAsset.CostChart.IncomesVal = inCome - cost;
-                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
+                currentLevelAsset.CostChart.CurrencyVal =
+                    Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
             }
 
             lastInCome = inCome;
@@ -801,8 +824,7 @@ namespace ROOT
                 currentLevelAsset.DataScreen.SetLcd(currentLevelAsset.GameStateMgr.GetGameTime(), RowEnum.Time);
                 currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetTimeRatio(), RowEnum.Time);
             }
-
-
+            
             //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
             //总之稳了后，这个不能这么每帧调用。
             occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
@@ -810,7 +832,8 @@ namespace ROOT
             {
                 //HACK Timeline的StepCount已经整合到这里，可以在一些LevelLogic里面统一 重置了。
                 //因为玩家有可能在开始按动ctrl，于是在相关教程中，在开启时间轴的时候StepCount会清零。
-                currentLevelAsset.StepCount++;
+                //currentLevelAsset.StepCount++;
+                WorldCycler.SimpleStepUp();
                 currentLevelAsset.TimeLine.Step();
                 //occupiedHeatSink = currentLevelAsset.GameBoard.ScanHeatSink();
                 currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
@@ -834,43 +857,71 @@ namespace ROOT
             }
         }
 
-        public static void UpdateLogic(GameAssets currentLevelAsset,in StageType type, out ControllingPack ctrlPack, out bool movedTile, out bool movedCursor)
+        private static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile,
+            in bool movedCursor)
+        {
+            var shouldCycle = false;
+            var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
+            if (StartGameMgr.UseTouchScreen)
+            {
+                shouldCycle = movedTile | hasCycleNext;
+            }
+            else
+            {
+                shouldCycle = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
+            }
+
+            return shouldCycle;
+        }
+
+        public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type,
+            out ControllingPack ctrlPack, out bool movedTile,
+            out bool movedCursor, out bool shouldCycle)
         {
             //其实这个流程问题不是特别大、主要是各种flag要整理
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = movedCursor = false;
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             var postalPrice = -1;
+            
+            var autoDrive = WorldCycler.NeedAutoDriveStep.HasValue;//先只做往前的。
 
             CleanDestoryer(currentLevelAsset);
 
             if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
 
-            ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset._boughtOnce);
-
-            if (currentLevelAsset.InputEnabled)
+            if (!autoDrive)
             {
+                ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor,
+                    ref currentLevelAsset._boughtOnce);
 
-                UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
-                if (currentLevelAsset.RotateEnabled) UpdateRotate(currentLevelAsset, in ctrlPack);
-                currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
-
-                if (currentLevelAsset.ShopEnabled)
+                if (currentLevelAsset.InputEnabled)
                 {
-                    //RISK 这里让购买单元也变成强制移动一步。
-                    movedTile |= UpdateShopBuy(currentLevelAsset, ctrlPack);
+
+                    UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
+                    if (currentLevelAsset.RotateEnabled) UpdateRotate(currentLevelAsset, in ctrlPack);
+                    currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
+
+                    if (currentLevelAsset.ShopEnabled)
+                    {
+                        //RISK 这里让购买单元也变成强制移动一步。
+                        movedTile |= UpdateShopBuy(currentLevelAsset, ctrlPack);
+                    }
                 }
+
+                movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
             }
 
-            movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
             if (currentLevelAsset.InputEnabled)
             {
-                currentLevelAsset.HintMaster.ShouldShowShopHint = currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
+                currentLevelAsset.HintMaster.ShouldShowShopHint =
+                    currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
             }
             else
             {
                 currentLevelAsset.HintMaster.ShouldShowShopHint = currentLevelAsset.BuyingCursor;
             }
+
             if (currentLevelAsset.BuyingCursor)
             {
                 if (postalPrice != -1)
@@ -880,7 +931,16 @@ namespace ROOT
             }
 
             if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
+
+            movedTile |= autoDrive;
+
             if (currentLevelAsset.CycleEnabled) UpdateCycle(currentLevelAsset, type, movedTile);
+
+            shouldCycle = autoDrive || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
+
+            //现在的Cycle其实分两层，一个是广义一些的播放动画的Cycle，一个是跑计分内容的Cycle，这个东西也要区分开。
+            //目前moveTile是那个狭义的，ShouldCycle是那个广义的。
+            //ShouldCycle可以调用的部分多一些，MoveTile少一些。
         }
     }
 }

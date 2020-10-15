@@ -20,7 +20,7 @@ namespace ROOT
                     if (!OnceFlagA)
                     {
                         OnceFlagA = true;
-                        LevelAsset.StepCount = 0;
+                        WorldCycler.InitCycler();
                         LevelAsset.TimeLine.InitWithAssets(LevelAsset);
                         LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
                     }

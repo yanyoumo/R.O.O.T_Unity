@@ -26,7 +26,7 @@ namespace ROOT
     /// </summary>
     public sealed class GameAssets//ASSET 这里不应该有任何之际逻辑（有些便于操作的除外
     {
-        public int StepCount { set; get; }
+        public int StepCount => WorldCycler.Step;
         public float LevelProgress = 0.0f;
         public bool BuyingCursor = false;
         public int BuyingID = -1;
@@ -266,23 +266,6 @@ namespace ROOT
             }
         }
 
-
-        private bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile,
-            in bool movedCursor)
-        {
-            bool shouldCycle = false;
-            if (StartGameMgr.UseTouchScreen)
-            {
-                shouldCycle = movedTile | ctrlPack.HasFlag(ControllingCommand.CycleNext);
-            }
-            else
-            {
-                shouldCycle = (pressedAny & (movedTile | movedCursor)) | ctrlPack.HasFlag(ControllingCommand.CycleNext);
-            }
-
-            return shouldCycle;
-        }
-
         IEnumerator Animate()
         {
             while (AnimationLerper < 1.0f)
@@ -302,7 +285,6 @@ namespace ROOT
                             moveableBase.LerpingBoardPosition = moveableBase.LerpBoardPos(AnimationLerper);
                         }
                     }
-
                 }
 
                 //加上允许手动步进后，这个逻辑就应该独立出来了。
@@ -362,7 +344,7 @@ namespace ROOT
 
             System.Diagnostics.Debug.Assert(LevelAsset.GameBoard != null, nameof(LevelAsset.GameBoard) + " != null");
             _ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
-            bool shouldCycle = false, movedTile = false, pressedAny = Input.anyKeyDown;
+            bool shouldCycle = false, movedTile = false;
             var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
             var stage = roundGist?.Type ?? StageType.Shop;
 
@@ -370,7 +352,8 @@ namespace ROOT
             {
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
-                WorldLogic.UpdateLogic(LevelAsset, in stage, out _ctrlPack, out movedTile, out var movedCursor);
+                // ShouldCycle这个放到WorldLogic里面去了。
+                WorldLogic.UpdateLogic(LevelAsset, in stage, out _ctrlPack, out movedTile, out var movedCursor,out shouldCycle);
 
                 if (roundGist.HasValue)
                 {
@@ -382,8 +365,8 @@ namespace ROOT
                     UpdateGameOverStatus(LevelAsset);
                 }
 
-                shouldCycle = ShouldCycle(in _ctrlPack, in pressedAny, in movedTile, in movedCursor);
                 Animating = shouldCycle;
+
                 if (shouldCycle && movedTile && (!_noRequirement))
                 {
                     if (LevelAsset.TimeLine.RequirementSatisfied)
@@ -393,7 +376,7 @@ namespace ROOT
                 }
 
                 if (Animating)
-                {
+                { 
                     AnimationTimerOrigin = Time.timeSinceLevelLoad;
                     LevelAsset.MovedTileAni = movedTile;
                     LevelAsset.MovedCursorAni = movedCursor;

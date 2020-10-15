@@ -107,7 +107,7 @@ namespace ROOT
             LevelAsset.DestroyerEnabled = true;
             LevelAsset.CycleEnabled = true;
 
-            LevelAsset.StepCount = 0;
+            WorldCycler.InitCycler();
             LevelAsset.TimeLine.InitWithAssets(LevelAsset);
 
             ReadyToGo = true;

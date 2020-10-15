@@ -27,7 +27,7 @@ namespace ROOT
                         InitShop();
                         StartShop();
                         LevelAsset.ShopEnabled = true;
-                        LevelAsset.StepCount = 0;
+                        WorldCycler.InitCycler();
                         LevelAsset.TimeLine.InitWithAssets(LevelAsset);
                     }
                 }

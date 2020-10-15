@@ -78,7 +78,7 @@ namespace ROOT
             LevelAsset.LCDCurrencyEnabled=true;
             LevelAsset.LCDDeltaCurrencyEnabled = true;
             
-            LevelAsset.StepCount = 0;
+            WorldCycler.InitCycler();
             LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             LevelAsset.TimeLine.SetNoCount();
 

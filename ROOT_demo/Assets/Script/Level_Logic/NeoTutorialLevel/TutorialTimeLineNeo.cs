@@ -22,7 +22,7 @@ namespace ROOT
                     {
                         OnceFlagA = true;
                         //Debug.Assert(LevelAsset.ActionAsset.TimeLineTokens.Length > 0);
-                        LevelAsset.StepCount = 0;
+                        WorldCycler.InitCycler();
                         LevelAsset.TimeLine.InitWithAssets(LevelAsset);
                     }
                 }

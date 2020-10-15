@@ -27,7 +27,8 @@ namespace ROOT
             ReadyToGo = true;
             if (LevelAsset.ActionAsset.RoundDatas.Length>0)
             {
-                LevelAsset.StepCount = 0;
+                //TODO 这个东西放在这里还是怎么着？
+                WorldCycler.InitCycler();
                 LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             }
             LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
