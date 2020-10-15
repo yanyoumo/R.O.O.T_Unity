@@ -9,10 +9,52 @@ namespace ROOT
 
     /// <summary>
     /// WorldLogic或者Controller还是要通过这个来影响Cycle，毕竟之后可以快速往前还能往后。
+    /// 现在的一个问题就是Level对Step的动作是一个单向的。就是Level单纯地提高Step的计数。
     /// </summary>
     internal static class WorldCycler
     {
+        public static int Step
+        {
+            get
+            {
+                if (ActualStep==ExpectedStep)
+                {
+                    return ActualStep;
+                }
+                throw new ArgumentException();
+            }
+        }
 
+        private static int ActualStep;
+        private static int ExpectedStep;
+
+        public static void InitCycler()
+        {
+            ActualStep = 0;
+            ExpectedStep = 0;
+        }
+
+        public static void SimpleStepUp()
+        {
+            ActualStep++;
+            ExpectedStep++;
+        }
+
+        public static void SimpleStepDown()
+        {
+            ActualStep--;
+            ExpectedStep--;
+        }
+
+        public static void ExpectedStepIncrement(int amount)
+        {
+            ExpectedStep += amount;
+        }
+
+        public static void ExpectedStepDecrement(int amount)
+        {
+            ExpectedStep -= amount;
+        }
     }
 
     #endregion
