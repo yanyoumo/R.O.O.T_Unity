@@ -28,7 +28,7 @@ namespace ROOT
                 return ExpectedStep > ActualStep;
             }
         }
-        private static int ActualStep;
+        public static int ActualStep { private set; get; }
         public static int ExpectedStep { private set; get; }
 
         public static void InitCycler()
@@ -37,22 +37,36 @@ namespace ROOT
             ExpectedStep = 0;
         }
 
-        public static void SimpleStepUp()
+        public static void StepUp()
         {
-            ActualStep++;
-            //RISK 这个靠谱吗？不
-            if (ExpectedStep == ActualStep-1)
+            if (ExpectedStep < ActualStep)
             {
+                throw new Exception("Should not further Increase Step when ExpectedStep is Lower");
+            }
+            else if (ExpectedStep > ActualStep)
+            {
+                ActualStep++;
+            }
+            else if (ExpectedStep == ActualStep)
+            {
+                ActualStep++;
                 ExpectedStep++;
             }
         }
 
-        public static void SimpleStepDown()
+        public static void StepDown()
         {
-            ActualStep--;
-            //RISK 这个靠谱吗？不
-            if (ExpectedStep == ActualStep+1)
+            if (ExpectedStep>ActualStep)
             {
+                throw new Exception("Should not further Decrease Step when ExpectedStep is Higher");
+            }
+            else if (ExpectedStep < ActualStep)
+            {
+                ActualStep--;
+            }
+            else if (ExpectedStep == ActualStep)
+            {
+                ActualStep--;
                 ExpectedStep--;
             }
         }
@@ -75,19 +89,20 @@ namespace ROOT
     [Flags]
     public enum ControllingCommand
     {
-        Nop =         0b_000000000000,
-        Move =        0b_000000000001,
-        Drag =        0b_000000000010,
-        Rotate =      0b_000000000100,
-        Buy =         0b_000000001000,
-        PlayHint =    0b_000000010000,
-        SignalHint =  0b_000000100000,
-        NextButton =  0b_000001000000,
-        CycleNext =   0b_000010000000,
-        BuyCanceled = 0b_000100000000,
-        BuyConfirm =  0b_001000000000,
-        BuyRandom =   0b_010000000000,
-        RemoveUnit =  0b_100000000000,
+        Nop =         0,
+        Move =        1<<0,
+        Drag =        1<<1,
+        Rotate =      1<<2,
+        Buy =         1<<3,
+        PlayHint =    1<<4,
+        SignalHint =  1<<5,
+        NextButton =  1<<6,
+        CycleNext =   1<<7,
+        BuyCanceled = 1<<8,
+        BuyConfirm =  1<<9,
+        BuyRandom =   1<<10,
+        RemoveUnit =  1<<11,
+        Skill =       1<<12,
     }
 
     public struct ControllingPack
@@ -97,6 +112,7 @@ namespace ROOT
         public Vector2Int CurrentPos;
         public Vector2Int NextPos;
         public int ShopID;
+        public int SkillID;
 
         public void MaskFlag(ControllingCommand a)
         {
@@ -475,18 +491,34 @@ namespace ROOT
                 }
             }
 
-            ShopBuyID(ref ctrlPack, out bool anyBuy);
-
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                //TEMP 先这样，之后要和技能系统连一起。
-                WorldCycler.ExpectedStepIncrement(5);
-            }
+            var anyBuy = ShopBuyID(ref ctrlPack);
+            var anySkill = SkillID(ref ctrlPack);
         }
 
-        private static void ShopBuyID(ref ControllingPack ctrlPack, out bool anyBuy)
+        private static bool SkillID(ref ControllingPack ctrlPack)
         {
-            anyBuy = false;
+            var anySkill = false;
+
+            for (var i = 0; i < StaticName.INPUT_BUTTON_NAME_SKILLS.Length; i++)
+            {
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SKILLS[i]))
+                {
+                    anySkill = true;
+                    ctrlPack.SkillID = i;
+                    break;
+                }
+            }
+
+            if (anySkill)
+            {
+                ctrlPack.SetFlag(ControllingCommand.Skill);
+            }
+            return anySkill;
+        }
+
+        private static bool ShopBuyID(ref ControllingPack ctrlPack)
+        {
+            var anyBuy = false;
 
             for (var i = 0; i < StaticName.INPUT_BUTTON_NAME_SHOPBUYS.Length; i++)
             {
@@ -499,6 +531,7 @@ namespace ROOT
             }
 
             if (anyBuy) ctrlPack.SetFlag(ControllingCommand.Buy);
+            return anyBuy;
         }
     }
 
@@ -817,7 +850,18 @@ namespace ROOT
             }
         }
 
-        internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type, bool shouldCycle = true)
+        internal static void UpdateReverseCycle(GameAssets currentLevelAsset)
+        {
+            //TODO 从实施上还得想想时间反演的时候很多别的机制怎么办……
+            //而且还有一个问题，这个作为一个反抗正反馈的机制（负反馈机制）（越穷越没时间、越没时间越穷）
+            //如果还需要花钱，那么效率可能不高；但是这个机制如果没有门槛，那么就会被滥用。
+            //这种负反馈的机制最好参考马车，但是马车里面有个很方便的量化“负状态”的参量——排名。
+            //目前这个系统也需要一个这样的参量，有几个候选：钱数、离红色区段太近等等。
+            WorldCycler.StepDown();
+            currentLevelAsset.TimeLine.Reverse();
+        }
+
+        internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type, bool shouldCycle)
         {
             if (currentLevelAsset.LCDTimeEnabled)
             {
@@ -833,7 +877,7 @@ namespace ROOT
                 //HACK Timeline的StepCount已经整合到这里，可以在一些LevelLogic里面统一 重置了。
                 //因为玩家有可能在开始按动ctrl，于是在相关教程中，在开启时间轴的时候StepCount会清零。
                 //currentLevelAsset.StepCount++;
-                WorldCycler.SimpleStepUp();
+                WorldCycler.StepUp();
                 currentLevelAsset.TimeLine.Step();
                 //occupiedHeatSink = currentLevelAsset.GameBoard.ScanHeatSink();
                 currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
@@ -874,17 +918,53 @@ namespace ROOT
             return shouldCycle;
         }
 
-        public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type,
-            out ControllingPack ctrlPack, out bool movedTile,
-            out bool movedCursor, out bool shouldCycle)
+        public static void UpdateSkill(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
-            //其实这个流程问题不是特别大、主要是各种flag要整理
+            if (!ctrlPack.HasFlag(ControllingCommand.Skill)) return;
+
+            switch (ctrlPack.SkillID)
+            {
+                case 0:
+                    WorldCycler.ExpectedStepIncrement(3);
+                    break;
+                case 1:
+                    WorldCycler.ExpectedStepIncrement(5);
+                    break;
+                case 2:
+                    WorldCycler.ExpectedStepIncrement(7);
+                    break;
+                case 3:
+                    WorldCycler.ExpectedStepDecrement(3);
+                    break;
+                case 4:
+                    WorldCycler.ExpectedStepDecrement(5);
+                    break;
+                case 5:
+                    WorldCycler.ExpectedStepDecrement(7);
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
+        }
+
+        public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type,
+            out ControllingPack ctrlPack, out bool movedTile, out bool movedCursor, out bool shouldCycle)
+        {
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = movedCursor = false;
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             var postalPrice = -1;
-            
-            var autoDrive = WorldCycler.NeedAutoDriveStep.HasValue;//先只做往前的。
+
+            var autoDrive = WorldCycler.NeedAutoDriveStep.HasValue && WorldCycler.NeedAutoDriveStep.Value;
+            var autoReverse = WorldCycler.NeedAutoDriveStep.HasValue && !WorldCycler.NeedAutoDriveStep.Value;
 
             CleanDestoryer(currentLevelAsset);
 
@@ -892,14 +972,17 @@ namespace ROOT
 
             if (!autoDrive)
             {
-                ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor,
+                ctrlPack = UpdateInputScheme(currentLevelAsset,
+                    out movedTile, out movedCursor,
                     ref currentLevelAsset._boughtOnce);
 
                 if (currentLevelAsset.InputEnabled)
                 {
-
                     UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
-                    if (currentLevelAsset.RotateEnabled) UpdateRotate(currentLevelAsset, in ctrlPack);
+
+                    if (currentLevelAsset.RotateEnabled)
+                        UpdateRotate(currentLevelAsset, in ctrlPack);
+
                     currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
 
                     if (currentLevelAsset.ShopEnabled)
@@ -910,12 +993,16 @@ namespace ROOT
                 }
 
                 movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
+
+                if (currentLevelAsset.SkillEnabled)
+                {
+                    UpdateSkill(currentLevelAsset, ctrlPack);
+                }
             }
 
             if (currentLevelAsset.InputEnabled)
             {
-                currentLevelAsset.HintMaster.ShouldShowShopHint =
-                    currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
+                currentLevelAsset.HintMaster.ShouldShowShopHint = currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
             }
             else
             {
@@ -934,13 +1021,25 @@ namespace ROOT
 
             movedTile |= autoDrive;
 
-            if (currentLevelAsset.CycleEnabled) UpdateCycle(currentLevelAsset, type, movedTile);
+            if (currentLevelAsset.CycleEnabled)
+            {
+                if (autoReverse)
+                {
+                    UpdateReverseCycle(currentLevelAsset);
+                }
+                else
+                {
+                    UpdateCycle(currentLevelAsset, type, movedTile);
+                }
+            }
 
             shouldCycle = autoDrive || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
 
             //现在的Cycle其实分两层，一个是广义一些的播放动画的Cycle，一个是跑计分内容的Cycle，这个东西也要区分开。
             //目前moveTile是那个狭义的，ShouldCycle是那个广义的。
             //ShouldCycle可以调用的部分多一些，MoveTile少一些。
+            //这两个flag的名字是不是要改一下？以防忘了，这个之前就忘了…………！@……
+            //但是没有特别好的改名方式....先这样,留个TAG RISK 两个Bool的名字没整好。
         }
     }
 }

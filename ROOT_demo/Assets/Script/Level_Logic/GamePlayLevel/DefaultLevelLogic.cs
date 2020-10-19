@@ -69,6 +69,7 @@ namespace ROOT
         public bool CursorEnabled = true;
         public bool RotateEnabled = true;
         public bool ShopEnabled = true;
+        public bool SkillEnabled = true;
         public bool DestroyerEnabled = false;
         //LevelLogicFlag
         public bool GameOverEnabled = true;
@@ -113,6 +114,7 @@ namespace ROOT
             CurrencyIncomeEnabled = true;
             RotateEnabled = true;
             ShopEnabled = true;
+            SkillEnabled = true;
             LCDCurrencyEnabled = true;
             LCDDeltaCurrencyEnabled = true;
             LCDTimeEnabled = true;
@@ -130,6 +132,7 @@ namespace ROOT
             CurrencyIncomeEnabled = false;
             RotateEnabled = false;
             ShopEnabled = false;
+            SkillEnabled = false;
             LCDCurrencyEnabled = false;
             LCDDeltaCurrencyEnabled = false;
             LCDTimeEnabled = false;
@@ -421,10 +424,11 @@ namespace ROOT
         {
             //这个函数就很接近裁判要做的事儿了。
             int normalRval = 0, networkRval = 0;
-            bool shouldOpenShop, shouldCurrencyIo, shouldCurrencyIncome, shouldDestoryer;
+            bool shouldOpenShop, shouldCurrencyIo, shouldCurrencyIncome, shouldDestoryer,SkillAllowed;
             var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
 
             shouldOpenShop = roundGist.Type == StageType.Shop;
+            SkillAllowed = roundGist.Type != StageType.Shop;
             shouldCurrencyIncome = roundGist.Type == StageType.Require;
             shouldCurrencyIo = (roundGist.Type == StageType.Require || roundGist.Type == StageType.Destoryer);
             shouldDestoryer = (roundGist.Type == StageType.Destoryer);
@@ -500,6 +504,7 @@ namespace ROOT
             }
 
             LevelAsset.Shop.ShopOpening = shouldOpenShop;
+            LevelAsset.SkillEnabled = SkillAllowed;
 
             LevelAsset.SignalPanel.TGTNormalSignal = normalRval;
             LevelAsset.SignalPanel.TGTNetworkSignal = networkRval;

@@ -184,17 +184,38 @@ namespace ROOT
             while (AnimationLerper < 1.0f)
             {
                 yield return 0;
-                TimeLineMarkerRoot.transform.localPosition =
-                    orgPos - new Vector3(UnitLength / SubDivision, 0, 0) * AnimationLerper;
+                TimeLineMarkerRoot.transform.localPosition = orgPos - new Vector3(UnitLength / SubDivision, 0, 0) * AnimationLerper;
             }
 
             TimeLineMarkerRoot.transform.localPosition = orgPos - new Vector3(UnitLength / SubDivision, 0, 0);
         }
 
+        IEnumerator ReverseAnimation(Vector3 orgPos)
+        {
+            AnimationTimerOrigin = Time.time;
+            while (AnimationLerper < 1.0f)
+            {
+                yield return 0;
+                TimeLineMarkerRoot.transform.localPosition = orgPos + new Vector3(UnitLength / SubDivision, 0, 0) * AnimationLerper;
+            }
+
+            TimeLineMarkerRoot.transform.localPosition = orgPos + new Vector3(UnitLength / SubDivision, 0, 0);
+        }
+
         public void Step()
         {
-            Vector3 orgPos = TimeLineMarkerRoot.transform.localPosition;
+            var orgPos = TimeLineMarkerRoot.transform.localPosition;
             StartCoroutine(StepAnimation(orgPos));
+        }
+
+        public void Reverse()
+        {
+            //完犊子，这里的逻辑都要重做。相关的逻辑都是假设只有单项演进弄得………………
+            //到时候干脆全重新弄把。
+            //这里的逻辑的时序性还是太强了…………尽量想想还有什么好的办法。
+            //但是重要的间隔动画如果没有时序性，那么真的很难实现。
+            var orgPos = TimeLineMarkerRoot.transform.localPosition;
+            StartCoroutine(ReverseAnimation(orgPos));
         }
 
         private void UpdateMarkerExistence(TimeLineMarker tm, ref int markerCount, in float markerRootX)
