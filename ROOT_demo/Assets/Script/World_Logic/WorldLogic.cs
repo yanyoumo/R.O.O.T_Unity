@@ -861,44 +861,21 @@ namespace ROOT
             currentLevelAsset.TimeLine.Reverse();
         }
 
-        internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type, bool shouldCycle)
+        internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type)
         {
-            if (currentLevelAsset.LCDTimeEnabled)
-            {
-                currentLevelAsset.DataScreen.SetLcd(currentLevelAsset.GameStateMgr.GetGameTime(), RowEnum.Time);
-                currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetTimeRatio(), RowEnum.Time);
-            }
-            
-            //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
-            //总之稳了后，这个不能这么每帧调用。
-            occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
-            if (shouldCycle)
-            {
-                //HACK Timeline的StepCount已经整合到这里，可以在一些LevelLogic里面统一 重置了。
-                //因为玩家有可能在开始按动ctrl，于是在相关教程中，在开启时间轴的时候StepCount会清零。
-                //currentLevelAsset.StepCount++;
-                WorldCycler.StepUp();
-                currentLevelAsset.TimeLine.Step();
-                //occupiedHeatSink = currentLevelAsset.GameBoard.ScanHeatSink();
-                currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
-                if (currentLevelAsset.BoughtOnce)
-                {
-                    currentLevelAsset.BoughtOnce = false;
-                }
+            WorldCycler.StepUp();
+            currentLevelAsset.TimeLine.Step();
+            currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
+            currentLevelAsset.BoughtOnce = false;
 
-                if (currentLevelAsset.ShopEnabled)
-                {
-                    if (currentLevelAsset.Shop is IAnimatableShop shop)
-                    {
-                        shop.ShopPreAnimationUpdate();
-                    }
-                }
+            if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
+            if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
 
-                if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
-                {
-                    currentLevelAsset.WarningDestoryer.Step(out currentLevelAsset.DestoryedCoreType);
-                }
-            }
+            if (currentLevelAsset.ShopEnabled && (currentLevelAsset.Shop is IAnimatableShop shop))
+                shop.ShopPreAnimationUpdate();
+
+            if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
+                currentLevelAsset.WarningDestoryer.Step(out currentLevelAsset.DestoryedCoreType);
         }
 
         private static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile,
@@ -955,23 +932,32 @@ namespace ROOT
             }
         }
 
-        public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type,
-            out ControllingPack ctrlPack, out bool movedTile, out bool movedCursor, out bool shouldCycle)
+        public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type, out ControllingPack ctrlPack,
+            out bool movedTile, out bool movedCursor, out bool shouldCycle)
         {
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = movedCursor = false;
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
-            var postalPrice = -1;
 
-            var autoDrive = WorldCycler.NeedAutoDriveStep.HasValue && WorldCycler.NeedAutoDriveStep.Value;
-            var autoReverse = WorldCycler.NeedAutoDriveStep.HasValue && !WorldCycler.NeedAutoDriveStep.Value;
-
+            #region UpKeep
+            //这个Section认为是每帧都调的东西。
             CleanDestoryer(currentLevelAsset);
+            //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
+            //总之稳了后，这个不能这么每帧调用。
+            occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
 
-            if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
+            #endregion
 
-            if (!autoDrive)
+            var AutoDrive = WorldCycler.NeedAutoDriveStep;
+
+            //不一定必然是相反的，有可能是双false。
+            var forwardCycle = false;
+            var reverseCycle = false;
+
+            if (!AutoDrive.HasValue)
             {
+                #region UserIO
+
                 ctrlPack = UpdateInputScheme(currentLevelAsset,
                     out movedTile, out movedCursor,
                     ref currentLevelAsset._boughtOnce);
@@ -979,10 +965,7 @@ namespace ROOT
                 if (currentLevelAsset.InputEnabled)
                 {
                     UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
-
-                    if (currentLevelAsset.RotateEnabled)
-                        UpdateRotate(currentLevelAsset, in ctrlPack);
-
+                    UpdateRotate(currentLevelAsset, in ctrlPack);
                     currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
 
                     if (currentLevelAsset.ShopEnabled)
@@ -990,56 +973,47 @@ namespace ROOT
                         //RISK 这里让购买单元也变成强制移动一步。
                         movedTile |= UpdateShopBuy(currentLevelAsset, ctrlPack);
                     }
+
+                    movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
+
+                    if (currentLevelAsset.SkillEnabled)
+                    {
+                        UpdateSkill(currentLevelAsset, ctrlPack);
+                    }
                 }
+                
+                forwardCycle = movedTile;
 
-                movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
-
-                if (currentLevelAsset.SkillEnabled)
-                {
-                    UpdateSkill(currentLevelAsset, ctrlPack);
-                }
-            }
-
-            if (currentLevelAsset.InputEnabled)
-            {
-                currentLevelAsset.HintMaster.ShouldShowShopHint = currentLevelAsset.Cursor.Targeting = currentLevelAsset.BuyingCursor;
+                #endregion
             }
             else
             {
-                currentLevelAsset.HintMaster.ShouldShowShopHint = currentLevelAsset.BuyingCursor;
+                forwardCycle = AutoDrive.Value;
+                reverseCycle = !AutoDrive.Value;
             }
 
-            if (currentLevelAsset.BuyingCursor)
+            if (forwardCycle)
             {
-                if (postalPrice != -1)
-                {
-                    currentLevelAsset.HintMaster.ShopHintPostalPrice = postalPrice;
-                }
+                #region FORWARD
+
+                UpdateCycle(currentLevelAsset, type);
+
+                #endregion
             }
-
-            if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
-
-            movedTile |= autoDrive;
-
-            if (currentLevelAsset.CycleEnabled)
+            else if (reverseCycle)
             {
-                if (autoReverse)
-                {
-                    UpdateReverseCycle(currentLevelAsset);
-                }
-                else
-                {
-                    UpdateCycle(currentLevelAsset, type, movedTile);
-                }
+                #region REVERSE
+
+                UpdateReverseCycle(currentLevelAsset);
+
+                #endregion
             }
 
-            shouldCycle = autoDrive || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
+            #region CLEANUP
 
-            //现在的Cycle其实分两层，一个是广义一些的播放动画的Cycle，一个是跑计分内容的Cycle，这个东西也要区分开。
-            //目前moveTile是那个狭义的，ShouldCycle是那个广义的。
-            //ShouldCycle可以调用的部分多一些，MoveTile少一些。
-            //这两个flag的名字是不是要改一下？以防忘了，这个之前就忘了…………！@……
-            //但是没有特别好的改名方式....先这样,留个TAG RISK 两个Bool的名字没整好。
+            shouldCycle = AutoDrive.HasValue || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
+
+            #endregion
         }
     }
 }
