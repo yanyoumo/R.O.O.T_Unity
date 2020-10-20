@@ -118,9 +118,8 @@ namespace ROOT
             }
         }
 
-        //public TimeLineToken[] TimeLineTokens;
-        public RoundData[] RoundDatas;
-        public bool HasHeatsinkSwitch = false;
+        private RoundData[] RoundDatas;
+        private bool HasHeatsinkSwitch = false;
 
         void CheckToken(Transform MarkRoot, int j, int markerCount)
         {
