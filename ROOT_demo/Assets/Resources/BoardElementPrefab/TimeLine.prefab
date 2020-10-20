@@ -174,8 +174,6 @@ MonoBehaviour:
   TimeLineMarkerExiting: {fileID: 4747717513928508350}
   TimeLineMarkerRoot: {fileID: 3513411668517040801}
   MarkerCount: 9
-  RoundDatas: []
-  HasHeatsinkSwitch: 0
 --- !u!1 &4751478864667234132
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,7 +343,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8049536456896868927}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -2.096, y: -0.073, z: 0.147}
+  m_LocalPosition: {x: -2.096, y: 0.052, z: 0.191}
   m_LocalScale: {x: 0.33249578, y: 0.46114, z: 0.46114}
   m_Children: []
   m_Father: {fileID: 6281929567232298922}

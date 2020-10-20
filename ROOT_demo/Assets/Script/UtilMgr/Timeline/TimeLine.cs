@@ -121,17 +121,17 @@ namespace ROOT
         private RoundData[] RoundDatas;
         private bool HasHeatsinkSwitch = false;
 
-        void CheckToken(Transform MarkRoot, int j, int markerCount)
+        void CheckToken(Transform MarkRoot, int j, int markerID)
         {
             RoundGist roundGist = new RoundGist();
             //BUG 这里会出一个Exception，但是似乎不影响运行。
-            if (_currentGameAsset.ActionAsset.HasEnded(markerCount))
+            if (_currentGameAsset.ActionAsset.HasEnded(markerID))
             {
                 roundGist.Type = StageType.Ending;
             }
             else
             {
-                var truncatedCount = _currentGameAsset.ActionAsset.GetTruncatedCount(markerCount, out var RoundCount);
+                var truncatedCount = _currentGameAsset.ActionAsset.GetTruncatedCount(markerID, out var RoundCount);
 
                 if (RoundCount >= RoundDatas.Length || RoundCount == -1)
                 {
@@ -149,21 +149,43 @@ namespace ROOT
             var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
             token.GetComponent<TimeLineTokenQuad>().owner = this;
             token.GetComponent<TimeLineTokenQuad>().InitQuadShape(UnitLength, SubDivision, roundGist, HasHeatsinkSwitch);
-            token.GetComponent<TimeLineTokenQuad>().MarkerID = markerCount;
+            token.GetComponent<TimeLineTokenQuad>().MarkerID = markerID;
         }
 
-        void CreateMarker(int i, int j, int markerCount)
+        void CreateMarker(int placeID, int markerID)
         {
             var marker = Instantiate(TimeLineMarkerTemplate, TimeLineMarkerRoot);
-            var unitLocalX = UnitLength * i + (UnitLength / SubDivision) * (j);
+            var unitLocalX = (UnitLength / SubDivision) * (placeID + 1);
             marker.transform.localPosition = TimeLineMarkerZeroing.localPosition + new Vector3(unitLocalX, 0, 0);
-            CheckToken(marker.transform, j, markerCount);
-            marker.GetComponent<TimeLineMarker>().UseMajorMark = (j == 0);
+            CheckToken(marker.transform, placeID, markerID);
+            marker.GetComponent<TimeLineMarker>().UseMajorMark = (markerID % SubDivision == 0);
         }
+
+        void UpdateTimeLine()
+        {
+            TimeLineMarkerRoot.transform.localPosition = orgPos;
+            foreach (Transform child in TimeLineMarkerRoot.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            for (var i = -(int)HeadingCount; i < TailingCount; i++)
+            {
+                var placeID = i;
+                var markerID = StepCount + placeID;
+                if (markerID>=0)
+                {
+                    CreateMarker(placeID, markerID);
+                }
+            }
+        }
+
+        private Vector3 orgPos;
 
         void InitTimeLine()
         {
-            TimeLineMarkerRoot.localPosition = Vector3.zero;
+            //orgPos = TimeLineMarkerRoot.transform.localPosition;
+            UpdateTimeLine();
+            /*TimeLineMarkerRoot.localPosition = Vector3.zero;
             TotalCount = 0;
             float x5 = 0;
             while (x5 <= TimeLineMarkerEntering.localPosition.x || TotalCount == 0)
@@ -173,7 +195,7 @@ namespace ROOT
                 x5 = UnitLength * i + (UnitLength / SubDivision) * (j);
                 CreateMarker(i, j, TotalCount);
                 TotalCount++;
-            }
+            }*/
         }
 
         //TODO 这里需要反向的Animation。
@@ -203,17 +225,12 @@ namespace ROOT
 
         public void Step()
         {
-            var orgPos = TimeLineMarkerRoot.transform.localPosition;
+            UpdateTimeLine();
             StartCoroutine(StepAnimation(orgPos));
         }
 
         public void Reverse()
         {
-            //完犊子，这里的逻辑都要重做。相关的逻辑都是假设只有单项演进弄得………………
-            //到时候干脆全重新弄把。
-            //这里的逻辑的时序性还是太强了…………尽量想想还有什么好的办法。
-            //但是重要的间隔动画如果没有时序性，那么真的很难实现。
-            var orgPos = TimeLineMarkerRoot.transform.localPosition;
             StartCoroutine(ReverseAnimation(orgPos));
         }
 
@@ -232,9 +249,16 @@ namespace ROOT
             return new Tuple<int, int>(i, j);
         }
 
+        private uint HeadingCount = 2;
+        private uint TailingCount = 9;
+
         void Update()
         {
-            MarkerCount = 0;
+            //var markers = TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
+            //var markerRootX = TimeLineMarkerRoot.transform.localPosition.x;
+
+
+            /*MarkerCount = 0;
             var markers = TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
             var markerRootX = TimeLineMarkerRoot.transform.localPosition.x;
             var minMarkerX = markers.Length != 0
@@ -252,7 +276,7 @@ namespace ROOT
                 var (i1, j1) = UnrollMarker(TotalCount);
                 CreateMarker(i1, j1, TotalCount);
                 TotalCount++;
-            }
+            }*/
         }
 
         public void InitWithAssets(GameAssets levelAsset)
