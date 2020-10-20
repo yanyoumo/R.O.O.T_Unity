@@ -99,6 +99,7 @@ namespace ROOT
 
         public void Awake()
         {
+            DisableValMarker();
             QuadColors = new[]
             {
                 ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_GENERAL),
@@ -118,34 +119,6 @@ namespace ROOT
                 {
                     SetValMarker(RoundGist.normalReq, TimeLineTokenType.RequireNormal);
                     SetValMarker(RoundGist.networkReq, TimeLineTokenType.RequireNetwork);
-                }
-            }
-        }
-
-        private void SetSingleToken(TimeLineToken _token)
-        {
-            if (_token.type == TimeLineTokenType.RequireNormal || _token.type == TimeLineTokenType.RequireNetwork)
-            {
-                if (MarkerID == _token.Range.x)
-                {
-                    if (_token.Range.x >= owner.StepCount)
-                    {
-                        SetValMarker(_token.RequireAmount, _token.type);
-                    }
-                }
-                else if (MarkerID <= _token.Range.y)
-                {
-                    if (MarkerID == owner.StepCount)
-                    {
-                        SetValMarker(_token.RequireAmount, _token.type);
-                    }
-                }
-                else if (_token.Range.y == -1)
-                {
-                    if (MarkerID == owner.StepCount)
-                    {
-                        SetValMarker(_token.RequireAmount, _token.type);
-                    }
                 }
             }
         }

@@ -155,7 +155,7 @@ namespace ROOT
         void CreateMarker(int placeID, int markerID)
         {
             var marker = Instantiate(TimeLineMarkerTemplate, TimeLineMarkerRoot);
-            var unitLocalX = (UnitLength / SubDivision) * (placeID + 1);
+            var unitLocalX = (UnitLength / SubDivision) * (placeID);
             marker.transform.localPosition = TimeLineMarkerZeroing.localPosition + new Vector3(unitLocalX, 0, 0);
             CheckToken(marker.transform, placeID, markerID);
             marker.GetComponent<TimeLineMarker>().UseMajorMark = (markerID % SubDivision == 0);
@@ -163,128 +163,59 @@ namespace ROOT
 
         void UpdateTimeLine()
         {
-            TimeLineMarkerRoot.transform.localPosition = orgPos;
+            #region NOTE
+            //想和时序无关的话，就只能做这种全clear类似的逻辑。
+            //想做帧间更新的逻辑就只能做之前那种时间耦合很强的。
             foreach (Transform child in TimeLineMarkerRoot.transform)
             {
                 Destroy(child.gameObject);
             }
-            for (var i = -(int)HeadingCount; i < TailingCount; i++)
+
+            #endregion
+
+            for (var i = -(int) HeadingCount; i < TailingCount; i++)
             {
                 var placeID = i;
                 var markerID = StepCount + placeID;
-                if (markerID>=0)
+                if (markerID >= 0)
                 {
                     CreateMarker(placeID, markerID);
                 }
             }
         }
 
-        private Vector3 orgPos;
-
-        void InitTimeLine()
+        IEnumerator Animate(bool Forward)
         {
-            //orgPos = TimeLineMarkerRoot.transform.localPosition;
+            AnimationTimerOrigin = Time.time;
+            while (AnimationLerper < 1.0f)
+            {
+                yield return 0;
+                TimeLineMarkerRoot.transform.localPosition = (Forward ? -1 : 1) * new Vector3(UnitLength / SubDivision, 0, 0) * AnimationLerper;
+            }
+
+            TimeLineMarkerRoot.transform.localPosition = Vector3.zero;
             UpdateTimeLine();
-            /*TimeLineMarkerRoot.localPosition = Vector3.zero;
-            TotalCount = 0;
-            float x5 = 0;
-            while (x5 <= TimeLineMarkerEntering.localPosition.x || TotalCount == 0)
-            {
-                int i = TotalCount / SubDivision;
-                int j = TotalCount % SubDivision;
-                x5 = UnitLength * i + (UnitLength / SubDivision) * (j);
-                CreateMarker(i, j, TotalCount);
-                TotalCount++;
-            }*/
-        }
-
-        //TODO 这里需要反向的Animation。
-        IEnumerator StepAnimation(Vector3 orgPos)
-        {
-            AnimationTimerOrigin = Time.time;
-            while (AnimationLerper < 1.0f)
-            {
-                yield return 0;
-                TimeLineMarkerRoot.transform.localPosition = orgPos - new Vector3(UnitLength / SubDivision, 0, 0) * AnimationLerper;
-            }
-
-            TimeLineMarkerRoot.transform.localPosition = orgPos - new Vector3(UnitLength / SubDivision, 0, 0);
-        }
-
-        IEnumerator ReverseAnimation(Vector3 orgPos)
-        {
-            AnimationTimerOrigin = Time.time;
-            while (AnimationLerper < 1.0f)
-            {
-                yield return 0;
-                TimeLineMarkerRoot.transform.localPosition = orgPos + new Vector3(UnitLength / SubDivision, 0, 0) * AnimationLerper;
-            }
-
-            TimeLineMarkerRoot.transform.localPosition = orgPos + new Vector3(UnitLength / SubDivision, 0, 0);
         }
 
         public void Step()
         {
-            UpdateTimeLine();
-            StartCoroutine(StepAnimation(orgPos));
+            StartCoroutine(Animate(true));
         }
 
         public void Reverse()
         {
-            StartCoroutine(ReverseAnimation(orgPos));
-        }
-
-        private void UpdateMarkerExistence(TimeLineMarker tm, ref int markerCount, in float markerRootX)
-        {
-            if (tm.transform.localPosition.x + markerRootX <= TimeLineMarkerExiting.localPosition.x)
-                tm.PendingKill = true;
-            else
-                MarkerCount++;
-        }
-
-        private Tuple<int, int> UnrollMarker(int markerCount)
-        {
-            var i = markerCount / SubDivision;
-            var j = markerCount % SubDivision;
-            return new Tuple<int, int>(i, j);
+            StartCoroutine(Animate(false));
         }
 
         private uint HeadingCount = 2;
         private uint TailingCount = 9;
-
-        void Update()
-        {
-            //var markers = TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
-            //var markerRootX = TimeLineMarkerRoot.transform.localPosition.x;
-
-
-            /*MarkerCount = 0;
-            var markers = TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
-            var markerRootX = TimeLineMarkerRoot.transform.localPosition.x;
-            var minMarkerX = markers.Length != 0
-                ? markers.Select(marker => marker.transform.localPosition.x).Min() + markerRootX
-                : 0;
-
-            markers.ForEach(marker => UpdateMarkerExistence(marker, ref MarkerCount, in markerRootX));
-            MarkerCount++;
-
-            var (i, j) = UnrollMarker(MarkerCount);
-            var unitLocalPosX = UnitLength * i + (UnitLength / SubDivision) * j;
-            var unitPosX = unitLocalPosX + minMarkerX;
-            if (unitPosX <= TimeLineMarkerEntering.localPosition.x)
-            {
-                var (i1, j1) = UnrollMarker(TotalCount);
-                CreateMarker(i1, j1, TotalCount);
-                TotalCount++;
-            }*/
-        }
 
         public void InitWithAssets(GameAssets levelAsset)
         {
             _currentGameAsset = levelAsset;
             Debug.Assert(_currentGameAsset.StepCount == 0);
             RoundDatas = levelAsset.ActionAsset.RoundDatas;
-            InitTimeLine();
+            UpdateTimeLine();
         }
 
         void Awake()
