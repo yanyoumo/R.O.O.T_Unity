@@ -793,8 +793,7 @@ namespace ROOT
 
         internal static void UpdateBoardData(GameAssets currentLevelAsset)
         {
-            int inCome = 0;
-            int cost = 0;
+            int inCome = 0, cost = 0;
 
             var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
             var tmpInComeB = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
@@ -829,8 +828,7 @@ namespace ROOT
             if (currentLevelAsset.CostChart != null)
             {
                 currentLevelAsset.CostChart.IncomesVal = inCome - cost;
-                currentLevelAsset.CostChart.CurrencyVal =
-                    Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
+                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
             }
 
             lastInCome = inCome;
@@ -902,22 +900,20 @@ namespace ROOT
             switch (ctrlPack.SkillID)
             {
                 case 0:
-                    WorldCycler.ExpectedStepIncrement(3);
-                    break;
-                case 1:
                     WorldCycler.ExpectedStepIncrement(5);
                     break;
-                case 2:
+                case 1:
                     WorldCycler.ExpectedStepIncrement(7);
                     break;
-                case 3:
+                case 2:
                     WorldCycler.ExpectedStepDecrement(3);
                     break;
+                case 3:
+                    WorldCycler.ExpectedStepDecrement(7);
+                    break;
                 case 4:
-                    WorldCycler.ExpectedStepDecrement(5);
                     break;
                 case 5:
-                    WorldCycler.ExpectedStepDecrement(7);
                     break;
                 case 6:
                     break;

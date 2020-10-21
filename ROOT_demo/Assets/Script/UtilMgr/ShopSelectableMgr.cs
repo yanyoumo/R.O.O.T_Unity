@@ -40,7 +40,7 @@ namespace ROOT
                 }
 
                 DisplayRoot.gameObject.SetActive(value);
-                StaticContent.gameObject.SetActive(value);
+                //StaticContent.gameObject.SetActive(value);//技能系统也要用。
                 _shopOpening = value;
             }
             get => _shopOpening;

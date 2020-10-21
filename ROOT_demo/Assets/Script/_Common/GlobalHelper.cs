@@ -113,6 +113,25 @@ namespace ROOT
 
     public static class Utils
     {
+        /// TODO Digong
+        /// <summary>
+        /// 目的：提供一个棋盘上的坐标作为center以及半径，返回由坐标构成，像素化的圆。
+        /// 并且随机选择一个圆上的位置。这个随机过程符合二维正态分布。
+        /// 如果圆被棋盘边界阻挡，那么可能需要返回半圆或四分之一圆等残圆。
+        /// </summary>
+        /// <param name="center">输入的棋盘位置。</param>
+        /// <param name="radius">像素圆的半径。</param>
+        /// <param name="s_div">随机选择过程的标准差。</param>
+        /// <param name="boardLength">棋盘宽度。</param>
+        /// <param name="selected">所选结果在return中的index。</param>
+        /// <returns>构成像素圆全部像素的坐标的Array。</returns>
+        /// 生成圆形的pattern可以参考网页：https://donatstudios.com/PixelCircleGenerator
+        ///     里面输入的Height/Width是直径，因为是像素化的圆，那里的直径是函数中的：radius*2+1.
+        public static List<Vector2Int> PosisionRandomazation_NormalDistro(in Vector2Int center,in int radius,in float s_div,in int boardLength,out int selected)
+        {
+            throw new NotImplementedException();
+        }
+
         public static float EaseInOutCubic(float x)
         {
             return x < 0.5f ? 4.0f * x * x * x : 1.0f - Mathf.Pow(-2.0f * x + 2.0f, 3.0f) / 2.0f;
