@@ -205,14 +205,14 @@ namespace ROOT
         {
             //var res = CalculateProcessorScoreFindSetA();
             //RootDebug.Watch(res.Count.ToString(), WatchID.YanYoumo_ExampleA);
-            string log = "";
-            var res = FindEndLeafPoint();
-            foreach (var unit in res)
-            {
-                log += "(" + unit.name.ToString() + unit.CurrentBoardPosition.ToString() + ")";
-            }
+            //string log = "";
+            //var res = FindEndLeafPoint();
+            //foreach (var unit in res)
+            //{
+                //log += "(" + unit.name.ToString() + unit.CurrentBoardPosition.ToString() + ")";
+            //}
 
-            RootDebug.Log(log, NameID.JiangDigong_Log);
+            //RootDebug.Log(log, NameID.JiangDigong_Log);
 
             var driverCount = 0.0f;
             var processorKeys = new List<Vector2Int>();
