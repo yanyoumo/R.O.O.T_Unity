@@ -89,44 +89,57 @@ namespace ROOT
 
             return score;
         }
-        List<Unit> FindEndLeavePoint()
+        List<Unit> FindEndLeafPoint()
         {
             var res = new List<Unit>();
+            //vidited: dequeued
+            //visiting: in queue
             m_Board.Units.ForEach(unit => unit.InServerGrid = unit.Visited = unit.Visiting = false);
             foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
             {
+                //enumerate unvisited server
                 if (!startPoint.Visited)
                 {
                     var networkCableQueue = new Queue<Tuple<Unit, ulong>>();
                     startPoint.Visited = true;
                     networkCableQueue.Enqueue(new Tuple<Unit, ulong>(startPoint, AddPath(startPoint, 0ul)));
+                    startPoint.Visiting = true;
+                    //BFS
                     while (networkCableQueue.Count != 0)
                     {
                         var (networkCable, vis) = networkCableQueue.Dequeue();
+                        networkCable.Visiting = false;
+                        networkCable.Visited = true;
                         var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
                         hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
                         var isEnd = true;
-                        while (hardDriveQueue.Count!=0 )
+                        //BFS again, to find next level network cable
+                        //if no unit found, it is end leaf point
+                        while (hardDriveQueue.Count != 0)
                         {
                             var (hardDrive, vis2) = hardDriveQueue.Dequeue();
-                            foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit().Where(unit => IsVis(unit, vis2) == false && unit.Visited == false))
+                            //enumerate the other unvisited units connected with this unit
+                            foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit().Where(
+                                unit => IsVis(unit, vis2) == false && unit.Visited == false))
                             {
-                                if (unitConnectedToHardDrive.UnitCore==CoreType.NetworkCable)
+                                //network cable: mark as visited; push into network cable BFS queue
+                                if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable)
                                 {
                                     unitConnectedToHardDrive.Visited = true;
-                                    networkCableQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive, 
+                                    networkCableQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive,
                                         AddPath(unitConnectedToHardDrive, vis2)));
                                     isEnd = false;
                                 }
+                                //other unit: mark as vivited; push into haed drive cable BFS queue
                                 else
                                 {
                                     unitConnectedToHardDrive.Visited = true;
                                     hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive,
                                         AddPath(unitConnectedToHardDrive, vis2)));
                                 }
-                            }    
+                            }
                         }
-                        if (isEnd == true&& networkCable.UnitCore!=CoreType.Server)
+                        if (isEnd == true && networkCable.UnitCore != CoreType.Server)
                         {
                             res.Add(networkCable);
                         }
@@ -139,11 +152,11 @@ namespace ROOT
         {
             int maxCount = Board.BoardLength * Board.BoardLength;
             var res = new List<List<Unit>>();
-            var endLeavePoint = FindEndLeavePoint();
+            var endLeavePoint = FindEndLeafPoint();
             RootDebug.Log(endLeavePoint.Count.ToString(), NameID.JiangDigong_Log);
             foreach (var i in endLeavePoint)
             {
-                RootDebug.Log(i.name.ToString()+i.CurrentBoardPosition.ToString(), NameID.JiangDigong_Log);
+                RootDebug.Log(i.name.ToString() + i.CurrentBoardPosition.ToString(), NameID.JiangDigong_Log);
             }
             foreach (var startPoint in endLeavePoint)
             {
@@ -190,8 +203,16 @@ namespace ROOT
 
         public float CalculateProcessorScore(out int driverCountInt)
         {
-            //var res=CalculateProcessorScoreFindSetA();
+            //var res = CalculateProcessorScoreFindSetA();
             //RootDebug.Watch(res.Count.ToString(), WatchID.YanYoumo_ExampleA);
+            //string log = "";
+            //var res = FindEndLeafPoint();
+            //foreach (var unit in res)
+            //{
+                //log += "(" + unit.name.ToString() + unit.CurrentBoardPosition.ToString() + ")";
+            //}
+
+            //RootDebug.Log(log, NameID.JiangDigong_Log);
 
             var driverCount = 0.0f;
             var processorKeys = new List<Vector2Int>();
