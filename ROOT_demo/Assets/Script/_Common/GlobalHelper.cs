@@ -52,7 +52,6 @@ namespace ROOT
 
         public static readonly string[] INPUT_BUTTON_NAME_SKILLS =
         {
-            //这个字符串数组的顺序不能变，它的顺序就是ShopID。
             INPUT_BUTTON_NAME_FUNC1,
             INPUT_BUTTON_NAME_FUNC2,
             INPUT_BUTTON_NAME_FUNC3,

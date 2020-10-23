@@ -802,6 +802,7 @@ namespace ROOT
             {
                 inCome += tmpInComeA;
                 inCome += tmpInComeB;
+                inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
                 //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
                 //TEMP 现在只有热力消耗。
                 if (!currentLevelAsset.CurrencyIncomeEnabled)
@@ -893,41 +894,6 @@ namespace ROOT
             return shouldCycle;
         }
 
-        public static void UpdateSkill(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
-        {
-            if (!ctrlPack.HasFlag(ControllingCommand.Skill)) return;
-
-            switch (ctrlPack.SkillID)
-            {
-                case 0:
-                    WorldCycler.ExpectedStepIncrement(5);
-                    break;
-                case 1:
-                    WorldCycler.ExpectedStepIncrement(7);
-                    break;
-                case 2:
-                    WorldCycler.ExpectedStepDecrement(3);
-                    break;
-                case 3:
-                    WorldCycler.ExpectedStepDecrement(7);
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
-                case 6:
-                    break;
-                case 7:
-                    break;
-                case 8:
-                    break;
-                case 9:
-                    break;
-                default:
-                    throw new ArgumentException();
-            }
-        }
-
         public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type, out ControllingPack ctrlPack,
             out bool movedTile, out bool movedCursor, out bool shouldCycle)
         {
@@ -972,10 +938,8 @@ namespace ROOT
 
                     movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
 
-                    if (currentLevelAsset.SkillEnabled)
-                    {
-                        UpdateSkill(currentLevelAsset, ctrlPack);
-                    }
+                    currentLevelAsset.SkillMgr.SkillEnabled = currentLevelAsset.SkillEnabled;
+                    currentLevelAsset.SkillMgr.UpdateSkill(currentLevelAsset, ctrlPack);
                 }
                 
                 forwardCycle = movedTile;

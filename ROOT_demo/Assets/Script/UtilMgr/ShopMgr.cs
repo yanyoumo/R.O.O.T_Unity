@@ -12,7 +12,6 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
-
     public partial class BoardDataCollector : MonoBehaviour
     {
         internal int NthUnitCost(int N)

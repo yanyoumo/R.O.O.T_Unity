@@ -53,7 +53,9 @@ namespace ROOT
 
         internal BoardDataCollector BoardDataCollector;
         internal GameStateMgr GameStateMgr;
+        internal float CurrencyRebate = 1.0f;
         internal ShopBase Shop;
+        internal SkillMgr SkillMgr;
         internal IWarningDestoryer WarningDestoryer;
         internal GameObject[] WarningGo;
 
@@ -229,6 +231,7 @@ namespace ROOT
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
             LevelAsset.CostLine = FindObjectOfType<CostLine>();
             LevelAsset.Shop = FindObjectOfType<ShopBase>();
+            LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
             LevelAsset.CostChart = FindObjectOfType<CostChart>();
             LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
