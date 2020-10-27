@@ -5726,7 +5726,7 @@ PrefabInstance:
     - target: {fileID: 4752471184458440742, guid: e97fd50e4d98d004d8e07e6e551b8718,
         type: 3}
       propertyPath: m_text
-      value: '[SWAP T1]'
+      value: '[SWAP:300]'
       objectReference: {fileID: 0}
     - target: {fileID: 4752471184458440742, guid: e97fd50e4d98d004d8e07e6e551b8718,
         type: 3}
@@ -5747,6 +5747,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_fontColor32.rgba
       value: 4278190080
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752471184458440742, guid: e97fd50e4d98d004d8e07e6e551b8718,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 2.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752471184458440742, guid: e97fd50e4d98d004d8e07e6e551b8718,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 2.8
       objectReference: {fileID: 0}
     - target: {fileID: 6759654763300599964, guid: e97fd50e4d98d004d8e07e6e551b8718,
         type: 3}
@@ -5756,7 +5766,7 @@ PrefabInstance:
     - target: {fileID: 8256127052292520606, guid: e97fd50e4d98d004d8e07e6e551b8718,
         type: 3}
       propertyPath: m_text
-      value: '[SWAP T0]'
+      value: '[SWAP:300]'
       objectReference: {fileID: 0}
     - target: {fileID: 8256127052292520606, guid: e97fd50e4d98d004d8e07e6e551b8718,
         type: 3}
@@ -5777,6 +5787,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_fontColor32.rgba
       value: 4278190080
+      objectReference: {fileID: 0}
+    - target: {fileID: 8256127052292520606, guid: e97fd50e4d98d004d8e07e6e551b8718,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 2.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8256127052292520606, guid: e97fd50e4d98d004d8e07e6e551b8718,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 2.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e97fd50e4d98d004d8e07e6e551b8718, type: 3}

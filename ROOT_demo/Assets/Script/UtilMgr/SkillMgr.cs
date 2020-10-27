@@ -167,8 +167,11 @@ namespace ROOT
             if (ctrlPack.HasFlag(ControllingCommand.Confirm))
             {
                 var unitBPosition = res[selected];
-                var res1=currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
-                Debug.Assert(res1);
+                if (unitAPosition != unitBPosition)
+                {
+                    var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
+                    Debug.Assert(res1);
+                }
             }
 
             if (CurrentSkillType == SkillType.Swap)

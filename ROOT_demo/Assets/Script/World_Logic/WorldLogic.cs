@@ -872,12 +872,14 @@ namespace ROOT
         {
             WorldCycler.StepUp();
             currentLevelAsset.TimeLine.Step();
-            currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
             currentLevelAsset.BoughtOnce = false;
 
             if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
             //目前整个游戏的流程框架太过简单了，现在只有流程调用和flag。可能UpdateBoardData这个需要类似基于事件和触发的事件更新(?)
             if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
+
+            //RISK DeltaCurrency在UpdateBoardData里面才弄完。
+            currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
 
             if (currentLevelAsset.ShopEnabled && (currentLevelAsset.Shop is IAnimatableShop shop))
                 shop.ShopPreAnimationUpdate();
