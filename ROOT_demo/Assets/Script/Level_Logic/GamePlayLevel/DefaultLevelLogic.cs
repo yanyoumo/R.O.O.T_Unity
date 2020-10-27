@@ -58,6 +58,8 @@ namespace ROOT
         internal SkillMgr SkillMgr;
         internal IWarningDestoryer WarningDestoryer;
         internal GameObject[] WarningGo;
+        internal GameObject SkillIndGoA;
+        internal GameObject[] SkillIndGoB;
 
         public float DeltaCurrency { get; internal set; }
 

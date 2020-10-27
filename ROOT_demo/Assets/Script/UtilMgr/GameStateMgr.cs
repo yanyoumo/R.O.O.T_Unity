@@ -68,6 +68,11 @@ namespace ROOT
         private ScoreSet _gameScoreSet;
         private GameModeAsset _startingGameMode;
 
+        public bool SpendSkillCurrency(float price)
+        {
+            return _gameScoreSet.SpendCurrency(price);
+        }
+
         public bool SpendShopCurrency(float price)
         {
             if (_startingGameMode.ShopCost)

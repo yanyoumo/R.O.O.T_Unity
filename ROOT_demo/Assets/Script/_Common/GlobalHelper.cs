@@ -66,7 +66,7 @@ namespace ROOT
 
 
         public static readonly string INPUT_BUTTON_NAME_SHOPCANCELED = "ShopCancel";
-        public static readonly string INPUT_BUTTON_NAME_SHOPCONFIRM = "ShopConfirm";
+        public static readonly string INPUT_BUTTON_NAME_CONFIRM = "Confirm";
         public static readonly string INPUT_BUTTON_NAME_SHOPRANDOM = "ShopRandom";
         public static readonly string INPUT_BUTTON_NAME_REMOVEUNIT = "RemoveUnit";
 
@@ -129,6 +129,20 @@ namespace ROOT
         public static List<Vector2Int> PosisionRandomazation_NormalDistro(in Vector2Int center,in int radius,in float s_div,in int boardLength,out int selected)
         {
             throw new NotImplementedException();
+        }
+
+        public static List<Vector2Int> PositionRandomization_Dummy(
+            in Vector2Int center, in int radius,
+            in float s_div, in int boardLength, out int selected)
+        {
+            var res = new List<Vector2Int>();
+            res.Add(center);
+            res.Add(center+Vector2Int.left);
+            res.Add(center+Vector2Int.right);
+            res.Add(center+Vector2Int.up);
+            res.Add(center+Vector2Int.down);
+            selected = Random.Range(0, res.Count() - 1);
+            return res;
         }
 
         public static float EaseInOutCubic(float x)

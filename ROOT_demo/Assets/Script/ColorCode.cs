@@ -69,5 +69,8 @@ namespace ROOT
 
         public const string ROOT_DESTORYER_STRIKING = "#FF3300";
         public const string ROOT_DESTORYER_WARNING = "#FFEA04";
+
+        public const string ROOT_SKILL_SWAP_UNITA = "#008585";
+        public const string ROOT_SKILL_SWAP_UNITB = "#00FFFF";
     }
 }
