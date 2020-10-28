@@ -18,24 +18,30 @@ namespace ROOT
         [PropertyOrder(-1)]
         public readonly int Tier;
 
-        [ShowIf("@this.SklType != SkillType.FastForward")]
+        [PreviewField(Alignment = ObjectFieldAlignment.Center)]
         [PropertyOrder(0)]
+        public Sprite SkillIcon;
+
+        [ShowIf("@this.SklType != SkillType.FastForward")]
+        [PropertyOrder(1)]
         public int Cost;
         [ShowIf("@this.SklType == SkillType.TimeFromMoney")]
-        [PropertyOrder(1)]
+        [PropertyOrder(2)]
         public int TimeGain;
         [ShowIf("@this.SklType == SkillType.FastForward")]
-        [PropertyOrder(2)]
+        [PropertyOrder(3)]
         public int FastForwardCount;
         [ShowIf("@this.SklType == SkillType.FastForward")]
-        [PropertyOrder(3)]
+        [PropertyOrder(4)]
         public float AdditionalIncome;
         [ShowIf("@this.SklType == SkillType.Swap")]
-        [PropertyOrder(4)]
+        [PropertyOrder(5)]
         public int radius;
         [ShowIf("@this.SklType == SkillType.Discount")]
-        [PropertyOrder(5)]
+        [PropertyOrder(6)]
         public int Discount;
+
+
 
         public SkillBase(SkillType sklType,int _tier)
         {

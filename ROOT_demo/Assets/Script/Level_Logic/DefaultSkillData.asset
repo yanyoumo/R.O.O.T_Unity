@@ -13,61 +13,71 @@ MonoBehaviour:
   m_Name: DefaultSkillData
   m_EditorClassIdentifier: 
   SkillDataList:
-  - Cost: 0
+  - SkillIcon: {fileID: 21300000, guid: 79b90b0d3dae84e478f294bca7652bd6, type: 3}
+    Cost: 0
     TimeGain: 0
     FastForwardCount: 5
     AdditionalIncome: 5
     radius: 0
     Discount: 0
-  - Cost: 0
+  - SkillIcon: {fileID: 21300000, guid: 79b90b0d3dae84e478f294bca7652bd6, type: 3}
+    Cost: 0
     TimeGain: 0
     FastForwardCount: 7
     AdditionalIncome: 7
     radius: 0
     Discount: 0
-  - Cost: 300
+  - SkillIcon: {fileID: 21300000, guid: 79b90b0d3dae84e478f294bca7652bd6, type: 3}
+    Cost: 300
     TimeGain: 3
     FastForwardCount: 7
     AdditionalIncome: 5
     radius: 0
     Discount: 0
-  - Cost: 600
+  - SkillIcon: {fileID: 21300000, guid: 79b90b0d3dae84e478f294bca7652bd6, type: 3}
+    Cost: 600
     TimeGain: 7
     FastForwardCount: 0
     AdditionalIncome: 0
     radius: 0
     Discount: 0
-  - Cost: 30
+  - SkillIcon: {fileID: 21300000, guid: 79b90b0d3dae84e478f294bca7652bd6, type: 3}
+    Cost: 30
     TimeGain: 7
     FastForwardCount: 0
     AdditionalIncome: 0
     radius: 5
     Discount: 0
-  - Cost: 300
+  - SkillIcon: {fileID: 21300000, guid: 79b90b0d3dae84e478f294bca7652bd6, type: 3}
+    Cost: 300
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
     radius: 3
     Discount: 0
-  - Cost: 800
+  - SkillIcon: {fileID: 21300000, guid: 79b90b0d3dae84e478f294bca7652bd6, type: 3}
+    Cost: 800
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
     radius: 1
     Discount: 0
-  - Cost: 1
+  - SkillIcon: {fileID: 21300000, guid: 79b90b0d3dae84e478f294bca7652bd6, type: 3}
+    Cost: 1
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
     radius: 0
     Discount: 30
-  - Cost: 0
+  - SkillIcon: {fileID: 21300000, guid: 79b90b0d3dae84e478f294bca7652bd6, type: 3}
+    Cost: 0
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
     radius: 0
     Discount: 0
-  - Cost: 0
+  - SkillIcon: {fileID: 21300000, guid: 79b90b0d3dae84e478f294bca7652bd6, type: 3}
+    Cost: 0
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0

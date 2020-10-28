@@ -21,7 +21,8 @@ namespace ROOT
     /// </summary>
     public class SkillMgr : MonoBehaviour
     {
-        public List<TextMeshPro> SkillTag;
+        public List<GameObject> SkillPalettes;
+        //public List<TextMeshPro> SkillTag;
         public Transform IconFramework;
         public SkillData SkillData;
 
@@ -278,9 +279,10 @@ namespace ROOT
 
         public void Awake()
         {
-            for (var i = 0; i < SkillTag.Count; i++)
+            for (var i = 0; i < SkillPalettes.Count; i++)
             {
-                SkillTag[i].text = SkillTagText(SkillData.SkillDataList[i]);
+                SkillPalettes[i].GetComponentInChildren<TextMeshPro>().text = SkillTagText(SkillData.SkillDataList[i]);
+                SkillPalettes[i].GetComponentInChildren<SpriteRenderer>().sprite = SkillData.SkillDataList[i].SkillIcon;
             }
         }
     }
