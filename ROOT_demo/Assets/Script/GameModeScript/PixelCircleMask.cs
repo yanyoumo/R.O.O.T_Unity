@@ -6,9 +6,7 @@ using UnityEngine.Assertions;
 
 namespace ROOT
 {
-    [Serializable]
-    [CreateAssetMenu(fileName = "NewPixcelCircleMask", menuName = "ActionAsset/New PixcelCircleMask")]
-    public class PixcelCircleMask : ScriptableObject
+    public class PixelCircleMask
     {
         private int[][] mask =
         {
@@ -20,7 +18,7 @@ namespace ROOT
             new []{0xf8, 0x18c, 0x306, 0x603, 0x401, 0x401, 0x401, 0x603, 0x306, 0x18c, 0xf8},
             new []{0x1f0, 0x71c, 0xc06, 0x401, 0x1803, 0x1001, 0x1001, 0x1001, 0x1803, 0x401, 0xc06, 0x71c, 0x1f0}
         };
-        PixcelCircleMask()
+        PixelCircleMask()
         {
         }
 

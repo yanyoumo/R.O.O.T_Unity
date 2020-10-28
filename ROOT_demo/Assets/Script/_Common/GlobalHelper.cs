@@ -129,7 +129,7 @@ namespace ROOT
         ///     里面输入的Height/Width是直径，因为是像素化的圆，那里的直径是函数中的：radius*2+1.
         public static List<Vector2Int> PosisionRandomazation_NormalDistro(in Vector2Int center, in int radius, in float s_div, in int boardLength, out int selected)
         {
-            int[][] mask = ScriptableObject.CreateInstance<PixcelCircleMask>().GenerateMask(radius);
+            int[][] mask = PixelCircleMask.GenerateMask(radius);
             var len = 2 * radius + 1;
             var possibility = new Dictionary<int, float>();
             var res = new List<Vector2Int>();
