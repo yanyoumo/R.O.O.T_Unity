@@ -10,8 +10,9 @@ namespace ROOT
 {
     public class ShopSelectableMgr : ShopBase
     {
-        private void UpdateShopSelf()
+        private void UpdateShopSelf(int discount)
         {
+            //主要是要把打折的相关数据放进来。
             for (var i = 0; i < _items.Length; i++)
             {
                 var unit = _itemUnit[i];
@@ -20,27 +21,31 @@ namespace ROOT
                     Destroy(unit.transform.parent.gameObject);
                     // ReSharper disable once PossibleNullReferenceException
                     var (i0, j0) = IDtoIJ(i);
-                    CreatePremiumUnit(i0, j0);
+                    CreatePremiumUnit(i0, j0, discount);
                 }
                 else
                 {
                     unit.UpdateUnitTier(TierProgress(currentLevelAsset.LevelProgress));
-                    unit.SetShop(i, UnitRetailPrice(i, _itemUnit[i].Tier), 0, true);
+                    unit.SetShop(i, UnitRetailPrice(i, _itemUnit[i].Tier), discount, 0, true);
                 }
             }
         }
 
+        public override void OpenShop(bool Opening, int discount)
+        {
+            if (Opening && !_shopOpening)
+            {
+                UpdateShopSelf(discount);
+                discountRate = discount;
+            }
+            ShopOpening = Opening;
+        }
+
         public override bool ShopOpening
         {
-            set
+            protected set
             {
-                if (value && !_shopOpening)
-                {
-                    UpdateShopSelf();
-                }
-
                 DisplayRoot.gameObject.SetActive(value);
-                //StaticContent.gameObject.SetActive(value);//技能系统也要用。
                 _shopOpening = value;
             }
             get => _shopOpening;
@@ -96,10 +101,13 @@ namespace ROOT
 
         private readonly float YOffset=0.05f;
 
+        private int discountRate = 0;
         private int UnitRetailPrice(int idx,int tier)
         {
+            //TODO 实际打折的价格还要在这儿体现出来。
             var (item1, priceMutilpier, item3) = TierMultiplier(tier);
             var val = Mathf.FloorToInt(_hardwarePrices[idx] * priceMutilpier);
+            val = Mathf.FloorToInt(val * (1.0f - discountRate * 0.01f));
             return Math.Max(val, 1);
         }
 
@@ -111,14 +119,16 @@ namespace ROOT
             return Mathf.RoundToInt(hardwarePrice);
         }
 
-        private GameObject InitUnitShop(CoreType core, SideType[] sides, out int hardwarePrice, int ID, int _cost, int tier)
+        private GameObject InitUnitShop(CoreType core, SideType[] sides, out int hardwarePrice, int ID, int _cost,
+            int tier,int discount)
         {
             var go = InitUnitShopCore(core, sides, ID, _cost, tier);
             go.transform.parent = DisplayRoot;
             var unit = go.GetComponentInChildren<Unit>();
             hardwarePrice = UnitHardwarePrice(core, sides);
             _hardwarePrices[ID] = hardwarePrice;
-            unit.SetShop(ID, UnitRetailPrice(ID,tier), _cost, true);
+            //TODO
+            unit.SetShop(ID, UnitRetailPrice(ID, tier), discount, _cost, true);
             _items[ID] = go;
             return go;
         }
@@ -152,18 +162,18 @@ namespace ROOT
             }
         }
 
-        private void CreateSelfUnit(int i, int j)
+        private void CreateSelfUnit(int i, int j,int discount)
         {
             var ID = IJtoID(i, j);
             var core = GenerateSelfCoreAndTier(in i, out var tier);
-            var go = InitUnitShop(core, GenerateSide(j), out var hardwarePrice, ID, 0, tier);
+            var go = InitUnitShop(core, GenerateSide(j), out var hardwarePrice, ID, 0, tier, discount);
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
         private bool ServerOnBoard => GameBoard.GetCountByType(CoreType.Server) > 0;
         private bool ProcessorOnBoard => GameBoard.GetCountByType(CoreType.Processor) > 0;
 
-        private void CreatePremiumUnit(int i, int j)
+        private void CreatePremiumUnit(int i, int j,int discount)
         {
             var ID = IJtoID(i, j);
 
@@ -202,7 +212,7 @@ namespace ROOT
                 } while (sides.Count(side => side == SideType.Connection) < 2);
             }
 
-            var go = InitUnitShop(core, sides, out var hardwarePrice, ID, 0, tier);
+            var go = InitUnitShop(core, sides, out var hardwarePrice, ID, 0, tier, discount);
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
@@ -215,12 +225,12 @@ namespace ROOT
                     if (i == VerticalCount - 1)
                     {
                         if (j < HorizontalCount - 2) continue;
-                        CreatePremiumUnit(i, j);
+                        CreatePremiumUnit(i, j,0);
                         TotalCount++;
                     }
                     else
                     {
-                        CreateSelfUnit(i, j);
+                        CreateSelfUnit(i, j,0);
                         TotalCount++;
                     }
                 }

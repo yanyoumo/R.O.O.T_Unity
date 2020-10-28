@@ -38,6 +38,15 @@ namespace ROOT
             get => _skillEnabled;
         }
 
+        private int discount = 0;
+
+        public int CheckDiscount()
+        {
+            var tempDiscount = discount;
+            discount = 0;
+            return tempDiscount;
+        }
+
         private string SkillTagText(SkillBase skill)
         {
             switch (skill.SklType)
@@ -102,6 +111,12 @@ namespace ROOT
                     break;
                 case SkillType.Discount:
                     //延迟技能
+                    moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
+                    if (moneySpent)
+                    {
+                        discount = skill.Discount;
+                        WorldLogic.UpdateBoardData(currentLevelAsset);
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

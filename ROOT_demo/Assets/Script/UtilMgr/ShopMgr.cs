@@ -77,7 +77,9 @@ namespace ROOT
         public abstract void ShopStart();
 
         protected bool _shopOpening;
-        public abstract bool ShopOpening { get; set; }
+        public abstract bool ShopOpening { get; protected set; }
+        public abstract void OpenShop(bool Opening, int discount);
+
 
         public abstract bool BuyToRandom(int idx);
 
@@ -380,7 +382,7 @@ namespace ROOT
     {
         public override bool ShopOpening
         {
-            set
+            protected set
             {
                 _shopOpening = value;
                 ShopCoverRoot.gameObject.SetActive(!_shopOpening);
@@ -561,14 +563,14 @@ namespace ROOT
                     CostMultiplier = 0.0f;
                     _cost = Mathf.RoundToInt(_cost * CostMultiplier);
                     _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i, _cost, tier);
-                    _itemUnit[i].SetShop(i, UnitRetailPrice(i), _cost, TotalCount % 2 == 0);
+                    _itemUnit[i].SetShop(i, UnitRetailPrice(i),0, _cost, TotalCount % 2 == 0);
                     currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
                 else
                 {
-                    _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, UnitRetailPrice(i), -1,  null);
+                    _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, UnitRetailPrice(i),0, -1,  null);
                 }
             }
         }

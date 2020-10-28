@@ -112,6 +112,11 @@ namespace ROOT
             TotalCount++;
             return go;
         }
+
+        public override void OpenShop(bool Opening, int discount)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public partial class Unit : MoveableBase
@@ -147,8 +152,8 @@ namespace ROOT
         public TextMeshPro TierTag;
         public TextMeshPro CostTag;
         public TextMeshPro PriceTag;
-
-        public Transform ShopBackPlane;
+        public TextMeshPro DiscountedPriceTag;
+        
         public MeshRenderer BackQuadRenderer;
         public Material BuyingMat;
         public Material ImmovableMat;
@@ -165,16 +170,33 @@ namespace ROOT
         public MeshRenderer AdditionalClampMesh;
         public bool StationUnit { get; private set; }
         public Dictionary<RotationDirection, Tuple<int, int>> StationRequirement;
+
+        public Transform ShopBackPlane;
+        public Transform ShopDiscountRoot;
+
+        private bool _hasDiscount = false;
+        public bool HasDiscount
+        {
+            set
+            {
+                _hasDiscount = ShopID!=-1 && value;
+                ShopDiscountRoot.gameObject.SetActive(_hasDiscount);
+            }
+            get => _hasDiscount;
+        }
+
         public int ShopID { get; private set; } = -1;
 
         public void UnsetShop()
         {
-            ShopID = -1;
+            HasDiscount = false;
             SetPendingBuying = false;
             ShopBackPlane.gameObject.SetActive(false);
+            ShopID = -1;
         }
 
-        public void SetShop(int shopID, int retailPrice, int _cost, bool? showQuad)
+
+        public void SetShop(int shopID, int retailPrice, int discountRate, int _cost, bool? showQuad)
         {
             ShopID = shopID;
             if (retailPrice != -1)
@@ -192,6 +214,19 @@ namespace ROOT
             {
                 Cost = _cost;
                 CostTag.text = Utils.PaddingNum2Digit(Cost);
+            }
+
+            //这个discountRate写以百分比的数据，比如八折就是写20。（-20%）
+            if (discountRate>0)
+            {
+                discountRate = Mathf.Min(discountRate, 99);
+                HasDiscount = true;
+                var discountedPrice = Mathf.FloorToInt(retailPrice * (1.0f - discountRate * 0.01f));
+                DiscountedPriceTag.text = "<color=#00A62E>" + Utils.PaddingNum2Digit(discountedPrice) + "</color>";
+            }
+            else
+            {
+                HasDiscount = false;
             }
         }
 

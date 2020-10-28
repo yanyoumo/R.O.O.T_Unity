@@ -35,7 +35,7 @@ namespace ROOT
         public int radius;
         [ShowIf("@this.SklType == SkillType.Discount")]
         [PropertyOrder(5)]
-        public float Discount;
+        public int Discount;
 
         public SkillBase(SkillType sklType,int _tier)
         {
