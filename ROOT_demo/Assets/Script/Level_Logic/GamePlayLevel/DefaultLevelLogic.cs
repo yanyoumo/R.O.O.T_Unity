@@ -508,7 +508,14 @@ namespace ROOT
                 }
             }
 
-            LevelAsset.Shop.ShopOpening = shouldOpenShop;
+            //CheckDiscount这个函数只能每次调一次，还是需要guard一下。
+            var discount = 0;
+            if (!LevelAsset.Shop.ShopOpening && shouldOpenShop)
+            {
+                discount = LevelAsset.SkillMgr.CheckDiscount();
+                RootDebug.Log(discount.ToString(), NameID.YanYoumo_Log);
+            }
+            LevelAsset.Shop.OpenShop(shouldOpenShop, discount);
             LevelAsset.SkillEnabled = SkillAllowed;
 
             LevelAsset.SignalPanel.TGTNormalSignal = normalRval;

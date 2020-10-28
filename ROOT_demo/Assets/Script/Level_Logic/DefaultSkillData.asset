@@ -55,12 +55,12 @@ MonoBehaviour:
     AdditionalIncome: 0
     radius: 1
     Discount: 0
-  - Cost: 100
+  - Cost: 1
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
     radius: 0
-    Discount: 10
+    Discount: 30
   - Cost: 0
     TimeGain: 0
     FastForwardCount: 0
