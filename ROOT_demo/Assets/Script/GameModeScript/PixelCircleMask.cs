@@ -6,9 +6,9 @@ using UnityEngine.Assertions;
 
 namespace ROOT
 {
-    public class PixelCircleMask
+    public static class PixelCircleMask
     {
-        private int[][] mask =
+        private static int[][] mask =
         {
             new []{0},
             new []{7, 5, 7},
@@ -18,11 +18,7 @@ namespace ROOT
             new []{0xf8, 0x18c, 0x306, 0x603, 0x401, 0x401, 0x401, 0x603, 0x306, 0x18c, 0xf8},
             new []{0x1f0, 0x71c, 0xc06, 0x401, 0x1803, 0x1001, 0x1001, 0x1001, 0x1803, 0x401, 0xc06, 0x71c, 0x1f0}
         };
-        PixelCircleMask()
-        {
-        }
-
-        public int[][] GenerateMask(in int radius)
+        public static int[][] GenerateMask(in int radius)
         {
             Debug.Assert(radius <= 6);
             var len = radius * 2 + 1;
