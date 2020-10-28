@@ -37,7 +37,7 @@ MonoBehaviour:
     AdditionalIncome: 0
     radius: 0
     Discount: 0
-  - Cost: 300
+  - Cost: 30
     TimeGain: 7
     FastForwardCount: 0
     AdditionalIncome: 0
@@ -49,18 +49,18 @@ MonoBehaviour:
     AdditionalIncome: 0
     radius: 3
     Discount: 0
-  - Cost: 0
+  - Cost: 800
+    TimeGain: 0
+    FastForwardCount: 0
+    AdditionalIncome: 0
+    radius: 1
+    Discount: 0
+  - Cost: 100
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
     radius: 0
-    Discount: 0
-  - Cost: 0
-    TimeGain: 0
-    FastForwardCount: 0
-    AdditionalIncome: 0
-    radius: 0
-    Discount: 0
+    Discount: 10
   - Cost: 0
     TimeGain: 0
     FastForwardCount: 0

@@ -57,10 +57,10 @@ namespace ROOT
             new SkillBase(SkillType.TimeFromMoney,2),
             new SkillBase(SkillType.Swap,1),
             new SkillBase(SkillType.Swap,2),
+            new SkillBase(SkillType.Swap,3),
+            new SkillBase(SkillType.Discount,1),
             new SkillBase(SkillType.RefreshHeatSink,1),
             new SkillBase(SkillType.RefreshHeatSink,2),
-            new SkillBase(SkillType.Discount,1),
-            new SkillBase(SkillType.Discount,2),
         };
     }
 }
