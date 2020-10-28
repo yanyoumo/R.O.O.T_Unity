@@ -144,7 +144,7 @@ namespace ROOT
                         var now = new Vector2Int(x + center.x, y + center.y);
                         if (IsInBoard(now, boardLength))
                         {
-                            sum += possibility[res.Count] = (float)TwoDimensionalGaussianDistribution(x, y, s_div);
+                            sum += (possibility[res.Count] = (float)TwoDimensionalGaussianDistribution(x, y, s_div));
                             res.Add(now);
                         }
                     }
@@ -161,7 +161,7 @@ namespace ROOT
 
         public static bool IsInBoard(Vector2Int pos, int len)
         {
-            return !(pos.x < 0 || pos.y < 0 || pos.x > len || pos.y > len);
+            return (pos.x >= 0) && (pos.y >= 0) && (pos.x < len) && (pos.y < len);
         }
         //using two dimensional gaussian distribution at point(x,y) as possibility of chunk (x,y)
         public static double TwoDimensionalGaussianDistribution(in int x, in int y, in float s_div)
