@@ -160,14 +160,49 @@ namespace ROOT
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
+        private bool ServerOnBoard => GameBoard.GetCountByType(CoreType.Server) > 0;
+        private bool ProcessorOnBoard => GameBoard.GetCountByType(CoreType.Processor) > 0;
+
         private void CreatePremiumUnit(int i, int j)
         {
             var ID = IJtoID(i, j);
-            var core = GenerateRandomCore();
+
+            CoreType core;
+            if (ServerOnBoard&&ProcessorOnBoard)
+            {
+                core = GenerateRandomCore();
+            }
+            else if (ServerOnBoard)
+            {
+                core = CoreType.Processor;
+            }
+            else if (ProcessorOnBoard)
+            {
+                core = CoreType.Server;
+            }
+            else
+            {
+                //hmmmmm这里先这样吧…………
+                core = Random.value > 0.5 ? CoreType.Processor : CoreType.Server;
+            }
+            
             //TEMP 这个Tier到时候还是统一管理一下。
             var tier = TierProgress(currentLevelAsset.LevelProgress) + (Random.value > 0.5f ? 1 : 2);
-            //想办法让PB的Unit接口至少是2。
-            var go = InitUnitShop(core, GenerateRandomSideArray(core), out var hardwarePrice, ID, 0, tier);
+            SideType[] sides;
+            if (tier>4)
+            {
+                sides=new []{SideType.Connection, SideType.Connection , SideType.Connection , SideType.Connection };
+            }
+            else
+            {
+                do
+                {
+                    //PB的Unit接口至少是2。
+                    sides = GenerateRandomSideArray(core);
+                } while (sides.Count(side => side == SideType.Connection) < 2);
+            }
+
+            var go = InitUnitShop(core, sides, out var hardwarePrice, ID, 0, tier);
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 

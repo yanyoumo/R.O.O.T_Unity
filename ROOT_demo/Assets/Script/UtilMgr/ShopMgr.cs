@@ -12,7 +12,6 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
-
     public partial class BoardDataCollector : MonoBehaviour
     {
         internal int NthUnitCost(int N)
@@ -377,9 +376,6 @@ namespace ROOT
         public abstract bool BuyToPos(int idx, Vector2Int pos, bool crash);
     }
 
-    /// 其实无论如何怎么改，这里就只能做到：保证拼死寻找的玩家能够买满而已。
-    /// 
-    /// 
     public sealed partial class ShopMgr: ShopBase, IAnimatableShop, IRequirableShop
     {
         public override bool ShopOpening

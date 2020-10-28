@@ -98,8 +98,8 @@ namespace ROOT
         SignalHint =  1<<5,
         NextButton =  1<<6,
         CycleNext =   1<<7,
-        BuyCanceled = 1<<8,
-        BuyConfirm =  1<<9,
+        Cancel =      1<<8,
+        Confirm =     1<<9,
         BuyRandom =   1<<10,
         RemoveUnit =  1<<11,
         Skill =       1<<12,
@@ -473,17 +473,22 @@ namespace ROOT
                 ctrlPack.SetFlag(ControllingCommand.CycleNext);
             }
 
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CONFIRM))
+            {
+                ctrlPack.SetFlag(ControllingCommand.Confirm);
+            }
+
             if (currentLevelAsset.BuyingCursor)
             {
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCANCELED))
                 {
-                    ctrlPack.SetFlag(ControllingCommand.BuyCanceled);
+                    ctrlPack.SetFlag(ControllingCommand.Cancel);
                 }
 
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
+                /*if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
                 {
-                    ctrlPack.SetFlag(ControllingCommand.BuyConfirm);
-                }
+                    ctrlPack.SetFlag(ControllingCommand.Confirm);
+                }*/
 
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
                 {
@@ -594,13 +599,13 @@ namespace ROOT
                     //然后进入送货地址选择的位置时候，这个时候玩家可以取消也可以选择随机
                     //如果随机的话，比送过价格要低一些。
                     //目前商店上的价格写的是随机送的价格，即要送货再加X元，随机送不加价。
-                    if (ctrlPack.HasFlag(ControllingCommand.BuyCanceled))
+                    if (ctrlPack.HasFlag(ControllingCommand.Cancel))
                     {
                         shopMgr.ResetPendingBuy();
                         currentLevelAsset.BuyingCursor = false;
                         currentLevelAsset.BuyingID = -1;
                     }
-                    else if (ctrlPack.HasFlag(ControllingCommand.BuyConfirm))
+                    else if (ctrlPack.HasFlag(ControllingCommand.Confirm))
                     {
                         //试图本地购买。
                         var requirement = crashable
@@ -678,12 +683,8 @@ namespace ROOT
 
         internal static void UpdateCursorPos(GameAssets currentLevelAsset)
         {
-            currentLevelAsset.Cursor.SetPosWithAnimation(
-                ClampPosInBoard(currentLevelAsset.Cursor.CurrentBoardPosition, currentLevelAsset.GameBoard),
-                PosSetFlag.Current);
-            currentLevelAsset.Cursor.SetPosWithAnimation(
-                ClampPosInBoard(currentLevelAsset.Cursor.NextBoardPosition, currentLevelAsset.GameBoard),
-                PosSetFlag.Next);
+            currentLevelAsset.Cursor.SetPosWithAnimation(ClampPosInBoard(currentLevelAsset.Cursor.CurrentBoardPosition, currentLevelAsset.GameBoard), PosSetFlag.Current);
+            currentLevelAsset.Cursor.SetPosWithAnimation(ClampPosInBoard(currentLevelAsset.Cursor.NextBoardPosition, currentLevelAsset.GameBoard), PosSetFlag.Next);
         }
 
         internal static void UpdateRotate(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
@@ -775,8 +776,8 @@ namespace ROOT
             if (currentLevelAsset.BuyingCursor)
             {
                 ctrlPack.MaskFlag(ControllingCommand.BuyRandom
-                                  | ControllingCommand.BuyCanceled
-                                  | ControllingCommand.BuyConfirm
+                                  | ControllingCommand.Cancel
+                                  | ControllingCommand.Confirm
                                   | ControllingCommand.Move);
             }
 
@@ -791,8 +792,15 @@ namespace ROOT
         //TEMP 每一步应该才计算一次，帧间时都这么临时存着。
         private static int occupiedHeatSink;
 
+
+        /// <summary>
+        /// 这个函数主要是将目前场面上的数据反映到UI和玩家的视野中，这个很可能是不能单纯用flow的框架来搞？
+        /// </summary>
+        /// <param name="currentLevelAsset"></param>
         internal static void UpdateBoardData(GameAssets currentLevelAsset)
         {
+            //RISK 其实这里调用到的currentLevelAsset里面的数据修改后，这个函数其实都得重新调…………
+            //也有解决方案，其实就是对其使用的数据进行变化监听……不知道靠谱不靠谱。
             int inCome = 0, cost = 0;
 
             var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
@@ -802,6 +810,7 @@ namespace ROOT
             {
                 inCome += tmpInComeA;
                 inCome += tmpInComeB;
+                inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
                 //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
                 //TEMP 现在只有热力消耗。
                 if (!currentLevelAsset.CurrencyIncomeEnabled)
@@ -863,11 +872,14 @@ namespace ROOT
         {
             WorldCycler.StepUp();
             currentLevelAsset.TimeLine.Step();
-            currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
             currentLevelAsset.BoughtOnce = false;
 
             if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
+            //目前整个游戏的流程框架太过简单了，现在只有流程调用和flag。可能UpdateBoardData这个需要类似基于事件和触发的事件更新(?)
             if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
+
+            //RISK DeltaCurrency在UpdateBoardData里面才弄完。
+            currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
 
             if (currentLevelAsset.ShopEnabled && (currentLevelAsset.Shop is IAnimatableShop shop))
                 shop.ShopPreAnimationUpdate();
@@ -893,41 +905,6 @@ namespace ROOT
             return shouldCycle;
         }
 
-        public static void UpdateSkill(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
-        {
-            if (!ctrlPack.HasFlag(ControllingCommand.Skill)) return;
-
-            switch (ctrlPack.SkillID)
-            {
-                case 0:
-                    WorldCycler.ExpectedStepIncrement(5);
-                    break;
-                case 1:
-                    WorldCycler.ExpectedStepIncrement(7);
-                    break;
-                case 2:
-                    WorldCycler.ExpectedStepDecrement(3);
-                    break;
-                case 3:
-                    WorldCycler.ExpectedStepDecrement(7);
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
-                case 6:
-                    break;
-                case 7:
-                    break;
-                case 8:
-                    break;
-                case 9:
-                    break;
-                default:
-                    throw new ArgumentException();
-            }
-        }
-
         public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type, out ControllingPack ctrlPack,
             out bool movedTile, out bool movedCursor, out bool shouldCycle)
         {
@@ -936,11 +913,13 @@ namespace ROOT
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
 
             #region UpKeep
+
             //这个Section认为是每帧都调的东西。
             CleanDestoryer(currentLevelAsset);
             //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
             //总之稳了后，这个不能这么每帧调用。
             occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
+            currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
 
             #endregion
 
@@ -970,14 +949,12 @@ namespace ROOT
                         movedTile |= UpdateShopBuy(currentLevelAsset, ctrlPack);
                     }
 
-                    movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);
+                    movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);//这个flag的实际含义和名称有冲突。
 
-                    if (currentLevelAsset.SkillEnabled)
-                    {
-                        UpdateSkill(currentLevelAsset, ctrlPack);
-                    }
+                    currentLevelAsset.SkillMgr.SkillEnabled = currentLevelAsset.SkillEnabled;
+                    currentLevelAsset.SkillMgr.TriggerSkill(currentLevelAsset, ctrlPack);
                 }
-                
+
                 forwardCycle = movedTile;
 
                 #endregion
@@ -988,21 +965,30 @@ namespace ROOT
                 reverseCycle = !AutoDrive.Value;
             }
 
-            if (forwardCycle)
+
+            if (currentLevelAsset.SkillMgr.CurrentSkillType.HasValue && currentLevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap)
             {
-                #region FORWARD
-
-                UpdateCycle(currentLevelAsset, type);
-
-                #endregion
+                currentLevelAsset.SkillMgr.SwapTick(currentLevelAsset, ctrlPack);
+                movedTile = false;
             }
-            else if (reverseCycle)
+            else
             {
-                #region REVERSE
+                if (forwardCycle)
+                {
+                    #region FORWARD
 
-                UpdateReverseCycle(currentLevelAsset);
+                    UpdateCycle(currentLevelAsset, type);
 
-                #endregion
+                    #endregion
+                }
+                else if (reverseCycle)
+                {
+                    #region REVERSE
+
+                    UpdateReverseCycle(currentLevelAsset);
+
+                    #endregion
+                }
             }
 
             #region CLEANUP

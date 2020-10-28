@@ -436,6 +436,15 @@ namespace ROOT
             return false;
         }
 
+        public bool TransferUnitAssignedPlace(Vector2Int From, Vector2Int To)
+        {
+            if (!CheckBoardPosValidAndFilled(From)) return false;
+            UnitsGameObjects.TryGetValue(From, out GameObject go);
+            UnitsGameObjects.Remove(From);
+            UpdateBoard();
+            return DeliverUnitAssignedPlace(go, To);
+        }
+
         public bool DeliverUnitRandomPlace(GameObject unit)
         {
             return DeliverUnitRandomPlace(unit, out Vector2Int vector2Int);
@@ -465,6 +474,36 @@ namespace ROOT
                 if (unit.Value == null) continue;
                 var mUnit = unit.Value.GetComponentInChildren<Unit>();
                 mUnit.UpdateNeighboringDataAndSideMesh();
+            }
+        }
+
+        public bool SwapUnit(Vector2Int posA,Vector2Int posB)
+        {
+            Debug.Assert(CheckBoardPosValid(posA));
+            Debug.Assert(CheckBoardPosValid(posB));
+            var unitA = FindUnitUnderBoardPos(posA);
+            var unitB = FindUnitUnderBoardPos(posB);
+            if (unitA==null&&unitB==null)
+            {
+                return false;
+            }
+            else if(unitA != null && unitB != null)
+            {
+                UnitsGameObjects.TryGetValue(posA, out GameObject goA);
+                UnitsGameObjects.TryGetValue(posB, out GameObject goB);
+                UnitsGameObjects.Remove(posA);
+                UnitsGameObjects.Remove(posB);
+                UpdateBoard();
+                var resA=DeliverUnitAssignedPlace(goA, posB);
+                var resB=DeliverUnitAssignedPlace(goB, posA);
+                UpdateBoard();
+                return resA && resB;
+            }
+            else
+            {
+                var fromPos = unitA == null ? posB : posA;
+                var toPos = unitA == null ? posA : posB;
+                return TransferUnitAssignedPlace(fromPos, toPos);
             }
         }
 
