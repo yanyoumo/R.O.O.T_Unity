@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -126,21 +127,58 @@ namespace ROOT
         /// <returns>构成像素圆全部像素的坐标的Array。</returns>
         /// 生成圆形的pattern可以参考网页：https://donatstudios.com/PixelCircleGenerator
         ///     里面输入的Height/Width是直径，因为是像素化的圆，那里的直径是函数中的：radius*2+1.
-        public static List<Vector2Int> PosisionRandomazation_NormalDistro(in Vector2Int center,in int radius,in float s_div,in int boardLength,out int selected)
+        public static List<Vector2Int> PosisionRandomazation_NormalDistro(in Vector2Int center, in int radius, in float s_div, in int boardLength, out int selected)
         {
-            throw new NotImplementedException();
+            int[][] mask = PixelCircleMask.GenerateMask(radius);
+            var len = 2 * radius + 1;
+            var possibility = new Dictionary<int, float>();
+            var res = new List<Vector2Int>();
+            var sum = 0f;
+            for (int i = 0; i < len; ++i)
+            {
+                for (int j = 0; j < len; ++j)
+                {
+                    if (mask[i][j] == 1)
+                    {
+                        int x = i - radius, y = j - radius;
+                        var now = new Vector2Int(x + center.x, y + center.y);
+                        if (IsInBoard(now, boardLength))
+                        {
+                            sum += possibility[res.Count] = (float)TwoDimensionalGaussianDistribution(x, y, s_div);
+                            res.Add(now);
+                        }
+                    }
+                }
+            }
+            //normalize
+            for (int i = 0; i < res.Count; ++i)
+            {
+                possibility[i] *= 1 / sum;
+            }
+            selected = GenerateWeightedRandom(possibility);
+            return res;
         }
 
+        public static bool IsInBoard(Vector2Int pos, int len)
+        {
+            return !(pos.x < 0 || pos.y < 0 || pos.x > len || pos.y > len);
+        }
+        //using two dimensional gaussian distribution at point(x,y) as possibility of chunk (x,y)
+        public static double TwoDimensionalGaussianDistribution(in int x, in int y, in float s_div)
+        {
+            double s_div2 = 1.0 * s_div * s_div;
+            return (2 * Math.PI * s_div2) * Math.Exp(-0.5 * (x * x / s_div2 + y * y / s_div2));
+        }
         public static List<Vector2Int> PositionRandomization_Dummy(
             in Vector2Int center, in int radius,
             in float s_div, in int boardLength, out int selected)
         {
             var res = new List<Vector2Int>();
             res.Add(center);
-            res.Add(center+Vector2Int.left);
-            res.Add(center+Vector2Int.right);
-            res.Add(center+Vector2Int.up);
-            res.Add(center+Vector2Int.down);
+            res.Add(center + Vector2Int.left);
+            res.Add(center + Vector2Int.right);
+            res.Add(center + Vector2Int.up);
+            res.Add(center + Vector2Int.down);
             selected = Random.Range(0, res.Count() - 1);
             return res;
         }
@@ -335,10 +373,10 @@ namespace ROOT
         /// <param name="maxCount">总数，大于等于目标计数</param>
         /// <param name="sum">将切分结果求和积分结果，最后一个数值就是总数</param>
         /// <returns>将总数按照计数切分的结果</returns>
-        public static int[] SpreadOutLaying(int targetCount, int maxCount,out int[]sum)
+        public static int[] SpreadOutLaying(int targetCount, int maxCount, out int[] sum)
         {
 
-            if (targetCount<1|| targetCount> maxCount)
+            if (targetCount < 1 || targetCount > maxCount)
             {
                 throw new ArgumentException("目标计数，大于等于1;总数，大于等于目标计数");
             }
@@ -350,7 +388,7 @@ namespace ROOT
             for (int i = 0; i < targetCount; i++)
             {
                 int interval = baseInterval;
-                if (targetCount-i<=residue)
+                if (targetCount - i <= residue)
                 {
                     interval++;
                 }
