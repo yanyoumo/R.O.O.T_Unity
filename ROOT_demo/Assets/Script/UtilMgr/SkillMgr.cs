@@ -49,7 +49,7 @@ namespace ROOT
                 case SkillType.Swap:
                     return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>R=" + skill.radius + "</color>";
                 case SkillType.RefreshHeatSink:
-                    return "RefreshHeatSink";
+                    return "Refresh";
                 case SkillType.Discount:
                     return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>-" + skill.Discount + "%</color>";
                 default:
