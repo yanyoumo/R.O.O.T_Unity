@@ -188,8 +188,8 @@ namespace ROOT
         public void SwapTick(GameAssets currentLevelAsset, ControllingPack ctrlPack)
         {
             Debug.Assert(_swapRadius != -1);
-            var res = Utils.PositionRandomization_Dummy(
-                ctrlPack.CurrentPos, _swapRadius, 0.3f, Board.BoardLength,
+            var res = Utils.PositionRandomization_NormalDistro(
+                ctrlPack.CurrentPos, _swapRadius, 0.65f, Board.BoardLength,
                 out var selected);
 
             if (oldCurrentPos != ctrlPack.CurrentPos)

@@ -127,8 +127,20 @@ namespace ROOT
         /// <returns>构成像素圆全部像素的坐标的Array。</returns>
         /// 生成圆形的pattern可以参考网页：https://donatstudios.com/PixelCircleGenerator
         ///     里面输入的Height/Width是直径，因为是像素化的圆，那里的直径是函数中的：radius*2+1.
-        public static List<Vector2Int> PosisionRandomazation_NormalDistro(in Vector2Int center, in int radius, in float s_div, in int boardLength, out int selected)
+        public static List<Vector2Int> PositionRandomization_NormalDistro(
+            in Vector2Int center, in int radius, 
+            in float s_div, in int boardLength, 
+            out int selected)
         {
+            //考虑想辙把possibility也传出来？
+            if (radius==0)
+            {
+                var res0 = new List<Vector2Int>();
+                res0.Add(center);
+                selected = 0;
+                return res0;
+            }
+
             int[][] mask = PixelCircleMask.GenerateMask(radius);
             var len = 2 * radius + 1;
             var possibility = new Dictionary<int, float>();
