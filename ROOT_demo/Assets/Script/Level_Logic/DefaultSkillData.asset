@@ -28,14 +28,14 @@ MonoBehaviour:
     radius: 0
     Discount: 0
   - SkillIcon: {fileID: 21300000, guid: b9440521b53c9664185f900098568696, type: 3}
-    Cost: 300
+    Cost: 150
     TimeGain: 3
     FastForwardCount: 7
     AdditionalIncome: 5
     radius: 0
     Discount: 0
   - SkillIcon: {fileID: 21300000, guid: b9440521b53c9664185f900098568696, type: 3}
-    Cost: 600
+    Cost: 300
     TimeGain: 7
     FastForwardCount: 0
     AdditionalIncome: 0
