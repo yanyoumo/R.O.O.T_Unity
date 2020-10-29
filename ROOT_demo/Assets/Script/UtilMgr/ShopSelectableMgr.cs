@@ -117,7 +117,7 @@ namespace ROOT
             //TODO 就是说边的价格不要弄成线性的，可能是指数的这种。
             //var sidePrice = sides.Sum(TryGetPrice);
             var sideCount= sides.Count(side => side == SideType.Connection);
-            var sidePrice = Mathf.Pow(2.5f, sideCount);
+            var sidePrice = Mathf.Pow(1.5f, sideCount);
             var hardwarePrice = corePrice + sidePrice;
             return Mathf.RoundToInt(hardwarePrice);
         }
