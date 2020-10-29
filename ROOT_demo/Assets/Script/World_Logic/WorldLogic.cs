@@ -438,7 +438,7 @@ namespace ROOT
                 ctrlPack.ReplaceFlag(ControllingCommand.Move); //Replace
                 if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT))
                 {
-                    ctrlPack.ReplaceFlag(ControllingCommand.Drag);  //Replace
+                    ctrlPack.ReplaceFlag(ControllingCommand.Drag); //Replace
                 }
             }
 
@@ -451,14 +451,16 @@ namespace ROOT
                 ctrlPack.SetFlag(ControllingCommand.RemoveUnit);
             }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT)&& ctrlPack.CtrlCMD == ControllingCommand.Nop)
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT) &&
+                ctrlPack.CtrlCMD == ControllingCommand.Nop)
             {
                 //移动和拖动的优先级比旋转高。
                 ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
                 ctrlPack.SetFlag(ControllingCommand.Rotate);
             }
 
-            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD)|| Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET))
+            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD) ||
+                Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET))
             {
                 ctrlPack.SetFlag(ControllingCommand.SignalHint);
             }
@@ -478,12 +480,13 @@ namespace ROOT
                 ctrlPack.SetFlag(ControllingCommand.Confirm);
             }
 
+            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CANCELED))
+            {
+                ctrlPack.SetFlag(ControllingCommand.Cancel);
+            }
+
             if (currentLevelAsset.BuyingCursor)
             {
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCANCELED))
-                {
-                    ctrlPack.SetFlag(ControllingCommand.Cancel);
-                }
 
                 /*if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
                 {

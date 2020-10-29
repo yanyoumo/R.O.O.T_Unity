@@ -219,6 +219,7 @@ namespace ROOT
                 {
                     currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
                     swapAlipay = 0;
+                    WorldLogic.UpdateBoardData(currentLevelAsset);
                 }
 
                 //淦、这里如果取消的话，这里还得写退款的逻辑…………

@@ -66,7 +66,7 @@ namespace ROOT
         };
 
 
-        public static readonly string INPUT_BUTTON_NAME_SHOPCANCELED = "ShopCancel";
+        public static readonly string INPUT_BUTTON_NAME_CANCELED = "Cancel";
         public static readonly string INPUT_BUTTON_NAME_CONFIRM = "Confirm";
         public static readonly string INPUT_BUTTON_NAME_SHOPRANDOM = "ShopRandom";
         public static readonly string INPUT_BUTTON_NAME_REMOVEUNIT = "RemoveUnit";
