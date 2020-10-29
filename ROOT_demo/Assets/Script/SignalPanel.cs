@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
-//using Padding= ROOT.Utils.PaddingNum2Digit();
 
 namespace ROOT
 {
@@ -11,72 +8,97 @@ namespace ROOT
         public TextMeshPro NormalSignal;
         public TextMeshPro NetworkSignal;
         public TextMeshPro MissionTarget;
+        public TextMeshPro NormalTierText;
+        public TextMeshPro NetworkTierText;
 
-        private int crtNormalSignal;
-        public int CRTNormalSignal
+        private int _crtNormalSignal;
+        public int CrtNormalSignal
         {
             set
             {
-                crtNormalSignal = value;
+                _crtNormalSignal = value;
                 UpdateNumbers();
             }
-            get => crtNormalSignal;
+            get => _crtNormalSignal;
         }
 
-        private int tgtNormalSignal;
-        public int TGTNormalSignal
+        private int _tgtNormalSignal;
+        public int TgtNormalSignal
         {
             set
             {
-                tgtNormalSignal = value;
+                _tgtNormalSignal = value;
                 UpdateNumbers();
             }
-            get => tgtNormalSignal;
+            get => _tgtNormalSignal;
         }
 
-        private int crtNetworkSignal;
-        public int CRTNetworkSignal
+        private int _crtNetworkSignal;
+        public int CrtNetworkSignal
         {
             set
             {
-                crtNetworkSignal = value;
+                _crtNetworkSignal = value;
                 UpdateNumbers();
             }
-            get => crtNetworkSignal;
+            get => _crtNetworkSignal;
         }
 
-        private int tgtNetworkSignal;
-        public int TGTNetworkSignal
+        private int _tgtNetworkSignal;
+        public int TgtNetworkSignal
         {
             set
             {
-                tgtNetworkSignal = value;
+                _tgtNetworkSignal = value;
                 UpdateNumbers();
             }
-            get => tgtNetworkSignal;
+            get => _tgtNetworkSignal;
         }
         
-        private int crtMission;
-        public int CRTMission
+        private int _crtMission;
+        public int CrtMission
         {
             set
             {
-                crtMission = value;
+                _crtMission = value;
                 UpdateNumbers();
             }
-            get => crtMission;
+            get => _crtMission;
         }
 
-        private int tgtMission;
-        public int TGTtMission
+        private int _tgtMission;
+        public int TgTtMission
         {
             set
             {
-                tgtMission = value;
+                _tgtMission = value;
                 UpdateNumbers();
             }
-            get => tgtMission;
+            get => _tgtMission;
         }
+
+        private int _normalTier;
+        public int NormalTier
+        {
+            get => _normalTier;
+            set
+            {
+                _normalTier = value;
+                UpdateNumbers();
+            }
+        }
+
+        private int _networkTier;
+        public int NetworkTier
+        {
+            get => _networkTier;
+            set
+            {
+                _networkTier = value;
+                UpdateNumbers();
+            }
+        }
+
 
         private string Padding(int v)
         {
@@ -85,9 +107,11 @@ namespace ROOT
 
         private void UpdateNumbers()
         {
-            NormalSignal.text = Padding(crtNormalSignal) + "/" + Padding(tgtNormalSignal);
-            NetworkSignal.text = Padding(crtNetworkSignal) + "/" + Padding(tgtNetworkSignal);
-            MissionTarget.text = Padding(crtMission) + "/" + Padding(tgtMission);
+            NormalSignal.text = Padding(_crtNormalSignal) + "/" + Padding(_tgtNormalSignal);
+            NetworkSignal.text = Padding(_crtNetworkSignal) + "/" + Padding(_tgtNetworkSignal);
+            MissionTarget.text = Padding(_crtMission) + "/" + Padding(_tgtMission);
+            NormalTierText.text = "["+ Padding(_normalTier) + "]";
+            NetworkTierText.text = "[" + Padding(_networkTier) + "]";
         }
     }
 }

@@ -104,7 +104,6 @@ namespace ROOT
         private int discountRate = 0;
         private int UnitRetailPrice(int idx,int tier)
         {
-            //TODO 实际打折的价格还要在这儿体现出来。
             var (item1, priceMutilpier, item3) = TierMultiplier(tier);
             var val = Mathf.FloorToInt(_hardwarePrices[idx] * priceMutilpier);
             val = Mathf.FloorToInt(val * (1.0f - discountRate * 0.01f));
@@ -115,7 +114,11 @@ namespace ROOT
         private int UnitHardwarePrice(CoreType core,SideType[] sides)
         {
             _priceByCore.TryGetValue(core, out var corePrice);
-            var hardwarePrice = corePrice + sides.Sum(TryGetPrice);
+            //TODO 就是说边的价格不要弄成线性的，可能是指数的这种。
+            //var sidePrice = sides.Sum(TryGetPrice);
+            var sideCount= sides.Count(side => side == SideType.Connection);
+            var sidePrice = Mathf.Pow(2.5f, sideCount);
+            var hardwarePrice = corePrice + sidePrice;
             return Mathf.RoundToInt(hardwarePrice);
         }
 
@@ -207,9 +210,9 @@ namespace ROOT
             {
                 do
                 {
-                    //PB的Unit接口至少是2。
+                    //PB的Unit接口数至少是3。
                     sides = GenerateRandomSideArray(core);
-                } while (sides.Count(side => side == SideType.Connection) < 2);
+                } while (sides.Count(side => side == SideType.Connection) < 3);
             }
 
             var go = InitUnitShop(core, sides, out var hardwarePrice, ID, 0, tier, discount);

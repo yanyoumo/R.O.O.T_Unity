@@ -361,7 +361,9 @@ namespace ROOT
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
                 // ShouldCycle这个放到WorldLogic里面去了。
-                WorldLogic.UpdateLogic(LevelAsset, in stage, out _ctrlPack, out movedTile, out var movedCursor,out shouldCycle);
+                WorldLogic.UpdateLogic(
+                    LevelAsset, in stage, out _ctrlPack, out movedTile,
+                    out var movedCursor,out shouldCycle,out var AutoDrive);
 
                 if (roundGist.HasValue)
                 {
@@ -375,10 +377,11 @@ namespace ROOT
 
                 Animating = shouldCycle;
 
-                if (shouldCycle && movedTile && (!_noRequirement))
+                if (((AutoDrive.HasValue && AutoDrive.Value) || (shouldCycle && movedTile)) && (!_noRequirement))
                 {
                     if (LevelAsset.TimeLine.RequirementSatisfied)
                     {
+                        //BUG 谢特，这里autoDrive的时候加不上数据。
                         RequirementSatisfiedCycleCount++;
                     }
                 }
@@ -518,10 +521,12 @@ namespace ROOT
             LevelAsset.Shop.OpenShop(shouldOpenShop, discount);
             LevelAsset.SkillEnabled = SkillAllowed;
 
-            LevelAsset.SignalPanel.TGTNormalSignal = normalRval;
-            LevelAsset.SignalPanel.TGTNetworkSignal = networkRval;
-            LevelAsset.SignalPanel.CRTNormalSignal = harDriverCountInt;
-            LevelAsset.SignalPanel.CRTNetworkSignal = networkCountInt;
+            LevelAsset.SignalPanel.TgtNormalSignal = normalRval;
+            LevelAsset.SignalPanel.TgtNetworkSignal = networkRval;
+            LevelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
+            LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
+            LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
+            LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
         }
     }
 

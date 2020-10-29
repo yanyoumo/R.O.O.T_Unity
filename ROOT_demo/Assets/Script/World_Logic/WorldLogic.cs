@@ -909,7 +909,7 @@ namespace ROOT
         }
 
         public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type, out ControllingPack ctrlPack,
-            out bool movedTile, out bool movedCursor, out bool shouldCycle)
+            out bool movedTile, out bool movedCursor, out bool shouldCycle,out bool? autoDrive)
         {
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = movedCursor = false;
@@ -926,13 +926,13 @@ namespace ROOT
 
             #endregion
 
-            var AutoDrive = WorldCycler.NeedAutoDriveStep;
+            autoDrive = WorldCycler.NeedAutoDriveStep;
 
             //不一定必然是相反的，有可能是双false。
             var forwardCycle = false;
             var reverseCycle = false;
 
-            if (!AutoDrive.HasValue)
+            if (!autoDrive.HasValue)
             {
                 #region UserIO
 
@@ -955,6 +955,7 @@ namespace ROOT
                     movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);//这个flag的实际含义和名称有冲突。
 
                     currentLevelAsset.SkillMgr.SkillEnabled = currentLevelAsset.SkillEnabled;
+                    //BUG !!!重大Bug，自动演进的时候不会计Mission的数字。
                     currentLevelAsset.SkillMgr.TriggerSkill(currentLevelAsset, ctrlPack);
                 }
 
@@ -964,8 +965,8 @@ namespace ROOT
             }
             else
             {
-                forwardCycle = AutoDrive.Value;
-                reverseCycle = !AutoDrive.Value;
+                forwardCycle = autoDrive.Value;
+                reverseCycle = !autoDrive.Value;
             }
 
 
@@ -996,7 +997,7 @@ namespace ROOT
 
             #region CLEANUP
 
-            shouldCycle = AutoDrive.HasValue || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
+            shouldCycle = autoDrive.HasValue || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
 
             #endregion
         }

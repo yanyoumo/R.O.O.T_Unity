@@ -33,7 +33,7 @@ namespace ROOT
                 LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             }
             LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
-            LevelAsset.SignalPanel.TGTtMission= LevelAsset.ActionAsset.TargetCount;
+            LevelAsset.SignalPanel.TgTtMission= LevelAsset.ActionAsset.TargetCount;
             LevelAsset.HintMaster.ShouldShowCheckList = false;
         }
 
@@ -69,7 +69,7 @@ namespace ROOT
         {
             var res= UpdateCareerGameOverStatus(currentLevelAsset);
             LevelAsset.TimeLine.SetCurrentCount = RequirementSatisfiedCycleCount;
-            LevelAsset.SignalPanel.CRTMission = RequirementSatisfiedCycleCount;
+            LevelAsset.SignalPanel.CrtMission = RequirementSatisfiedCycleCount;
             return res;
         }
 

@@ -248,6 +248,10 @@ namespace ROOT
 
         public Dictionary<Vector2Int, GameObject> UnitsGameObjects { get; private set; }
 
+        public int GetTotalTierCountByCoreType(CoreType coreType)
+        {
+            return Units.Where(unit => unit.UnitCore == coreType).Sum(unit => unit.Tier);
+        }
         public int GetUnitCount => UnitsGameObjects.Count;
         public int GetNonPCBUnitCount => Units.Count(unit => unit.UnitCore != CoreType.PCB);
 
