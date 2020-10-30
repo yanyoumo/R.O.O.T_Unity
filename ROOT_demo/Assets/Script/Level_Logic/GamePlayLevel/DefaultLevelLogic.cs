@@ -462,9 +462,9 @@ namespace ROOT
                 LevelAsset.WarningDestoryer.ForceReset();
             }
 
-            if (lastDestoryBool && !shouldDestoryer)
+            if ((lastDestoryBool && !shouldDestoryer) && !WorldCycler.NeedAutoDriveStep.HasValue)
             {
-                //RISK 这个的触发实际和商店的切换HeatSink冲突了。
+                //这个的触发实际和商店的切换HeatSink冲突了。 Resolved
                 LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
             }
 
