@@ -795,9 +795,17 @@ namespace ROOT
         //TEMP 每一步应该才计算一次，帧间时都这么临时存着。
         private static int occupiedHeatSink;
 
+        internal static void UpdateUICurrencyVal(GameAssets currentLevelAsset)
+        {
+            if (currentLevelAsset.CostChart != null)
+            {
+                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
+            }
+        }
 
         /// <summary>
         /// 这个函数主要是将目前场面上的数据反映到UI和玩家的视野中，这个很可能是不能单纯用flow的框架来搞？
+        /// 这个真的不能瞎调，每调用一次就会让场上单位调用一次。
         /// </summary>
         /// <param name="currentLevelAsset"></param>
         internal static void UpdateBoardData(GameAssets currentLevelAsset)
@@ -828,35 +836,10 @@ namespace ROOT
             currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
             currentLevelAsset.DeltaCurrency = inCome - cost;
 
-            if (currentLevelAsset.CostLine != null)
-            {
-                if ((inCome != lastInCome) || (cost != lastCost))
-                {
-                    currentLevelAsset.CostLine.Income = Mathf.FloorToInt(inCome);
-                    currentLevelAsset.CostLine.Cost = Mathf.FloorToInt(cost);
-                }
-            }
-
             if (currentLevelAsset.CostChart != null)
             {
-                currentLevelAsset.CostChart.IncomesVal = inCome - cost;
                 currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
-            }
-
-            lastInCome = inCome;
-            lastCost = cost;
-
-
-            if (currentLevelAsset.LCDCurrencyEnabled)
-            {
-                currentLevelAsset.DataScreen.SetLcd(currentLevelAsset.GameStateMgr.GetCurrency(), RowEnum.CurrentMoney);
-                currentLevelAsset.DataScreen.SetAlertLevel(currentLevelAsset.GameStateMgr.GetCurrencyRatio(),
-                    RowEnum.CurrentMoney);
-            }
-
-            if (currentLevelAsset.LCDDeltaCurrencyEnabled)
-            {
-                currentLevelAsset.DataScreen.SetLcd(currentLevelAsset.DeltaCurrency, RowEnum.DeltaMoney);
+                currentLevelAsset.CostChart.IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency);
             }
         }
 

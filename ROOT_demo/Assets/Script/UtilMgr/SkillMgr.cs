@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 
@@ -15,14 +17,10 @@ namespace ROOT
         Discount,               //ε：下次商店会有折扣。
     }
 
-    /// <summary>
-    /// 是这个的问题，TriggerSkill和UpdateSkill可能要分开的。
-    /// 换句话说，这个玩意儿还要有个内部状态。这个内部状态很难搞。
-    /// </summary>
     public class SkillMgr : MonoBehaviour
     {
-        public List<GameObject> SkillPalettes;
-        //public List<TextMeshPro> SkillTag;
+        public List<SkillPalette> SkillPalettes;
+        public List<InstancedSkillData> InstancedSkillData;
         public Transform IconFramework;
         public SkillData SkillData;
 
@@ -45,51 +43,40 @@ namespace ROOT
         {
             var tempDiscount = discount;
             discount = 0;
+            InstancedSkillData.Where(skill => skill.SklType == SkillType.Discount).ForEach(skill => skill.SkillEnabled = true);
+            UpdateSkillPalettes();
             return tempDiscount;
-        }
-
-        private string SkillTagText(SkillBase skill)
-        {
-            switch (skill.SklType)
-            {
-                case SkillType.TimeFromMoney:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>" + skill.TimeGain + "<<</color>";
-                case SkillType.FastForward:
-                    return "<color=#8a0b00>>>" + skill.FastForwardCount + "</color> <color=#00b35c>+" + skill.AdditionalIncome + "%</color>";
-                case SkillType.Swap:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>R=" + skill.radius + "</color>";
-                case SkillType.RefreshHeatSink:
-                    return "Refresh";
-                case SkillType.Discount:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>-" + skill.Discount + "%</color>";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
         private float _fastForwardRebate = -1.0f;
         private int _swapRadius = -1;
 
+        #region SkillTemporalFramework
+
         //就是整个技能框架还是要弄一套配置框架………………🤣
-        private void ActiveSkill(GameAssets currentLevelAsset, SkillBase skill)
+        private void ActiveSkill(GameAssets currentLevelAsset, int skillIndex)
         {
-            bool moneySpent = false;
+            var skill = InstancedSkillData[skillIndex];
+            if (!skill.SkillEnabled) return;
+            if (skill.CountLimit != -1 && skill.RemainingCount <= 0) return;
+
+            bool moneySpent = false, skillActived = false;
             switch (skill.SklType)
             {
                 case SkillType.TimeFromMoney:
                     //持续技能
-                    //RISK 之前说到的这个技能可能无法很好的解反馈的问题还在。（Gameplay的问题，不是程序的问题。）
                     moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
+                        skillActived = true;
                         CurrentSkillType = SkillType.TimeFromMoney;
                         WorldCycler.ExpectedStepDecrement(skill.TimeGain);
-                        //因为这个时间点后就AutoDrive了，所以就没机会调UpdateBoard了，所以先在这里调一下。
-                        WorldLogic.UpdateBoardData(currentLevelAsset);
+                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);//因为这个时间点后就AutoDrive了，所以就没机会调UpdateBoard了，所以先在这里调一下。
                     }
                     break;
                 case SkillType.FastForward:
                     //持续技能
+                    skillActived = true;
                     _fastForwardRebate = 1.00f + 0.01f * skill.AdditionalIncome;
                     WorldCycler.ExpectedStepIncrement(skill.FastForwardCount);
                     CurrentSkillType = SkillType.FastForward;
@@ -99,32 +86,95 @@ namespace ROOT
                     moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
+                        skillActived = true;//这里的计数还可以取消。
                         swapAlipay = skill.Cost;
                         CurrentSkillType = SkillType.Swap;
                         _swapRadius = skill.radius;
                         unitAPosition = currentLevelAsset.Cursor.CurrentBoardPosition;
                         UpdateAIndicator(currentLevelAsset, unitAPosition);
-                        WorldLogic.UpdateBoardData(currentLevelAsset);
+                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;
                 case SkillType.RefreshHeatSink:
                     //瞬时技能
-                    break;
+                    throw new NotImplementedException();
                 case SkillType.Discount:
                     //延迟技能
                     moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
+                        skillActived = true;
                         discount = skill.Discount;
-                        WorldLogic.UpdateBoardData(currentLevelAsset);
+                        skill.SkillEnabled = false;
+                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            //currentSkillType = skill.SklType; 
+            if (skillActived&&skill.CountLimit!=-1)
+            {
+                skill.RemainingCount--;
+                if (skill.RemainingCount<=0)
+                {
+                    skill.SkillEnabled = false;
+                }
+            }
+            UpdateSkillPalettes();
         }
+        public void UpKeepSkill(GameAssets currentLevelAsset)
+        {
+            var autoDrive = WorldCycler.NeedAutoDriveStep;
+
+            if (!CurrentSkillType.HasValue) return;
+
+            switch (CurrentSkillType.Value)
+            {
+                case SkillType.Swap:
+                    break;
+                case SkillType.RefreshHeatSink:
+                    break;
+                case SkillType.FastForward:
+                    currentLevelAsset.CurrencyRebate = 1.00f;
+
+                    if (!autoDrive.HasValue)
+                    {
+                        _fastForwardRebate = -1.00f;
+                        CurrentSkillType = null;
+                        //RISK 本质上是在乱搞flow，这个还是得想辙。而且这个函数也不能这么搞。
+                        //flow结构这个时候不要那么八股，还是先用上，需求多了，这个可能要改成基于监听的。
+                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
+                    }
+
+                    if (_fastForwardRebate > 0.0f)
+                    {
+                        currentLevelAsset.CurrencyRebate = _fastForwardRebate;
+                    }
+
+                    break;
+                case SkillType.Discount:
+                    break;
+                case SkillType.TimeFromMoney:
+                    if (!autoDrive.HasValue)
+                    {
+                        CurrentSkillType = null;
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        public void TriggerSkill(GameAssets currentLevelAsset,in ControllingPack ctrlPack)
+        {
+            if (!_skillEnabled || !ctrlPack.HasFlag(ControllingCommand.Skill) || CurrentSkillType.HasValue) return;//这里return掉了。
+            ActiveSkill(currentLevelAsset, ctrlPack.SkillID);
+        }
+
+        #endregion
+
+        #region SwapSection
+
+        #region IndicatorRelated
 
         internal static void CleanIndicatorFrame(GameAssets currentLevelAsset)
         {
@@ -140,8 +190,7 @@ namespace ROOT
                 }
             }
         }
-
-
+        
         internal static void CleanIndicator(GameAssets currentLevelAsset)
         {
             if (currentLevelAsset.SkillIndGoA != null)
@@ -181,6 +230,8 @@ namespace ROOT
             }
         }
 
+        #endregion
+
         private Vector2Int unitAPosition = new Vector2Int(-1, -1);//这个的值赋进去了，只是要想着再画出来。
         private int swapAlipay = 0;
         private Vector2Int oldCurrentPos = new Vector2Int(-1, -1);
@@ -219,7 +270,7 @@ namespace ROOT
                 {
                     currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
                     swapAlipay = 0;
-                    WorldLogic.UpdateBoardData(currentLevelAsset);
+                    WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
                 }
 
                 //淦、这里如果取消的话，这里还得写退款的逻辑…………
@@ -229,62 +280,53 @@ namespace ROOT
             }
         }
 
-        public void UpKeepSkill(GameAssets currentLevelAsset)
+        #endregion
+
+        private string SkillTagText(InstancedSkillData skill)
         {
-            var autoDrive = WorldCycler.NeedAutoDriveStep;
-
-            if (!CurrentSkillType.HasValue) return;
-
-            switch (CurrentSkillType.Value)
+            switch (skill.SklType)
             {
-                case SkillType.Swap:
-                    break;
-                case SkillType.RefreshHeatSink:
-                    break;
-                case SkillType.FastForward:
-                    currentLevelAsset.CurrencyRebate = 1.00f;
-
-                    if (!autoDrive.HasValue)
-                    {
-                        _fastForwardRebate = -1.00f;
-                        CurrentSkillType = null;
-                        //RISK 本质上是在乱搞flow，这个还是得想辙。而且这个函数也不能这么搞。
-                        //flow结构这个时候不要那么八股，还是先用上，需求多了，这个可能要改成基于监听的。
-                        WorldLogic.UpdateBoardData(currentLevelAsset);
-                    }
-
-                    if (_fastForwardRebate > 0.0f)
-                    {
-                        currentLevelAsset.CurrencyRebate = _fastForwardRebate;
-                    }
-
-                    break;
-                case SkillType.Discount:
-                    break;
+                case SkillType.TimeFromMoney when skill.CountLimit != -1:
+                    return "<color=#003663>RMN=" + skill.RemainingCount + "</color> <color=#00b35c>" + skill.TimeGain + "<<</color>";
                 case SkillType.TimeFromMoney:
-                    if (!autoDrive.HasValue)
-                    {
-                        CurrentSkillType = null;
-                    }
-                    break;
+                    return "<color=#00b35c>" + skill.TimeGain + "<<</color>";
+                case SkillType.FastForward:
+                    return "<color=#8a0b00>>>" + skill.FastForwardCount + "</color> <color=#00b35c>+" + skill.AdditionalIncome + "%</color>";
+                case SkillType.Swap:
+                    return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>R=" + skill.radius + "</color>";
+                case SkillType.RefreshHeatSink:
+                    return "Refresh";
+                case SkillType.Discount:
+                    return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>-" + skill.Discount + "%</color>";
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        public void TriggerSkill(GameAssets currentLevelAsset,in ControllingPack ctrlPack)
+        private void PopulateInstancedSkill()
         {
-            if (!_skillEnabled || !ctrlPack.HasFlag(ControllingCommand.Skill) || CurrentSkillType.HasValue) return;//这里return掉了。
-            ActiveSkill(currentLevelAsset, SkillData.SkillDataList[ctrlPack.SkillID]);
+            InstancedSkillData = new List<InstancedSkillData>();
+            for (var i = 0; i < SkillPalettes.Count; i++)
+            {
+                InstancedSkillData.Add(new InstancedSkillData(SkillData.SkillDataList[i]));
+            }
+        }
+
+        private void UpdateSkillPalettes()
+        {
+            for (var i = 0; i < SkillPalettes.Count; i++)
+            {
+                SkillPalettes[i].SklType = InstancedSkillData[i].SklType;
+                SkillPalettes[i].SkillTagText = SkillTagText(InstancedSkillData[i]);
+                SkillPalettes[i].SkillIconSprite = InstancedSkillData[i].SkillIcon;
+                SkillPalettes[i].SkillEnabled = InstancedSkillData[i].SkillEnabled;
+            }
         }
 
         public void Awake()
         {
-            for (var i = 0; i < SkillPalettes.Count; i++)
-            {
-                SkillPalettes[i].GetComponentInChildren<TextMeshPro>().text = SkillTagText(SkillData.SkillDataList[i]);
-                SkillPalettes[i].GetComponentInChildren<SpriteRenderer>().sprite = SkillData.SkillDataList[i].SkillIcon;
-            }
+            PopulateInstancedSkill();
+            UpdateSkillPalettes();
         }
     }
 }

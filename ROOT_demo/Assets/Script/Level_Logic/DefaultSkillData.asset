@@ -15,6 +15,7 @@ MonoBehaviour:
   SkillDataList:
   - SkillIcon: {fileID: 21300000, guid: d193f3ce7bc69c74fad4d3ced5b72a63, type: 3}
     Cost: 0
+    CountLimit: -1
     TimeGain: 0
     FastForwardCount: 5
     AdditionalIncome: 5
@@ -22,6 +23,7 @@ MonoBehaviour:
     Discount: 0
   - SkillIcon: {fileID: 21300000, guid: d193f3ce7bc69c74fad4d3ced5b72a63, type: 3}
     Cost: 0
+    CountLimit: -1
     TimeGain: 0
     FastForwardCount: 7
     AdditionalIncome: 7
@@ -29,6 +31,7 @@ MonoBehaviour:
     Discount: 0
   - SkillIcon: {fileID: 21300000, guid: b9440521b53c9664185f900098568696, type: 3}
     Cost: 0
+    CountLimit: 2
     TimeGain: 3
     FastForwardCount: 7
     AdditionalIncome: 5
@@ -36,6 +39,7 @@ MonoBehaviour:
     Discount: 0
   - SkillIcon: {fileID: 21300000, guid: b9440521b53c9664185f900098568696, type: 3}
     Cost: 0
+    CountLimit: 1
     TimeGain: 7
     FastForwardCount: 0
     AdditionalIncome: 0
@@ -43,6 +47,7 @@ MonoBehaviour:
     Discount: 0
   - SkillIcon: {fileID: 21300000, guid: c9718bbe22da23e4da808160035b8a59, type: 3}
     Cost: 50
+    CountLimit: -1
     TimeGain: 7
     FastForwardCount: 0
     AdditionalIncome: 0
@@ -50,6 +55,7 @@ MonoBehaviour:
     Discount: 0
   - SkillIcon: {fileID: 21300000, guid: c9718bbe22da23e4da808160035b8a59, type: 3}
     Cost: 150
+    CountLimit: -1
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
@@ -57,6 +63,7 @@ MonoBehaviour:
     Discount: 0
   - SkillIcon: {fileID: 21300000, guid: c9718bbe22da23e4da808160035b8a59, type: 3}
     Cost: 450
+    CountLimit: -1
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
@@ -64,6 +71,7 @@ MonoBehaviour:
     Discount: 0
   - SkillIcon: {fileID: 21300000, guid: 1894cd8f2cf71934a8e08f06d2960260, type: 3}
     Cost: 100
+    CountLimit: -1
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
@@ -71,6 +79,7 @@ MonoBehaviour:
     Discount: 30
   - SkillIcon: {fileID: 21300000, guid: a79450bb4f36fae468b0f089f0ba22d3, type: 3}
     Cost: 0
+    CountLimit: -1
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
@@ -78,6 +87,7 @@ MonoBehaviour:
     Discount: 0
   - SkillIcon: {fileID: 21300000, guid: a79450bb4f36fae468b0f089f0ba22d3, type: 3}
     Cost: 0
+    CountLimit: -1
     TimeGain: 0
     FastForwardCount: 0
     AdditionalIncome: 0
