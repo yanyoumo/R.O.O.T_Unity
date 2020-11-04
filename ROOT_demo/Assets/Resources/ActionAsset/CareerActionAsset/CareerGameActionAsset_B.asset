@@ -22,26 +22,22 @@ MonoBehaviour:
   ShopExcludedType: 
   Actions: []
   RoundDatas:
-  - ShopLength: 6
-    RequireLength: 10
+  - ID: 0
+    ShopLength: 1
+    RequireLength: 1
     NormalRequirement: 3
     NetworkRequirement: 4
-    DestoryerLength: 8
-  - ShopLength: 3
-    RequireLength: 7
+    DestoryerLength: 1
+    DestoryerCount: 0
+    InfoCount: 0
+  - ID: 1
+    ShopLength: 1
+    RequireLength: 1
     NormalRequirement: 7
     NetworkRequirement: 8
-    DestoryerLength: 10
-  - ShopLength: 4
-    RequireLength: 12
-    NormalRequirement: 24
-    NetworkRequirement: 61
-    DestoryerLength: 3
-  - ShopLength: 4
-    RequireLength: 9
-    NormalRequirement: 15
-    NetworkRequirement: 20
-    DestoryerLength: 2
+    DestoryerLength: 20
+    DestoryerCount: 0
+    InfoCount: 0
   InitalBoard:
   - Core: 2
     Sides: 01000000010000000100000000000000

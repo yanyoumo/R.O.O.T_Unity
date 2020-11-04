@@ -43,7 +43,7 @@ namespace ROOT
         public Board GameBoard { get; set; }
         
         public int NextStrikingCount { internal set; get; }
-        private WarningDestoryerStatus Status;
+        protected WarningDestoryerStatus Status;
 
         public int Counter { private set; get; }
         public int StartingMedian { private set; get; }
@@ -266,7 +266,7 @@ namespace ROOT
 
         public virtual WarningDestoryerStatus GetStatus => Status;
 
-        public Color GetWaringColor
+        public virtual Color GetWaringColor
         {
             get
             {
@@ -288,5 +288,26 @@ namespace ROOT
             count = NextStrikingCount;
             return NextIncomes;
         }
+    }
+
+    public class MeteoriteInfo : MeteoriteBomber
+    {
+        public virtual Color GetWaringColor
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case WarningDestoryerStatus.Warning:
+                        return Color.yellow;
+                    case WarningDestoryerStatus.Striking:
+                        ColorUtility.TryParseHtmlString("#FF3300", out Color col);
+                        return col;
+                    default:
+                        throw new IndexOutOfRangeException();
+                }
+            }
+        }
+
     }
 }

@@ -14,6 +14,7 @@ namespace ROOT
     internal static class WorldCycler
     {
         public static int Step => ActualStep;
+        public static bool BossStage = false;
 
         /// <summary>
         /// NULL: 不需要自动演进。
@@ -24,10 +25,18 @@ namespace ROOT
         {
             get
             {
-                if (ActualStep==ExpectedStep) return null;
-                return ExpectedStep > ActualStep;
+                if (BossStage)
+                {
+                    return true;
+                }
+                else
+                {
+                    if (ActualStep == ExpectedStep) return null;
+                    return ExpectedStep > ActualStep;
+                }
             }
         }
+
         public static int ActualStep { private set; get; }
         public static int ExpectedStep { private set; get; }
 
@@ -919,9 +928,7 @@ namespace ROOT
             {
                 #region UserIO
 
-                ctrlPack = UpdateInputScheme(currentLevelAsset,
-                    out movedTile, out movedCursor,
-                    ref currentLevelAsset._boughtOnce);
+                ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor, ref currentLevelAsset._boughtOnce);
 
                 if (currentLevelAsset.InputEnabled)
                 {

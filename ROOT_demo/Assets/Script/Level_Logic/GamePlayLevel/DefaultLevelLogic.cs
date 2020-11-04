@@ -74,7 +74,7 @@ namespace ROOT
         public bool RotateEnabled = true;
         public bool ShopEnabled = true;
         public bool SkillEnabled = true;
-        public bool DestroyerEnabled = false;
+        public bool DestroyerEnabled = true;
         //LevelLogicFlag
         public bool GameOverEnabled = true;
         //UtilsFlag
@@ -168,7 +168,11 @@ namespace ROOT
         protected bool PendingCleanUp;
 
         protected float AnimationTimerOrigin = 0.0f; //都是秒
-        public static readonly float AnimationDuration = 0.15f; //都是秒
+
+        public static float AnimationDuration => WorldCycler.BossStage ? BossAnimationDuration : DefaultAnimationDuration;
+
+        public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
+        public static readonly float BossAnimationDuration = 0.3f; //都是秒
 
         public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
         public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
@@ -356,6 +360,13 @@ namespace ROOT
             var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
             var stage = roundGist?.Type ?? StageType.Shop;
 
+            if (stage == StageType.Boss)
+            {
+                //TODO 之后Boss部分就在这儿搞。
+                WorldCycler.BossStage = true;
+                LevelAsset.DestroyerEnabled = true;
+            }
+
             if (!Animating)
             {
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
@@ -381,7 +392,6 @@ namespace ROOT
                 {
                     if (LevelAsset.TimeLine.RequirementSatisfied)
                     {
-                        //BUG 谢特，这里autoDrive的时候加不上数据。
                         RequirementSatisfiedCycleCount++;
                     }
                 }
@@ -432,9 +442,11 @@ namespace ROOT
         {
             //这个函数就很接近裁判要做的事儿了。
             int normalRval = 0, networkRval = 0;
-            bool shouldOpenShop, shouldCurrencyIo, shouldCurrencyIncome, shouldDestoryer,SkillAllowed;
+            bool shouldOpenShop, shouldCurrencyIo, shouldCurrencyIncome, 
+                shouldDestoryer, SkillAllowed, bossStage;
             var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
 
+            bossStage = roundGist.Type == StageType.Boss;
             shouldOpenShop = roundGist.Type == StageType.Shop;
             SkillAllowed = roundGist.Type != StageType.Shop;
             shouldCurrencyIncome = roundGist.Type == StageType.Require;
@@ -457,7 +469,7 @@ namespace ROOT
                 _obselateStepID = LevelAsset.StepCount;
             }
 
-            if (LevelAsset.DestroyerEnabled && !shouldDestoryer)
+            if ((LevelAsset.DestroyerEnabled && !shouldDestoryer) && !WorldCycler.BossStage)
             {
                 LevelAsset.WarningDestoryer.ForceReset();
             }
@@ -470,9 +482,9 @@ namespace ROOT
 
             lastDestoryBool = shouldDestoryer;
 
-            //RISK 这里把Destroyer目前完全关了。
+            //RISK 这里把Destroyer目前完全关了。现在Boss阶段也要用。
             //LevelAsset.DestroyerEnabled = ShouldDestoryer;
-            LevelAsset.DestroyerEnabled = false;
+            LevelAsset.DestroyerEnabled = WorldCycler.BossStage;
             LevelAsset.CurrencyIncomeEnabled = shouldCurrencyIncome;
             LevelAsset.CurrencyIOEnabled = shouldCurrencyIo;
 

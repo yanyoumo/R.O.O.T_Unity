@@ -17,6 +17,7 @@ namespace ROOT
         Ending = 3,//Black
         HeatSinkSwitch = 4,//ICON
         ShopOpened = 5,//
+        BossStage = 6,//Purple
     }
 
     [Serializable]
@@ -139,7 +140,8 @@ namespace ROOT
                 }
 
                 RoundData round = RoundDatas[RoundCount];
-                var stage = round.CheckStage(truncatedCount);
+                //这里的逻辑还是不太行。
+                var stage = round.CheckStage(truncatedCount, RoundCount == RoundDatas.Length - 1);
                 if (!stage.HasValue) return;
 
                 roundGist = LevelActionAsset.ExtractGist(stage.Value, round);

@@ -183,6 +183,7 @@ namespace ROOT
                     targetingStatus = CellStatus.Normal;
                     break;
                 case StageType.Require:
+                case StageType.Boss://TODO Boss的Sink状态还要在这儿决定。
                     targetingStatus = CellStatus.Warning;
                     break;
                 case StageType.Destoryer:

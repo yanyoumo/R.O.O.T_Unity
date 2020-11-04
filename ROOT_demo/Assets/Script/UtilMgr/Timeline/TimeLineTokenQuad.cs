@@ -84,6 +84,9 @@ namespace ROOT
                 case StageType.Ending:
                     gistList.Add((int)TimeLineTokenType.Ending);
                     break;
+                case StageType.Boss:
+                    gistList.Add((int) TimeLineTokenType.BossStage);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -108,6 +111,7 @@ namespace ROOT
                 ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_ENDING),
                 ColorUtilityWrapper.ParseHtmlStringNotNull("#FF8800"),
                 ColorUtilityWrapper.ParseHtmlStringNotNull("#0E195E"),
+                ColorUtilityWrapper.ParseHtmlStringNotNull("#AB00C2"),
             };
         }
 

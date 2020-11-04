@@ -47,6 +47,7 @@ namespace ROOT
         Shop,
         Require,
         Destoryer,
+        Boss,
         Ending,
     }
 
@@ -58,6 +59,10 @@ namespace ROOT
         public int networkReq;
         public int shopLength;
         public int[] HSSwTruncatedIdx;
+
+        public int BossLength;
+        public int DestoryerCount;
+        public int InfoCount;
 
         public bool SwitchHeatsink(int tCount)
         {
@@ -87,10 +92,10 @@ namespace ROOT
         [Space]
         [Range(0, 20)]
         public int DestoryerLength;
-
-        /*[Space]
-        [Range(0, 30)]
-        public int HeatSinkSwitchCount;*/
+        [Range(0, 20)]
+        public int DestoryerCount;
+        [Range(0, 20)]
+        public int InfoCount;
 
         public int TotalLength => ShopLength + RequireLength + DestoryerLength;
 
@@ -99,8 +104,10 @@ namespace ROOT
             return truncatedCount < TotalLength;
         }
 
-        public StageType? CheckStage(int truncatedCount)
+        public StageType? CheckStage(int truncatedCount,bool isFinalRound)
         {
+            //RISK 这里现在把最后一个Round的Destoryer部分变成Boss阶段。
+            //Hmmmm还是尽量稍改代码的狗皮膏药，先逻辑和相关东西弄明白后这里得重新搞。
             var dic=new List<Tuple<StageType, int>>()
             {
                 new Tuple<StageType, int>(StageType.Shop,ShopLength),
@@ -113,6 +120,10 @@ namespace ROOT
             {
                 if (truncatedCount < dic[idx].Item2)
                 {
+                    if (isFinalRound && dic[idx].Item1 == StageType.Destoryer)
+                    {
+                        return StageType.Boss;
+                    }
                     return dic[idx].Item1;
                 }
 
@@ -242,12 +253,21 @@ namespace ROOT
         [CanBeNull]
         public RoundGist? GetRoundGistByStep(int stepCount)
         {
-            var tCount = GetTruncatedCount(stepCount, out var Round);
+            var tCount = GetTruncatedCount(stepCount, out var _round);
             if (tCount==-1) return null;
-            var round = RoundDatas[Round];
-            var type = round.CheckStage(tCount);
+
+            var round = RoundDatas[_round];
+            var type = round.CheckStage(tCount, _round == RoundDatas.Length - 1);
+
             if (!type.HasValue) return null;
-            return ExtractGist(type.Value, round);
+
+            var stage = type.Value;
+            if (_round == RoundDatas.Length - 1 && stage == StageType.Destoryer)
+            {
+                stage = StageType.Boss;
+            }
+
+            return ExtractGist(stage, round);
         }
 
         public static RoundGist ExtractGist(StageType type, RoundData round)
@@ -265,6 +285,13 @@ namespace ROOT
                     roundGist.networkReq = round.NetworkRequirement;
                     break;
                 case StageType.Destoryer:
+                    break;
+                case StageType.Boss:
+                    roundGist.BossLength = round.DestoryerLength;
+                    roundGist.DestoryerCount = round.DestoryerCount;
+                    roundGist.InfoCount = round.InfoCount;
+                    break;
+                case StageType.Ending:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
