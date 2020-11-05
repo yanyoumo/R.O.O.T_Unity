@@ -292,7 +292,7 @@ namespace ROOT
 
     public class MeteoriteInfo : MeteoriteBomber
     {
-        public virtual Color GetWaringColor
+        public override Color GetWaringColor
         {
             get
             {
@@ -308,6 +308,5 @@ namespace ROOT
                 }
             }
         }
-
     }
 }

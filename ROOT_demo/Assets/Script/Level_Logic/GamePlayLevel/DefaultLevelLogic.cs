@@ -47,6 +47,8 @@ namespace ROOT
         public CostChart CostChart;
         public CoreType? DestoryedCoreType;
         public SignalPanel SignalPanel;
+        public int ReqOkCount = 0;
+        public List<Vector2Int> CollectorZone;
 
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
@@ -151,7 +153,7 @@ namespace ROOT
     public abstract class LevelLogic : MonoBehaviour //LEVEL-LOGIC/每一关都有一个这个类。
     {
         private bool _noRequirement;
-        protected int RequirementSatisfiedCycleCount = 0;
+        //protected int RequirementSatisfiedCycleCount = 0;
 
         public bool IsTutorialLevel = false;
 
@@ -392,7 +394,7 @@ namespace ROOT
                 {
                     if (LevelAsset.TimeLine.RequirementSatisfied)
                     {
-                        RequirementSatisfiedCycleCount++;
+                        LevelAsset.ReqOkCount++;
                     }
                 }
 

@@ -32,8 +32,8 @@ namespace ROOT
                 WorldCycler.InitCycler();
                 LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             }
-            LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
-            LevelAsset.SignalPanel.TgTtMission= LevelAsset.ActionAsset.TargetCount;
+            //LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
+            //LevelAsset.SignalPanel.TgTtMission= LevelAsset.ActionAsset.TargetCount;
             LevelAsset.HintMaster.ShouldShowCheckList = false;
         }
 
@@ -68,8 +68,8 @@ namespace ROOT
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             var res= UpdateCareerGameOverStatus(currentLevelAsset);
-            LevelAsset.TimeLine.SetCurrentCount = RequirementSatisfiedCycleCount;
-            LevelAsset.SignalPanel.CrtMission = RequirementSatisfiedCycleCount;
+            LevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
+            LevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
             return res;
         }
 

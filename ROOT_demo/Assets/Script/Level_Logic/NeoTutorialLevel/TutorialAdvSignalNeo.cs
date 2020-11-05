@@ -31,7 +31,7 @@ namespace ROOT
 
             if (ActionEnded)
             {
-                bool timeLineGood = RequirementSatisfiedCycleCount >= LevelAsset.ActionAsset.TargetCount;
+                bool timeLineGood = LevelAsset.ReqOkCount >= LevelAsset.ActionAsset.TargetCount;
                 LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = timeLineGood;
                 LevelAsset.HintMaster.TutorialCheckList.SecondaryGoalCompleted = !OnceFlagB;
                 LevelCompleted = (!OnceFlagB) && timeLineGood;

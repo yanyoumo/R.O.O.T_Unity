@@ -174,6 +174,9 @@ namespace ROOT
         public Transform ShopBackPlane;
         public Transform ShopDiscountRoot;
 
+        public bool IsInGridHDD => InHddGrid && (UnitCore == CoreType.HardDrive);
+        public bool IsEndingGridNetwork => InServerGrid && (UnitCore == CoreType.NetworkCable) && ServerDepth == 1;
+
         private bool _hasDiscount = false;
         public bool HasDiscount
         {

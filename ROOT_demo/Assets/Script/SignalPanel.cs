@@ -109,7 +109,7 @@ namespace ROOT
         {
             NormalSignal.text = Padding(_crtNormalSignal) + "/" + Padding(_tgtNormalSignal);
             NetworkSignal.text = Padding(_crtNetworkSignal) + "/" + Padding(_tgtNetworkSignal);
-            MissionTarget.text = Padding(_crtMission) + "/" + Padding(_tgtMission);
+            MissionTarget.text = "[" + Padding(_crtMission) + "]";
             NormalTierText.text = "["+ Padding(_normalTier) + "]";
             NetworkTierText.text = "[" + Padding(_networkTier) + "]";
         }

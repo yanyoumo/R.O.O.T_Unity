@@ -15,6 +15,46 @@ namespace ROOT
 {
     public sealed class Board : MonoBehaviour
     {
+        private List<Vector2Int> GetSingleHardDriveInfoCollectorZone(Unit unit)
+        {
+            var zone = Utils.GetPixelateCircle_Tier(unit.Tier-1);
+            var res = new List<Vector2Int>();
+            zone.PatternList.ForEach(vec => res.Add(vec + unit.CurrentBoardPosition-new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
+            return res;
+        }
+
+        private List<Vector2Int> GetSingleNetworkInfoCollectorZone(Unit unit)
+        {
+            //TEMP 在这里调整MaxNetworkDepth和tier之间的关系。
+            var circleTier = Math.Max(Mathf.RoundToInt(BoardDataCollector.MaxNetworkDepth / 3.0f), 0);
+            var zone = Utils.GetPixelateCircle_Tier(circleTier);
+            var res = new List<Vector2Int>();
+            zone.PatternList.ForEach(vec => res.Add(vec + unit.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
+            return res;
+        }
+
+        public List<Vector2Int> GetInfoCollectorZone()
+        {
+            //这里保证前面调过一次计分函数，实在不行在这儿再调一遍。
+            var res = new List<Vector2Int>();
+
+            Units.Where(unit => unit.IsInGridHDD).ForEach(unit => res.AddRange(GetSingleHardDriveInfoCollectorZone(unit)));
+            Units.Where(unit => unit.IsEndingGridNetwork).ForEach(unit => res.AddRange(GetSingleNetworkInfoCollectorZone(unit)));
+            
+            return res.Where(CheckBoardPosValid).Distinct().ToList();
+        }
+
+        public void UpdateInfoZone(GameAssets levelAssets)
+        {
+            levelAssets.CollectorZone = GetInfoCollectorZone();
+
+            //TODO 这里直接用Heatsink还是有点坑，可能还是得弄成别的Indicator
+            //但是Indicator又得想办法长显。叮铃铃！！！想到了用边际连出一条边。
+            //这个目前很好，但还有微调的空间。
+            BoardGirds.Values.ForEach(grid => grid.ClearEdge());
+            BoardGirds.Values.ForEach(grid => grid.UpdateEdge(levelAssets.CollectorZone));
+        }
+
         #region 热力系统
 
         public HeatSinkPatternLib HeatSinkPatterns;
@@ -114,6 +154,8 @@ namespace ROOT
                     go.transform.localPosition = BoardGridZeroing.position + offset;
                     var key = new Vector2Int(i, j);
                     BoardGirds.Add(key, go.GetComponent<BoardGirdCell>());
+                    go.GetComponent<BoardGirdCell>().OnboardPos = key;
+                    go.GetComponent<BoardGirdCell>().owner = this;
                 }
             }
 

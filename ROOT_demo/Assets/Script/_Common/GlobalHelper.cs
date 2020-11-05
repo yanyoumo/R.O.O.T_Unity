@@ -581,5 +581,29 @@ namespace ROOT
 
             return ConnectionMeshType.NoChange;
         }
+
+        private static PixelateCirclePatternLib PixelateCirclePatternLibCache = null;
+
+        public static PixelateCirclePattern GetPixelateCircle_Tier(int tier)
+        {
+            if (PixelateCirclePatternLibCache == null)
+            {
+                GetPixelateCircle();
+            }
+            if (tier>=PixelateCirclePatternLibCache.Lib.Count)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            return PixelateCirclePatternLibCache.Lib[tier];
+        }
+
+        public static List<PixelateCirclePattern> GetPixelateCircle()
+        {
+            if (PixelateCirclePatternLibCache == null)
+            {
+                PixelateCirclePatternLibCache = Resources.Load<PixelateCirclePatternLib>("PixelateCircleLib/DefaultPixelateCirclePatternLib");
+            }
+            return PixelateCirclePatternLibCache.Lib;
+        }
     }
 }

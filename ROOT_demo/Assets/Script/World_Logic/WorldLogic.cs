@@ -900,6 +900,7 @@ namespace ROOT
             return shouldCycle;
         }
 
+
         public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type, out ControllingPack ctrlPack,
             out bool movedTile, out bool movedCursor, out bool shouldCycle,out bool? autoDrive)
         {
@@ -914,6 +915,7 @@ namespace ROOT
             //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
             //总之稳了后，这个不能这么每帧调用。
             occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
+            currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset);//RISK 这里先放在这
             currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
 
             #endregion
