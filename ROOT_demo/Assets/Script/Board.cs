@@ -120,18 +120,26 @@ namespace ROOT
         {
             //RISK 现在出来一个问题，就是基础图样加上这一轮添加后，有可能就堆满了。
             //TODO 有办法，就是想办法在pattern里面储存“不能被填充”这种数据。
+            //现在Diminishing里面加了一个Maxout。hmmmm先这样，并没有解决上面的核心问题。
             if (DiminishingStep == -1) return RawHeatSinkPos;
 
             var res = RawHeatSinkPos.ToList();
-            var dimList = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID].DiminishingList;
+            var HeatSinkPattern = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID];
+            var dimList = HeatSinkPattern.DiminishingList;
+            //RISK 这个算法还是考虑写道HeatSinkPattern的算法里面。
+            var maxOut = HeatSinkPattern.CutOffCount;
 
-            for (var i = 0; i < DiminishingStep; i++)
+            if (DiminishingStep < maxOut)
             {
-                if (i < dimList.Count && !res.Contains(dimList[i]))
+                for (var i = 0; i < DiminishingStep; i++)
                 {
-                    res.Add(dimList[i]);
+                    if (i < dimList.Count && !res.Contains(dimList[i]))
+                    {
+                        res.Add(dimList[i]);
+                    }
                 }
             }
+
             return res.ToArray();
         }
 

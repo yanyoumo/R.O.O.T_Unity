@@ -16,7 +16,7 @@ namespace ROOT
         public List<Vector2Int> DiminishingList;
 
         [Range(0,35)]
-        public int CutOffCount = 30;
+        public int CutOffCount = 30;//这个的设计是比这个数据大都返回-1，但是现在没有特别好的不删掉原始数据的方法。
 
         [ShowInInspector]
         [TableMatrix]
