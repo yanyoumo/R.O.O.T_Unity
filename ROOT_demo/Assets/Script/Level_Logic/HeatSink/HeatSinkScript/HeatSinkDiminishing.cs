@@ -15,6 +15,9 @@ namespace ROOT
         [ReadOnly]
         public List<Vector2Int> DiminishingList;
 
+        [Range(0,35)]
+        public int CutOffCount = 30;
+
         [ShowInInspector]
         [TableMatrix]
         public int[,] Order;
