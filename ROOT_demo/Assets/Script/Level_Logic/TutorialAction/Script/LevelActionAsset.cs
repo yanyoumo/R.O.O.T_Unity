@@ -90,7 +90,7 @@ namespace ROOT
         public int NetworkRequirement;
 
         [Space]
-        [Range(0, 20)]
+        [Range(0, 100)]
         public int DestoryerLength;
         [Range(0, 20)]
         public int DestoryerCount;

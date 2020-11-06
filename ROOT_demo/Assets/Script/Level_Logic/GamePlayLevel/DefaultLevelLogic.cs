@@ -47,6 +47,7 @@ namespace ROOT
         public CostChart CostChart;
         public CoreType? DestoryedCoreType;
         public SignalPanel SignalPanel;
+        public InfoAirdrop AirDrop;
         public int ReqOkCount = 0;
         public List<Vector2Int> CollectorZone;
 
@@ -174,7 +175,7 @@ namespace ROOT
         public static float AnimationDuration => WorldCycler.BossStage ? BossAnimationDuration : DefaultAnimationDuration;
 
         public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
-        public static readonly float BossAnimationDuration = 0.3f; //都是秒
+        public static readonly float BossAnimationDuration = 1.5f; //都是秒
 
         public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
         public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
@@ -242,6 +243,7 @@ namespace ROOT
             LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
             LevelAsset.CostChart = FindObjectOfType<CostChart>();
             LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
+            LevelAsset.AirDrop = FindObjectOfType<InfoAirdrop>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
@@ -343,6 +345,28 @@ namespace ROOT
             yield break;
         }
 
+        private float _timer=0.0f;
+        private float _timerInterval=0.35f;//TODO 这个可能要做成和Animie时长相关的随机数。
+
+        private void BossInit()
+        {
+            LevelAsset.DestroyerEnabled = true;
+            LevelAsset.SignalPanel.IsBossStage = true;
+            WorldCycler.BossStage = true;
+        }
+
+        private void BossUpdate()
+        {
+            //Spray的逻辑可以再做一些花活。
+            _timer += Time.deltaTime;
+            if (_timer >= _timerInterval)
+            {
+                _timer = 0.0f;
+                LevelAsset.AirDrop.SprayInfo(3);
+            }
+        }
+
+
         //原则上这个不让被重载。
         //TODO Digong需要了解一些主干的Update流程。
         //未来需要将动画部分移动至随机位置。
@@ -365,8 +389,11 @@ namespace ROOT
             if (stage == StageType.Boss)
             {
                 //TODO 之后Boss部分就在这儿搞。
-                WorldCycler.BossStage = true;
-                LevelAsset.DestroyerEnabled = true;
+                if (!WorldCycler.BossStage)
+                {
+                    BossInit();
+                }
+                BossUpdate();
             }
 
             if (!Animating)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
@@ -662,6 +663,18 @@ namespace ROOT
         {
             UpdateNeighboringData();
             UpdateSideMesh();
+        }
+
+        private IEnumerator BlinkCo()
+        {
+            TierLEDs.Val = 5-Tier;
+            yield return new WaitForSeconds(0.1f);
+            TierLEDs.Val = Tier;
+        }
+
+        public void Blink()
+        {
+            StartCoroutine(BlinkCo());
         }
     }
 }

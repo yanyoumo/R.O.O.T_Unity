@@ -28,9 +28,6 @@ namespace ROOT
         void ForceReset();
     }
 
-    /// <summary>
-    /// 这套系统其实问题蛮大的，就是记忆性太强了，这些逻辑不好整理。
-    /// </summary>
     public class MeteoriteBomber: IWarningDestoryer
     {
         //现在是每NextStrikeUpCounter的StrikeLevel提高，每次StrikeLevel多攻击一发，中间值和偏移值降低。
@@ -287,26 +284,6 @@ namespace ROOT
         {
             count = NextStrikingCount;
             return NextIncomes;
-        }
-    }
-
-    public class MeteoriteInfo : MeteoriteBomber
-    {
-        public override Color GetWaringColor
-        {
-            get
-            {
-                switch (Status)
-                {
-                    case WarningDestoryerStatus.Warning:
-                        return Color.yellow;
-                    case WarningDestoryerStatus.Striking:
-                        ColorUtility.TryParseHtmlString("#FF3300", out Color col);
-                        return col;
-                    default:
-                        throw new IndexOutOfRangeException();
-                }
-            }
         }
     }
 }

@@ -666,6 +666,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b322dcd43ba1884a9454804756229d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 0}
+  OnboardPos: {x: 0, y: 0}
   Edges:
   - {fileID: 3127740687823156789}
   - {fileID: 6809436163352796776}

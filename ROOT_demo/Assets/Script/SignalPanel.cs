@@ -5,11 +5,51 @@ namespace ROOT
 {
     public class SignalPanel : MonoBehaviour
     {
+        public void Awake()
+        {
+            IsBossStage = false;
+        }
+
+        [HideInInspector]
+        private bool _isBossStage;
+
+        public bool IsBossStage
+        {
+            set
+            {
+                _isBossStage = value;
+                if (_isBossStage)
+                {
+                    NormalSignal.enabled = false;
+                    NetworkSignal.enabled = false;
+                    MissionTarget.enabled = false;
+                    NormalTierText.enabled = false;
+                    NetworkTierText.enabled = false;
+                    MissionTarget_Big.enabled = true;
+                    SignalText.enabled = true;
+                }
+                else
+                {
+                    NormalSignal.enabled = true;
+                    NetworkSignal.enabled = true;
+                    MissionTarget.enabled = true;
+                    NormalTierText.enabled = true;
+                    NetworkTierText.enabled = true;
+                    MissionTarget_Big.enabled = false;
+                    SignalText.enabled = false;
+                }
+            }
+            get => _isBossStage;
+        }
+
         public TextMeshPro NormalSignal;
         public TextMeshPro NetworkSignal;
         public TextMeshPro MissionTarget;
         public TextMeshPro NormalTierText;
         public TextMeshPro NetworkTierText;
+
+        public TextMeshPro MissionTarget_Big;
+        public TextMeshPro SignalText;
 
         private int _crtNormalSignal;
         public int CrtNormalSignal
@@ -110,6 +150,7 @@ namespace ROOT
             NormalSignal.text = Padding(_crtNormalSignal) + "/" + Padding(_tgtNormalSignal);
             NetworkSignal.text = Padding(_crtNetworkSignal) + "/" + Padding(_tgtNetworkSignal);
             MissionTarget.text = "[" + Padding(_crtMission) + "]";
+            MissionTarget_Big.text = "[" + Padding(_crtMission) + "]";
             NormalTierText.text = "["+ Padding(_normalTier) + "]";
             NetworkTierText.text = "[" + Padding(_networkTier) + "]";
         }

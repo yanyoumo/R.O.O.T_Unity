@@ -21,7 +21,7 @@ namespace ROOT
             set
             {
                 _targetCount = value;
-                TargetLabel.text = PadCount(_targetCount);
+                //TargetLabel.text = PadCount(_targetCount);
                 UpdateCheck();
             }
             get => _targetCount;
@@ -33,7 +33,7 @@ namespace ROOT
             set
             {
                 _currentCount = value;
-                CurrentLabel.text = PadCount(_currentCount);
+                //CurrentLabel.text = PadCount(_currentCount);
                 UpdateCheck();
             }
             get => _currentCount;
@@ -41,7 +41,7 @@ namespace ROOT
 
         public void UpdateCheck()
         {
-            CheckQuad.material = _currentCount >= _targetCount ? tick : cross;
+            //CheckQuad.material = _currentCount >= _targetCount ? tick : cross;
         }
 
         public string PadCount(int count)

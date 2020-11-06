@@ -85,6 +85,11 @@ namespace ROOT
             _edgeDic.Values.ForEach(renderer => renderer.enabled = false);
         }
 
+        public void Blink()
+        {
+            BoardGridMesh.material.color = Color.green;
+        }
+
         private Dictionary<RotationDirection, SpriteRenderer> _edgeDic;
 
         void Awake()

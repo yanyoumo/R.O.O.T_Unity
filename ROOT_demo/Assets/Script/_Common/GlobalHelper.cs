@@ -592,7 +592,8 @@ namespace ROOT
             }
             if (tier>=PixelateCirclePatternLibCache.Lib.Count)
             {
-                throw new IndexOutOfRangeException();
+                Debug.LogWarning("PixelateCircle Tier Maxed-out");
+                tier = PixelateCirclePatternLibCache.Lib.Count - 1;
             }
             return PixelateCirclePatternLibCache.Lib[tier];
         }
