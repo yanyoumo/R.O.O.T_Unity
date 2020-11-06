@@ -101,8 +101,7 @@ namespace ROOT
         public int MinHeatSinkCount=> ActualHeatSinkPos.Length;
         private Vector2Int[] RawHeatSinkPos => HeatSinkPatterns.Lib[_currentHeatSinkPatternsID].Lib.ToArray();
         private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward();
-        private int DiminishingStep => DiminishingCounter;//TODO 这里先放这里这个步长需要调整。
-        private int DiminishingCounter = -1;
+        public int DiminishingStep { get; private set; }
 
         private void TryDeleteIfFilledCertainUnit(Vector2Int pos)
         {
@@ -159,7 +158,7 @@ namespace ROOT
 
         public void UpdatePatternDiminishing()
         {
-            DiminishingCounter++;
+            DiminishingStep++;
         }
 
         public void UpdatePatternID()
@@ -175,7 +174,7 @@ namespace ROOT
                 _currentHeatSinkDiminishingID = Random.Range(0, HeatSinkPatterns.DiminishingList.Count);
             } while ((_currentHeatSinkDiminishingID == oldDimID || _currentHeatSinkPatternsID == oldID) && counter <= max);
 
-            DiminishingCounter = 0;
+            DiminishingStep = 0;
         }
 
         private void InitHeatInfo()
@@ -243,6 +242,11 @@ namespace ROOT
             }
 
             return null;
+        }
+
+        public void ResetHeatSink()
+        {
+            DiminishingStep = 0;
         }
 
         [CanBeNull]

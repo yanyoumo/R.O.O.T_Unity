@@ -345,8 +345,8 @@ namespace ROOT
             yield break;
         }
 
-        private float _timer=0.0f;
-        private float _timerInterval=0.35f;//TODO 这个可能要做成和Animie时长相关的随机数。
+        private float _bossInfoSprayTimer=0.0f;
+        private float _bossInfoSprayTimerInterval=0.35f;//TODO 这个可能要做成和Animie时长相关的随机数。
 
         private void BossInit()
         {
@@ -358,10 +358,10 @@ namespace ROOT
         private void BossUpdate()
         {
             //Spray的逻辑可以再做一些花活。
-            _timer += Time.deltaTime;
-            if (_timer >= _timerInterval)
+            _bossInfoSprayTimer += Time.deltaTime;
+            if (_bossInfoSprayTimer >= _bossInfoSprayTimerInterval)
             {
-                _timer = 0.0f;
+                _bossInfoSprayTimer = 0.0f;
                 LevelAsset.AirDrop.SprayInfo(3);
             }
         }
