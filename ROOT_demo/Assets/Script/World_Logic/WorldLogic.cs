@@ -14,7 +14,18 @@ namespace ROOT
     internal static class WorldCycler
     {
         public static int Step => ActualStep;
+
         public static bool BossStage = false;
+        public static bool BossStagePause = false;
+
+        private static bool? RawNeedAutoDriveStep
+        {
+            get
+            {
+                if (ActualStep == ExpectedStep) return null;
+                return ExpectedStep > ActualStep;
+            }
+        }
 
         /// <summary>
         /// NULL: 不需要自动演进。
@@ -27,12 +38,11 @@ namespace ROOT
             {
                 if (BossStage)
                 {
-                    return true;
+                    return !BossStagePause;
                 }
                 else
                 {
-                    if (ActualStep == ExpectedStep) return null;
-                    return ExpectedStep > ActualStep;
+                    return RawNeedAutoDriveStep;
                 }
             }
         }
