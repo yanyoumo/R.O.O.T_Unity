@@ -129,14 +129,13 @@ namespace ROOT
             //RISK 这个算法还是考虑写道HeatSinkPattern的算法里面。
             var maxOut = HeatSinkPattern.CutOffCount;
 
-            if (DiminishingStep < maxOut)
+            var TaperedDiminishingStep = Mathf.Min(DiminishingStep, maxOut);
+
+            for (var i = 0; i < TaperedDiminishingStep; i++)
             {
-                for (var i = 0; i < DiminishingStep; i++)
+                if (i < dimList.Count && !res.Contains(dimList[i]))
                 {
-                    if (i < dimList.Count && !res.Contains(dimList[i]))
-                    {
-                        res.Add(dimList[i]);
-                    }
+                    res.Add(dimList[i]);
                 }
             }
 
@@ -147,6 +146,7 @@ namespace ROOT
         /// 这个函数时往下减少HeatSink数量。
         /// </summary>
         /// <returns>计算完毕后的HeatSinkPattern</returns>
+        [Obsolete]
         private Vector2Int[] GetActualHeatSinkDownward()
         {
             if (DiminishingStep == -1) return RawHeatSinkPos;
@@ -254,6 +254,7 @@ namespace ROOT
 
         public void ResetHeatSink()
         {
+            Debug.Log("HeatSink Reseted");
             DiminishingStep = 0;
         }
 
