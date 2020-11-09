@@ -1,4 +1,5 @@
 ﻿using System;
+using Rewired;
 using UnityEngine;
 using CommandDir = ROOT.RotationDirection;
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
@@ -153,6 +154,7 @@ namespace ROOT
     //要把Asset和Logic，把Controller也要彻底拆开。
     internal static class WorldController
     {
+        private static Player player = ReInput.players.GetPlayer(0);
         /// <summary>
         /// 技能系统要从这个地方接入。而且Cycle的管理部分要再整理起来。
         /// 比较蛋疼的是，Cycle完整管理起来，需要有一个前置条件，就是：Animation系统要整理明白。
@@ -164,25 +166,25 @@ namespace ROOT
             bool anyDir = false;
             dir = CommandDir.North;
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORUP))
+            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORUP))
             {
                 dir = CommandDir.North;
                 anyDir = true;
             }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
+            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
             {
                 dir = CommandDir.South;
                 anyDir = true;
             }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
+            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
             {
                 dir = CommandDir.West;
                 anyDir = true;
             }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
+            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
             {
                 dir = CommandDir.East;
                 anyDir = true;
