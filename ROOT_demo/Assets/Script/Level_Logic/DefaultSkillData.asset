@@ -77,7 +77,7 @@ MonoBehaviour:
     AdditionalIncome: 0
     radius: 0
     Discount: 30
-  - SkillIcon: {fileID: 21300000, guid: a79450bb4f36fae468b0f089f0ba22d3, type: 3}
+  - SkillIcon: {fileID: 21300000, guid: 73092acfbb3909e4782b19ee6b148018, type: 3}
     Cost: 300
     CountLimit: -1
     TimeGain: 0

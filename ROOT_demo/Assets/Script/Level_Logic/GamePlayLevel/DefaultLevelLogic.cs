@@ -48,7 +48,7 @@ namespace ROOT
         public CoreType? DestoryedCoreType;
         public SignalPanel SignalPanel;
         public InfoAirdrop AirDrop;
-        public int ReqOkCount = 0;
+        public int ReqOkCount = 10;
         public List<Vector2Int> CollectorZone;
 
         internal GameObject GameCursor;
@@ -153,6 +153,56 @@ namespace ROOT
 
     public abstract class LevelLogic : MonoBehaviour //LEVEL-LOGIC/每一关都有一个这个类。
     {
+        protected IEnumerator ManualListenBossPauseKey()
+        {
+            yield return 0;
+            while (true)
+            {
+                yield return 0;
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_BOSS_PAUSE))
+                {
+                    //这个按钮需要在Animation状态插入，因为逻辑帧变得太碎了，就是需要这里放一个线程出来。
+                    //Debug.Log("ManualListenBossPauseKey");
+                    WorldLogic.BossStagePauseTriggered(LevelAsset);
+                }
+            }
+        }
+
+        private static float BossStagePauseCostTimer = 0.0f;
+        private const float BossStagePauseCostInterval = 1.0f;
+        private IEnumerator BossStagePauseCost()
+        {
+            yield return 0;
+            while (true)
+            {
+                yield return 0;
+                BossStagePauseCostTimer += Time.deltaTime;
+                if (BossStagePauseCostTimer >= BossStagePauseCostInterval)
+                {
+                    BossStagePauseCostTimer = 0.0f;
+                    LevelAsset.ReqOkCount--;
+                    if (LevelAsset.ReqOkCount <= 0)
+                    {
+                        WorldLogic.BossStagePauseRunStop(LevelAsset);
+                        yield break;
+                    }
+                }
+            }
+        }
+
+        public Coroutine BossStagePauseCostCo { private set; get; }
+
+        public void StartBossStageCost()
+        {
+            BossStagePauseCostCo=StartCoroutine(BossStagePauseCost());
+        }
+
+        public void StopBossStageCost()
+        {
+            StopCoroutine(BossStagePauseCostCo);
+            BossStagePauseCostCo = null;
+        }
+
         private bool _noRequirement;
         //protected int RequirementSatisfiedCycleCount = 0;
 
@@ -172,7 +222,7 @@ namespace ROOT
 
         protected float AnimationTimerOrigin = 0.0f; //都是秒
 
-        public static float AnimationDuration => WorldCycler.BossStage ? BossAnimationDuration : DefaultAnimationDuration;
+        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? BossAnimationDuration : DefaultAnimationDuration;
 
         public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
         public static readonly float BossAnimationDuration = 1.5f; //都是秒
@@ -346,12 +396,14 @@ namespace ROOT
         }
 
         private float _bossInfoSprayTimer=0.0f;
-        private float _bossInfoSprayTimerInterval=0.35f;//TODO 这个可能要做成和Animie时长相关的随机数。
+        private float _bossInfoSprayTimerInterval=0.35f;//TODO 这个可能要做成和Anime时长相关的随机数。
+        private Coroutine ManualListenBossPauseKeyCoroutine;
 
         private void BossInit()
         {
             LevelAsset.DestroyerEnabled = true;
             LevelAsset.SignalPanel.IsBossStage = true;
+            ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualListenBossPauseKey());
             WorldCycler.BossStage = true;
         }
 
@@ -401,8 +453,7 @@ namespace ROOT
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
                 // ShouldCycle这个放到WorldLogic里面去了。
-                WorldLogic.UpdateLogic(
-                    LevelAsset, in stage, out _ctrlPack, out movedTile,
+                WorldLogic.UpdateLogic(LevelAsset, in stage, out _ctrlPack, out movedTile,
                     out var movedCursor,out shouldCycle,out var AutoDrive);
 
                 if (roundGist.HasValue)
@@ -568,6 +619,14 @@ namespace ROOT
             LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
             LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
             LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (ManualListenBossPauseKeyCoroutine != null)
+            {
+                StopCoroutine(ManualListenBossPauseKeyCoroutine);
+            }
         }
     }
 
