@@ -28,9 +28,6 @@ namespace ROOT
         void ForceReset();
     }
 
-    /// <summary>
-    /// 这套系统其实问题蛮大的，就是记忆性太强了，这些逻辑不好整理。
-    /// </summary>
     public class MeteoriteBomber: IWarningDestoryer
     {
         //现在是每NextStrikeUpCounter的StrikeLevel提高，每次StrikeLevel多攻击一发，中间值和偏移值降低。
@@ -43,7 +40,7 @@ namespace ROOT
         public Board GameBoard { get; set; }
         
         public int NextStrikingCount { internal set; get; }
-        private WarningDestoryerStatus Status;
+        protected WarningDestoryerStatus Status;
 
         public int Counter { private set; get; }
         public int StartingMedian { private set; get; }
@@ -266,7 +263,7 @@ namespace ROOT
 
         public virtual WarningDestoryerStatus GetStatus => Status;
 
-        public Color GetWaringColor
+        public virtual Color GetWaringColor
         {
             get
             {

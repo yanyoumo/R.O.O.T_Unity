@@ -47,6 +47,9 @@ namespace ROOT
         public CostChart CostChart;
         public CoreType? DestoryedCoreType;
         public SignalPanel SignalPanel;
+        public InfoAirdrop AirDrop;
+        public int ReqOkCount;
+        public List<Vector2Int> CollectorZone;
 
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
@@ -74,7 +77,7 @@ namespace ROOT
         public bool RotateEnabled = true;
         public bool ShopEnabled = true;
         public bool SkillEnabled = true;
-        public bool DestroyerEnabled = false;
+        public bool DestroyerEnabled = true;
         //LevelLogicFlag
         public bool GameOverEnabled = true;
         //UtilsFlag
@@ -150,8 +153,56 @@ namespace ROOT
 
     public abstract class LevelLogic : MonoBehaviour //LEVEL-LOGIC/每一关都有一个这个类。
     {
+        #region BossStage
+
+        protected IEnumerator ManualPollingBossPauseKey()
+        {
+            yield return 0;
+            while (true)
+            {
+                yield return 0;
+                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_BOSS_PAUSE))
+                {
+                    //这个按钮需要在Animation状态插入，因为逻辑帧比率降低了，就是需要这里放一个线程出来。
+                    WorldLogic.BossStagePauseTriggered(LevelAsset);
+                }
+            }
+        }
+
+        private static float BossStagePauseCostTimer = 0.0f;
+        private const float BossStagePauseCostInterval = 1.0f;
+        private const int BossStagePricePerInterval = 1;
+        private IEnumerator BossStagePauseCost()
+        {
+            yield return 0;
+            while (true)
+            {
+                yield return 0;
+                BossStagePauseCostTimer += Time.deltaTime;
+
+                if (!(BossStagePauseCostTimer >= BossStagePauseCostInterval)) continue;
+                BossStagePauseCostTimer = 0.0f;
+                LevelAsset.ReqOkCount -= BossStagePricePerInterval;
+
+                if (LevelAsset.ReqOkCount > 0) continue;
+                WorldLogic.BossStagePauseRunStop(LevelAsset);
+                yield break;
+            }
+        }
+
+        public Coroutine BossStagePauseCostCo { private set; get; }
+        public void StartBossStageCost()
+        {
+            BossStagePauseCostCo=StartCoroutine(BossStagePauseCost());
+        }
+        public void StopBossStageCost()
+        {
+            StopCoroutine(BossStagePauseCostCo);
+            BossStagePauseCostCo = null;
+        }
         private bool _noRequirement;
-        protected int RequirementSatisfiedCycleCount = 0;
+
+        #endregion
 
         public bool IsTutorialLevel = false;
 
@@ -168,7 +219,11 @@ namespace ROOT
         protected bool PendingCleanUp;
 
         protected float AnimationTimerOrigin = 0.0f; //都是秒
-        public static readonly float AnimationDuration = 0.15f; //都是秒
+
+        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? BossAnimationDuration : DefaultAnimationDuration;
+
+        public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
+        public static readonly float BossAnimationDuration = 1.5f; //都是秒
 
         public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
         public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
@@ -236,6 +291,7 @@ namespace ROOT
             LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
             LevelAsset.CostChart = FindObjectOfType<CostChart>();
             LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
+            LevelAsset.AirDrop = FindObjectOfType<InfoAirdrop>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
@@ -337,6 +393,30 @@ namespace ROOT
             yield break;
         }
 
+        private float _bossInfoSprayTimer=0.0f;
+        private float _bossInfoSprayTimerInterval=0.35f;//TODO 这个可能要做成和Anime时长相关的随机数。
+        private Coroutine ManualListenBossPauseKeyCoroutine;
+
+        private void BossInit()
+        {
+            LevelAsset.DestroyerEnabled = true;
+            LevelAsset.SignalPanel.IsBossStage = true;
+            ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualPollingBossPauseKey());
+            WorldCycler.BossStage = true;
+        }
+
+        private void BossUpdate()
+        {
+            //Spray的逻辑可以再做一些花活。
+            _bossInfoSprayTimer += Time.deltaTime;
+            if (_bossInfoSprayTimer >= _bossInfoSprayTimerInterval)
+            {
+                _bossInfoSprayTimer = 0.0f;
+                LevelAsset.AirDrop.SprayInfo(3);
+            }
+        }
+
+
         //原则上这个不让被重载。
         //TODO Digong需要了解一些主干的Update流程。
         //未来需要将动画部分移动至随机位置。
@@ -356,13 +436,22 @@ namespace ROOT
             var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
             var stage = roundGist?.Type ?? StageType.Shop;
 
+            if (stage == StageType.Boss)
+            {
+                //TODO 之后Boss部分就在这儿搞。
+                if (!WorldCycler.BossStage)
+                {
+                    BossInit();
+                }
+                BossUpdate();
+            }
+
             if (!Animating)
             {
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
                 // ShouldCycle这个放到WorldLogic里面去了。
-                WorldLogic.UpdateLogic(
-                    LevelAsset, in stage, out _ctrlPack, out movedTile,
+                WorldLogic.UpdateLogic(LevelAsset, in stage, out _ctrlPack, out movedTile,
                     out var movedCursor,out shouldCycle,out var AutoDrive);
 
                 if (roundGist.HasValue)
@@ -381,8 +470,7 @@ namespace ROOT
                 {
                     if (LevelAsset.TimeLine.RequirementSatisfied)
                     {
-                        //BUG 谢特，这里autoDrive的时候加不上数据。
-                        RequirementSatisfiedCycleCount++;
+                        LevelAsset.ReqOkCount++;
                     }
                 }
 
@@ -432,9 +520,11 @@ namespace ROOT
         {
             //这个函数就很接近裁判要做的事儿了。
             int normalRval = 0, networkRval = 0;
-            bool shouldOpenShop, shouldCurrencyIo, shouldCurrencyIncome, shouldDestoryer,SkillAllowed;
+            bool shouldOpenShop, shouldCurrencyIo, shouldCurrencyIncome, 
+                shouldDestoryer, SkillAllowed, bossStage;
             var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
 
+            bossStage = roundGist.Type == StageType.Boss;
             shouldOpenShop = roundGist.Type == StageType.Shop;
             SkillAllowed = roundGist.Type != StageType.Shop;
             shouldCurrencyIncome = roundGist.Type == StageType.Require;
@@ -457,7 +547,7 @@ namespace ROOT
                 _obselateStepID = LevelAsset.StepCount;
             }
 
-            if (LevelAsset.DestroyerEnabled && !shouldDestoryer)
+            if ((LevelAsset.DestroyerEnabled && !shouldDestoryer) && !WorldCycler.BossStage)
             {
                 LevelAsset.WarningDestoryer.ForceReset();
             }
@@ -470,9 +560,9 @@ namespace ROOT
 
             lastDestoryBool = shouldDestoryer;
 
-            //RISK 这里把Destroyer目前完全关了。
+            //RISK 这里把Destroyer目前完全关了。现在Boss阶段也要用。
             //LevelAsset.DestroyerEnabled = ShouldDestoryer;
-            LevelAsset.DestroyerEnabled = false;
+            LevelAsset.DestroyerEnabled = WorldCycler.BossStage;
             LevelAsset.CurrencyIncomeEnabled = shouldCurrencyIncome;
             LevelAsset.CurrencyIOEnabled = shouldCurrencyIo;
 
@@ -527,6 +617,14 @@ namespace ROOT
             LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
             LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
             LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (ManualListenBossPauseKeyCoroutine != null)
+            {
+                StopCoroutine(ManualListenBossPauseKeyCoroutine);
+            }
         }
     }
 

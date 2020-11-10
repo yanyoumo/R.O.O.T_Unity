@@ -15,6 +15,83 @@ namespace ROOT
 {
     public sealed class Board : MonoBehaviour
     {
+        public Unit FindNearestUnit(Vector2Int Pos)
+        {
+            var distance = float.MaxValue;
+            var nearestPos = Vector2Int.zero;
+            foreach (var vector2Int in UnitsGameObjects.Keys)
+            {
+                if (vector2Int == Pos)
+                {
+                    distance = 0;
+                    nearestPos = vector2Int;
+                    break;
+                }
+                else
+                {
+                    var tmpDist=Vector2.Distance(Pos, vector2Int);
+                    if (tmpDist<distance)
+                    {
+                        distance = tmpDist;
+                        nearestPos = vector2Int;
+                    }
+                }
+            }
+
+            return UnitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
+        }
+
+
+        public void SomeGridHasCollectedInfo(BoardGirdCell girdCell)
+        {
+            //逻辑到这里居然是好用的，只是需要去调整Extend的内容。
+            //从逻辑上讲，只要把接收的分数加上加上就好了。剩下都是表现侧的。
+            //girdCell.Blink();//TODO 这里要处理接收了Info的内容。
+            var girdPos = girdCell.OnboardPos;
+            var collectingUnit = FindNearestUnit(girdPos);
+            collectingUnit.Blink();//接收了就先闪亮一下
+        }
+
+        private List<Vector2Int> GetSingleHardDriveInfoCollectorZone(Unit unit)
+        {
+            var zone = Utils.GetPixelateCircle_Tier(unit.Tier-1);
+            var res = new List<Vector2Int>();
+            zone.PatternList.ForEach(vec => res.Add(vec + unit.CurrentBoardPosition-new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
+            return res;
+        }
+
+        private List<Vector2Int> GetSingleNetworkInfoCollectorZone(Unit unit)
+        {
+            //TEMP 在这里调整MaxNetworkDepth和tier之间的关系。
+            var circleTier = Math.Max(Mathf.RoundToInt(BoardDataCollector.MaxNetworkDepth / 3.0f), 0);
+            var zone = Utils.GetPixelateCircle_Tier(circleTier);
+            var res = new List<Vector2Int>();
+            zone.PatternList.ForEach(vec => res.Add(vec + unit.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
+            return res;
+        }
+
+        public List<Vector2Int> GetInfoCollectorZone()
+        {
+            //这里保证前面调过一次计分函数，实在不行在这儿再调一遍。
+            var res = new List<Vector2Int>();
+
+            Units.Where(unit => unit.IsInGridHDD).ForEach(unit => res.AddRange(GetSingleHardDriveInfoCollectorZone(unit)));
+            Units.Where(unit => unit.IsEndingGridNetwork).ForEach(unit => res.AddRange(GetSingleNetworkInfoCollectorZone(unit)));
+            
+            return res.Where(CheckBoardPosValid).Distinct().ToList();
+        }
+
+        public void UpdateInfoZone(GameAssets levelAssets)
+        {
+            levelAssets.CollectorZone = GetInfoCollectorZone();
+
+            //TODO 这里直接用Heatsink还是有点坑，可能还是得弄成别的Indicator
+            //但是Indicator又得想办法长显。叮铃铃！！！想到了用边际连出一条边。
+            //这个目前很好，但还有微调的空间。
+            BoardGirds.Values.ForEach(grid => grid.ClearEdge());
+            BoardGirds.Values.ForEach(grid => grid.UpdateEdge(levelAssets.CollectorZone));
+        }
+
         #region 热力系统
 
         public HeatSinkPatternLib HeatSinkPatterns;
@@ -24,8 +101,7 @@ namespace ROOT
         public int MinHeatSinkCount=> ActualHeatSinkPos.Length;
         private Vector2Int[] RawHeatSinkPos => HeatSinkPatterns.Lib[_currentHeatSinkPatternsID].Lib.ToArray();
         private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward();
-        private int DiminishingStep => DiminishingCounter;//TODO 这里先放这里这个步长需要调整。
-        private int DiminishingCounter = -1;
+        public int DiminishingStep { get; private set; }
 
         private void TryDeleteIfFilledCertainUnit(Vector2Int pos)
         {
@@ -44,18 +120,25 @@ namespace ROOT
         {
             //RISK 现在出来一个问题，就是基础图样加上这一轮添加后，有可能就堆满了。
             //TODO 有办法，就是想办法在pattern里面储存“不能被填充”这种数据。
+            //现在Diminishing里面加了一个Maxout。hmmmm先这样，并没有解决上面的核心问题。
             if (DiminishingStep == -1) return RawHeatSinkPos;
 
             var res = RawHeatSinkPos.ToList();
-            var dimList = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID].DiminishingList;
+            var HeatSinkPattern = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID];
+            var dimList = HeatSinkPattern.DiminishingList;
+            //RISK 这个算法还是考虑写道HeatSinkPattern的算法里面。
+            var maxOut = HeatSinkPattern.CutOffCount;
 
-            for (var i = 0; i < DiminishingStep; i++)
+            var TaperedDiminishingStep = Mathf.Min(DiminishingStep, maxOut);
+
+            for (var i = 0; i < TaperedDiminishingStep; i++)
             {
                 if (i < dimList.Count && !res.Contains(dimList[i]))
                 {
                     res.Add(dimList[i]);
                 }
             }
+
             return res.ToArray();
         }
 
@@ -63,6 +146,7 @@ namespace ROOT
         /// 这个函数时往下减少HeatSink数量。
         /// </summary>
         /// <returns>计算完毕后的HeatSinkPattern</returns>
+        [Obsolete]
         private Vector2Int[] GetActualHeatSinkDownward()
         {
             if (DiminishingStep == -1) return RawHeatSinkPos;
@@ -82,7 +166,7 @@ namespace ROOT
 
         public void UpdatePatternDiminishing()
         {
-            DiminishingCounter++;
+            DiminishingStep++;
         }
 
         public void UpdatePatternID()
@@ -98,7 +182,7 @@ namespace ROOT
                 _currentHeatSinkDiminishingID = Random.Range(0, HeatSinkPatterns.DiminishingList.Count);
             } while ((_currentHeatSinkDiminishingID == oldDimID || _currentHeatSinkPatternsID == oldID) && counter <= max);
 
-            DiminishingCounter = 0;
+            DiminishingStep = 0;
         }
 
         private void InitHeatInfo()
@@ -114,6 +198,8 @@ namespace ROOT
                     go.transform.localPosition = BoardGridZeroing.position + offset;
                     var key = new Vector2Int(i, j);
                     BoardGirds.Add(key, go.GetComponent<BoardGirdCell>());
+                    go.GetComponent<BoardGirdCell>().OnboardPos = key;
+                    go.GetComponent<BoardGirdCell>().owner = this;
                 }
             }
 
@@ -166,6 +252,12 @@ namespace ROOT
             return null;
         }
 
+        public void ResetHeatSink()
+        {
+            Debug.Log("HeatSink Reseted");
+            DiminishingStep = 0;
+        }
+
         [CanBeNull]
         public Unit[] OverlapHeatSinkUnit => CheckHeatSink(StageType.Shop) != 0 ? Units.Where(unit => ActualHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray() : null;
 
@@ -183,6 +275,7 @@ namespace ROOT
                     targetingStatus = CellStatus.Normal;
                     break;
                 case StageType.Require:
+                case StageType.Boss://TODO Boss的Sink状态还要在这儿决定。
                     targetingStatus = CellStatus.Warning;
                     break;
                 case StageType.Destoryer:

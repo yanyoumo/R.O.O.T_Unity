@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using CommandDir = ROOT.RotationDirection;
+using Object = System.Object;
+
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
 
 namespace ROOT
@@ -13,7 +16,21 @@ namespace ROOT
     /// </summary>
     internal static class WorldCycler
     {
+        public static bool AnimationTimeLongSwitch => BossStage && !BossStagePause;
+
         public static int Step => ActualStep;
+
+        public static bool BossStage = false;
+        public static bool BossStagePause = false;
+
+        private static bool? RawNeedAutoDriveStep
+        {
+            get
+            {
+                if (ActualStep == ExpectedStep) return null;
+                return ExpectedStep > ActualStep;
+            }
+        }
 
         /// <summary>
         /// NULL: 不需要自动演进。
@@ -24,10 +41,24 @@ namespace ROOT
         {
             get
             {
-                if (ActualStep==ExpectedStep) return null;
-                return ExpectedStep > ActualStep;
+                if (BossStage)
+                {
+                    if (BossStagePause)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return RawNeedAutoDriveStep;
+                }
             }
         }
+
         public static int ActualStep { private set; get; }
         public static int ExpectedStep { private set; get; }
 
@@ -103,6 +134,7 @@ namespace ROOT
         BuyRandom =   1<<10,
         RemoveUnit =  1<<11,
         Skill =       1<<12,
+        BossPause =   1<<13,//这个用作为Toggle开关，就不做两个Command了。
     }
 
     public struct ControllingPack
@@ -544,7 +576,9 @@ namespace ROOT
     }
 
     #endregion
-    
+
+    #region WorldLogic
+
     //要把Asset和Logic彻底拆开。
     /// <summary>
     /// 世界本身的运行逻辑、应该类比于物理世界，高程度独立。
@@ -757,7 +791,7 @@ namespace ROOT
         {
             movedTile = false;
             movedCursor = false;
-
+            
             var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (StartGameMgr.UseTouchScreen)
             {
@@ -891,8 +925,30 @@ namespace ROOT
             return shouldCycle;
         }
 
+        public static void BossStagePauseRunStop(GameAssets currentLevelAsset)
+        {
+            WorldCycler.BossStagePause = false;
+            currentLevelAsset.Owner.StopBossStageCost();
+        }
+
+        public static void BossStagePauseTriggered(GameAssets currentLevelAsset)
+        {
+            Debug.Assert(WorldCycler.BossStage);
+            if (currentLevelAsset.ReqOkCount<=0) return;
+            if (WorldCycler.BossStagePause)
+            {
+                WorldCycler.BossStagePause = false;
+                currentLevelAsset.Owner.StopBossStageCost();
+            }
+            else
+            {
+                WorldCycler.BossStagePause = true;
+                currentLevelAsset.Owner.StartBossStageCost();
+            }
+        }
+
         public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type, out ControllingPack ctrlPack,
-            out bool movedTile, out bool movedCursor, out bool shouldCycle,out bool? autoDrive)
+            out bool movedTile, out bool movedCursor, out bool shouldCycle, out bool? autoDrive)
         {
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = movedCursor = false;
@@ -905,6 +961,7 @@ namespace ROOT
             //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
             //总之稳了后，这个不能这么每帧调用。
             occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
+            currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
             currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
 
             #endregion
@@ -915,12 +972,11 @@ namespace ROOT
             var forwardCycle = false;
             var reverseCycle = false;
 
-            if (!autoDrive.HasValue)
+            if (!autoDrive.HasValue)//RISK
             {
                 #region UserIO
 
-                ctrlPack = UpdateInputScheme(currentLevelAsset,
-                    out movedTile, out movedCursor,
+                ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor,
                     ref currentLevelAsset._boughtOnce);
 
                 if (currentLevelAsset.InputEnabled)
@@ -935,10 +991,10 @@ namespace ROOT
                         movedTile |= UpdateShopBuy(currentLevelAsset, ctrlPack);
                     }
 
-                    movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext);//这个flag的实际含义和名称有冲突。
+                    movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
 
                     currentLevelAsset.SkillMgr.SkillEnabled = currentLevelAsset.SkillEnabled;
-                    //BUG !!!重大Bug，自动演进的时候不会计Mission的数字。
+                    //BUG !!!重大Bug，自动演进的时候不会计Mission的数字。(?)
                     currentLevelAsset.SkillMgr.TriggerSkill(currentLevelAsset, ctrlPack);
                 }
 
@@ -952,37 +1008,42 @@ namespace ROOT
                 reverseCycle = !autoDrive.Value;
             }
 
-
-            if (currentLevelAsset.SkillMgr.CurrentSkillType.HasValue && currentLevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap)
+            if (currentLevelAsset.SkillMgr.CurrentSkillType.HasValue &&
+                currentLevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap)
             {
                 currentLevelAsset.SkillMgr.SwapTick(currentLevelAsset, ctrlPack);
                 movedTile = false;
             }
             else
             {
-                if (forwardCycle)
+                if (!(WorldCycler.BossStage && WorldCycler.BossStagePause))
                 {
-                    #region FORWARD
+                    if (forwardCycle)
+                    {
+                        #region FORWARD
 
-                    UpdateCycle(currentLevelAsset, type);
+                        UpdateCycle(currentLevelAsset, type);
 
-                    #endregion
-                }
-                else if (reverseCycle)
-                {
-                    #region REVERSE
+                        #endregion
+                    }
+                    else if (reverseCycle)
+                    {
+                        #region REVERSE
 
-                    UpdateReverseCycle(currentLevelAsset);
+                        UpdateReverseCycle(currentLevelAsset);
 
-                    #endregion
+                        #endregion
+                    }
                 }
             }
 
             #region CLEANUP
 
-            shouldCycle = autoDrive.HasValue || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
+            shouldCycle = (autoDrive.HasValue) || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
 
             #endregion
         }
     }
+
+    #endregion
 }

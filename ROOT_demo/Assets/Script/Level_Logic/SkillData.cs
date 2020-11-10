@@ -69,7 +69,7 @@ namespace ROOT
             new SkillDataUnit(SkillType.Swap,3),
             new SkillDataUnit(SkillType.Discount,1),
             new SkillDataUnit(SkillType.RefreshHeatSink,1),
-            new SkillDataUnit(SkillType.RefreshHeatSink,2),
+            new SkillDataUnit(SkillType.ResetHeatSink,1),
         };
     }
 

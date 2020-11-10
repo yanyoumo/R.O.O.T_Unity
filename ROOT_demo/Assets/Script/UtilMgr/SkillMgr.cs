@@ -13,7 +13,8 @@ namespace ROOT
         TimeFromMoney,          //α：花钱买时间。
         FastForward,            //β：快速演进时间。（收费可能有返利）
         Swap,                   //γ：单元交换位置。（操作是个问题）
-        RefreshHeatSink,        //δ：强制刷新HeatsinkPattern/清理HeatSink添加的Pattern
+        RefreshHeatSink,        //δ-0：强制刷新HeatsinkPattern
+        ResetHeatSink,        //δ-1：清理HeatSink添加的Pattern
         Discount,               //ε：下次商店会有折扣。
     }
 
@@ -95,9 +96,6 @@ namespace ROOT
                         WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;
-                case SkillType.RefreshHeatSink:
-                    //瞬时技能
-                    throw new NotImplementedException();
                 case SkillType.Discount:
                     //延迟技能
                     moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
@@ -107,6 +105,20 @@ namespace ROOT
                         discount = skill.Discount;
                         skill.SkillEnabled = false;
                         WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
+                    }
+                    break;
+                case SkillType.RefreshHeatSink:
+                    moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
+                    if (moneySpent)
+                    {
+                        currentLevelAsset.GameBoard.UpdatePatternID();
+                    }
+                    break;
+                case SkillType.ResetHeatSink:
+                    moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
+                    if (moneySpent)
+                    {
+                        currentLevelAsset.GameBoard.ResetHeatSink();
                     }
                     break;
                 default:
@@ -122,12 +134,19 @@ namespace ROOT
             }
             UpdateSkillPalettes();
         }
+
+        private void UpdateSkillActive(GameAssets currentLevelAsset)
+        {
+            InstancedSkillData.Where(skill=>skill.Cost>0).ForEach(skill =>
+                skill.SkillEnabled = (skill.Cost <= currentLevelAsset.GameStateMgr.GetCurrency()));
+            UpdateSkillPalettes();
+        }
+
         public void UpKeepSkill(GameAssets currentLevelAsset)
         {
             var autoDrive = WorldCycler.NeedAutoDriveStep;
-
+            UpdateSkillActive(currentLevelAsset);
             if (!CurrentSkillType.HasValue) return;
-
             switch (CurrentSkillType.Value)
             {
                 case SkillType.Swap:
@@ -295,9 +314,11 @@ namespace ROOT
                 case SkillType.Swap:
                     return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>R=" + skill.radius + "</color>";
                 case SkillType.RefreshHeatSink:
-                    return "Refresh";
+                    return "<color=#8a0b00>-" + skill.Cost + "</color><color=#00b35c>Refresh</color>";
                 case SkillType.Discount:
                     return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>-" + skill.Discount + "%</color>";
+                case SkillType.ResetHeatSink:
+                    return "<color=#8a0b00>-" + skill.Cost + "</color><color=#00b35c>Reset</color>";
                 default:
                     throw new ArgumentOutOfRangeException();
             }

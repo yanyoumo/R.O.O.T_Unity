@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc59ac2316464d44b855beb709081b02, type: 3}
+  m_Name: DefaultPixelateCirclePatternLib
+  m_EditorClassIdentifier: 
+  Lib:
+  - {fileID: 11400000, guid: c23e866c49850f549b1aefd9bfd87aa5, type: 2}
+  - {fileID: 11400000, guid: e3f7328c327cedc4c9b7cbeec2f9b300, type: 2}
+  - {fileID: 11400000, guid: 54e73c224cebda0448f1bf62a2efedfc, type: 2}
+  - {fileID: 11400000, guid: 5c18ca0442ba3344dab5eb72c5b46532, type: 2}
+  - {fileID: 11400000, guid: 37c0ac85e67abea4bba24531ee7e6d4a, type: 2}
+  - {fileID: 11400000, guid: ef9550dfb6f683c4ca7b62b03e5abd76, type: 2}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
@@ -10,6 +11,7 @@ namespace ROOT
         Normal,
         Warning,
         Sink,
+        InfoCol,//先凑活一下。
     }
 
     public class BoardGirdCell : MonoBehaviour
@@ -17,6 +19,14 @@ namespace ROOT
         private Color NormalColor=> ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_MAT_BOARDGRID_NORMAL);
         private Color WarningColor=> ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_MAT_BOARDGRID_WARNING);
         private Color HeatSinkColor=> ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_MAT_BOARDGRID_HEATSINK);
+        private Color InfoColColor => ColorUtilityWrapper.ParseHtmlString("#00FFFF").Value;
+
+        [HideInInspector]
+        public Board owner;
+        [HideInInspector]
+        public Vector2Int OnboardPos;
+
+        public List<SpriteRenderer> Edges;
 
         public MeshRenderer BoardGridMesh;
 
@@ -38,6 +48,9 @@ namespace ROOT
                     case CellStatus.Sink:
                         BoardGridMesh.material.color = HeatSinkColor;
                         break;
+                    case CellStatus.InfoCol:
+                        BoardGridMesh.material.color = InfoColColor;
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -45,21 +58,52 @@ namespace ROOT
             get => _cellStatus;
         }
 
-        /*private bool _normalOrHeatSink = false;
-        public bool NormalOrHeatSink
+        private RotationDirection[] rotLib = {
+            RotationDirection.North,
+            RotationDirection.East,
+            RotationDirection.West,
+            RotationDirection.South
+        };
+
+        private void UpdateEdgeSingleSide(RotationDirection side, List<Vector2Int> zone)
         {
-            set
-            {
-                _normalOrHeatSink = value;
-                BoardGridMesh.material.color = _normalOrHeatSink ? HeatSinkColor : NormalColor;
-            }
-            get => _normalOrHeatSink;
-        }*/
+            var res = false;
+            var otherPos = OnboardPos + Utils.ConvertDirectionToBoardPosOffset(side);
+            var inZone=zone.Contains(OnboardPos);
+            var otherInZone = zone.Contains(otherPos) && owner.CheckBoardPosValid(otherPos);
+            _edgeDic[side].enabled = inZone && !otherInZone;
+        }
+
+        public void UpdateEdge(List<Vector2Int> zone)
+        {
+            if (!zone.Contains(OnboardPos)) return;
+            rotLib.ForEach(edge => UpdateEdgeSingleSide(edge, zone));
+        }
+
+        public void ClearEdge()
+        {
+            _edgeDic.Values.ForEach(renderer => renderer.enabled = false);
+        }
+
+        public void Blink()
+        {
+            BoardGridMesh.material.color = Color.green;
+        }
+
+        private Dictionary<RotationDirection, SpriteRenderer> _edgeDic;
 
         void Awake()
         {
             _cellStatus = CellStatus.Normal;
-            //NormalOrHeatSink = false;
+
+            _edgeDic = new Dictionary<RotationDirection, SpriteRenderer>
+            {
+                {RotationDirection.North, Edges[0]},
+                {RotationDirection.East, Edges[1]},
+                {RotationDirection.West, Edges[2]},
+                {RotationDirection.South, Edges[3]}
+            };
+            ClearEdge();
         }
     }
 }
