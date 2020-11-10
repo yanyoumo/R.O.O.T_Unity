@@ -57,6 +57,8 @@ namespace ROOT
                 {
                     if (WithInUnitExtend(gird, transform.position))
                     {
+                        GameAsset.SignalInfo++;
+                        GameAsset.SignalPanel.SignalCounter = GameAsset.SignalInfo;
                         GameAsset.GameBoard.SomeGridHasCollectedInfo(gird);
                         Destroy(gameObject);
                     }

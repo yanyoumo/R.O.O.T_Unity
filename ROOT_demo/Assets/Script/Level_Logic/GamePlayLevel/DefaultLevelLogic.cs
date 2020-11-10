@@ -49,6 +49,7 @@ namespace ROOT
         public SignalPanel SignalPanel;
         public InfoAirdrop AirDrop;
         public int ReqOkCount;
+        public int SignalInfo=0;
         public List<Vector2Int> CollectorZone;
 
         internal GameObject GameCursor;
