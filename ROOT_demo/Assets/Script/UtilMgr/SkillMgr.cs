@@ -112,6 +112,7 @@ namespace ROOT
                     if (moneySpent)
                     {
                         currentLevelAsset.GameBoard.UpdatePatternID();
+                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;
                 case SkillType.ResetHeatSink:
@@ -119,6 +120,7 @@ namespace ROOT
                     if (moneySpent)
                     {
                         currentLevelAsset.GameBoard.ResetHeatSink();
+                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;
                 default:

@@ -479,8 +479,8 @@ namespace ROOT
 
             if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_REMOVEUNIT))
             {
-                ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
-                ctrlPack.SetFlag(ControllingCommand.RemoveUnit);
+                //ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
+                //ctrlPack.SetFlag(ControllingCommand.RemoveUnit);
             }
 
             if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT) &&
