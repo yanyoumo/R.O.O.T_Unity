@@ -43,7 +43,14 @@ namespace ROOT
             {
                 if (BossStage)
                 {
-                    return !BossStagePause;
+                    if (BossStagePause)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
                 else
                 {
@@ -569,7 +576,9 @@ namespace ROOT
     }
 
     #endregion
-    
+
+    #region WorldLogic
+
     //要把Asset和Logic彻底拆开。
     /// <summary>
     /// 世界本身的运行逻辑、应该类比于物理世界，高程度独立。
@@ -963,11 +972,10 @@ namespace ROOT
             var forwardCycle = false;
             var reverseCycle = false;
 
-            if (!autoDrive.HasValue || !autoDrive.Value)
+            if (!autoDrive.HasValue)//RISK
             {
                 #region UserIO
 
-                Debug.Log("UserIO");
                 ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor,
                     ref currentLevelAsset._boughtOnce);
 
@@ -986,7 +994,7 @@ namespace ROOT
                     movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
 
                     currentLevelAsset.SkillMgr.SkillEnabled = currentLevelAsset.SkillEnabled;
-                    //BUG !!!重大Bug，自动演进的时候不会计Mission的数字。
+                    //BUG !!!重大Bug，自动演进的时候不会计Mission的数字。(?)
                     currentLevelAsset.SkillMgr.TriggerSkill(currentLevelAsset, ctrlPack);
                 }
 
@@ -1031,11 +1039,11 @@ namespace ROOT
 
             #region CLEANUP
 
-            shouldCycle = (autoDrive.HasValue && autoDrive.Value) ||
-                          ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
-            Debug.Log("shouldCycle:" + shouldCycle);
+            shouldCycle = (autoDrive.HasValue) || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
 
             #endregion
         }
     }
+
+    #endregion
 }

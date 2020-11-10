@@ -48,7 +48,7 @@ namespace ROOT
         public CoreType? DestoryedCoreType;
         public SignalPanel SignalPanel;
         public InfoAirdrop AirDrop;
-        public int ReqOkCount = 10;
+        public int ReqOkCount=99;
         public List<Vector2Int> CollectorZone;
 
         internal GameObject GameCursor;
@@ -153,7 +153,9 @@ namespace ROOT
 
     public abstract class LevelLogic : MonoBehaviour //LEVEL-LOGIC/每一关都有一个这个类。
     {
-        protected IEnumerator ManualListenBossPauseKey()
+        #region BossStage
+
+        protected IEnumerator ManualPollingBossPauseKey()
         {
             yield return 0;
             while (true)
@@ -161,8 +163,7 @@ namespace ROOT
                 yield return 0;
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_BOSS_PAUSE))
                 {
-                    //这个按钮需要在Animation状态插入，因为逻辑帧变得太碎了，就是需要这里放一个线程出来。
-                    //Debug.Log("ManualListenBossPauseKey");
+                    //这个按钮需要在Animation状态插入，因为逻辑帧比率降低了，就是需要这里放一个线程出来。
                     WorldLogic.BossStagePauseTriggered(LevelAsset);
                 }
             }
@@ -170,6 +171,7 @@ namespace ROOT
 
         private static float BossStagePauseCostTimer = 0.0f;
         private const float BossStagePauseCostInterval = 1.0f;
+        private const int BossStagePricePerInterval = 1;
         private IEnumerator BossStagePauseCost()
         {
             yield return 0;
@@ -177,34 +179,30 @@ namespace ROOT
             {
                 yield return 0;
                 BossStagePauseCostTimer += Time.deltaTime;
-                if (BossStagePauseCostTimer >= BossStagePauseCostInterval)
-                {
-                    BossStagePauseCostTimer = 0.0f;
-                    LevelAsset.ReqOkCount--;
-                    if (LevelAsset.ReqOkCount <= 0)
-                    {
-                        WorldLogic.BossStagePauseRunStop(LevelAsset);
-                        yield break;
-                    }
-                }
+
+                if (!(BossStagePauseCostTimer >= BossStagePauseCostInterval)) continue;
+                BossStagePauseCostTimer = 0.0f;
+                LevelAsset.ReqOkCount -= BossStagePricePerInterval;
+
+                if (LevelAsset.ReqOkCount > 0) continue;
+                WorldLogic.BossStagePauseRunStop(LevelAsset);
+                yield break;
             }
         }
 
         public Coroutine BossStagePauseCostCo { private set; get; }
-
         public void StartBossStageCost()
         {
             BossStagePauseCostCo=StartCoroutine(BossStagePauseCost());
         }
-
         public void StopBossStageCost()
         {
             StopCoroutine(BossStagePauseCostCo);
             BossStagePauseCostCo = null;
         }
-
         private bool _noRequirement;
-        //protected int RequirementSatisfiedCycleCount = 0;
+
+        #endregion
 
         public bool IsTutorialLevel = false;
 
@@ -403,7 +401,7 @@ namespace ROOT
         {
             LevelAsset.DestroyerEnabled = true;
             LevelAsset.SignalPanel.IsBossStage = true;
-            ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualListenBossPauseKey());
+            ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualPollingBossPauseKey());
             WorldCycler.BossStage = true;
         }
 
