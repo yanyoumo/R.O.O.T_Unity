@@ -2,10 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
+using Matrix4x4 = UnityEngine.Matrix4x4;
 using Random = UnityEngine.Random;
+using Vector2 = UnityEngine.Vector2;
+
 // ReSharper disable IdentifierTypo
 
 namespace ROOT
@@ -607,6 +611,134 @@ namespace ROOT
                 PixelateCirclePatternLibCache = Resources.Load<PixelateCirclePatternLib>("PixelateCircleLib/DefaultPixelateCirclePatternLib");
             }
             return PixelateCirclePatternLibCache.Lib;
+        }
+
+        public struct Matrix2x2
+        {
+            internal float A00;
+            internal float A01;
+            internal float A10;
+            internal float A11;
+
+            public Matrix2x2(float _A00, float _A01, float _A10, float _A11)
+            {
+                A00 = _A00;
+                A01 = _A01;
+                A10 = _A10;
+                A11 = _A11;
+            }
+
+            public Matrix2x2(float[] content = null)
+            {
+                if (content == null)
+                {
+                    A00 = 1;
+                    A01 = 0;
+                    A10 = 0;
+                    A11 = 1;
+                }
+                else
+                {
+                    A00 = content[0];
+                    A01 = content[1];
+                    A10 = content[2];
+                    A11 = content[3];
+                }
+            }
+
+            public static Matrix2x2 operator +(Matrix2x2 a, Matrix2x2 b)
+            {
+                var content =
+                new[]{
+                    b.A00+a.A00, b.A01+a.A01, b.A10+a.A10, b.A11+a.A11
+                };
+                return new Matrix2x2(content);
+            }
+
+            public static Matrix2x2 operator -(Matrix2x2 a, Matrix2x2 b)
+            {
+                var content =
+                    new[]{
+                        a.A00-b.A00, a.A01-b.A01, a.A10-b.A10, a.A11-b.A11
+                    };
+                return new Matrix2x2(content);
+            }
+
+            public static Matrix2x2 operator *(Matrix2x2 a, Matrix2x2 b)
+            {
+                Vector2 rowA0 = new Vector2(a.A00, a.A01);
+                Vector2 rowA1 = new Vector2(a.A10, a.A11);
+                Vector2 rowB0 = new Vector2(b.A00, b.A01);
+                Vector2 rowB1 = new Vector2(b.A10, b.A11);
+
+                var content =
+                    new[]{
+                        Vector2.Dot(rowA0,rowB0),
+                        Vector2.Dot(rowA0,rowB1),
+                        Vector2.Dot(rowA1,rowB0),
+                        Vector2.Dot(rowA1,rowB1),
+                    };
+                return new Matrix2x2(content);
+            }
+
+            public static Vector2 operator *(Matrix2x2 a, Vector2 b)
+            {
+                Vector2 rowA0 = new Vector2(a.A00, a.A01);
+                Vector2 rowA1 = new Vector2(a.A10, a.A11);
+
+                return new Vector2(
+                    Vector2.Dot(rowA0, b),
+                    Vector2.Dot(rowA1, b));
+            }
+
+            public static Vector2 operator *(Vector2 a, Matrix2x2 b)
+            {
+                return b * a;
+            }
+        }
+
+        public static Vector2Int V2toV2Int(Vector2 a)
+        {
+            return new Vector2Int(Mathf.RoundToInt(a.x), Mathf.RoundToInt(a.y));
+        }
+
+        public static Vector2Int PermutateV2I(Vector2Int inVec,int maxLength, PatternPermutation permutation)
+        {
+            Debug.Assert(maxLength >= 1);
+            if (maxLength==1)
+            {
+                return inVec;
+            }
+            Vector2 center = new Vector2(maxLength / 2.0f, maxLength / 2.0f);
+            Vector2 normalizedIn = new Vector2(inVec.x, inVec.y) - center;
+            Matrix2x2 rhs = new Matrix2x2();
+            switch (permutation)
+            {
+                case PatternPermutation.None:
+                    return inVec;
+                case PatternPermutation.RotateR:
+                    rhs = new Matrix2x2(0,1,-1,0);
+                    break;
+                case PatternPermutation.RotateL:
+                    rhs = new Matrix2x2(0,-1,1,0);
+                    break;
+                case PatternPermutation.RotateH:
+                    rhs = new Matrix2x2(-1,0,0,-1);
+                    break;
+                case PatternPermutation.FlipX:
+                    rhs = new Matrix2x2(1,0,0,-1);
+                    break;
+                case PatternPermutation.FlipY:
+                    rhs = new Matrix2x2(-1,0,0,1);
+                    break;
+                case PatternPermutation.FlipXY:
+                    rhs = new Matrix2x2(0,1,1,0);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(permutation), permutation, null);
+            }
+
+            return V2toV2Int(normalizedIn * rhs + center);
         }
     }
 }

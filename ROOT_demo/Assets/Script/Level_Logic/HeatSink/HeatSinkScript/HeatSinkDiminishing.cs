@@ -8,6 +8,17 @@ using UnityEngine;
 
 namespace ROOT
 {
+    public enum PatternPermutation
+    {
+        None,
+        RotateL,
+        RotateR,
+        RotateH,
+        FlipX,
+        FlipY,
+        FlipXY,
+    }
+    
     [CreateAssetMenu(fileName = "NewHeatSinkDiminishing", menuName = "HeatSink/New HeatSink Diminishing")]
     [Serializable]
     public class HeatSinkDiminishing : ScriptableObject

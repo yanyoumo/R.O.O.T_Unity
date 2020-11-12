@@ -95,12 +95,14 @@ namespace ROOT
         #region 热力系统
 
         public HeatSinkPatternLib HeatSinkPatterns;
+        private PatternPermutation _HeatSinkPermutation = PatternPermutation.None;
         private int _currentHeatSinkPatternsID = 0;
         private int _currentHeatSinkDiminishingID = 0;
 
         public int MinHeatSinkCount=> ActualHeatSinkPos.Length;
         private Vector2Int[] RawHeatSinkPos => HeatSinkPatterns.Lib[_currentHeatSinkPatternsID].Lib.ToArray();
-        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward();
+        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward().Select(vec => Utils.PermutateV2I(vec, BoardLength-1, _HeatSinkPermutation)).ToArray();
+
         public int DiminishingStep { get; private set; }
 
         private void TryDeleteIfFilledCertainUnit(Vector2Int pos)
@@ -171,6 +173,7 @@ namespace ROOT
 
         public void UpdatePatternID()
         {
+            _HeatSinkPermutation = (PatternPermutation) Random.Range(0, 6);
             var oldID = _currentHeatSinkPatternsID;
             var oldDimID = _currentHeatSinkDiminishingID;
             const int max = 100;
