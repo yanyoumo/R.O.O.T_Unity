@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Rewired;
 using UnityEngine;
 
 namespace ROOT
@@ -55,7 +56,6 @@ namespace ROOT
             }
             get => _normalOrHeatSink;
         }*/
-
         void Awake()
         {
             _cellStatus = CellStatus.Normal;
