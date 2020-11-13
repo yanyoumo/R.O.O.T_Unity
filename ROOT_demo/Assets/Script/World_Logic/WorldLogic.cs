@@ -154,8 +154,10 @@ namespace ROOT
     //要把Asset和Logic，把Controller也要彻底拆开。
     internal static class WorldController
     {
-        // BUG Somehow PlayerId 0 is 9999999 NOW!
-        private static Player player = ReInput.players.GetPlayer(9999999);
+        //Somehow PlayerId 0 is 9999999 NOW!
+        //没什么特别的，没有新建Player的SYSTEM系统才是9999999。
+        private static int playerID = 0;
+        private static readonly Player player = ReInput.players.GetPlayer(playerID);
         /// <summary>
         /// 技能系统要从这个地方接入。而且Cycle的管理部分要再整理起来。
         /// 比较蛋疼的是，Cycle完整管理起来，需要有一个前置条件，就是：Animation系统要整理明白。
