@@ -50,7 +50,7 @@ namespace ROOT
         public CoreType? DestoryedCoreType;
         public SignalPanel SignalPanel;
         public InfoAirdrop AirDrop;
-        public int ReqOkCount=999;
+        public int ReqOkCount;
         public int SignalInfo;
         public List<Vector2Int> CollectorZone;
 
