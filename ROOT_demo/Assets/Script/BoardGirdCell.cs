@@ -9,6 +9,7 @@ namespace ROOT
     public enum CellStatus
     {
         Normal,
+        PreWarning,
         Warning,
         Sink,
         InfoCol,//先凑活一下。
@@ -20,6 +21,7 @@ namespace ROOT
         private Color WarningColor=> ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_MAT_BOARDGRID_WARNING);
         private Color HeatSinkColor=> ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_MAT_BOARDGRID_HEATSINK);
         private Color InfoColColor => ColorUtilityWrapper.ParseHtmlString("#00FFFF").Value;
+        private Color PreWarningColor => ColorUtilityWrapper.ParseHtmlString("#CF9E00").Value;
 
         [HideInInspector]
         public Board owner;
@@ -41,6 +43,9 @@ namespace ROOT
                 {
                     case CellStatus.Normal:
                         BoardGridMesh.material.color = NormalColor;
+                        break;
+                    case CellStatus.PreWarning:
+                        BoardGridMesh.material.color = PreWarningColor;
                         break;
                     case CellStatus.Warning:
                         BoardGridMesh.material.color = WarningColor;

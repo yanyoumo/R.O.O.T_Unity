@@ -40,8 +40,7 @@ namespace ROOT
 
             return UnitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
         }
-
-
+        
         public void SomeGridHasCollectedInfo(BoardGirdCell girdCell)
         {
             //逻辑到这里居然是好用的，只是需要去调整Extend的内容。
@@ -271,6 +270,8 @@ namespace ROOT
         /// <returns>返回有多少个HeatSink格没有被满足，返回0即均满足。</returns>
         public int CheckHeatSink(StageType type)
         {
+
+
             //这里需要把status接进来，然后判是什么阶段的。
             CellStatus targetingStatus;
             switch (type)
@@ -279,7 +280,7 @@ namespace ROOT
                     targetingStatus = CellStatus.Normal;
                     break;
                 case StageType.Require:
-                case StageType.Boss://TODO Boss的Sink状态还要在这儿决定。
+                case StageType.Boss: //TODO Boss的Sink状态还要在这儿决定。
                     targetingStatus = CellStatus.Warning;
                     break;
                 case StageType.Destoryer:
@@ -289,8 +290,36 @@ namespace ROOT
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+
             BoardGirds.Values.ForEach(grid => grid.CellStatus = CellStatus.Normal);
-            BoardGirds.ForEach(val => val.Value.CellStatus = ActualHeatSinkPos.Contains(val.Key)? targetingStatus : CellStatus.Normal);
+            if (type == StageType.Require)
+            {
+                var waringTile = new List<Vector2Int>();
+                RotationDirection[] RotationList =
+                {
+                    RotationDirection.East,
+                    RotationDirection.North,
+                    RotationDirection.South,
+                    RotationDirection.West
+                };
+
+                foreach (var actualHeatSinkPo in ActualHeatSinkPos)
+                {
+                    foreach (var rotationDirection in RotationList)
+                    {
+                        var offset = Utils.ConvertDirectionToBoardPosOffset(rotationDirection);
+                        var tmpPos = actualHeatSinkPo + offset;
+                        if (!waringTile.Contains(tmpPos))
+                        {
+                            waringTile.Add(tmpPos);
+                        }
+                    }
+                }
+
+                BoardGirds.Where(val => waringTile.Contains(val.Key)).ForEach(val => val.Value.CellStatus = CellStatus.PreWarning);
+            }
+            BoardGirds.Where(val => ActualHeatSinkPos.Contains(val.Key)).ForEach(val => val.Value.CellStatus = targetingStatus);
+            
             return ActualHeatSinkPos.Count(pos => CheckBoardPosValidAndEmpty(pos) == false);
         }
 

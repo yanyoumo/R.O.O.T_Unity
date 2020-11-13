@@ -51,7 +51,11 @@ namespace ROOT
             if (!_activated) return;
 
             _timer += Time.deltaTime;
-            if (_timer>=_delay)
+            if (_timer >= _lifeSpan)
+            {
+                Destroy(gameObject);
+            }
+            else if (_timer >= _delay)
             {
                 foreach (var gird in GameAsset.CollectorZone.Select(vec => GameAsset.GameBoard.BoardGirds[vec]))
                 {
@@ -63,10 +67,6 @@ namespace ROOT
                         Destroy(gameObject);
                     }
                 }
-            }
-            else if (_timer>=_lifeSpan)
-            {
-                Destroy(gameObject);
             }
         }
     }

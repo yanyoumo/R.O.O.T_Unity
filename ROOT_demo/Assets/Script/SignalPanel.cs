@@ -8,6 +8,7 @@ namespace ROOT
         public void Awake()
         {
             IsBossStage = false;
+            BossStagePaused = false;
         }
 
         [HideInInspector]
@@ -50,6 +51,12 @@ namespace ROOT
 
         public TextMeshPro MissionTarget_Big;
         public TextMeshPro SignalText;
+        public TextMeshPro PausedTag;
+
+        public bool BossStagePaused
+        {
+            set => PausedTag.enabled = value&& _isBossStage;
+        }
 
         private int _crtNormalSignal;
         public int CrtNormalSignal

@@ -39,12 +39,12 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   InitalBoard:
-  - Core: 2
-    Sides: 01000000010000000100000000000000
+  - Core: 5
+    Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 0, y: 0}
-    IsStation: 1
-  - Core: 5
+    IsStation: 0
+  - Core: 4
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 2, y: 2}

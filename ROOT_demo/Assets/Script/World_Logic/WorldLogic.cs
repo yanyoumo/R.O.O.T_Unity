@@ -950,6 +950,8 @@ namespace ROOT
                 WorldCycler.BossStagePause = true;
                 currentLevelAsset.Owner.StartBossStageCost();
             }
+
+            currentLevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
         }
 
         public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type, out ControllingPack ctrlPack,
@@ -1027,6 +1029,7 @@ namespace ROOT
                     {
                         #region FORWARD
 
+                        //这里把计分逻辑也跳过去了，所以在Boss阶段就不会有那个更新。
                         UpdateCycle(currentLevelAsset, type);
 
                         #endregion
@@ -1038,6 +1041,14 @@ namespace ROOT
                         UpdateReverseCycle(currentLevelAsset);
 
                         #endregion
+                    }
+                }
+                else if (WorldCycler.BossStage && WorldCycler.BossStagePause)
+                {
+                    if (forwardCycle)
+                    {
+                        //这里是boss的暂停阶段还进行的逻辑。
+                        UpdateBoardData(currentLevelAsset);
                     }
                 }
             }
