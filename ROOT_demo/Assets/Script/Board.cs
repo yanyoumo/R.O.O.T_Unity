@@ -40,14 +40,45 @@ namespace ROOT
 
             return UnitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
         }
-        
+        public Unit FindNearestSignalAP(Vector2Int Pos)
+        {
+            var distance = float.MaxValue;
+            var nearestPos = Vector2Int.zero;
+            foreach (var vector2Int in UnitsGameObjects.Keys)
+            {
+                var unit = UnitsGameObjects[vector2Int].GetComponentInChildren<Unit>();
+
+                if (unit.UnitCore == CoreType.HardDrive ||
+                    (unit.UnitCore == CoreType.NetworkCable && unit.InServerGrid && unit.ServerDepth == 1))
+                {
+                    if (vector2Int == Pos)
+                    {
+                        distance = 0;
+                        nearestPos = vector2Int;
+                        break;
+                    }
+                    else
+                    {
+                        var tmpDist = Vector2.Distance(Pos, vector2Int);
+                        if (tmpDist < distance)
+                        {
+                            distance = tmpDist;
+                            nearestPos = vector2Int;
+                        }
+                    }
+                }
+            }
+
+            return UnitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
+        }
+
         public void SomeGridHasCollectedInfo(BoardGirdCell girdCell)
         {
             //逻辑到这里居然是好用的，只是需要去调整Extend的内容。
             //从逻辑上讲，只要把接收的分数加上加上就好了。剩下都是表现侧的。
             //girdCell.Blink();//TODO 这里要处理接收了Info的内容。
             var girdPos = girdCell.OnboardPos;
-            var collectingUnit = FindNearestUnit(girdPos);
+            var collectingUnit = FindNearestSignalAP(girdPos);
             collectingUnit.Blink();//接收了就先闪亮一下
         }
 

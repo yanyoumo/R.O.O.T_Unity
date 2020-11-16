@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -126,6 +127,7 @@ namespace ROOT
         public int Cost { get; internal set; } = 0;
 
         private int _tier = 0;
+
         public int Tier
         {
             get => _tier;
@@ -136,8 +138,10 @@ namespace ROOT
                 TierLEDs.Val = _tier;
             }
         }
+
         private int _hardwarePrice = -1;
         private int _retailPrice = -1;
+
         public int RetailPrice
         {
             get => _retailPrice;
@@ -154,10 +158,11 @@ namespace ROOT
         public TextMeshPro CostTag;
         public TextMeshPro PriceTag;
         public TextMeshPro DiscountedPriceTag;
-        
+
         public MeshRenderer BackQuadRenderer;
         public Material BuyingMat;
         public Material ImmovableMat;
+
         public override bool Immovable
         {
             set
@@ -168,6 +173,7 @@ namespace ROOT
             }
             get => _immovable;
         }
+
         public MeshRenderer AdditionalClampMesh;
         public bool StationUnit { get; private set; }
         public Dictionary<RotationDirection, Tuple<int, int>> StationRequirement;
@@ -179,11 +185,12 @@ namespace ROOT
         public bool IsEndingGridNetwork => InServerGrid && (UnitCore == CoreType.NetworkCable) && ServerDepth == 1;
 
         private bool _hasDiscount = false;
+
         public bool HasDiscount
         {
             set
             {
-                _hasDiscount = ShopID!=-1 && value;
+                _hasDiscount = ShopID != -1 && value;
                 ShopDiscountRoot.gameObject.SetActive(_hasDiscount);
             }
             get => _hasDiscount;
@@ -221,7 +228,7 @@ namespace ROOT
             }
 
             //这个discountRate写以百分比的数据，比如八折就是写20。（-20%）
-            if (discountRate>0)
+            if (discountRate > 0)
             {
                 discountRate = Mathf.Min(discountRate, 99);
                 HasDiscount = true;
@@ -266,7 +273,7 @@ namespace ROOT
         public Dictionary<RotationDirection, SideType> UnitSides { get; protected set; }
 
         private RotationDirection _unitRotation;
-        private Transform _rootTransform=>transform.parent;
+        private Transform _rootTransform => transform.parent;
         private Material _coreMat;
 
         private MeshRenderer _coreMeshRenderer;
@@ -302,38 +309,34 @@ namespace ROOT
             _coreMatNameDic.Add(CoreType.NetworkCable, GlobalResourcePath.UNIT_NETCABLE_MAT_NAME);
             _coreMatNameDic.Add(CoreType.Processor, GlobalResourcePath.UNIT_PROCESSOR_MAT_NAME);
             _coreMatNameDic.Add(CoreType.Server, GlobalResourcePath.UNIT_SERVER_MAT_NAME);
-            _coreMatNameDic.Add(CoreType.HQ, GlobalResourcePath.UNIT_HQ_MAT_NAME);//TODO HQ的核心还没有实际材质
+            _coreMatNameDic.Add(CoreType.HQ, GlobalResourcePath.UNIT_HQ_MAT_NAME); //TODO HQ的核心还没有实际材质
         }
 
-        [ReadOnly]
-        public RotationDirection SignalFromDir;
-        [ReadOnly]
-        public bool Visited { get; set; } //for scoring purpose: dequeue
-        [ReadOnly]
-        public bool Visiting { get; set; } //for scoring purpose: enqueue
-        [ReadOnly]
-        public int HardDiskVal; //for scoring purpose
-        [ReadOnly]
-        public bool InHddGrid { get; set; } //for scoring purpose
-        [ReadOnly]
-        public bool InHddSignalGrid; //for scoring purpose
+        [ReadOnly] public RotationDirection SignalFromDir;
+        [ReadOnly] public bool Visited { get; set; } //for scoring purpose: dequeue
+        [ReadOnly] public bool Visiting { get; set; } //for scoring purpose: enqueue
+        [ReadOnly] public int HardDiskVal; //for scoring purpose
+        [ReadOnly] public bool InHddGrid { get; set; } //for scoring purpose
+        [ReadOnly] public bool InHddSignalGrid; //for scoring purpose
 
         #region 服务器计分
+
         /// <summary>
         /// 记录服务器信号深度的变量，和服务器相连的Network该数值应该为1.
         /// 可以作为中间量、即使不处于最长序列该值不必清除。
         /// </summary>
-        [ReadOnly]
-        public int ServerDepth;//for scoring purpose
+        [ReadOnly] public int ServerDepth; //for scoring purpose
+
         /// <summary>
         /// 标记一次计分后，本单元是否处于必要最长序列中。不处于的需要显式记为false。
         /// </summary>
-        [ReadOnly]
-        public bool InServerGrid; //for scoring purpose
+        [ReadOnly] public bool InServerGrid; //for scoring purpose
+
         /// <summary>
         /// 具体显示LED的field，即，最接近服务器的该数值应为全部深度，最枝端的显示值需要为1。
         /// </summary>
-        public int NetworkVal=> ServerDepth;
+        public int NetworkVal => ServerDepth;
+
         #endregion
 
         //Rotation使用的世界方向的。
@@ -343,12 +346,12 @@ namespace ROOT
         {
             get
             {
-                return WorldNeighboringData.Where(keyValuePair => keyValuePair.Value.HasConnector).Any(keyValuePair => keyValuePair.Value.Connected);
+                return WorldNeighboringData.Where(keyValuePair => keyValuePair.Value.HasConnector)
+                    .Any(keyValuePair => keyValuePair.Value.Connected);
             }
         }
 
-        [HideInInspector]
-        public readonly RotationDirection[] RotationList =
+        [HideInInspector] public readonly RotationDirection[] RotationList =
         {
             RotationDirection.East,
             RotationDirection.North,
@@ -452,7 +455,8 @@ namespace ROOT
             InitUnit(core, sides[0], sides[1], sides[2], sides[3], tier, gameBoard);
         }
 
-        public void InitUnit(CoreType core, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide, int tier, Board gameBoard = null)
+        public void InitUnit(CoreType core, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
+            int tier, Board gameBoard = null)
         {
             this.UnitCore = core;
             InitUnitMeshByCore(core);
@@ -466,10 +470,10 @@ namespace ROOT
             _coreMeshRenderer.material = Resources.Load<Material>(GlobalResourcePath.UNIT_MAT_PATH_PREFIX + val);
             Debug.Assert(_coreMeshRenderer.material);
 
-            InitConnector(_localNorthConnector,lNSide);
-            InitConnector(_localEastConnector,lESide);
-            InitConnector(_localWestConnector,lWSide);
-            InitConnector(_localSouthConnector,lSSide);
+            InitConnector(_localNorthConnector, lNSide);
+            InitConnector(_localEastConnector, lESide);
+            InitConnector(_localWestConnector, lWSide);
+            InitConnector(_localSouthConnector, lSSide);
 
             Visited = false;
             InServerGrid = false;
@@ -560,14 +564,16 @@ namespace ROOT
                         {
                             Unit otherUnit = value.GetComponentInChildren<Unit>();
                             connectionData.OtherUnit = otherUnit;
-                            connectionData.Connected = (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(currentSideDirection)) ==
-                                                        SideType.Connection);
+                            connectionData.Connected =
+                                (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(currentSideDirection)) ==
+                                 SideType.Connection);
                             if (connectionData.Connected)
                             {
                                 connectionData.ConnectedToGenre = otherUnit.UnitCoreGenre;
                             }
                         }
                     }
+
                     WorldNeighboringData.Add(currentSideDirection, connectionData);
                 }
             }
@@ -658,9 +664,12 @@ namespace ROOT
                             //bossAutoCase
                             //TODO 总之这里的逻辑是不一样的，但是具体怎么弄还不清楚。
                             //总之不能简单的不显示。
-                            var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
+                            var localRotation =
+                                Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
                             ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
-                            Connector.Hided = true;
+                            Connector.NormalSignalVal = 0;
+                            Connector.NetworkSignalVal = 0;
+                            //Connector.Hided = true;
                         }
                     }
                 }
@@ -684,17 +693,102 @@ namespace ROOT
             UpdateSideMesh();
         }
 
-        [Obsolete]
-        private IEnumerator BlinkCo()
+        private readonly float BlinkDuration = 0.075f;
+
+        private IEnumerator NextBlinkGap(float duration)
         {
-            TierLEDs.Val = 5-Tier;
-            yield return new WaitForSeconds(0.1f);
-            TierLEDs.Val = Tier;
+            yield return new WaitForSeconds(duration);
+            NextBlink();
         }
-        [Obsolete]
+
         public void Blink()
         {
-            StartCoroutine(BlinkCo());
+            //Server那里用不用迪公帮忙把路径捋出来？目前看不用
+            foreach (var currentSideDirection in RotationList)
+            {
+                if (UnitCore == CoreType.HardDrive)
+                {
+                    if (currentSideDirection == this.SignalFromDir)
+                    {
+                        var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
+                        ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
+                        Connector.Blink(BlinkDuration);
+                        StartCoroutine("NextBlinkGap", BlinkDuration);
+                    }
+                }
+                else if (UnitCore == CoreType.NetworkCable)
+                {
+                    if (currentSideDirection == RotationDirection.West ||
+                        currentSideDirection == RotationDirection.South)
+                    {
+                        var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
+                        ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
+
+                        WorldNeighboringData.TryGetValue(currentSideDirection, out ConnectionData data);
+                        Unit otherUnit = data.OtherUnit;
+
+                        if (otherUnit != null)
+                        {
+                            bool ShowNetLED = InServerGrid && otherUnit.InServerGrid;
+                            ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
+
+                            if (ShowNetLED)
+                            {
+                                Connector.Blink(BlinkDuration);
+                                StartCoroutine("NextBlinkGap", BlinkDuration);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void NextBlink()
+        {
+            if (UnitCore == CoreType.HardDrive)
+            {
+                foreach (var currentSideDirection in RotationList)
+                {
+                    if (currentSideDirection == SignalFromDir)
+                    {
+                        var nextPos = CurrentBoardPosition +
+                                      Utils.ConvertDirectionToBoardPosOffset(currentSideDirection);
+                        var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
+                        nextUnit.Blink();
+                    }
+                }
+            }
+            else if (UnitCore == CoreType.NetworkCable)
+            {
+                foreach (var currentSideDirection in RotationList)
+                {
+                    if (currentSideDirection == RotationDirection.West ||
+                        currentSideDirection == RotationDirection.South)
+                    {
+                        var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
+                        ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
+
+                        WorldNeighboringData.TryGetValue(currentSideDirection, out ConnectionData data);
+                        Unit otherUnit = data.OtherUnit;
+
+                        if (otherUnit != null)
+                        {
+                            bool ShowNetLED = InServerGrid && otherUnit.InServerGrid;
+                            ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
+
+                            if (ShowNetLED)
+                            {
+                                var nextPos = CurrentBoardPosition +
+                                              Utils.ConvertDirectionToBoardPosOffset(currentSideDirection);
+                                var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
+                                nextUnit.Blink();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

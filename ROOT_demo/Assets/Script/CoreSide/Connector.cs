@@ -52,7 +52,6 @@ namespace ROOT
             }
             get => _normalSignalVal;
         }
-        
         public int NetworkSignalVal
         {
             set
@@ -66,5 +65,28 @@ namespace ROOT
 
         public LEDArray NormalSignalArray;
         public LEDArray NetworkSignalArray;
+
+        public GameObject BlinkCube;
+        public GameObject NormalED;
+
+        public void Awake()
+        {
+            BlinkCube.gameObject.SetActive(false);
+            NormalED.gameObject.SetActive(true);
+        }
+
+        IEnumerator Blink_Coroutine(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            BlinkCube.gameObject.SetActive(false);
+            NormalED.gameObject.SetActive(true);
+        }
+
+        public void Blink(float duration)
+        {
+            BlinkCube.gameObject.SetActive(true);
+            NormalED.gameObject.SetActive(false);
+            StartCoroutine("Blink_Coroutine", duration);
+        }
     }
 }

@@ -39,15 +39,30 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   InitalBoard:
-  - Core: 5
+  - Core: 2
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 0, y: 0}
+    Pos: {x: 0, y: 3}
     IsStation: 0
-  - Core: 4
+  - Core: 1
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 2, y: 2}
+    Pos: {x: 2, y: 3}
+    IsStation: 0
+  - Core: 1
+    Sides: 01000000010000000100000001000000
+    Tier: 2
+    Pos: {x: 1, y: 3}
+    IsStation: 0
+  - Core: 1
+    Sides: 01000000010000000100000001000000
+    Tier: 3
+    Pos: {x: 3, y: 3}
+    IsStation: 0
+  - Core: 1
+    Sides: 01000000010000000100000001000000
+    Tier: 4
+    Pos: {x: 4, y: 3}
     IsStation: 0
   TargetCount: 15
   StationaryRateList:
