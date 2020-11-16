@@ -650,6 +650,8 @@ namespace ROOT
                 destoryedCore = go.GetComponentInChildren<Unit>().UnitCore;
                 Destroy(go);
                 UnitsGameObjects.Remove(pos);
+                //想办法需要在这儿调双个计分函数。
+
                 UpdateBoard();
                 return true;
             }

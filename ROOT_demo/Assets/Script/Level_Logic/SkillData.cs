@@ -76,6 +76,7 @@ namespace ROOT
     public class InstancedSkillData
     {
         public bool SkillEnabled = true;
+        public bool SkillCoolDown = false;
         public int RemainingCount = -1;
 
         public readonly SkillType SklType;
@@ -104,6 +105,8 @@ namespace ROOT
             AdditionalIncome = _skillDataUnit.AdditionalIncome;
             radius = _skillDataUnit.radius;
             Discount = _skillDataUnit.Discount;
+
+            SkillCoolDown = false;
         }
     }
 }

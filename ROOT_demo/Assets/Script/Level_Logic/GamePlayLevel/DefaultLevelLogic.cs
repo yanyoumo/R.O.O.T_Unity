@@ -459,13 +459,15 @@ namespace ROOT
                 BossUpdate();
             }
 
+            bool? AutoDrive = null;
+
             if (!Animating)
             {
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
                 // ShouldCycle这个放到WorldLogic里面去了。
                 WorldLogic.UpdateLogic(LevelAsset, in stage, out _ctrlPack, out movedTile,
-                    out var movedCursor,out shouldCycle,out var AutoDrive);
+                    out var movedCursor,out shouldCycle,out AutoDrive);
 
                 if (roundGist.HasValue)
                 {
@@ -501,7 +503,7 @@ namespace ROOT
                 LevelAsset.HintMaster.UpdateHintMaster(_ctrlPack);
             }
 
-            if (shouldCycle && movedTile)
+            if ((shouldCycle) && (movedTile || AutoDrive.HasValue))
             {
                 if (roundGist.HasValue && roundGist.Value.Type == StageType.Require)
                 {

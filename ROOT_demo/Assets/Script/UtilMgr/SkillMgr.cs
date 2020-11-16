@@ -44,7 +44,7 @@ namespace ROOT
         {
             var tempDiscount = discount;
             discount = 0;
-            InstancedSkillData.Where(skill => skill.SklType == SkillType.Discount).ForEach(skill => skill.SkillEnabled = true);
+            InstancedSkillData.Where(skill => skill.SklType == SkillType.Discount).ForEach(skill => skill.SkillCoolDown = false);
             UpdateSkillPalettes();
             return tempDiscount;
         }
@@ -103,7 +103,7 @@ namespace ROOT
                     {
                         skillActived = true;
                         discount = skill.Discount;
-                        skill.SkillEnabled = false;
+                        skill.SkillCoolDown = true;
                         WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;
@@ -139,8 +139,9 @@ namespace ROOT
 
         private void UpdateSkillActive(GameAssets currentLevelAsset)
         {
-            InstancedSkillData.Where(skill=>skill.Cost>0).ForEach(skill =>
-                skill.SkillEnabled = (skill.Cost <= currentLevelAsset.GameStateMgr.GetCurrency()));
+            //是在这儿，把Discount的enable数据清掉了。Discount的SkillCost还真是大于0.
+            //蛋疼，那个实例化Skill里面再加一个coolDown
+            InstancedSkillData.Where(skill=>skill.Cost>0).ForEach(skill => skill.SkillEnabled = (skill.Cost <= currentLevelAsset.GameStateMgr.GetCurrency()));
             UpdateSkillPalettes();
         }
 
@@ -342,7 +343,7 @@ namespace ROOT
                 SkillPalettes[i].SklType = InstancedSkillData[i].SklType;
                 SkillPalettes[i].SkillTagText = SkillTagText(InstancedSkillData[i]);
                 SkillPalettes[i].SkillIconSprite = InstancedSkillData[i].SkillIcon;
-                SkillPalettes[i].SkillEnabled = InstancedSkillData[i].SkillEnabled;
+                SkillPalettes[i].SkillEnabled = InstancedSkillData[i].SkillEnabled && !InstancedSkillData[i].SkillCoolDown;
             }
         }
 

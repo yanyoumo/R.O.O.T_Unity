@@ -73,11 +73,5 @@ namespace ROOT
             LevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
             return res;
         }
-
-        //private int _obsoletedID = -1;
-        /*protected override void Update()
-        {
-            base.Update();
-        }*/
     }
 }

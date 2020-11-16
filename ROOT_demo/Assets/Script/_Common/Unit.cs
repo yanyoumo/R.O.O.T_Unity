@@ -611,38 +611,57 @@ namespace ROOT
                     WorldNeighboringData.TryGetValue(currentSideDirection, out ConnectionData data);
                     if (data.HasConnector)
                     {
-                        var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
-                        ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
-                        Connector.Connected = data.Connected;
-                        var shouldHide = true;
-                        var NormalSignalValtmp = 0;
-                        var NetworkSignalValtmp = 0;
-                        if (data.Connected)
+                        if (!WorldCycler.BossStage || (WorldCycler.BossStage && WorldCycler.BossStagePause))
                         {
-                            if (currentSideDirection == RotationDirection.West|| currentSideDirection == RotationDirection.South)
+                            //none-bossAuto Case
+                            var localRotation =
+                                Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
+                            ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
+                            Connector.Connected = data.Connected;
+                            var shouldHide = true;
+                            var NormalSignalValtmp = 0;
+                            var NetworkSignalValtmp = 0;
+                            if (data.Connected)
                             {
-                                // 所有单元只计算自己西侧和南侧的链接，这样就不存在双侧显示的问题了。
-                                Unit otherUnit = data.OtherUnit;
-                                if (otherUnit != null)
+                                if (currentSideDirection == RotationDirection.West ||
+                                    currentSideDirection == RotationDirection.South)
                                 {
-                                    bool ShowHDDLED = InHddSignalGrid && otherUnit.InHddSignalGrid;
-                                    bool HasSolidHDDSigal = (SignalFromDir == currentSideDirection);
-                                    HasSolidHDDSigal |= (Utils.GetInvertDirection(otherUnit.SignalFromDir) == currentSideDirection);
-                                    ShowHDDLED &= HasSolidHDDSigal;
+                                    // 所有单元只计算自己西侧和南侧的链接，这样就不存在双侧显示的问题了。
+                                    Unit otherUnit = data.OtherUnit;
+                                    if (otherUnit != null)
+                                    {
+                                        bool ShowHDDLED = InHddSignalGrid && otherUnit.InHddSignalGrid;
+                                        bool HasSolidHDDSigal = (SignalFromDir == currentSideDirection);
+                                        HasSolidHDDSigal |=
+                                            (Utils.GetInvertDirection(otherUnit.SignalFromDir) == currentSideDirection);
+                                        ShowHDDLED &= HasSolidHDDSigal;
 
-                                    bool ShowNetLED = InServerGrid && otherUnit.InServerGrid;
-                                    ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
+                                        bool ShowNetLED = InServerGrid && otherUnit.InServerGrid;
+                                        ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
 
-                                    NormalSignalValtmp = ShowHDDLED ? Math.Min(HardDiskVal, otherUnit.HardDiskVal) : 0;
-                                    NetworkSignalValtmp = ShowNetLED ? Math.Min(NetworkVal, otherUnit.NetworkVal) : 0;
+                                        NormalSignalValtmp =
+                                            ShowHDDLED ? Math.Min(HardDiskVal, otherUnit.HardDiskVal) : 0;
+                                        NetworkSignalValtmp =
+                                            ShowNetLED ? Math.Min(NetworkVal, otherUnit.NetworkVal) : 0;
 
-                                    shouldHide = !(ShowHDDLED || ShowNetLED);
+                                        shouldHide = !(ShowHDDLED || ShowNetLED);
+                                    }
                                 }
                             }
+
+                            Connector.NormalSignalVal = NormalSignalValtmp;
+                            Connector.NetworkSignalVal = NetworkSignalValtmp;
+                            Connector.Hided = shouldHide;
                         }
-                        Connector.NormalSignalVal = NormalSignalValtmp;
-                        Connector.NetworkSignalVal = NetworkSignalValtmp;
-                        Connector.Hided = shouldHide;
+                        else
+                        {
+                            //bossAutoCase
+                            //TODO 总之这里的逻辑是不一样的，但是具体怎么弄还不清楚。
+                            //总之不能简单的不显示。
+                            var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
+                            ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
+                            Connector.Hided = true;
+                        }
                     }
                 }
             }
@@ -665,13 +684,14 @@ namespace ROOT
             UpdateSideMesh();
         }
 
+        [Obsolete]
         private IEnumerator BlinkCo()
         {
             TierLEDs.Val = 5-Tier;
             yield return new WaitForSeconds(0.1f);
             TierLEDs.Val = Tier;
         }
-
+        [Obsolete]
         public void Blink()
         {
             StartCoroutine(BlinkCo());

@@ -910,7 +910,14 @@ namespace ROOT
                 shop.ShopPreAnimationUpdate();
 
             if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
-                currentLevelAsset.WarningDestoryer.Step(out currentLevelAsset.DestoryedCoreType);
+            {
+                currentLevelAsset.WarningDestoryer.Step(out var outCore);
+                if (outCore.HasValue)
+                {
+                    UpdateBoardData(currentLevelAsset);
+                }
+                currentLevelAsset.DestoryedCoreType = outCore;
+            }
         }
 
         private static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile,
