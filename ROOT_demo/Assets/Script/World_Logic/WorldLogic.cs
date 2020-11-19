@@ -467,7 +467,7 @@ namespace ROOT
             }
         }
 
-        internal static void GetCommand_KM(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
+        internal static void GetCommand_Keyboard(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (GetCommandDir(out ctrlPack.CommandDir))
@@ -538,6 +538,31 @@ namespace ROOT
 
             var anyBuy = ShopBuyID(ref ctrlPack);
             var anySkill = SkillID(ref ctrlPack);
+        }
+
+        private static bool GetPlayerMouseOverObject(out RaycastHit hitInfo)
+        {
+            var mouseScnPos = player.controllers.Mouse.screenPosition;
+            var ray = Camera.main.ScreenPointToRay(mouseScnPos);
+            var hit = Physics.Raycast(ray, out hitInfo);
+            return hit;
+        }
+
+        internal static void GetCommand_Mouse(GameAssets currentLevelAsset, ref ControllingPack ctrlPack)
+        {
+            //TEMP 现在鼠标的输入是可以挂属在键盘之后的。
+            //ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
+            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CONFIRM))
+            {
+                var mouseScnPos = player.controllers.Mouse.screenPosition;
+                var ray=Camera.main.ScreenPointToRay(mouseScnPos);
+                //Debug.DrawRay(ray.origin, ray.direction, Color.black);
+                var hit=Physics.Raycast(ray, out var hitInfo);
+                if (hit)
+                {
+                    Debug.Log(hitInfo.transform.gameObject.name);
+                }
+            }
         }
 
         private static bool SkillID(ref ControllingPack ctrlPack)
@@ -806,7 +831,8 @@ namespace ROOT
             {
                 if (currentLevelAsset.CursorEnabled)
                 {
-                    WorldController.GetCommand_KM(currentLevelAsset, out ctrlPack);
+                    WorldController.GetCommand_Keyboard(currentLevelAsset, out ctrlPack);
+                    WorldController.GetCommand_Mouse(currentLevelAsset, ref ctrlPack);
                 }
 
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
