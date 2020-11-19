@@ -719,21 +719,30 @@ namespace ROOT
         public void Blink(RotationDirection? fromDirection)
         {
             //Server那里用不用迪公帮忙把路径捋出来？目前看不用
-            foreach (var currentSideDirection in RotationList)
+            if (UnitCore == CoreType.HardDrive)
             {
-                if (UnitCore == CoreType.HardDrive)
+                if (SignalFromDir == RotationDirection.West || SignalFromDir == RotationDirection.South)
                 {
-                    if (currentSideDirection == this.SignalFromDir)
+                    var localRotation = Utils.RotateDirectionBeforeRotation(SignalFromDir, _unitRotation);
+                    ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
+                    if (Connector != null)
                     {
-                        var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
-                        ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
                         Connector.Blink(BlinkDuration);
-                        StartCoroutine("NextBlinkGap", BlinkDuration);
                     }
                 }
-                else if (UnitCore == CoreType.NetworkCable)
+                else
                 {
-                    if (!fromDirection.HasValue||(currentSideDirection != fromDirection.Value))
+                    var nextPos = CurrentBoardPosition + Utils.ConvertDirectionToBoardPosOffset(SignalFromDir);
+                    var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
+                    nextUnit.SimpleBlink(Utils.GetInvertDirection(SignalFromDir));
+                }
+                StartCoroutine("NextBlinkGap", BlinkDuration);
+            }
+            else if (UnitCore == CoreType.NetworkCable)
+            {
+                foreach (var currentSideDirection in RotationList)
+                {
+                    if (!fromDirection.HasValue || (currentSideDirection != fromDirection.Value))
                     {
                         var localRotation =
                             Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
@@ -762,6 +771,7 @@ namespace ROOT
                                 var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
                                 nextUnit.SimpleBlink(Utils.GetInvertDirection(nextBlinkDir));
                             }
+
                             StartCoroutine("NextBlinkGap", BlinkDuration);
                             break;
                         }
@@ -774,16 +784,10 @@ namespace ROOT
         {
             if (UnitCore == CoreType.HardDrive)
             {
-                foreach (var currentSideDirection in RotationList)
-                {
-                    if (currentSideDirection == SignalFromDir)
-                    {
-                        var nextPos = CurrentBoardPosition +
-                                      Utils.ConvertDirectionToBoardPosOffset(currentSideDirection);
-                        var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
-                        nextUnit.Blink(null);
-                    }
-                }
+                //TODO 硬盘的可能也有问题？
+                var nextPos = CurrentBoardPosition + Utils.ConvertDirectionToBoardPosOffset(SignalFromDir);
+                var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
+                nextUnit.Blink(null);
             }
             else if (UnitCore == CoreType.NetworkCable)
             {
