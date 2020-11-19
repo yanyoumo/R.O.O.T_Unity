@@ -554,10 +554,7 @@ namespace ROOT
             //ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
             if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CONFIRM))
             {
-                var mouseScnPos = player.controllers.Mouse.screenPosition;
-                var ray=Camera.main.ScreenPointToRay(mouseScnPos);
-                //Debug.DrawRay(ray.origin, ray.direction, Color.black);
-                var hit=Physics.Raycast(ray, out var hitInfo);
+                var hit = GetPlayerMouseOverObject(out var hitInfo);
                 if (hit)
                 {
                     Debug.Log(hitInfo.transform.gameObject.name);

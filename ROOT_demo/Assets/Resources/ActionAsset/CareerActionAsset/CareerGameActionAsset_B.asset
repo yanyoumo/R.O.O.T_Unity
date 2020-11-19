@@ -42,7 +42,7 @@ MonoBehaviour:
   - Core: 2
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 0, y: 3}
+    Pos: {x: 2, y: 2}
     IsStation: 0
   - Core: 1
     Sides: 01000000010000000100000001000000

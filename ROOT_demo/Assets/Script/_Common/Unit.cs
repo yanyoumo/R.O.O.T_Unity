@@ -695,13 +695,28 @@ namespace ROOT
 
         private readonly float BlinkDuration = 0.075f;
 
+        private RotationDirection nextBlinkDir;
+
         private IEnumerator NextBlinkGap(float duration)
         {
             yield return new WaitForSeconds(duration);
-            NextBlink();
+            NextBlink(nextBlinkDir);
         }
 
-        public void Blink()
+        internal void SimpleBlink(RotationDirection requiredDirection)
+        {
+            if (requiredDirection == RotationDirection.West || requiredDirection == RotationDirection.South)
+            {
+                var localRotation = Utils.RotateDirectionBeforeRotation(requiredDirection, _unitRotation);
+                ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
+                if (Connector == null) return;
+                Connector.Blink(BlinkDuration);
+                return;
+            }
+            throw new ArgumentException();
+        }
+
+        public void Blink(RotationDirection? fromDirection)
         {
             //Server那里用不用迪公帮忙把路径捋出来？目前看不用
             foreach (var currentSideDirection in RotationList)
@@ -718,33 +733,44 @@ namespace ROOT
                 }
                 else if (UnitCore == CoreType.NetworkCable)
                 {
-                    if (currentSideDirection == RotationDirection.West ||
-                        currentSideDirection == RotationDirection.South)
+                    if (!fromDirection.HasValue||(currentSideDirection != fromDirection.Value))
                     {
-                        var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
+                        var localRotation =
+                            Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
                         ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
 
+                        if (Connector == null) continue;
+
                         WorldNeighboringData.TryGetValue(currentSideDirection, out ConnectionData data);
-                        Unit otherUnit = data.OtherUnit;
+                        var otherUnit = data.OtherUnit;
 
-                        if (otherUnit != null)
+                        if (otherUnit == null) continue;
+
+                        var showNetLed = InServerGrid && otherUnit.InServerGrid;
+                        showNetLed &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
+
+                        if (showNetLed)
                         {
-                            bool ShowNetLED = InServerGrid && otherUnit.InServerGrid;
-                            ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
-
-                            if (ShowNetLED)
+                            nextBlinkDir = currentSideDirection;
+                            if (nextBlinkDir == RotationDirection.West || nextBlinkDir == RotationDirection.South)
                             {
                                 Connector.Blink(BlinkDuration);
-                                StartCoroutine("NextBlinkGap", BlinkDuration);
-                                break;
                             }
+                            else
+                            {
+                                var nextPos = CurrentBoardPosition + Utils.ConvertDirectionToBoardPosOffset(nextBlinkDir);
+                                var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
+                                nextUnit.SimpleBlink(Utils.GetInvertDirection(nextBlinkDir));
+                            }
+                            StartCoroutine("NextBlinkGap", BlinkDuration);
+                            break;
                         }
                     }
                 }
             }
         }
 
-        private void NextBlink()
+        private void NextBlink(RotationDirection? nextDirection)
         {
             if (UnitCore == CoreType.HardDrive)
             {
@@ -755,38 +781,17 @@ namespace ROOT
                         var nextPos = CurrentBoardPosition +
                                       Utils.ConvertDirectionToBoardPosOffset(currentSideDirection);
                         var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
-                        nextUnit.Blink();
+                        nextUnit.Blink(null);
                     }
                 }
             }
             else if (UnitCore == CoreType.NetworkCable)
             {
-                foreach (var currentSideDirection in RotationList)
+                if (nextDirection.HasValue)
                 {
-                    if (currentSideDirection == RotationDirection.West ||
-                        currentSideDirection == RotationDirection.South)
-                    {
-                        var localRotation = Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
-                        ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
-
-                        WorldNeighboringData.TryGetValue(currentSideDirection, out ConnectionData data);
-                        Unit otherUnit = data.OtherUnit;
-
-                        if (otherUnit != null)
-                        {
-                            bool ShowNetLED = InServerGrid && otherUnit.InServerGrid;
-                            ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
-
-                            if (ShowNetLED)
-                            {
-                                var nextPos = CurrentBoardPosition +
-                                              Utils.ConvertDirectionToBoardPosOffset(currentSideDirection);
-                                var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
-                                nextUnit.Blink();
-                                break;
-                            }
-                        }
-                    }
+                    var nextPos = CurrentBoardPosition + Utils.ConvertDirectionToBoardPosOffset(nextDirection.Value);
+                    var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
+                    nextUnit.Blink(Utils.GetInvertDirection(nextDirection.Value));
                 }
             }
         }

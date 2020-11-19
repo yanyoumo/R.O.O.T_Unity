@@ -79,7 +79,7 @@ namespace ROOT
             //girdCell.Blink();//TODO 这里要处理接收了Info的内容。
             var girdPos = girdCell.OnboardPos;
             var collectingUnit = FindNearestSignalAP(girdPos);
-            collectingUnit.Blink();//接收了就先闪亮一下
+            collectingUnit.Blink(null); //接收了就先闪亮一下
         }
 
         private List<Vector2Int> GetSingleHardDriveInfoCollectorZone(Unit unit)
