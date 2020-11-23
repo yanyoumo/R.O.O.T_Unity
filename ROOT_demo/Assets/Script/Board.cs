@@ -527,6 +527,12 @@ namespace ROOT
             }
         }
 
+        public Unit GetUnitWithPosAndDir(Vector2Int center, RotationDirection offsetDirection)
+        {
+            var nextPos = center + Utils.ConvertDirectionToBoardPosOffset(offsetDirection);
+            return CheckBoardPosValidAndFilled(nextPos) ? UnitsGameObjects[nextPos].GetComponentInChildren<Unit>() : null;
+        }
+
         public void InitBoardWAsset(LevelActionAsset actionAsset)
         {
             foreach (var unitGist in actionAsset.InitalBoard)

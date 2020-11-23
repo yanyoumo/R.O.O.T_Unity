@@ -725,16 +725,12 @@ namespace ROOT
                 {
                     var localRotation = Utils.RotateDirectionBeforeRotation(SignalFromDir, _unitRotation);
                     ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
-                    if (Connector != null)
-                    {
-                        Connector.Blink(BlinkDuration);
-                    }
+                    if (Connector != null) Connector.Blink(BlinkDuration);
                 }
                 else
                 {
-                    var nextPos = CurrentBoardPosition + Utils.ConvertDirectionToBoardPosOffset(SignalFromDir);
-                    var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
-                    nextUnit.SimpleBlink(Utils.GetInvertDirection(SignalFromDir));
+                    var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalFromDir);
+                    if (nextUnit != null) nextUnit.SimpleBlink(Utils.GetInvertDirection(SignalFromDir));
                 }
                 StartCoroutine("NextBlinkGap", BlinkDuration);
             }
@@ -767,9 +763,8 @@ namespace ROOT
                             }
                             else
                             {
-                                var nextPos = CurrentBoardPosition + Utils.ConvertDirectionToBoardPosOffset(nextBlinkDir);
-                                var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
-                                nextUnit.SimpleBlink(Utils.GetInvertDirection(nextBlinkDir));
+                                var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, nextBlinkDir);
+                                if (nextUnit != null) nextUnit.SimpleBlink(Utils.GetInvertDirection(nextBlinkDir));
                             }
 
                             StartCoroutine("NextBlinkGap", BlinkDuration);
@@ -784,19 +779,13 @@ namespace ROOT
         {
             if (UnitCore == CoreType.HardDrive)
             {
-                //TODO 硬盘的可能也有问题？
-                var nextPos = CurrentBoardPosition + Utils.ConvertDirectionToBoardPosOffset(SignalFromDir);
-                var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
-                nextUnit.Blink(null);
+                var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalFromDir);
+                if (nextUnit != null) nextUnit.Blink(null);
             }
-            else if (UnitCore == CoreType.NetworkCable)
+            else if (UnitCore == CoreType.NetworkCable && nextDirection.HasValue)
             {
-                if (nextDirection.HasValue)
-                {
-                    var nextPos = CurrentBoardPosition + Utils.ConvertDirectionToBoardPosOffset(nextDirection.Value);
-                    var nextUnit = GameBoard.UnitsGameObjects[nextPos].GetComponentInChildren<Unit>();
-                    nextUnit.Blink(Utils.GetInvertDirection(nextDirection.Value));
-                }
+                var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, nextDirection.Value);
+                if (nextUnit != null) nextUnit.Blink(Utils.GetInvertDirection(nextDirection.Value));
             }
         }
     }
