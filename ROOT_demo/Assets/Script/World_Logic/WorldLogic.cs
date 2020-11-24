@@ -473,7 +473,7 @@ namespace ROOT
             if (GetCommandDir(out ctrlPack.CommandDir))
             {
                 ctrlPack.ReplaceFlag(ControllingCommand.Move); //Replace
-                if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT))
+                if (player.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT))
                 {
                     ctrlPack.ReplaceFlag(ControllingCommand.Drag); //Replace
                 }
@@ -482,13 +482,13 @@ namespace ROOT
             ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
             ctrlPack.NextPos = currentLevelAsset.Cursor.GetCoord(ctrlPack.CommandDir);
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_REMOVEUNIT))
+            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_REMOVEUNIT))
             {
                 //ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
                 //ctrlPack.SetFlag(ControllingCommand.RemoveUnit);
             }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT) &&
+            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT) &&
                 ctrlPack.CtrlCMD == ControllingCommand.Nop)
             {
                 //移动和拖动的优先级比旋转高。
@@ -496,28 +496,28 @@ namespace ROOT
                 ctrlPack.SetFlag(ControllingCommand.Rotate);
             }
 
-            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD) ||
-                Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET))
+            if (player.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD) ||
+                player.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET))
             {
                 ctrlPack.SetFlag(ControllingCommand.SignalHint);
             }
 
-            if (Input.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL))
+            if (player.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL))
             {
                 ctrlPack.SetFlag(ControllingCommand.PlayHint);
             }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CYCLENEXT))
+            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CYCLENEXT))
             {
                 ctrlPack.SetFlag(ControllingCommand.CycleNext);
             }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CONFIRM))
+            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CONFIRM))
             {
                 ctrlPack.SetFlag(ControllingCommand.Confirm);
             }
 
-            if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CANCELED))
+            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CANCELED))
             {
                 ctrlPack.SetFlag(ControllingCommand.Cancel);
             }
@@ -525,12 +525,12 @@ namespace ROOT
             if (currentLevelAsset.BuyingCursor)
             {
 
-                /*if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
+                /*if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
                 {
                     ctrlPack.SetFlag(ControllingCommand.Confirm);
                 }*/
 
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
+                if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
                 {
                     ctrlPack.SetFlag(ControllingCommand.BuyRandom);
                 }
@@ -568,7 +568,7 @@ namespace ROOT
 
             for (var i = 0; i < StaticName.INPUT_BUTTON_NAME_SKILLS.Length; i++)
             {
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SKILLS[i]))
+                if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SKILLS[i]))
                 {
                     anySkill = true;
                     ctrlPack.SkillID = i;
@@ -589,7 +589,7 @@ namespace ROOT
 
             for (var i = 0; i < StaticName.INPUT_BUTTON_NAME_SHOPBUYS.Length; i++)
             {
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUYS[i]))
+                if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPBUYS[i]))
                 {
                     anyBuy = true;
                     ctrlPack.ShopID = i;
@@ -612,6 +612,9 @@ namespace ROOT
     /// </summary>
     internal static class WorldLogic //WORLD-LOGIC
     {
+        //RISK
+        private static int playerID = 0;
+        private static readonly Player player = ReInput.players.GetPlayer(playerID);
         //对，这种需要影响场景怎么办？
         //本来是为了保证WRD-LOGIC的独立性（体现形而上学的概念）；
         //就是弄成了静态类，但是现在看估计得弄成单例？
@@ -832,7 +835,7 @@ namespace ROOT
                     WorldController.GetCommand_Mouse(currentLevelAsset, ref ctrlPack);
                 }
 
-                if (Input.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
+                if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
                 {
                     ctrlPack.SetFlag(ControllingCommand.NextButton);
                 }
@@ -1085,6 +1088,7 @@ namespace ROOT
 
             #region CLEANUP
 
+            //RISK 
             shouldCycle = (autoDrive.HasValue) || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
 
             #endregion
