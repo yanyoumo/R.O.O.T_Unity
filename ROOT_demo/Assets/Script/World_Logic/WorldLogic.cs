@@ -552,7 +552,7 @@ namespace ROOT
         {
             //TEMP 现在鼠标的输入是可以挂属在键盘之后的。
             //ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CONFIRM))
+            if (player.GetButtonDown("Confirm0"))
             {
                 var hit = GetPlayerMouseOverObject(out var hitInfo);
                 if (hit)
