@@ -53,5 +53,7 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 2, y: 3}
     IsStation: 0
-  TargetCount: 20
+  InfoCount: 1903
+  InfoVariantRatio: 0.141
+  InfoTargetRatio: 0.757
   StationaryRateList: []
