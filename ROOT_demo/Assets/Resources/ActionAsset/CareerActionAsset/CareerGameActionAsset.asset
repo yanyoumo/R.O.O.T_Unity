@@ -17,35 +17,11 @@ MonoBehaviour:
   LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
     type: 3}
   levelType: 1
-  GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
+  GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
-  TimeLineTokens:
-  - TokenID: 0
-    type: 0
-    RequireAmount: 3
-    Range: {x: 10, y: 20}
-  - TokenID: 1
-    type: 1
-    RequireAmount: 2
-    Range: {x: 15, y: 25}
-  - TokenID: 2
-    type: 0
-    RequireAmount: 12
-    Range: {x: 30, y: -1}
-  - TokenID: 3
-    type: 1
-    RequireAmount: 15
-    Range: {x: 40, y: -1}
-  - TokenID: 4
-    type: 2
-    RequireAmount: 0
-    Range: {x: 35, y: -1}
-  - TokenID: 5
-    type: 3
-    RequireAmount: 0
-    Range: {x: 60, y: -1}
+  RoundDatas: []
   InitalBoard:
   - Core: 0
     Sides: 00000000000000000000000000000000

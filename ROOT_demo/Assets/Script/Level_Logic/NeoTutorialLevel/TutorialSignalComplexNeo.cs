@@ -24,14 +24,15 @@ namespace ROOT
                         OnceFlagA = true;
                         WorldCycler.InitCycler();
                         LevelAsset.TimeLine.InitWithAssets(LevelAsset);
-                        LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
+                        //LevelAsset.TimeLine.SetGoalCount = LevelAsset.ActionAsset.TargetCount;
                     }
                 }
             }
 
             if (ActionEnded)
             {
-                bool timeLineGood = LevelAsset.ReqOkCount >= LevelAsset.ActionAsset.TargetCount;
+                //bool timeLineGood = LevelAsset.ReqOkCount >= LevelAsset.ActionAsset.TargetCount;
+                bool timeLineGood=false;
                 LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = timeLineGood;
                 LevelAsset.HintMaster.TutorialCheckList.SecondaryGoalCompleted = !OnceFlagB;
                 LevelCompleted = (!OnceFlagB) && timeLineGood;

@@ -205,8 +205,12 @@ namespace ROOT
         [ShowIf("levelType", LevelType.Career)]
         public UnitGist[] InitalBoard;
         [ShowIf("levelType", LevelType.Career)]
-        [Range(0, 100)]
-        public int TargetCount;
+        [Range(0, 10000)]
+        public int InfoCount;
+        [Range(0, 1.0f)]
+        public float InfoVariantRatio;
+        [Range(0, 1.0f)]
+        public float InfoTargetRatio;
         [ShowIf("levelType", LevelType.Career)]
         [ShowInInspector]
         [SerializeField]
@@ -218,6 +222,8 @@ namespace ROOT
         {
             return StepCount >= PlayableCount;
         }
+
+        public int BossStageCount => RoundDatas[RoundDatas.Length - 1].DestoryerLength;
 
         /// <summary>
         /// 获得改时间线上End前玩家可以玩的步长。

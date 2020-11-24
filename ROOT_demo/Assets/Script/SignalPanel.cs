@@ -157,6 +157,16 @@ namespace ROOT
             }
         }
 
+        private int _signalTarget;
+        public int SignalTarget
+        {
+            get => _signalTarget;
+            set
+            {
+                _signalTarget = value;
+                UpdateNumbers();
+            }
+        }
 
         private string Padding(int v)
         {
@@ -171,7 +181,7 @@ namespace ROOT
             MissionTarget_Big.text = "[" + Padding(_crtMission) + "]";
             NormalTierText.text = "["+ Padding(_normalTier) + "]";
             NetworkTierText.text = "[" + Padding(_networkTier) + "]";
-            SignalText.text = "[" + Utils.PaddingNum3Digit(_signalCounter) + "]";
+            SignalText.text = Utils.PaddingNum4Digit(_signalCounter) + "/" + Utils.PaddingNum4Digit(_signalTarget);
         }
     }
 }

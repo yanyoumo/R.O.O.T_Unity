@@ -375,45 +375,123 @@ namespace ROOT
             }
         }
 
+        public static void DebugLogArray(int[] Array)
+        {
+            var res = "[";
+            foreach (var i in Array)
+            {
+                res += i.ToString() + ",";
+            }
+            res += "]";
+            Debug.Log(res);
+        }
+
         public static int GetSideCount(SideType side, SideType[] sides)
         {
             return sides.Count(sideType => sideType == side);
         }
 
         /// <summary>
+        /// 根据指定波动，生成特定随机数列，但是保证整个数组和为0。
+        /// </summary>
+        /// <param name="length">长度</param>
+        /// <param name="variation">指定波动</param>
+        /// <returns>随机数列</returns>
+        public static int[] SumZeroRandomArray(int length, int variation)
+        {
+            var res = new int[length];
+            for (int i = 0; i < length; i++)
+            {
+                res[i] = Random.Range(-variation, variation);
+            }
+            var sum = res.Sum();
+            if (sum != 0)
+            {
+                if (Mathf.Abs(sum) < length)
+                {
+                    var sign = Mathf.Sign(sum) > 0;
+                    var absSum = Mathf.Abs(sum);
+                    for (var i = 0; i < absSum; i++)
+                    {
+                        //如果sum数值小于总数，就将前sum个数量的值中都敲掉1就行了。
+                        res[i] = res[i] - (sign ? 1 : -1);
+                    }
+                }
+                else
+                {
+                    var sign = Mathf.Sign(sum) > 0;
+                    var absSum = Mathf.Abs(sum);
+                    var offset = SpreadOutLaying(length, absSum,  out var sum1);
+                    for (var i = 0; i < length; i++)
+                    {
+                        //是减法，是因为需要和去掉sum的数量。
+                        res[i] = res[i] - (sign ? 1 : -1) * offset[i];
+                    }
+                }
+
+                Debug.Assert(res.Sum() == 0, "sum not Zero!");
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// 将一个整数以特定数量切分，并且每个数值可以会有特定的随机波动。
+        /// </summary>
+        /// <param name="length">目标计数，大于等于1</param>
+        /// <param name="sum">总数，大于等于目标计数</param>
+        /// <param name="variationRatio">随机波动的强度：0~1</param>
+        /// <returns>将总数按照计数随机切分的结果</returns>
+        public static int[] SpreadOutLayingWRandomization(int length, int sum, float variationRatio)
+        {
+            var averagedList = SpreadOutLaying(length, sum, out var avgSum);
+            var maxElement = averagedList.Select(Mathf.Abs).Max();
+            var variation = Mathf.RoundToInt(maxElement * variationRatio);
+            var offset=SumZeroRandomArray(length, variation);
+            var res = new int[length];
+            for (int i = 0; i < length; i++)
+            {
+                res[i] = averagedList[i] + offset[i];
+            }
+
+            Debug.Assert(res.Sum() == sum);
+            return res;
+        }
+
+        /// <summary>
         /// 将一个整数尽可能以目标计数以整数平均分解
         /// </summary>
-        /// <param name="targetCount">目标计数，大于等于1</param>
-        /// <param name="maxCount">总数，大于等于目标计数</param>
-        /// <param name="sum">将切分结果求和积分结果，最后一个数值就是总数</param>
+        /// <param name="length">目标计数，大于等于1</param>
+        /// <param name="sum">总数，大于等于目标计数</param>
+        /// <param name="sumArray">将切分结果求和积分结果，最后一个数值就是总数</param>
         /// <returns>将总数按照计数切分的结果</returns>
-        public static int[] SpreadOutLaying(int targetCount, int maxCount, out int[] sum)
+        public static int[] SpreadOutLaying(int length, int sum, out int[] sumArray)
         {
 
-            if (targetCount < 1 || targetCount > maxCount)
+            if (length < 1 || length > sum)
             {
                 throw new ArgumentException("目标计数，大于等于1;总数，大于等于目标计数");
             }
 
-            sum = new int[targetCount];
-            var resDiv = new int[targetCount];
-            var baseInterval = maxCount / targetCount;
-            var residue = maxCount - (baseInterval * targetCount);
-            for (int i = 0; i < targetCount; i++)
+            sumArray = new int[length];
+            var resDiv = new int[length];
+            var baseInterval = sum / length;
+            var residue = sum - (baseInterval * length);
+            for (int i = 0; i < length; i++)
             {
                 int interval = baseInterval;
-                if (targetCount - i <= residue)
+                if (length - i <= residue)
                 {
                     interval++;
                 }
                 resDiv[i] = interval;
             }
 
-            for (var i = 0; i < sum.Length; i++)
+            for (var i = 0; i < sumArray.Length; i++)
             {
                 for (var j = 0; j <= i; j++)
                 {
-                    sum[i] += resDiv[j];
+                    sumArray[i] += resDiv[j];
                 }
             }
 

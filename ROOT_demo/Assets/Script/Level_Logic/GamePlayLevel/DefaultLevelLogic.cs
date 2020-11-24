@@ -398,7 +398,7 @@ namespace ROOT
 
         //现在一共提供Info的计数是：Boss阶段*BossInfoSprayCount*SprayCountPerAnimateInterval;
         private const int SprayCountPerAnimateInterval = 4;
-        private const int BossInfoSprayCount = 3;
+        //private const int BossInfoSprayCount = 3;
         private const float BossInfoSprayTimerIntervalOffsetRange = 0.5f;
 
         private float _bossInfoSprayTimerIntervalBase => AnimationDuration / SprayCountPerAnimateInterval;//TODO 这个可能要做成和Anime时长相关的随机数。
@@ -407,8 +407,20 @@ namespace ROOT
         private float _bossInfoSprayTimer=0.0f;
         private Coroutine ManualListenBossPauseKeyCoroutine;
 
+        private int[] SprayCountArray;
+        private int SprayCounter = 0;
+
         private void BossInit()
         {
+            var bossStageCount = LevelAsset.ActionAsset.BossStageCount;
+            var totalSprayCount = bossStageCount * SprayCountPerAnimateInterval;
+            //这个数据还得传过去。
+            var targetInfoCount = Mathf.RoundToInt(LevelAsset.ActionAsset.InfoCount * LevelAsset.ActionAsset.InfoTargetRatio);
+            LevelAsset.SignalPanel.SignalTarget = targetInfoCount;
+
+            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, LevelAsset.ActionAsset.InfoCount,
+                LevelAsset.ActionAsset.InfoVariantRatio);
+            
             LevelAsset.DestroyerEnabled = true;
             LevelAsset.SignalPanel.IsBossStage = true;
             ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualPollingBossPauseKey());
@@ -418,14 +430,25 @@ namespace ROOT
         private void BossUpdate()
         {
             //Spray的逻辑可以再做一些花活。
-            _bossInfoSprayTimer += Time.deltaTime;
-            if (_bossInfoSprayTimer >= _bossInfoSprayTimerInterval)
+            if (!WorldCycler.BossStagePause)
             {
-                LevelAsset.AirDrop.SprayInfo(BossInfoSprayCount);
-                _bossInfoSprayTimerIntervalOffset = Random.Range(
-                    -BossInfoSprayTimerIntervalOffsetRange,
-                    BossInfoSprayTimerIntervalOffsetRange);
-                _bossInfoSprayTimer = 0.0f;
+                _bossInfoSprayTimer += Time.deltaTime;
+                if (_bossInfoSprayTimer >= _bossInfoSprayTimerInterval)
+                {
+                    try
+                    {
+                        LevelAsset.AirDrop.SprayInfo(SprayCountArray[SprayCounter]);
+                    }
+                    catch(IndexOutOfRangeException)
+                    {
+                        LevelAsset.AirDrop.SprayInfo(3);
+                    }
+                    _bossInfoSprayTimerIntervalOffset = Random.Range(
+                        -BossInfoSprayTimerIntervalOffsetRange,
+                        BossInfoSprayTimerIntervalOffsetRange);
+                    _bossInfoSprayTimer = 0.0f;
+                    SprayCounter++;
+                }
             }
         }
 

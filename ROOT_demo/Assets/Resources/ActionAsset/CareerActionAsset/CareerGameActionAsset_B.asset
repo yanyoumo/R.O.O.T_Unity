@@ -13,61 +13,35 @@ MonoBehaviour:
   m_Name: CareerGameActionAsset_B
   m_EditorClassIdentifier: 
   TitleTerm: Level_3
-  Thumbnail: {fileID: 21300000, guid: ebad0ac1de2ad1f4dbf300bfb7a41d70, type: 3}
+  Thumbnail: {fileID: 21300000, guid: 53e27874c263fec468d86516331a6776, type: 3}
   LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
     type: 3}
   levelType: 1
-  GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
+  GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
-  RoundDatas:
-  - ID: 0
-    ShopLength: 1
-    RequireLength: 1
-    NormalRequirement: 3
-    NetworkRequirement: 4
-    DestoryerLength: 1
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 1
-    ShopLength: 1
-    RequireLength: 1
-    NormalRequirement: 7
-    NetworkRequirement: 8
-    DestoryerLength: 20
-    DestoryerCount: 0
-    InfoCount: 0
+  RoundDatas: []
   InitalBoard:
-  - Core: 5
-    Sides: 01000000010000000100000001000000
+  - Core: 0
+    Sides: 00000000000000000000000000000000
     Tier: 1
-    Pos: {x: 4, y: 2}
-    IsStation: 0
-  - Core: 4
-    Sides: 01000000010000000100000001000000
-    Tier: 1
-    Pos: {x: 2, y: 3}
-    IsStation: 0
-  - Core: 4
-    Sides: 01000000010000000100000001000000
-    Tier: 2
-    Pos: {x: 1, y: 3}
-    IsStation: 0
-  - Core: 4
-    Sides: 01000000010000000100000001000000
-    Tier: 3
     Pos: {x: 3, y: 3}
     IsStation: 0
-  - Core: 4
-    Sides: 01000000010000000100000001000000
-    Tier: 4
+  - Core: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 1
+    Pos: {x: 4, y: 4}
+    IsStation: 0
+  - Core: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 1
+    Pos: {x: 3, y: 4}
+    IsStation: 0
+  - Core: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 1
     Pos: {x: 4, y: 3}
     IsStation: 0
-  TargetCount: 15
-  StationaryRateList:
-  - {x: 12, y: 8}
-  - {x: 10, y: 5}
-  - {x: 8, y: 2}
-  - {x: 7, y: 1}
-  - {x: 0, y: 0}
+  TargetCount: 10
+  StationaryRateList: []
