@@ -21,34 +21,43 @@ MonoBehaviour:
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
-  RoundDatas: []
+  RoundDatas:
+  - ID: 0
+    ShopLength: 8
+    RequireLength: 12
+    NormalRequirement: 3
+    NetworkRequirement: 2
+    DestoryerLength: 12
+    DestoryerCount: 0
+    InfoCount: 0
+  - ID: 1
+    ShopLength: 12
+    RequireLength: 14
+    NormalRequirement: 5
+    NetworkRequirement: 4
+    DestoryerLength: 12
+    DestoryerCount: 0
+    InfoCount: 0
+  - ID: 2
+    ShopLength: 14
+    RequireLength: 14
+    NormalRequirement: 8
+    NetworkRequirement: 6
+    DestoryerLength: 20
+    DestoryerCount: 0
+    InfoCount: 0
   InitalBoard:
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 1
-    Pos: {x: 2, y: 3}
-    IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 1
-    Pos: {x: 3, y: 2}
-    IsStation: 0
   - Core: 2
-    Sides: 01000000000000000000000001000000
+    Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 3, y: 3}
+    Pos: {x: 4, y: 4}
     IsStation: 0
   - Core: 5
-    Sides: 00000000010000000100000000000000
+    Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 2, y: 2}
+    Pos: {x: 1, y: 1}
     IsStation: 0
-  - Core: 8
-    Sides: 00000000000000000000000000000000
-    Tier: 1
-    Pos: {x: 0, y: 0}
-    IsStation: 0
-  InfoCount: 1903
-  InfoVariantRatio: 0.141
-  InfoTargetRatio: 0.757
+  InfoCount: 1200
+  InfoVariantRatio: 0.1
+  InfoTargetRatio: 0.3
   StationaryRateList: []

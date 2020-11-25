@@ -29,7 +29,7 @@ namespace ROOT
             ReadyToGo = true;
             if (LevelAsset.ActionAsset.RoundDatas.Length>0)
             {
-                //TODO 这个东西放在这里还是怎么着？
+                //这个东西放在这里还是怎么着？就先这样吧。
                 WorldCycler.InitCycler();
                 LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             }
