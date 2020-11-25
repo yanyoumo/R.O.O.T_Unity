@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Rewired;
+using UnityEditor;
 using UnityEngine;
 using CommandDir = ROOT.RotationDirection;
 using Object = System.Object;
@@ -88,7 +89,7 @@ namespace ROOT
 
         public static void StepDown()
         {
-            if (ExpectedStep>ActualStep)
+            if (ExpectedStep > ActualStep)
             {
                 throw new Exception("Should not further Decrease Step when ExpectedStep is Higher");
             }
@@ -121,21 +122,21 @@ namespace ROOT
     [Flags]
     public enum ControllingCommand
     {
-        Nop =         0,
-        Move =        1<<0,
-        Drag =        1<<1,
-        Rotate =      1<<2,
-        Buy =         1<<3,
-        PlayHint =    1<<4,
-        SignalHint =  1<<5,
-        NextButton =  1<<6,
-        CycleNext =   1<<7,
-        Cancel =      1<<8,
-        Confirm =     1<<9,
-        BuyRandom =   1<<10,
-        RemoveUnit =  1<<11,
-        Skill =       1<<12,
-        BossPause =   1<<13,//这个用作为Toggle开关，就不做两个Command了。
+        Nop = 0,
+        Move = 1 << 0,
+        Drag = 1 << 1,
+        Rotate = 1 << 2,
+        Buy = 1 << 3,
+        PlayHint = 1 << 4,
+        SignalHint = 1 << 5,
+        NextButton = 1 << 6,
+        CycleNext = 1 << 7,
+        Cancel = 1 << 8,
+        Confirm = 1 << 9,
+        BuyRandom = 1 << 10,
+        RemoveUnit = 1 << 11,
+        Skill = 1 << 12,
+        BossPause = 1 << 13,//这个用作为Toggle开关，就不做两个Command了。
     }
 
     public struct ControllingPack
@@ -186,6 +187,9 @@ namespace ROOT
     //要把Asset和Logic，把Controller也要彻底拆开。
     internal static class WorldController
     {
+        private static GameObject pressedObj = null;
+        private static bool isSinglePress = false;
+        private static float pressTime = 0;
         //Somehow PlayerId 0 is 9999999 NOW!
         //没什么特别的，没有新建Player的SYSTEM系统才是9999999。
         private static int playerID = 0;
@@ -227,7 +231,7 @@ namespace ROOT
 
             return anyDir;
         }
-        
+
         private static int _lastFingerID = -1;
         private static int _ObsoleteFingerID = -2;
         private static bool swiping = false;
@@ -321,10 +325,10 @@ namespace ROOT
             //滑动这边，滑动过长会失效，这个也是个很神奇的bug，有空要看看
             //商店的新版流程正在弄。
             //先特么只考虑一个手指的情况。
-            ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+            ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
             if (Input.touchCount > 0)
             {
-                if (Input.touchCount>1)
+                if (Input.touchCount > 1)
                 {
                     //Dual Finger touch
                     ctrlPack.SetFlag(ControllingCommand.SignalHint);
@@ -333,7 +337,7 @@ namespace ROOT
                 {
                     Touch touch = Input.touches[0];
                     //不允许在滑动的同时还有一次别的手指点击的可能。
-                    var touchedGo=GetTouchedOnGameObject(in touch);
+                    var touchedGo = GetTouchedOnGameObject(in touch);
                     Unit tmpTouchingUnit = GetTouchedOnUnit(in touchedGo); //这个在滑动过程中不要了。
                     Debug.Log("touch.tapCount ==" + touch.tapCount);
                     if (touch.tapCount >= 2)
@@ -402,20 +406,20 @@ namespace ROOT
                                                 _holdTimer = 0.0f;
                                                 break;
                                             case TouchPhase.Stationary:
-                                            {
-                                                _holdTimer += Time.deltaTime;
-                                                if (!_holdAntiSpam)
                                                 {
-                                                    if (_holdTimer >= _holdThreadhold)
+                                                    _holdTimer += Time.deltaTime;
+                                                    if (!_holdAntiSpam)
                                                     {
-                                                        //Debug.Log("Hold Detected");
-                                                        ctrlPack.SetFlag(ControllingCommand.CycleNext);
-                                                        _holdAntiSpam = true;
+                                                        if (_holdTimer >= _holdThreadhold)
+                                                        {
+                                                            //Debug.Log("Hold Detected");
+                                                            ctrlPack.SetFlag(ControllingCommand.CycleNext);
+                                                            _holdAntiSpam = true;
+                                                        }
                                                     }
-                                                }
 
-                                                break;
-                                            }
+                                                    break;
+                                                }
                                             case TouchPhase.Canceled:
                                             case TouchPhase.Moved:
                                             case TouchPhase.Ended:
@@ -469,7 +473,7 @@ namespace ROOT
 
         internal static void GetCommand_Keyboard(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
-            ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+            ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
             if (GetCommandDir(out ctrlPack.CommandDir))
             {
                 ctrlPack.ReplaceFlag(ControllingCommand.Move); //Replace
@@ -551,17 +555,75 @@ namespace ROOT
         internal static void GetCommand_Mouse(GameAssets currentLevelAsset, ref ControllingPack ctrlPack)
         {
             //TEMP 现在鼠标的输入是可以挂属在键盘之后的。
+            //光标：不需要。
+            //移动单位：拖动。
+            //旋转单位：双击单位。
+            //购买和技能：点击。
+            //下一回合：
+            //Boss阶段暂停：因为时序问题还是键盘。
             //ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-            if (player.GetButtonDown("Confirm0"))
+            if (player.GetButtonDoublePressDown("Confirm0"))
+            {
+                DoublePress();
+                pressedObj = null;
+                isSinglePress = false;
+            }
+
+            else if (player.GetButtonDown("Confirm0"))
             {
                 var hit = GetPlayerMouseOverObject(out var hitInfo);
                 if (hit)
                 {
-                    Debug.Log(hitInfo.transform.gameObject.name);
+                    pressTime = Time.fixedTime;
+                    pressedObj = hitInfo.transform.gameObject;
+                    //Debug.Log(hitInfo.transform.gameObject.name);
                 }
+                else
+                {
+                    pressedObj = null;
+                }
+            }
+
+            else if (player.GetButtonUp("Confirm0"))
+            {
+                var hit = GetPlayerMouseOverObject(out var hitInfo);
+                if (hit)
+                {
+                    if (pressedObj == hitInfo.transform.gameObject)
+                    {
+                        isSinglePress = true;
+                    }
+                    else
+                    {
+                        Drag(pressedObj, hitInfo.transform.gameObject);
+                    }
+                }
+                else
+                {
+                    pressedObj = null;
+                }
+            }
+            else if (isSinglePress && Time.fixedTime - pressTime > 0.3)
+            {
+                SinglePress();
+                pressedObj = null;
+                isSinglePress = false;
             }
         }
 
+        private static void SinglePress()
+        {
+            Debug.Log("Single press " + pressedObj.name);
+        }
+
+        private static void Drag(GameObject from, GameObject to)
+        {
+            Debug.Log("Drag from " + from.name + " to " + to.name);
+        }
+        private static void DoublePress()
+        {
+            Debug.Log("Double press");
+        }
         private static bool SkillID(ref ControllingPack ctrlPack)
         {
             var anySkill = false;
@@ -821,8 +883,8 @@ namespace ROOT
         {
             movedTile = false;
             movedCursor = false;
-            
-            var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+
+            var ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
             if (StartGameMgr.UseTouchScreen)
             {
                 WorldController.GetCommand_Touch(currentLevelAsset, out ctrlPack);
@@ -972,7 +1034,7 @@ namespace ROOT
         public static void BossStagePauseTriggered(GameAssets currentLevelAsset)
         {
             Debug.Assert(WorldCycler.BossStage);
-            if (currentLevelAsset.ReqOkCount<=0) return;
+            if (currentLevelAsset.ReqOkCount <= 0) return;
             if (WorldCycler.BossStagePause)
             {
                 WorldCycler.BossStagePause = false;
@@ -992,7 +1054,7 @@ namespace ROOT
         {
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = movedCursor = false;
-            ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+            ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
 
             #region UpKeep
 
