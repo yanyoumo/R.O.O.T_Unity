@@ -558,6 +558,11 @@ namespace ROOT
                 if (hit)
                 {
                     Debug.Log(hitInfo.transform.gameObject.name);
+
+                    if (hitInfo.transform.root.gameObject.CompareTag(StaticTagName.TAG_NAME_UNIT))
+                    {
+                        //这个判断的代码可以用来判断有没有某个TAG。
+                    }
                 }
             }
         }
