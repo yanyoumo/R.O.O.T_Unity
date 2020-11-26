@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class SkillPalette : MonoBehaviour
 {
+    public int SkillID;
     public SkillType SklType;
     public TextMeshPro SkillTag;
     public SpriteRenderer SkillIcon;
