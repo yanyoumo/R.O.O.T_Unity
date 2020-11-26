@@ -21,29 +21,69 @@ MonoBehaviour:
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
-  RoundDatas: []
+  RoundDatas:
+  - ID: 0
+    ShopLength: 12
+    RequireLength: 16
+    NormalRequirement: 3
+    NetworkRequirement: 2
+    DestoryerLength: 12
+    DestoryerCount: 0
+    InfoCount: 0
+  - ID: 1
+    ShopLength: 12
+    RequireLength: 18
+    NormalRequirement: 5
+    NetworkRequirement: 6
+    DestoryerLength: 9
+    DestoryerCount: 0
+    InfoCount: 0
+  - ID: 2
+    ShopLength: 9
+    RequireLength: 14
+    NormalRequirement: 10
+    NetworkRequirement: 8
+    DestoryerLength: 14
+    DestoryerCount: 0
+    InfoCount: 0
+  - ID: 3
+    ShopLength: 12
+    RequireLength: 20
+    NormalRequirement: 12
+    NetworkRequirement: 8
+    DestoryerLength: 12
+    DestoryerCount: 0
+    InfoCount: 0
+  - ID: 4
+    ShopLength: 10
+    RequireLength: 24
+    NormalRequirement: 18
+    NetworkRequirement: 13
+    DestoryerLength: 40
+    DestoryerCount: 0
+    InfoCount: 0
   InitalBoard:
-  - Core: 0
-    Sides: 00000000000000000000000000000000
+  - Core: 2
+    Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 3, y: 3}
+    Pos: {x: 4, y: 1}
     IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
+  - Core: 2
+    Sides: 01000000010000000100000001000000
+    Tier: 1
+    Pos: {x: 1, y: 4}
+    IsStation: 0
+  - Core: 5
+    Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 4, y: 4}
     IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
+  - Core: 5
+    Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 3, y: 4}
+    Pos: {x: 1, y: 1}
     IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 1
-    Pos: {x: 4, y: 3}
-    IsStation: 0
-  InfoCount: 1903
-  InfoVariantRatio: 0.141
-  InfoTargetRatio: 0.757
+  InfoCount: 1500
+  InfoVariantRatio: 0.35
+  InfoTargetRatio: 0.6
   StationaryRateList: []

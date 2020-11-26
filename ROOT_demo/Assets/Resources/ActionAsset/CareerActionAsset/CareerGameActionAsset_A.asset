@@ -18,42 +18,54 @@ MonoBehaviour:
     type: 3}
   levelType: 1
   GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
-  ExcludedShop: 1
+  ExcludedShop: 0
   ShopExcludedType: 020000000800000005000000
   Actions: []
-  RoundDatas: []
+  RoundDatas:
+  - ID: 0
+    ShopLength: 6
+    RequireLength: 10
+    NormalRequirement: 4
+    NetworkRequirement: 2
+    DestoryerLength: 12
+    DestoryerCount: 0
+    InfoCount: 0
+  - ID: 1
+    ShopLength: 8
+    RequireLength: 12
+    NormalRequirement: 6
+    NetworkRequirement: 5
+    DestoryerLength: 12
+    DestoryerCount: 0
+    InfoCount: 0
+  - ID: 2
+    ShopLength: 12
+    RequireLength: 10
+    NormalRequirement: 8
+    NetworkRequirement: 8
+    DestoryerLength: 20
+    DestoryerCount: 0
+    InfoCount: 0
+  - ID: 3
+    ShopLength: 12
+    RequireLength: 12
+    NormalRequirement: 10
+    NetworkRequirement: 8
+    DestoryerLength: 35
+    DestoryerCount: 0
+    InfoCount: 0
   InitalBoard:
   - Core: 2
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 1, y: 1}
+    Pos: {x: 2, y: 2}
     IsStation: 0
   - Core: 5
-    Sides: 01000000010000000000000000000000
+    Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 3, y: 3}
     IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 1
-    Pos: {x: 3, y: 4}
-    IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 1
-    Pos: {x: 3, y: 2}
-    IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 1
-    Pos: {x: 4, y: 3}
-    IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 1
-    Pos: {x: 2, y: 3}
-    IsStation: 0
-  InfoCount: 1903
-  InfoVariantRatio: 0.141
-  InfoTargetRatio: 0.757
+  InfoCount: 1000
+  InfoVariantRatio: 0.25
+  InfoTargetRatio: 0.4
   StationaryRateList: []

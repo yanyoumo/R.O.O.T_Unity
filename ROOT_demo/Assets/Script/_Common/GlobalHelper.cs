@@ -10,6 +10,16 @@ using Vector2 = UnityEngine.Vector2;
 
 namespace ROOT
 {
+    public static class StaticTagName
+    {
+        public static readonly string TAG_NAME_UNIT = "Unit";
+        public static readonly string TAG_NAME_BOARD_GRID = "BoardGrid";
+        public static readonly string TAG_NAME_SKILL_PALETTE = "SkillPalette";
+        public static readonly string TAG_NAME_HELP_SCREEN = "HelpScreen";
+        public static readonly string TAG_NAME_TUTORIAL_FRAME = "TutorialTextFrame";
+        public static readonly string TAG_NAME_ADV_SHOP_PANEL = "AdvShopPanel";
+    }
+
     public static class StaticName
     {
         public static readonly string INPUT_BUTTON_BOSS_PAUSE = "BossPause";

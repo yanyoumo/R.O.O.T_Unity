@@ -18,7 +18,7 @@ MonoBehaviour:
     type: 3}
   levelType: 1
   GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
-  ExcludedShop: 1
+  ExcludedShop: 0
   ShopExcludedType: 0500000002000000
   Actions: []
   RoundDatas:

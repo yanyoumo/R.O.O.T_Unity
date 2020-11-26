@@ -8,6 +8,8 @@ TagManager:
   - TutorialTextFrame
   - HelpScreen
   - AdvShopPanel
+  - SkillPalette
+  - BoardGrid
   layers:
   - Default
   - TransparentFX

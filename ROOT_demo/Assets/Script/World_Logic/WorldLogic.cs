@@ -564,7 +564,14 @@ namespace ROOT
             //ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
             if (player.GetButtonDoublePressDown("Confirm0"))
             {
-                DoublePress();
+                if (pressedObj != null && pressedObj.transform.root.CompareTag(StaticTagName.TAG_NAME_UNIT))
+                {
+                    var unit = pressedObj.transform.root.GetComponentInChildren<Unit>();
+                    if (unit.ShopID == -1)
+                    {
+                        DoublePress(ref ctrlPack,unit);
+                    }
+                }
                 pressedObj = null;
                 isSinglePress = false;
             }
@@ -572,15 +579,23 @@ namespace ROOT
             else if (player.GetButtonDown("Confirm0"))
             {
                 var hit = GetPlayerMouseOverObject(out var hitInfo);
-                if (hit)
+
+                Debug.Log(hitInfo.transform.gameObject.name);
+
+                if (hitInfo.transform.root.gameObject.CompareTag(StaticTagName.TAG_NAME_UNIT) ||
+                    hitInfo.transform.root.gameObject.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE))
                 {
-                    pressTime = Time.fixedTime;
-                    pressedObj = hitInfo.transform.gameObject;
-                    //Debug.Log(hitInfo.transform.gameObject.name);
-                }
-                else
-                {
-                    pressedObj = null;
+                    //这个判断的代码可以用来判断有没有某个TAG。
+                    if (hit)
+                    {
+                        pressTime = Time.fixedTime;
+                        pressedObj = hitInfo.transform.gameObject;
+                        //Debug.Log(hitInfo.transform.gameObject.name);
+                    }
+                    else
+                    {
+                        pressedObj = null;
+                    }
                 }
             }
 
@@ -626,9 +641,11 @@ namespace ROOT
                 Debug.Log("Drag from " + from.name + " to " + to.name);
             }
         }
-        private static void DoublePress()
+        private static void DoublePress(ref ControllingPack ctrlPack,Unit unit)
         {
             Debug.Log("Double press");
+            ctrlPack.CurrentPos = unit.CurrentBoardPosition;
+            ctrlPack.SetFlag(ControllingCommand.Rotate);
         }
         private static bool SkillID(ref ControllingPack ctrlPack)
         {
