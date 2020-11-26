@@ -613,12 +613,18 @@ namespace ROOT
 
         private static void SinglePress()
         {
-            Debug.Log("Single press " + pressedObj.name);
+            if (pressedObj != null)
+            {
+                Debug.Log("Single press " + pressedObj.name);
+            }
         }
 
         private static void Drag(GameObject from, GameObject to)
         {
-            Debug.Log("Drag from " + from.name + " to " + to.name);
+            if (from != null && to != null)
+            {
+                Debug.Log("Drag from " + from.name + " to " + to.name);
+            }
         }
         private static void DoublePress()
         {
