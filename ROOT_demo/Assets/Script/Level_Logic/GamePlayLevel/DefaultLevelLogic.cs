@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -53,6 +54,8 @@ namespace ROOT
         public int ReqOkCount;
         public int SignalInfo;
         public List<Vector2Int> CollectorZone;
+
+        public CinemachineFreeLook CineCam;
 
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
@@ -295,6 +298,7 @@ namespace ROOT
             LevelAsset.CostChart = FindObjectOfType<CostChart>();
             LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
             LevelAsset.AirDrop = FindObjectOfType<InfoAirdrop>();
+            LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
@@ -535,6 +539,13 @@ namespace ROOT
             }
 
             LevelAsset.LevelProgress = LevelAsset.StepCount / (float)LevelAsset.ActionAsset.PlayableCount;
+
+            if (_ctrlPack.HasFlag(ControllingCommand.CameraMov))
+            {
+                var cam = LevelAsset.CineCam;
+                cam.m_XAxis.Value += _ctrlPack.CameraMovement.x;
+                cam.m_YAxis.Value += _ctrlPack.CameraMovement.y*0.05f;
+            }
         }
 
         protected bool UpdateCareerGameOverStatus(GameAssets currentLevelAsset)
