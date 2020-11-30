@@ -229,35 +229,36 @@ namespace ROOT
 
             return anyDir;
         }
-        private static bool GetCommandDir_HOLD(out CommandDir dir)
+        private static bool GetCamMovementVec_KB(out Vector2 dir)
         {
             bool anyDir = false;
-            dir = CommandDir.North;
+            dir = Vector2.zero;
 
             if (player.GetButton(StaticName.INPUT_BUTTON_NAME_CURSORUP))
             {
-                dir = CommandDir.North;
+                dir += Vector2.up;
                 anyDir = true;
             }
 
             if (player.GetButton(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
             {
-                dir = CommandDir.South;
+                dir += Vector2.down;
                 anyDir = true;
             }
 
             if (player.GetButton(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
             {
-                dir = CommandDir.West;
+                dir += Vector2.left;
                 anyDir = true;
             }
 
             if (player.GetButton(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
             {
-                dir = CommandDir.East;
+                dir += Vector2Int.right;
                 anyDir = true;
             }
 
+            dir = Vector3.Normalize(dir);
             return anyDir;
         }
 
@@ -504,7 +505,7 @@ namespace ROOT
         {
             ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             var anyDir = GetCommandDir(out var Direction);
-            var anyDirHOLD = GetCommandDir_HOLD(out var DirectionHOLD);
+            var anyDirAxis = GetCamMovementVec_KB(out var directionAxis);
             if (anyDir)
             {
                 ctrlPack.CommandDir = Direction;
@@ -575,12 +576,12 @@ namespace ROOT
             var anyBuy = ShopBuyID(ref ctrlPack);
             var anySkill = SkillID(ref ctrlPack);
 
-            //下面是对Camera写一段测试代码，尽快整合起来。
-            if (Input.GetKey(KeyCode.LeftAlt) && anyDirHOLD)
+            //TODO 下面是对Camera写一段测试代码，尽快整合起来。
+            if (Input.GetKey(KeyCode.LeftAlt) && anyDirAxis)
             {
                 ctrlPack.SetFlag(ControllingCommand.CameraMov);
                 Debug.Log("KeyCode.LeftAlt");
-                ctrlPack.CameraMovement = Utils.ConvertDirectionToBoardPosOffset(DirectionHOLD);
+                ctrlPack.CameraMovement = directionAxis;
             }
         }
 
