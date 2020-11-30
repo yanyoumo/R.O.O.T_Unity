@@ -162,7 +162,7 @@ namespace ROOT
         public float GetServerIncomeByLength(int length)
         {
             float[] incomeArrayDel = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
-            float incomeArrayBase = 1.0f;
+            float incomeArrayBase = 0.0f;
             float income = incomeArrayBase;
             for (int i = 0; i < length; i++)
             {
