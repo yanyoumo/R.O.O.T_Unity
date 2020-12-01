@@ -137,6 +137,7 @@ namespace ROOT
         RemoveUnit = 1 << 11,
         Skill = 1 << 12,
         BossPause = 1 << 13,//这个用作为Toggle开关，就不做两个Command了。
+        CameraMov = 1 << 14
     }
 
     public struct ControllingPack
@@ -145,6 +146,7 @@ namespace ROOT
         public CommandDir CommandDir;
         public Vector2Int CurrentPos;
         public Vector2Int NextPos;
+        public Vector2 CameraMovement;
         public int ShopID;
         public int SkillID;
 
@@ -229,6 +231,38 @@ namespace ROOT
                 anyDir = true;
             }
 
+            return anyDir;
+        }
+        private static bool GetCamMovementVec_KB(out Vector2 dir)
+        {
+            bool anyDir = false;
+            dir = Vector2.zero;
+
+            if (player.GetButton(StaticName.INPUT_BUTTON_NAME_CURSORUP))
+            {
+                dir += Vector2.up;
+                anyDir = true;
+            }
+
+            if (player.GetButton(StaticName.INPUT_BUTTON_NAME_CURSORDOWN))
+            {
+                dir += Vector2.down;
+                anyDir = true;
+            }
+
+            if (player.GetButton(StaticName.INPUT_BUTTON_NAME_CURSORLEFT))
+            {
+                dir += Vector2.left;
+                anyDir = true;
+            }
+
+            if (player.GetButton(StaticName.INPUT_BUTTON_NAME_CURSORRIGHT))
+            {
+                dir += Vector2Int.right;
+                anyDir = true;
+            }
+
+            dir = Vector3.Normalize(dir);
             return anyDir;
         }
 
@@ -474,8 +508,11 @@ namespace ROOT
         internal static void GetCommand_Keyboard(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
             ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-            if (GetCommandDir(out ctrlPack.CommandDir))
+            var anyDir = GetCommandDir(out var Direction);
+            var anyDirAxis = GetCamMovementVec_KB(out var directionAxis);
+            if (anyDir)
             {
+                ctrlPack.CommandDir = Direction;
                 ctrlPack.ReplaceFlag(ControllingCommand.Move); //Replace
                 if (player.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT))
                 {
@@ -542,6 +579,14 @@ namespace ROOT
 
             var anyBuy = ShopBuyID(ref ctrlPack);
             var anySkill = SkillID(ref ctrlPack);
+
+            //TODO 下面是对Camera写一段测试代码，尽快整合起来。
+            if (Input.GetKey(KeyCode.LeftAlt) && anyDirAxis)
+            {
+                ctrlPack.SetFlag(ControllingCommand.CameraMov);
+                Debug.Log("KeyCode.LeftAlt");
+                ctrlPack.CameraMovement = directionAxis;
+            }
         }
 
         private static bool GetPlayerMouseOverObject(out RaycastHit hitInfo)
