@@ -189,8 +189,8 @@ namespace ROOT
     //要把Asset和Logic，把Controller也要彻底拆开。
     internal static class WorldController
     {
-        private static GameObject pressedObj = null;
-        private static bool isSinglePress = false;
+        private static Transform _pressedObj = null;
+        private static bool _isSinglePress = false;
         private static float pressTime = 0;
         //Somehow PlayerId 0 is 9999999 NOW!
         //没什么特别的，没有新建Player的SYSTEM系统才是9999999。
@@ -609,16 +609,16 @@ namespace ROOT
             //ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
             if (player.GetButtonDoublePressDown("Confirm0"))
             {
-                if (pressedObj != null && pressedObj.transform.root.CompareTag(StaticTagName.TAG_NAME_UNIT))
+                if (_pressedObj != null && _pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT))
                 {
-                    var unit = pressedObj.transform.root.GetComponentInChildren<Unit>();
+                    var unit = _pressedObj.GetComponentInChildren<Unit>();
                     if (unit.ShopID == -1)
                     {
                         DoublePress(ref ctrlPack, unit);
                     }
                 }
-                pressedObj = null;
-                isSinglePress = false;
+                _pressedObj = null;
+                _isSinglePress = false;
             }
 
             else if (player.GetButtonDown("Confirm0"))
@@ -627,18 +627,21 @@ namespace ROOT
 
                 if (hit)
                 {
-                    pressTime = Time.fixedTime;
-                    pressedObj = hitInfo.transform.gameObject;
-                    //Debug.Log(hitInfo.transform.gameObject.name);
-                    if (hitInfo.transform.root.gameObject.CompareTag(StaticTagName.TAG_NAME_UNIT) ||
-                        hitInfo.transform.root.gameObject.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE))
+                    _pressedObj = hitInfo.transform.gameObject.transform.root;
+                    Debug.Log("Single press down " + _pressedObj.name);
+                    if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT) ||
+                        _pressedObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE))
                     {
-                        //这个判断的代码可以用来判断有没有某个TAG。
+                        pressTime = Time.fixedTime;
+                    }
+                    else
+                    {
+                        _pressedObj = null;
                     }
                 }
                 else
                 {
-                    pressedObj = null;
+                    _pressedObj = null;
                 }
             }
 
@@ -647,33 +650,46 @@ namespace ROOT
                 var hit = GetPlayerMouseOverObject(out var hitInfo);
                 if (hit)
                 {
-                    if (pressedObj == hitInfo.transform.gameObject)
+                    var _pressedObj2 = hitInfo.transform.gameObject.transform.root;
+                    Debug.Log("Single press up " + _pressedObj2.name);
+                    if (_pressedObj == _pressedObj2)
                     {
-                        isSinglePress = true;
+                        _isSinglePress = true;
                     }
                     else
                     {
-                        Drag(pressedObj, hitInfo.transform.gameObject);
+                        //Drag(_pressedObj, hitInfo.transform.gameObject);
                     }
                 }
                 else
                 {
-                    pressedObj = null;
+                    _pressedObj = null;
                 }
             }
-            else if (isSinglePress && Time.fixedTime - pressTime > 0.3)
+            else if (_isSinglePress && Time.fixedTime - pressTime > 0.3)
             {
-                SinglePress();
-                pressedObj = null;
-                isSinglePress = false;
+                if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE) ||
+                    (_pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT) && _pressedObj.GetComponentInChildren<Unit>().ShopID!=-1))
+                {
+                    SinglePress(ref ctrlPack);
+                }
+                _pressedObj = null;
+                _isSinglePress = false;
             }
         }
 
-        private static void SinglePress()
+        private static void SinglePress(ref ControllingPack ctrlPack)
         {
-            if (pressedObj != null)
+            Debug.Log("Single press on "+_pressedObj.name);
+            if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT))
             {
-                Debug.Log("Single press " + pressedObj.name);
+                ctrlPack.SetFlag(ControllingCommand.Buy);
+                ctrlPack.ShopID = _pressedObj.GetComponentInChildren<Unit>().ShopID;
+            }
+            else if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE))
+            {
+                ctrlPack.SetFlag(ControllingCommand.Skill);
+                ctrlPack.SkillID = _pressedObj.GetComponent<SkillPalette>().SkillID;
             }
         }
 
