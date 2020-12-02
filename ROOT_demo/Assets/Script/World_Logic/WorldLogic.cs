@@ -189,7 +189,7 @@ namespace ROOT
     //要把Asset和Logic，把Controller也要彻底拆开。
     internal static class WorldController
     {
-        private static Transform _pressedObj = null;
+        private static GameObject _pressedObj = null;
         private static bool _isSinglePress = false;
         private static float pressTime = 0;
         //Somehow PlayerId 0 is 9999999 NOW!
@@ -234,7 +234,7 @@ namespace ROOT
             return anyDir;
         }
         private static bool GetCamMovementVec_KB(out Vector2 dir)
-        { 
+        {
             bool anyDir = false;
             dir = Vector2.zero;
 
@@ -609,13 +609,9 @@ namespace ROOT
             //ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
             if (player.GetButtonDoublePressDown("Confirm0"))
             {
-                if (_pressedObj != null && _pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT))
+                if (_pressedObj != null && Utils.IsBoardUint(_pressedObj))
                 {
-                    var unit = _pressedObj.GetComponentInChildren<Unit>();
-                    if (unit.ShopID == -1)
-                    {
-                        DoublePress(ref ctrlPack, unit);
-                    }
+                    DoublePress(ref ctrlPack, Utils.GetUnit(_pressedObj));
                 }
                 _pressedObj = null;
                 _isSinglePress = false;
@@ -627,10 +623,10 @@ namespace ROOT
 
                 if (hit)
                 {
-                    _pressedObj = hitInfo.transform.gameObject.transform.root;
+                    _pressedObj = hitInfo.transform.gameObject;
                     Debug.Log("Single press down " + _pressedObj.name);
-                    if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT) ||
-                        _pressedObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE))
+                    if (Utils.IsUnit(_pressedObj) ||
+                        Utils.IsSkillPalette(_pressedObj))
                     {
                         pressTime = Time.fixedTime;
                     }
@@ -650,9 +646,9 @@ namespace ROOT
                 var hit = GetPlayerMouseOverObject(out var hitInfo);
                 if (hit)
                 {
-                    var _pressedObj2 = hitInfo.transform.gameObject.transform.root;
-                    Debug.Log("Single press up " + _pressedObj2.name);
-                    if (_pressedObj == _pressedObj2)
+                    var pressedObj2 = hitInfo.transform.gameObject;
+                    Debug.Log("Single press up " + pressedObj2.name);
+                    if (_pressedObj == pressedObj2)
                     {
                         _isSinglePress = true;
                     }
@@ -668,8 +664,7 @@ namespace ROOT
             }
             else if (_isSinglePress && Time.fixedTime - pressTime > 0.3)
             {
-                if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE) ||
-                    (_pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT) && _pressedObj.GetComponentInChildren<Unit>().ShopID!=-1))
+                if (!Utils.IsBoardUint(_pressedObj))
                 {
                     SinglePress(ref ctrlPack);
                 }
@@ -680,16 +675,16 @@ namespace ROOT
 
         private static void SinglePress(ref ControllingPack ctrlPack)
         {
-            Debug.Log("Single press on "+_pressedObj.name);
-            if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT))
+            Debug.Log("Single press on " + _pressedObj.name);
+            if (Utils.IsUnit(_pressedObj))
             {
                 ctrlPack.SetFlag(ControllingCommand.Buy);
-                ctrlPack.ShopID = _pressedObj.GetComponentInChildren<Unit>().ShopID;
+                ctrlPack.ShopID = Utils.GetUnit(_pressedObj).ShopID;
             }
-            else if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE))
+            else if (Utils.IsSkillPalette(_pressedObj))
             {
                 ctrlPack.SetFlag(ControllingCommand.Skill);
-                ctrlPack.SkillID = _pressedObj.GetComponent<SkillPalette>().SkillID;
+                ctrlPack.SkillID = Utils.GetSkillPalette(_pressedObj).SkillID;
             }
         }
 
