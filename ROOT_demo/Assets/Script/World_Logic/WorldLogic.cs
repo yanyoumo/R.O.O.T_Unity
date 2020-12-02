@@ -234,7 +234,7 @@ namespace ROOT
             return anyDir;
         }
         private static bool GetCamMovementVec_KB(out Vector2 dir)
-        {
+        { 
             bool anyDir = false;
             dir = Vector2.zero;
 

@@ -125,6 +125,32 @@ namespace ROOT
 
     public static class Utils
     {
+        public static bool HasUnitInUpperHirearchy(GameObject go)
+        {
+            return TryFindUnitInUpperHirearchy(go) != null;
+        }
+
+        public static Unit TryFindUnitInUpperHirearchy(GameObject go)
+        {
+            var tmpGo = go;
+            do
+            {
+                var tmpUnit = tmpGo.GetComponent<Unit>();
+                if (tmpUnit != null)
+                {
+                    return tmpUnit;
+                }
+
+                var tmpTmpGo = tmpGo.transform.parent.gameObject;
+                if (tmpTmpGo == tmpGo)
+                {
+                    return null;
+                }
+
+                tmpGo = tmpTmpGo;
+            } while (true);
+        }
+
         /// TODO Digong
         /// <summary>
         /// 目的：提供一个棋盘上的坐标作为center以及半径，返回由坐标构成，像素化的圆。
