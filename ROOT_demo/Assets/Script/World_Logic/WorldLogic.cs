@@ -662,8 +662,9 @@ namespace ROOT
                     _pressedObj = null;
                 }
             }
-            else if (_isSinglePress && Time.fixedTime - pressTime > 0.3)
+            else if (_isSinglePress && Time.fixedTime - pressTime >= 0.3)
             {
+                Debug.Log("Regarded as single press");
                 if (!Utils.IsBoardUint(_pressedObj))
                 {
                     SinglePress(ref ctrlPack);

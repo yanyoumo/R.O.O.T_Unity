@@ -141,13 +141,14 @@ namespace ROOT
         }
         public static bool IsSkillPalette(GameObject pressObj)
         {
-            return pressObj.transform.root.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE);
+            return pressObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE);
         }
 
         public static SkillPalette GetSkillPalette(GameObject pressObj)
         {
-            return pressObj.transform.root.GetComponent<SkillPalette>();
+            return pressObj.GetComponent<SkillPalette>();
         }
+
         public static bool HasUnitInUpperHirearchy(GameObject go)
         {
             return TryFindUnitInUpperHirearchy(go) != null;
