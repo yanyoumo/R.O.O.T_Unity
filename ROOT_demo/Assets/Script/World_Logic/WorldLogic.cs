@@ -138,7 +138,8 @@ namespace ROOT
         Skill = 1 << 12,
         BossPause = 1 << 13,//这个用作为Toggle开关，就不做两个Command了。
         CameraMov = 1 << 14,
-        ClickOnGird = 1 << 15//日了，这个还是要铺满场地。
+        ClickOnGird = 1 << 15,//日了，这个还是要铺满场地。
+        FloatingOnGird = 1 << 16//估计也能搞，而且早晚也得搞。
     }
 
     public struct ControllingPack
@@ -598,7 +599,7 @@ namespace ROOT
             return hit;
         }
 
-        internal static void GetCommand_Mouse(GameAssets currentLevelAsset, ref ControllingPack ctrlPack)
+        internal static void GetCommand_Mouse(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
             //TEMP 现在鼠标的输入是可以挂属在键盘之后的。
             //光标：不需要。
@@ -607,7 +608,7 @@ namespace ROOT
             //购买和技能：点击。
             //下一回合：
             //Boss阶段暂停：因为时序问题还是键盘。
-            //ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
+            ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
             if (player.GetButtonDoublePressDown("Confirm0"))
             {
                 if (_pressedObj != null && _pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT))
@@ -973,10 +974,32 @@ namespace ROOT
             }
             else
             {
+                if (StartGameMgr.UseKeyboard)
+                {
+                    if (player.controllers.Mouse.GetAnyButton())
+                    {
+                        StartGameMgr.SetUseMouse();
+                    }
+                }
+                else if(StartGameMgr.UseMouse)
+                {
+                    if (player.controllers.Keyboard.GetAnyButton())
+                    {
+                        StartGameMgr.SetUseKeyboard();
+                    }
+                }
+
                 if (currentLevelAsset.CursorEnabled)
                 {
-                    WorldController.GetCommand_Keyboard(currentLevelAsset, out ctrlPack);
-                    WorldController.GetCommand_Mouse(currentLevelAsset, ref ctrlPack);
+                    
+                    if (StartGameMgr.UseKeyboard)
+                    {
+                        WorldController.GetCommand_Keyboard(currentLevelAsset, out ctrlPack);
+                    }
+                    else if(StartGameMgr.UseMouse)
+                    {
+                        WorldController.GetCommand_Mouse(currentLevelAsset, out ctrlPack);
+                    }
                 }
 
                 if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))

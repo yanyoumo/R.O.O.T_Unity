@@ -51,7 +51,7 @@ namespace ROOT
 
         private float _fastForwardRebate = -1.0f;
         private int _swapRadius = -1;
-
+        
         #region SkillTemporalFramework
 
         //就是整个技能框架还是要弄一套配置框架………………🤣
@@ -84,17 +84,26 @@ namespace ROOT
                     break;
                 case SkillType.Swap:
                     //瞬时技能
+                    //RISK 日了，这里使用键盘和鼠标流程得变，但是还是有问题。
                     moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
-                        skillActived = true;//这里的计数还可以取消。
+                        skillActived = true; //这里的计数还可以取消。
                         swapAlipay = skill.Cost;
                         CurrentSkillType = SkillType.Swap;
                         _swapRadius = skill.radius;
-                        unitAPosition = currentLevelAsset.Cursor.CurrentBoardPosition;
-                        UpdateAIndicator(currentLevelAsset, unitAPosition);
-                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
+                        if (StartGameMgr.UseKeyboard)
+                        {
+                            unitAPosition = currentLevelAsset.Cursor.CurrentBoardPosition;
+                            UpdateAIndicator(currentLevelAsset, unitAPosition);
+                            WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
+                        }
+                        else if (StartGameMgr.UseMouse)
+                        {
+                            throw new NotImplementedException();
+                        }
                     }
+
                     break;
                 case SkillType.Discount:
                     //延迟技能
@@ -144,6 +153,9 @@ namespace ROOT
             InstancedSkillData.Where(skill=>skill.Cost>0).ForEach(skill => skill.SkillEnabled = (skill.Cost <= currentLevelAsset.GameStateMgr.GetCurrency()));
             UpdateSkillPalettes();
         }
+
+        private bool _mouseWaitingUnitA = false;
+        private bool _mouseWaitingUnitB = false;
 
         public void UpKeepSkill(GameAssets currentLevelAsset)
         {
@@ -258,47 +270,118 @@ namespace ROOT
         private int swapAlipay = 0;
         private Vector2Int oldCurrentPos = new Vector2Int(-1, -1);
 
+        IEnumerator DelayedCheckMouseUnitB()
+        {
+            yield return new WaitForSeconds(0.01f);
+            _mouseWaitingUnitB = true;
+        }
+
         public void SwapTick(GameAssets currentLevelAsset, ControllingPack ctrlPack)
         {
             Debug.Assert(_swapRadius != -1);
-            var res = Utils.PositionRandomization_NormalDistro(
-                ctrlPack.CurrentPos, _swapRadius, 0.65f, Board.BoardLength,
-                out var selected);
 
-            if (oldCurrentPos != ctrlPack.CurrentPos)
+            if (StartGameMgr.UseKeyboard)
             {
-                //这个加个Anti-spam。
-                CleanIndicatorFrame(currentLevelAsset);
-                //这里根据res把所有的标记都画出来。
-                UpdateBIndicator(currentLevelAsset, res);
-                oldCurrentPos = ctrlPack.CurrentPos;
-            }
+                var res = Utils.PositionRandomization_NormalDistro(
+                    ctrlPack.CurrentPos, _swapRadius, 0.65f, Board.BoardLength,
+                    out var selected);
 
-            //Confirm Or Cancel Gate
-            if (!ctrlPack.HasFlag(ControllingCommand.Confirm) && !ctrlPack.HasFlag(ControllingCommand.Cancel)) return;
-
-            if (CurrentSkillType == SkillType.Swap)
-            {
-                if (ctrlPack.HasFlag(ControllingCommand.Confirm))
+                if (oldCurrentPos != ctrlPack.CurrentPos)
                 {
-                    var unitBPosition = res[selected];
-                    if (unitAPosition != unitBPosition)
+                    //这个加个Anti-spam。
+                    CleanIndicatorFrame(currentLevelAsset);
+                    //这里根据res把所有的标记都画出来。
+                    UpdateBIndicator(currentLevelAsset, res);
+                    oldCurrentPos = ctrlPack.CurrentPos;
+                }
+
+                //Confirm Or Cancel Gate
+                if (!ctrlPack.HasFlag(ControllingCommand.Confirm) &&
+                    !ctrlPack.HasFlag(ControllingCommand.Cancel)) return;
+
+                if (CurrentSkillType == SkillType.Swap)
+                {
+                    if (ctrlPack.HasFlag(ControllingCommand.Confirm))
                     {
-                        var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
-                        Debug.Assert(res1);
+                        var unitBPosition = res[selected];
+                        if (unitAPosition != unitBPosition)
+                        {
+                            var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
+                            Debug.Assert(res1);
+                        }
+                    }
+                    else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
+                    {
+                        currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
+                        swapAlipay = 0;
+                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
+                    }
+
+                    CleanIndicator(currentLevelAsset);
+                    CurrentSkillType = null;
+                }
+            }
+            else if (StartGameMgr.UseMouse)
+            {
+                if (_mouseWaitingUnitA)
+                {
+                    if (ctrlPack.HasFlag(ControllingCommand.ClickOnGird))
+                    {
+                        unitAPosition = ctrlPack.CurrentPos;
+                        UpdateAIndicator(currentLevelAsset, unitAPosition);
+                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
+                        _mouseWaitingUnitA = false;
+                        StartCoroutine(DelayedCheckMouseUnitB()); //这里可能需要一个AntiSpam，可以加个协程延迟。
+                    }
+                    else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
+                    {
+                        currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
+                        swapAlipay = 0;
+                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
+                        _mouseWaitingUnitA = false;
+                        _mouseWaitingUnitB = false;
                     }
                 }
-                else if(ctrlPack.HasFlag(ControllingCommand.Cancel))
+                else if (_mouseWaitingUnitB)
                 {
-                    currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
-                    swapAlipay = 0;
-                    WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
+                    List<Vector2Int> res = new List<Vector2Int>();
+                    int selected = -1;
+                    if (ctrlPack.HasFlag(ControllingCommand.FloatingOnGird))
+                    {
+                        res = Utils.PositionRandomization_NormalDistro(
+                            ctrlPack.CurrentPos, _swapRadius, 0.65f, Board.BoardLength,
+                            out selected);
+
+                        if (oldCurrentPos != ctrlPack.CurrentPos)
+                        {
+                            //这个加个Anti-spam。
+                            CleanIndicatorFrame(currentLevelAsset);
+                            //这里根据res把所有的标记都画出来。
+                            UpdateBIndicator(currentLevelAsset, res);
+                            oldCurrentPos = ctrlPack.CurrentPos;
+                        }
+                    }
+                    else if (ctrlPack.HasFlag(ControllingCommand.ClickOnGird))
+                    {
+                        var unitBPosition = res[selected];
+                        if (unitAPosition != unitBPosition)
+                        {
+                            var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
+                            Debug.Assert(res1);
+                        }
+
+                        _mouseWaitingUnitA = false;
+                        _mouseWaitingUnitB = false;
+                    }
+                    else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
+                    {
+                        currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
+                        swapAlipay = 0;
+                        WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
+                        _mouseWaitingUnitA = false;
+                        _mouseWaitingUnitB = false;
+                    }
                 }
-
-                //淦、这里如果取消的话，这里还得写退款的逻辑…………
-
-                CleanIndicator(currentLevelAsset);
-                CurrentSkillType = null;
             }
         }
 
