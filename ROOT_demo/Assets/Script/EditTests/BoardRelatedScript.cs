@@ -10,7 +10,7 @@ using Random=UnityEngine.Random;
 
 namespace Tests
 {
-    public partial class BoardGistTestScript
+    public partial class BoardRelatedScript
     {
         private int[] BoardLengthList={2,3,4,5,6,7,8};
 
@@ -155,5 +155,8 @@ namespace Tests
                 }
             }
         }
+
+        /*[Test]
+        */
     }
 }

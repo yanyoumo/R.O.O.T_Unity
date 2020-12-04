@@ -14,6 +14,7 @@ namespace ROOT
     {
         public static readonly string TAG_NAME_UNIT = "Unit";
         public static readonly string TAG_NAME_BOARD_GRID = "BoardGrid";
+        public static readonly string TAG_NAME_BOARD_GRID_ROOT = "BoardGridRoot";
         public static readonly string TAG_NAME_SKILL_PALETTE = "SkillPalette";
         public static readonly string TAG_NAME_HELP_SCREEN = "HelpScreen";
         public static readonly string TAG_NAME_TUTORIAL_FRAME = "TutorialTextFrame";
@@ -125,6 +126,12 @@ namespace ROOT
 
     public static class Utils
     {
+        public static int SignalChannelSplit(float a, float b, int n, float x)
+        {
+            Debug.Assert(n >= 0);
+            return Mathf.FloorToInt(((x - a) / (b - a)) * n);
+        }
+
         public static bool HasUnitInUpperHirearchy(GameObject go)
         {
             return TryFindUnitInUpperHirearchy(go) != null;

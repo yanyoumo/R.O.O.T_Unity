@@ -254,6 +254,8 @@ namespace ROOT
         {
             LevelAsset.CursorTemplate = Resources.Load<GameObject>("Cursor/Prefab/Cursor");
             LevelAsset.GameBoard = FindObjectOfType<Board>();
+            LevelAsset.AirDrop = LevelAsset.GameBoard.AirDrop;
+            LevelAsset.AirDrop.GameAsset = LevelAsset;
             LevelAsset.Owner = this;
         }
 
@@ -297,7 +299,7 @@ namespace ROOT
             LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
             LevelAsset.CostChart = FindObjectOfType<CostChart>();
             LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
-            LevelAsset.AirDrop = FindObjectOfType<InfoAirdrop>();
+            //LevelAsset.AirDrop = FindObjectOfType<InfoAirdrop>();
             LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
