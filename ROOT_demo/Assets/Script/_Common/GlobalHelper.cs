@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,7 @@ namespace ROOT
     {
         public static readonly string TAG_NAME_UNIT = "Unit";
         public static readonly string TAG_NAME_BOARD_GRID = "BoardGrid";
+        public static readonly string TAG_NAME_BOARD_GRID_ROOT = "BoardGridRoot";
         public static readonly string TAG_NAME_SKILL_PALETTE = "SkillPalette";
         public static readonly string TAG_NAME_HELP_SCREEN = "HelpScreen";
         public static readonly string TAG_NAME_TUTORIAL_FRAME = "TutorialTextFrame";
@@ -147,6 +148,12 @@ namespace ROOT
         public static SkillPalette GetSkillPalette(GameObject pressObj)
         {
             return pressObj.GetComponent<SkillPalette>();
+        }
+      
+        public static int SignalChannelSplit(float a, float b, int n, float x)
+        {
+            Debug.Assert(n >= 0);
+            return Mathf.FloorToInt(((x - a) / (b - a)) * n);
         }
 
         public static bool HasUnitInUpperHirearchy(GameObject go)
@@ -688,8 +695,7 @@ namespace ROOT
         {
             return GetRelationBetweenGenre(SrcGenre, null);
         }
-
-
+        
         public static ConnectionMeshType GetRelationBetweenGenre(CoreGenre SrcGenre, CoreGenre? OtherGenre)
         {
             switch (SrcGenre)

@@ -15,6 +15,24 @@ namespace ROOT
 {
     public sealed class Board : MonoBehaviour
     {
+        public InfoAirdrop AirDrop;
+        public Transform LFLocator;
+        public Transform URLocator;
+
+        public static Transform LFLocatorStatic;
+        public static Transform URLocatorStatic;
+        public static Vector2Int? WorldPosToXZGrid(Vector3 worldPos)
+        {
+            return WorldPosToXZGrid(new Vector2(worldPos.x, worldPos.z));
+        }
+        public static Vector2Int? WorldPosToXZGrid(Vector2 worldPosXZ)
+        {
+            var xN = Utils.SignalChannelSplit(LFLocatorStatic.transform.position.x, URLocatorStatic.transform.position.x, BoardLength, worldPosXZ.x);
+            var yN = Utils.SignalChannelSplit(LFLocatorStatic.transform.position.z, URLocatorStatic.transform.position.z, BoardLength, worldPosXZ.y);
+            var res= new Vector2Int(xN, yN);
+            return CheckBoardPosValidStatic(res) ? (Vector2Int?) res : null;
+        }
+        
         public Unit FindNearestUnit(Vector2Int Pos)
         {
             var distance = float.MaxValue;
@@ -219,7 +237,7 @@ namespace ROOT
             DiminishingStep = 0;
         }
 
-        private void InitHeatInfo()
+        private void InitBoardGird()
         {
             BoardGirds=new Dictionary<Vector2Int, BoardGirdCell>();
             for (var i = 0; i < BoardLength; i++)
@@ -236,7 +254,6 @@ namespace ROOT
                     go.GetComponent<BoardGirdCell>().owner = this;
                 }
             }
-
             UpdatePatternID();
         }
 
@@ -543,6 +560,11 @@ namespace ROOT
 
         public bool CheckBoardPosValid(Vector2Int mVector2Int)
         {
+            return CheckBoardPosValidStatic(mVector2Int);
+        }
+
+        public static bool CheckBoardPosValidStatic(Vector2Int mVector2Int)
+        {
             return (mVector2Int.x >= 0) && (mVector2Int.y >= 0) && (mVector2Int.x < BoardLength) && (mVector2Int.y < BoardLength);
         }
 
@@ -556,12 +578,23 @@ namespace ROOT
             return (UnitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
         }
 
+        /*public void BoardWorldPosToXZGridTest()
+        {
+            var randomCount = Random.Range(10, 50);
+            for (int i = 0; i < randomCount; i++)
+            {
+                var res = Board.WorldPosToXZGrid(Random.insideUnitCircle * 10f);
+                Debug.Log(res);
+            }
+        }*/
+
         void Awake()
         {
             UnitsGameObjects = new Dictionary<Vector2Int, GameObject>();
-            InitHeatInfo();
+            InitBoardGird();
             CheckHeatSink(StageType.Shop);
-            //ScanHeatSink();
+            LFLocatorStatic = LFLocator;
+            URLocatorStatic = URLocator;
         }
 
         public Vector2Int[] GetAllEmptySpace()

@@ -23,7 +23,6 @@ namespace ROOT
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
-            LevelAsset.AirDrop.GameAsset = LevelAsset;
             StartShop();
 
             ReadyToGo = true;

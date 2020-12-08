@@ -17,7 +17,8 @@ namespace ROOT
 
     public enum InputScheme
     {
-        KeyboardMouse,
+        Keyboard,
+        Mouse,
         TouchScreen,
     }
 
@@ -50,10 +51,22 @@ namespace ROOT
         public InputScheme EditorInputScheme;
 
         public static SupportedScreenRatio DetectedScreenRatio { get; private set; } = SupportedScreenRatio.HD;
-        public static InputScheme DetectedInputScheme { get; private set; } = InputScheme.KeyboardMouse;
+        public static InputScheme DetectedInputScheme { get; private set; } = InputScheme.Keyboard;
+
+        public static void SetUseMouse()
+        {
+            DetectedInputScheme = InputScheme.Mouse;
+        }
+
+        public static void SetUseKeyboard()
+        {
+            DetectedInputScheme = InputScheme.Keyboard;
+        }
 
         public static bool UseTouchScreen => DetectedInputScheme == InputScheme.TouchScreen;
-
+        public static bool UseKeyboard => DetectedInputScheme == InputScheme.Keyboard;
+        public static bool UseMouse => DetectedInputScheme == InputScheme.Mouse;
+        
         IEnumerator LoadLevelMasterSceneAndSetActive()
         {
             SceneManager.LoadSceneAsync(StaticName.SCENE_ID_LEVELMASTER, LoadSceneMode.Additive);
