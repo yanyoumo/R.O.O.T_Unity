@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,6 +126,30 @@ namespace ROOT
 
     public static class Utils
     {
+        public static Unit GetUnit(GameObject pressObj)
+        {
+            return TryFindUnitInUpperHirearchy(pressObj);
+        }
+
+        public static bool IsUnit(GameObject pressObj)
+        {
+            return GetUnit(pressObj) != null;
+        }
+
+        public static bool IsBoardUint(GameObject pressObj)
+        {
+            return IsUnit(pressObj) && GetUnit(pressObj).ShopID == -1;
+        }
+        public static bool IsSkillPalette(GameObject pressObj)
+        {
+            return pressObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE);
+        }
+
+        public static SkillPalette GetSkillPalette(GameObject pressObj)
+        {
+            return pressObj.GetComponent<SkillPalette>();
+        }
+      
         public static int SignalChannelSplit(float a, float b, int n, float x)
         {
             Debug.Assert(n >= 0);
@@ -148,6 +172,10 @@ namespace ROOT
                     return tmpUnit;
                 }
 
+                if (tmpGo.transform.parent == null)
+                {
+                    return null;
+                }
                 var tmpTmpGo = tmpGo.transform.parent.gameObject;
                 if (tmpTmpGo == tmpGo)
                 {
@@ -173,12 +201,12 @@ namespace ROOT
         /// 生成圆形的pattern可以参考网页：https://donatstudios.com/PixelCircleGenerator
         ///     里面输入的Height/Width是直径，因为是像素化的圆，那里的直径是函数中的：radius*2+1.
         public static List<Vector2Int> PositionRandomization_NormalDistro(
-            in Vector2Int center, in int radius, 
-            in float s_div, in int boardLength, 
+            in Vector2Int center, in int radius,
+            in float s_div, in int boardLength,
             out int selected)
         {
             //考虑想辙把possibility也传出来？
-            if (radius==0)
+            if (radius == 0)
             {
                 var res0 = new List<Vector2Int>();
                 res0.Add(center);
@@ -464,7 +492,7 @@ namespace ROOT
                 {
                     var sign = Mathf.Sign(sum) > 0;
                     var absSum = Mathf.Abs(sum);
-                    var offset = SpreadOutLaying(length, absSum,  out var sum1);
+                    var offset = SpreadOutLaying(length, absSum, out var sum1);
                     for (var i = 0; i < length; i++)
                     {
                         //是减法，是因为需要和去掉sum的数量。
@@ -490,7 +518,7 @@ namespace ROOT
             var averagedList = SpreadOutLaying(length, sum, out var avgSum);
             var maxElement = averagedList.Select(Mathf.Abs).Max();
             var variation = Mathf.RoundToInt(maxElement * variationRatio);
-            var offset=SumZeroRandomArray(length, variation);
+            var offset = SumZeroRandomArray(length, variation);
             var res = new int[length];
             for (int i = 0; i < length; i++)
             {
@@ -712,7 +740,7 @@ namespace ROOT
             {
                 GetPixelateCircle();
             }
-            if (tier>=PixelateCirclePatternLibCache.Lib.Count)
+            if (tier >= PixelateCirclePatternLibCache.Lib.Count)
             {
                 Debug.LogWarning("PixelateCircle Tier Maxed-out");
                 tier = PixelateCirclePatternLibCache.Lib.Count - 1;
@@ -818,10 +846,10 @@ namespace ROOT
             return new Vector2Int(Mathf.RoundToInt(a.x), Mathf.RoundToInt(a.y));
         }
 
-        public static Vector2Int PermutateV2I(Vector2Int inVec,int maxLength, PatternPermutation permutation)
+        public static Vector2Int PermutateV2I(Vector2Int inVec, int maxLength, PatternPermutation permutation)
         {
             Debug.Assert(maxLength >= 1);
-            if (maxLength==1)
+            if (maxLength == 1)
             {
                 return inVec;
             }
@@ -833,22 +861,22 @@ namespace ROOT
                 case PatternPermutation.None:
                     return inVec;
                 case PatternPermutation.RotateR:
-                    rhs = new Matrix2x2(0,1,-1,0);
+                    rhs = new Matrix2x2(0, 1, -1, 0);
                     break;
                 case PatternPermutation.RotateL:
-                    rhs = new Matrix2x2(0,-1,1,0);
+                    rhs = new Matrix2x2(0, -1, 1, 0);
                     break;
                 case PatternPermutation.RotateH:
-                    rhs = new Matrix2x2(-1,0,0,-1);
+                    rhs = new Matrix2x2(-1, 0, 0, -1);
                     break;
                 case PatternPermutation.FlipX:
-                    rhs = new Matrix2x2(1,0,0,-1);
+                    rhs = new Matrix2x2(1, 0, 0, -1);
                     break;
                 case PatternPermutation.FlipY:
-                    rhs = new Matrix2x2(-1,0,0,1);
+                    rhs = new Matrix2x2(-1, 0, 0, 1);
                     break;
                 case PatternPermutation.FlipXY:
-                    rhs = new Matrix2x2(0,1,1,0);
+                    rhs = new Matrix2x2(0, 1, 1, 0);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(permutation), permutation, null);

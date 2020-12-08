@@ -191,8 +191,9 @@ namespace ROOT
     //要把Asset和Logic，把Controller也要彻底拆开。
     internal static class WorldController
     {
-        private static Transform _pressedObj = null;
+        private static GameObject _pressedObj = null;
         private static bool _isSinglePress = false;
+        private static Vector2 startPos;
         private static float pressTime = 0;
         //Somehow PlayerId 0 is 9999999 NOW!
         //没什么特别的，没有新建Player的SYSTEM系统才是9999999。
@@ -236,7 +237,7 @@ namespace ROOT
             return anyDir;
         }
         private static bool GetCamMovementVec_KB(out Vector2 dir)
-        { 
+        {
             bool anyDir = false;
             dir = Vector2.zero;
 
@@ -611,13 +612,9 @@ namespace ROOT
             ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
             if (player.GetButtonDoublePressDown("Confirm0"))
             {
-                if (_pressedObj != null && _pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT))
+                if (_pressedObj != null && Utils.IsBoardUint(_pressedObj))
                 {
-                    var unit = _pressedObj.GetComponentInChildren<Unit>();
-                    if (unit.ShopID == -1)
-                    {
-                        DoublePress(ref ctrlPack, unit);
-                    }
+                    DoublePress(ref ctrlPack, Utils.GetUnit(_pressedObj));
                 }
                 _pressedObj = null;
                 _isSinglePress = false;
@@ -629,12 +626,13 @@ namespace ROOT
 
                 if (hit)
                 {
-                    _pressedObj = hitInfo.transform.gameObject.transform.root;
+                    _pressedObj = hitInfo.transform.gameObject;
                     Debug.Log("Single press down " + _pressedObj.name);
-                    if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT) ||
-                        _pressedObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE))
+                    if (Utils.IsUnit(_pressedObj) ||
+                        Utils.IsSkillPalette(_pressedObj))
                     {
                         pressTime = Time.fixedTime;
+                        startPos = player.controllers.Mouse.screenPosition;
                     }
                     else
                     {
@@ -652,15 +650,15 @@ namespace ROOT
                 var hit = GetPlayerMouseOverObject(out var hitInfo);
                 if (hit)
                 {
-                    var _pressedObj2 = hitInfo.transform.gameObject.transform.root;
-                    Debug.Log("Single press up " + _pressedObj2.name);
-                    if (_pressedObj == _pressedObj2)
+                    var pressedObj2 = hitInfo.transform.gameObject;
+                    Debug.Log("Single press up " + pressedObj2.name);
+                    if (_pressedObj == pressedObj2)
                     {
                         _isSinglePress = true;
                     }
                     else
                     {
-                        //Drag(_pressedObj, hitInfo.transform.gameObject);
+                        Drag(ref ctrlPack, startPos, player.controllers.Mouse.screenPosition);
                     }
                 }
                 else
@@ -668,10 +666,10 @@ namespace ROOT
                     _pressedObj = null;
                 }
             }
-            else if (_isSinglePress && Time.fixedTime - pressTime > 0.3)
+            else if (_isSinglePress && Time.fixedTime - pressTime >= 0.3)
             {
-                if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE) ||
-                    (_pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT) && _pressedObj.GetComponentInChildren<Unit>().ShopID!=-1))
+                Debug.Log("Regarded as single press");
+                if (!Utils.IsBoardUint(_pressedObj))
                 {
                     SinglePress(ref ctrlPack);
                 }
@@ -682,30 +680,57 @@ namespace ROOT
 
         private static void SinglePress(ref ControllingPack ctrlPack)
         {
-            Debug.Log("Single press on "+_pressedObj.name);
-            if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_UNIT))
+            Debug.Log("Single press on " + _pressedObj.name);
+            if (Utils.IsUnit(_pressedObj))
             {
                 ctrlPack.SetFlag(ControllingCommand.Buy);
-                ctrlPack.ShopID = _pressedObj.GetComponentInChildren<Unit>().ShopID;
+                ctrlPack.ShopID = Utils.GetUnit(_pressedObj).ShopID;
             }
-            else if (_pressedObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE))
+            else if (Utils.IsSkillPalette(_pressedObj))
             {
                 ctrlPack.SetFlag(ControllingCommand.Skill);
-                ctrlPack.SkillID = _pressedObj.GetComponent<SkillPalette>().SkillID;
+                ctrlPack.SkillID = Utils.GetSkillPalette(_pressedObj).SkillID;
             }
         }
 
-        private static void Drag(GameObject from, GameObject to)
+        private static void Drag(ref ControllingPack ctrlPack, Vector2 from, Vector2 to)
         {
-            if (from != null && to != null)
-            {
-                Debug.Log("Drag from " + from.name + " to " + to.name);
-            }
+
+            Debug.Log("Drag from " + from + " to " + to);
+            ctrlPack.CommandDir=GetDir(from,to);
         }
         private static void DoublePress(ref ControllingPack ctrlPack, Unit unit)
         {
             ctrlPack.CurrentPos = unit.CurrentBoardPosition;
             ctrlPack.SetFlag(ControllingCommand.Rotate);
+        }
+
+        private static CommandDir GetDir(Vector2 from, Vector2 to)
+        {
+            var deltaX = to.x - from.x;
+            var deltaY = to.y - from.y;
+            if (Math.Abs(deltaX) >= Math.Abs(deltaY))
+            {
+                if (deltaX >= 0)
+                {
+                    return CommandDir.East;
+                }
+                else
+                {
+                    return CommandDir.West;
+                }
+            }
+            else
+            {
+                if (deltaY >= 0)
+                {
+                    return CommandDir.North;
+                }
+                else
+                {
+                    return CommandDir.South;
+                }
+            }
         }
         private static bool SkillID(ref ControllingPack ctrlPack)
         {
