@@ -191,6 +191,7 @@ namespace ROOT
     {
         private static GameObject _pressedObj = null;
         private static bool _isSinglePress = false;
+        private static Vector2 startPos;
         private static float pressTime = 0;
         //Somehow PlayerId 0 is 9999999 NOW!
         //没什么特别的，没有新建Player的SYSTEM系统才是9999999。
@@ -629,6 +630,7 @@ namespace ROOT
                         Utils.IsSkillPalette(_pressedObj))
                     {
                         pressTime = Time.fixedTime;
+                        startPos = player.controllers.Mouse.screenPosition;
                     }
                     else
                     {
@@ -654,7 +656,7 @@ namespace ROOT
                     }
                     else
                     {
-                        //Drag(_pressedObj, hitInfo.transform.gameObject);
+                        Drag(ref ctrlPack, startPos, player.controllers.Mouse.screenPosition);
                     }
                 }
                 else
@@ -689,17 +691,44 @@ namespace ROOT
             }
         }
 
-        private static void Drag(GameObject from, GameObject to)
+        private static void Drag(ref ControllingPack ctrlPack, Vector2 from, Vector2 to)
         {
-            if (from != null && to != null)
-            {
-                Debug.Log("Drag from " + from.name + " to " + to.name);
-            }
+
+            Debug.Log("Drag from " + from + " to " + to);
+            ctrlPack.CommandDir=GetDir(from,to);
         }
         private static void DoublePress(ref ControllingPack ctrlPack, Unit unit)
         {
             ctrlPack.CurrentPos = unit.CurrentBoardPosition;
             ctrlPack.SetFlag(ControllingCommand.Rotate);
+        }
+
+        private static CommandDir GetDir(Vector2 from, Vector2 to)
+        {
+            var deltaX = to.x - from.x;
+            var deltaY = to.y - from.y;
+            if (Math.Abs(deltaX) >= Math.Abs(deltaY))
+            {
+                if (deltaX >= 0)
+                {
+                    return CommandDir.East;
+                }
+                else
+                {
+                    return CommandDir.West;
+                }
+            }
+            else
+            {
+                if (deltaY >= 0)
+                {
+                    return CommandDir.North;
+                }
+                else
+                {
+                    return CommandDir.South;
+                }
+            }
         }
         private static bool SkillID(ref ControllingPack ctrlPack)
         {
