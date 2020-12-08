@@ -138,8 +138,8 @@ namespace ROOT
         Skill = 1 << 12,
         BossPause = 1 << 13,//这个用作为Toggle开关，就不做两个Command了。
         CameraMov = 1 << 14,
-        ClickOnGird = 1 << 15,//日了，这个还是要铺满场地。
-        FloatingOnGird = 1 << 16//估计也能搞，而且早晚也得搞。
+        ClickOnGrid = 1 << 15,//日了，这个还是要铺满场地。
+        FloatingOnGrid = 1 << 16//估计也能搞，而且早晚也得搞。
     }
 
     public struct ControllingPack

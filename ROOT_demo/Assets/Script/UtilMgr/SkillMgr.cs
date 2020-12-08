@@ -278,10 +278,17 @@ namespace ROOT
 
         public void SwapTick(GameAssets currentLevelAsset, ControllingPack ctrlPack)
         {
+            //RISK 这里键盘⌨和鼠标🖱只能是两种逻辑，但是就是中间切了输入怎么办？
+            //⌨=>🖱理论上哈可以，但是反过来是干脆缺一个阶段……
+            //有两大解决方案：
+            //1、给键盘强制多加一个阶段以和鼠标匹配。（可能还得这么搞，但是现在先不
+            //   目前是在swap过程中不识别切换
+            //2、干脆不允许局中切换……
             Debug.Assert(_swapRadius != -1);
 
             if (StartGameMgr.UseKeyboard)
             {
+                //RISK 这里切换的时候会出问题……
                 var res = Utils.PositionRandomization_NormalDistro(
                     ctrlPack.CurrentPos, _swapRadius, 0.65f, Board.BoardLength,
                     out var selected);
@@ -323,9 +330,10 @@ namespace ROOT
             }
             else if (StartGameMgr.UseMouse)
             {
+                //RISK 这里切换的时候会出问题……同上
                 if (_mouseWaitingUnitA)
                 {
-                    if (ctrlPack.HasFlag(ControllingCommand.ClickOnGird))
+                    if (ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
                     {
                         unitAPosition = ctrlPack.CurrentPos;
                         UpdateAIndicator(currentLevelAsset, unitAPosition);
@@ -346,7 +354,7 @@ namespace ROOT
                 {
                     List<Vector2Int> res = new List<Vector2Int>();
                     int selected = -1;
-                    if (ctrlPack.HasFlag(ControllingCommand.FloatingOnGird))
+                    if (ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid))
                     {
                         res = Utils.PositionRandomization_NormalDistro(
                             ctrlPack.CurrentPos, _swapRadius, 0.65f, Board.BoardLength,
@@ -361,7 +369,7 @@ namespace ROOT
                             oldCurrentPos = ctrlPack.CurrentPos;
                         }
                     }
-                    else if (ctrlPack.HasFlag(ControllingCommand.ClickOnGird))
+                    else if (ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
                     {
                         var unitBPosition = res[selected];
                         if (unitAPosition != unitBPosition)

@@ -667,8 +667,7 @@ namespace ROOT
         {
             return GetRelationBetweenGenre(SrcGenre, null);
         }
-
-
+        
         public static ConnectionMeshType GetRelationBetweenGenre(CoreGenre SrcGenre, CoreGenre? OtherGenre)
         {
             switch (SrcGenre)
