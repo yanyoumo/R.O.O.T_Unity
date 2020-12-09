@@ -100,7 +100,8 @@ namespace ROOT
                         }
                         else if (StartGameMgr.UseMouse)
                         {
-                            throw new NotImplementedException();
+                            _mouseWaitingUnitA = true;
+                            //throw new NotImplementedException();
                         }
                     }
 
