@@ -954,7 +954,10 @@ namespace ROOT
                     var movingUnit = unit.GetComponentInChildren<Unit>();
                     movingUnit.Move(ctrlPack.CommandDir);
                     currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(ctrlPack.CurrentPos);
-                    currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
+                    if (StartGameMgr.UseKeyboard)
+                    {
+                        currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
+                    }
                     currentLevelAsset.AnimationPendingObj.Add(movingUnit);
                     movedTile = true;
                     movedCursor = true;
@@ -1141,6 +1144,10 @@ namespace ROOT
             if (StartGameMgr.UseTouchScreen)
             {
                 shouldCycle = movedTile | hasCycleNext;
+            }
+            else if(StartGameMgr.UseMouse)
+            {
+                shouldCycle = ((movedTile | movedCursor)) | hasCycleNext;
             }
             else
             {
