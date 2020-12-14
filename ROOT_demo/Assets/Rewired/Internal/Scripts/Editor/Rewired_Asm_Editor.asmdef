@@ -1,0 +1,18 @@
+{
+    "name": "Rewired_Asm_Editor",
+    "references": [
+        "GUID:cf780540b58aad94e82159e92c04e08b",
+        "GUID:97792db02cca0964b86c6fe6dd5d3128"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
