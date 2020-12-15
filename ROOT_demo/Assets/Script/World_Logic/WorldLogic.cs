@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using Rewired;
-using UnityEditor;
 using UnityEngine;
 using CommandDir = ROOT.RotationDirection;
-using Object = System.Object;
 
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
 
