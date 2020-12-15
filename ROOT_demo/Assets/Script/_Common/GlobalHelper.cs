@@ -126,6 +126,10 @@ namespace ROOT
 
     public static class Utils
     {
+        public static bool IsOnGrid(RaycastHit hitInfo)
+        {
+            return Board.WorldPosToXZGrid(hitInfo.point).HasValue;
+        }
         public static Unit GetUnit(GameObject pressObj)
         {
             return TryFindUnitInUpperHirearchy(pressObj);
@@ -133,7 +137,7 @@ namespace ROOT
 
         public static bool IsUnit(GameObject pressObj)
         {
-            return GetUnit(pressObj) != null;
+            return pressObj!=null && GetUnit(pressObj) != null;
         }
 
         public static bool IsBoardUint(GameObject pressObj)
@@ -142,7 +146,7 @@ namespace ROOT
         }
         public static bool IsSkillPalette(GameObject pressObj)
         {
-            return pressObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE);
+            return pressObj!=null && pressObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE);
         }
 
         public static SkillPalette GetSkillPalette(GameObject pressObj)

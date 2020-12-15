@@ -190,7 +190,7 @@ namespace ROOT
     {
         private static GameObject _pressedObj = null;
         private static bool _isSinglePress = false;
-        private static Vector2 startPos;
+        private static Vector2Int? startPos;
         private static float pressTime = 0;
         //Somehow PlayerId 0 is 9999999 NOW!
         //没什么特别的，没有新建Player的SYSTEM系统才是9999999。
@@ -607,6 +607,12 @@ namespace ROOT
             //下一回合：
             //Boss阶段暂停：因为时序问题还是键盘。
             ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
+            GetPlayerMouseOverObject(out var hitInfo2);
+            if (Board.WorldPosToXZGrid(hitInfo2.point).HasValue)
+            {
+                ctrlPack.SetFlag(ControllingCommand.FloatingOnGrid);
+                ctrlPack.CurrentPos = Board.WorldPosToXZGrid(hitInfo2.point).Value;
+            }
             if (player.GetButtonDoublePressDown("Confirm0"))
             {
                 if (_pressedObj != null && Utils.IsBoardUint(_pressedObj))
@@ -626,14 +632,16 @@ namespace ROOT
                     _pressedObj = hitInfo.transform.gameObject;
                     Debug.Log("Single press down " + _pressedObj.name);
                     if (Utils.IsUnit(_pressedObj) ||
-                        Utils.IsSkillPalette(_pressedObj))
+                        Utils.IsSkillPalette(_pressedObj) || 
+                        Utils.IsOnGrid(hitInfo))
                     {
                         pressTime = Time.fixedTime;
-                        startPos = player.controllers.Mouse.screenPosition;
+                        startPos = Board.WorldPosToXZGrid(hitInfo.point);
                     }
                     else
                     {
                         _pressedObj = null;
+                        startPos = null;
                     }
                 }
                 else
@@ -645,17 +653,19 @@ namespace ROOT
             else if (player.GetButtonUp("Confirm0"))
             {
                 var hit = GetPlayerMouseOverObject(out var hitInfo);
+                //hitInfo.point;
                 if (hit)
                 {
                     var pressedObj2 = hitInfo.transform.gameObject;
                     Debug.Log("Single press up " + pressedObj2.name);
-                    if (_pressedObj == pressedObj2)
+                    if (_pressedObj == pressedObj2 || 
+                        (Utils.IsOnGrid(hitInfo)) && startPos == Board.WorldPosToXZGrid(hitInfo.point))
                     {
                         _isSinglePress = true;
                     }
                     else
                     {
-                        Drag(ref ctrlPack, startPos, player.controllers.Mouse.screenPosition);
+                        Drag(ref ctrlPack, startPos, Board.WorldPosToXZGrid(hitInfo.point));
                     }
                 }
                 else
@@ -666,10 +676,9 @@ namespace ROOT
             else if (_isSinglePress && Time.fixedTime - pressTime >= 0.3)
             {
                 Debug.Log("Regarded as single press");
-                if (!Utils.IsBoardUint(_pressedObj))
-                {
+                
                     SinglePress(ref ctrlPack);
-                }
+                
                 _pressedObj = null;
                 _isSinglePress = false;
             }
@@ -677,24 +686,48 @@ namespace ROOT
 
         private static void SinglePress(ref ControllingPack ctrlPack)
         {
-            Debug.Log("Single press on " + _pressedObj.name);
-            if (Utils.IsUnit(_pressedObj))
+            if (!Utils.IsBoardUint(_pressedObj))
             {
-                ctrlPack.SetFlag(ControllingCommand.Buy);
-                ctrlPack.ShopID = Utils.GetUnit(_pressedObj).ShopID;
+                if (Utils.IsUnit(_pressedObj))
+                {
+                    Debug.Log("Single press on " + _pressedObj.name);
+                    ctrlPack.SetFlag(ControllingCommand.Buy);
+                    ctrlPack.ShopID = Utils.GetUnit(_pressedObj).ShopID;
+                }
+                else if (Utils.IsSkillPalette(_pressedObj))
+                {
+                    Debug.Log("Single press on " + _pressedObj.name);
+                    ctrlPack.SetFlag(ControllingCommand.Skill);
+                    ctrlPack.SkillID = Utils.GetSkillPalette(_pressedObj).SkillID;
+                }
+                else
+                {
+                    ctrlPack.SetFlag(ControllingCommand.ClickOnGrid);
+                    ctrlPack.CurrentPos = startPos.Value;
+                    Debug.Log("Single press on grid " + startPos);
+                }
             }
-            else if (Utils.IsSkillPalette(_pressedObj))
+            else
             {
-                ctrlPack.SetFlag(ControllingCommand.Skill);
-                ctrlPack.SkillID = Utils.GetSkillPalette(_pressedObj).SkillID;
+                ctrlPack.SetFlag(ControllingCommand.ClickOnGrid);
+                ctrlPack.CurrentPos = startPos.Value;
+                Debug.Log("Single press on grid " + startPos);
             }
         }
 
-        private static void Drag(ref ControllingPack ctrlPack, Vector2 from, Vector2 to)
+        private static void Drag(ref ControllingPack ctrlPack, Vector2Int? from, Vector2Int? to)
         {
-
+            if (from.HasValue == false || to.HasValue == false)
+                return;
+            var dir = GetDir(from.Value, to.Value);
+            if (dir.HasValue == false)
+                return;
+            ctrlPack.CommandDir = dir.Value;
+            ctrlPack.CurrentPos = from.Value;
+            ctrlPack.NextPos = to.Value;
+            ctrlPack.SetFlag(ControllingCommand.Drag);
+            ctrlPack.SetFlag(ControllingCommand.Move);
             Debug.Log("Drag from " + from + " to " + to);
-            ctrlPack.CommandDir=GetDir(from,to);
         }
         private static void DoublePress(ref ControllingPack ctrlPack, Unit unit)
         {
@@ -702,33 +735,19 @@ namespace ROOT
             ctrlPack.SetFlag(ControllingCommand.Rotate);
         }
 
-        private static CommandDir GetDir(Vector2 from, Vector2 to)
+        private static CommandDir? GetDir(Vector2Int from, Vector2Int to)
         {
-            var deltaX = to.x - from.x;
-            var deltaY = to.y - from.y;
-            if (Math.Abs(deltaX) >= Math.Abs(deltaY))
-            {
-                if (deltaX >= 0)
-                {
-                    return CommandDir.East;
-                }
-                else
-                {
-                    return CommandDir.West;
-                }
-            }
-            else
-            {
-                if (deltaY >= 0)
-                {
-                    return CommandDir.North;
-                }
-                else
-                {
-                    return CommandDir.South;
-                }
-            }
+            if (to - from == Vector2Int.up)
+                return CommandDir.North;
+            if (to - from == Vector2Int.right)
+                return CommandDir.East;
+            if (to - from == Vector2Int.down)
+                return CommandDir.South;
+            if (to - from == Vector2Int.left)
+                return CommandDir.West;
+            return null;
         }
+
         private static bool SkillID(ref ControllingPack ctrlPack)
         {
             var anySkill = false;
@@ -956,7 +975,10 @@ namespace ROOT
                     var movingUnit = unit.GetComponentInChildren<Unit>();
                     movingUnit.Move(ctrlPack.CommandDir);
                     currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(ctrlPack.CurrentPos);
-                    currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
+                    if (StartGameMgr.UseKeyboard)
+                    {
+                        currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
+                    }
                     currentLevelAsset.AnimationPendingObj.Add(movingUnit);
                     movedTile = true;
                     movedCursor = true;
@@ -1003,7 +1025,7 @@ namespace ROOT
                         StartGameMgr.SetUseMouse();
                     }
                 }
-                else if(StartGameMgr.UseMouse)
+                else if (StartGameMgr.UseMouse)
                 {
                     if (player.controllers.Keyboard.GetAnyButton())
                     {
@@ -1013,12 +1035,12 @@ namespace ROOT
 
                 if (currentLevelAsset.CursorEnabled)
                 {
-                    
+
                     if (StartGameMgr.UseKeyboard)
                     {
                         WorldController.GetCommand_Keyboard(currentLevelAsset, out ctrlPack);
                     }
-                    else if(StartGameMgr.UseMouse)
+                    else if (StartGameMgr.UseMouse)
                     {
                         WorldController.GetCommand_Mouse(currentLevelAsset, out ctrlPack);
                     }
@@ -1143,6 +1165,10 @@ namespace ROOT
             if (StartGameMgr.UseTouchScreen)
             {
                 shouldCycle = movedTile | hasCycleNext;
+            }
+            else if(StartGameMgr.UseMouse)
+            {
+                shouldCycle = ((movedTile | movedCursor)) | hasCycleNext;
             }
             else
             {
