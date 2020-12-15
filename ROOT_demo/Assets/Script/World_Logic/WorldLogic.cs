@@ -607,6 +607,12 @@ namespace ROOT
             //下一回合：
             //Boss阶段暂停：因为时序问题还是键盘。
             ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
+            GetPlayerMouseOverObject(out var hitInfo2);
+            if (Board.WorldPosToXZGrid(hitInfo2.point).HasValue)
+            {
+                ctrlPack.SetFlag(ControllingCommand.FloatingOnGrid);
+                ctrlPack.CurrentPos = Board.WorldPosToXZGrid(hitInfo2.point).Value;
+            }
             if (player.GetButtonDoublePressDown("Confirm0"))
             {
                 if (_pressedObj != null && Utils.IsBoardUint(_pressedObj))
@@ -626,7 +632,8 @@ namespace ROOT
                     _pressedObj = hitInfo.transform.gameObject;
                     Debug.Log("Single press down " + _pressedObj.name);
                     if (Utils.IsUnit(_pressedObj) ||
-                        Utils.IsSkillPalette(_pressedObj))
+                        Utils.IsSkillPalette(_pressedObj) || 
+                        Utils.IsOnGrid(hitInfo))
                     {
                         pressTime = Time.fixedTime;
                         startPos = Board.WorldPosToXZGrid(hitInfo.point);
@@ -634,6 +641,7 @@ namespace ROOT
                     else
                     {
                         _pressedObj = null;
+                        startPos = null;
                     }
                 }
                 else
@@ -650,7 +658,8 @@ namespace ROOT
                 {
                     var pressedObj2 = hitInfo.transform.gameObject;
                     Debug.Log("Single press up " + pressedObj2.name);
-                    if (_pressedObj == pressedObj2)
+                    if (_pressedObj == pressedObj2 || 
+                        (Utils.IsOnGrid(hitInfo)) && startPos == Board.WorldPosToXZGrid(hitInfo.point))
                     {
                         _isSinglePress = true;
                     }
@@ -667,10 +676,9 @@ namespace ROOT
             else if (_isSinglePress && Time.fixedTime - pressTime >= 0.3)
             {
                 Debug.Log("Regarded as single press");
-                if (!Utils.IsBoardUint(_pressedObj))
-                {
+                
                     SinglePress(ref ctrlPack);
-                }
+                
                 _pressedObj = null;
                 _isSinglePress = false;
             }
@@ -678,16 +686,32 @@ namespace ROOT
 
         private static void SinglePress(ref ControllingPack ctrlPack)
         {
-            Debug.Log("Single press on " + _pressedObj.name);
-            if (Utils.IsUnit(_pressedObj))
+            if (!Utils.IsBoardUint(_pressedObj))
             {
-                ctrlPack.SetFlag(ControllingCommand.Buy);
-                ctrlPack.ShopID = Utils.GetUnit(_pressedObj).ShopID;
+                if (Utils.IsUnit(_pressedObj))
+                {
+                    Debug.Log("Single press on " + _pressedObj.name);
+                    ctrlPack.SetFlag(ControllingCommand.Buy);
+                    ctrlPack.ShopID = Utils.GetUnit(_pressedObj).ShopID;
+                }
+                else if (Utils.IsSkillPalette(_pressedObj))
+                {
+                    Debug.Log("Single press on " + _pressedObj.name);
+                    ctrlPack.SetFlag(ControllingCommand.Skill);
+                    ctrlPack.SkillID = Utils.GetSkillPalette(_pressedObj).SkillID;
+                }
+                else
+                {
+                    ctrlPack.SetFlag(ControllingCommand.ClickOnGrid);
+                    ctrlPack.CurrentPos = startPos.Value;
+                    Debug.Log("Single press on grid " + startPos);
+                }
             }
-            else if (Utils.IsSkillPalette(_pressedObj))
+            else
             {
-                ctrlPack.SetFlag(ControllingCommand.Skill);
-                ctrlPack.SkillID = Utils.GetSkillPalette(_pressedObj).SkillID;
+                ctrlPack.SetFlag(ControllingCommand.ClickOnGrid);
+                ctrlPack.CurrentPos = startPos.Value;
+                Debug.Log("Single press on grid " + startPos);
             }
         }
 
