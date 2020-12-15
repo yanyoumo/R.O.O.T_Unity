@@ -1,7 +1,8 @@
 {
-    "name": "Rewired_Asm_Editor",
+    "name": "Rewired_ASM_Editor_2",
     "references": [
-        "GUID:97792db02cca0964b86c6fe6dd5d3128"
+        "GUID:97792db02cca0964b86c6fe6dd5d3128",
+        "GUID:93d97fd20160f97418db6b3a7391cdff"
     ],
     "includePlatforms": [
         "Editor"
