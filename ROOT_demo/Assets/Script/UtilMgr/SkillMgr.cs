@@ -370,7 +370,8 @@ namespace ROOT
                             oldCurrentPos = ctrlPack.CurrentPos;
                         }
                     }
-                    else if (ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
+
+                    if (ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
                     {
                         var unitBPosition = res[selected];
                         if (unitAPosition != unitBPosition)
@@ -381,14 +382,19 @@ namespace ROOT
 
                         _mouseWaitingUnitA = false;
                         _mouseWaitingUnitB = false;
+                        CleanIndicator(currentLevelAsset);
+                        CurrentSkillType = null;
                     }
                     else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
                     {
                         currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
                         swapAlipay = 0;
                         WorldLogic.UpdateUICurrencyVal(currentLevelAsset);
+
                         _mouseWaitingUnitA = false;
                         _mouseWaitingUnitB = false;
+                        CleanIndicator(currentLevelAsset);
+                        CurrentSkillType = null;
                     }
                 }
             }
