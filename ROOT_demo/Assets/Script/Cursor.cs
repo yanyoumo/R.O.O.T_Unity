@@ -109,5 +109,11 @@ namespace ROOT
             }
             _meshFilter.mesh = IndicatorMesh;
         }
+
+        /*public void Update()
+        {
+            //RISK 这个到时候改成基于事件的、因为这个东西的引用不好搞，就先轮询吧。
+            //TODO 这个逻辑意外地的不好弄，试图立刻搞了；等有时间把时序舔明白再弄吧。
+        }*/
     }
 }

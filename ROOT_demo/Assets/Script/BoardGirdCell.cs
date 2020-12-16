@@ -23,6 +23,10 @@ namespace ROOT
         private Color InfoColColor => ColorUtilityWrapper.ParseHtmlString("#00FFFF").Value;
         private Color PreWarningColor => ColorUtilityWrapper.ParseHtmlString("#CF9E00").Value;
 
+        private Color NormalStrokeColor => ColorUtilityWrapper.ParseHtmlString("#141414").Value;
+        private Color FloatingStrokeColor => ColorUtilityWrapper.ParseHtmlString("#99bcac").Value;
+        private Color HighLightedStrokeColor => ColorUtilityWrapper.ParseHtmlString("#ee7959").Value;
+
         [HideInInspector]
         public Board owner;
         [HideInInspector]
@@ -31,6 +35,7 @@ namespace ROOT
         public List<SpriteRenderer> Edges;
 
         public MeshRenderer BoardGridMesh;
+        public MeshRenderer BoardStrokeMesh;
 
         private CellStatus _cellStatus = CellStatus.Normal;
 
@@ -97,10 +102,57 @@ namespace ROOT
 
         private Dictionary<RotationDirection, SpriteRenderer> _edgeDic;
 
+        private const float ClickColorDelay = 0.1f;
+        private bool ClickColoring = false;
+
+        private IEnumerator ClickColorDelay_CO()
+        {
+            yield return new WaitForSeconds(ClickColorDelay);
+            ClickColoring = false;
+        }
+
+        public void ChangeStrokeMode(LightUpBoardColor color)
+        {
+            if (ClickColoring) return;
+
+            switch (color)
+            {
+                case LightUpBoardColor.Clicked:
+                    Clicked();
+                    ClickColoring = true;
+                    StartCoroutine(ClickColorDelay_CO());
+                    break;
+                case LightUpBoardColor.Hovered:
+                    Hovered();
+                    break;
+                case LightUpBoardColor.Unhovered:
+                    Unhovered();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(color), color, null);
+            }
+        }
+
+        private void Clicked()
+        {
+            BoardStrokeMesh.material.color = HighLightedStrokeColor;
+        }
+
+        private void Hovered()
+        {
+            BoardStrokeMesh.material.color = FloatingStrokeColor;
+        }
+
+        private void Unhovered()
+        {
+            BoardStrokeMesh.material.color = NormalStrokeColor;
+        }
+
         void Awake()
         {
+            BoardStrokeMesh.material.color = NormalStrokeColor;
             _cellStatus = CellStatus.Normal;
-
+            
             _edgeDic = new Dictionary<RotationDirection, SpriteRenderer>
             {
                 {RotationDirection.North, Edges[0]},

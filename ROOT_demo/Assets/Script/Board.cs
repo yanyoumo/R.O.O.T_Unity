@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -8,6 +9,20 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
+    public enum LightUpBoardGirdMode
+    {
+        REPLACE,
+        ADD,
+        CLEAR,
+    }
+
+    public enum LightUpBoardColor
+    {
+        Clicked,
+        Hovered,
+        Unhovered,
+    }
+
     public sealed class Board : MonoBehaviour
     {
         public InfoAirdrop AirDrop;
@@ -401,6 +416,36 @@ namespace ROOT
         }
 
         public Dictionary<Vector2Int, BoardGirdCell> BoardGirds { get; private set; }
+
+        public void LightUpBoardGird(
+            Vector2Int pos,
+            LightUpBoardGirdMode mode=LightUpBoardGirdMode.REPLACE, 
+            LightUpBoardColor color= LightUpBoardColor.Hovered)
+        {
+            switch (mode)
+            {
+                case LightUpBoardGirdMode.REPLACE:
+                    BoardGirds.Values.ForEach(val => val.ChangeStrokeMode(LightUpBoardColor.Unhovered));
+                    BoardGirds.TryGetValue(pos, out var cell);
+                    if (cell != null)
+                    {
+                        cell.ChangeStrokeMode(color);
+                    }
+                    break;
+                case LightUpBoardGirdMode.ADD:
+                    BoardGirds.TryGetValue(pos, out var cell1);
+                    if (cell1 != null)
+                    {
+                        cell1.ChangeStrokeMode(color);
+                    }
+                    break;
+                case LightUpBoardGirdMode.CLEAR:
+                    BoardGirds.Values.ForEach(val => val.ChangeStrokeMode(LightUpBoardColor.Unhovered));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
 
         #endregion
 
