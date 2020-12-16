@@ -503,6 +503,25 @@ namespace ROOT
                     UpdateRoundStatus(LevelAsset, roundGist.Value);
                 }
 
+                if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid)|| _ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
+                {
+                    if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid))
+                    {
+                        LevelAsset.GameBoard.LightUpBoardGird(_ctrlPack.CurrentPos);
+                    }
+
+                    if (_ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
+                    {
+                        LevelAsset.GameBoard.LightUpBoardGird(_ctrlPack.CurrentPos,
+                            LightUpBoardGirdMode.REPLACE,
+                            LightUpBoardColor.Clicked);
+                    }
+                }
+                else
+                {
+                    LevelAsset.GameBoard.LightUpBoardGird(Vector2Int.zero, LightUpBoardGirdMode.CLEAR);
+                }
+
                 if (LevelAsset.GameOverEnabled)
                 {
                     UpdateGameOverStatus(LevelAsset);
