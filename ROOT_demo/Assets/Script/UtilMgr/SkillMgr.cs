@@ -315,7 +315,10 @@ namespace ROOT
                         if (unitAPosition != unitBPosition)
                         {
                             var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
-                            Debug.Assert(res1);
+                            if (!res1)
+                            {
+                                Debug.LogWarning("swap nothing to nothing!!");
+                            }
                         }
                     }
                     else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
@@ -377,7 +380,10 @@ namespace ROOT
                         if (unitAPosition != unitBPosition)
                         {
                             var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
-                            Debug.Assert(res1);
+                            if (!res1)
+                            {
+                                Debug.LogWarning("swap nothing to nothing!!");
+                            }
                         }
 
                         _mouseWaitingUnitA = false;
