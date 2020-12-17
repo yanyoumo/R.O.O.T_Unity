@@ -126,6 +126,16 @@ namespace ROOT
 
     public static class Utils
     {
+        public static float GetCustomizedDistance(Vector2 from, Vector2 to)
+        {
+            var width = Screen.width;
+            var height = Screen.height;
+            from.x /= width;
+            from.y /= height;
+            to.x /= width;
+            to.y /= height;
+            return (from - to).magnitude;
+        }
         public static bool IsOnGrid(RaycastHit hitInfo)
         {
             return Board.WorldPosToXZGrid(hitInfo.point).HasValue;
@@ -137,7 +147,7 @@ namespace ROOT
 
         public static bool IsUnit(GameObject pressObj)
         {
-            return pressObj!=null && GetUnit(pressObj) != null;
+            return pressObj != null && GetUnit(pressObj) != null;
         }
 
         public static bool IsBoardUint(GameObject pressObj)
@@ -146,14 +156,14 @@ namespace ROOT
         }
         public static bool IsSkillPalette(GameObject pressObj)
         {
-            return pressObj!=null && pressObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE);
+            return pressObj != null && pressObj.CompareTag(StaticTagName.TAG_NAME_SKILL_PALETTE);
         }
 
         public static SkillPalette GetSkillPalette(GameObject pressObj)
         {
             return pressObj.GetComponent<SkillPalette>();
         }
-      
+
         public static int SignalChannelSplit(float a, float b, int n, float x)
         {
             Debug.Assert(n >= 0);
@@ -699,7 +709,7 @@ namespace ROOT
         {
             return GetRelationBetweenGenre(SrcGenre, null);
         }
-        
+
         public static ConnectionMeshType GetRelationBetweenGenre(CoreGenre SrcGenre, CoreGenre? OtherGenre)
         {
             switch (SrcGenre)

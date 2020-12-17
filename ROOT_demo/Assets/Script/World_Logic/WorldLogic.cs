@@ -188,6 +188,11 @@ namespace ROOT
     //要把Asset和Logic，把Controller也要彻底拆开。
     internal static class WorldController
     {
+        private static bool idle = false;
+        private const float minHoldTime = 1;
+        private const float minHoldShift = 1e-12f;
+        private static Vector2? holdPos = null;
+        private static float holdTime = 0;
         private static GameObject _pressedObj = null;
         private static bool _isSinglePress = false;
         private static Vector2Int? startPos;
@@ -608,34 +613,37 @@ namespace ROOT
             //Boss阶段暂停：因为时序问题还是键盘。
             ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
             GetPlayerMouseOverObject(out var hitInfo2);
-            if (Board.WorldPosToXZGrid(hitInfo2.point).HasValue)
+            if (idle == false && Board.WorldPosToXZGrid(hitInfo2.point).HasValue)
             {
                 ctrlPack.SetFlag(ControllingCommand.FloatingOnGrid);
                 ctrlPack.CurrentPos = Board.WorldPosToXZGrid(hitInfo2.point).Value;
             }
-            if (player.GetButtonDoublePressDown("Confirm0"))
+
+            if (idle == false && player.GetButtonDoublePressDown("Confirm0"))
             {
                 if (_pressedObj != null && Utils.IsBoardUint(_pressedObj))
                 {
                     DoublePress(ref ctrlPack, Utils.GetUnit(_pressedObj));
                 }
+
                 _pressedObj = null;
                 _isSinglePress = false;
             }
 
-            else if (player.GetButtonDown("Confirm0"))
+            else if (idle == false && player.GetButtonDown("Confirm0"))
             {
                 var hit = GetPlayerMouseOverObject(out var hitInfo);
-
+                holdPos = player.controllers.Mouse.screenPosition;
+                holdTime = Time.time;
                 if (hit)
                 {
                     _pressedObj = hitInfo.transform.gameObject;
                     Debug.Log("Single press down " + _pressedObj.name);
                     if (Utils.IsUnit(_pressedObj) ||
-                        Utils.IsSkillPalette(_pressedObj) || 
+                        Utils.IsSkillPalette(_pressedObj) ||
                         Utils.IsOnGrid(hitInfo))
                     {
-                        pressTime = Time.fixedTime;
+                        pressTime = Time.time;
                         startPos = Board.WorldPosToXZGrid(hitInfo.point);
                     }
                     else
@@ -652,13 +660,17 @@ namespace ROOT
 
             else if (player.GetButtonUp("Confirm0"))
             {
+                if (idle)
+                {
+                    idle = false;
+                }
                 var hit = GetPlayerMouseOverObject(out var hitInfo);
                 //hitInfo.point;
                 if (hit)
                 {
                     var pressedObj2 = hitInfo.transform.gameObject;
                     Debug.Log("Single press up " + pressedObj2.name);
-                    if (_pressedObj == pressedObj2 || 
+                    if (_pressedObj == pressedObj2 ||
                         (Utils.IsOnGrid(hitInfo)) && startPos == Board.WorldPosToXZGrid(hitInfo.point))
                     {
                         _isSinglePress = true;
@@ -673,14 +685,25 @@ namespace ROOT
                     _pressedObj = null;
                 }
             }
-            else if (_isSinglePress && Time.fixedTime - pressTime >= 0.3)
+            //双击的时间阈值是0.3s
+            else if (idle == false && _isSinglePress && Time.time - pressTime >= 0.3)
             {
                 Debug.Log("Regarded as single press");
-                
-                    SinglePress(ref ctrlPack);
-                
+
+                SinglePress(ref ctrlPack);
+
                 _pressedObj = null;
                 _isSinglePress = false;
+            }
+            if (idle == false && holdTime != 0 && Time.time - holdTime >= minHoldShift && holdPos.HasValue &&
+                Utils.GetCustomizedDistance(holdPos.Value, player.controllers.Mouse.screenPosition) < minHoldShift)
+            {
+                idle = true;
+                ctrlPack.SetFlag(ControllingCommand.CycleNext);
+                holdPos = null;
+                holdTime = 0;
+                _pressedObj = null;
+                startPos = null;
             }
         }
 
@@ -1166,7 +1189,7 @@ namespace ROOT
             {
                 shouldCycle = movedTile | hasCycleNext;
             }
-            else if(StartGameMgr.UseMouse)
+            else if (StartGameMgr.UseMouse)
             {
                 shouldCycle = ((movedTile | movedCursor)) | hasCycleNext;
             }
