@@ -189,8 +189,8 @@ namespace ROOT
     internal static class WorldController
     {
         private static bool idle = false;
-        private const float minHoldTime = 2;
-        private const float minHoldShift = 1e-12f;
+        private const float minHoldTime = 1.5f;
+        private const float minHoldShift = 1e-4f;
         private static Vector2? holdPos = null;
         private static float holdTime = 0;
         private static GameObject _pressedObj = null;
