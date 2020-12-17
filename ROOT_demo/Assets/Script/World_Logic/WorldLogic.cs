@@ -189,7 +189,7 @@ namespace ROOT
     internal static class WorldController
     {
         private static bool idle = false;
-        private const float minHoldTime = 1;
+        private const float minHoldTime = 2;
         private const float minHoldShift = 1e-12f;
         private static Vector2? holdPos = null;
         private static float holdTime = 0;
@@ -695,7 +695,7 @@ namespace ROOT
                 _pressedObj = null;
                 _isSinglePress = false;
             }
-            if (idle == false && holdTime != 0 && Time.time - holdTime >= minHoldShift && holdPos.HasValue &&
+            if (idle == false && holdTime != 0 && Time.time - holdTime >= minHoldTime && holdPos.HasValue &&
                 Utils.GetCustomizedDistance(holdPos.Value, player.controllers.Mouse.screenPosition) < minHoldShift)
             {
                 idle = true;
