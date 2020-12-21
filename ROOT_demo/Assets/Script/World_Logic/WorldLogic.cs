@@ -684,6 +684,9 @@ namespace ROOT
                 {
                     _pressedObj = null;
                 }
+                holdPos = null;
+                holdTime = 0;
+                startPos = null;
             }
             //双击的时间阈值是0.3s
             else if (idle == false && _isSinglePress && Time.time - pressTime >= 0.3)
