@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace ROOT
 {
@@ -608,83 +607,73 @@ namespace ROOT
             return WorldNeighboringData.Values.Where(data => data.Connected).Select(data => data.OtherUnit).ToList();
         }
 
+        private bool SideFilter(RotationDirection dir)
+        {
+            return dir == RotationDirection.West || dir == RotationDirection.South;
+        }
+
+        private void ResetConnector(RotationDirection dir)
+        {
+            WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
+            if (!data.HasConnector) return;
+            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(dir, _unitRotation), out Connector Connector);
+            if (Connector==null) return;
+            Connector.NormalSignalVal = 0;
+            Connector.NetworkSignalVal = 0;
+            Connector.Hided = true;
+        }
+
+        private void SetZeroConnector(RotationDirection dir)
+        {
+            //none-bossAuto Case
+            var localRotation = Utils.RotateDirectionBeforeRotation(dir, _unitRotation);
+            ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
+            Connector.NormalSignalVal = 0;
+            Connector.NetworkSignalVal = 0;
+        }
+
+        private bool FilterConnector(RotationDirection dir)
+        {
+            WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
+            return data.HasConnector && data.Connected && SideFilter(dir) && data.OtherUnit != null;
+        }
+
         public void UpdateSideMesh()
         {
-            if (WorldNeighboringData != null)
+            if (WorldNeighboringData == null) return;
+            RotationList.ForEach(ResetConnector);
+            ConnectorLocalDir.Values.ForEach(val => val.Connected = false);
+            if (WorldCycler.BossStage && !WorldCycler.BossStagePause)
             {
-                foreach (var currentSideDirection in RotationList)
-                {
-                    WorldNeighboringData.TryGetValue(currentSideDirection, out ConnectionData data);
-                    if (data.HasConnector)
-                    {
-                        if (!WorldCycler.BossStage || (WorldCycler.BossStage && WorldCycler.BossStagePause))
-                        {
-                            //none-bossAuto Case
-                            var localRotation =
-                                Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
-                            ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
-                            Connector.Connected = data.Connected;
-                            var shouldHide = true;
-                            var NormalSignalValtmp = 0;
-                            var NetworkSignalValtmp = 0;
-                            if (data.Connected)
-                            {
-                                if (currentSideDirection == RotationDirection.West ||
-                                    currentSideDirection == RotationDirection.South)
-                                {
-                                    // 所有单元只计算自己西侧和南侧的链接，这样就不存在双侧显示的问题了。
-                                    Unit otherUnit = data.OtherUnit;
-                                    if (otherUnit != null)
-                                    {
-                                        bool ShowHDDLED = InHddSignalGrid && otherUnit.InHddSignalGrid;
-                                        bool HasSolidHDDSigal = (SignalFromDir == currentSideDirection);
-                                        HasSolidHDDSigal |=
-                                            (Utils.GetInvertDirection(otherUnit.SignalFromDir) == currentSideDirection);
-                                        ShowHDDLED &= HasSolidHDDSigal;
-
-                                        bool ShowNetLED = InServerGrid && otherUnit.InServerGrid;
-                                        ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
-
-                                        NormalSignalValtmp =
-                                            ShowHDDLED ? Math.Min(HardDiskVal, otherUnit.HardDiskVal) : 0;
-                                        NetworkSignalValtmp =
-                                            ShowNetLED ? Math.Min(NetworkVal, otherUnit.NetworkVal) : 0;
-
-                                        shouldHide = !(ShowHDDLED || ShowNetLED);
-                                    }
-                                }
-                            }
-
-                            Connector.NormalSignalVal = NormalSignalValtmp;
-                            Connector.NetworkSignalVal = NetworkSignalValtmp;
-                            Connector.Hided = shouldHide;
-                        }
-                        else
-                        {
-                            //bossAutoCase
-                            //TODO 总之这里的逻辑是不一样的，但是具体怎么弄还不清楚。
-                            //总之不能简单的不显示。
-                            var localRotation =
-                                Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
-                            ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
-                            Connector.NormalSignalVal = 0;
-                            Connector.NetworkSignalVal = 0;
-                            //Connector.Hided = true;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //ShopCase
-                foreach (var keyValuePair in ConnectorLocalDir)
-                {
-                    keyValuePair.Value.Connected = false;
-                }
+                //boss-noneAuto Case
+                RotationList.ForEach(SetZeroConnector);
+                return;
             }
 
-            //TEMP 临时用这个测一下。
-            BillBoardText.text = InServerGrid + "";
+            foreach (var crtDir in RotationList.Where(FilterConnector))
+            {
+                //none-bossAuto Case
+                WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
+                ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation), out Connector Connector);
+                Connector.Connected = data.Connected;
+
+                var otherUnit = data.OtherUnit;
+                var ShowHDDLED = InHddSignalGrid && otherUnit.InHddSignalGrid;
+                var HasSolidHDDSigal = (SignalFromDir == crtDir);
+                HasSolidHDDSigal |= (Utils.GetInvertDirection(otherUnit.SignalFromDir) == crtDir);
+                ShowHDDLED &= HasSolidHDDSigal;
+
+                var ShowNetLED = InServerGrid && otherUnit.InServerGrid;
+                ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
+
+                var NormalSignalValtmp = ShowHDDLED ? Math.Min(HardDiskVal, otherUnit.HardDiskVal) : 0;
+                var NetworkSignalValtmp = ShowNetLED ? Math.Min(NetworkVal, otherUnit.NetworkVal) : 0;
+                var shouldHide = !(ShowHDDLED || ShowNetLED);
+
+                Connector.NormalSignalVal = NormalSignalValtmp;
+                Connector.NetworkSignalVal = NetworkSignalValtmp;
+                Connector.Hided = shouldHide;
+            }
         }
 
         public void UpdateNeighboringDataAndSideMesh()
