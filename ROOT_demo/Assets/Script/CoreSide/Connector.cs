@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace ROOT
@@ -71,6 +69,7 @@ namespace ROOT
 
         public void Awake()
         {
+            Hided = true;
             BlinkCube.gameObject.SetActive(false);
             NormalED.gameObject.SetActive(true);
         }
