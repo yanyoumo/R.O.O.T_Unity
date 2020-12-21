@@ -335,11 +335,13 @@ namespace ROOT
         public float CalculateServerScore(out int networkCount)
         {
             int maxCount = Board.BoardLength * Board.BoardLength;
-            var maxLength = maxCount;
-            var maxScore = Int32.MinValue;
-            var lastLevelDict = new Dictionary<Unit, networkCableStatus>();
+            var ansScore = Int32.MinValue;
+            var ansLength = maxCount;
             foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
             {
+                var maxLength = maxCount;
+                var maxScore = Int32.MinValue;
+                var lastLevelDict = new Dictionary<Unit, networkCableStatus>();
                 m_Board.Units.ForEach(unit => unit.InServerGrid = unit.Visited = unit.Visiting = false);
                 startPoint.Visiting = true;
                 var networkCableQueue = new Queue<networkCableStatus>();
@@ -367,6 +369,7 @@ namespace ROOT
                     {
                         maxScore = score;
                         maxLength = length;
+                        m_Board.Units.ForEach(unit => unit.InServerGrid = false);
                         GeneratePath(startPoint, vis);
                         foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit().Where(unit => lastLevelDict.ContainsKey(unit)))
                         {
@@ -380,13 +383,24 @@ namespace ROOT
                         }
                     }
                 }
+
+                Debug.Log("start:" + startPoint.CurrentBoardPosition + "length:" + maxLength + "score:" + maxScore);
+                if (maxLength < ansLength)
+                {
+                    ansLength = maxLength;
+                    ansScore = maxScore;
+                }
+                else if (maxLength == ansLength)
+                {
+                    ansScore = Math.Max(ansScore, maxScore);
+                }
             }
-            if (maxLength == maxCount)
+            if (ansLength == maxCount)
             {
-                maxLength = maxScore = 0;
+                ansLength = ansScore = 0;
             }
-            MaxNetworkDepth = networkCount = maxScore;
-            return GetServerIncomeByLength(maxScore);
+            MaxNetworkDepth = networkCount = ansScore;
+            return GetServerIncomeByLength(ansScore);
         }
         #endregion
         private float CalculateBasicCost()
