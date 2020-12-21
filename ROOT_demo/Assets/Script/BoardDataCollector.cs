@@ -369,6 +369,7 @@ namespace ROOT
                     {
                         maxScore = score;
                         maxLength = length;
+                        m_Board.Units.ForEach(unit => unit.InServerGrid = false);
                         GeneratePath(startPoint, vis);
                         foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit().Where(unit => lastLevelDict.ContainsKey(unit)))
                         {
