@@ -640,6 +640,7 @@ namespace ROOT
 
         public void UpdateSideMesh()
         {
+            //?为什么不是实时更新了？
             if (WorldNeighboringData == null) return;
             RotationList.ForEach(ResetConnector);
             ConnectorLocalDir.Values.ForEach(val => val.Connected = false);
