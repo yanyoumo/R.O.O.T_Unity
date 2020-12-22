@@ -93,6 +93,8 @@ namespace ROOT
             }
         }
 
+        private Coroutine animate_Co;
+
         public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
         public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
         
@@ -110,18 +112,6 @@ namespace ROOT
             LevelAsset = new GameAssets();
             UpdateLogicLevelReference();
         }
-
-        //这两个函数是WorldLogic要通过LvlLogic去影响世界/因为Unity的规定。
-        //这样不得不得出的结论就是裁判要兼任神使这一工作（是个隐坑
-        /*internal T WorldLogicRequestInstantiate<T>(T obj) where T : Object
-        {
-            return Instantiate(obj);
-        }
-
-        internal void WorldLogicRequestDestroy(Object obj)
-        {
-            Destroy(obj);
-        }*/
 
         /// <summary>
         /// 需要允许各个Level去自定义如何Link。
@@ -145,7 +135,6 @@ namespace ROOT
             LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
             LevelAsset.CostChart = FindObjectOfType<CostChart>();
             LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
-            //LevelAsset.AirDrop = FindObjectOfType<InfoAirdrop>();
             LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
@@ -173,16 +162,10 @@ namespace ROOT
         protected virtual bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             //这个函数就很接近裁判要做的事儿了。
-            if (currentLevelAsset.GameStateMgr.EndGameCheck())
-            {
-                PendingCleanUp = true;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            if (!currentLevelAsset.GameStateMgr.EndGameCheck()) return false;
+            PendingCleanUp = true;
+            LevelMasterManager.Instance.LevelFinished(LevelAsset);
+            return true;
         }
 
         IEnumerator Animate()
@@ -317,9 +300,9 @@ namespace ROOT
             }
 
             if (!Playing) Playing = true;
-
-            System.Diagnostics.Debug.Assert(LevelAsset.GameBoard != null, nameof(LevelAsset.GameBoard) + " != null");
             _ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+
+            bool? AutoDrive = null;
             bool shouldCycle = false, movedTile = false;
             var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
             var stage = roundGist?.Type ?? StageType.Shop;
@@ -333,16 +316,15 @@ namespace ROOT
                 }
                 BossUpdate();
             }
-
-            bool? AutoDrive = null;
-
-            if (!Animating)
+            
+            if (!Animating)//很可能动画要改成准轮询的，换句话说程序要有能打断动画的“能力”。
             {
+                //Solid_Logic
+                animate_Co = null;
                 LevelAsset.AnimationPendingObj = new List<MoveableBase>();
 
                 // ShouldCycle这个放到WorldLogic里面去了。
-                WorldLogic.UpdateLogic(LevelAsset, in stage, out _ctrlPack, out movedTile,
-                    out var movedCursor,out shouldCycle,out AutoDrive);
+                WorldLogic.UpdateLogic(LevelAsset, in stage, out _ctrlPack, out movedTile, out var movedCursor,out shouldCycle,out AutoDrive);
 
                 if (roundGist.HasValue)
                 {
@@ -388,8 +370,15 @@ namespace ROOT
                     AnimationTimerOrigin = Time.timeSinceLevelLoad;
                     LevelAsset.MovedTileAni = movedTile;
                     LevelAsset.MovedCursorAni = movedCursor;
-                    StartCoroutine(Animate()); //这里完成后会把Animating设回来。
+                    animate_Co=StartCoroutine(Animate()); //这里完成后会把Animating设回来。
                 }
+            }
+            else
+            {
+                //Animation_Logic_Upkeep
+                Debug.Assert(animate_Co != null);
+                //RISK 先凑活放在这儿。这个的确是把Boss阶段诡异的scheduling弄好了，但是……这个还得弄。
+                LevelAsset.GameBoard.UpdateInfoZone(LevelAsset);
             }
 
             if (LevelAsset.HintEnabled)

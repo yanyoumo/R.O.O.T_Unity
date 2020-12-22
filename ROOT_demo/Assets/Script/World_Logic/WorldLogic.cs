@@ -1172,6 +1172,8 @@ namespace ROOT
             currentLevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
         }
 
+        //这个也要拆，实际逻辑和Upkeep要拆开、为了Animation的时候能KeepUp
+        //Boss阶段诡异的时序是因为在此时Animation中的几秒没法做任何事儿。
         public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type, out ControllingPack ctrlPack,
             out bool movedTile, out bool movedCursor, out bool shouldCycle, out bool? autoDrive)
         {
@@ -1188,7 +1190,6 @@ namespace ROOT
             occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
             currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
             currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
-
             #endregion
 
             autoDrive = WorldCycler.NeedAutoDriveStep;
