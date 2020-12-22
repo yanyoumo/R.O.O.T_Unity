@@ -121,7 +121,9 @@ namespace ROOT
         private List<Vector2Int> GetSingleNetworkInfoCollectorZone(Unit unit)
         {
             //TEMP 在这里调整MaxNetworkDepth和tier之间的关系。
-            var circleTier = Math.Max(Mathf.RoundToInt(BoardDataCollector.MaxNetworkDepth / 3.0f), 0);
+            const float networkA = 1.45f;
+            const float networkB = 1.74f;
+            var circleTier = Math.Max(Mathf.RoundToInt(Mathf.Pow(BoardDataCollector.MaxNetworkDepth / networkB, networkA)), 0);
             var zone = Utils.GetPixelateCircle_Tier(circleTier);
             var res = new List<Vector2Int>();
             zone.PatternList.ForEach(vec => res.Add(vec + unit.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));

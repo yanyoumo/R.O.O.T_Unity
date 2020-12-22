@@ -553,6 +553,7 @@ namespace ROOT
             foreach (var currentSideDirection in RotationList)
             {
                 ConnectionData connectionData = new ConnectionData();
+
                 if (GetWorldSpaceUnitSide(currentSideDirection) == SideType.Connection)
                 {
                     connectionData.HasConnector = true;
@@ -576,6 +577,7 @@ namespace ROOT
             }
         }
 
+        [Obsolete]
         private void UpdateDestConnectionSide(ConnectionMeshType connectionMeshType, ref Connector connector)
         {
             if (connectionMeshType == ConnectionMeshType.NoChange) return;
@@ -596,15 +598,9 @@ namespace ROOT
             }
         }
 
-        /// <summary>
-        /// 获得相连的所有Unit
-        /// </summary>
-        /// <returns>所查询的Unit，如果没有相连的则返回零长Unit</returns>
-        public List<Unit> GetConnectedOtherUnit()
-        {
-            return WorldNeighboringData.Values.Where(data => data.Connected).Select(data => data.OtherUnit).ToList();
-        }
-
+        // 获得相连的所有Unit
+        public List<Unit> GetConnectedOtherUnit=>WorldNeighboringData.Values.Where(data => data.Connected).Select(data => data.OtherUnit).ToList();
+        
         private bool SideFilter(RotationDirection dir)
         {
             return dir == RotationDirection.West || dir == RotationDirection.South;
@@ -706,7 +702,8 @@ namespace ROOT
                     var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalFromDir);
                     if (nextUnit != null) nextUnit.SimpleBlink(Utils.GetInvertDirection(SignalFromDir));
                 }
-                StartCoroutine("NextBlinkGap", BlinkDuration);
+
+                StartCoroutine(NextBlinkGap(BlinkDuration));
             }
             else if (UnitCore == CoreType.NetworkCable)
             {
@@ -741,7 +738,7 @@ namespace ROOT
                                 if (nextUnit != null) nextUnit.SimpleBlink(Utils.GetInvertDirection(nextBlinkDir));
                             }
 
-                            StartCoroutine("NextBlinkGap", BlinkDuration);
+                            StartCoroutine(NextBlinkGap(BlinkDuration));
                             break;
                         }
                     }
