@@ -1172,25 +1172,37 @@ namespace ROOT
             currentLevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
         }
 
+        public static void UpkeepLogic(GameAssets currentLevelAsset, in StageType type,bool animating)
+        {
+            //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
+            //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
+            if (type == StageType.Boss&& animating)
+            {
+                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
+            }
+            else
+            {
+                WorldUtils.CleanDestoryer(currentLevelAsset);
+                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
+                //总之稳了后，这个不能这么每帧调用。
+                occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
+                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
+                currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
+            }
+        }
+
         //这个也要拆，实际逻辑和Upkeep要拆开、为了Animation的时候能KeepUp
         //Boss阶段诡异的时序是因为在此时Animation中的几秒没法做任何事儿。
-        public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type, out ControllingPack ctrlPack,
-            out bool movedTile, out bool movedCursor, out bool shouldCycle, out bool? autoDrive)
+        public static void UpdateLogic(GameAssets currentLevelAsset, 
+            in StageType type, out ControllingPack ctrlPack,
+            out bool movedTile, out bool movedCursor, 
+            out bool shouldCycle, out bool? autoDrive)
         {
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = movedCursor = false;
             ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
 
-            #region UpKeep
-
-            //这个Section认为是每帧都调的东西。
-            WorldUtils.CleanDestoryer(currentLevelAsset);
-            //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
-            //总之稳了后，这个不能这么每帧调用。
-            occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
-            currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-            currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
-            #endregion
+            UpkeepLogic(currentLevelAsset, in type, false);//RISK 这个也要弄。
 
             autoDrive = WorldCycler.NeedAutoDriveStep;
 
@@ -1220,7 +1232,6 @@ namespace ROOT
                     movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
 
                     currentLevelAsset.SkillMgr.SkillEnabled = currentLevelAsset.SkillEnabled;
-                    //BUG !!!重大Bug，自动演进的时候不会计Mission的数字。(?)
                     currentLevelAsset.SkillMgr.TriggerSkill(currentLevelAsset, ctrlPack);
                 }
 

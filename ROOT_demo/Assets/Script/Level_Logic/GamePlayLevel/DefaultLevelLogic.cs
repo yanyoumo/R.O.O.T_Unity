@@ -377,8 +377,7 @@ namespace ROOT
             {
                 //Animation_Logic_Upkeep
                 Debug.Assert(animate_Co != null);
-                //RISK 先凑活放在这儿。这个的确是把Boss阶段诡异的scheduling弄好了，但是……这个还得弄。
-                LevelAsset.GameBoard.UpdateInfoZone(LevelAsset);
+                WorldLogic.UpkeepLogic(LevelAsset, in stage, Animating);
             }
 
             if (LevelAsset.HintEnabled)

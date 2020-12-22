@@ -328,8 +328,6 @@ namespace ROOT
         /// <returns>返回有多少个HeatSink格没有被满足，返回0即均满足。</returns>
         public int CheckHeatSink(StageType type)
         {
-
-
             //这里需要把status接进来，然后判是什么阶段的。
             CellStatus targetingStatus;
             switch (type)
