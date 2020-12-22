@@ -85,9 +85,9 @@ namespace ROOT
         }
 
         [Serializable]
-        struct JSONTest
+        struct GameSettingJSON
         {
-            public string test;
+            public int startingMoney;
         }
 
         void Awake()
@@ -169,11 +169,14 @@ namespace ROOT
             }
             LevelLib.Instance.LockInLib();
 
-            JSONTest A=new JSONTest();
-            A.test = "wehuoiwefwefibhujwsedfvhu";
-            var AJson=JsonUtility.ToJson(A);
-            Debug.Log(AJson);
-            //JsonUtility.FromJson("");
+#if !UNITY_EDITOR
+            var gameSetting = new GameSettingJSON {startingMoney = Mathf.RoundToInt(Random.value*100)};
+            FileIOUtility.WriteString(JsonUtility.ToJson(gameSetting), "GameSetting.json");
+
+            var GameSettingString = FileIOUtility.ReadString("GameSetting.json");
+            var gameSettingB = JsonUtility.FromJson<GameSettingJSON>(GameSettingString);
+            Debug.Log(gameSettingB + "::" + gameSettingB.startingMoney);
+#endif
         }
 
         public void GameStart()

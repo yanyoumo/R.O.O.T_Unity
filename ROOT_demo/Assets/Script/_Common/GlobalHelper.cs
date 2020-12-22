@@ -1,7 +1,9 @@
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
@@ -897,6 +899,24 @@ namespace ROOT
             }
 
             return V2toV2Int(normalizedIn * rhs + center);
+        }
+    }
+
+    public class FileIOUtility
+    {
+        public static void WriteString(string Content,string path)
+        {
+            StreamWriter writer = new StreamWriter(path);
+            writer.WriteLine(Content);
+            writer.Close();
+        }
+
+        public static string ReadString(string path)
+        {
+            StreamReader reader = new StreamReader(path);
+            var content = reader.ReadToEnd();
+            reader.Close();
+            return content;
         }
     }
 }
