@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    public class CareerLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
+    public class MonitoringLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         public override void InitLevel()
         {
