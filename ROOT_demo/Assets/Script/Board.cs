@@ -449,6 +449,14 @@ namespace ROOT
 
         #endregion
 
+        public static Vector2Int ClampPosInBoard(Vector2Int pos)
+        {
+            var newPos = pos;
+            newPos.x = Mathf.Clamp(newPos.x, 0, Board.BoardLength - 1);
+            newPos.y = Mathf.Clamp(newPos.y, 0, Board.BoardLength - 1);
+            return newPos;
+        }
+
         public const int BoardLength = 6;
         public int TotalBoardCount => BoardLength * BoardLength;
         private readonly float _boardPhysicalLength = 1.2f;
