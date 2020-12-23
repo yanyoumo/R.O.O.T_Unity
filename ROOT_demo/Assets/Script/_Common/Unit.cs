@@ -25,7 +25,8 @@ namespace ROOT
         public bool Connected;
         public CoreGenre ConnectedToGenre;
         private Unit _otherUnit;
-        public Unit OtherUnit {
+        public Unit OtherUnit
+        {
             get => HasConnector && Connected ? _otherUnit : null;
             set => _otherUnit = value;
         }
@@ -48,7 +49,7 @@ namespace ROOT
         private bool GenerateStationaryArray()
         {
             var srList = currentLevelAsset.ActionAsset.StationaryRateList ?? DefaultStationaryRateList;
-            if (StationaryRateListLastIndex>= srList.Length)
+            if (StationaryRateListLastIndex >= srList.Length)
             {
                 return false;
             }
@@ -96,7 +97,7 @@ namespace ROOT
             }
         }
 
-        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID, int _cost,int tier)
+        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID, int _cost, int tier)
         {
             var go = InitUnitShopCore(core, sides, ID, _cost, tier);
             var unit = go.GetComponentInChildren<Unit>();
@@ -312,8 +313,8 @@ namespace ROOT
         }
 
         [ReadOnly] public RotationDirection SignalFromDir;
-        [ReadOnly] public bool Visited { get; set; } //for scoring purpose: dequeue
-        [ReadOnly] public bool Visiting { get; set; } //for scoring purpose: enqueue
+        [ReadOnly] public bool Visited { get; set; }//for scoring purpose: dequeue
+        [ReadOnly] public bool Visiting { get; set; }//for scoring purpose: enqueue
         [ReadOnly] public int HardDiskVal; //for scoring purpose
         [ReadOnly] public bool InHddGrid { get; set; } //for scoring purpose
         [ReadOnly] public bool InHddSignalGrid; //for scoring purpose
@@ -350,7 +351,8 @@ namespace ROOT
             }
         }
 
-        [HideInInspector] public readonly RotationDirection[] RotationList =
+        [HideInInspector]
+        public readonly RotationDirection[] RotationList =
         {
             RotationDirection.East,
             RotationDirection.North,
@@ -617,7 +619,7 @@ namespace ROOT
             WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
             if (!data.HasConnector) return;
             ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(dir, _unitRotation), out Connector Connector);
-            if (Connector==null) return;
+            if (Connector == null) return;
             Connector.NormalSignalVal = 0;
             Connector.NetworkSignalVal = 0;
             Connector.Hided = true;
