@@ -122,6 +122,8 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
+        public UnitLogicCoreBase LogicCore;
+
         public TextMeshPro BillBoardText;
         public int Cost { get; internal set; } = 0;
 
@@ -495,6 +497,11 @@ namespace ROOT
             Immovable = false;
             ShopBackPlane.gameObject.SetActive(false);
             InitDic();
+
+            if (LogicCore == null)
+            {
+                LogicCore = gameObject.AddComponent<MatrixUnitLogicCore>();
+            }
         }
 
         public override void UpdateTransform(Vector3 pos)
