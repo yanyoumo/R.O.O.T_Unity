@@ -116,7 +116,7 @@ namespace ROOT
                         {
                             var (hardDrive, vis2) = hardDriveQueue.Dequeue();
                             //enumerate the other unvisited units connected with this unit
-                            foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit().Where(
+                            foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit.Where(
                                 unit => IsVis(unit, vis2) == false && unit.Visited == false))
                             {
                                 //network cable: mark as visited; push into network cable BFS queue
@@ -173,7 +173,7 @@ namespace ROOT
                     while (hardDriveQueue.Count != 0)
                     {
                         var (hardDrive, vis2) = hardDriveQueue.Dequeue();
-                        foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit().Where(unit => IsVis(unit, vis2) == false))
+                        foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit.Where(unit => IsVis(unit, vis2) == false))
                         {
                             if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable &&
                                 unitConnectedToHardDrive.Visited == false &&
@@ -263,7 +263,7 @@ namespace ROOT
                 unitPathList.Add(now);
                 now.InServerGrid = true;
                 vis = RemovePath(now, vis);
-                foreach (var otherUnit in now.GetConnectedOtherUnit())
+                foreach (var otherUnit in now.GetConnectedOtherUnit)
                 {
                     if (IsVis(otherUnit, vis))
                     {
@@ -311,7 +311,7 @@ namespace ROOT
             while (hardDriveQueue.Count != 0)
             {
                 var (hardDrive, vis) = hardDriveQueue.Dequeue();
-                foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit().Where(unit => IsVis(unit, vis) == false))
+                foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit.Where(unit => IsVis(unit, vis) == false))
                 {
                     if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable &&
                         unitConnectedToHardDrive.Visited == false)

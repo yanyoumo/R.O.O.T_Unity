@@ -551,35 +551,35 @@ namespace ROOT
         public void UpdateNeighboringData()
         {
             WorldNeighboringData = new Dictionary<RotationDirection, ConnectionData>();
-            if (GameBoard != null)
+            if (GameBoard == null) return;
+            foreach (var currentSideDirection in RotationList)
             {
-                foreach (var currentSideDirection in RotationList)
+                ConnectionData connectionData = new ConnectionData();
+
+                if (GetWorldSpaceUnitSide(currentSideDirection) == SideType.Connection)
                 {
-                    ConnectionData connectionData = new ConnectionData();
-                    if (GetWorldSpaceUnitSide(currentSideDirection) == SideType.Connection)
+                    connectionData.HasConnector = true;
+                    Vector2Int otherUnitPos = GetNeigbourCoord(currentSideDirection);
+                    GameBoard.UnitsGameObjects.TryGetValue(otherUnitPos, out GameObject value);
+                    if (value != null)
                     {
-                        connectionData.HasConnector = true;
-                        Vector2Int otherUnitPos = GetNeigbourCoord(currentSideDirection);
-                        GameBoard.UnitsGameObjects.TryGetValue(otherUnitPos, out GameObject value);
-                        if (value != null)
+                        Unit otherUnit = value.GetComponentInChildren<Unit>();
+                        connectionData.OtherUnit = otherUnit;
+                        connectionData.Connected =
+                            (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(currentSideDirection)) ==
+                             SideType.Connection);
+                        if (connectionData.Connected)
                         {
-                            Unit otherUnit = value.GetComponentInChildren<Unit>();
-                            connectionData.OtherUnit = otherUnit;
-                            connectionData.Connected =
-                                (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(currentSideDirection)) ==
-                                 SideType.Connection);
-                            if (connectionData.Connected)
-                            {
-                                connectionData.ConnectedToGenre = otherUnit.UnitCoreGenre;
-                            }
+                            connectionData.ConnectedToGenre = otherUnit.UnitCoreGenre;
                         }
                     }
-
-                    WorldNeighboringData.Add(currentSideDirection, connectionData);
                 }
+
+                WorldNeighboringData.Add(currentSideDirection, connectionData);
             }
         }
 
+        [Obsolete]
         private void UpdateDestConnectionSide(ConnectionMeshType connectionMeshType, ref Connector connector)
         {
             if (connectionMeshType == ConnectionMeshType.NoChange) return;
@@ -600,15 +600,9 @@ namespace ROOT
             }
         }
 
-        /// <summary>
-        /// 获得相连的所有Unit
-        /// </summary>
-        /// <returns>所查询的Unit，如果没有相连的则返回零长Unit</returns>
-        public List<Unit> GetConnectedOtherUnit()
-        {
-            return WorldNeighboringData.Values.Where(data => data.Connected).Select(data => data.OtherUnit).ToList();
-        }
-
+        // 获得相连的所有Unit
+        public List<Unit> GetConnectedOtherUnit=>WorldNeighboringData.Values.Where(data => data.Connected).Select(data => data.OtherUnit).ToList();
+        
         private bool SideFilter(RotationDirection dir)
         {
             return dir == RotationDirection.West || dir == RotationDirection.South;
@@ -625,13 +619,29 @@ namespace ROOT
             Connector.Hided = true;
         }
 
-        private void SetZeroConnector(RotationDirection dir)
+        private void SetConnector(RotationDirection crtDir, bool ignoreVal = false)
         {
-            //none-bossAuto Case
-            var localRotation = Utils.RotateDirectionBeforeRotation(dir, _unitRotation);
-            ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
-            Connector.NormalSignalVal = 0;
-            Connector.NetworkSignalVal = 0;
+            WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
+            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation),
+                out Connector Connector);
+            Connector.Connected = data.Connected;
+
+            var otherUnit = data.OtherUnit;
+            var ShowHDDLED = InHddSignalGrid && otherUnit.InHddSignalGrid;
+            var HasSolidHDDSigal = (SignalFromDir == crtDir);
+            HasSolidHDDSigal |= (Utils.GetInvertDirection(otherUnit.SignalFromDir) == crtDir);
+            ShowHDDLED &= HasSolidHDDSigal;
+
+            var ShowNetLED = InServerGrid && otherUnit.InServerGrid;
+            ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
+
+            var NormalSignalValtmp = ShowHDDLED ? Math.Min(HardDiskVal, otherUnit.HardDiskVal) : 0;
+            var NetworkSignalValtmp = ShowNetLED ? Math.Min(NetworkVal, otherUnit.NetworkVal) : 0;
+            var shouldHide = !(ShowHDDLED || ShowNetLED);
+
+            Connector.NormalSignalVal = ignoreVal ? 0 : NormalSignalValtmp;
+            Connector.NetworkSignalVal = ignoreVal ? 0 : NetworkSignalValtmp;
+            Connector.Hided = shouldHide;
         }
 
         private bool FilterConnector(RotationDirection dir)
@@ -642,41 +652,11 @@ namespace ROOT
 
         public void UpdateSideMesh()
         {
-            //?为什么不是实时更新了？
             if (WorldNeighboringData == null) return;
             RotationList.ForEach(ResetConnector);
             ConnectorLocalDir.Values.ForEach(val => val.Connected = false);
-            if (WorldCycler.BossStage && !WorldCycler.BossStagePause)
-            {
-                //boss-noneAuto Case
-                RotationList.ForEach(SetZeroConnector);
-                return;
-            }
-
-            foreach (var crtDir in RotationList.Where(FilterConnector))
-            {
-                //none-bossAuto Case
-                WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
-                ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation), out Connector Connector);
-                Connector.Connected = data.Connected;
-
-                var otherUnit = data.OtherUnit;
-                var ShowHDDLED = InHddSignalGrid && otherUnit.InHddSignalGrid;
-                var HasSolidHDDSigal = (SignalFromDir == crtDir);
-                HasSolidHDDSigal |= (Utils.GetInvertDirection(otherUnit.SignalFromDir) == crtDir);
-                ShowHDDLED &= HasSolidHDDSigal;
-
-                var ShowNetLED = InServerGrid && otherUnit.InServerGrid;
-                ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
-
-                var NormalSignalValtmp = ShowHDDLED ? Math.Min(HardDiskVal, otherUnit.HardDiskVal) : 0;
-                var NetworkSignalValtmp = ShowNetLED ? Math.Min(NetworkVal, otherUnit.NetworkVal) : 0;
-                var shouldHide = !(ShowHDDLED || ShowNetLED);
-
-                Connector.NormalSignalVal = NormalSignalValtmp;
-                Connector.NetworkSignalVal = NetworkSignalValtmp;
-                Connector.Hided = shouldHide;
-            }
+            var ignoreVal = WorldCycler.BossStage && !WorldCycler.BossStagePause;
+            RotationList.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
         }
 
         public void UpdateNeighboringDataAndSideMesh()
@@ -724,7 +704,8 @@ namespace ROOT
                     var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalFromDir);
                     if (nextUnit != null) nextUnit.SimpleBlink(Utils.GetInvertDirection(SignalFromDir));
                 }
-                StartCoroutine("NextBlinkGap", BlinkDuration);
+
+                StartCoroutine(NextBlinkGap(BlinkDuration));
             }
             else if (UnitCore == CoreType.NetworkCable)
             {
@@ -759,7 +740,7 @@ namespace ROOT
                                 if (nextUnit != null) nextUnit.SimpleBlink(Utils.GetInvertDirection(nextBlinkDir));
                             }
 
-                            StartCoroutine("NextBlinkGap", BlinkDuration);
+                            StartCoroutine(NextBlinkGap(BlinkDuration));
                             break;
                         }
                     }

@@ -121,7 +121,9 @@ namespace ROOT
         private List<Vector2Int> GetSingleNetworkInfoCollectorZone(Unit unit)
         {
             //TEMP 在这里调整MaxNetworkDepth和tier之间的关系。
-            var circleTier = Math.Max(Mathf.RoundToInt(BoardDataCollector.MaxNetworkDepth / 3.0f), 0);
+            const float networkA = 1.45f;
+            const float networkB = 1.74f;
+            var circleTier = Math.Max(Mathf.RoundToInt(Mathf.Pow(BoardDataCollector.MaxNetworkDepth / networkB, networkA)), 0);
             var zone = Utils.GetPixelateCircle_Tier(circleTier);
             var res = new List<Vector2Int>();
             zone.PatternList.ForEach(vec => res.Add(vec + unit.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
@@ -328,8 +330,6 @@ namespace ROOT
         /// <returns>返回有多少个HeatSink格没有被满足，返回0即均满足。</returns>
         public int CheckHeatSink(StageType type)
         {
-
-
             //这里需要把status接进来，然后判是什么阶段的。
             CellStatus targetingStatus;
             switch (type)
@@ -448,6 +448,14 @@ namespace ROOT
         }
 
         #endregion
+
+        public static Vector2Int ClampPosInBoard(Vector2Int pos)
+        {
+            var newPos = pos;
+            newPos.x = Mathf.Clamp(newPos.x, 0, Board.BoardLength - 1);
+            newPos.y = Mathf.Clamp(newPos.y, 0, Board.BoardLength - 1);
+            return newPos;
+        }
 
         public const int BoardLength = 6;
         public int TotalBoardCount => BoardLength * BoardLength;

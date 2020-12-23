@@ -1,7 +1,9 @@
 ﻿using System;
 using Rewired;
+using Sirenix.Utilities;
 using UnityEngine;
 using CommandDir = ROOT.RotationDirection;
+using Object = UnityEngine.Object;
 
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
 
@@ -196,17 +198,21 @@ namespace ROOT
         private static GameObject _pressedObj = null;
         private static bool _isSinglePress = false;
         private static Vector2Int? startPos;
+
         private static float pressTime = 0;
+
         //Somehow PlayerId 0 is 9999999 NOW!
         //没什么特别的，没有新建Player的SYSTEM系统才是9999999。
         private static int playerID = 0;
         private static readonly Player player = ReInput.players.GetPlayer(playerID);
+
         /// <summary>
         /// 技能系统要从这个地方接入。而且Cycle的管理部分要再整理起来。
         /// 比较蛋疼的是，Cycle完整管理起来，需要有一个前置条件，就是：Animation系统要整理明白。
         /// 就是Cycle系统要和现在耦合挺深的余下系统拆开，再Worldlogic里面再加一个夹层系统。
         ///  </summary>
         private static float _moveValThreadhold = 0.1f;
+
         private static bool GetCommandDir(out CommandDir dir)
         {
             bool anyDir = false;
@@ -238,6 +244,7 @@ namespace ROOT
 
             return anyDir;
         }
+
         private static bool GetCamMovementVec_KB(out Vector2 dir)
         {
             bool anyDir = false;
@@ -287,6 +294,7 @@ namespace ROOT
             {
                 return hitInfo.collider.gameObject;
             }
+
             return null;
         }
 
@@ -296,6 +304,7 @@ namespace ROOT
             {
                 return go.GetComponentInChildren<Unit>();
             }
+
             return null;
         }
 
@@ -364,7 +373,7 @@ namespace ROOT
             //滑动这边，滑动过长会失效，这个也是个很神奇的bug，有空要看看
             //商店的新版流程正在弄。
             //先特么只考虑一个手指的情况。
-            ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
+            ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (Input.touchCount > 0)
             {
                 if (Input.touchCount > 1)
@@ -445,20 +454,20 @@ namespace ROOT
                                                 _holdTimer = 0.0f;
                                                 break;
                                             case TouchPhase.Stationary:
+                                            {
+                                                _holdTimer += Time.deltaTime;
+                                                if (!_holdAntiSpam)
                                                 {
-                                                    _holdTimer += Time.deltaTime;
-                                                    if (!_holdAntiSpam)
+                                                    if (_holdTimer >= _holdThreadhold)
                                                     {
-                                                        if (_holdTimer >= _holdThreadhold)
-                                                        {
-                                                            //Debug.Log("Hold Detected");
-                                                            ctrlPack.SetFlag(ControllingCommand.CycleNext);
-                                                            _holdAntiSpam = true;
-                                                        }
+                                                        //Debug.Log("Hold Detected");
+                                                        ctrlPack.SetFlag(ControllingCommand.CycleNext);
+                                                        _holdAntiSpam = true;
                                                     }
-
-                                                    break;
                                                 }
+
+                                                break;
+                                            }
                                             case TouchPhase.Canceled:
                                             case TouchPhase.Moved:
                                             case TouchPhase.Ended:
@@ -496,6 +505,7 @@ namespace ROOT
                                         ctrlPack.CommandDir = ConvertValToOffset(_moveVal, out var offset);
                                         ctrlPack.NextPos = ctrlPack.CurrentPos + offset;
                                     }
+
                                     ResetSwipeStatus();
                                     break;
                                 case TouchPhase.Canceled:
@@ -512,7 +522,7 @@ namespace ROOT
 
         internal static void GetCommand_Keyboard(GameAssets currentLevelAsset, out ControllingPack ctrlPack)
         {
-            ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
+            ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             var anyDir = GetCommandDir(out var Direction);
             var anyDirAxis = GetCamMovementVec_KB(out var directionAxis);
             if (anyDir)
@@ -611,7 +621,7 @@ namespace ROOT
             //购买和技能：点击。
             //下一回合：
             //Boss阶段暂停：因为时序问题还是键盘。
-            ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
+            ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             GetPlayerMouseOverObject(out var hitInfo2);
             if (idle == false && Board.WorldPosToXZGrid(hitInfo2.point).HasValue)
             {
@@ -664,6 +674,7 @@ namespace ROOT
                 {
                     idle = false;
                 }
+
                 var hit = GetPlayerMouseOverObject(out var hitInfo);
                 //hitInfo.point;
                 if (hit)
@@ -684,6 +695,7 @@ namespace ROOT
                 {
                     _pressedObj = null;
                 }
+
                 holdPos = null;
                 holdTime = 0;
             }
@@ -697,6 +709,7 @@ namespace ROOT
                 _pressedObj = null;
                 _isSinglePress = false;
             }
+
             if (idle == false && holdTime != 0 && Time.time - holdTime >= minHoldTime && holdPos.HasValue &&
                 Utils.GetCustomizedDistance(holdPos.Value, player.controllers.Mouse.screenPosition) < minHoldShift)
             {
@@ -753,6 +766,7 @@ namespace ROOT
             ctrlPack.SetFlag(ControllingCommand.Move);
             Debug.Log("Drag from " + from + " to " + to);
         }
+
         private static void DoublePress(ref ControllingPack ctrlPack, Unit unit)
         {
             ctrlPack.CurrentPos = unit.CurrentBoardPosition;
@@ -790,6 +804,7 @@ namespace ROOT
             {
                 ctrlPack.SetFlag(ControllingCommand.Skill);
             }
+
             return anySkill;
         }
 
@@ -810,6 +825,65 @@ namespace ROOT
             if (anyBuy) ctrlPack.SetFlag(ControllingCommand.Buy);
             return anyBuy;
         }
+
+        public static ControllingPack UpdateInputScheme(
+            GameAssets currentLevelAsset, out bool movedTile,
+            out bool movedCursor, ref bool boughtOnce)
+        {
+            movedTile = false;
+            movedCursor = false;
+
+            var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+            if (StartGameMgr.UseTouchScreen)
+            {
+                WorldController.GetCommand_Touch(currentLevelAsset, out ctrlPack);
+            }
+            else
+            {
+                if (StartGameMgr.UseKeyboard)
+                {
+                    if (player.controllers.Mouse.GetAnyButton())
+                    {
+                        StartGameMgr.SetUseMouse();
+                    }
+                }
+                else if (StartGameMgr.UseMouse)
+                {
+                    if (player.controllers.Keyboard.GetAnyButton())
+                    {
+                        StartGameMgr.SetUseKeyboard();
+                    }
+                }
+
+                if (currentLevelAsset.CursorEnabled)
+                {
+
+                    if (StartGameMgr.UseKeyboard)
+                    {
+                        WorldController.GetCommand_Keyboard(currentLevelAsset, out ctrlPack);
+                    }
+                    else if (StartGameMgr.UseMouse)
+                    {
+                        WorldController.GetCommand_Mouse(currentLevelAsset, out ctrlPack);
+                    }
+                }
+
+                if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
+                {
+                    ctrlPack.SetFlag(ControllingCommand.NextButton);
+                }
+            }
+
+            if (currentLevelAsset.BuyingCursor)
+            {
+                ctrlPack.MaskFlag(ControllingCommand.BuyRandom
+                                  | ControllingCommand.Cancel
+                                  | ControllingCommand.Confirm
+                                  | ControllingCommand.Move);
+            }
+
+            return ctrlPack;
+        }
     }
 
     #endregion
@@ -825,20 +899,11 @@ namespace ROOT
         //RISK
         private static int playerID = 0;
         private static readonly Player player = ReInput.players.GetPlayer(playerID);
-        //对，这种需要影响场景怎么办？
-        //本来是为了保证WRD-LOGIC的独立性（体现形而上学的概念）；
-        //就是弄成了静态类，但是现在看估计得弄成单例？
-        private static Vector2Int ClampPosInBoard(Vector2Int pos, Board gameBoard)
-        {
-            var newPos = pos;
-            newPos.x = Mathf.Clamp(newPos.x, 0, Board.BoardLength - 1);
-            newPos.y = Mathf.Clamp(newPos.y, 0, Board.BoardLength - 1);
-            return newPos;
-        }
 
         private static bool UpdateShopBuy(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
             //先简单一些，只允许随机购买。
+            //现在不是因为简单而购买了；而是设计上随机位置变成重要的一环。
             if (ctrlPack.HasFlag(ControllingCommand.Buy) && currentLevelAsset.Shop.ShopOpening)
             {
                 return currentLevelAsset.Shop.BuyToRandom(ctrlPack.ShopID);
@@ -847,6 +912,7 @@ namespace ROOT
             return false;
         }
 
+        [Obsolete]
         private static void UpdateShopBuy(
             GameAssets currentLevelAsset, ShopBase shopMgr,
             in ControllingPack ctrlPack, bool crashable,
@@ -913,57 +979,6 @@ namespace ROOT
             }
         }
 
-        internal static GameObject CreateIndicator(GameAssets currentLevelAsset, Vector2Int pos, Color col)
-        {
-            GameObject indicator =
-                currentLevelAsset.Owner.WorldLogicRequestInstantiate(currentLevelAsset.CursorTemplate);
-            Cursor indicatorCursor = indicator.GetComponent<Cursor>();
-            indicatorCursor.SetIndMesh();
-            indicatorCursor.InitPosWithAnimation(pos);
-            UpdateCursorPos(currentLevelAsset);
-            indicatorCursor.UpdateTransform(
-                currentLevelAsset.GameBoard.GetFloatTransform(indicatorCursor.CurrentBoardPosition));
-            indicatorCursor.CursorColor = col;
-            return indicator;
-        }
-
-        internal static void CleanDestoryer(GameAssets currentLevelAsset)
-        {
-            if (currentLevelAsset.WarningGo != null)
-            {
-                if (currentLevelAsset.WarningGo.Length > 0)
-                {
-                    foreach (var go in currentLevelAsset.WarningGo)
-                    {
-                        currentLevelAsset.Owner.WorldLogicRequestDestroy(go);
-                        currentLevelAsset.WarningGo = null;
-                    }
-                }
-            }
-        }
-
-        internal static void UpdateDestoryer(GameAssets currentLevelAsset)
-        {
-            //if (currentLevelAsset.WarningDestoryer.GetStatus != WarningDestoryerStatus.Dormant)
-            //TEMP 现在警告-1；
-            if (currentLevelAsset.WarningDestoryer.GetStatus == WarningDestoryerStatus.Striking)
-            {
-                var incomings = currentLevelAsset.WarningDestoryer.NextStrikingPos(out var count);
-                currentLevelAsset.WarningGo = new GameObject[count];
-                for (var i = 0; i < count; i++)
-                {
-                    Color col = currentLevelAsset.WarningDestoryer.GetWaringColor;
-                    currentLevelAsset.WarningGo[i] = CreateIndicator(currentLevelAsset, incomings[i], col);
-                }
-            }
-        }
-
-        internal static void UpdateCursorPos(GameAssets currentLevelAsset)
-        {
-            currentLevelAsset.Cursor.SetPosWithAnimation(ClampPosInBoard(currentLevelAsset.Cursor.CurrentBoardPosition, currentLevelAsset.GameBoard), PosSetFlag.Current);
-            currentLevelAsset.Cursor.SetPosWithAnimation(ClampPosInBoard(currentLevelAsset.Cursor.NextBoardPosition, currentLevelAsset.GameBoard), PosSetFlag.Next);
-        }
-
         internal static void UpdateRotate(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
             if (ctrlPack.HasFlag(ControllingCommand.Rotate))
@@ -1023,85 +1038,17 @@ namespace ROOT
             if (currentLevelAsset.CursorEnabled && movedCursor)
             {
                 currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
-                UpdateCursorPos(currentLevelAsset);
+                WorldUtils.UpdateCursorPos(currentLevelAsset);
                 movedCursor = true;
             }
         }
 
-        internal static ControllingPack UpdateInputScheme(
-            GameAssets currentLevelAsset, out bool movedTile,
-            out bool movedCursor, ref bool boughtOnce)
-        {
-            movedTile = false;
-            movedCursor = false;
-
-            var ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-            if (StartGameMgr.UseTouchScreen)
-            {
-                WorldController.GetCommand_Touch(currentLevelAsset, out ctrlPack);
-            }
-            else
-            {
-                if (StartGameMgr.UseKeyboard)
-                {
-                    if (player.controllers.Mouse.GetAnyButton())
-                    {
-                        StartGameMgr.SetUseMouse();
-                    }
-                }
-                else if (StartGameMgr.UseMouse)
-                {
-                    if (player.controllers.Keyboard.GetAnyButton())
-                    {
-                        StartGameMgr.SetUseKeyboard();
-                    }
-                }
-
-                if (currentLevelAsset.CursorEnabled)
-                {
-
-                    if (StartGameMgr.UseKeyboard)
-                    {
-                        WorldController.GetCommand_Keyboard(currentLevelAsset, out ctrlPack);
-                    }
-                    else if (StartGameMgr.UseMouse)
-                    {
-                        WorldController.GetCommand_Mouse(currentLevelAsset, out ctrlPack);
-                    }
-                }
-
-                if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_NEXT))
-                {
-                    ctrlPack.SetFlag(ControllingCommand.NextButton);
-                }
-            }
-
-            if (currentLevelAsset.BuyingCursor)
-            {
-                ctrlPack.MaskFlag(ControllingCommand.BuyRandom
-                                  | ControllingCommand.Cancel
-                                  | ControllingCommand.Confirm
-                                  | ControllingCommand.Move);
-            }
-
-            return ctrlPack;
-        }
-
         //TEMP 每次修改这两个值的时候才应该改一次。
         private static int lastInCome = -1;
-
         private static int lastCost = -1;
 
         //TEMP 每一步应该才计算一次，帧间时都这么临时存着。
         private static int occupiedHeatSink;
-
-        internal static void UpdateUICurrencyVal(GameAssets currentLevelAsset)
-        {
-            if (currentLevelAsset.CostChart != null)
-            {
-                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
-            }
-        }
 
         /// <summary>
         /// 这个函数主要是将目前场面上的数据反映到UI和玩家的视野中，这个很可能是不能单纯用flow的框架来搞？
@@ -1160,7 +1107,7 @@ namespace ROOT
             currentLevelAsset.TimeLine.Step();
             currentLevelAsset.BoughtOnce = false;
 
-            if (currentLevelAsset.DestroyerEnabled) UpdateDestoryer(currentLevelAsset);
+            if (currentLevelAsset.DestroyerEnabled) WorldUtils.UpdateDestoryer(currentLevelAsset);
             //目前整个游戏的流程框架太过简单了，现在只有流程调用和flag。可能UpdateBoardData这个需要类似基于事件和触发的事件更新(?)
             if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
 
@@ -1181,8 +1128,7 @@ namespace ROOT
             }
         }
 
-        private static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile,
-            in bool movedCursor)
+        private static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
         {
             var shouldCycle = false;
             var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
@@ -1226,24 +1172,37 @@ namespace ROOT
             currentLevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
         }
 
-        public static void UpdateLogic(GameAssets currentLevelAsset, in StageType type, out ControllingPack ctrlPack,
-            out bool movedTile, out bool movedCursor, out bool shouldCycle, out bool? autoDrive)
+        public static void UpkeepLogic(GameAssets currentLevelAsset, in StageType type,bool animating)
+        {
+            //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
+            //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
+            if (type == StageType.Boss&& animating)
+            {
+                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
+            }
+            else
+            {
+                WorldUtils.CleanDestoryer(currentLevelAsset);
+                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
+                //总之稳了后，这个不能这么每帧调用。
+                occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
+                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
+                currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
+            }
+        }
+
+        //这个也要拆，实际逻辑和Upkeep要拆开、为了Animation的时候能KeepUp
+        //Boss阶段诡异的时序是因为在此时Animation中的几秒没法做任何事儿。
+        public static void UpdateLogic(GameAssets currentLevelAsset, 
+            in StageType type, out ControllingPack ctrlPack,
+            out bool movedTile, out bool movedCursor, 
+            out bool shouldCycle, out bool? autoDrive)
         {
             currentLevelAsset.DeltaCurrency = 0.0f;
             movedTile = movedCursor = false;
             ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
 
-            #region UpKeep
-
-            //这个Section认为是每帧都调的东西。
-            CleanDestoryer(currentLevelAsset);
-            //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
-            //总之稳了后，这个不能这么每帧调用。
-            occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
-            currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-            currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
-
-            #endregion
+            UpkeepLogic(currentLevelAsset, in type, false);//RISK 这个也要弄。
 
             autoDrive = WorldCycler.NeedAutoDriveStep;
 
@@ -1255,7 +1214,7 @@ namespace ROOT
             {
                 #region UserIO
 
-                ctrlPack = UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor,
+                ctrlPack = WorldController.UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor,
                     ref currentLevelAsset._boughtOnce);
 
                 if (currentLevelAsset.InputEnabled)
@@ -1273,7 +1232,6 @@ namespace ROOT
                     movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
 
                     currentLevelAsset.SkillMgr.SkillEnabled = currentLevelAsset.SkillEnabled;
-                    //BUG !!!重大Bug，自动演进的时候不会计Mission的数字。(?)
                     currentLevelAsset.SkillMgr.TriggerSkill(currentLevelAsset, ctrlPack);
                 }
 
@@ -1331,6 +1289,65 @@ namespace ROOT
             shouldCycle = (autoDrive.HasValue) || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
 
             #endregion
+        }
+    }
+
+    #endregion
+
+    #region WorldUtil
+
+    //是为了进一步解耦，和一般的Utils只能基于基础数学不同，这个允许基于游戏逻辑和游戏制度。
+    public static class WorldUtils //WORLD-UTILS
+    {
+        public static GameObject CreateIndicator(GameAssets currentLevelAsset, Vector2Int pos, Color col, bool playerCursor = false)
+        {
+            var indicator = Object.Instantiate(currentLevelAsset.CursorTemplate);
+            var indicatorCursor = indicator.GetComponent<Cursor>();
+            indicatorCursor.SetIndMesh();
+            indicatorCursor.InitPosWithAnimation(pos);
+            if (playerCursor)
+            {
+                UpdateCursorPos(currentLevelAsset);
+            }
+            indicatorCursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransform(indicatorCursor.CurrentBoardPosition));
+            indicatorCursor.CursorColor = col;
+            return indicator;
+        }
+
+        public static void UpdateCursorPos(GameAssets currentLevelAsset)
+        {
+            currentLevelAsset.Cursor.SetPosWithAnimation(Board.ClampPosInBoard(currentLevelAsset.Cursor.CurrentBoardPosition), PosSetFlag.Current);
+            currentLevelAsset.Cursor.SetPosWithAnimation(Board.ClampPosInBoard(currentLevelAsset.Cursor.NextBoardPosition), PosSetFlag.Next);
+        }
+
+        public static void UpdateDestoryer(GameAssets currentLevelAsset)
+        {
+            //if (currentLevelAsset.WarningDestoryer.GetStatus != WarningDestoryerStatus.Dormant)
+            //TEMP 现在警告-1；
+            if (currentLevelAsset.WarningDestoryer.GetStatus == WarningDestoryerStatus.Striking)
+            {
+                var incomings = currentLevelAsset.WarningDestoryer.NextStrikingPos(out var count);
+                currentLevelAsset.WarningGo = new GameObject[count];
+                for (var i = 0; i < count; i++)
+                {
+                    Color col = currentLevelAsset.WarningDestoryer.GetWaringColor;
+                    currentLevelAsset.WarningGo[i] = WorldUtils.CreateIndicator(currentLevelAsset, incomings[i], col, true);
+                }
+            }
+        }
+
+        public static void CleanDestoryer(GameAssets currentLevelAsset)
+        {
+            if (currentLevelAsset.WarningGo == null || currentLevelAsset.WarningGo.Length <= 0) return;
+            currentLevelAsset.WarningGo.ForEach(go => Object.Destroy(go));
+            currentLevelAsset.WarningGo = null;
+        }
+
+        // ReSharper disable once InconsistentNaming
+        public static void UpdateUICurrencyVal(GameAssets currentLevelAsset)
+        {
+            if (currentLevelAsset.CostChart == null) return;
+            currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
         }
     }
 
