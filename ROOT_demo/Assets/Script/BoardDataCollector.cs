@@ -335,72 +335,67 @@ namespace ROOT
         public float CalculateServerScore(out int networkCount)
         {
             int maxCount = Board.BoardLength * Board.BoardLength;
-            var ansScore = Int32.MinValue;
-            var ansLength = maxCount;
+            var maxScore = Int32.MinValue;
+            var maxLength = maxCount;
             foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
             {
-                var maxLength = maxCount;
-                var maxScore = Int32.MinValue;
                 var lastLevelDict = new Dictionary<Unit, networkCableStatus>();
-                m_Board.Units.ForEach(unit => unit.InServerGrid = unit.Visited = unit.Visiting = false);
+                var thisLevelDict = new Dictionary<Unit, networkCableStatus>();
+                m_Board.Units.ForEach(unit => unit.Visited = unit.Visiting = false);
                 startPoint.Visiting = true;
                 var networkCableQueue = new Queue<networkCableStatus>();
                 networkCableQueue.Enqueue(new networkCableStatus(startPoint, 0, 0, AddPath(startPoint, 0ul)));
                 while (networkCableQueue.Count != 0)
                 {
                     var (networkCable, length, score, vis) = networkCableQueue.Dequeue();
-                    if (lastLevelDict.Count > 0 &&
-                        length > lastLevelDict.First().Value.Item2)
+                    if (thisLevelDict.Count > 0 &&
+                        length > thisLevelDict.First().Value.Item2)
                     {
-                        lastLevelDict = new Dictionary<Unit, networkCableStatus>
+                        lastLevelDict = thisLevelDict;
+                        thisLevelDict = new Dictionary<Unit, networkCableStatus>
                         {
                             {networkCable, new networkCableStatus(networkCable, length, score, vis)}
                         };
                     }
                     else
-                        lastLevelDict.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
+                        thisLevelDict.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
                     if (length > maxLength)
                         break;
                     networkCable.Visited = true;
+                    networkCable.Visiting = false;
                     var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
                     hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
                     if (FindNextLevelNetworkCable(networkCableQueue, hardDriveQueue, length, score) &&
-                        (length < maxLength && length != 0) || (length == maxLength && score > maxScore))
+                        ((length < maxLength && length != 0) || length == maxLength))
                     {
-                        maxScore = score;
-                        maxLength = length;
-                        m_Board.Units.ForEach(unit => unit.InServerGrid = false);
-                        GeneratePath(startPoint, vis);
-                        foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit.Where(unit => lastLevelDict.ContainsKey(unit)))
+                        if (length < maxLength || (length == maxLength && score > maxScore))
+                        {
+                            maxScore = score;
+                            maxLength = length;
+                            m_Board.Units.ForEach(unit => unit.InServerGrid = false);
+                            GeneratePath(startPoint, vis);
+                        }
+
+                        foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit().Where(unit => lastLevelDict.ContainsKey(unit)))
                         {
                             var lastNodeButOne = lastLevelDict[unitConnectedToLastNode];
                             if (PathContains(vis, lastNodeButOne.Item4) == false &&
                                 lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable) > maxScore)
                             {
                                 maxScore = lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable);
+                                m_Board.Units.ForEach(unit => unit.InServerGrid = false);
                                 GeneratePath(startPoint, AddPath(networkCable, lastNodeButOne.Item4));
                             }
                         }
                     }
                 }
-
-                Debug.Log("start:" + startPoint.CurrentBoardPosition + "length:" + maxLength + "score:" + maxScore);
-                if (maxLength < ansLength)
-                {
-                    ansLength = maxLength;
-                    ansScore = maxScore;
-                }
-                else if (maxLength == ansLength)
-                {
-                    ansScore = Math.Max(ansScore, maxScore);
-                }
             }
-            if (ansLength == maxCount)
+            if (maxLength == maxCount)
             {
-                ansLength = ansScore = 0;
+                maxLength = maxScore = 0;
             }
-            MaxNetworkDepth = networkCount = ansScore;
-            return GetServerIncomeByLength(ansScore);
+            MaxNetworkDepth = networkCount = maxScore;
+            return GetServerIncomeByLength(maxScore);
         }
         #endregion
         private float CalculateBasicCost()
