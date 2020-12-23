@@ -376,7 +376,7 @@ namespace ROOT
                             GeneratePath(startPoint, vis);
                         }
 
-                        foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit().Where(unit => lastLevelDict.ContainsKey(unit)))
+                        foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit.Where(unit => lastLevelDict.ContainsKey(unit)))
                         {
                             var lastNodeButOne = lastLevelDict[unitConnectedToLastNode];
                             if (PathContains(vis, lastNodeButOne.Item4) == false &&
