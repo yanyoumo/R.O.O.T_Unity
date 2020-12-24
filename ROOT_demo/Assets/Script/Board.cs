@@ -626,16 +626,6 @@ namespace ROOT
             return (UnitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
         }
 
-        /*public void BoardWorldPosToXZGridTest()
-        {
-            var randomCount = Random.Range(10, 50);
-            for (int i = 0; i < randomCount; i++)
-            {
-                var res = Board.WorldPosToXZGrid(Random.insideUnitCircle * 10f);
-                Debug.Log(res);
-            }
-        }*/
-
         void Awake()
         {
             UnitsGameObjects = new Dictionary<Vector2Int, GameObject>();
@@ -839,6 +829,11 @@ namespace ROOT
                     }
                 }
             }
+        }
+
+        public int CalculateTotalIncomes()
+        {
+            return Units.Where(unit => unit.IsSource).Sum(unit => unit.LogicCore.CalScore());
         }
     }
 }

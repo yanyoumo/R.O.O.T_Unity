@@ -7,15 +7,10 @@ using UnityEngine;
 namespace ROOT
 {
     using networkCableStatus = Tuple<Unit, int, int, ulong>;
-    public struct ScoreContext
-    {
-        public SideType ConnectionType;
-        public Func<Unit, CoreType, float, bool> ActionOnUnitUponVisit;
-        public Func<Unit, RotationDirection, SideType, bool> ConnectionRequirement;
-    }
 
     public partial class BoardDataCollector : MonoBehaviour
     {
+       
         public static int MaxNormalDepth;
         public static int MaxNetworkDepth;
 
@@ -86,10 +81,10 @@ namespace ROOT
             return score;
         }
 
-        List<Unit> FindEndLeafPoint()
+        private List<Unit> FindEndLeafPoint()
         {
             var res = new List<Unit>();
-            //vidited: dequeued
+            //visited: dequeued
             //visiting: in queue
             m_Board.Units.ForEach(unit => unit.InServerGrid = unit.Visited = unit.Visiting = false);
             foreach (var startPoint in m_Board.FindUnitWithCoreType(CoreType.Server))
@@ -145,6 +140,8 @@ namespace ROOT
             }
             return res;
         }
+
+        [Obsolete]
         public List<List<Unit>> CalculateProcessorScoreFindSetA()
         {
             int maxCount = Board.BoardLength * Board.BoardLength;
@@ -254,7 +251,7 @@ namespace ROOT
         //  3、寻找最长距离时，如果信号距离相等，则选择其中物理距离较短的（平均信号/物理密度较高的那个）。
         //  4、若信号距离相等、且密度相等，则随便选择一条。
         //并且对本系列函数补充部分注释。
-        public List<Unit> GeneratePath(Unit start, ulong vis)
+        private List<Unit> GeneratePath(Unit start, ulong vis)
         {
             var unitPathList = new List<Unit>();
             var now = start;
@@ -277,32 +274,32 @@ namespace ROOT
             return unitPathList;
         }
 
-        public ulong UnitToBit64(Unit now)
+        private ulong UnitToBit64(Unit now)
         {
             return 1ul << Utils.UnrollVector2Int(now.CurrentBoardPosition, Board.BoardLength);
         }
 
-        public bool IsVis(Unit now, ulong vis)
+        private bool IsVis(Unit now, ulong vis)
         {
             return (vis & UnitToBit64(now)) != 0ul;
         }
 
-        public ulong AddPath(Unit now, ulong vis)
+        private ulong AddPath(Unit now, ulong vis)
         {
             return vis ^ UnitToBit64(now);
         }
 
-        public ulong RemovePath(Unit now, ulong vis)
+        private ulong RemovePath(Unit now, ulong vis)
         {
             return AddPath(now, vis);
         }
 
-        public static bool PathContains(ulong a, ulong b)
+        private static bool PathContains(ulong a, ulong b)
         {
             return (a & b) == b;
         }
 
-        public bool FindNextLevelNetworkCable(Queue<networkCableStatus> networkCableQueue,
+        private bool FindNextLevelNetworkCable(Queue<networkCableStatus> networkCableQueue,
                                             Queue<Tuple<Unit, ulong>> hardDriveQueue,
                                             int length,
                                             int score)
@@ -332,6 +329,7 @@ namespace ROOT
             }
             return isLast;
         }
+
         public float CalculateServerScore(out int networkCount)
         {
             int maxCount = Board.BoardLength * Board.BoardLength;
@@ -410,7 +408,7 @@ namespace ROOT
 
         //这个返回的也是正数。
         //Tokenize后，这个逻辑要换。
-        public float CalculateCost()
+        private float CalculateCost()
         {
             return CalculateTieredCost();
             //return CalculateBasicCost();

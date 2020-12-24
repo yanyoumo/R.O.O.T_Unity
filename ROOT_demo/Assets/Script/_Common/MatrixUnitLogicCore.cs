@@ -6,9 +6,9 @@ namespace ROOT
 {
     public class MatrixUnitLogicCore : UnitLogicCoreBase
     {
-        public override int CalScore()
+        public override int CalScore(out int driverCountInt)
         {
-            throw new System.NotImplementedException();
+            throw new System.NotImplementedException("MatrixUnitLogicCore");
         }
     }
 }

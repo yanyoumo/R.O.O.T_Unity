@@ -6,6 +6,10 @@ namespace ROOT
 {
     public abstract class UnitLogicCoreBase : MonoBehaviour
     {
-        public abstract int CalScore();
+        public int CalScore()
+        {
+            return CalScore(out var a);
+        }
+        public abstract int CalScore(out int hardwareCount);
     }
 }
