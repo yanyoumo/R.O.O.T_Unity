@@ -38,28 +38,28 @@ namespace ROOT
         public GameObject Display;
         public Mesh ScrStub;
         public Mesh DestStub;
-        private int _normalSignalVal;
-        private int _networkSignalVal;
+        private int _signalAVal;
+        private int _signalBVal;
 
-        public int NormalSignalVal
+        public int Signal_A_Val
         {
             set
             {
                 var val = value;
-                _normalSignalVal = val;
+                _signalAVal = val;
                 SignalAArray.Val = val;
             }
-            get => _normalSignalVal;
+            get => _signalAVal;
         }
-        public int NetworkSignalVal
+        public int Signal_B_Val
         {
             set
             {
                 var val = value;
-                _networkSignalVal = val;
+                _signalBVal = val;
                 SignalBArray.Val = val;
             }
-            get => _networkSignalVal;
+            get => _signalBVal;
         }
 
         public LEDArray SignalAArray;

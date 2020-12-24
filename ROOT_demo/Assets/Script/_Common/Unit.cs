@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace ROOT
 {
@@ -123,7 +124,7 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
-        public UnitLogicCoreBase LogicCore;
+        public UnitSignalCoreBase SignalCore;
 
         public TextMeshPro BillBoardText;
         public int Cost { get; internal set; } = 0;
@@ -368,8 +369,8 @@ namespace ROOT
         {
             connector.UseScrVersion = (UnitCoreGenre == CoreGenre.Source);
             connector.gameObject.SetActive(sideType == SideType.Connection);
-            connector.NormalSignalVal = 0;
-            connector.NetworkSignalVal = 0;
+            connector.Signal_A_Val = 0;
+            connector.Signal_B_Val = 0;
         }
 
         //North,South,West,East
@@ -487,18 +488,24 @@ namespace ROOT
 
             UpdateSideMesh();
 
-            if (LogicCore == null && UnitCoreGenre == CoreGenre.Source)
+            if (SignalCore == null)
             {
+                Type signalCoreType = typeof(Object);
                 switch (UnitCore)
                 {
                     //TEMP 这个应该用Lib配置去弄，现在先这样。
+                    case CoreType.Processor:
                     case CoreType.HardDrive:
-                        LogicCore = gameObject.AddComponent<MatrixUnitLogicCore>();
+                        signalCoreType = SignalMasterMgr.Instance.SignalUnitCore(SignalType.Matrix);
                         break;
                     case CoreType.Server:
-                        LogicCore = gameObject.AddComponent<ArrayUnitLogicCore>();
+                    case CoreType.NetworkCable:
+                        signalCoreType = SignalMasterMgr.Instance.SignalUnitCore(SignalType.Scan);
                         break;
                 }
+
+                SignalCore = gameObject.AddComponent(signalCoreType) as UnitSignalCoreBase;
+                SignalCore.Owner = this;
             }
         }
 
@@ -630,8 +637,8 @@ namespace ROOT
             if (!data.HasConnector) return;
             ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(dir, _unitRotation), out Connector Connector);
             if (Connector == null) return;
-            Connector.NormalSignalVal = 0;
-            Connector.NetworkSignalVal = 0;
+            Connector.Signal_A_Val = 0;
+            Connector.Signal_B_Val = 0;
             Connector.Hided = true;
         }
 
@@ -665,8 +672,8 @@ namespace ROOT
             var NetworkSignalValtmp = ShowNetLED ? Math.Min(NetworkVal, otherUnit.NetworkVal) : 0;
             var shouldHide = !(ShowHDDLED || ShowNetLED);
 
-            Connector.NormalSignalVal = ignoreVal ? 0 : NormalSignalValtmp;
-            Connector.NetworkSignalVal = ignoreVal ? 0 : NetworkSignalValtmp;
+            Connector.Signal_A_Val = ignoreVal ? 0 : NormalSignalValtmp;
+            Connector.Signal_B_Val = ignoreVal ? 0 : NetworkSignalValtmp;
             Connector.Hided = shouldHide;
         }
 

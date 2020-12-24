@@ -833,7 +833,7 @@ namespace ROOT
 
         public int CalculateTotalIncomes()
         {
-            return Units.Where(unit => unit.IsSource).Sum(unit => unit.LogicCore.CalScore());
+            return Units.Where(unit => unit.IsSource).Sum(unit => unit.SignalCore.CalScore());
         }
     }
 }
