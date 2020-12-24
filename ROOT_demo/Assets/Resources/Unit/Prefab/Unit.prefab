@@ -1373,7 +1373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729dec68926cbf34da144e2b436836dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LogicCore: {fileID: 0}
+  SignalCore: {fileID: 0}
   BillBoardText: {fileID: 8761583895662260726}
   TierLEDs: {fileID: 814975058593057325}
   TierTag: {fileID: 1445302186819268858}
