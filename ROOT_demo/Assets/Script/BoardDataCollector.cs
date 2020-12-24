@@ -260,7 +260,10 @@ namespace ROOT
             var now = start;
             while (vis != 0ul)
             {
-                unitPathList.Add(now);
+                if (now.UnitCore == CoreType.NetworkCable)
+                {
+                    unitPathList.Add(now);
+                }
                 now.InServerGrid = true;
                 vis = RemovePath(now, vis);
                 foreach (var otherUnit in now.GetConnectedOtherUnit)
@@ -273,6 +276,7 @@ namespace ROOT
                 }
             }
             var length = unitPathList.Count;
+            start.ServerDepth = length + 1;
             unitPathList.ForEach(unit => unit.ServerDepth = length--);
             return unitPathList;
         }
