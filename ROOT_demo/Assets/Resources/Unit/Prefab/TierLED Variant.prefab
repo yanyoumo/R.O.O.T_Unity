@@ -9,8 +9,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2080913516168633956, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
         type: 3}
-      propertyPath: TurnOnColor.r
-      value: 1
+      propertyPath: TurnOnColor.b
+      value: 0.39308167
       objectReference: {fileID: 0}
     - target: {fileID: 2080913516168633956, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
         type: 3}
@@ -19,13 +19,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2080913516168633956, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
         type: 3}
-      propertyPath: TurnOnColor.b
-      value: 0.39308167
+      propertyPath: TurnOnColor.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2155355002307578729, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
         type: 3}
       propertyPath: m_Name
-      value: TierLED
+      value: TierLED Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7401303076406112037, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7401303076406112037, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
         type: 3}
@@ -44,6 +49,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7401303076406112037, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7401303076406112037, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
@@ -56,16 +66,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7401303076406112037, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7401303076406112037, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7401303076406112037, guid: 8a605329d56dcfa43bdb06f1e2c1c695,
         type: 3}

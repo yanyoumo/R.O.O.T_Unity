@@ -130,7 +130,6 @@ MonoBehaviour:
   cross: {fileID: 2100000, guid: 227a1b39d2363c14aabe27d2b8be6397, type: 2}
   CheckBox: {fileID: 599161013773063219}
   content: {fileID: 5743664745128122592}
-  test: 1
 --- !u!1 &9005744737667679260
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,5 +298,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 506792364439489954}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0

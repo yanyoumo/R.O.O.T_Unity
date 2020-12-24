@@ -250,6 +250,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 105720844}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!1 &415268039
@@ -451,6 +452,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 454919964}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!1 &824994238
@@ -814,6 +816,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1256077809}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!1 &1340575339
@@ -985,6 +988,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1340575341}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!1 &1381206239
@@ -1150,13 +1154,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dcad34fe12424641a4a997ded36af3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShopCoverRoot: {fileID: 4051117213003334943}
   UnitTemplate: {fileID: 4688034594746405584, guid: 44794b1f4e158b24791064bd426e575e,
     type: 3}
   GameBoard: {fileID: 0}
+  excludedTypes: 
+  ShopCoverRoot: {fileID: 4051117213003334943}
   PlacementPosA: {fileID: 415268040}
   PlacementPosB: {fileID: 853165654}
-  excludedTypes: 
 --- !u!1 &6195419709708319192
 GameObject:
   m_ObjectHideFlags: 0

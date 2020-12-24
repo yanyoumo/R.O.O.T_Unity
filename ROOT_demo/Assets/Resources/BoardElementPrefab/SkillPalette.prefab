@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef0f72bfa1c10ef499d2b48122b54c65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SkillID: 0
   SklType: 0
   SkillTag: {fileID: 3501529039856494807}
   SkillIcon: {fileID: 3547738720659014793}
@@ -248,6 +249,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 3501529039856494806}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!1 &7947219447578245848

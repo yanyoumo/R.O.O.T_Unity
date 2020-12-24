@@ -43,6 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17ac01c6d39166c42b74025262f0606c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CursorTemplateIo: {fileID: 6636971623283588989, guid: d888cb50120172047abb6039d9bf53be,
-    type: 3}
-  GameBoardIo: {fileID: 0}
+  IsTutorialLevel: 0
