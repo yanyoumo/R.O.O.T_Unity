@@ -10,5 +10,8 @@ using UnityEngine.UI;
 
 namespace ROOT
 {
-
+    public class TutorialMgr : MonoBehaviour
+    {
+        //STUB
+    }
 }
