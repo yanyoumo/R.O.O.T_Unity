@@ -258,12 +258,14 @@ namespace ROOT
         {
             var unitPathList = new List<Unit>();
             var now = start;
+            int cnt = 0;
             while (vis != 0ul)
             {
                 if (now.UnitCore == CoreType.NetworkCable)
                 {
-                    unitPathList.Add(now);
+                    cnt += now.Tier;
                 }
+                unitPathList.Add(now);
                 now.InServerGrid = true;
                 vis = RemovePath(now, vis);
                 foreach (var otherUnit in now.GetConnectedOtherUnit)
@@ -276,8 +278,14 @@ namespace ROOT
                 }
             }
             var length = unitPathList.Count;
-            start.ServerDepth = length + 1;
-            unitPathList.ForEach(unit => unit.ServerDepth = length--);
+            foreach (var unit in unitPathList)
+            {
+                unit.ServerDepth = cnt;
+                if (unit.UnitCore == CoreType.NetworkCable)
+                {
+                    cnt -= unit.Tier;
+                }
+            }
             return unitPathList;
         }
 
