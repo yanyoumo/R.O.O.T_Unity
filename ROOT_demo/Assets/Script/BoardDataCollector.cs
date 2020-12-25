@@ -404,7 +404,8 @@ namespace ROOT
             }
             if (maxLength == maxCount)
             {
-                maxLength = maxScore = 0;
+                m_Board.Units.ForEach(unit => unit.InServerGrid = false);
+                maxScore = 0;
             }
             MaxNetworkDepth = networkCount = maxScore;
             return GetServerIncomeByLength(maxScore);
