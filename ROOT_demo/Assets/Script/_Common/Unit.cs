@@ -666,6 +666,8 @@ namespace ROOT
             ShowHDDLED &= HasSolidHDDSigal;
 
             var ShowNetLED = InServerGrid && otherUnit.InServerGrid;
+            //这快儿是有问题的，主要是因为之前为了避免绕近道，强制一次一步、但是这么设计没法根据Tier调整数据。
+            //可能有需要ServerDepth和HardwareDepth两个平行数据。再否则就是类似阵列信号那边，有一个FromDir。
             ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
 
             var NormalSignalValtmp = ShowHDDLED ? Math.Min(HardDiskVal, otherUnit.HardDiskVal) : 0;
