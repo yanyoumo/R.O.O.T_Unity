@@ -645,8 +645,15 @@ namespace ROOT
         //对，仔细想下，如果需要搞，这里的东西也需要抽象出来。
         //包括Connector本身的设计也需要抽象。
         //现在Connector不能是：有一个network灯、一个hardware灯。
-                   //而需要是：有两个通用的灯。
+        //而需要是：有两个通用的灯。
         //其实为了添加新的Unit，除了Asset部分、所有现有矩阵和扫描相关的代码都得抽象掉。
+
+        //这块儿的代码还可以进行抽象出来、理论上可以：
+        //这里的代码需要遍历所有的信号类型（因为所有接口应该可以传送所有信号）。
+        //可以把所有的LED具体显示逻辑（661~2行）可以挂在UnitLogicBase上面变成静态函数。
+        //利用lib系统的设计，这里需要能够遍历UnitLogicBase中所有对应静态函数来计分。
+        //当然、LED上面能不能显示那么多是另一回事、抽象框架设计出来后，都会好一些。
+
         private void SetConnector(RotationDirection crtDir, bool ignoreVal = false)
         {
             WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
@@ -655,11 +662,7 @@ namespace ROOT
             Connector.Connected = data.Connected;
 
             var otherUnit = data.OtherUnit;
-            //这块儿的代码还可以进行抽象出来、理论上可以：
-            //这里的代码需要遍历所有的信号类型（因为所有接口应该可以传送所有信号）。
-            //可以把所有的LED具体显示逻辑（661~2行）可以挂在UnitLogicBase上面变成静态函数。
-            //利用lib系统的设计，这里需要能够遍历UnitLogicBase中所有对应静态函数来计分。
-            //当然、LED上面能不能显示那么多是另一回事、抽象框架设计出来后，都会好一些。
+
             var ShowHDDLED = InHddSignalGrid && otherUnit.InHddSignalGrid;
             var HasSolidHDDSigal = (SignalFromDir == crtDir);
             HasSolidHDDSigal |= (Utils.GetInvertDirection(otherUnit.SignalFromDir) == crtDir);
