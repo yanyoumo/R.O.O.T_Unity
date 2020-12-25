@@ -41,6 +41,7 @@ namespace ROOT
             iPadPro4Gen,//2732x2048-1.33-4:3
         }*/
 
+        public GameObject SignalMasterRoot;
         public LevelActionAssetLib TutorialActionAssetLib;
         public LevelActionAssetLib ClassicGameActionAssetLib;
         public LevelActionAssetLib CareerGameActionAssetLib;
@@ -168,7 +169,7 @@ namespace ROOT
                 LevelLib.Instance.CareerActionAssetList[i] = tmp;
             }
             LevelLib.Instance.LockInLib();
-
+            //SignalMasterRoot
 #if !UNITY_EDITOR
             var gameSetting = new GameSettingJSON {startingMoney = Mathf.RoundToInt(Random.value*100)};
             FileIOUtility.WriteString(JsonUtility.ToJson(gameSetting), "GameSetting.json");

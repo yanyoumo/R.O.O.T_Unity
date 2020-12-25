@@ -57,6 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -81,6 +82,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &6702503993503829438
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -91,7 +93,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
@@ -107,5 +109,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60548856bc1ef56499500cc6c61d9abf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AirDrop: {fileID: 0}
+  LFLocator: {fileID: 0}
+  URLocator: {fileID: 0}
+  HeatSinkPatterns: {fileID: 0}
   UnitTemplate: {fileID: 4688034594746405584, guid: 44794b1f4e158b24791064bd426e575e,
     type: 3}
+  BoardGridTemplate: {fileID: 0}
+  BoardGridRoot: {fileID: 0}
+  BoardGridZeroing: {fileID: 0}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4449706927188418238}
   - component: {fileID: 1515159002637636608}
   m_Layer: 0
-  m_Name: CareerGameLevelLogicPrefab
+  m_Name: MonitoringLevelLogicPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

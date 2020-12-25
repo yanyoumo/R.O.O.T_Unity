@@ -12,6 +12,35 @@ using Vector2 = UnityEngine.Vector2;
 
 namespace ROOT
 {
+    public static class EditorUtils
+    {
+        [MenuItem("Utils/Reserialize all prefabs")]
+        private static void onClick_ReserializeAllPrefabs()
+        {
+            foreach (string _prefabPath in GetAllPrefabs())
+            {
+                GameObject _prefabAsset = AssetDatabase.LoadAssetAtPath<GameObject>(_prefabPath);
+                if (!PrefabUtility.IsPartOfImmutablePrefab(_prefabAsset))
+                {
+                    PrefabUtility.SavePrefabAsset(_prefabAsset);
+                }
+            }
+        }
+
+        public static string[] GetAllPrefabs()
+        {
+            List<string> _prefabPaths = new List<string>();
+            foreach (string _paths in AssetDatabase.GetAllAssetPaths())
+            {
+                if (_paths.Contains(".prefab"))
+                {
+                    _prefabPaths.Add(_paths);
+                }
+            }
+            return _prefabPaths.ToArray();
+        }
+    }
+
     public static class StaticTagName
     {
         public static readonly string TAG_NAME_UNIT = "Unit";

@@ -168,6 +168,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 218689900}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!1 &3159655933326008868
@@ -419,6 +420,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 3159655933966893565}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!1 &3159655934193895929
@@ -467,5 +469,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 270a0f38281a09546b24a4b70c18850b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: {fileID: 3159655933966893554}
-  Val: 0
+  Currency: {fileID: 0}
+  Incomes: {fileID: 0}

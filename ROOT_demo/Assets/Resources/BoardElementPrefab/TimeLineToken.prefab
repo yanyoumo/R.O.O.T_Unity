@@ -229,6 +229,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 4319205782969983411}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!1 &4375676578673643783
@@ -375,23 +376,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
-  Token:
-  - TokenID: 0
-    type: 0
-    RequireAmount: 0
-    Range: {x: 0, y: 0}
-  - TokenID: 0
-    type: 0
-    RequireAmount: 0
-    Range: {x: 0, y: 0}
-  - TokenID: 0
-    type: 0
-    RequireAmount: 0
-    Range: {x: 0, y: 0}
-  - TokenID: 0
-    type: 0
-    RequireAmount: 0
-    Range: {x: 0, y: 0}
   MarkerID: 0
   QuadTemplate: {fileID: 9058086274939430006, guid: 6382cf56453cde94b856da3b89a5d878,
     type: 3}
@@ -566,5 +550,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 7024454004587039180}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0

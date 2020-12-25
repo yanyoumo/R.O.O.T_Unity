@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace ROOT
 {
@@ -123,6 +124,8 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
+        public UnitSignalCoreBase SignalCore;
+
         public TextMeshPro BillBoardText;
         public int Cost { get; internal set; } = 0;
 
@@ -366,8 +369,8 @@ namespace ROOT
         {
             connector.UseScrVersion = (UnitCoreGenre == CoreGenre.Source);
             connector.gameObject.SetActive(sideType == SideType.Connection);
-            connector.NormalSignalVal = 0;
-            connector.NetworkSignalVal = 0;
+            connector.Signal_A_Val = 0;
+            connector.Signal_B_Val = 0;
         }
 
         //North,South,West,East
@@ -484,6 +487,26 @@ namespace ROOT
             Tier = tier;
 
             UpdateSideMesh();
+
+            if (SignalCore == null)
+            {
+                Type signalCoreType = typeof(Object);
+                switch (UnitCore)
+                {
+                    //TEMP 这个应该用Lib配置去弄，现在先这样。
+                    case CoreType.Processor:
+                    case CoreType.HardDrive:
+                        signalCoreType = SignalMasterMgr.Instance.SignalUnitCore(SignalType.Matrix);
+                        break;
+                    case CoreType.Server:
+                    case CoreType.NetworkCable:
+                        signalCoreType = SignalMasterMgr.Instance.SignalUnitCore(SignalType.Scan);
+                        break;
+                }
+
+                SignalCore = gameObject.AddComponent(signalCoreType) as UnitSignalCoreBase;
+                SignalCore.Owner = this;
+            }
         }
 
         protected virtual void Awake()
@@ -614,11 +637,16 @@ namespace ROOT
             if (!data.HasConnector) return;
             ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(dir, _unitRotation), out Connector Connector);
             if (Connector == null) return;
-            Connector.NormalSignalVal = 0;
-            Connector.NetworkSignalVal = 0;
+            Connector.Signal_A_Val = 0;
+            Connector.Signal_B_Val = 0;
             Connector.Hided = true;
         }
 
+        //对，仔细想下，如果需要搞，这里的东西也需要抽象出来。
+        //包括Connector本身的设计也需要抽象。
+        //现在Connector不能是：有一个network灯、一个hardware灯。
+                   //而需要是：有两个通用的灯。
+        //其实为了添加新的Unit，除了Asset部分、所有现有矩阵和扫描相关的代码都得抽象掉。
         private void SetConnector(RotationDirection crtDir, bool ignoreVal = false)
         {
             WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
@@ -627,6 +655,11 @@ namespace ROOT
             Connector.Connected = data.Connected;
 
             var otherUnit = data.OtherUnit;
+            //这块儿的代码还可以进行抽象出来、理论上可以：
+            //这里的代码需要遍历所有的信号类型（因为所有接口应该可以传送所有信号）。
+            //可以把所有的LED具体显示逻辑（661~2行）可以挂在UnitLogicBase上面变成静态函数。
+            //利用lib系统的设计，这里需要能够遍历UnitLogicBase中所有对应静态函数来计分。
+            //当然、LED上面能不能显示那么多是另一回事、抽象框架设计出来后，都会好一些。
             var ShowHDDLED = InHddSignalGrid && otherUnit.InHddSignalGrid;
             var HasSolidHDDSigal = (SignalFromDir == crtDir);
             HasSolidHDDSigal |= (Utils.GetInvertDirection(otherUnit.SignalFromDir) == crtDir);
@@ -641,8 +674,8 @@ namespace ROOT
             var NetworkSignalValtmp = ShowNetLED ? Math.Min(NetworkVal, otherUnit.NetworkVal) : 0;
             var shouldHide = !(ShowHDDLED || ShowNetLED);
 
-            Connector.NormalSignalVal = ignoreVal ? 0 : NormalSignalValtmp;
-            Connector.NetworkSignalVal = ignoreVal ? 0 : NetworkSignalValtmp;
+            Connector.Signal_A_Val = ignoreVal ? 0 : NormalSignalValtmp;
+            Connector.Signal_B_Val = ignoreVal ? 0 : NetworkSignalValtmp;
             Connector.Hided = shouldHide;
         }
 

@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc9a471d2d3ede74884bbb31cc3ce9e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TurnOnColor: {r: 0, g: 0, b: 0, a: 0}
   LumpedText: {fileID: 6372684043725646833}
   RepText: {fileID: 8759284062068812246}
   LED: {fileID: 6791313750073739884}
@@ -347,6 +348,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 3516090300163692521}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!1 &5080490882295671830
@@ -598,6 +600,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 2547597600164990052}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!1 &8928996632551444014

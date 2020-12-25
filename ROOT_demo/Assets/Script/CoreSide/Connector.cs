@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace ROOT
 {
+    //为了添加新的Unit，这里的灯光需要抽象化；就是不能是死的矩阵或者扫描信号了。
     public class Connector : MonoBehaviour
     {
         public MeshFilter StubMesh;
@@ -37,32 +38,32 @@ namespace ROOT
         public GameObject Display;
         public Mesh ScrStub;
         public Mesh DestStub;
-        private int _normalSignalVal;
-        private int _networkSignalVal;
+        private int _signalAVal;
+        private int _signalBVal;
 
-        public int NormalSignalVal
+        public int Signal_A_Val
         {
             set
             {
                 var val = value;
-                _normalSignalVal = val;
-                NormalSignalArray.Val = val;
+                _signalAVal = val;
+                SignalAArray.Val = val;
             }
-            get => _normalSignalVal;
+            get => _signalAVal;
         }
-        public int NetworkSignalVal
+        public int Signal_B_Val
         {
             set
             {
                 var val = value;
-                _networkSignalVal = val;
-                NetworkSignalArray.Val = val;
+                _signalBVal = val;
+                SignalBArray.Val = val;
             }
-            get => _networkSignalVal;
+            get => _signalBVal;
         }
 
-        public LEDArray NormalSignalArray;
-        public LEDArray NetworkSignalArray;
+        public LEDArray SignalAArray;
+        public LEDArray SignalBArray;
 
         public GameObject BlinkCube;
         public GameObject NormalED;
