@@ -91,6 +91,11 @@ namespace ROOT
             public int startingMoney;
         }
 
+        void AddListeners()
+        {
+
+        }
+
         void Awake()
         {
             //这里不能用Time.time，因为Awake和游戏运行时间差距一般很小且固定。所以这里要去调系统时间
@@ -169,7 +174,9 @@ namespace ROOT
                 LevelLib.Instance.CareerActionAssetList[i] = tmp;
             }
             LevelLib.Instance.LockInLib();
-            //SignalMasterRoot
+
+
+
 #if !UNITY_EDITOR
             var gameSetting = new GameSettingJSON {startingMoney = Mathf.RoundToInt(Random.value*100)};
             FileIOUtility.WriteString(JsonUtility.ToJson(gameSetting), "GameSetting.json");

@@ -9,6 +9,297 @@ using Object = UnityEngine.Object;
 
 namespace ROOT
 {
+    #region WorldLogic
+
+    [Flags]
+    public enum LogicCommand
+    {
+        Nop = 0,
+    }
+
+    [Serializable]
+    public struct LogicPack
+    {
+        public LogicCommand LogicCMD;
+    }
+
+    //要把Asset和Logic彻底拆开。
+    /// <summary>
+    /// 世界本身的运行逻辑、应该类比于物理世界，高程度独立。
+    /// </summary>
+    internal static class WorldLogic //WORLD-LOGIC
+    {
+        public static void Root_Dispatcher_void_PUBLIC()
+        {
+            Root_Dispatcher_void();
+        }
+
+        private static void Root_Dispatcher_void()
+        {
+
+        }
+        
+        //RISK 这里应该尽量变成一个Dispatcher（尽量做dispatch），实际的逻辑放到WorldUtils
+        //说白了，这个函数应该只发命令不管别的。
+        private static int playerID = 0;
+        private static readonly Player player = ReInput.players.GetPlayer(playerID);
+
+        //TEMP 每次修改这两个值的时候才应该改一次。
+        private static int lastInCome = -1;
+        private static int lastCost = -1;
+
+        //TEMP 每一步应该才计算一次，帧间时都这么临时存着。
+        private static int occupiedHeatSink;
+
+        /// <summary>
+        /// 这个函数主要是将目前场面上的数据反映到UI和玩家的视野中，这个很可能是不能单纯用flow的框架来搞？
+        /// 这个真的不能瞎调，每调用一次就会让场上单位调用一次。
+        /// </summary>
+        /// <param name="currentLevelAsset"></param>
+        internal static void UpdateBoardData(GameAssets currentLevelAsset)
+        {
+            //应该把这个、函数（包括round）这些相关的函数流程拆碎；然后用基于事件发布内容。
+            //
+            //这个函数已经被调用了太多次了，现在考虑稍微激进一些；准备调整为基于事件的？
+            //RISK 其实这里调用到的currentLevelAsset里面的数据修改后，这个函数其实都得重新调…………
+            //也有解决方案，其实就是对其使用的数据进行变化监听……不知道靠谱不靠谱。
+            int inCome = 0, cost = 0;
+
+            var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
+            var tmpInComeB = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
+            //下面这个函数应该逻辑上等效，只不过目前还没有实际逻辑。
+            //这个东西是不是该改成基于事件的流程了？
+            var tmpInComeM = SignalMasterMgr.Instance.CalAllScoreAllSignal(currentLevelAsset.GameBoard);
+            if (currentLevelAsset.CurrencyIOEnabled)
+            {
+                inCome += tmpInComeA;
+                inCome += tmpInComeB;
+                inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
+                //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
+                //TEMP 现在只有热力消耗。
+                if (!currentLevelAsset.CurrencyIncomeEnabled)
+                {
+                    //RISK 现在在红色区间没有任何价格收入。靠谱吗？
+                    inCome = 0;
+                }
+
+                cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
+            }
+
+            currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
+            currentLevelAsset.DeltaCurrency = inCome - cost;
+
+            if (currentLevelAsset.CostChart != null)
+            {
+                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
+                currentLevelAsset.CostChart.IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency);
+            }
+        }
+
+        internal static void UpdateReverseCycle(GameAssets currentLevelAsset)
+        {
+            //TODO 从实施上还得想想时间反演的时候很多别的机制怎么办……
+            //而且还有一个问题，这个作为一个反抗正反馈的机制（负反馈机制）（越穷越没时间、越没时间越穷）
+            //如果还需要花钱，那么效率可能不高；但是这个机制如果没有门槛，那么就会被滥用。
+            //这种负反馈的机制最好参考马车，但是马车里面有个很方便的量化“负状态”的参量——排名。
+            //目前这个系统也需要一个这样的参量，有几个候选：钱数、离红色区段太近等等。
+            WorldCycler.StepDown();
+            currentLevelAsset.TimeLine.Reverse();
+        }
+
+        internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type)
+        {
+            WorldCycler.StepUp();
+            currentLevelAsset.TimeLine.Step();
+            currentLevelAsset.BoughtOnce = false;
+
+            if (currentLevelAsset.DestroyerEnabled) WorldExecutor.UpdateDestoryer(currentLevelAsset);
+            //目前整个游戏的流程框架太过简单了，现在只有流程调用和flag。可能UpdateBoardData这个需要类似基于事件和触发的事件更新(?)
+            if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
+
+            //RISK DeltaCurrency在UpdateBoardData里面才弄完。
+            currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
+
+            if (currentLevelAsset.ShopEnabled && (currentLevelAsset.Shop is IAnimatableShop shop))
+                shop.ShopPreAnimationUpdate();
+
+            if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
+            {
+                currentLevelAsset.WarningDestoryer.Step(out var outCore);
+                if (outCore.HasValue)
+                {
+                    UpdateBoardData(currentLevelAsset);
+                }
+                currentLevelAsset.DestoryedCoreType = outCore;
+            }
+        }
+
+        private static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
+        {
+            var shouldCycle = false;
+            var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
+            if (StartGameMgr.UseTouchScreen)
+            {
+                shouldCycle = movedTile | hasCycleNext;
+            }
+            else if (StartGameMgr.UseMouse)
+            {
+                shouldCycle = ((movedTile | movedCursor)) | hasCycleNext;
+            }
+            else
+            {
+                shouldCycle = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
+            }
+
+            return shouldCycle;
+        }
+
+        public static void BossStagePauseRunStop(GameAssets currentLevelAsset)
+        {
+            WorldCycler.BossStagePause = false;
+            currentLevelAsset.Owner.StopBossStageCost();
+        }
+
+        public static void BossStagePauseTriggered(GameAssets currentLevelAsset)
+        {
+            Debug.Assert(WorldCycler.BossStage);
+            if (currentLevelAsset.ReqOkCount <= 0) return;
+            if (WorldCycler.BossStagePause)
+            {
+                WorldCycler.BossStagePause = false;
+                currentLevelAsset.Owner.StopBossStageCost();
+            }
+            else
+            {
+                WorldCycler.BossStagePause = true;
+                currentLevelAsset.Owner.StartBossStageCost();
+            }
+
+            currentLevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
+        }
+
+        public static void UpkeepLogic(GameAssets currentLevelAsset, in StageType type,bool animating)
+        {
+            //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
+            //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
+            if (type == StageType.Boss&& animating)
+            {
+                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
+            }
+            else
+            {
+                WorldExecutor.CleanDestoryer(currentLevelAsset);
+                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
+                //总之稳了后，这个不能这么每帧调用。
+                occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
+                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
+                currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
+            }
+        }
+
+        //这个也要拆，实际逻辑和Upkeep要拆开、为了Animation的时候能KeepUp
+        //Boss阶段诡异的时序是因为在此时Animation中的几秒没法做任何事儿。
+        public static void UpdateLogic(GameAssets currentLevelAsset, 
+            in StageType type, out ControllingPack ctrlPack,
+            out bool movedTile, out bool movedCursor, 
+            out bool shouldCycle, out bool? autoDrive)
+        {
+            currentLevelAsset.DeltaCurrency = 0.0f;
+            movedTile = movedCursor = false;
+            ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
+
+            UpkeepLogic(currentLevelAsset, in type, false);//RISK 这个也要弄。
+
+            autoDrive = WorldCycler.NeedAutoDriveStep;
+
+            //不一定必然是相反的，有可能是双false。
+            var forwardCycle = false;
+            var reverseCycle = false;
+
+            if (!autoDrive.HasValue)//RISK
+            {
+                #region UserIO
+
+                ctrlPack = WorldController.UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor,
+                    ref currentLevelAsset._boughtOnce);
+
+                if (currentLevelAsset.InputEnabled)
+                {
+                    WorldExecutor.UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
+                    WorldExecutor.UpdateRotate(currentLevelAsset, in ctrlPack);
+                    currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
+
+                    if (currentLevelAsset.ShopEnabled)
+                    {
+                        //RISK 这里让购买单元也变成强制移动一步。
+                        movedTile |= WorldExecutor.UpdateShopBuy(currentLevelAsset, ctrlPack);
+                    }
+
+                    movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
+
+                    currentLevelAsset.SkillMgr.SkillEnabled = currentLevelAsset.SkillEnabled;
+                    currentLevelAsset.SkillMgr.TriggerSkill(currentLevelAsset, ctrlPack);
+                }
+
+                forwardCycle = movedTile;
+
+                #endregion
+            }
+            else
+            {
+                forwardCycle = autoDrive.Value;
+                reverseCycle = !autoDrive.Value;
+            }
+
+            if (currentLevelAsset.SkillMgr.CurrentSkillType.HasValue &&
+                currentLevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap)
+            {
+                currentLevelAsset.SkillMgr.SwapTick(currentLevelAsset, ctrlPack);
+                movedTile = false;
+            }
+            else
+            {
+                if (!(WorldCycler.BossStage && WorldCycler.BossStagePause))
+                {
+                    if (forwardCycle)
+                    {
+                        #region FORWARD
+
+                        //这里把计分逻辑也跳过去了，所以在Boss阶段就不会有那个更新。
+                        UpdateCycle(currentLevelAsset, type);
+
+                        #endregion
+                    }
+                    else if (reverseCycle)
+                    {
+                        #region REVERSE
+
+                        UpdateReverseCycle(currentLevelAsset);
+
+                        #endregion
+                    }
+                }
+                else if (WorldCycler.BossStage && WorldCycler.BossStagePause)
+                {
+                    if (forwardCycle)
+                    {
+                        //这里是boss的暂停阶段还进行的逻辑。
+                        UpdateBoardData(currentLevelAsset);
+                    }
+                }
+            }
+
+            #region CLEANUP
+
+            //RISK 
+            shouldCycle = (autoDrive.HasValue) || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
+
+            #endregion
+        }
+    }
+
+    #endregion
+    
     #region WorldCycler
 
     /// <summary>
@@ -888,19 +1179,77 @@ namespace ROOT
 
     #endregion
 
-    #region WorldLogic
+    #region WorldExecutor
 
-    //要把Asset和Logic彻底拆开。
-    /// <summary>
-    /// 世界本身的运行逻辑、应该类比于物理世界，高程度独立。
-    /// </summary>
-    internal static class WorldLogic //WORLD-LOGIC
+    //原WORLD-UTILS 是为了进一步解耦，和一般的Utils只能基于基础数学不同，这个允许基于游戏逻辑和游戏制度。
+    //现为：WorldExecutor，主要是执行具体的内部逻辑；想象为舰长和执行舰长的感觉吧。
+    public static class WorldExecutor //WORLD-EXECUTOR
     {
-        //RISK
-        private static int playerID = 0;
-        private static readonly Player player = ReInput.players.GetPlayer(playerID);
+        public static void UpdateRotate(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
+        {
+            if (ctrlPack.HasFlag(ControllingCommand.Rotate))
+            {
+                if (currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos))
+                {
+                    var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
+                    System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
+                    unit.GetComponentInChildren<Unit>().UnitRotateCw();
+                    currentLevelAsset.GameBoard.UpdateBoard();
+                }
+            }
+        }
 
-        private static bool UpdateShopBuy(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
+        public static void UpdateCursor_Unit(GameAssets currentLevelAsset, in ControllingPack ctrlPack,
+            out bool movedTile, out bool movedCursor)
+        {
+            //这个还要能够处理enableCursor是false的情况。
+            //相当于现在这个函数是Cursor和Unit混在一起的，可能还需要拆开。
+            movedTile = false;
+            movedCursor = false;
+
+            var validAction = currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos) &&
+                              currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos);
+            var extractedCommand = ctrlPack.CtrlCMD & (ControllingCommand.Drag | ControllingCommand.Move);
+
+            if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Drag) && validAction)
+            {
+                var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
+                if (!unit.GetComponentInChildren<Unit>().StationUnit)
+                {
+                    System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
+                    var movingUnit = unit.GetComponentInChildren<Unit>();
+                    movingUnit.Move(ctrlPack.CommandDir);
+                    currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(ctrlPack.CurrentPos);
+                    if (StartGameMgr.UseKeyboard)
+                    {
+                        currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
+                    }
+                    currentLevelAsset.AnimationPendingObj.Add(movingUnit);
+                    movedTile = true;
+                    movedCursor = true;
+                }
+            }
+            else if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Move))
+            {
+                currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
+                movedCursor = true;
+            }
+            else if (ctrlPack.HasFlag(ControllingCommand.RemoveUnit))
+            {
+                currentLevelAsset.GameBoard.TryDeleteCertainUnit(ctrlPack.CurrentPos);
+                //movedTile = true;//RISK 这里可以调整删除单位是否强制移动。目前不移动。
+                movedCursor = true;
+            }
+
+            if (currentLevelAsset.CursorEnabled && movedCursor)
+            {
+                currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
+                WorldExecutor.UpdateCursorPos(currentLevelAsset);
+                movedCursor = true;
+            }
+        }
+
+        public static bool UpdateShopBuy(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
             //先简单一些，只允许随机购买。
             //现在不是因为简单而购买了；而是设计上随机位置变成重要的一环。
@@ -913,7 +1262,7 @@ namespace ROOT
         }
 
         [Obsolete]
-        private static void UpdateShopBuy(
+        public static void UpdateShopBuy(
             GameAssets currentLevelAsset, ShopBase shopMgr,
             in ControllingPack ctrlPack, bool crashable,
             ref bool boughtOnce, out int postalPrice)
@@ -979,329 +1328,6 @@ namespace ROOT
             }
         }
 
-        internal static void UpdateRotate(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
-        {
-            if (ctrlPack.HasFlag(ControllingCommand.Rotate))
-            {
-                if (currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos))
-                {
-                    var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
-                    System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-                    unit.GetComponentInChildren<Unit>().UnitRotateCw();
-                    currentLevelAsset.GameBoard.UpdateBoard();
-                }
-            }
-        }
-
-        internal static void UpdateCursor_Unit(GameAssets currentLevelAsset, in ControllingPack ctrlPack,
-            out bool movedTile, out bool movedCursor)
-        {
-            //这个还要能够处理enableCursor是false的情况。
-            //相当于现在这个函数是Cursor和Unit混在一起的，可能还需要拆开。
-            movedTile = false;
-            movedCursor = false;
-
-            var validAction = currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos) &&
-                              currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos);
-            var extractedCommand = ctrlPack.CtrlCMD & (ControllingCommand.Drag | ControllingCommand.Move);
-
-            if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Drag) && validAction)
-            {
-                var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
-                if (!unit.GetComponentInChildren<Unit>().StationUnit)
-                {
-                    System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-                    var movingUnit = unit.GetComponentInChildren<Unit>();
-                    movingUnit.Move(ctrlPack.CommandDir);
-                    currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(ctrlPack.CurrentPos);
-                    if (StartGameMgr.UseKeyboard)
-                    {
-                        currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
-                    }
-                    currentLevelAsset.AnimationPendingObj.Add(movingUnit);
-                    movedTile = true;
-                    movedCursor = true;
-                }
-            }
-            else if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Move))
-            {
-                currentLevelAsset.Cursor.Move(ctrlPack.CommandDir);
-                movedCursor = true;
-            }
-            else if (ctrlPack.HasFlag(ControllingCommand.RemoveUnit))
-            {
-                currentLevelAsset.GameBoard.TryDeleteCertainUnit(ctrlPack.CurrentPos);
-                //movedTile = true;//RISK 这里可以调整删除单位是否强制移动。目前不移动。
-                movedCursor = true;
-            }
-
-            if (currentLevelAsset.CursorEnabled && movedCursor)
-            {
-                currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
-                WorldUtils.UpdateCursorPos(currentLevelAsset);
-                movedCursor = true;
-            }
-        }
-
-        //TEMP 每次修改这两个值的时候才应该改一次。
-        private static int lastInCome = -1;
-        private static int lastCost = -1;
-
-        //TEMP 每一步应该才计算一次，帧间时都这么临时存着。
-        private static int occupiedHeatSink;
-
-        /// <summary>
-        /// 这个函数主要是将目前场面上的数据反映到UI和玩家的视野中，这个很可能是不能单纯用flow的框架来搞？
-        /// 这个真的不能瞎调，每调用一次就会让场上单位调用一次。
-        /// </summary>
-        /// <param name="currentLevelAsset"></param>
-        internal static void UpdateBoardData(GameAssets currentLevelAsset)
-        {
-            //这个函数已经被调用了太多次了，现在考虑稍微激进一些；准备调整为基于事件的？
-            //RISK 其实这里调用到的currentLevelAsset里面的数据修改后，这个函数其实都得重新调…………
-            //也有解决方案，其实就是对其使用的数据进行变化监听……不知道靠谱不靠谱。
-            int inCome = 0, cost = 0;
-
-            var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
-            var tmpInComeB = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
-            //下面这个函数应该逻辑上等效，只不过目前还没有实际逻辑。
-            //这个东西是不是该改成基于事件的流程了？
-            var tmpInComeM = SignalMasterMgr.Instance.CalAllScoreAllSignal(currentLevelAsset.GameBoard);
-            if (currentLevelAsset.CurrencyIOEnabled)
-            {
-                inCome += tmpInComeA;
-                inCome += tmpInComeB;
-                inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
-                //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
-                //TEMP 现在只有热力消耗。
-                if (!currentLevelAsset.CurrencyIncomeEnabled)
-                {
-                    //RISK 现在在红色区间没有任何价格收入。靠谱吗？
-                    inCome = 0;
-                }
-
-                cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
-            }
-
-            currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
-            currentLevelAsset.DeltaCurrency = inCome - cost;
-
-            if (currentLevelAsset.CostChart != null)
-            {
-                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
-                currentLevelAsset.CostChart.IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency);
-            }
-        }
-
-        internal static void UpdateReverseCycle(GameAssets currentLevelAsset)
-        {
-            //TODO 从实施上还得想想时间反演的时候很多别的机制怎么办……
-            //而且还有一个问题，这个作为一个反抗正反馈的机制（负反馈机制）（越穷越没时间、越没时间越穷）
-            //如果还需要花钱，那么效率可能不高；但是这个机制如果没有门槛，那么就会被滥用。
-            //这种负反馈的机制最好参考马车，但是马车里面有个很方便的量化“负状态”的参量——排名。
-            //目前这个系统也需要一个这样的参量，有几个候选：钱数、离红色区段太近等等。
-            WorldCycler.StepDown();
-            currentLevelAsset.TimeLine.Reverse();
-        }
-
-        internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type)
-        {
-            WorldCycler.StepUp();
-            currentLevelAsset.TimeLine.Step();
-            currentLevelAsset.BoughtOnce = false;
-
-            if (currentLevelAsset.DestroyerEnabled) WorldUtils.UpdateDestoryer(currentLevelAsset);
-            //目前整个游戏的流程框架太过简单了，现在只有流程调用和flag。可能UpdateBoardData这个需要类似基于事件和触发的事件更新(?)
-            if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
-
-            //RISK DeltaCurrency在UpdateBoardData里面才弄完。
-            currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
-
-            if (currentLevelAsset.ShopEnabled && (currentLevelAsset.Shop is IAnimatableShop shop))
-                shop.ShopPreAnimationUpdate();
-
-            if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
-            {
-                currentLevelAsset.WarningDestoryer.Step(out var outCore);
-                if (outCore.HasValue)
-                {
-                    UpdateBoardData(currentLevelAsset);
-                }
-                currentLevelAsset.DestoryedCoreType = outCore;
-            }
-        }
-
-        private static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
-        {
-            var shouldCycle = false;
-            var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
-            if (StartGameMgr.UseTouchScreen)
-            {
-                shouldCycle = movedTile | hasCycleNext;
-            }
-            else if (StartGameMgr.UseMouse)
-            {
-                shouldCycle = ((movedTile | movedCursor)) | hasCycleNext;
-            }
-            else
-            {
-                shouldCycle = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
-            }
-
-            return shouldCycle;
-        }
-
-        public static void BossStagePauseRunStop(GameAssets currentLevelAsset)
-        {
-            WorldCycler.BossStagePause = false;
-            currentLevelAsset.Owner.StopBossStageCost();
-        }
-
-        public static void BossStagePauseTriggered(GameAssets currentLevelAsset)
-        {
-            Debug.Assert(WorldCycler.BossStage);
-            if (currentLevelAsset.ReqOkCount <= 0) return;
-            if (WorldCycler.BossStagePause)
-            {
-                WorldCycler.BossStagePause = false;
-                currentLevelAsset.Owner.StopBossStageCost();
-            }
-            else
-            {
-                WorldCycler.BossStagePause = true;
-                currentLevelAsset.Owner.StartBossStageCost();
-            }
-
-            currentLevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
-        }
-
-        public static void UpkeepLogic(GameAssets currentLevelAsset, in StageType type,bool animating)
-        {
-            //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
-            //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
-            if (type == StageType.Boss&& animating)
-            {
-                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-            }
-            else
-            {
-                WorldUtils.CleanDestoryer(currentLevelAsset);
-                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
-                //总之稳了后，这个不能这么每帧调用。
-                occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
-                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-                currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
-            }
-        }
-
-        //这个也要拆，实际逻辑和Upkeep要拆开、为了Animation的时候能KeepUp
-        //Boss阶段诡异的时序是因为在此时Animation中的几秒没法做任何事儿。
-        public static void UpdateLogic(GameAssets currentLevelAsset, 
-            in StageType type, out ControllingPack ctrlPack,
-            out bool movedTile, out bool movedCursor, 
-            out bool shouldCycle, out bool? autoDrive)
-        {
-            currentLevelAsset.DeltaCurrency = 0.0f;
-            movedTile = movedCursor = false;
-            ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-
-            UpkeepLogic(currentLevelAsset, in type, false);//RISK 这个也要弄。
-
-            autoDrive = WorldCycler.NeedAutoDriveStep;
-
-            //不一定必然是相反的，有可能是双false。
-            var forwardCycle = false;
-            var reverseCycle = false;
-
-            if (!autoDrive.HasValue)//RISK
-            {
-                #region UserIO
-
-                ctrlPack = WorldController.UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor,
-                    ref currentLevelAsset._boughtOnce);
-
-                if (currentLevelAsset.InputEnabled)
-                {
-                    UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
-                    UpdateRotate(currentLevelAsset, in ctrlPack);
-                    currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
-
-                    if (currentLevelAsset.ShopEnabled)
-                    {
-                        //RISK 这里让购买单元也变成强制移动一步。
-                        movedTile |= UpdateShopBuy(currentLevelAsset, ctrlPack);
-                    }
-
-                    movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
-
-                    currentLevelAsset.SkillMgr.SkillEnabled = currentLevelAsset.SkillEnabled;
-                    currentLevelAsset.SkillMgr.TriggerSkill(currentLevelAsset, ctrlPack);
-                }
-
-                forwardCycle = movedTile;
-
-                #endregion
-            }
-            else
-            {
-                forwardCycle = autoDrive.Value;
-                reverseCycle = !autoDrive.Value;
-            }
-
-            if (currentLevelAsset.SkillMgr.CurrentSkillType.HasValue &&
-                currentLevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap)
-            {
-                currentLevelAsset.SkillMgr.SwapTick(currentLevelAsset, ctrlPack);
-                movedTile = false;
-            }
-            else
-            {
-                if (!(WorldCycler.BossStage && WorldCycler.BossStagePause))
-                {
-                    if (forwardCycle)
-                    {
-                        #region FORWARD
-
-                        //这里把计分逻辑也跳过去了，所以在Boss阶段就不会有那个更新。
-                        UpdateCycle(currentLevelAsset, type);
-
-                        #endregion
-                    }
-                    else if (reverseCycle)
-                    {
-                        #region REVERSE
-
-                        UpdateReverseCycle(currentLevelAsset);
-
-                        #endregion
-                    }
-                }
-                else if (WorldCycler.BossStage && WorldCycler.BossStagePause)
-                {
-                    if (forwardCycle)
-                    {
-                        //这里是boss的暂停阶段还进行的逻辑。
-                        UpdateBoardData(currentLevelAsset);
-                    }
-                }
-            }
-
-            #region CLEANUP
-
-            //RISK 
-            shouldCycle = (autoDrive.HasValue) || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
-
-            #endregion
-        }
-    }
-
-    #endregion
-
-    #region WorldUtil
-
-    //是为了进一步解耦，和一般的Utils只能基于基础数学不同，这个允许基于游戏逻辑和游戏制度。
-    public static class WorldUtils //WORLD-UTILS
-    {
         public static GameObject CreateIndicator(GameAssets currentLevelAsset, Vector2Int pos, Color col, bool playerCursor = false)
         {
             var indicator = Object.Instantiate(currentLevelAsset.CursorTemplate);
@@ -1334,7 +1360,7 @@ namespace ROOT
                 for (var i = 0; i < count; i++)
                 {
                     Color col = currentLevelAsset.WarningDestoryer.GetWaringColor;
-                    currentLevelAsset.WarningGo[i] = WorldUtils.CreateIndicator(currentLevelAsset, incomings[i], col, true);
+                    currentLevelAsset.WarningGo[i] = WorldExecutor.CreateIndicator(currentLevelAsset, incomings[i], col, true);
                 }
             }
         }
