@@ -49,7 +49,6 @@ namespace ROOT
     /// </summary>
     internal static class WorldLogic //WORLD-LOGIC
     {
-
         //TEMP 每次修改这两个值的时候才应该改一次。
         private static int lastInCome = -1;
         private static int lastCost = -1;
@@ -162,14 +161,13 @@ namespace ROOT
 
                 if (currentLevelAsset.InputEnabled)
                 {
-                    WorldExecutor_Dispatcher.Root_Executor_Compound(
-                        LogicCommand.UpdateUnitCursor|LogicCommand.RotateUnit,
+                    WorldExecutor_Dispatcher.Root_Executor_Compound_Ordered(
+                        new [] {LogicCommand.UpdateUnitCursor, LogicCommand.RotateUnit},
                         ref currentLevelAsset,in ctrlPack,out var res);
-                    var tRes = (bool[]) (((object[]) res)[1]);
+                    var tRes = (bool[]) res[LogicCommand.UpdateUnitCursor];
                     movedTile = tRes[0];
                     movedCursor = tRes[1];
-
-
+                    
                     currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
 
                     if (currentLevelAsset.ShopEnabled)
@@ -1137,26 +1135,34 @@ namespace ROOT
             Root_Executor(cmd, ref gameAsset);
         }
 
-        internal static void Root_Executor_Compound(
+        internal static void Root_Executor_Compound_Unordered(
             in LogicCommand cmd, ref GameAssets gameAsset,
-            in ControllingPack ctrlPack, out object Res)
+            in ControllingPack ctrlPack)
         {
             var counter = 0;
-            var resArray = new List<object>();
             do
             {
                 var tick = (LogicCommand) (1 << counter);
                 if (tick >= LogicCommand.ESC) break;
                 if (LogicPack.HasFlag(cmd, tick))
                 {
-                    Root_Executor(tick, ref gameAsset, in ctrlPack, out var tRes);
-                    resArray.Add(tRes);
+                    Root_Executor(tick, ref gameAsset, in ctrlPack);
                 }
-
                 counter++;
             } while (true);
+        }
 
-            Res = resArray.ToArray();
+        internal static void Root_Executor_Compound_Ordered(
+            in LogicCommand[] cmds, ref GameAssets gameAsset,
+            in ControllingPack ctrlPack, out Dictionary<LogicCommand, object> Res)
+        {
+            var resArray = new Dictionary<LogicCommand,object>();
+            foreach (var t in cmds)
+            {
+                Root_Executor(t, ref gameAsset, in ctrlPack, out var tRes);
+                resArray.Add(t, tRes);
+            }
+            Res = resArray;
         }
 
         internal static void Root_Executor(in LogicCommand cmd, ref GameAssets gameAsset)
