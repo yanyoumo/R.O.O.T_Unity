@@ -17,9 +17,12 @@ namespace ROOT
             return Math.Min(unit.HardDiskVal, otherUnit.HardDiskVal);
         }
         
-        public override int CalScore(out int driverCountInt)
+        public override float CalScore(out int driverCountInt)
         {
-            throw new System.NotImplementedException("MatrixUnitLogicCore");
+            Debug.LogWarning("MatrixUnitLogicCore_CalScore");
+            driverCountInt = 0;
+            return -1.0f;
+            //throw new System.NotImplementedException("MatrixUnitLogicCore_CalScore");
         }
     }
 }

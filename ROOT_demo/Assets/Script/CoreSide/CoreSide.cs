@@ -5,6 +5,14 @@ using UnityEngine;
 
 namespace ROOT
 {
+    //需要一个SignalType和CoreType之间的双相映射。
+    //可能就是需要一个<CoreType,SignalType>的Dictionary，然后时常反着查？
+    public enum SignalType
+    {
+        Matrix,
+        Scan,
+    }
+
     public enum CoreType
     {
         PCB,

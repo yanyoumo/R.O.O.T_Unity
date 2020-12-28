@@ -481,8 +481,10 @@ namespace ROOT
             {
                 currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out harDriverCountInt);
                 currentLevelAsset.BoardDataCollector.CalculateServerScore(out networkCountInt);
-                currentLevelAsset.TimeLine.RequirementSatisfied =
-                    (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
+                //下面两个函数应该是等效的，只不过目前还没有实际逻辑。
+                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, currentLevelAsset.GameBoard, out var m_hardDriveCountInt);
+                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, currentLevelAsset.GameBoard, out var m_networkCountInt);
+                currentLevelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
             }
 
             if (LevelAsset.Shop is IRequirableShop shop)

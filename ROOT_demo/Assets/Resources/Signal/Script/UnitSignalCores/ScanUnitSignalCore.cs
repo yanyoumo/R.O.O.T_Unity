@@ -7,9 +7,12 @@ namespace ROOT
 {
     public class ScanUnitSignalCore : UnitSignalCoreBase
     {
-        public override int CalScore(out int networkCount)
+        public override float CalScore(out int networkCount)
         {
-            throw new System.NotImplementedException("ScanUnitSignalCore");
+            Debug.LogWarning("ScanUnitSignalCore_CalScore");
+            networkCount = 0;
+            return -1.0f;
+            //throw new System.NotImplementedException("ScanUnitSignalCore_CalScore");
         }
     }
 }

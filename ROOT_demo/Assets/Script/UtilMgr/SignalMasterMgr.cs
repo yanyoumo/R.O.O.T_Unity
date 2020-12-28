@@ -58,6 +58,21 @@ namespace ROOT
             return signalAssetLib[type].UnitSignalCoreType;
         }
 
+        public float CalAllScoreBySignal(SignalType type, Board gameBoard, out int hardwareCount)
+        {
+            return signalAssetLib[type].CalAllScore(gameBoard, out hardwareCount);
+        }
+
+        public float CalAllScoreBySignal(SignalType type, Board gameBoard)
+        {
+            return signalAssetLib[type].CalAllScore(gameBoard);
+        }
+
+        public float CalAllScoreAllSignal(Board gameBoard)
+        {
+            return signalAssetLib.Values.Sum(v => v.CalAllScore(gameBoard));
+        }
+
         #endregion
     }
 }

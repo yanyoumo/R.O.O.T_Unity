@@ -39,10 +39,10 @@ namespace ROOT
             InHddGrid = false;
         }
 
-        public int CalScore()
+        public float CalScore()
         {
             return CalScore(out var a);
         }
-        public abstract int CalScore(out int hardwareCount);
+        public abstract float CalScore(out int hardwareCount);
     }
 }

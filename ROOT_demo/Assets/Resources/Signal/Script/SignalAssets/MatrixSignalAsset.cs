@@ -12,6 +12,9 @@ namespace ROOT
         }
 
         public override SignalType Type => SignalType.Matrix;
+        public override CoreType CoreUnitType => CoreType.Processor;
+        public override CoreType FieldUnitType => CoreType.HardDrive;
+
         public override bool ShowSignal(Unit unit, Unit otherUnit)
         {
             throw new System.NotImplementedException();

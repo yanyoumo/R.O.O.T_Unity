@@ -14,6 +14,9 @@ namespace ROOT
 
         //这里的代码未来还要考虑到这些数据的位置会变。
         public override SignalType Type => SignalType.Scan;
+        public override CoreType CoreUnitType => CoreType.Server;
+        public override CoreType FieldUnitType => CoreType.NetworkCable;
+
         public override bool ShowSignal(Unit unit, Unit otherUnit)
         {
             var ShowNetLED = unit.InServerGrid && otherUnit.InServerGrid;
