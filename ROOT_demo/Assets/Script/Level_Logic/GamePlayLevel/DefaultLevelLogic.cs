@@ -24,7 +24,7 @@ namespace ROOT
                 if (Input.GetButtonDown(StaticName.INPUT_BUTTON_BOSS_PAUSE))
                 {
                     //这个按钮需要在Animation状态插入，因为逻辑帧比率降低了，就是需要这里放一个线程出来。
-                    WorldLogic.BossStagePauseTriggered(LevelAsset);
+                    WorldExecutor_Dispatcher.Root_Executor_void_PUBLIC(LogicCommand.BossTryUnpause, ref LevelAsset);
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace ROOT
                 LevelAsset.ReqOkCount -= BossStagePricePerInterval;
 
                 if (LevelAsset.ReqOkCount > 0) continue;
-                WorldLogic.BossStagePauseRunStop(LevelAsset);
+                WorldExecutor_Dispatcher.Root_Executor_void_PUBLIC(LogicCommand.BossUnpaused, ref LevelAsset);
                 yield break;
             }
         }

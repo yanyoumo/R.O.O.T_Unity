@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
@@ -21,6 +22,7 @@ namespace ROOT
     /// <summary>
     /// 一个每个关卡都有这么一个类，在Lvl-WRD之间传来传去。这个类只有一个，做成最通用的样子。
     /// </summary>
+    [Serializable]
     public sealed class GameAssets //ASSET 这里不应该有任何实际的逻辑（有些便于操作的除外
     {
         public int StepCount => WorldCycler.Step;
@@ -67,6 +69,7 @@ namespace ROOT
         internal GameObject[] WarningGo;
         internal GameObject SkillIndGoA;
         internal GameObject[] SkillIndGoB;
+        public int occupiedHeatSink=0;
 
         public float DeltaCurrency { get; internal set; }
 

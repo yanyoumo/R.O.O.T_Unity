@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Rewired;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -6,7 +7,6 @@ using CommandDir = ROOT.RotationDirection;
 using Object = UnityEngine.Object;
 
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
-
 namespace ROOT
 {
     #region WorldLogic
@@ -15,13 +15,33 @@ namespace ROOT
     public enum LogicCommand
     {
         Nop = 0,
+        UpdateShop = 1 << 0,
+        RotateUnit = 1 << 1,
+        UpdateUnitCursor = 1 << 2,
+        UpdateBoardData = 1 << 3,
+        BossUnpaused = 1 << 4,
+        BossTryUnpause = 1 << 5,
+
+        //这个既然作为ESC命令、又是标记这个enum的结尾、
+        //加的所有值需要在它上面，并且调整它的值
+        ESC = 1 << 6
     }
 
+    //之前的ControllingPack实质上是Deferred的处理；
+    //这里LogicCommand大部分时间是即时的。
+    //这种东西的数据交互一般都是个大问题；但是LevelAsset是好东西。
+    //此时LogicPack可能没有Command本身意义大（enum本身就可以与）
     [Serializable]
     public struct LogicPack
     {
         public LogicCommand LogicCMD;
+
+        public static bool HasFlag(LogicCommand a, LogicCommand b)
+        {
+            return (a & b) == b;
+        }
     }
+
 
     //要把Asset和Logic彻底拆开。
     /// <summary>
@@ -29,72 +49,10 @@ namespace ROOT
     /// </summary>
     internal static class WorldLogic //WORLD-LOGIC
     {
-        public static void Root_Dispatcher_void_PUBLIC()
-        {
-            Root_Dispatcher_void();
-        }
-
-        private static void Root_Dispatcher_void()
-        {
-
-        }
-        
-        //RISK 这里应该尽量变成一个Dispatcher（尽量做dispatch），实际的逻辑放到WorldUtils
-        //说白了，这个函数应该只发命令不管别的。
-        private static int playerID = 0;
-        private static readonly Player player = ReInput.players.GetPlayer(playerID);
 
         //TEMP 每次修改这两个值的时候才应该改一次。
         private static int lastInCome = -1;
         private static int lastCost = -1;
-
-        //TEMP 每一步应该才计算一次，帧间时都这么临时存着。
-        private static int occupiedHeatSink;
-
-        /// <summary>
-        /// 这个函数主要是将目前场面上的数据反映到UI和玩家的视野中，这个很可能是不能单纯用flow的框架来搞？
-        /// 这个真的不能瞎调，每调用一次就会让场上单位调用一次。
-        /// </summary>
-        /// <param name="currentLevelAsset"></param>
-        internal static void UpdateBoardData(GameAssets currentLevelAsset)
-        {
-            //应该把这个、函数（包括round）这些相关的函数流程拆碎；然后用基于事件发布内容。
-            //
-            //这个函数已经被调用了太多次了，现在考虑稍微激进一些；准备调整为基于事件的？
-            //RISK 其实这里调用到的currentLevelAsset里面的数据修改后，这个函数其实都得重新调…………
-            //也有解决方案，其实就是对其使用的数据进行变化监听……不知道靠谱不靠谱。
-            int inCome = 0, cost = 0;
-
-            var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
-            var tmpInComeB = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
-            //下面这个函数应该逻辑上等效，只不过目前还没有实际逻辑。
-            //这个东西是不是该改成基于事件的流程了？
-            var tmpInComeM = SignalMasterMgr.Instance.CalAllScoreAllSignal(currentLevelAsset.GameBoard);
-            if (currentLevelAsset.CurrencyIOEnabled)
-            {
-                inCome += tmpInComeA;
-                inCome += tmpInComeB;
-                inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
-                //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
-                //TEMP 现在只有热力消耗。
-                if (!currentLevelAsset.CurrencyIncomeEnabled)
-                {
-                    //RISK 现在在红色区间没有任何价格收入。靠谱吗？
-                    inCome = 0;
-                }
-
-                cost = ShopMgr.HeatSinkCost(occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
-            }
-
-            currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
-            currentLevelAsset.DeltaCurrency = inCome - cost;
-
-            if (currentLevelAsset.CostChart != null)
-            {
-                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
-                currentLevelAsset.CostChart.IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency);
-            }
-        }
 
         internal static void UpdateReverseCycle(GameAssets currentLevelAsset)
         {
@@ -115,7 +73,10 @@ namespace ROOT
 
             if (currentLevelAsset.DestroyerEnabled) WorldExecutor.UpdateDestoryer(currentLevelAsset);
             //目前整个游戏的流程框架太过简单了，现在只有流程调用和flag。可能UpdateBoardData这个需要类似基于事件和触发的事件更新(?)
-            if (currentLevelAsset.CurrencyEnabled) UpdateBoardData(currentLevelAsset);
+            if (currentLevelAsset.CurrencyEnabled)
+            {
+                WorldExecutor_Dispatcher.Root_Executor(LogicCommand.UpdateBoardData, ref currentLevelAsset);
+            }
 
             //RISK DeltaCurrency在UpdateBoardData里面才弄完。
             currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
@@ -128,7 +89,7 @@ namespace ROOT
                 currentLevelAsset.WarningDestoryer.Step(out var outCore);
                 if (outCore.HasValue)
                 {
-                    UpdateBoardData(currentLevelAsset);
+                    WorldExecutor_Dispatcher.Root_Executor(LogicCommand.UpdateBoardData, ref currentLevelAsset);
                 }
                 currentLevelAsset.DestoryedCoreType = outCore;
             }
@@ -154,30 +115,6 @@ namespace ROOT
             return shouldCycle;
         }
 
-        public static void BossStagePauseRunStop(GameAssets currentLevelAsset)
-        {
-            WorldCycler.BossStagePause = false;
-            currentLevelAsset.Owner.StopBossStageCost();
-        }
-
-        public static void BossStagePauseTriggered(GameAssets currentLevelAsset)
-        {
-            Debug.Assert(WorldCycler.BossStage);
-            if (currentLevelAsset.ReqOkCount <= 0) return;
-            if (WorldCycler.BossStagePause)
-            {
-                WorldCycler.BossStagePause = false;
-                currentLevelAsset.Owner.StopBossStageCost();
-            }
-            else
-            {
-                WorldCycler.BossStagePause = true;
-                currentLevelAsset.Owner.StartBossStageCost();
-            }
-
-            currentLevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
-        }
-
         public static void UpkeepLogic(GameAssets currentLevelAsset, in StageType type,bool animating)
         {
             //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
@@ -191,7 +128,7 @@ namespace ROOT
                 WorldExecutor.CleanDestoryer(currentLevelAsset);
                 //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
                 //总之稳了后，这个不能这么每帧调用。
-                occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
+                currentLevelAsset.occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
                 currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
                 currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
             }
@@ -225,14 +162,23 @@ namespace ROOT
 
                 if (currentLevelAsset.InputEnabled)
                 {
-                    WorldExecutor.UpdateCursor_Unit(currentLevelAsset, in ctrlPack, out movedTile, out movedCursor);
-                    WorldExecutor.UpdateRotate(currentLevelAsset, in ctrlPack);
+                    WorldExecutor_Dispatcher.Root_Executor_Compound(
+                        LogicCommand.UpdateUnitCursor|LogicCommand.RotateUnit,
+                        ref currentLevelAsset,in ctrlPack,out var res);
+                    var tRes = (bool[]) (((object[]) res)[1]);
+                    movedTile = tRes[0];
+                    movedCursor = tRes[1];
+
+
                     currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
 
                     if (currentLevelAsset.ShopEnabled)
                     {
                         //RISK 这里让购买单元也变成强制移动一步。
-                        movedTile |= WorldExecutor.UpdateShopBuy(currentLevelAsset, ctrlPack);
+                        WorldExecutor_Dispatcher.Root_Executor(LogicCommand.UpdateShop, ref currentLevelAsset, in ctrlPack, out var pRes);
+                        Debug.Assert(pRes!=null);
+                        // ReSharper disable once PossibleNullReferenceException
+                        movedTile |= (bool) pRes;
                     }
 
                     movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
@@ -284,7 +230,7 @@ namespace ROOT
                     if (forwardCycle)
                     {
                         //这里是boss的暂停阶段还进行的逻辑。
-                        UpdateBoardData(currentLevelAsset);
+                        WorldExecutor_Dispatcher.Root_Executor(LogicCommand.UpdateBoardData, ref currentLevelAsset);
                     }
                 }
             }
@@ -432,6 +378,7 @@ namespace ROOT
         FloatingOnGrid = 1 << 16//估计也能搞，而且早晚也得搞。
     }
 
+    [Serializable]
     public struct ControllingPack
     {
         public ControllingCommand CtrlCMD;
@@ -1181,11 +1128,113 @@ namespace ROOT
 
     #region WorldExecutor
 
+    public static class WorldExecutor_Dispatcher
+    {
+        //RISK 这里应该尽量变成一个Dispatcher（尽量做dispatch），实际的逻辑放到WorldUtils
+        //说白了，这个函数应该只发命令不管别的。
+        public static void Root_Executor_void_PUBLIC(LogicCommand cmd, ref GameAssets gameAsset)
+        {
+            Root_Executor(cmd, ref gameAsset);
+        }
+
+        internal static void Root_Executor_Compound(
+            in LogicCommand cmd, ref GameAssets gameAsset,
+            in ControllingPack ctrlPack, out object Res)
+        {
+            var counter = 0;
+            var resArray = new List<object>();
+            do
+            {
+                var tick = (LogicCommand) (1 << counter);
+                if (tick >= LogicCommand.ESC) break;
+                if (LogicPack.HasFlag(cmd, tick))
+                {
+                    Root_Executor(tick, ref gameAsset, in ctrlPack, out var tRes);
+                    resArray.Add(tRes);
+                }
+
+                counter++;
+            } while (true);
+
+            Res = resArray.ToArray();
+        }
+
+        internal static void Root_Executor(in LogicCommand cmd, ref GameAssets gameAsset)
+        {
+            var ctrlPack=new ControllingPack();
+            Root_Executor(cmd, ref gameAsset, in ctrlPack, out var pRes);
+        }
+
+        internal static void Root_Executor(in LogicCommand cmd, ref GameAssets gameAsset, in ControllingPack ctrlPack)
+        {
+            Root_Executor(cmd, ref gameAsset, in ctrlPack, out var pRes);
+        }
+
+        //这个应该是最核心的、别的种类应该都是它的shell。
+        internal static void Root_Executor(
+            in LogicCommand cmd,ref GameAssets gameAsset,
+            in ControllingPack ctrlPack,out object Res)
+        {
+            Res = null;
+            //这个玩意儿的逻辑核心尽量就是这么简单的一个switch、Overhead尽量小。
+            switch (cmd)
+            {
+                case LogicCommand.UpdateShop:
+                    Res=WorldExecutor.UpdateShopBuy(ref gameAsset, in ctrlPack);
+                    break;
+                case LogicCommand.RotateUnit:
+                    WorldExecutor.UpdateRotate(ref gameAsset, in ctrlPack);
+                    break;
+                case LogicCommand.UpdateUnitCursor:
+                    WorldExecutor.UpdateCursor_Unit(ref gameAsset, in ctrlPack, out var movedTile, out var movedCursor);
+                    Res = new [] {movedTile, movedCursor };
+                    break;
+                case LogicCommand.UpdateBoardData:
+                    WorldExecutor.UpdateBoardData(ref gameAsset);
+                    break;
+                case LogicCommand.BossUnpaused:
+                    WorldExecutor.BossStagePauseRunStop(ref gameAsset);
+                    break;
+                case LogicCommand.BossTryUnpause:
+                    WorldExecutor.BossStagePauseTriggered(ref gameAsset);
+                    break;
+                case LogicCommand.Nop:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(cmd), cmd, null);
+            }
+        }
+    }
+    
     //原WORLD-UTILS 是为了进一步解耦，和一般的Utils只能基于基础数学不同，这个允许基于游戏逻辑和游戏制度。
     //现为：WorldExecutor，主要是执行具体的内部逻辑；想象为舰长和执行舰长的感觉吧。
     public static class WorldExecutor //WORLD-EXECUTOR
     {
-        public static void UpdateRotate(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
+        public static void BossStagePauseRunStop(ref GameAssets currentLevelAsset)
+        {
+            WorldCycler.BossStagePause = false;
+            currentLevelAsset.Owner.StopBossStageCost();
+        }
+
+        public static void BossStagePauseTriggered(ref GameAssets currentLevelAsset)
+        {
+            Debug.Assert(WorldCycler.BossStage);
+            if (currentLevelAsset.ReqOkCount <= 0) return;
+            if (WorldCycler.BossStagePause)
+            {
+                WorldCycler.BossStagePause = false;
+                currentLevelAsset.Owner.StopBossStageCost();
+            }
+            else
+            {
+                WorldCycler.BossStagePause = true;
+                currentLevelAsset.Owner.StartBossStageCost();
+            }
+
+            currentLevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
+        }
+
+        public static void UpdateRotate(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
             if (ctrlPack.HasFlag(ControllingCommand.Rotate))
             {
@@ -1199,7 +1248,7 @@ namespace ROOT
             }
         }
 
-        public static void UpdateCursor_Unit(GameAssets currentLevelAsset, in ControllingPack ctrlPack,
+        public static void UpdateCursor_Unit(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack,
             out bool movedTile, out bool movedCursor)
         {
             //这个还要能够处理enableCursor是false的情况。
@@ -1249,7 +1298,7 @@ namespace ROOT
             }
         }
 
-        public static bool UpdateShopBuy(GameAssets currentLevelAsset, in ControllingPack ctrlPack)
+        public static bool UpdateShopBuy(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
             //先简单一些，只允许随机购买。
             //现在不是因为简单而购买了；而是设计上随机位置变成重要的一环。
@@ -1377,6 +1426,51 @@ namespace ROOT
         {
             if (currentLevelAsset.CostChart == null) return;
             currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
+        }
+
+        /// <summary>
+        /// 这个函数主要是将目前场面上的数据反映到UI和玩家的视野中，这个很可能是不能单纯用flow的框架来搞？
+        /// 这个真的不能瞎调，每调用一次就会让场上单位调用一次。
+        /// </summary>
+        /// <param name="currentLevelAsset"></param>
+        internal static void UpdateBoardData(ref GameAssets currentLevelAsset)
+        {
+            //应该把这个、函数（包括round）这些相关的函数流程拆碎；然后用基于事件发布内容。
+            //
+            //这个函数已经被调用了太多次了，现在考虑稍微激进一些；准备调整为基于事件的？
+            //RISK 其实这里调用到的currentLevelAsset里面的数据修改后，这个函数其实都得重新调…………
+            //也有解决方案，其实就是对其使用的数据进行变化监听……不知道靠谱不靠谱。
+            int inCome = 0, cost = 0;
+
+            var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
+            var tmpInComeB = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
+            //下面这个函数应该逻辑上等效，只不过目前还没有实际逻辑。
+            //这个东西是不是该改成基于事件的流程了？
+            var tmpInComeM = SignalMasterMgr.Instance.CalAllScoreAllSignal(currentLevelAsset.GameBoard);
+            if (currentLevelAsset.CurrencyIOEnabled)
+            {
+                inCome += tmpInComeA;
+                inCome += tmpInComeB;
+                inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
+                //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
+                //TEMP 现在只有热力消耗。
+                if (!currentLevelAsset.CurrencyIncomeEnabled)
+                {
+                    //RISK 现在在红色区间没有任何价格收入。靠谱吗？
+                    inCome = 0;
+                }
+
+                cost = ShopMgr.HeatSinkCost(currentLevelAsset.occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
+            }
+
+            currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
+            currentLevelAsset.DeltaCurrency = inCome - cost;
+
+            if (currentLevelAsset.CostChart != null)
+            {
+                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
+                currentLevelAsset.CostChart.IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency);
+            }
         }
     }
 
