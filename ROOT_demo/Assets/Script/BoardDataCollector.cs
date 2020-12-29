@@ -21,7 +21,7 @@ namespace ROOT
             InitIncomeCost();
         }
 
-        private float CalculateProcessorScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
+        /*private float CalculateProcessorScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
         {
             var score = 0.0f;
             var side = unit.GetWorldSpaceUnitSide(direction);
@@ -425,6 +425,6 @@ namespace ROOT
         {
             return CalculateTieredCost();
             //return CalculateBasicCost();
-        }
+        }*/
     }
 }
