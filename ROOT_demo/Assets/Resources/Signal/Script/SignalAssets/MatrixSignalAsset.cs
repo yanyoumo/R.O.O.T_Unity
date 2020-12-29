@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
@@ -22,6 +24,36 @@ namespace ROOT
         public override int SignalVal(Unit unit, Unit otherUnit)
         {
             throw new System.NotImplementedException();
+        }
+
+        public int MaxNormalDepth;
+
+        private void initCounting(Unit unit)
+        {
+            unit.Visited = false;
+            unit.InHddGrid = (unit.UnitCore == CoreType.Processor);
+            unit.InHddSignalGrid = (unit.UnitCore == CoreType.Processor);
+        }
+
+        public override float CalAllScore(Board gameBoard, out int driverCountInt)
+        {
+            var driverCount = 0.0f;
+            driverCountInt = 0;
+
+            gameBoard.Units.ForEach(initCounting);
+
+            if (gameBoard.Units.Count(unit => unit.UnitCore == CoreType.Processor) == 0) return 0.0f;
+
+            foreach (var unit in gameBoard.Units.Where(unit=>unit.UnitCore == CoreType.Processor))
+            {
+                if (unit.Visited) continue;
+                unit.SignalCore.CalScore(out var hardwareCount);
+                driverCount += hardwareCount;
+            }
+
+            MaxNormalDepth = (int) driverCount;
+            driverCountInt = (int) driverCount;
+            return Mathf.FloorToInt(driverCount * BoardDataCollector.GetPerDriverIncome);
         }
     }
 }

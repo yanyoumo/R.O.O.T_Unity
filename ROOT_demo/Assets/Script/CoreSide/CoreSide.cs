@@ -148,7 +148,7 @@ namespace ROOT
 
     public partial class BoardDataCollector : MonoBehaviour
     {
-        private float perDriverIncome = 1.0f;
+        private const float perDriverIncome = 1.0f;
         private Dictionary<CoreType, float> costByCore;
 
         private void InitIncomeCost()
@@ -178,7 +178,7 @@ namespace ROOT
             return Mathf.Floor(income);
         }
 
-        public float GetPerDriverIncome => perDriverIncome;
+        public static float GetPerDriverIncome => perDriverIncome;
 
         public float GetCostByCore(CoreType key)
         {
