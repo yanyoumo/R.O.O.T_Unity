@@ -1448,15 +1448,15 @@ namespace ROOT
             //也有解决方案，其实就是对其使用的数据进行变化监听……不知道靠谱不靠谱。
             int inCome = 0, cost = 0;
 
-            var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
-            var tmpInComeB = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
+            //var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
+            //var tmpInComeB = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
             //下面这个函数应该逻辑上等效，只不过目前还没有实际逻辑。
             //这个东西是不是该改成基于事件的流程了？
             var tmpInComeM = SignalMasterMgr.Instance.CalAllScoreAllSignal(currentLevelAsset.GameBoard);
             if (currentLevelAsset.CurrencyIOEnabled)
             {
-                inCome += tmpInComeA;
-                inCome += tmpInComeB;
+                //inCome += tmpInComeA;
+                inCome += Mathf.FloorToInt(tmpInComeM);
                 inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
                 //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
                 //TEMP 现在只有热力消耗。

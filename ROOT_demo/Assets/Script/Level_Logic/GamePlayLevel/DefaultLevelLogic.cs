@@ -479,11 +479,11 @@ namespace ROOT
             }
             else
             {
-                currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out harDriverCountInt);
-                currentLevelAsset.BoardDataCollector.CalculateServerScore(out networkCountInt);
+                /*currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out harDriverCountInt);
+                currentLevelAsset.BoardDataCollector.CalculateServerScore(out networkCountInt);*/
                 //下面两个函数应该是等效的，只不过目前还没有实际逻辑。
-                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, currentLevelAsset.GameBoard, out var m_hardDriveCountInt);
-                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, currentLevelAsset.GameBoard, out var m_networkCountInt);
+                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, currentLevelAsset.GameBoard, out harDriverCountInt);
+                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, currentLevelAsset.GameBoard, out networkCountInt);
                 currentLevelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
             }
 
