@@ -23,14 +23,14 @@ namespace ROOT
         {
             //这快儿是有问题的，主要是因为之前为了避免绕近道，强制一次一步、但是这么设计没法根据Tier调整数据。
             //可能有需要ServerDepth和HardwareDepth两个平行数据。再否则就是类似阵列信号那边，有一个FromDir。
-            var ShowNetLED = unit.InServerGrid && otherUnit.InServerGrid;
-            ShowNetLED &= Math.Abs(unit.ServerDepth - otherUnit.ServerDepth) <= 1;
+            var ShowNetLED = unit.SignalCore.InServerGrid && otherUnit.SignalCore.InServerGrid;
+            ShowNetLED &= Math.Abs(unit.SignalCore.ServerSignalDepth - otherUnit.SignalCore.ServerSignalDepth) <= 1;
             return ShowNetLED;
         }
         public override int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             var showSig = ShowSignal(dir, unit, otherUnit);
-            return showSig ? Math.Min(unit.ServerDepth, otherUnit.NetworkVal) : 0;
+            return showSig ? Math.Min(unit.SignalCore.ServerSignalDepth, otherUnit.SignalCore.ServerSignalDepth) : 0;
         }
 
         public override float CalAllScore(Board gameBoard, out int hardwareCount)

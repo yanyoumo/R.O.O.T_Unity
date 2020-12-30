@@ -14,7 +14,7 @@ namespace ROOT
         public abstract CoreType FieldUnitType { get; }
         public abstract bool ShowSignal(RotationDirection dir,Unit unit,Unit otherUnit);
         public abstract int SignalVal(RotationDirection dir, Unit unit,Unit otherUnit);
-        
+
         //从这里看，就是将会有一个地方可以对某类信号统一调用结果；
         //但是现在相当于要把视角放在单元上；
         //然后将这个函数统一放在这里。这是最费劲的事儿，这里需要Board的引用，先留个口吧。

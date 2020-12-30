@@ -9,12 +9,12 @@ namespace ROOT
     {
         public static bool ShowSignal(Unit unit, Unit otherUnit)
         {
-            return unit.InHddSignalGrid && otherUnit.InHddSignalGrid;
+            return unit.SignalCore.InMatrixSignal && otherUnit.SignalCore.InMatrixSignal;
         }
 
         public static int SignalVal(Unit unit, Unit otherUnit)
         {
-            return Math.Min(unit.HardDiskVal, otherUnit.HardDiskVal);
+            return Math.Min(unit.SignalCore.MatrixVal, otherUnit.SignalCore.MatrixVal);
         }
 
         private float CalculateProcessorScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
@@ -35,26 +35,40 @@ namespace ROOT
         {
             var score = 0.0f;
             var unit = GameBoard.FindUnitUnderBoardPos(hostKey)?.GetComponentInChildren<Unit>();
-            if (unit == null || unit.Visited) return score;
+            var signalCore = unit?.SignalCore;
+            if (unit == null || signalCore.Visited) return score;
 
             if (unit.UnitCore == CoreType.HardDrive)
             {
                 var (scoreMultiplier, item2, item3) = ShopBase.TierMultiplier(unit.Tier);
                 score += scoreMultiplier;
-                unit.InHddGrid = true;
+                signalCore.InMatrix = true;
             }
 
-            unit.InHddSignalGrid = true;
-            unit.Visited = true;
+            signalCore.InMatrixSignal = true;
+            signalCore.Visited = true;
 
             score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.North, depth);
             score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.East, depth);
             score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.West, depth);
             score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.South, depth);
 
-            unit.SignalFromDir = dir;
-            unit.HardDiskVal = (int) score;
+            signalCore.SignalFromDir = dir;
+            signalCore.MatrixVal = (int) score;
             return score;
+        }
+
+        public override SignalType Type => SignalType.Matrix;
+
+        public override List<Vector2Int> SingleInfoCollectorZone
+        {
+            get
+            {
+                var zone = Utils.GetPixelateCircle_Tier(Owner.Tier - 1);
+                var res = new List<Vector2Int>();
+                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
+                return res;
+            }
         }
 
         public override float CalScore(out int driverCountInt)

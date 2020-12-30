@@ -124,6 +124,22 @@ namespace ROOT
             throw new NotImplementedException();
         }
 
+        public override SignalType Type => SignalType.Scan;
+
+        public override List<Vector2Int> SingleInfoCollectorZone
+        {
+            get
+            {
+                const float networkA = 1.45f;
+                const float networkB = 1.74f;
+                var circleTier = Math.Max(Mathf.RoundToInt(Mathf.Pow(BoardDataCollector.MaxNetworkDepth / networkB, networkA)), 0);
+                var zone = Utils.GetPixelateCircle_Tier(circleTier);
+                var res = new List<Vector2Int>();
+                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
+                return res;
+            }
+        }
+
         public override float CalScore(out int networkCount)
         {
             //这里调一下你那个有更多的输出变量CalScore函数就行了。（函数名想变都能变。

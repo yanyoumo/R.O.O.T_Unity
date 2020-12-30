@@ -20,25 +20,23 @@ namespace ROOT
 
         public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
-            var ShowHDDLED = unit.InHddSignalGrid && otherUnit.InHddSignalGrid;
-            var HasSolidHDDSigal = (unit.SignalFromDir == dir);
-            HasSolidHDDSigal |= (Utils.GetInvertDirection(otherUnit.SignalFromDir) == dir);
-            ShowHDDLED &= HasSolidHDDSigal;
-            return ShowHDDLED;
+            var showScan = unit.SignalCore.InMatrixSignal && otherUnit.SignalCore.InMatrixSignal;
+            var solidScanSignal = (unit.SignalCore.SignalFromDir == dir);
+            solidScanSignal |= (Utils.GetInvertDirection(otherUnit.SignalCore.SignalFromDir) == dir);
+            showScan &= solidScanSignal;
+            return showScan;
         }
         public override int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             var showSig = ShowSignal(dir, unit, otherUnit);
-            return showSig ? Math.Min(unit.HardDiskVal, otherUnit.HardDiskVal) : 0;
+            return showSig ? Math.Min(unit.SignalCore.MatrixVal, otherUnit.SignalCore.MatrixVal) : 0;
         }
-
-        public int MaxNormalDepth;
 
         private void initCounting(Unit unit)
         {
-            unit.Visited = false;
-            unit.InHddGrid = (unit.UnitCore == CoreType.Processor);
-            unit.InHddSignalGrid = (unit.UnitCore == CoreType.Processor);
+            unit.SignalCore.Visited = false;
+            unit.SignalCore.InMatrix = (unit.UnitCore == CoreType.Processor);
+            unit.SignalCore.InMatrixSignal = (unit.UnitCore == CoreType.Processor);
         }
 
         public override float CalAllScore(Board gameBoard, out int driverCountInt)
@@ -52,12 +50,12 @@ namespace ROOT
 
             foreach (var unit in gameBoard.FindUnitWithCoreType(CoreUnitType))
             {
-                if (unit.Visited) continue;
+                if (unit.SignalCore.Visited) continue;
                 unit.SignalCore.CalScore(out var hardwareCount);
                 driverCount += hardwareCount;
             }
 
-            driverCountInt = MaxNormalDepth = Mathf.FloorToInt(driverCount);
+            driverCountInt = Mathf.FloorToInt(driverCount);
             return Mathf.FloorToInt(driverCount * BoardDataCollector.GetPerDriverIncome);
         }
     }

@@ -26,6 +26,7 @@ namespace ROOT
         public bool Connected;
         public CoreGenre ConnectedToGenre;
         private Unit _otherUnit;
+
         public Unit OtherUnit
         {
             get => HasConnector && Connected ? _otherUnit : null;
@@ -54,6 +55,7 @@ namespace ROOT
             {
                 return false;
             }
+
             var vec = srList[StationaryRateListLastIndex];
             if (vec.x == 0 && vec.y == 0)
             {
@@ -70,6 +72,7 @@ namespace ROOT
             StationaryRateListLastIndex++;
             return true;
         }
+
         /// <summary>
         /// 根据现有的状态来决定下一个单元是否应该是静态的。
         /// </summary>
@@ -94,11 +97,13 @@ namespace ROOT
                         return false;
                     }
                 }
+
                 return stationaryArray[localOffset];
             }
         }
 
-        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID, int _cost, int tier)
+        private GameObject InitUnitShop(CoreType core, SideType[] sides, out float hardwarePrice, int ID, int _cost,
+            int tier)
         {
             var go = InitUnitShopCore(core, sides, ID, _cost, tier);
             var unit = go.GetComponentInChildren<Unit>();
@@ -112,6 +117,7 @@ namespace ROOT
                 _priceByCore.TryGetValue(core, out var corePrice);
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
+
             TotalCount++;
             return go;
         }
@@ -184,8 +190,8 @@ namespace ROOT
         public Transform ShopBackPlane;
         public Transform ShopDiscountRoot;
 
-        public bool IsInGridHDD => InHddGrid && (UnitCore == CoreType.HardDrive);
-        public bool IsEndingGridNetwork => InServerGrid && (UnitCore == CoreType.NetworkCable) && ServerDepth == 1;
+        public bool IsActiveMatrixFieldUnit => SignalCore.InMatrix && (UnitCore == CoreType.HardDrive);
+        public bool IsEndingScanFieldUnit => SignalCore.InServerGrid && (UnitCore == CoreType.NetworkCable) && SignalCore.ServerDepth == 1;
 
         private bool _hasDiscount = false;
 
@@ -316,50 +322,64 @@ namespace ROOT
         }
 
         #region 临时转译
+
         //现在这里只是和SignalCoreBase的转译字段，彻底转过来后就彻底移除。
         //现在信号相关的数据已经从单元本身（硬件）中移除出去了。
+        [Obsolete]
         public RotationDirection SignalFromDir
         {
             get => SignalCore.SignalFromDir;
             set => SignalCore.SignalFromDir = value;
         }
+
+        [Obsolete]
         public bool Visited
         {
             get => SignalCore.Visited;
             set => SignalCore.Visited = value;
         }
+
+        [Obsolete]
         public bool Visiting
         {
             get => SignalCore.Visiting;
             set => SignalCore.Visiting = value;
         }
+
+        [Obsolete]
         public int HardDiskVal
         {
-            get => SignalCore.HardDiskVal;
-            set => SignalCore.HardDiskVal = value;
-        }
-        public bool InHddGrid
-        {
-            get => SignalCore.InHddGrid;
-            set => SignalCore.InHddGrid = value;
-        }
-        public bool InHddSignalGrid
-        {
-            get => SignalCore.InHddSignalGrid;
-            set => SignalCore.InHddSignalGrid = value;
+            get => SignalCore.MatrixVal;
+            set => SignalCore.MatrixVal = value;
         }
 
+        [Obsolete]
+        public bool InHddGrid
+        {
+            get => SignalCore.InMatrix;
+            set => SignalCore.InMatrix = value;
+        }
+
+        [Obsolete]
+        public bool InHddSignalGrid
+        {
+            get => SignalCore.InMatrixSignal;
+            set => SignalCore.InMatrixSignal = value;
+        }
+
+        [Obsolete]
         public int ServerDepth
         {
             get => SignalCore.ServerDepth;
             set => SignalCore.ServerDepth = value;
         }
+
+        [Obsolete]
         public bool InServerGrid
         {
             get => SignalCore.InServerGrid;
             set => SignalCore.InServerGrid = value;
         }
-        public int NetworkVal => SignalCore.NetworkVal;
 
         #endregion
 
@@ -375,8 +395,7 @@ namespace ROOT
             }
         }
 
-        [HideInInspector]
-        public readonly RotationDirection[] RotationList =
+        [HideInInspector] public readonly RotationDirection[] RotationList =
         {
             RotationDirection.East,
             RotationDirection.North,
@@ -642,8 +661,9 @@ namespace ROOT
         }
 
         // 获得相连的所有Unit
-        public List<Unit> GetConnectedOtherUnit=>WorldNeighboringData.Values.Where(data => data.Connected).Select(data => data.OtherUnit).ToList();
-        
+        public List<Unit> GetConnectedOtherUnit => WorldNeighboringData.Values.Where(data => data.Connected)
+            .Select(data => data.OtherUnit).ToList();
+
         private bool SideFilter(RotationDirection dir)
         {
             return dir == RotationDirection.West || dir == RotationDirection.South;
@@ -653,7 +673,8 @@ namespace ROOT
         {
             WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
             if (!data.HasConnector) return;
-            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(dir, _unitRotation), out Connector Connector);
+            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(dir, _unitRotation),
+                out Connector Connector);
             if (Connector == null) return;
             Connector.Signal_A_Val = 0;
             Connector.Signal_B_Val = 0;
@@ -672,7 +693,7 @@ namespace ROOT
         //利用lib系统的设计，这里需要能够遍历UnitLogicBase中所有对应静态函数来计分。
         //当然、LED上面能不能显示那么多是另一回事、抽象框架设计出来后，都会好一些。
 
-        private void ConnectorSignalMux(ref Connector connector,SignalType type,int val, bool ignoreVal = false)
+        private void ConnectorSignalMux(ref Connector connector, SignalType type, int val, bool ignoreVal = false)
         {
             //这个函数是将信号配置到具体的接口LED上面、这个东西只能手动配置；相当于信号和硬件儿的映射。
             switch (type)
@@ -691,7 +712,8 @@ namespace ROOT
         private void SetConnector(RotationDirection crtDir, bool ignoreVal = false)
         {
             WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
-            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation), out var Connector);
+            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation),
+                out var Connector);
             Connector.Connected = data.Connected;
 
             var otherUnit = data.OtherUnit;
@@ -750,6 +772,7 @@ namespace ROOT
                 Connector.Blink(BlinkDuration);
                 return;
             }
+
             throw new ArgumentException();
         }
 
@@ -758,16 +781,16 @@ namespace ROOT
             //Server那里用不用迪公帮忙把路径捋出来？目前看不用
             if (UnitCore == CoreType.HardDrive)
             {
-                if (SignalFromDir == RotationDirection.West || SignalFromDir == RotationDirection.South)
+                if (SignalCore.SignalFromDir == RotationDirection.West || SignalCore.SignalFromDir == RotationDirection.South)
                 {
-                    var localRotation = Utils.RotateDirectionBeforeRotation(SignalFromDir, _unitRotation);
+                    var localRotation = Utils.RotateDirectionBeforeRotation(SignalCore.SignalFromDir, _unitRotation);
                     ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
                     if (Connector != null) Connector.Blink(BlinkDuration);
                 }
                 else
                 {
-                    var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalFromDir);
-                    if (nextUnit != null) nextUnit.SimpleBlink(Utils.GetInvertDirection(SignalFromDir));
+                    var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalCore.SignalFromDir);
+                    if (nextUnit != null) nextUnit.SimpleBlink(Utils.GetInvertDirection(SignalCore.SignalFromDir));
                 }
 
                 StartCoroutine(NextBlinkGap(BlinkDuration));
@@ -789,8 +812,8 @@ namespace ROOT
 
                         if (otherUnit == null) continue;
 
-                        var showNetLed = InServerGrid && otherUnit.InServerGrid;
-                        showNetLed &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
+                        var showNetLed = SignalCore.InServerGrid && otherUnit.SignalCore.InServerGrid;
+                        showNetLed &= Math.Abs(SignalCore.ServerDepth - otherUnit.SignalCore.ServerDepth) <= 1;
 
                         if (showNetLed)
                         {
@@ -817,7 +840,7 @@ namespace ROOT
         {
             if (UnitCore == CoreType.HardDrive)
             {
-                var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalFromDir);
+                var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalCore.SignalFromDir);
                 if (nextUnit != null) nextUnit.Blink(null);
             }
             else if (UnitCore == CoreType.NetworkCable && nextDirection.HasValue)

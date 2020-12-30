@@ -73,6 +73,11 @@ namespace ROOT
             return signalAssetLib.Values.Sum(v => v.CalAllScore(gameBoard));
         }
 
+        /*public List<Vector2Int> SingleInfoCollectorZoneBySignal(Unit unit)
+        {
+            return signalAssetLib[unit.SignalCore.Type].SingleInfoCollectorZone(unit);
+        }*/
+
         #endregion
     }
 }
