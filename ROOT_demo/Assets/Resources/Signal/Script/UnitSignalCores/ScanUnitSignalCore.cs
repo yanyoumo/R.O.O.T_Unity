@@ -11,9 +11,6 @@ namespace ROOT
     using networkCableStatus = Tuple<Unit, int, int, ulong>;
     public class ScanUnitSignalCore : UnitSignalCoreBase
     {
-        public int MaxCount;
-        public int MaxScore;
-        public int MaxLength;
         private List<Unit> GeneratePath(Unit start, ulong vis)
         {
             var unitPathList = new List<Unit>();
@@ -120,29 +117,7 @@ namespace ROOT
             return Mathf.Floor(income);
         }
 
-        public float CalScore(out int networkCount,out int A,out int B,out int C)
-        {
-            //这个函数你自己具体挪吧。
-            throw new NotImplementedException();
-        }
-
-        public override SignalType Type => SignalType.Scan;
-
-        public override List<Vector2Int> SingleInfoCollectorZone
-        {
-            get
-            {
-                const float networkA = 1.45f;
-                const float networkB = 1.74f;
-                var circleTier = Math.Max(Mathf.RoundToInt(Mathf.Pow(BoardDataCollector.MaxNetworkDepth / networkB, networkA)), 0);
-                var zone = Utils.GetPixelateCircle_Tier(circleTier);
-                var res = new List<Vector2Int>();
-                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
-                return res;
-            }
-        }
-
-        public override float CalScore(out int networkCount)
+        public float CalScore(out int networkCount, ref int maxCount, ref int maxScore, ref int maxLength)
         {
             //这里调一下你那个有更多的输出变量CalScore函数就行了。（函数名想变都能变。
             //return CalScore(out networkCount, out var A, out var B, out var C);
@@ -166,19 +141,19 @@ namespace ROOT
                 }
                 else
                     thisLevelDict.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
-                if (length > MaxLength)
+                if (length > maxLength)
                     break;
                 networkCable.SignalCore.Visited = true;
                 networkCable.SignalCore.Visiting = false;
                 var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
                 hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
                 if (FindNextLevelNetworkCable(networkCableQueue, hardDriveQueue, length, score) &&
-                    ((length < MaxLength && length != 0) || length == MaxLength))
+                    ((length < maxLength && length != 0) || length == maxLength))
                 {
-                    if (length < MaxLength || (length == MaxLength && score > MaxScore))
+                    if (length < maxLength || (length == maxLength && score > maxScore))
                     {
-                        MaxScore = score;
-                        MaxLength = length;
+                        maxScore = score;
+                        maxLength = length;
                         Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
                         GeneratePath(Owner, vis);
                     }
@@ -187,22 +162,43 @@ namespace ROOT
                     {
                         var lastNodeButOne = lastLevelDict[unitConnectedToLastNode];
                         if (PathContains(vis, lastNodeButOne.Item4) == false &&
-                            lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable) > MaxScore)
+                            lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable) > maxScore)
                         {
-                            MaxScore = lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable);
+                            maxScore = lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable);
                             Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
                             GeneratePath(Owner, AddPath(networkCable, lastNodeButOne.Item4));
                         }
                     }
                 }
             }
-            if (MaxLength == MaxCount)
+            if (maxLength == maxCount)
             {
                 Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
-                MaxScore = 0;
+                maxScore = 0;
             }
-            BoardDataCollector.MaxNetworkDepth = networkCount = MaxScore;
-            return GetServerIncomeByLength(MaxScore);
+            BoardDataCollector.MaxNetworkDepth = networkCount = maxScore;
+            return GetServerIncomeByLength(maxScore);
+        }
+
+        public override SignalType Type => SignalType.Scan;
+
+        public override List<Vector2Int> SingleInfoCollectorZone
+        {
+            get
+            {
+                const float networkA = 1.45f;
+                const float networkB = 1.74f;
+                var circleTier = Math.Max(Mathf.RoundToInt(Mathf.Pow(BoardDataCollector.MaxNetworkDepth / networkB, networkA)), 0);
+                var zone = Utils.GetPixelateCircle_Tier(circleTier);
+                var res = new List<Vector2Int>();
+                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
+                return res;
+            }
+        }
+
+        public override float CalScore(out int networkCount)
+        {
+            throw new NotImplementedException();
         }
     }
 }

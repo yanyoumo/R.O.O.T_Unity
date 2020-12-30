@@ -44,13 +44,7 @@ namespace ROOT
                 //懂了，主要是CalScore代码之间需要交互这三个数据。
                 //这个可以搞的，写一个CalScore的重写，里面写上需要的out变量就行了。
                 //给你在ScanUnitSignalCore.cs的129行左右留了更多的内容。
-                signalCore.MaxCount = maxCount;
-                signalCore.MaxScore = maxScore;
-                signalCore.MaxLength = maxLength;
-                res = signalCore.CalScore(out var count);
-                maxCount = signalCore.MaxCount;
-                maxScore = signalCore.MaxScore;
-                maxLength = signalCore.MaxLength;
+                res = signalCore.CalScore(out var count, ref maxCount, ref maxScore, ref maxLength);
             }
             BoardDataCollector.MaxNetworkDepth = hardwareCount = maxScore;
             return res;
