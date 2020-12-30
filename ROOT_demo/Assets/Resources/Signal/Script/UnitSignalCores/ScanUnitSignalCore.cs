@@ -9,6 +9,7 @@ using UnityEngine;
 namespace ROOT
 {
     using networkCableStatus = Tuple<Unit, int, int, ulong>;
+
     public class ScanUnitSignalCore : UnitSignalCoreBase
     {
         private List<Unit> GeneratePath(Unit start, ulong vis)
@@ -22,6 +23,7 @@ namespace ROOT
                 {
                     cnt += now.Tier;
                 }
+
                 unitPathList.Add(now);
                 now.SignalCore.InServerGrid = true;
                 vis = RemovePath(now, vis);
@@ -45,6 +47,7 @@ namespace ROOT
                     cnt -= unit.Tier;
                 }
             }
+
             return unitPathList;
         }
 
@@ -74,15 +77,16 @@ namespace ROOT
         }
 
         private bool FindNextLevelNetworkCable(Queue<networkCableStatus> networkCableQueue,
-                                            Queue<Tuple<Unit, ulong>> hardDriveQueue,
-                                            int length,
-                                            int score)
+            Queue<Tuple<Unit, ulong>> hardDriveQueue,
+            int length,
+            int score)
         {
             bool isLast = true;
             while (hardDriveQueue.Count != 0)
             {
                 var (hardDrive, vis) = hardDriveQueue.Dequeue();
-                foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit.Where(unit => IsVis(unit, vis) == false))
+                foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit.Where(unit =>
+                    IsVis(unit, vis) == false))
                 {
                     if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable &&
                         unitConnectedToHardDrive.SignalCore.Visited == false)
@@ -98,14 +102,17 @@ namespace ROOT
                         }
                     }
                     else
-                        hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive, AddPath(unitConnectedToHardDrive, vis)));
+                        hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(unitConnectedToHardDrive,
+                            AddPath(unitConnectedToHardDrive, vis)));
                 }
             }
+
             return isLast;
         }
+
         public float GetServerIncomeByLength(int length)
         {
-            float[] incomeArrayDel = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f };
+            float[] incomeArrayDel = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
             float incomeArrayBase = 0.0f;
             float income = incomeArrayBase;
             for (int i = 0; i < length; i++)
@@ -117,7 +124,7 @@ namespace ROOT
             return Mathf.Floor(income);
         }
 
-public float CalScore(out int networkCount, ref int maxCount, ref int maxScore, ref int maxLength)
+        public float CalScore(out int networkCount, ref int maxCount, ref int maxScore, ref int maxLength)
         {
             //这里调一下你那个有更多的输出变量CalScore函数就行了。（函数名想变都能变。
             //return CalScore(out networkCount, out var A, out var B, out var C);
@@ -135,12 +142,13 @@ public float CalScore(out int networkCount, ref int maxCount, ref int maxScore, 
                 {
                     lastLevelDict = thisLevelDict;
                     thisLevelDict = new Dictionary<Unit, networkCableStatus>
-                        {
-                            {networkCable, new networkCableStatus(networkCable, length, score, vis)}
-                        };
+                    {
+                        {networkCable, new networkCableStatus(networkCable, length, score, vis)}
+                    };
                 }
                 else
                     thisLevelDict.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
+
                 if (length > maxLength)
                     break;
                 networkCable.SignalCore.Visited = true;
@@ -158,7 +166,8 @@ public float CalScore(out int networkCount, ref int maxCount, ref int maxScore, 
                         GeneratePath(Owner, vis);
                     }
 
-                    foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit.Where(unit => lastLevelDict.ContainsKey(unit)))
+                    foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit.Where(unit =>
+                        lastLevelDict.ContainsKey(unit)))
                     {
                         var lastNodeButOne = lastLevelDict[unitConnectedToLastNode];
                         if (PathContains(vis, lastNodeButOne.Item4) == false &&
@@ -171,11 +180,13 @@ public float CalScore(out int networkCount, ref int maxCount, ref int maxScore, 
                     }
                 }
             }
+
             if (maxLength == maxCount)
             {
                 Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
                 maxScore = 0;
             }
+
             BoardDataCollector.MaxNetworkDepth = networkCount = maxScore;
             return GetServerIncomeByLength(maxScore);
         }
@@ -188,17 +199,24 @@ public float CalScore(out int networkCount, ref int maxCount, ref int maxScore, 
             {
                 const float networkA = 1.45f;
                 const float networkB = 1.74f;
-                var circleTier = Math.Max(Mathf.RoundToInt(Mathf.Pow(BoardDataCollector.MaxNetworkDepth / networkB, networkA)), 0);
+                var circleTier =
+                    Math.Max(Mathf.RoundToInt(Mathf.Pow(BoardDataCollector.MaxNetworkDepth / networkB, networkA)), 0);
                 var zone = Utils.GetPixelateCircle_Tier(circleTier);
                 var res = new List<Vector2Int>();
-                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
+                zone.PatternList.ForEach(vec =>
+                    res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
                 return res;
             }
         }
 
         public override float CalScore(out int networkCount)
         {
-            throw new NotImplementedException();
+            int maxCount = Board.BoardLength * Board.BoardLength;
+            var maxScore = Int32.MinValue;
+            var maxLength = maxCount;
+            //这里实际应该有问题，迪公的这个代码应该没法这么实际运行？总之有空让他把这儿弄成一个能用的版本。
+            //这里跑的逻辑应该是假设除了这个Server其他Server都不存在的计算结果。
+            return CalScore(out networkCount, ref maxCount, ref maxScore, ref maxLength);
         }
     }
 }
