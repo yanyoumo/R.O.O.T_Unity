@@ -122,7 +122,7 @@ namespace ROOT
 
         public float CalScore(out int networkCount,out int A,out int B,out int C)
         {
-            //Õâ¸öº¯ÊıÄã×Ô¼º¾ßÌåÅ²°É¡£
+            //è¿™ä¸ªå‡½æ•°ä½ è‡ªå·±å…·ä½“æŒªå§ã€‚
             throw new NotImplementedException();
         }
 
@@ -144,7 +144,7 @@ namespace ROOT
 
         public override float CalScore(out int networkCount)
         {
-            //ÕâÀïµ÷Ò»ÏÂÄãÄÇ¸öÓĞ¸ü¶àµÄÊä³ö±äÁ¿CalScoreº¯Êı¾ÍĞĞÁË¡££¨º¯ÊıÃûÏë±ä¶¼ÄÜ±ä¡£
+            //è¿™é‡Œè°ƒä¸€ä¸‹ä½ é‚£ä¸ªæœ‰æ›´å¤šçš„è¾“å‡ºå˜é‡CalScoreå‡½æ•°å°±è¡Œäº†ã€‚ï¼ˆå‡½æ•°åæƒ³å˜éƒ½èƒ½å˜ã€‚
             //return CalScore(out networkCount, out var A, out var B, out var C);
             var thisLevelDict = new Dictionary<Unit, networkCableStatus>();
             var lastLevelDict = new Dictionary<Unit, networkCableStatus>();

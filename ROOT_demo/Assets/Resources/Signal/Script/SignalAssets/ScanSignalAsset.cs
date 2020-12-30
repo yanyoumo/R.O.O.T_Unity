@@ -14,17 +14,17 @@ namespace ROOT
             UnitSignalCoreType = gameObject.AddComponent<ScanUnitSignalCore>().GetType();
         }
 
-        //ÕâÀïµÄ´úÂëÎ´À´»¹Òª¿¼ÂÇµ½ÕâĞ©Êı¾İµÄÎ»ÖÃ»á±ä¡£
+        //è¿™é‡Œçš„ä»£ç æœªæ¥è¿˜è¦è€ƒè™‘åˆ°è¿™äº›æ•°æ®çš„ä½ç½®ä¼šå˜ã€‚
         public override SignalType Type => SignalType.Scan;
         public override CoreType CoreUnitType => CoreType.Server;
         public override CoreType FieldUnitType => CoreType.NetworkCable;
 
         public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
-            //Õâ¿ì¶ùÊÇÓĞÎÊÌâµÄ£¬Ö÷ÒªÊÇÒòÎªÖ®Ç°ÎªÁË±ÜÃâÈÆ½üµÀ£¬Ç¿ÖÆÒ»´ÎÒ»²½¡¢µ«ÊÇÕâÃ´Éè¼ÆÃ»·¨¸ù¾İTierµ÷ÕûÊı¾İ¡£
-            //¿ÉÄÜÓĞĞèÒªServerDepthºÍHardwareDepthÁ½¸öÆ½ĞĞÊı¾İ¡£ÔÙ·ñÔò¾ÍÊÇÀàËÆÕóÁĞĞÅºÅÄÇ±ß£¬ÓĞÒ»¸öFromDir¡£
+            //è¿™å¿«å„¿æ˜¯æœ‰é—®é¢˜çš„ï¼Œä¸»è¦æ˜¯å› ä¸ºä¹‹å‰ä¸ºäº†é¿å…ç»•è¿‘é“ï¼Œå¼ºåˆ¶ä¸€æ¬¡ä¸€æ­¥ã€ä½†æ˜¯è¿™ä¹ˆè®¾è®¡æ²¡æ³•æ ¹æ®Tierè°ƒæ•´æ•°æ®ã€‚
+            //å¯èƒ½æœ‰éœ€è¦ServerDepthå’ŒHardwareDepthä¸¤ä¸ªå¹³è¡Œæ•°æ®ã€‚å†å¦åˆ™å°±æ˜¯ç±»ä¼¼é˜µåˆ—ä¿¡å·é‚£è¾¹ï¼Œæœ‰ä¸€ä¸ªFromDirã€‚
             var ShowNetLED = unit.SignalCore.InServerGrid && otherUnit.SignalCore.InServerGrid;
-            ShowNetLED &= Math.Abs(unit.SignalCore.ServerSignalDepth - otherUnit.SignalCore.ServerSignalDepth) <= 1;
+            ShowNetLED &= Math.Abs(unit.SignalCore.ServerDepth - otherUnit.SignalCore.ServerDepth) <= 1;
             return ShowNetLED;
         }
         public override int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
@@ -41,9 +41,9 @@ namespace ROOT
             float res = 0;
             foreach (var signalCore in gameBoard.FindUnitWithCoreType(CoreUnitType).Select(unit => unit.SignalCore as ScanUnitSignalCore))
             {
-                //¶®ÁË£¬Ö÷ÒªÊÇCalScore´úÂëÖ®¼äĞèÒª½»»¥ÕâÈı¸öÊı¾İ¡£
-                //Õâ¸ö¿ÉÒÔ¸ãµÄ£¬Ğ´Ò»¸öCalScoreµÄÖØĞ´£¬ÀïÃæĞ´ÉÏĞèÒªµÄout±äÁ¿¾ÍĞĞÁË¡£
-                //¸øÄãÔÚScanUnitSignalCore.csµÄ129ĞĞ×óÓÒÁôÁË¸ü¶àµÄÄÚÈİ¡£
+                //æ‡‚äº†ï¼Œä¸»è¦æ˜¯CalScoreä»£ç ä¹‹é—´éœ€è¦äº¤äº’è¿™ä¸‰ä¸ªæ•°æ®ã€‚
+                //è¿™ä¸ªå¯ä»¥æçš„ï¼Œå†™ä¸€ä¸ªCalScoreçš„é‡å†™ï¼Œé‡Œé¢å†™ä¸Šéœ€è¦çš„outå˜é‡å°±è¡Œäº†ã€‚
+                //ç»™ä½ åœ¨ScanUnitSignalCore.csçš„129è¡Œå·¦å³ç•™äº†æ›´å¤šçš„å†…å®¹ã€‚
                 signalCore.MaxCount = maxCount;
                 signalCore.MaxScore = maxScore;
                 signalCore.MaxLength = maxLength;
