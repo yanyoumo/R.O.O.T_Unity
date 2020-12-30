@@ -26,7 +26,7 @@ namespace ROOT
                     cnt += now.Tier;
                 }
                 unitPathList.Add(now);
-                now.InServerGrid = true;
+                now.SignalCore.InServerGrid = true;
                 vis = RemovePath(now, vis);
                 foreach (var otherUnit in now.GetConnectedOtherUnit)
                 {
@@ -37,10 +37,12 @@ namespace ROOT
                     }
                 }
             }
+
             var length = unitPathList.Count;
             foreach (var unit in unitPathList)
             {
-                unit.ServerDepth = cnt;
+                unit.SignalCore.ServerDepth = length--;
+                unit.SignalCore.ServerSignalDepth = cnt;
                 if (unit.UnitCore == CoreType.NetworkCable)
                 {
                     cnt -= unit.Tier;
@@ -86,12 +88,12 @@ namespace ROOT
                 foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit.Where(unit => IsVis(unit, vis) == false))
                 {
                     if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable &&
-                        unitConnectedToHardDrive.Visited == false)
+                        unitConnectedToHardDrive.SignalCore.Visited == false)
                     {
                         isLast = false;
-                        if (unitConnectedToHardDrive.Visiting == false)
+                        if (unitConnectedToHardDrive.SignalCore.Visiting == false)
                         {
-                            unitConnectedToHardDrive.Visiting = true;
+                            unitConnectedToHardDrive.SignalCore.Visiting = true;
                             networkCableQueue.Enqueue(new networkCableStatus(unitConnectedToHardDrive,
                                 length + 1,
                                 score + Utils.GetUnitTierInt(unitConnectedToHardDrive),
@@ -146,8 +148,8 @@ namespace ROOT
             //return CalScore(out networkCount, out var A, out var B, out var C);
             var thisLevelDict = new Dictionary<Unit, networkCableStatus>();
             var lastLevelDict = new Dictionary<Unit, networkCableStatus>();
-            Owner.GameBoard.Units.ForEach(unit => unit.Visited = unit.Visiting = false);
-            Owner.Visiting = true;
+            Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.Visited = unit.SignalCore.Visiting = false);
+            Owner.SignalCore.Visiting = true;
             var networkCableQueue = new Queue<networkCableStatus>();
             networkCableQueue.Enqueue(new networkCableStatus(Owner, 0, 0, AddPath(Owner, 0ul)));
             while (networkCableQueue.Count != 0)
@@ -166,8 +168,8 @@ namespace ROOT
                     thisLevelDict.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
                 if (length > MaxLength)
                     break;
-                networkCable.Visited = true;
-                networkCable.Visiting = false;
+                networkCable.SignalCore.Visited = true;
+                networkCable.SignalCore.Visiting = false;
                 var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
                 hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
                 if (FindNextLevelNetworkCable(networkCableQueue, hardDriveQueue, length, score) &&
@@ -177,7 +179,7 @@ namespace ROOT
                     {
                         MaxScore = score;
                         MaxLength = length;
-                        Owner.GameBoard.Units.ForEach(unit => unit.InServerGrid = false);
+                        Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
                         GeneratePath(Owner, vis);
                     }
 
@@ -188,7 +190,7 @@ namespace ROOT
                             lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable) > MaxScore)
                         {
                             MaxScore = lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable);
-                            Owner.GameBoard.Units.ForEach(unit => unit.InServerGrid = false);
+                            Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
                             GeneratePath(Owner, AddPath(networkCable, lastNodeButOne.Item4));
                         }
                     }
@@ -196,7 +198,7 @@ namespace ROOT
             }
             if (MaxLength == MaxCount)
             {
-                Owner.GameBoard.Units.ForEach(unit => unit.InServerGrid = false);
+                Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
                 MaxScore = 0;
             }
             BoardDataCollector.MaxNetworkDepth = networkCount = MaxScore;
