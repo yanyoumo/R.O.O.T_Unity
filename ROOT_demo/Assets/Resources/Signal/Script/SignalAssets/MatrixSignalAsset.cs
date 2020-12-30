@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,18 @@ namespace ROOT
         public override CoreType CoreUnitType => CoreType.Processor;
         public override CoreType FieldUnitType => CoreType.HardDrive;
 
-        public override bool ShowSignal(Unit unit, Unit otherUnit)
+        public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
-            throw new System.NotImplementedException();
+            var ShowHDDLED = unit.InHddSignalGrid && otherUnit.InHddSignalGrid;
+            var HasSolidHDDSigal = (unit.SignalFromDir == dir);
+            HasSolidHDDSigal |= (Utils.GetInvertDirection(otherUnit.SignalFromDir) == dir);
+            ShowHDDLED &= HasSolidHDDSigal;
+            return ShowHDDLED;
         }
-        public override int SignalVal(Unit unit, Unit otherUnit)
+        public override int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
-            throw new System.NotImplementedException();
+            var showSig = ShowSignal(dir, unit, otherUnit);
+            return showSig ? Math.Min(unit.HardDiskVal, otherUnit.HardDiskVal) : 0;
         }
 
         public int MaxNormalDepth;

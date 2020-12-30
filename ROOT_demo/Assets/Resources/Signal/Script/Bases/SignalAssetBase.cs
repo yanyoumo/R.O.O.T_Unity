@@ -12,8 +12,8 @@ namespace ROOT
         public abstract SignalType Type { get; }
         public abstract CoreType CoreUnitType { get; }
         public abstract CoreType FieldUnitType { get; }
-        public abstract bool ShowSignal(Unit unit,Unit otherUnit);
-        public abstract int SignalVal(Unit unit,Unit otherUnit);
+        public abstract bool ShowSignal(RotationDirection dir,Unit unit,Unit otherUnit);
+        public abstract int SignalVal(RotationDirection dir, Unit unit,Unit otherUnit);
         
         //从这里看，就是将会有一个地方可以对某类信号统一调用结果；
         //但是现在相当于要把视角放在单元上；

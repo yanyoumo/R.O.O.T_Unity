@@ -672,32 +672,41 @@ namespace ROOT
         //利用lib系统的设计，这里需要能够遍历UnitLogicBase中所有对应静态函数来计分。
         //当然、LED上面能不能显示那么多是另一回事、抽象框架设计出来后，都会好一些。
 
+        private void ConnectorSignalMux(ref Connector connector,SignalType type,int val, bool ignoreVal = false)
+        {
+            //这个函数是将信号配置到具体的接口LED上面、这个东西只能手动配置；相当于信号和硬件儿的映射。
+            switch (type)
+            {
+                case SignalType.Matrix:
+                    connector.Signal_A_Val = ignoreVal ? 0 : val;
+                    break;
+                case SignalType.Scan:
+                    connector.Signal_B_Val = ignoreVal ? 0 : val;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
         private void SetConnector(RotationDirection crtDir, bool ignoreVal = false)
         {
             WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
-            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation),
-                out Connector Connector);
+            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation), out var Connector);
             Connector.Connected = data.Connected;
 
             var otherUnit = data.OtherUnit;
 
-            var ShowHDDLED = InHddSignalGrid && otherUnit.InHddSignalGrid;
-            var HasSolidHDDSigal = (SignalFromDir == crtDir);
-            HasSolidHDDSigal |= (Utils.GetInvertDirection(otherUnit.SignalFromDir) == crtDir);
-            ShowHDDLED &= HasSolidHDDSigal;
+            var shouldShow = false;
 
-            var ShowNetLED = InServerGrid && otherUnit.InServerGrid;
-            //这快儿是有问题的，主要是因为之前为了避免绕近道，强制一次一步、但是这么设计没法根据Tier调整数据。
-            //可能有需要ServerDepth和HardwareDepth两个平行数据。再否则就是类似阵列信号那边，有一个FromDir。
-            ShowNetLED &= Math.Abs(ServerDepth - otherUnit.ServerDepth) <= 1;
+            foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
+            {
+                var tmpShouldShow = SignalMasterMgr.Instance.ShowSignal(signalType, crtDir, this, otherUnit);
+                var tmpVal = SignalMasterMgr.Instance.SignalVal(signalType, crtDir, this, otherUnit);
+                ConnectorSignalMux(ref Connector, signalType, tmpVal, ignoreVal);
+                shouldShow |= tmpShouldShow;
+            }
 
-            var NormalSignalValtmp = ShowHDDLED ? Math.Min(HardDiskVal, otherUnit.HardDiskVal) : 0;
-            var NetworkSignalValtmp = ShowNetLED ? Math.Min(NetworkVal, otherUnit.NetworkVal) : 0;
-            var shouldHide = !(ShowHDDLED || ShowNetLED);
-
-            Connector.Signal_A_Val = ignoreVal ? 0 : NormalSignalValtmp;
-            Connector.Signal_B_Val = ignoreVal ? 0 : NetworkSignalValtmp;
-            Connector.Hided = shouldHide;
+            Connector.Hided = !shouldShow;
         }
 
         private bool FilterConnector(RotationDirection dir)

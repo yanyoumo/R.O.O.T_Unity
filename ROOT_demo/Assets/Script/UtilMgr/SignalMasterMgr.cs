@@ -43,14 +43,14 @@ namespace ROOT
 
         //这里是通过代理，可以调用SignalAsset里面的“准静态”函数。
         //如果准静态函数类型加了，这里只能手动加。
-        public bool ShowSignal(SignalType type, Unit unit, Unit otherUnit)
+        public bool ShowSignal(SignalType type, RotationDirection dir, Unit unit, Unit otherUnit)
         {
-            return signalAssetLib[type].ShowSignal(unit, otherUnit);
+            return signalAssetLib[type].ShowSignal(dir, unit, otherUnit);
         }
 
-        public int SignalVal(SignalType type, Unit unit, Unit otherUnit)
+        public int SignalVal(SignalType type, RotationDirection dir, Unit unit, Unit otherUnit)
         {
-            return signalAssetLib[type].SignalVal(unit, otherUnit);
+            return signalAssetLib[type].SignalVal(dir, unit, otherUnit);
         }
 
         public Type SignalUnitCore(SignalType type)
