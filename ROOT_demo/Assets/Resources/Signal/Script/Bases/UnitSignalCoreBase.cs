@@ -8,6 +8,7 @@ namespace ROOT
     public abstract class UnitSignalCoreBase : MonoBehaviour
     {
         public Unit Owner;
+        protected Board GameBoard => Owner.GameBoard;
 
         [ReadOnly] public RotationDirection SignalFromDir;
         [ReadOnly] public bool Visited;//dequeue

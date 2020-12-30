@@ -19,67 +19,48 @@ namespace ROOT
 
         private float CalculateProcessorScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
         {
-            var score = 0.0f;
-            var side = unit.GetWorldSpaceUnitSide(direction);
-            if (side == SideType.Connection)
-            {
-                var nextKey = hostKey + Utils.ConvertDirectionToBoardPosOffset(direction);
-                if (Owner.GameBoard.CheckBoardPosValidAndFilled(nextKey))
-                {
-                    var nextGo = Owner.GameBoard.FindUnitUnderBoardPos(nextKey);
-                    Debug.Assert(nextGo != null);
-                    var nextUnit = nextGo.GetComponentInChildren<Unit>();
-                    var otherSide = nextUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(direction));
+            if (unit.GetWorldSpaceUnitSide(direction) != SideType.Connection) return 0.0f;
+            var nextKey = hostKey + Utils.ConvertDirectionToBoardPosOffset(direction);
+            if (!Owner.GameBoard.CheckBoardPosValidAndFilled(nextKey)) return 0.0f;
 
-                    if (otherSide == SideType.Connection)
-                    {
-                        score = CalculateProcessorScoreCore(nextKey, Utils.GetInvertDirection(direction), depth + 1);
-                    }
-                }
-            }
+            var nextUnit = Owner.GameBoard.FindUnitUnderBoardPos(nextKey)?.GetComponentInChildren<Unit>();
+            if (nextUnit == null) return 0.0f;
 
-            return score;
+            var invDir=Utils.GetInvertDirection(direction);
+            if (nextUnit.GetWorldSpaceUnitSide(invDir) != SideType.Connection) return 0.0f;
+            return CalculateProcessorScoreCore(nextKey, invDir, depth + 1);
         }
 
         private float CalculateProcessorScoreCore(Vector2Int hostKey, RotationDirection dir, int depth)
         {
             var score = 0.0f;
-            Owner.GameBoard.UnitsGameObjects.TryGetValue(hostKey, out var currentUnit);
-            if (currentUnit != null)
+            var unit = GameBoard.FindUnitUnderBoardPos(hostKey)?.GetComponentInChildren<Unit>();
+            if (unit == null || unit.Visited) return score;
+
+            if (unit.UnitCore == CoreType.HardDrive)
             {
-                var unit = currentUnit.GetComponentInChildren<Unit>();
-                if (!unit.Visited)
-                {
-                    if (unit.UnitCore == CoreType.HardDrive)
-                    {
-                        var (scoreMutiplier, item2, item3) = ShopMgr.TierMultiplier(unit.Tier);
-                        score += scoreMutiplier;
-                        unit.InHddGrid = true;
-                    }
-
-                    unit.InHddSignalGrid = true;
-                    unit.Visited = true;
-
-                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.North, depth);
-                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.East, depth);
-                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.South, depth);
-                    score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.West, depth);
-
-                    unit.SignalFromDir = dir;
-                    unit.HardDiskVal = (int)score;
-                }
-            }
-            else
-            {
-                Debug.Assert(true);
+                var (scoreMultiplier, item2, item3) = ShopBase.TierMultiplier(unit.Tier);
+                score += scoreMultiplier;
+                unit.InHddGrid = true;
             }
 
+            unit.InHddSignalGrid = true;
+            unit.Visited = true;
+
+            score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.North, depth);
+            score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.East, depth);
+            score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.West, depth);
+            score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.South, depth);
+
+            unit.SignalFromDir = dir;
+            unit.HardDiskVal = (int) score;
             return score;
         }
-        
+
         public override float CalScore(out int driverCountInt)
         {
-            driverCountInt = Mathf.RoundToInt(CalculateProcessorScoreCore(Owner.CurrentBoardPosition, RotationDirection.North, 0));
+            driverCountInt =
+                Mathf.RoundToInt(CalculateProcessorScoreCore(Owner.CurrentBoardPosition, RotationDirection.North, 0));
             return driverCountInt;
         }
     }

@@ -42,17 +42,16 @@ namespace ROOT
 
             gameBoard.Units.ForEach(initCounting);
 
-            if (gameBoard.Units.Count(unit => unit.UnitCore == CoreType.Processor) == 0) return 0.0f;
+            if (gameBoard.GetCountByType(CoreUnitType) == 0) return 0.0f;
 
-            foreach (var unit in gameBoard.Units.Where(unit=>unit.UnitCore == CoreType.Processor))
+            foreach (var unit in gameBoard.FindUnitWithCoreType(CoreUnitType))
             {
                 if (unit.Visited) continue;
                 unit.SignalCore.CalScore(out var hardwareCount);
                 driverCount += hardwareCount;
             }
 
-            MaxNormalDepth = (int) driverCount;
-            driverCountInt = (int) driverCount;
+            driverCountInt = MaxNormalDepth = Mathf.FloorToInt(driverCount);
             return Mathf.FloorToInt(driverCount * BoardDataCollector.GetPerDriverIncome);
         }
     }

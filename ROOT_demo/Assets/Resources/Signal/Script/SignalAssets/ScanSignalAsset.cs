@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+// ReSharper disable PossibleNullReferenceException
 
 namespace ROOT
 {
@@ -35,15 +36,18 @@ namespace ROOT
             var maxScore = Int32.MinValue;
             var maxLength = maxCount;
             float res = 0;
-            foreach (var signalCore in gameBoard.Units.Where(unit => unit.UnitCore == CoreUnitType).Select(unit => unit.SignalCore))
+            foreach (var signalCore in gameBoard.FindUnitWithCoreType(CoreUnitType).Select(unit => unit.SignalCore as ScanUnitSignalCore))
             {
-                ((ScanUnitSignalCore)signalCore).MaxCount = maxCount;
-                ((ScanUnitSignalCore)signalCore).MaxScore = maxScore;
-                ((ScanUnitSignalCore)signalCore).MaxLength = maxLength;
+                //懂了，主要是CalScore代码之间需要交互这三个数据。
+                //这个可以搞的，写一个CalScore的重写，里面写上需要的out变量就行了。
+                //给你在ScanUnitSignalCore.cs的129行左右留了更多的内容。
+                signalCore.MaxCount = maxCount;
+                signalCore.MaxScore = maxScore;
+                signalCore.MaxLength = maxLength;
                 res = signalCore.CalScore(out var count);
-                maxCount = ((ScanUnitSignalCore)signalCore).MaxCount;
-                maxScore = ((ScanUnitSignalCore)signalCore).MaxScore;
-                maxLength = ((ScanUnitSignalCore)signalCore).MaxLength;
+                maxCount = signalCore.MaxCount;
+                maxScore = signalCore.MaxScore;
+                maxLength = signalCore.MaxLength;
             }
             BoardDataCollector.MaxNetworkDepth = hardwareCount = maxScore;
             return res;

@@ -117,10 +117,19 @@ namespace ROOT
 
             return Mathf.Floor(income);
         }
+
+        public float CalScore(out int networkCount,out int A,out int B,out int C)
+        {
+            //这个函数你自己具体挪吧。
+            throw new NotImplementedException();
+        }
+
         public override float CalScore(out int networkCount)
         {
-            var lastLevelDict = new Dictionary<Unit, networkCableStatus>();
+            //这里调一下你那个有更多的输出变量CalScore函数就行了。（函数名想变都能变。
+            //return CalScore(out networkCount, out var A, out var B, out var C);
             var thisLevelDict = new Dictionary<Unit, networkCableStatus>();
+            var lastLevelDict = new Dictionary<Unit, networkCableStatus>();
             Owner.GameBoard.Units.ForEach(unit => unit.Visited = unit.Visiting = false);
             Owner.Visiting = true;
             var networkCableQueue = new Queue<networkCableStatus>();
