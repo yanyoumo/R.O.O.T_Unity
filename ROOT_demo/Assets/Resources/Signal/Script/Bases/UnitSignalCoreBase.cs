@@ -20,20 +20,20 @@ namespace ROOT
         [ReadOnly] public bool InMatrixSignal;
 
         /// <summary>
-        /// ��¼������Ӳ����ȵı�����������Ϊ�м�������ʹ����������и�ֵ���������
-        /// �������Ϊɨ���źŵ�Ӳ����ȣ�ĩ�˱�ȻΪ1�����ҷ�ɨ���ź���Ȼ�������ֵ��
-        /// ���������ֵ��ĩ�˵�ɨ����ĵ�ԪӦ���ǵ����ġ�
+        /// 记录服务器硬件深度的变量。可以作为中间量、即使不处于最长序列该值不必清除。
+        /// 这个变量为扫描信号的硬件深度；末端必然为1；并且非扫描信号仍然增加这个值。
+        /// 即——这个值从末端到扫描核心单元应该是单增的。
         /// </summary>
         [ReadOnly] public int ServerDepth; //for scoring purpose
 
         /// <summary>
-        /// ��¼�������ź���ȵı�����������Ϊ�м�������ʹ����������и�ֵ���������
-        /// �������Ϊɨ���źŵ��ź���ȣ���ɨ���źŲ��������ֵ��
+        /// 记录服务器信号深度的变量。可以作为中间量、即使不处于最长序列该值不必清除。
+        /// 这个变量为扫描信号的信号深度；非扫描信号不增加这个值。
         /// </summary>
         [ReadOnly] public int ServerSignalDepth; //for scoring purpose
 
         /// <summary>
-        /// ���һ�μƷֺ󣬱���Ԫ�Ƿ��ڱ�Ҫ������С������ڵ���Ҫ��ʽ��Ϊfalse��
+        /// 标记一次计分后，本单元是否处于必要最长序列中。不处于的需要显式记为false。
         /// </summary>
         [ReadOnly] public bool InServerGrid; //for scoring purpose
 
