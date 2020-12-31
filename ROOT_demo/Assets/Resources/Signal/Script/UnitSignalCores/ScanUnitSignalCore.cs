@@ -187,7 +187,7 @@ namespace ROOT
                 maxScore = 0;
             }
 
-            BoardDataCollector.MaxNetworkDepth = networkCount = maxScore;
+            SignalMasterMgr.MaxNetworkDepth = networkCount = maxScore;
             return GetServerIncomeByLength(maxScore);
         }
 
@@ -200,7 +200,7 @@ namespace ROOT
                 const float networkA = 1.45f;
                 const float networkB = 1.74f;
                 var circleTier =
-                    Math.Max(Mathf.RoundToInt(Mathf.Pow(BoardDataCollector.MaxNetworkDepth / networkB, networkA)), 0);
+                    Math.Max(Mathf.RoundToInt(Mathf.Pow(SignalMasterMgr.MaxNetworkDepth / networkB, networkA)), 0);
                 var zone = Utils.GetPixelateCircle_Tier(circleTier);
                 var res = new List<Vector2Int>();
                 zone.PatternList.ForEach(vec =>

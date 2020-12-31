@@ -10,7 +10,10 @@ namespace ROOT
     {
         private static SignalMasterMgr _instance;
         public static SignalMasterMgr Instance => _instance;
-        
+        public static int MaxNetworkDepth;
+
+        public static float GetPerDriverIncome = 1.5f;
+
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -26,6 +29,35 @@ namespace ROOT
 
         private Dictionary<SignalType, SignalAssetBase> signalAssetLib;
         public SignalType[] SignalLib => signalAssetLib.Keys.ToArray();
+
+        public void UnitTypeFromSignal(SignalType signalType,out CoreType coreUnit,out CoreType fieldUnit)
+        {
+            coreUnit = signalAssetLib[signalType].CoreUnitType;
+            fieldUnit = signalAssetLib[signalType].FieldUnitType;
+        }
+
+        public SignalType SignalTypeFromUnit(CoreType unitType)
+        {
+            try
+            {
+                var v1 = signalAssetLib.Values.First(v => v.CoreUnitType == unitType);
+                if (v1 != null) return v1.Type;
+            }
+            catch (InvalidOperationException)
+            {
+                try
+                {
+
+                    var v2 = signalAssetLib.Values.First(v => v.FieldUnitType == unitType);
+                    if (v2 != null) return v2.Type;
+                }
+                catch (InvalidOperationException)
+                {
+                    throw new ArgumentException();
+                }
+            }
+            throw new ArgumentException();
+        }
 
         void Start()
         {

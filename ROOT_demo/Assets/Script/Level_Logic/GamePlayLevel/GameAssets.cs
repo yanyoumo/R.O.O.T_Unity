@@ -60,7 +60,7 @@ namespace ROOT
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
 
-        internal BoardDataCollector BoardDataCollector;
+        //internal BoardDataCollector BoardDataCollector;
         internal GameStateMgr GameStateMgr;
         internal float CurrencyRebate = 1.0f;
         internal ShopBase Shop;

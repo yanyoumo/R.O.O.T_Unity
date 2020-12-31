@@ -56,7 +56,7 @@ namespace ROOT
             }
 
             driverCountInt = Mathf.FloorToInt(driverCount);
-            return Mathf.FloorToInt(driverCount * BoardDataCollector.GetPerDriverIncome);
+            return Mathf.FloorToInt(driverCount * SignalMasterMgr.GetPerDriverIncome);
         }
     }
 }

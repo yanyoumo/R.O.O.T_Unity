@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
-    public partial class BoardDataCollector : MonoBehaviour
+    /*public partial class BoardDataCollector : MonoBehaviour
     {
         internal int NthUnitCost(int N)
         {
@@ -45,7 +45,7 @@ namespace ROOT
                 return tokenizedVal[tokenizedVal.Keys.Max()];
             }
         }
-    }
+    }*/
 
     public interface IAnimatableShop
     {
@@ -94,6 +94,43 @@ namespace ROOT
             unit.InitPosWithAnimation(Vector2Int.zero);
             unit.InitUnit(core, sides, tier);
             return go;
+        }
+
+        protected int NthUnitCost(int N)
+        {
+            return 0;
+            Dictionary<int, int> tokenizedVal = new Dictionary<int, int>()
+            {
+                {0, 0},
+                {1, 1},
+                {5, 1},
+                {10, 1},
+                {18, 2},
+                {24, 3},
+                {36, 6},
+            };
+
+            if (!tokenizedVal.Keys.All(i => i <= N))
+            {
+
+                var minKey = tokenizedVal.Keys.Where(i => i <= N).Max();
+                var maxKey = tokenizedVal.Keys.Where(i => i >= N).Min();
+                if (minKey == maxKey)
+                {
+                    return tokenizedVal[minKey];
+                }
+                else
+                {
+                    var minVal = tokenizedVal[minKey];
+                    var maxVal = tokenizedVal[maxKey];
+                    var normalizedCount = (N - minVal) / (float)(maxVal - minVal);
+                    return Mathf.RoundToInt(Mathf.Lerp(minVal, maxVal, normalizedCount));
+                }
+            }
+            else
+            {
+                return tokenizedVal[tokenizedVal.Keys.Max()];
+            }
         }
 
         /// <summary>
@@ -550,7 +587,7 @@ namespace ROOT
 
             for (var i = 0; i < _items.Length; i++)
             {
-                var _cost = currentLevelAsset.BoardDataCollector.NthUnitCost(GameBoard.GetUnitCount);
+                var _cost = NthUnitCost(GameBoard.GetUnitCount);
                 if (!_items[i])
                 {
                     var core = GenerateCoreAndTier(out var tier);

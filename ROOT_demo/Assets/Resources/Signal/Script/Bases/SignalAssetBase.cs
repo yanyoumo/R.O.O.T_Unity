@@ -14,11 +14,11 @@ namespace ROOT
         public abstract CoreType FieldUnitType { get; }
         public abstract bool ShowSignal(RotationDirection dir,Unit unit,Unit otherUnit);
         public abstract int SignalVal(RotationDirection dir, Unit unit,Unit otherUnit);
-
-        //´ÓÕâÀï¿´£¬¾ÍÊÇ½«»áÓĞÒ»¸öµØ·½¿ÉÒÔ¶ÔÄ³ÀàĞÅºÅÍ³Ò»µ÷ÓÃ½á¹û£»
-        //µ«ÊÇÏÖÔÚÏàµ±ÓÚÒª°ÑÊÓ½Ç·ÅÔÚµ¥ÔªÉÏ£»
-        //È»ºó½«Õâ¸öº¯ÊıÍ³Ò»·ÅÔÚÕâÀï¡£ÕâÊÇ×î·Ñ¾¢µÄÊÂ¶ù£¬ÕâÀïĞèÒªBoardµÄÒıÓÃ£¬ÏÈÁô¸ö¿Ú°É¡£
-        //Å¶¶Ô£¬ÕâÀï»¹ĞèÒªÒ»¸öUnitºÍSignalTypeµÄÓ³Éä¡£
+        
+        //ä»è¿™é‡Œçœ‹ï¼Œå°±æ˜¯å°†ä¼šæœ‰ä¸€ä¸ªåœ°æ–¹å¯ä»¥å¯¹æŸç±»ä¿¡å·ç»Ÿä¸€è°ƒç”¨ç»“æœï¼›
+        //ä½†æ˜¯ç°åœ¨ç›¸å½“äºè¦æŠŠè§†è§’æ”¾åœ¨å•å…ƒä¸Šï¼›
+        //ç„¶åå°†è¿™ä¸ªå‡½æ•°ç»Ÿä¸€æ”¾åœ¨è¿™é‡Œã€‚è¿™æ˜¯æœ€è´¹åŠ²çš„äº‹å„¿ï¼Œè¿™é‡Œéœ€è¦Boardçš„å¼•ç”¨ï¼Œå…ˆç•™ä¸ªå£å§ã€‚
+        //å“¦å¯¹ï¼Œè¿™é‡Œè¿˜éœ€è¦ä¸€ä¸ªUnitå’ŒSignalTypeçš„æ˜ å°„ã€‚
         public virtual float CalAllScore(Board gameBoard, out int hardwareCount)
         {
             float res=0;

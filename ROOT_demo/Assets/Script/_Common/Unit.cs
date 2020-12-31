@@ -256,7 +256,6 @@ namespace ROOT
             {
                 if (value)
                 {
-                    //Debug.Assert(ShopID != -1);
                     AdditionalClampMesh.material = BuyingMat;
                     AdditionalClampMesh.enabled = true;
                 }
@@ -310,6 +309,7 @@ namespace ROOT
 
         public void InitDic()
         {
+            //RISK 这个还是需要更新。
             _coreMatNameDic.Add(CoreType.PCB, GlobalResourcePath.UNIT_PCB_MAT_NAME);
             _coreMatNameDic.Add(CoreType.BackPlate, "");
             _coreMatNameDic.Add(CoreType.Bridge, "");
@@ -527,21 +527,10 @@ namespace ROOT
 
             if (SignalCore == null)
             {
-                Type signalCoreType = typeof(Object);
-                switch (UnitCore)
-                {
-                    //TEMP 这个应该用Lib配置去弄，现在先这样。
-                    case CoreType.Processor:
-                    case CoreType.HardDrive:
-                        signalCoreType = SignalMasterMgr.Instance.SignalUnitCore(SignalType.Matrix);
-                        break;
-                    case CoreType.Server:
-                    case CoreType.NetworkCable:
-                        signalCoreType = SignalMasterMgr.Instance.SignalUnitCore(SignalType.Scan);
-                        break;
-                }
-
+                var signalType = SignalMasterMgr.Instance.SignalTypeFromUnit(UnitCore);
+                var signalCoreType = SignalMasterMgr.Instance.SignalUnitCore(signalType);
                 SignalCore = gameObject.AddComponent(signalCoreType) as UnitSignalCoreBase;
+                // ReSharper disable once PossibleNullReferenceException
                 SignalCore.Owner = this;
             }
         }

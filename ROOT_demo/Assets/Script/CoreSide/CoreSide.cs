@@ -146,7 +146,7 @@ namespace ROOT
         }
     }
 
-    public partial class BoardDataCollector : MonoBehaviour
+    /*public partial class BoardDataCollector : MonoBehaviour
     {
         private const float perDriverIncome = 1.0f;
         private Dictionary<CoreType, float> costByCore;
@@ -185,5 +185,5 @@ namespace ROOT
             costByCore.TryGetValue(key, out float value);
             return value;
         }
-    }
+    }*/
 }

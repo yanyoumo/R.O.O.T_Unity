@@ -572,8 +572,8 @@ namespace ROOT
         }
         protected void InitCurrencyIoMgr()
         {
-            LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
-            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
+            //LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
+            //LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
         }
         protected void InitCursor(Vector2Int pos)
         {
