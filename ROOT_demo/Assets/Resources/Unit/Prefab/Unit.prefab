@@ -1395,11 +1395,6 @@ MonoBehaviour:
   DtoSSideMesh: {fileID: 873292305874184162, guid: 79e7c870840583d47a1b809e1248374f,
     type: 3}
   GameBoard: {fileID: 0}
-  SignalFromDir: 0
-  HardDiskVal: 0
-  InHddSignalGrid: 0
-  ServerDepth: 0
-  InServerGrid: 0
   LastNetworkPos: {x: 0, y: 0}
 --- !u!65 &4114003258773266200
 BoxCollider:

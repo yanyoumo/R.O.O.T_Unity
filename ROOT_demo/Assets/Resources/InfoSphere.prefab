@@ -139,3 +139,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e24e8ac26e6184ebcc14f0a83ec77b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameAsset:
+    LevelProgress: 0
+    BuyingCursor: 0
+    BuyingID: -1
+    Owner: {fileID: 0}
+    ActionAsset: {fileID: 0}
+    CursorTemplate: {fileID: 0}
+    ItemPriceRoot: {fileID: 0}
+    GameBoard: {fileID: 0}
+    DataScreen: {fileID: 0}
+    HintMaster: {fileID: 0}
+    TimeLine: {fileID: 0}
+    CostLine: {fileID: 0}
+    CostChart: {fileID: 0}
+    SignalPanel: {fileID: 0}
+    AirDrop: {fileID: 0}
+    ReqOkCount: 0
+    SignalInfo: 0
+    CollectorZone: []
+    CineCam: {fileID: 0}
+    occupiedHeatSink: 0
+    InputEnabled: 1
+    CurrencyEnabled: 1
+    CurrencyIOEnabled: 1
+    CurrencyIncomeEnabled: 1
+    CycleEnabled: 1
+    CursorEnabled: 1
+    RotateEnabled: 1
+    ShopEnabled: 1
+    SkillEnabled: 1
+    DestroyerEnabled: 1
+    GameOverEnabled: 1
+    LCDCurrencyEnabled: 1
+    LCDDeltaCurrencyEnabled: 1
+    LCDTimeEnabled: 1
+    HintEnabled: 1
+    ForceHddConnectionHint: 0
+    ForceServerConnectionHint: 0
