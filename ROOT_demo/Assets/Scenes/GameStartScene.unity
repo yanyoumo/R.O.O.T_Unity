@@ -1720,6 +1720,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6924b57070ef5c74b9bebb412cfe2765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CoreUnitAsset: {fileID: 11400000, guid: 1088ad42271b67645bced1ade75c78b2, type: 2}
+  FieldUnitAsset: {fileID: 11400000, guid: 9309dd200130ed545880d7a3982543f0, type: 2}
 --- !u!114 &1206314503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1945,6 +1947,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42097c173c5dbb040ae6960078d3427d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CoreUnitAsset: {fileID: 11400000, guid: f6fb87c84f2f0814497944dcd17e23d6, type: 2}
+  FieldUnitAsset: {fileID: 11400000, guid: c81d79e47ef5fdb4588dd39bf584911d, type: 2}
 --- !u!1 &1531629744
 GameObject:
   m_ObjectHideFlags: 0

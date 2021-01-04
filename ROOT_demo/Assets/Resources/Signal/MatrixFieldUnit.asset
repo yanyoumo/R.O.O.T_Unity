@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9efec1c38e35b64e985cb151e345b99, type: 3}
-  m_Name: DefaultUnitLib
+  m_Script: {fileID: 11500000, guid: e09bcd9a449f1174f9abb0a95a52fea7, type: 3}
+  m_Name: MatrixFieldUnit
   m_EditorClassIdentifier: 
-  Units: []
+  UnitType: 4
+  UnitGenre: 1
+  UnitPrice: 2
+  UnitMat: {fileID: 2100000, guid: 899df1935bd8608408ce1a16969b0a14, type: 2}

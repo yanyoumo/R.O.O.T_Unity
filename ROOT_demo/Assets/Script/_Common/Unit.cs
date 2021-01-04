@@ -114,7 +114,7 @@ namespace ROOT
             }
             else
             {
-                _priceByCore.TryGetValue(core, out var corePrice);
+                var corePrice = SignalMasterMgr.Instance.PriceFromUnit(core);
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
 
@@ -294,8 +294,6 @@ namespace ROOT
         private Transform _sideRootTransform;
         private Transform _coreTransform;
 
-        private Dictionary<CoreType, string> _coreMatNameDic;
-
         public Mesh DtoDSideMesh;
         public Mesh DtoSSideMesh;
 
@@ -306,82 +304,6 @@ namespace ROOT
             Immovable = true;
             StationUnit = true;
         }
-
-        public void InitDic()
-        {
-            //RISK 这个还是需要更新。
-            _coreMatNameDic.Add(CoreType.PCB, GlobalResourcePath.UNIT_PCB_MAT_NAME);
-            _coreMatNameDic.Add(CoreType.BackPlate, "");
-            _coreMatNameDic.Add(CoreType.Bridge, "");
-            _coreMatNameDic.Add(CoreType.Cooler, "");
-            _coreMatNameDic.Add(CoreType.HardDrive, GlobalResourcePath.UNIT_HDD_MAT_NAME);
-            _coreMatNameDic.Add(CoreType.NetworkCable, GlobalResourcePath.UNIT_NETCABLE_MAT_NAME);
-            _coreMatNameDic.Add(CoreType.Processor, GlobalResourcePath.UNIT_PROCESSOR_MAT_NAME);
-            _coreMatNameDic.Add(CoreType.Server, GlobalResourcePath.UNIT_SERVER_MAT_NAME);
-            _coreMatNameDic.Add(CoreType.HQ, GlobalResourcePath.UNIT_HQ_MAT_NAME); //TODO HQ的核心还没有实际材质
-        }
-
-        #region 临时转译
-
-        //现在这里只是和SignalCoreBase的转译字段，彻底转过来后就彻底移除。
-        //现在信号相关的数据已经从单元本身（硬件）中移除出去了。
-        [Obsolete]
-        public RotationDirection SignalFromDir
-        {
-            get => SignalCore.SignalFromDir;
-            set => SignalCore.SignalFromDir = value;
-        }
-
-        [Obsolete]
-        public bool Visited
-        {
-            get => SignalCore.Visited;
-            set => SignalCore.Visited = value;
-        }
-
-        [Obsolete]
-        public bool Visiting
-        {
-            get => SignalCore.Visiting;
-            set => SignalCore.Visiting = value;
-        }
-
-        [Obsolete]
-        public int HardDiskVal
-        {
-            get => SignalCore.MatrixVal;
-            set => SignalCore.MatrixVal = value;
-        }
-
-        [Obsolete]
-        public bool InHddGrid
-        {
-            get => SignalCore.InMatrix;
-            set => SignalCore.InMatrix = value;
-        }
-
-        [Obsolete]
-        public bool InHddSignalGrid
-        {
-            get => SignalCore.InMatrixSignal;
-            set => SignalCore.InMatrixSignal = value;
-        }
-
-        [Obsolete]
-        public int ServerDepth
-        {
-            get => SignalCore.ServerDepth;
-            set => SignalCore.ServerDepth = value;
-        }
-
-        [Obsolete]
-        public bool InServerGrid
-        {
-            get => SignalCore.InServerGrid;
-            set => SignalCore.InServerGrid = value;
-        }
-
-        #endregion
 
         //Rotation使用的世界方向的。
         public Dictionary<RotationDirection, ConnectionData> WorldNeighboringData { protected set; get; }
@@ -429,8 +351,8 @@ namespace ROOT
         protected void InitUnitMeshByCore(CoreType core)
         {
             UnitCoreGenre = GetCoreGenreByCoreType(core);
-            string connectorMasterNodeName = "";
-            string coreMeshNodeName = "";
+            var connectorMasterNodeName = "";
+            var coreMeshNodeName = "";
 
             if (UnitCoreGenre == CoreGenre.Source)
             {
@@ -510,8 +432,7 @@ namespace ROOT
             UnitSides.Add(RotationDirection.West, lWSide);
             UnitSides.Add(RotationDirection.East, lESide);
 
-            _coreMatNameDic.TryGetValue(UnitCore, out string val);
-            _coreMeshRenderer.material = Resources.Load<Material>(GlobalResourcePath.UNIT_MAT_PATH_PREFIX + val);
+            _coreMeshRenderer.material = SignalMasterMgr.Instance.GetMatByUnitType(core);
             Debug.Assert(_coreMeshRenderer.material);
 
             InitConnector(_localNorthConnector, lNSide);
@@ -542,10 +463,8 @@ namespace ROOT
             UnitSides = new Dictionary<RotationDirection, SideType>();
             _unitRotation = RotationDirection.North;
 
-            _coreMatNameDic = new Dictionary<CoreType, string>();
             Immovable = false;
             ShopBackPlane.gameObject.SetActive(false);
-            InitDic();
         }
 
         public override void UpdateTransform(Vector3 pos)
@@ -603,16 +522,16 @@ namespace ROOT
             if (GameBoard == null) return;
             foreach (var currentSideDirection in RotationList)
             {
-                ConnectionData connectionData = new ConnectionData();
+                var connectionData = new ConnectionData();
 
                 if (GetWorldSpaceUnitSide(currentSideDirection) == SideType.Connection)
                 {
                     connectionData.HasConnector = true;
-                    Vector2Int otherUnitPos = GetNeigbourCoord(currentSideDirection);
-                    GameBoard.UnitsGameObjects.TryGetValue(otherUnitPos, out GameObject value);
+                    var otherUnitPos = GetNeigbourCoord(currentSideDirection);
+                    GameBoard.UnitsGameObjects.TryGetValue(otherUnitPos, out var value);
                     if (value != null)
                     {
-                        Unit otherUnit = value.GetComponentInChildren<Unit>();
+                        var otherUnit = value.GetComponentInChildren<Unit>();
                         connectionData.OtherUnit = otherUnit;
                         connectionData.Connected =
                             (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(currentSideDirection)) ==
@@ -685,6 +604,7 @@ namespace ROOT
         private void ConnectorSignalMux(ref Connector connector, SignalType type, int val, bool ignoreVal = false)
         {
             //这个函数是将信号配置到具体的接口LED上面、这个东西只能手动配置；相当于信号和硬件儿的映射。
+            //这个相当于硬件软件间的一个接口、这个具体放在哪就还好。
             switch (type)
             {
                 case SignalType.Matrix:
@@ -741,6 +661,10 @@ namespace ROOT
             UpdateSideMesh();
         }
 
+        #region Blink
+
+        //这里需要完全重做、但是优先级没有多高。
+
         private readonly float BlinkDuration = 0.075f;
 
         private RotationDirection nextBlinkDir;
@@ -750,7 +674,6 @@ namespace ROOT
             yield return new WaitForSeconds(duration);
             NextBlink(nextBlinkDir);
         }
-
         internal void SimpleBlink(RotationDirection requiredDirection)
         {
             if (requiredDirection == RotationDirection.West || requiredDirection == RotationDirection.South)
@@ -764,7 +687,6 @@ namespace ROOT
 
             throw new ArgumentException();
         }
-
         public void Blink(RotationDirection? fromDirection)
         {
             //Server那里用不用迪公帮忙把路径捋出来？目前看不用
@@ -824,7 +746,6 @@ namespace ROOT
                 }
             }
         }
-
         private void NextBlink(RotationDirection? nextDirection)
         {
             if (UnitCore == CoreType.HardDrive)
@@ -838,5 +759,7 @@ namespace ROOT
                 if (nextUnit != null) nextUnit.Blink(Utils.GetInvertDirection(nextDirection.Value));
             }
         }
+
+        #endregion
     }
 }

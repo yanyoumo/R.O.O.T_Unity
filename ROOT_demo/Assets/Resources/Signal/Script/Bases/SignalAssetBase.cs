@@ -10,8 +10,10 @@ namespace ROOT
     {
         public Type UnitSignalCoreType { protected set; get; }
         public abstract SignalType Type { get; }
-        public abstract CoreType CoreUnitType { get; }
-        public abstract CoreType FieldUnitType { get; }
+        public CoreType CoreUnitType => CoreUnitAsset.UnitType;
+        public CoreType FieldUnitType => FieldUnitAsset.UnitType;
+        public UnitAsset CoreUnitAsset;
+        public UnitAsset FieldUnitAsset;
         public abstract bool ShowSignal(RotationDirection dir,Unit unit,Unit otherUnit);
         public abstract int SignalVal(RotationDirection dir, Unit unit,Unit otherUnit);
         

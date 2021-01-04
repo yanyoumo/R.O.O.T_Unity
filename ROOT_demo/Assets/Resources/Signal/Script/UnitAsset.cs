@@ -3,19 +3,16 @@ using UnityEngine;
 
 namespace ROOT
 {
+    //public UnitRules Rules;
+    //æ—¥äº†ï¼Œè¿™ä¸ªä¸œè¥¿åªèƒ½é€šè¿‡Monoå®ä¾‹/PrefabæŒ‡å®šï¼›ä¸å¥½æ•´ã€‚
+    //è¿™å¥—æµç¨‹ç”±ä¿¡å·ç³»ç»Ÿæå®šäº†ï¼›è¿™é‡Œå°±å˜æˆçº¯ç²¹çš„ç¡¬ä»¶é…ç½®äº†ï¼ˆï¼‰
     [CreateAssetMenu(fileName = "NewUnitAsset", menuName = "Unit/New UnitAsset")]
     [Serializable]
     public class UnitAsset : ScriptableObject
     {
-        public string Name;
-        public Texture CoreTexture;
-        public Texture FieldTexture;
-        public UnitRules Rules;//ÈÕÁË£¬Õâ¸ö¶«Î÷Ö»ÄÜÍ¨¹ıMonoÊµÀı/PrefabÖ¸¶¨£»²»ºÃÕû¡£
-    }
-
-    [Serializable]
-    public abstract class UnitRules : MonoBehaviour
-    {
-        public abstract int CalScore();
+        public CoreType UnitType;
+        public CoreGenre UnitGenre;
+        public int UnitPrice;
+        public Material UnitMat;
     }
 }

@@ -32,24 +32,26 @@ namespace ROOT
 
         public void UnitTypeFromSignal(SignalType signalType,out CoreType coreUnit,out CoreType fieldUnit)
         {
-            coreUnit = signalAssetLib[signalType].CoreUnitType;
-            fieldUnit = signalAssetLib[signalType].FieldUnitType;
+            coreUnit = signalAssetLib[signalType].CoreUnitAsset.UnitType;
+            fieldUnit = signalAssetLib[signalType].FieldUnitAsset.UnitType;
         }
 
-        public SignalType SignalTypeFromUnit(CoreType unitType)
+        #region Getter
+
+        private SignalAssetBase GetSignalAssetByUnitType(CoreType unitType)
         {
             try
             {
-                var v1 = signalAssetLib.Values.First(v => v.CoreUnitType == unitType);
-                if (v1 != null) return v1.Type;
+                var v1 = signalAssetLib.Values.First(v => v.CoreUnitAsset.UnitType == unitType);
+                if (v1 != null) return v1;
             }
             catch (InvalidOperationException)
             {
                 try
                 {
 
-                    var v2 = signalAssetLib.Values.First(v => v.FieldUnitType == unitType);
-                    if (v2 != null) return v2.Type;
+                    var v2 = signalAssetLib.Values.First(v => v.FieldUnitAsset.UnitType == unitType);
+                    if (v2 != null) return v2;
                 }
                 catch (InvalidOperationException)
                 {
@@ -58,6 +60,29 @@ namespace ROOT
             }
             throw new ArgumentException();
         }
+
+        public UnitAsset GetUnitAssetByUnitType(CoreType unitType)
+        {
+            var signalBase = GetSignalAssetByUnitType(unitType);
+            return signalBase.CoreUnitAsset.UnitType == unitType ? signalBase.CoreUnitAsset : signalBase.FieldUnitAsset;
+        }
+
+        public float PriceFromUnit(CoreType unitType)
+        {
+            return GetUnitAssetByUnitType(unitType).UnitPrice;
+        }
+
+        public SignalType SignalTypeFromUnit(CoreType unitType)
+        {
+            return GetSignalAssetByUnitType(unitType).Type;
+        }
+
+        public Material GetMatByUnitType(CoreType unitType)
+        {
+            return GetUnitAssetByUnitType(unitType).UnitMat;
+        }
+
+        #endregion
 
         void Start()
         {
@@ -104,11 +129,6 @@ namespace ROOT
         {
             return signalAssetLib.Values.Sum(v => v.CalAllScore(gameBoard));
         }
-
-        /*public List<Vector2Int> SingleInfoCollectorZoneBySignal(Unit unit)
-        {
-            return signalAssetLib[unit.SignalCore.Type].SingleInfoCollectorZone(unit);
-        }*/
 
         #endregion
     }

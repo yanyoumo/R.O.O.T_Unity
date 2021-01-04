@@ -62,6 +62,43 @@ namespace ROOT
 
     public abstract class ShopBase : MonoBehaviour
     {
+        //目前这两个是写死的；之后商店这个种类也改成可配置的；
+        protected SignalType SignalTypeA => SignalType.Matrix;
+        protected SignalType SignalTypeB => SignalType.Scan;
+
+        protected CoreType CoreUnitTypeA
+        {
+            get
+            {
+                SignalMasterMgr.Instance.UnitTypeFromSignal(SignalTypeA, out var coreUnit, out var fieldUnit);
+                return coreUnit;
+            }
+        }
+        protected CoreType FieldUnitTypeA
+        {
+            get
+            {
+                SignalMasterMgr.Instance.UnitTypeFromSignal(SignalTypeA, out var coreUnit, out var fieldUnit);
+                return fieldUnit;
+            }
+        }
+        protected CoreType CoreUnitTypeB
+        {
+            get
+            {
+                SignalMasterMgr.Instance.UnitTypeFromSignal(SignalTypeB, out var coreUnit, out var fieldUnit);
+                return coreUnit;
+            }
+        }
+        protected CoreType FieldUnitTypeB
+        {
+            get
+            {
+                SignalMasterMgr.Instance.UnitTypeFromSignal(SignalTypeB, out var coreUnit, out var fieldUnit);
+                return fieldUnit;
+            }
+        }
+
         public GameObject UnitTemplate;
         protected GameAssets currentLevelAsset;
         public Board GameBoard;
@@ -169,22 +206,10 @@ namespace ROOT
             return Mathf.Clamp(Mathf.RoundToInt(baseTier), 1, 5);
         }
 
-        protected Dictionary<CoreType, float> _priceByCore { private set; get; }
         protected Dictionary<SideType, float> _priceBySide { private set; get; }
 
         public void InitPrice()
         {
-            _priceByCore = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 1.0f},
-                {CoreType.NetworkCable, 2.0f},
-                {CoreType.Server, 3.0f},
-                {CoreType.Bridge, 4.0f},
-                {CoreType.HardDrive, 2.0f},
-                {CoreType.Processor, 3.0f},
-                {CoreType.Cooler, 3.0f},
-                {CoreType.BackPlate, 1.0f},
-            };
             _priceBySide = new Dictionary<SideType, float>()
             {
                 {SideType.NoConnection, 0.0f},
@@ -279,6 +304,7 @@ namespace ROOT
         //KeySide minCount
         protected Dictionary<CoreType, Tuple<SideType, int>> _keySideLib { private set; get; }
 
+        [Obsolete]
         public void InitSideCoreWeight()
         {
             _keySideLib = new Dictionary<CoreType, Tuple<SideType, int>>()

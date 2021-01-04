@@ -777,7 +777,7 @@ namespace ROOT
             float time = Time.timeSinceLevelLoad;
             foreach (var unit in UnitsGameObjects)
             {
-                if (unit.Value.GetComponentInChildren<Unit>().InHddGrid)
+                if (unit.Value.GetComponentInChildren<Unit>().SignalCore.InMatrixSignal)
                 {
                     Color color = (Mathf.Sin(time * 10) + 1.0f) * Color.red;
                     unit.Value.GetComponentInChildren<Unit>().SetCoreEmissive(color);
@@ -795,7 +795,7 @@ namespace ROOT
                 if (unitComp.UnitCore==CoreType.NetworkCable||unitComp.UnitCore==CoreType.Server)
                 {                  
                     //现在网络只显示网线和服务器，不会有错，但是有可能有更好的解决方案？
-                    if (unitComp.InServerGrid)
+                    if (unitComp.SignalCore.InServerGrid)
                     {
                         Color color = (Mathf.Sin(time * 10) + 1.0f) * Color.blue;
                         unit.Value.GetComponentInChildren<Unit>().SetCoreEmissive(color);

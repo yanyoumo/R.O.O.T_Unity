@@ -38,6 +38,7 @@ namespace ROOT
                 UpdateShopSelf(discount);
                 discountRate = discount;
             }
+
             ShopOpening = Opening;
         }
 
@@ -57,9 +58,9 @@ namespace ROOT
         /// <param name="i">输入 i</param>
         /// <param name="j">输入 j</param>
         /// <returns>如果此处不应该放置单位则返回-1</returns>
-        private int IJtoID(int i,int j)
+        private int IJtoID(int i, int j)
         {
-            var rawRes= j + i * HorizontalCount;
+            var rawRes = j + i * HorizontalCount;
             if (i < VerticalCount - 1)
             {
                 return rawRes;
@@ -99,10 +100,11 @@ namespace ROOT
         private int RetailCount => HorizontalCount * (VerticalCount - 1);
         private int MaxDisplayCount => (VerticalCount - 1) * HorizontalCount + PremiumCount;
 
-        private readonly float YOffset=0.05f;
+        private readonly float YOffset = 0.05f;
 
         private int discountRate = 0;
-        private int UnitRetailPrice(int idx,int tier)
+
+        private int UnitRetailPrice(int idx, int tier)
         {
             var (item1, priceMutilpier, item3) = TierMultiplier(tier);
             var val = Mathf.FloorToInt(_hardwarePrices[idx] * priceMutilpier);
@@ -111,19 +113,17 @@ namespace ROOT
         }
 
         //TEMP 这个还是要统一管理起来。
-        private int UnitHardwarePrice(CoreType core,SideType[] sides)
+        private int UnitHardwarePrice(CoreType core, SideType[] sides)
         {
-            _priceByCore.TryGetValue(core, out var corePrice);
-            //TODO 就是说边的价格不要弄成线性的，可能是指数的这种。
-            //var sidePrice = sides.Sum(TryGetPrice);
-            var sideCount= sides.Count(side => side == SideType.Connection);
+            var corePrice = SignalMasterMgr.Instance.PriceFromUnit(core);
+            var sideCount = sides.Count(side => side == SideType.Connection);
             var sidePrice = Mathf.Pow(2.0f, sideCount);
             var hardwarePrice = corePrice + sidePrice;
             return Mathf.RoundToInt(hardwarePrice);
         }
 
         private GameObject InitUnitShop(CoreType core, SideType[] sides, out int hardwarePrice, int ID, int _cost,
-            int tier,int discount)
+            int tier, int discount)
         {
             var go = InitUnitShopCore(core, sides, ID, _cost, tier);
             go.transform.parent = DisplayRoot;
@@ -136,16 +136,16 @@ namespace ROOT
             return go;
         }
 
-        protected CoreType GenerateSelfCoreAndTier(in int i,out int tier)
+        protected CoreType GenerateSelfCoreAndTier(in int i, out int tier)
         {
             tier = TierProgress(currentLevelAsset.LevelProgress);
             switch (i)
             {
                 case 0:
-                    return CoreType.HardDrive;
+                    return FieldUnitTypeA;
                 case 1:
                 default:
-                    return CoreType.NetworkCable;
+                    return FieldUnitTypeB;
             }
         }
 
@@ -154,18 +154,21 @@ namespace ROOT
             switch (i)
             {
                 case 0:
-                    return new[] {SideType.Connection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection };
+                    return new[]
+                        {SideType.Connection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection};
                 case 1:
-                    return new[] { SideType.Connection, SideType.Connection, SideType.NoConnection, SideType.NoConnection };
+                    return new[]
+                        {SideType.Connection, SideType.Connection, SideType.NoConnection, SideType.NoConnection};
                 case 2:
-                    return new[] { SideType.Connection, SideType.NoConnection, SideType.Connection, SideType.NoConnection };
+                    return new[]
+                        {SideType.Connection, SideType.NoConnection, SideType.Connection, SideType.NoConnection};
                 case 3:
                 default:
-                    return new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.NoConnection };
+                    return new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.NoConnection};
             }
         }
 
-        private void CreateSelfUnit(int i, int j,int discount)
+        private void CreateSelfUnit(int i, int j, int discount)
         {
             var ID = IJtoID(i, j);
             var core = GenerateSelfCoreAndTier(in i, out var tier);
@@ -173,38 +176,40 @@ namespace ROOT
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
-        private bool ServerOnBoard => GameBoard.GetCountByType(CoreType.Server) > 0;
-        private bool ProcessorOnBoard => GameBoard.GetCountByType(CoreType.Processor) > 0;
+        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(CoreUnitTypeB) > 0;
+        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(CoreUnitTypeA) > 0;
 
-        private void CreatePremiumUnit(int i, int j,int discount)
+        private void CreatePremiumUnit(int i, int j, int discount)
         {
             var ID = IJtoID(i, j);
 
             CoreType core;
-            if (ServerOnBoard&&ProcessorOnBoard)
+            if (CoreUnitTypeBOnBoard && CoreUnitTypeAOnBoard)
             {
+                //RISK 这里的生成有问题。还是要确认一下。
+                //这个函数是基类提供的；那个配置代码没有和UnitType解耦干净。
                 core = GenerateRandomCore();
             }
-            else if (ServerOnBoard)
+            else if (CoreUnitTypeBOnBoard)
             {
-                core = CoreType.Processor;
+                core = CoreUnitTypeA;
             }
-            else if (ProcessorOnBoard)
+            else if (CoreUnitTypeAOnBoard)
             {
-                core = CoreType.Server;
+                core = CoreUnitTypeB;
             }
             else
             {
                 //hmmmmm这里先这样吧…………
-                core = Random.value > 0.5 ? CoreType.Processor : CoreType.Server;
+                core = Random.value > 0.5 ? CoreUnitTypeA : CoreUnitTypeB;
             }
-            
+
             //TEMP 这个Tier到时候还是统一管理一下。
             var tier = TierProgress(currentLevelAsset.LevelProgress) + (Random.value > 0.5f ? 1 : 2);
             SideType[] sides;
-            if (tier>4)
+            if (tier > 4)
             {
-                sides=new []{SideType.Connection, SideType.Connection , SideType.Connection , SideType.Connection };
+                sides = new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection};
             }
             else
             {
@@ -228,12 +233,12 @@ namespace ROOT
                     if (i == VerticalCount - 1)
                     {
                         if (j < HorizontalCount - 2) continue;
-                        CreatePremiumUnit(i, j,0);
+                        CreatePremiumUnit(i, j, 0);
                         TotalCount++;
                     }
                     else
                     {
-                        CreateSelfUnit(i, j,0);
+                        CreateSelfUnit(i, j, 0);
                         TotalCount++;
                     }
                 }
@@ -246,7 +251,7 @@ namespace ROOT
             _items = new GameObject[MaxDisplayCount];
             _hardwarePrices = new float[MaxDisplayCount];
         }
-        
+
         public override void ShopStart()
         {
             InitPrice();
@@ -269,7 +274,7 @@ namespace ROOT
             var itemID = ItemIDFromShopID(shopID);
             if (!_items[itemID]) return false;
 
-            if (!CurrentGameStateMgr.SpendShopCurrency(UnitRetailPrice(itemID,_itemUnit[itemID].Tier))) return false;
+            if (!CurrentGameStateMgr.SpendShopCurrency(UnitRetailPrice(itemID, _itemUnit[itemID].Tier))) return false;
 
             if (_itemUnit != null)
             {
@@ -304,6 +309,7 @@ namespace ROOT
                 _items[itemID].GetComponentInChildren<Unit>().SetPendingBuying = true;
                 return true;
             }
+
             return false;
         }
 
@@ -311,7 +317,7 @@ namespace ROOT
         {
             //throw new NotImplementedException();
         }
-        
+
         public override bool BuyToPos(int idx, Vector2Int pos, bool crash)
         {
             return false;
