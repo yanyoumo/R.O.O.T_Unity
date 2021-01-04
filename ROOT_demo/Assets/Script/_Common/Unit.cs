@@ -157,7 +157,7 @@ namespace ROOT
             internal set
             {
                 _retailPrice = value;
-                PriceTag.text = Utils.PaddingNum3Digit(_retailPrice);
+                PriceTag.text = _retailPrice<=99 ? Utils.PaddingNum2Digit(_retailPrice) : Utils.PaddingNum3Digit(_retailPrice);
             }
         }
 

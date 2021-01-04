@@ -5,8 +5,11 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+
 namespace ROOT
 {
+    using CoreWeight = Dictionary<CoreType, float>;
+
     /*public partial class BoardDataCollector : MonoBehaviour
     {
         internal int NthUnitCost(int N)
@@ -74,6 +77,7 @@ namespace ROOT
                 return coreUnit;
             }
         }
+
         protected CoreType FieldUnitTypeA
         {
             get
@@ -82,6 +86,7 @@ namespace ROOT
                 return fieldUnit;
             }
         }
+
         protected CoreType CoreUnitTypeB
         {
             get
@@ -90,6 +95,7 @@ namespace ROOT
                 return coreUnit;
             }
         }
+
         protected CoreType FieldUnitTypeB
         {
             get
@@ -120,7 +126,9 @@ namespace ROOT
         protected GameObject[] _items;
 
         [CanBeNull]
-        protected Unit[] _itemUnit => _items.Select(unit => unit ? unit.GetComponentInChildren<Unit>() : null).ToArray();
+        protected Unit[] _itemUnit =>
+            _items.Select(unit => unit ? unit.GetComponentInChildren<Unit>() : null).ToArray();
+
         protected float[] _hardwarePrices;
 
         protected GameObject InitUnitShopCore(CoreType core, SideType[] sides, int ID, int _cost, int tier)
@@ -160,7 +168,7 @@ namespace ROOT
                 {
                     var minVal = tokenizedVal[minKey];
                     var maxVal = tokenizedVal[maxKey];
-                    var normalizedCount = (N - minVal) / (float)(maxVal - minVal);
+                    var normalizedCount = (N - minVal) / (float) (maxVal - minVal);
                     return Mathf.RoundToInt(Mathf.Lerp(minVal, maxVal, normalizedCount));
                 }
             }
@@ -180,7 +188,7 @@ namespace ROOT
             //目前对Tier进行设定：
             //先确定需要由Tier影响的内容：
             //分数、购买价格、Cost。
-            var SignalMultipler = (float)Tier;
+            var SignalMultipler = (float) Tier;
             var PriceMultipler = 1.0f + 1.55f * (Tier - 1);
             var CostMultipler = 1.0f + 0.5f * Tier;
             return new Tuple<float, float, float>(SignalMultipler, PriceMultipler, CostMultipler);
@@ -231,7 +239,7 @@ namespace ROOT
 
         #region UnitSideWeight
 
-        protected Dictionary<SideType, float> _defaultSideWeight { private set; get; }
+        /*protected Dictionary<SideType, float> _defaultSideWeight { private set; get; }
         protected Dictionary<SideType, float> _processorSideWeight { private set; get; }
         protected Dictionary<SideType, float> _serverSideWeight { private set; get; }
         protected Dictionary<SideType, float> _hddSideWeight { private set; get; }
@@ -241,24 +249,28 @@ namespace ROOT
         protected Dictionary<CoreType, float> _noServerCoreWeight { private set; get; }
         protected Dictionary<CoreType, float> _noProcessorCoreWeight { private set; get; }
         protected Dictionary<CoreType, float> _nandServerProcessorCoreWeight { private set; get; }
-        protected Dictionary<CoreType, Dictionary<SideType, float>> _sideWeightLib { private set; get; }
+        protected Dictionary<CoreType, Dictionary<SideType, float>> _sideWeightLib { private set; get; }*/
+
+        private SignalType[] TotalSignals => SignalMasterMgr.Instance.SignalLib;
+
+        private void AppendSignalWeight(SignalType type, ref CoreWeight dict)
+        {
+            //现在没有根据现有单元动态调整的逻辑。
+            SignalMasterMgr.Instance.UnitTypeFromSignal(type,out var coreUnit,out var fieldUnit);
+            var coreUnitAsset=SignalMasterMgr.Instance.GetUnitAssetByUnitType(coreUnit);
+            var fieldUnitAsset=SignalMasterMgr.Instance.GetUnitAssetByUnitType(fieldUnit);
+            dict.Add(coreUnit, coreUnitAsset.BaseRate);
+            dict.Add(fieldUnit, fieldUnitAsset.BaseRate);
+        }
 
         protected CoreType GenerateRandomCore()
         {
-            //这里不会生成HQ核心。
-            Dictionary<CoreType, float> lib = _defaultCoreWeight;
-            if (GameBoard.GetCountByType(CoreType.Server) < 1)
+            var lib = new CoreWeight();
+            foreach (var totalSignal in TotalSignals)
             {
-                lib = _noServerCoreWeight;
+                AppendSignalWeight(totalSignal, ref lib);
             }
-            if (GameBoard.GetCountByType(CoreType.Processor) < 1)
-            {
-                lib = _noProcessorCoreWeight;
-            }
-            if ((GameBoard.GetCountByType(CoreType.Server) < 1) && (GameBoard.GetCountByType(CoreType.Processor) < 1))
-            {
-                lib = _nandServerProcessorCoreWeight;
-            }
+
             if (excludedTypes.Count > 0)
             {
                 foreach (var excludedType in excludedTypes)
@@ -269,17 +281,23 @@ namespace ROOT
                     }
                 }
             }
+
             NormalizeDicVal(ref lib);
             return Utils.GenerateWeightedRandom(lib);
         }
 
         protected SideType[] GenerateRandomSideArray(CoreType core = CoreType.PCB)
         {
-            if (!_sideWeightLib.TryGetValue(core, out var lib))
+            var unitAsset = SignalMasterMgr.Instance.GetUnitAssetByUnitType(core);
+            var ratio = unitAsset.AdditionalPortRate;
+            var lib = new Dictionary<SideType, float>
             {
-                Debug.Assert(false);
-                lib = _defaultSideWeight;
-            }
+                [SideType.NoConnection] = 100 - ratio,
+                [SideType.Connection] = ratio
+            };
+
+            NormalizeDicVal(ref lib);
+
             SideType[] res = new SideType[4];
             const int cutoff = 1000;
             int cutoffCounter = 0;
@@ -304,6 +322,7 @@ namespace ROOT
         //KeySide minCount
         protected Dictionary<CoreType, Tuple<SideType, int>> _keySideLib { private set; get; }
 
+        //按照某套概率生成一个随机单元的需求肯定有、但是现在的优先级没有那么高。
         [Obsolete]
         public void InitSideCoreWeight()
         {
@@ -315,91 +334,8 @@ namespace ROOT
                 {CoreType.HardDrive, new Tuple<SideType, int>(SideType.Connection, 1)},
                 {CoreType.Processor, new Tuple<SideType, int>(SideType.Connection, 1)},
             };
-
-            #region SideSection
-
-            //现在下面这个数据是除了关键接口去掉后，剩下的接口的概率。
-
-            _defaultSideWeight = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.75f},
-                {SideType.Connection, 0.25f},
-            };
-
-            _processorSideWeight = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.5f},
-                {SideType.Connection, 0.5f},
-            };
-
-            _serverSideWeight = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.5f},
-                {SideType.Connection, 0.5f},
-            };
-
-            _hddSideWeight = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.6f},
-                {SideType.Connection, 0.4f},
-            };
-
-            _netCableSideWeight = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.8f},
-                {SideType.Connection, 0.2f},
-            };
-
-            _sideWeightLib = new Dictionary<CoreType, Dictionary<SideType, float>>()
-            {
-                {CoreType.Server, _serverSideWeight},
-                {CoreType.NetworkCable, _netCableSideWeight},
-                {CoreType.HardDrive, _hddSideWeight},
-                {CoreType.Processor, _processorSideWeight},
-            };
-
-            #endregion
-
-            #region CoreSection
-
-            _defaultCoreWeight = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 0.00f},
-                {CoreType.Server, 0.05f},
-                {CoreType.NetworkCable, 0.45f},
-                {CoreType.HardDrive, 0.45f},
-                {CoreType.Processor, 0.05f},
-            };
-
-            _noServerCoreWeight = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 0.00f},
-                {CoreType.Server, 0.45f},
-                {CoreType.NetworkCable, 0.25f},
-                {CoreType.HardDrive, 0.25f},
-                {CoreType.Processor, 0.05f},
-            };
-
-            _noProcessorCoreWeight = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 0.00f},
-                {CoreType.Server, 0.05f},
-                {CoreType.NetworkCable, 0.25f},
-                {CoreType.HardDrive, 0.25f},
-                {CoreType.Processor, 0.45f},
-            };
-
-            _nandServerProcessorCoreWeight = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 0.00f},
-                {CoreType.Server, 0.45f},
-                {CoreType.NetworkCable, 0.05f},
-                {CoreType.HardDrive, 0.05f},
-                {CoreType.Processor, 0.45f},
-            };
-
-            #endregion
         }
+
         #endregion
 
         private bool CheckConformKeySide(CoreType core, SideType[] sides)
@@ -421,6 +357,7 @@ namespace ROOT
             {
                 totalWeight += weight;
             }
+
             if (!(Mathf.Abs(totalWeight - 1) < 1e-3))
             {
                 var keys = lib.Keys.ToArray().Clone() as T[];
@@ -436,7 +373,7 @@ namespace ROOT
         public abstract bool BuyToPos(int idx, Vector2Int pos, bool crash);
     }
 
-    public sealed partial class ShopMgr: ShopBase, IAnimatableShop, IRequirableShop
+    public sealed partial class ShopMgr : ShopBase, IAnimatableShop, IRequirableShop
     {
         public override bool ShopOpening
         {
@@ -447,25 +384,26 @@ namespace ROOT
             }
             get => _shopOpening;
         }
+
         private int _madateUnitCount = -1;
         private int _normalMinRequire = -1;
         private int _networkMinRequire = -1;
-        private int[] normalMadateArray = new[]{-1};
-        private int[] networkMadateArray = new[]{-1};
+        private int[] normalMadateArray = new[] {-1};
+        private int[] networkMadateArray = new[] {-1};
         private int madateBaseTier = -1;
         private int unitCountOffset = -1;
 
-        private int[] createMadateArray(int minCount,int dur)
+        private int[] createMadateArray(int minCount, int dur)
         {
             var baseTier = TierProgress(currentLevelAsset.LevelProgress);
-            var minUnit = (minCount / baseTier) + ((minCount% baseTier) == 0 ? 0 : 1);
+            var minUnit = (minCount / baseTier) + ((minCount % baseTier) == 0 ? 0 : 1);
             Utils.SpreadOutLaying(minUnit, dur, out var res);
             return res;
         }
 
         public void SetRequire(int dur, int normal, int network)
         {
-            _madateUnitCount = dur*4;
+            _madateUnitCount = dur * 4;
             _normalMinRequire = normal;
             _networkMinRequire = network;
 
@@ -478,16 +416,18 @@ namespace ROOT
             {
                 networkMadateArray = createMadateArray(_networkMinRequire, _madateUnitCount);
             }
+
             madateBaseTier = TierProgress(currentLevelAsset.LevelProgress);
             unitCountOffset = TotalCount;
         }
+
         public void ResetRequire()
         {
             _madateUnitCount = -1;
             _normalMinRequire = -1;
             _networkMinRequire = -1;
-            normalMadateArray = new[] { -1 };
-            networkMadateArray = new[] { -1 };
+            normalMadateArray = new[] {-1};
+            networkMadateArray = new[] {-1};
             madateBaseTier = -1;
             unitCountOffset = -1;
         }
@@ -513,6 +453,7 @@ namespace ROOT
             {
                 Destroy(_items[0].gameObject);
             }
+
             _items[0] = null;
             for (int i = 0; i < _items.Length; i++)
             {
@@ -566,7 +507,7 @@ namespace ROOT
             }
         }
 
-        private Vector3 lerpVec3(Vector3 vecA,Vector3 vecB,float lerp)
+        private Vector3 lerpVec3(Vector3 vecA, Vector3 vecB, float lerp)
         {
             return new Vector3(Mathf.Lerp(vecA.x, vecB.x, lerp), Mathf.Lerp(vecA.y, vecB.y, lerp),
                 Mathf.Lerp(vecA.z, vecB.z, lerp));
@@ -579,7 +520,8 @@ namespace ROOT
                 if (_items[i])
                 {
                     _items[i].gameObject.transform.position = lerpVec3(currentPosS[i], nextPosS[i], lerp);
-                    _items[i].gameObject.GetComponentInChildren<Unit>().RetailPrice = Mathf.FloorToInt(Random.value * 100.0f);
+                    _items[i].gameObject.GetComponentInChildren<Unit>().RetailPrice =
+                        Mathf.FloorToInt(Random.value * 100.0f);
                 }
             }
         }
@@ -620,15 +562,16 @@ namespace ROOT
                     var (item1, item2, CostMultiplier) = TierMultiplier(tier);
                     CostMultiplier = 0.0f;
                     _cost = Mathf.RoundToInt(_cost * CostMultiplier);
-                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i, _cost, tier);
-                    _itemUnit[i].SetShop(i, UnitRetailPrice(i),0, _cost, TotalCount % 2 == 0);
+                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i, _cost,
+                        tier);
+                    _itemUnit[i].SetShop(i, UnitRetailPrice(i), 0, _cost, TotalCount % 2 == 0);
                     currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     _items[i].gameObject.transform.position = currentPosS[i];
                 }
                 else
                 {
-                    _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, UnitRetailPrice(i),0, -1,  null);
+                    _items[i].gameObject.GetComponentInChildren<Unit>().SetShop(i, UnitRetailPrice(i), 0, -1, null);
                 }
             }
         }
@@ -666,17 +609,18 @@ namespace ROOT
             if (_items[shopID])
             {
                 var totalPrice = UnitRetailPrice(shopID);
-                CalculatePostalPrice(totalPrice,currentLevelAsset.LevelProgress, out postalPrice);
+                CalculatePostalPrice(totalPrice, currentLevelAsset.LevelProgress, out postalPrice);
                 if (CurrentGameStateMgr.GetCurrency() >= totalPrice)
                 {
                     _items[shopID].GetComponentInChildren<Unit>().SetPendingBuying = true;
                     return true;
                 }
             }
+
             return false;
         }
 
-        public override bool BuyToPos(int idx, Vector2Int pos,bool crash=false)
+        public override bool BuyToPos(int idx, Vector2Int pos, bool crash = false)
         {
             if (_items[idx])
             {
@@ -694,10 +638,12 @@ namespace ROOT
                     {
                         GameBoard.DeliverUnitAssignedPlace(_items[idx], pos);
                     }
+
                     _items[idx] = null;
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -705,7 +651,7 @@ namespace ROOT
         {
             if (_items[idx])
             {
-                if (CurrentGameStateMgr.SpendShopCurrency(_hardwarePrices[idx]*_priceShopDiscount[idx]))
+                if (CurrentGameStateMgr.SpendShopCurrency(_hardwarePrices[idx] * _priceShopDiscount[idx]))
                 {
                     _items[idx].gameObject.GetComponentInChildren<Unit>().UnsetShop();
                     GameBoard.DeliverUnitRandomPlace(_items[idx]);
@@ -713,6 +659,7 @@ namespace ROOT
                     return true;
                 }
             }
+
             return false;
         }
     }

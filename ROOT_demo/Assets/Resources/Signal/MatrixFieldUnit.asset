@@ -15,4 +15,7 @@ MonoBehaviour:
   UnitType: 4
   UnitGenre: 1
   UnitPrice: 2
+  BaseRate: 45
+  NecessaryPortCount: 1
+  AdditionalPortRate: 35
   UnitMat: {fileID: 2100000, guid: 899df1935bd8608408ce1a16969b0a14, type: 2}

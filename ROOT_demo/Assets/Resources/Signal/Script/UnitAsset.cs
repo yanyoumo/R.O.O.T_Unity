@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace ROOT
@@ -10,9 +11,18 @@ namespace ROOT
     [Serializable]
     public class UnitAsset : ScriptableObject
     {
+        [Title("Basic Data")]
         public CoreType UnitType;
         public CoreGenre UnitGenre;
-        public int UnitPrice;
+        public float UnitPrice;
+        [Title("Ratio Data")]
+        [Range(0,100)]
+        public int BaseRate;
+        [Range(0,4)]
+        public int NecessaryPortCount;
+        [Range(0,100)]
+        public int AdditionalPortRate;
+        [Title("Aesthetic Data")]
         public Material UnitMat;
     }
 }
