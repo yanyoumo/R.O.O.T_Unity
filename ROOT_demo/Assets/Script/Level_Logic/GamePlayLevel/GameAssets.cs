@@ -73,6 +73,19 @@ namespace ROOT
 
         public float DeltaCurrency { get; internal set; }
 
+        //internal flag 
+        internal bool _boughtOnce = false;
+
+        public bool BoughtOnce
+        {
+            get => _boughtOnce;
+            internal set => _boughtOnce = value;
+        }
+
+        internal bool MovedTileAni = false;
+        internal bool MovedCursorAni = false;
+        internal List<MoveableBase> AnimationPendingObj;
+
         //CoreFunctionFlag
         public bool InputEnabled = true;
         public bool CurrencyEnabled = true;
@@ -98,21 +111,8 @@ namespace ROOT
         public bool LCDTimeEnabled = true;
         public bool HintEnabled = true;
         public bool ForceHddConnectionHint = false;
-
         public bool ForceServerConnectionHint = false;
 
-        //internal flag 
-        internal bool _boughtOnce = false;
-
-        public bool BoughtOnce
-        {
-            get => _boughtOnce;
-            internal set => _boughtOnce = value;
-        }
-
-        internal bool MovedTileAni = false;
-        internal bool MovedCursorAni = false;
-        internal List<MoveableBase> AnimationPendingObj;
 
         //一些辅助函数可以在这里。
 
