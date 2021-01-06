@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
-    public class CareerFSMLevelLogic : LevelLogic //LEVEL-LOGIC/ÿһ�ض���һ������ࡣ
+    public class CareerFSMLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         [ReadOnly]bool shouldCycle = false;
         [ReadOnly] bool movedTile = false;
@@ -73,9 +73,9 @@ namespace ROOT
         }
 
         /// <summary>
-        /// ��Ҫ��������Levelȥ�Զ������Link��
+        /// 需要允许各个Level去自定义如何Link。
         /// </summary>
-        /// <param name="aOP">��һ��Loading�����߼��������첽����ʵ��</param>
+        /// <param name="aOP">上一个Loading核心逻辑场景的异步操作实例</param>
         /// <returns></returns>
         public override IEnumerator UpdateArtLevelReference(AsyncOperation aOP)
         {
@@ -118,7 +118,7 @@ namespace ROOT
 
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
-            //��������ͺܽӽ�����Ҫ�����¶��ˡ�
+            //这个函数就很接近裁判要做的事儿了。
             if (!currentLevelAsset.GameStateMgr.EndGameCheck()) return false;
             PendingCleanUp = true;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
@@ -146,7 +146,7 @@ namespace ROOT
                     }
                 }
 
-                //���������ֶ�����������߼���Ӧ�ö��������ˡ�
+                //加上允许手动步进后，这个逻辑就应该独立出来了。
                 if (LevelAsset.MovedTileAni)
                 {
                     if (LevelAsset.Shop)
@@ -164,7 +164,7 @@ namespace ROOT
 
             foreach (var moveableBase in LevelAsset.AnimationPendingObj)
             {
-                //��ɺ��pingpong
+                //完成后的pingpong
                 moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
             }
 
@@ -188,13 +188,13 @@ namespace ROOT
             yield break;
         }
 
-        //����һ���ṩInfo�ļ����ǣ�Boss�׶�*BossInfoSprayCount*SprayCountPerAnimateInterval;
+        //现在一共提供Info的计数是：Boss阶段*BossInfoSprayCount*SprayCountPerAnimateInterval;
         private const int SprayCountPerAnimateInterval = 4;
         //private const int BossInfoSprayCount = 3;
         private const float BossInfoSprayTimerIntervalOffsetRange = 0.5f;
 
-        private float _bossInfoSprayTimerIntervalBase => AnimationDuration / SprayCountPerAnimateInterval;//TODO �������Ҫ���ɺ�Animeʱ����ص��������
-        private float _bossInfoSprayTimerInterval => _bossInfoSprayTimerIntervalBase + _bossInfoSprayTimerIntervalOffset;//TODO �������Ҫ���ɺ�Animeʱ����ص��������
+        private float _bossInfoSprayTimerIntervalBase => AnimationDuration / SprayCountPerAnimateInterval;//TODO 这个可能要做成和Anime时长相关的随机数。
+        private float _bossInfoSprayTimerInterval => _bossInfoSprayTimerIntervalBase + _bossInfoSprayTimerIntervalOffset;//TODO 这个可能要做成和Anime时长相关的随机数。
         private float _bossInfoSprayTimerIntervalOffset = 0.0f;
         private float _bossInfoSprayTimer = 0.0f;
         private Coroutine ManualListenBossPauseKeyCoroutine;
@@ -206,7 +206,7 @@ namespace ROOT
         {
             var bossStageCount = LevelAsset.ActionAsset.BossStageCount;
             var totalSprayCount = bossStageCount * SprayCountPerAnimateInterval;
-            //������ݻ��ô���ȥ��
+            //这个数据还得传过去。
             var targetInfoCount = Mathf.RoundToInt(LevelAsset.ActionAsset.InfoCount * LevelAsset.ActionAsset.InfoTargetRatio);
             LevelAsset.SignalPanel.SignalTarget = targetInfoCount;
 
@@ -221,7 +221,7 @@ namespace ROOT
 
         private void BossUpdate()
         {
-            //Spray���߼���������һЩ���
+            //Spray的逻辑可以再做一些花活。
             if (!WorldCycler.BossStagePause)
             {
                 _bossInfoSprayTimer += Time.deltaTime;
@@ -269,7 +269,7 @@ namespace ROOT
         {
             var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
             var stage = roundGist?.Type ?? StageType.Shop;
-            WorldLogic.UpkeepLogic(LevelAsset, in stage, false);//RISK ���ҲҪŪ��
+            WorldLogic.UpkeepLogic(LevelAsset, in stage, false);//RISK 这个也要弄。
         }
 
         public void MajorCycle()
@@ -281,7 +281,7 @@ namespace ROOT
             LevelAsset.DeltaCurrency = 0.0f;
             var forwardCycle = false;
             
-            //RISK �������Ҳ�Ȳ�Ҫ�ã����Ū�Ĳ����Ū��
+            //RISK 这个东西也先不要用；这边弄的差不多再弄。
             WorldExecutor_Dispatcher.Root_Executor_Compound_Ordered(
                 new[] { LogicCommand.UpdateUnitCursor, LogicCommand.RotateUnit },
                 ref LevelAsset, in _ctrlPack, out var res);
@@ -289,12 +289,12 @@ namespace ROOT
             movedTile = tRes[0];
             movedCursor = tRes[1];
 
-            LevelAsset.GameBoard.UpdateBoardRotate(); //TODO ��ת���ڻ������ֵġ���������ż�����
+            LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
 
-            //RISK �����ù���ԪҲ���ǿ���ƶ�һ����
+            //RISK 这里让购买单元也变成强制移动一步。
             WorldExecutor_Dispatcher.Root_Executor(LogicCommand.UpdateShop, ref LevelAsset, in _ctrlPack, out var pRes);
             movedTile |= (bool)pRes;
-            movedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //���flag��ʵ�ʺ���������г�ͻ��
+            movedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
 
             LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled;
             LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
@@ -307,7 +307,7 @@ namespace ROOT
             }
 
             //RISK 
-            //���Anykeydown����ͬһ֡�ˣ����Բ������ˡ�
+            //这个Anykeydown不是同一帧了；所以不能用了。
             shouldCycle = WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
 
             if (roundGist.HasValue)
@@ -337,13 +337,13 @@ namespace ROOT
                 AnimationTimerOrigin = Time.timeSinceLevelLoad;
                 LevelAsset.MovedTileAni = movedTile;
                 LevelAsset.MovedCursorAni = movedCursor;
-                animate_Co = StartCoroutine(Animate()); //������ɺ���Animating�������
+                animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
             }
         }
 
         public void AnimateAction()
         {
-            //Ŀǰ��������յģ���ʱ����ܰ�Animate��CoRoutine����Ķ���Ū������
+            //目前这里基本空的，到时候可能把Animate的CoRoutine里面的东西弄出来。
             var roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
             var stage = roundGist?.Type ?? StageType.Shop;
             Debug.Assert(animate_Co != null);
@@ -422,7 +422,7 @@ namespace ROOT
 
         public override void InitLevel()
         {
-            Debug.Assert(ReferenceOk);//�������ȷ��Reference�ġ������С���
+            Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
             LevelAsset.DeltaCurrency = 0.0f;
@@ -442,7 +442,7 @@ namespace ROOT
             ReadyToGo = true;
             if (LevelAsset.ActionAsset.RoundDatas.Length > 0)
             {
-                //��������������ﻹ����ô�ţ����������ɡ�
+                //这个东西放在这里还是怎么着？就先这样吧。
                 WorldCycler.InitCycler();
                 LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             }
@@ -473,13 +473,18 @@ namespace ROOT
             }
         }
 
+        //现在操纵有微妙的延迟，是因为IO的控制状态（Idle）到实际的动画（开启）（Cycle）之间还隔了一帧。
+        //大体上还是要把IO变成事件、可以将FSM跳到某个状态上；要不然还得弄。
         protected override void Update()
         {
-            Execute();
-            MainFSM.Transit();
-            //���ڲ�����΢����ӳ٣�����ΪIO�Ŀ���״̬��Idle����ʵ�ʵĶ�������������Cycle��֮�仹����һ֡��
-            //�����ϻ���Ҫ��IO����¼������Խ�FSM����ĳ��״̬�ϣ�Ҫ��Ȼ����Ū��
-            //RootDebug.Watch("FSM:" + MainFSM.currentStatus, WatchID.YanYoumo_ExampleA);
+            //这里有个很好的地方，状态转移到是和Update完全解耦了。
+            //这里可以让各个状态的事件间隔减少、但是绝对不是靠谱的解法；还是要用事件。
+            var transitPerFrame = 3;
+            for (var i = 0; i < transitPerFrame; i++)
+            {
+                Execute();
+                MainFSM.Transit();
+            }
         }
     }
 }
