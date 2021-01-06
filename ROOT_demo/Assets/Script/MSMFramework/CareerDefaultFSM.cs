@@ -11,10 +11,14 @@ namespace ROOT
             Actions = new List<RootFSMTransition>
             {
                 new PreInit_Idle_0(),
-                new Idle_Upkeep_0(),
-                new Upkeep_Major_0(),
-                new Major_CleanUp_0(),
-                new CleanUp_Idle_0(),
+                new Idle_Upkeep_1(),
+                new Idle_Idle_0(),
+                new Upkeep_Cycle_0(),
+                new Cycle_Animate_1(),
+                new Cycle_Clean_0(),
+                new Animate_Clean_1(),
+                new Animate_Animate_0(),
+                new Clean_Idle_0(),
             };
             foreach (var msmTransition in Actions)
             {

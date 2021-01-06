@@ -25,8 +25,8 @@ namespace ROOT
     //不同的FSM在相同状态执行的逻辑和离开逻辑是相同的。
     //每个状态将会有结束逻辑和转移逻辑、结束后才进行转移逻辑的判断。
     //命名原则：StartingStatus_TargetStatus_Priority
-    //BareboneLoop: PreInit==>Init==>Idle==>Upkeep==>Major==>CleanUp==>Idle
-
+    //DONE
+    //DONE
     public class PreInit_Idle_0 : RootFSMTransition
     {
         public override int priority => 0;
@@ -34,16 +34,17 @@ namespace ROOT
 
         public override bool AdditionalReq()
         {
-            return true;
-            //return (greatOwner.ReadyToGo) && (!greatOwner.PendingCleanUp);
+            return (greatOwner.ReadyToGo) && (!greatOwner.PendingCleanUp);
         }
 
         public override void Consequence()
         {
+            if (!greatOwner.Playing) greatOwner.Playing = true;
             owner.currentStatus = RootFSMStatus.Idle;
         }
     }
-    public class Idle_Upkeep_0 : RootFSMTransition
+    //DONE
+    public class Idle_Idle_0 : RootFSMTransition
     {
         public override int priority => 0;
         public override RootFSMStatus StartingStatus => RootFSMStatus.Idle;
@@ -55,10 +56,161 @@ namespace ROOT
 
         public override void Consequence()
         {
+            owner.currentStatus = RootFSMStatus.Idle;
+        }
+    }
+    //DONE
+    public class Idle_Upkeep_1 : RootFSMTransition
+    {
+        public override int priority => 1;
+        public override RootFSMStatus StartingStatus => RootFSMStatus.Idle;
+
+        public override bool AdditionalReq()
+        {
+            return !greatOwner.CtrlPack.IsFlag(ControllingCommand.Nop);
+        }
+
+        public override void Consequence()
+        {
             owner.currentStatus = RootFSMStatus.Upkeep;
         }
     }
-    public class Upkeep_Major_0 : RootFSMTransition
+    //DONE
+    public class Idle_BossInit_2 : RootFSMTransition
+    {
+        public override int priority => 2;
+        public override RootFSMStatus StartingStatus => RootFSMStatus.Idle;
+
+        public override bool AdditionalReq()
+        {
+            var roundGist = greatOwner.LevelAsset.ActionAsset.GetRoundGistByStep(greatOwner.LevelAsset.StepCount);
+            var stage = roundGist?.Type ?? StageType.Shop;
+            return (stage == StageType.Boss) && (!WorldCycler.BossStage);
+        }
+
+        public override void Consequence()
+        {
+            owner.currentStatus = RootFSMStatus.BossInit;
+        }
+    }
+    //DONE
+    public class Idle_Boss_1 : RootFSMTransition
+    {
+        public override int priority => 1;
+        public override RootFSMStatus StartingStatus => RootFSMStatus.Idle;
+
+        public override bool AdditionalReq()
+        {
+            var roundGist = greatOwner.LevelAsset.ActionAsset.GetRoundGistByStep(greatOwner.LevelAsset.StepCount);
+            var stage = roundGist?.Type ?? StageType.Shop;
+            return (stage == StageType.Boss);
+        }
+
+        public override void Consequence()
+        {
+            owner.currentStatus = RootFSMStatus.Boss;
+        }
+    }
+
+    public class Idle_Animate_0 : RootFSMTransition
+    {
+        public override int priority => 0;
+        public override RootFSMStatus StartingStatus => RootFSMStatus.Idle;
+
+        public override bool AdditionalReq()
+        {
+            return (greatOwner.ReadyToGo) && (!greatOwner.PendingCleanUp);
+        }
+
+        public override void Consequence()
+        {
+            if (!greatOwner.Playing) greatOwner.Playing = true;
+            owner.currentStatus = RootFSMStatus.Idle;
+        }
+    }
+    //DONE
+    public class BossInit_Boss_0 : RootFSMTransition
+    {
+        public override int priority => 0;
+        public override RootFSMStatus StartingStatus => RootFSMStatus.BossInit;
+
+        public override bool AdditionalReq()
+        {
+            return true;
+        }
+
+        public override void Consequence()
+        {
+            owner.currentStatus = RootFSMStatus.Boss;
+        }
+    }
+
+    public class Boss_Animate_0 : RootFSMTransition
+    {
+        public override int priority => 0;
+        public override RootFSMStatus StartingStatus => RootFSMStatus.PreInit;
+
+        public override bool AdditionalReq()
+        {
+            return (greatOwner.ReadyToGo) && (!greatOwner.PendingCleanUp);
+        }
+
+        public override void Consequence()
+        {
+            if (!greatOwner.Playing) greatOwner.Playing = true;
+            owner.currentStatus = RootFSMStatus.Idle;
+        }
+    }
+    //DONE
+    public class Cycle_Animate_1 : RootFSMTransition
+    {
+        public override int priority => 1;
+        public override RootFSMStatus StartingStatus => RootFSMStatus.Cycle;
+
+        public override bool AdditionalReq()
+        {
+            return greatOwner.Animating;
+        }
+
+        public override void Consequence()
+        {
+            owner.currentStatus = RootFSMStatus.Animate;
+        }
+    }
+    //DONE
+    public class Animate_Clean_1 : RootFSMTransition
+    {
+        public override int priority => 1;
+        public override RootFSMStatus StartingStatus => RootFSMStatus.Animate;
+
+        public override bool AdditionalReq()
+        {
+            return !greatOwner.Animating;
+        }
+
+        public override void Consequence()
+        {
+            owner.currentStatus = RootFSMStatus.CleanUp;
+        }
+    }
+    //DONE
+    public class Animate_Animate_0 : RootFSMTransition
+    {
+        public override int priority => 0;
+        public override RootFSMStatus StartingStatus => RootFSMStatus.Animate;
+
+        public override bool AdditionalReq()
+        {
+            return greatOwner.Animating;
+        }
+
+        public override void Consequence()
+        {
+            owner.currentStatus = RootFSMStatus.Animate;
+        }
+    }
+    //DONE
+    public class Upkeep_Cycle_0 : RootFSMTransition
     {
         public override int priority => 0;
         public override RootFSMStatus StartingStatus => RootFSMStatus.Upkeep;
@@ -73,7 +225,8 @@ namespace ROOT
             owner.currentStatus = RootFSMStatus.Cycle;
         }
     }
-    public class Major_CleanUp_0 : RootFSMTransition
+    //DONE
+    public class Cycle_Clean_0 : RootFSMTransition
     {
         public override int priority => 0;
         public override RootFSMStatus StartingStatus => RootFSMStatus.Cycle;
@@ -88,7 +241,8 @@ namespace ROOT
             owner.currentStatus = RootFSMStatus.CleanUp;
         }
     }
-    public class CleanUp_Idle_0 : RootFSMTransition
+    //DONE
+    public class Clean_Idle_0 : RootFSMTransition
     {
         public override int priority => 0;
         public override RootFSMStatus StartingStatus => RootFSMStatus.CleanUp;

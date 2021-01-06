@@ -44,3 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsTutorialLevel: 1
+  Animating: 0
+  ReadyToGo: 0
+  ReferenceOk: 0
+  PendingCleanUp: 0

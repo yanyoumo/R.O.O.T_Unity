@@ -14,6 +14,9 @@ namespace ROOT
         Idle,
         Upkeep,
         Cycle,
+        BossInit,
+        Boss,
+        Animate,
         CleanUp,
     }
 

@@ -50,6 +50,7 @@ namespace ROOT
             AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDTIVELOGIC, LoadSceneMode.Additive);
             yield return StartCoroutine(FindLlsAfterLoad(loadSceneAsync));
             _gameLogic = _lls.SpawnLevelLogic(LevelLogicPrefab);//这里Level-logic的Awake就进行初始化了。主要是LevelLogic的实例去拿CoreLogic场景里面的东西。
+            Debug.Log(_gameLogic.LevelAsset);
             _gameLogic.LevelAsset.ActionAsset = actionAsset;
             _lls = null;
             loadSceneAsync = SceneManager.LoadSceneAsync(_gameLogic.LEVEL_ART_SCENE_ID, LoadSceneMode.Additive);

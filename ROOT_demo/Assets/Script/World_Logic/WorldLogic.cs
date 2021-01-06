@@ -94,7 +94,7 @@ namespace ROOT
             }
         }
 
-        private static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
+        public static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
         {
             var shouldCycle = false;
             var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
@@ -386,6 +386,11 @@ namespace ROOT
         public Vector2 CameraMovement;
         public int ShopID;
         public int SkillID;
+
+        public bool IsFlag(ControllingCommand a)
+        {
+            return CtrlCMD == a;
+        }
 
         public void MaskFlag(ControllingCommand a)
         {

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -64,20 +65,20 @@ namespace ROOT
 
         #endregion
 
-        public bool IsTutorialLevel = false;
+        [ReadOnly] public bool IsTutorialLevel = false;
 
         //ASSET
         protected internal GameAssets LevelAsset;
-        private Cursor cursor => LevelAsset.Cursor;
-        private ControllingPack _ctrlPack;
-        protected ControllingPack CtrlPack => _ctrlPack;
+        protected Cursor cursor => LevelAsset.Cursor;
+        protected ControllingPack _ctrlPack;
+        public ControllingPack CtrlPack => _ctrlPack;
 
         //Lvl-Logic实际用的判断逻辑。
-        public bool Playing { get; private set; }
-        protected bool Animating = false;
-        protected bool ReadyToGo = false;
-        protected bool ReferenceOk = false;
-        protected bool PendingCleanUp;
+        [ReadOnly] public bool Playing { get; set; }
+        [ReadOnly] public bool Animating = false;
+        [ReadOnly] public bool ReadyToGo = false;
+        [ReadOnly] public bool ReferenceOk = false;
+        [ReadOnly] public bool PendingCleanUp;
 
         protected float AnimationTimerOrigin = 0.0f; //都是秒
         public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? BossAnimationDuration : DefaultAnimationDuration;
@@ -95,8 +96,8 @@ namespace ROOT
 
         private Coroutine animate_Co;
 
-        public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
-        public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
+        [ReadOnly] public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
+        [ReadOnly] public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
         
         protected virtual void UpdateLogicLevelReference()
         {
