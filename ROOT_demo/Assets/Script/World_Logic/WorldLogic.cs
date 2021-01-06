@@ -198,6 +198,7 @@ namespace ROOT
             if (currentLevelAsset.SkillMgr.CurrentSkillType.HasValue &&
                 currentLevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap)
             {
+                //不对啊，FF的停滞也不是因为这个啊。
                 currentLevelAsset.SkillMgr.SwapTick(currentLevelAsset, ctrlPack);
                 movedTile = false;
             }

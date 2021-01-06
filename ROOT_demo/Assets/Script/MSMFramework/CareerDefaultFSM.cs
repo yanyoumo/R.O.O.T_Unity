@@ -10,15 +10,16 @@ namespace ROOT
         {
             Actions = new List<RootFSMTransition>
             {
-                new PreInit_Idle_0(),
-                new Idle_Upkeep_1(),
-                new Idle_Idle_0(),
-                new Upkeep_Cycle_0(),
-                new Cycle_Animate_1(),
-                new Cycle_Clean_0(),
-                new Animate_Clean_1(),
-                new Animate_Animate_0(),
-                new Clean_Idle_0(),
+                new PreInit_UpKeep_0(),
+                new UpKeep_FCycle_2(),
+                new UpKeep_RIO_1(),
+                new UpKeep_UpKeep_0(),
+                new RIO_FCycle_0(),
+                new FCycle_Animate_1(),
+                new FCycle_Clean_0(),
+                new Animate_Clean_0(),
+                new Animate_Animate_1(),
+                new Clean_UpKeep_0(),
             };
             foreach (var msmTransition in Actions)
             {

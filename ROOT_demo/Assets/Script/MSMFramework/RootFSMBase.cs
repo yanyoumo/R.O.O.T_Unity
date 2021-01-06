@@ -11,9 +11,11 @@ namespace ROOT
     {
         //这里写全部的、Root系列中、全部可以使用的潜在状态。
         PreInit,
-        Idle,
-        Upkeep,
-        Cycle,
+        UpKeep,
+        R_Cycle,
+        F_Cycle,
+        R_IO,//ReactToIO
+        Skill,
         BossInit,
         Boss,
         Animate,
