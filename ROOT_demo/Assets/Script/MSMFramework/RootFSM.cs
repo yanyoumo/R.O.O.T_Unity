@@ -15,7 +15,8 @@ namespace ROOT
         PreInit,
         UpKeep,
         R_Cycle,
-        F_Cycle,
+        F_Cycle,//认为是最基本的逻辑核心
+        Career_Cycle,//只有现有“职业”模式需要的逻辑
         R_IO,//ReactToIO
         Skill,
         BossInit,

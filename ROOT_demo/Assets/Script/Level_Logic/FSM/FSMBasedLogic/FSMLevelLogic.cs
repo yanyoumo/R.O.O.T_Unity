@@ -30,6 +30,11 @@ namespace ROOT
             return AutoDrive.HasValue && AutoDrive.Value;
         }
 
+        protected bool CheckFCycle()
+        {
+            return forwardCycle;
+        }
+
         protected bool CheckCtrlPackAny()
         {
             return CtrlPack.AnyFlag();
@@ -37,7 +42,14 @@ namespace ROOT
 
         protected bool CheckAnimating()
         {
-            return Animating;
+            if (MainFSM.currentStatus == RootFSMStatus.Animate)
+            {
+                return Animating;
+            }
+            else
+            {
+                return shouldStartAnimate;
+            }
         }
 
         protected bool CheckNotAnimating()
@@ -45,33 +57,23 @@ namespace ROOT
             return !Animating;
         }
 
-        #endregion
-
-        #region BossStage
-
-        /*private static float BossStagePauseCostTimer = 0.0f;
-        private const float BossStagePauseCostInterval = 1.0f;
-        private const int BossStagePricePerInterval = 1;
-
-        private IEnumerator BossStagePauseCost()
+        protected void TriggerAnimation()
         {
-            yield return 0;
-            while (true)
-            {
-                yield return 0;
-                BossStagePauseCostTimer += Time.deltaTime;
-
-                if (!(BossStagePauseCostTimer >= BossStagePauseCostInterval)) continue;
-                BossStagePauseCostTimer = 0.0f;
-                LevelAsset.ReqOkCount -= BossStagePricePerInterval;
-
-                if (LevelAsset.ReqOkCount > 0) continue;
-                WorldExecutor.BossStagePauseRunStop(ref LevelAsset);
-                yield break;
-            }
+            MainFSM.currentStatus = RootFSMStatus.Animate;
+            Animating = true;
+            //这里的流程和多态机还不是特别兼容，差不多了还是要整理一下。
+            //RISK Skill那个状态并不是FF技能好使的原因；是因为那个时候，关了输入，但是也跑了对应事件长度的动画。
+            //FF前进N个时刻，就跑N个空主动画阻塞；只是恰好主动画时长和时间轴动画时长匹配；
+            //就造成了时间轴动画“匹配阻塞”的“假象”。
+            //在FSM流程中，不去跑错误的空动画了；就匹配不上了。
+            //（也不是说时序的问题；只是Animating的计算逻辑原本计算了AutoDrive，之前为了简化删了；按照原始的逻辑补回来就好了）
+            //上面是个治标不治本的方法，感觉还是有比“空动画”的“意外”阻塞更加高明的算法。
+            //SOLVED-还是先把“空动画”这个设计弄回来了；先从新整理一下再弄。
+            AnimationTimerOrigin = Time.timeSinceLevelLoad;
+            LevelAsset.MovedTileAni = movedTile;
+            LevelAsset.MovedCursorAni = movedCursor;
+            animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
         }
-
-        private bool _noRequirement;*/
 
         #endregion
 
@@ -221,6 +223,9 @@ namespace ROOT
             //RISK 临时在这里试一下相关代码
             if (Input.GetKeyDown(KeyCode.K))
             {
+                //BUG 这块儿炸了，还得再看看。
+                //这里还是要不用Animation的流程做一个单纯的阻塞。
+                _ctrlPack.SetFlag(ControllingCommand.Skill);
                 WorldCycler.ExpectedStepIncrement(5);
             }
         }
@@ -238,6 +243,10 @@ namespace ROOT
 
             LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled;
             LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
+
+            //TODO LED的时刻不只是这个函数的问题，还是积分函数的调用；后面的的时序还是要比较大幅度的调整的；
+            //意外地优先级不高。
+            WorldExecutor.UpdateBoardData(ref LevelAsset);
         }
 
         public RoundGist? roundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
@@ -245,25 +254,30 @@ namespace ROOT
         bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
         //这个Anykeydown不是同一帧了；所以不能用了。
         bool shouldCycle => (AutoDrive.HasValue) || WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
+        bool shouldStartAnimate => shouldCycle;
         bool forwardCycle => (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
 
-        private void ForwardCycleCore(GameAssets currentLevelAsset)
+        //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
+        protected void ForwardCycle()
         {
-            //现在的框架下，在一个Loop的中段StepUp还凑活，但是感觉有隐患。
-            WorldCycler.StepUp();
-            currentLevelAsset.TimeLine.Step();
-            currentLevelAsset.BoughtOnce = false;
-
-            if (currentLevelAsset.DestroyerEnabled) WorldExecutor.UpdateDestoryer(currentLevelAsset);
-            currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
-
-            if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
+            if (forwardCycle)
             {
-                currentLevelAsset.WarningDestoryer.Step(out var outCore);
-                currentLevelAsset.DestoryedCoreType = outCore;
-            }
+                //现在的框架下，在一个Loop的中段StepUp还凑活，但是感觉有隐患。
+                WorldCycler.StepUp();
+                LevelAsset.TimeLine.Step();
+                LevelAsset.BoughtOnce = false;
 
-            WorldExecutor.UpdateBoardData(ref currentLevelAsset);
+                if (LevelAsset.DestroyerEnabled) WorldExecutor.UpdateDestoryer(LevelAsset);
+                LevelAsset.GameStateMgr.PerMove(LevelAsset.DeltaCurrency);
+
+                if (LevelAsset.WarningDestoryer != null && LevelAsset.DestroyerEnabled)
+                {
+                    LevelAsset.WarningDestoryer.Step(out var outCore);
+                    LevelAsset.DestoryedCoreType = outCore;
+                }
+
+                WorldExecutor.UpdateBoardData(ref LevelAsset);
+            }
         }
 
         protected void UpdateRoundStatus_FSM(GameAssets currentLevelAsset, RoundGist roundGist)
@@ -349,11 +363,9 @@ namespace ROOT
         {
             if (roundGist.HasValue)
             {
-                //这个考不考虑提出成一个流程，因为本质上是Career mode的功能。
                 UpdateRoundStatus_FSM(LevelAsset, roundGist.Value);
                 if (LevelAsset.GameOverEnabled)
                 {
-                    //这个代码严格来说是Career模式的；先放在这里，但是要处理。
                     UpdateGameOverStatus(LevelAsset);
                 }
             }
@@ -364,34 +376,6 @@ namespace ROOT
                 {
                     LevelAsset.ReqOkCount++;
                 }
-            }
-        }
-
-        protected void ForwardCycle()
-        {
-            if (forwardCycle)
-            {
-                ForwardCycleCore(LevelAsset);
-            }
-
-            CareerCycle();
-
-            Animating = shouldCycle;
-
-            if (Animating)
-            {
-                //这里的流程和多态机还不是特别兼容，差不多了还是要整理一下。
-                //RISK Skill那个状态并不是FF技能好使的原因；是因为那个时候，关了输入，但是也跑了对应事件长度的动画。
-                //FF前进N个时刻，就跑N个空主动画阻塞；只是恰好主动画时长和时间轴动画时长匹配；
-                //就造成了时间轴动画“匹配阻塞”的“假象”。
-                //在FSM流程中，不去跑错误的空动画了；就匹配不上了。
-                //（也不是说时序的问题；只是Animating的计算逻辑原本计算了AutoDrive，之前为了简化删了；按照原始的逻辑补回来就好了）
-                //上面是个治标不治本的方法，感觉还是有比“空动画”的“意外”阻塞更加高明的算法。
-                //SOLVED-还是先把“空动画”这个设计弄回来了；先从新整理一下再弄。
-                AnimationTimerOrigin = Time.timeSinceLevelLoad;
-                LevelAsset.MovedTileAni = movedTile;
-                LevelAsset.MovedCursorAni = movedCursor;
-                animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
             }
         }
 
@@ -541,7 +525,8 @@ namespace ROOT
             {
                 MainFSM.Execute();
                 MainFSM.Transit();
-                RootDebug.Watch("FSM:" + MainFSM.currentStatus, WatchID.YanYoumo_ExampleB);
+                RootDebug.Watch("FSM:" + MainFSM.currentStatus, WatchID.YanYoumo_ExampleA);
+                //RootDebug.Log("FSM:" + MainFSM.currentStatus, NameID.YanYoumo_Log);
             }
         }
     }

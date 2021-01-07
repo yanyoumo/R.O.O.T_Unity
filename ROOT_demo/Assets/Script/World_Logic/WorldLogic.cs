@@ -96,22 +96,22 @@ namespace ROOT
 
         public static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
         {
-            var shouldCycle = false;
+            var shouldCycleTMP = false;
             var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
             if (StartGameMgr.UseTouchScreen)
             {
-                shouldCycle = movedTile | hasCycleNext;
+                shouldCycleTMP = movedTile | hasCycleNext;
             }
             else if (StartGameMgr.UseMouse)
             {
-                shouldCycle = ((movedTile | movedCursor)) | hasCycleNext;
+                shouldCycleTMP = ((movedTile | movedCursor)) | hasCycleNext;
             }
             else
             {
-                shouldCycle = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
+                shouldCycleTMP = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
             }
 
-            return shouldCycle;
+            return shouldCycleTMP;
         }
 
         public static void UpkeepLogic(GameAssets currentLevelAsset, StageType type,bool animating)
