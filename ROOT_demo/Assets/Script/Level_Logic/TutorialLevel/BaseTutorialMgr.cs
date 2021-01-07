@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    public abstract class TutorialLogic : LevelLogic
+    public abstract class TutorialLogic : BranchingLevelLogic
     {
         protected bool ActionEnded { get; private set; } = false;
         protected int ActionIndex { get; private set; } = -1;

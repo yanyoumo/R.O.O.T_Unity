@@ -114,7 +114,7 @@ namespace ROOT
             return shouldCycle;
         }
 
-        public static void UpkeepLogic(GameAssets currentLevelAsset, in StageType type,bool animating)
+        public static void UpkeepLogic(GameAssets currentLevelAsset, StageType type,bool animating)
         {
             //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
             //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
@@ -144,7 +144,7 @@ namespace ROOT
             movedTile = movedCursor = false;
             ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
 
-            UpkeepLogic(currentLevelAsset, in type, false);//RISK 这个也要弄。
+            UpkeepLogic(currentLevelAsset, type, false);//RISK 这个也要弄。
 
             autoDrive = WorldCycler.NeedAutoDriveStep;
 
@@ -387,6 +387,11 @@ namespace ROOT
         public Vector2 CameraMovement;
         public int ShopID;
         public int SkillID;
+
+        public bool AnyFlag()
+        {
+            return CtrlCMD != ControllingCommand.Nop;
+        }
 
         public bool IsFlag(ControllingCommand a)
         {

@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    public class ShortEndingLevelLogic : LevelLogic
+    public class ShortEndingLevelLogic : BranchingLevelLogic
     {
         //public override LevelType GetLevelType => LevelType.SimpleLevel;
 

@@ -8,16 +8,28 @@ namespace ROOT
 {
     public abstract class RootFSMTransition : IComparable<RootFSMTransition>
     {
-        public RootFSMBase owner;
-        public LevelLogic greatOwner => owner.owner;
+        public RootFSM owner;
+        public FSMLevelLogic levelLogic => owner.owner as FSMLevelLogic;
         public abstract int priority { get; } //这个值越高优先级越高。
-        public abstract RootFSMStatus StartingStatus { get; } //Transit的高阶要求，如果FSM不是这个状态则不考虑。
+        public abstract RootFSMStatus StartingStatus { get; } //Transit的高优先级要求，如果FSM不是这个状态则不考虑。
         public abstract bool AdditionalReq();
+        public Func<bool> AdditionalReqFunc;
         public abstract void Consequence();
 
         public int CompareTo(RootFSMTransition other)
         {
             return other.priority - priority;
+        }
+
+        public RootFSMTransition()
+        {
+
+        }
+
+        public RootFSMTransition(Func<bool> req)
+        {
+            //理论上讲，这么写也可以。
+            AdditionalReqFunc = req;
         }
     }
 
@@ -34,12 +46,12 @@ namespace ROOT
 
         public override bool AdditionalReq()
         {
-            return (greatOwner.ReadyToGo) && (!greatOwner.PendingCleanUp);
+            return (levelLogic.ReadyToGo) && (!levelLogic.PendingCleanUp);
         }
 
         public override void Consequence()
         {
-            if (!greatOwner.Playing) greatOwner.Playing = true;
+            if (!levelLogic.Playing) levelLogic.Playing = true;
             owner.currentStatus = RootFSMStatus.UpKeep;
         }
     }
@@ -51,9 +63,7 @@ namespace ROOT
 
         public override bool AdditionalReq()
         {
-            var roundGist = greatOwner.LevelAsset.ActionAsset.GetRoundGistByStep(greatOwner.LevelAsset.StepCount);
-            var stage = roundGist?.Type ?? StageType.Shop;
-            return (stage == StageType.Boss) && (!WorldCycler.BossStage);
+            return (levelLogic.stage == StageType.Boss) && (!WorldCycler.BossStage);
         }
 
         public override void Consequence()
@@ -69,9 +79,7 @@ namespace ROOT
 
         public override bool AdditionalReq()
         {
-            var roundGist = greatOwner.LevelAsset.ActionAsset.GetRoundGistByStep(greatOwner.LevelAsset.StepCount);
-            var stage = roundGist?.Type ?? StageType.Shop;
-            return (stage == StageType.Boss);
+            return (levelLogic.stage == StageType.Boss);
         }
 
         public override void Consequence()
@@ -137,7 +145,7 @@ namespace ROOT
 
         public override bool AdditionalReq()
         {
-            return !greatOwner.CtrlPack.IsFlag(ControllingCommand.Nop);
+            return levelLogic.CtrlPack.AnyFlag();
         }
 
         public override void Consequence()
@@ -201,7 +209,7 @@ namespace ROOT
 
         public override bool AdditionalReq()
         {
-            return greatOwner.Animating;
+            return levelLogic.Animating;
         }
 
         public override void Consequence()
@@ -233,7 +241,7 @@ namespace ROOT
 
         public override bool AdditionalReq()
         {
-            return greatOwner.Animating;
+            return levelLogic.Animating;
         }
 
         public override void Consequence()
@@ -249,7 +257,7 @@ namespace ROOT
 
         public override bool AdditionalReq()
         {
-            return !greatOwner.Animating;
+            return !levelLogic.Animating;
         }
 
         public override void Consequence()

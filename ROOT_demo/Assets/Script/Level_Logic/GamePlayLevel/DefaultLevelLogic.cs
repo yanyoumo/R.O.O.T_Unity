@@ -14,7 +14,157 @@ namespace ROOT
 {
     public abstract class LevelLogic : MonoBehaviour //LEVEL-LOGIC/每一关都有一个这个类。
     {
-        #region BossStage
+        [ReadOnly] public bool IsTutorialLevel = false;
+
+        //ASSET
+        protected internal GameAssets LevelAsset;
+        protected Cursor cursor => LevelAsset.Cursor;
+        protected ControllingPack _ctrlPack;
+        public ControllingPack CtrlPack => _ctrlPack;
+
+        //Lvl-Logic实际用的判断逻辑。
+        [ReadOnly] public bool Playing { get; set; }
+        [ReadOnly] public bool Animating = false;
+        [ReadOnly] public bool ReadyToGo = false;
+        [ReadOnly] public bool ReferenceOk = false;
+        [ReadOnly] public bool PendingCleanUp;
+
+        protected float AnimationTimerOrigin = 0.0f; //都是秒
+        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? BossAnimationDuration : DefaultAnimationDuration;
+        public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
+        public static readonly float BossAnimationDuration = 1.5f; //都是秒
+
+        protected int _obselateStepID = -1;
+        protected bool lastDestoryBool = false;
+        protected bool _noRequirement;
+
+        protected virtual void UpdateLogicLevelReference()
+        {
+            LevelAsset.CursorTemplate = Resources.Load<GameObject>("Cursor/Prefab/Cursor");
+            LevelAsset.GameBoard = FindObjectOfType<Board>();
+            LevelAsset.AirDrop = LevelAsset.GameBoard.AirDrop;
+            LevelAsset.AirDrop.GameAsset = LevelAsset;
+            LevelAsset.Owner = this;
+        }
+
+        protected virtual void StartShop()
+        {
+            LevelAsset.Shop.ShopStart();
+        }
+
+        protected virtual bool UpdateGameOverStatus(GameAssets currentLevelAsset)
+        {
+            //这个函数就很接近裁判要做的事儿了。
+            if (!currentLevelAsset.GameStateMgr.EndGameCheck()) return false;
+            PendingCleanUp = true;
+            LevelMasterManager.Instance.LevelFinished(LevelAsset);
+            return true;
+        }
+
+        protected void UpdateRoundStatus(GameAssets currentLevelAsset, RoundGist roundGist)
+        {
+            //这个函数就很接近裁判要做的事儿了。
+            int normalRval = 0, networkRval = 0;
+            bool shouldOpenShop, shouldCurrencyIo, shouldCurrencyIncome,
+                shouldDestoryer, SkillAllowed, bossStage;
+            var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
+
+            bossStage = roundGist.Type == StageType.Boss;
+            shouldOpenShop = roundGist.Type == StageType.Shop;
+            SkillAllowed = roundGist.Type != StageType.Shop;
+            shouldCurrencyIncome = roundGist.Type == StageType.Require;
+            shouldCurrencyIo = (roundGist.Type == StageType.Require || roundGist.Type == StageType.Destoryer);
+            shouldDestoryer = (roundGist.Type == StageType.Destoryer);
+
+            if (roundGist.Type == StageType.Require || roundGist.Type == StageType.Shop)
+            {
+                normalRval += roundGist.normalReq;
+                networkRval += roundGist.networkReq;
+            }
+
+            if (roundGist.SwitchHeatsink(tCount))
+            {
+                if (_obselateStepID == -1 || _obselateStepID != LevelAsset.StepCount)
+                {
+                    LevelAsset.GameBoard.UpdatePatternID();
+                }
+
+                _obselateStepID = LevelAsset.StepCount;
+            }
+
+            if ((LevelAsset.DestroyerEnabled && !shouldDestoryer) && !WorldCycler.BossStage)
+            {
+                LevelAsset.WarningDestoryer.ForceReset();
+            }
+
+            if ((lastDestoryBool && !shouldDestoryer) && !WorldCycler.NeedAutoDriveStep.HasValue)
+            {
+                //这个的触发实际和商店的切换HeatSink冲突了。 Resolved
+                LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
+            }
+
+            lastDestoryBool = shouldDestoryer;
+
+            //RISK 这里把Destroyer目前完全关了。现在Boss阶段也要用。
+            //LevelAsset.DestroyerEnabled = ShouldDestoryer;
+            LevelAsset.DestroyerEnabled = WorldCycler.BossStage;
+            LevelAsset.CurrencyIncomeEnabled = shouldCurrencyIncome;
+            LevelAsset.CurrencyIOEnabled = shouldCurrencyIo;
+
+            int harDriverCountInt = 0, networkCountInt = 0;
+            _noRequirement = (normalRval == 0 && networkRval == 0);
+
+            if (_noRequirement)
+            {
+                currentLevelAsset.TimeLine.RequirementSatisfied = true;
+            }
+            else
+            {
+                /*currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out harDriverCountInt);
+                currentLevelAsset.BoardDataCollector.CalculateServerScore(out networkCountInt);*/
+                //下面两个函数应该是等效的，只不过目前还没有实际逻辑。
+                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, currentLevelAsset.GameBoard, out harDriverCountInt);
+                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, currentLevelAsset.GameBoard, out networkCountInt);
+                currentLevelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
+            }
+
+            if (LevelAsset.Shop is IRequirableShop shop)
+            {
+                if (shouldOpenShop)
+                {
+                    if (!LevelAsset.Shop.ShopOpening)
+                    {
+                        int normalDataSurplus = normalRval - harDriverCountInt,
+                            networkDataSurplus = networkRval - networkCountInt;
+                        if (normalDataSurplus > 0 || networkDataSurplus > 0)
+                        {
+                            shop.SetRequire(roundGist.shopLength, normalDataSurplus, networkDataSurplus);
+                        }
+                    }
+                }
+                else
+                {
+                    shop.ResetRequire();
+                }
+            }
+
+            //CheckDiscount这个函数只能每次调一次，还是需要guard一下。
+            var discount = 0;
+            if (!LevelAsset.Shop.ShopOpening && shouldOpenShop)
+            {
+                discount = LevelAsset.SkillMgr.CheckDiscount();
+                RootDebug.Log(discount.ToString(), NameID.YanYoumo_Log);
+            }
+            LevelAsset.Shop.OpenShop(shouldOpenShop, discount);
+            LevelAsset.SkillEnabled = SkillAllowed;
+
+            LevelAsset.SignalPanel.TgtNormalSignal = normalRval;
+            LevelAsset.SignalPanel.TgtNetworkSignal = networkRval;
+            LevelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
+            LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
+            LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
+            LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
+        }
 
         protected IEnumerator ManualPollingBossPauseKey()
         {
@@ -30,10 +180,12 @@ namespace ROOT
             }
         }
 
-        private static float BossStagePauseCostTimer = 0.0f;
-        private const float BossStagePauseCostInterval = 1.0f;
-        private const int BossStagePricePerInterval = 1;
-        private IEnumerator BossStagePauseCost()
+        #region BossStage
+
+        protected static float BossStagePauseCostTimer = 0.0f;
+        protected const float BossStagePauseCostInterval = 1.0f;
+        protected const int BossStagePricePerInterval = 1;
+        protected IEnumerator BossStagePauseCost()
         {
             yield return 0;
             while (true)
@@ -61,58 +213,12 @@ namespace ROOT
             StopCoroutine(BossStagePauseCostCo);
             BossStagePauseCostCo = null;
         }
-        private bool _noRequirement;
 
         #endregion
 
-        [ReadOnly] public bool IsTutorialLevel = false;
-
-        //ASSET
-        protected internal GameAssets LevelAsset;
-        protected Cursor cursor => LevelAsset.Cursor;
-        protected ControllingPack _ctrlPack;
-        public ControllingPack CtrlPack => _ctrlPack;
-
-        //Lvl-Logic实际用的判断逻辑。
-        [ReadOnly] public bool Playing { get; set; }
-        [ReadOnly] public bool Animating = false;
-        [ReadOnly] public bool ReadyToGo = false;
-        [ReadOnly] public bool ReferenceOk = false;
-        [ReadOnly] public bool PendingCleanUp;
-
-        protected float AnimationTimerOrigin = 0.0f; //都是秒
-        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? BossAnimationDuration : DefaultAnimationDuration;
-        public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
-        public static readonly float BossAnimationDuration = 1.5f; //都是秒
-        private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
-        private float AnimationLerper
-        {
-            get
-            {
-                float res = animationTimer / AnimationDuration;
-                return Mathf.Min(res, 1.0f);
-            }
-        }
-
-        private Coroutine animate_Co;
-
         [ReadOnly] public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
         [ReadOnly] public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
-        
-        protected virtual void UpdateLogicLevelReference()
-        {
-            LevelAsset.CursorTemplate = Resources.Load<GameObject>("Cursor/Prefab/Cursor");
-            LevelAsset.GameBoard = FindObjectOfType<Board>();
-            LevelAsset.AirDrop = LevelAsset.GameBoard.AirDrop;
-            LevelAsset.AirDrop.GameAsset = LevelAsset;
-            LevelAsset.Owner = this;
-        }
-
-        protected virtual void Awake()
-        {
-            LevelAsset = new GameAssets();
-            UpdateLogicLevelReference();
-        }
+        public abstract void InitLevel();
 
         /// <summary>
         /// 需要允许各个Level去自定义如何Link。
@@ -141,8 +247,6 @@ namespace ROOT
             PopulateArtLevelReference();
         }
 
-        public abstract void InitLevel();
-
         public virtual bool CheckReference()
         {
             bool res = true;
@@ -154,19 +258,28 @@ namespace ROOT
         {
             ReferenceOk = CheckReference();
         }
+    }
 
-        protected virtual void StartShop()
+    //这一支儿是在FSM逻辑下好了之后随时整枝剪掉。
+    public abstract class BranchingLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
+    {
+        private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
+        private float AnimationLerper
         {
-            LevelAsset.Shop.ShopStart();
+            get
+            {
+                float res = animationTimer / AnimationDuration;
+                return Mathf.Min(res, 1.0f);
+            }
         }
 
-        protected virtual bool UpdateGameOverStatus(GameAssets currentLevelAsset)
+        private Coroutine animate_Co;
+        
+
+        protected virtual void Awake()
         {
-            //这个函数就很接近裁判要做的事儿了。
-            if (!currentLevelAsset.GameStateMgr.EndGameCheck()) return false;
-            PendingCleanUp = true;
-            LevelMasterManager.Instance.LevelFinished(LevelAsset);
-            return true;
+            LevelAsset = new GameAssets();
+            UpdateLogicLevelReference();
         }
 
         IEnumerator Animate()
@@ -378,7 +491,7 @@ namespace ROOT
             {
                 //Animation_Logic_Upkeep
                 Debug.Assert(animate_Co != null);
-                WorldLogic.UpkeepLogic(LevelAsset, in stage, Animating);
+                WorldLogic.UpkeepLogic(LevelAsset, stage, Animating);
             }
 
             if (LevelAsset.HintEnabled)
@@ -418,114 +531,6 @@ namespace ROOT
             return false;
         }
 
-        int _obselateStepID = -1;
-        bool lastDestoryBool = false;
-
-        protected void UpdateRoundStatus(GameAssets currentLevelAsset,RoundGist roundGist)
-        {
-            //这个函数就很接近裁判要做的事儿了。
-            int normalRval = 0, networkRval = 0;
-            bool shouldOpenShop, shouldCurrencyIo, shouldCurrencyIncome, 
-                shouldDestoryer, SkillAllowed, bossStage;
-            var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
-
-            bossStage = roundGist.Type == StageType.Boss;
-            shouldOpenShop = roundGist.Type == StageType.Shop;
-            SkillAllowed = roundGist.Type != StageType.Shop;
-            shouldCurrencyIncome = roundGist.Type == StageType.Require;
-            shouldCurrencyIo = (roundGist.Type == StageType.Require || roundGist.Type == StageType.Destoryer);
-            shouldDestoryer = (roundGist.Type == StageType.Destoryer);
-
-            if (roundGist.Type == StageType.Require || roundGist.Type == StageType.Shop)
-            {
-                normalRval += roundGist.normalReq;
-                networkRval += roundGist.networkReq;
-            }
-
-            if (roundGist.SwitchHeatsink(tCount))
-            {
-                if (_obselateStepID == -1 || _obselateStepID != LevelAsset.StepCount)
-                {
-                    LevelAsset.GameBoard.UpdatePatternID();
-                }
-
-                _obselateStepID = LevelAsset.StepCount;
-            }
-
-            if ((LevelAsset.DestroyerEnabled && !shouldDestoryer) && !WorldCycler.BossStage)
-            {
-                LevelAsset.WarningDestoryer.ForceReset();
-            }
-
-            if ((lastDestoryBool && !shouldDestoryer) && !WorldCycler.NeedAutoDriveStep.HasValue)
-            {
-                //这个的触发实际和商店的切换HeatSink冲突了。 Resolved
-                LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
-            }
-
-            lastDestoryBool = shouldDestoryer;
-
-            //RISK 这里把Destroyer目前完全关了。现在Boss阶段也要用。
-            //LevelAsset.DestroyerEnabled = ShouldDestoryer;
-            LevelAsset.DestroyerEnabled = WorldCycler.BossStage;
-            LevelAsset.CurrencyIncomeEnabled = shouldCurrencyIncome;
-            LevelAsset.CurrencyIOEnabled = shouldCurrencyIo;
-
-            int harDriverCountInt = 0, networkCountInt = 0;
-            _noRequirement = (normalRval == 0 && networkRval == 0);
-
-            if (_noRequirement)
-            {
-                currentLevelAsset.TimeLine.RequirementSatisfied = true;
-            }
-            else
-            {
-                /*currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out harDriverCountInt);
-                currentLevelAsset.BoardDataCollector.CalculateServerScore(out networkCountInt);*/
-                //下面两个函数应该是等效的，只不过目前还没有实际逻辑。
-                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, currentLevelAsset.GameBoard, out harDriverCountInt);
-                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, currentLevelAsset.GameBoard, out networkCountInt);
-                currentLevelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
-            }
-
-            if (LevelAsset.Shop is IRequirableShop shop)
-            {
-                if (shouldOpenShop)
-                {
-                    if (!LevelAsset.Shop.ShopOpening)
-                    {
-                        int normalDataSurplus = normalRval - harDriverCountInt,
-                            networkDataSurplus = networkRval - networkCountInt;
-                        if (normalDataSurplus > 0 || networkDataSurplus > 0)
-                        {
-                            shop.SetRequire(roundGist.shopLength, normalDataSurplus, networkDataSurplus);
-                        }
-                    }
-                }
-                else
-                {
-                    shop.ResetRequire();
-                }
-            }
-
-            //CheckDiscount这个函数只能每次调一次，还是需要guard一下。
-            var discount = 0;
-            if (!LevelAsset.Shop.ShopOpening && shouldOpenShop)
-            {
-                discount = LevelAsset.SkillMgr.CheckDiscount();
-                RootDebug.Log(discount.ToString(), NameID.YanYoumo_Log);
-            }
-            LevelAsset.Shop.OpenShop(shouldOpenShop, discount);
-            LevelAsset.SkillEnabled = SkillAllowed;
-
-            LevelAsset.SignalPanel.TgtNormalSignal = normalRval;
-            LevelAsset.SignalPanel.TgtNetworkSignal = networkRval;
-            LevelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
-            LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
-            LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
-            LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
-        }
-
         protected virtual void OnDestroy()
         {
             if (ManualListenBossPauseKeyCoroutine != null)
@@ -535,7 +540,7 @@ namespace ROOT
         }
     }
 
-    public class DefaultLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
+    public class DefaultLevelLogic : BranchingLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         public override void InitLevel()
         {
