@@ -250,8 +250,8 @@ namespace ROOT
             var stage = roundGist?.Type ?? StageType.Shop;
             var forwardCycle = false;
 
-            var autoDrive = WorldCycler.NeedAutoDriveStep;
-            forwardCycle = (autoDrive.HasValue && autoDrive.Value) ||movedTile;
+            var AutoDrive = WorldCycler.NeedAutoDriveStep;
+            forwardCycle = (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
 
             if (forwardCycle)
             {
@@ -260,7 +260,7 @@ namespace ROOT
 
             //RISK 
             //这个Anykeydown不是同一帧了；所以不能用了。
-            shouldCycle = WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
+            shouldCycle = (AutoDrive.HasValue) || WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
 
             if (roundGist.HasValue)
             {
@@ -274,7 +274,7 @@ namespace ROOT
                 UpdateGameOverStatus(LevelAsset);
             }
 
-            if (((shouldCycle && movedTile)) && (!_noRequirement))
+            if (((AutoDrive.HasValue && AutoDrive.Value || shouldCycle && movedTile)) && (!_noRequirement))
             {
                 if (LevelAsset.TimeLine.RequirementSatisfied)
                 {
@@ -287,12 +287,13 @@ namespace ROOT
             if (Animating)
             {
                 //这里的流程和多态机还不是特别兼容，差不多了还是要整理一下。
-                //RISK Skill那个并不是FF技能好使的原因；是因为那个时候，关了输入，但是也跑了对应事件长度的动画。
+                //RISK Skill那个状态并不是FF技能好使的原因；是因为那个时候，关了输入，但是也跑了对应事件长度的动画。
                 //FF前进N个时刻，就跑N个空主动画阻塞；只是恰好主动画时长和时间轴动画时长匹配；
                 //就造成了时间轴动画“匹配阻塞”的“假象”。
                 //在FSM流程中，不去跑错误的空动画了；就匹配不上了。
                 //（也不是说时序的问题；只是Animating的计算逻辑原本计算了AutoDrive，之前为了简化删了；按照原始的逻辑补回来就好了）
                 //上面是个治标不治本的方法，感觉还是有比“空动画”的“意外”阻塞更加高明的算法。
+                //SOLVED-还是先把“空动画”这个设计弄回来了；先从新整理一下再弄。
                 AnimationTimerOrigin = Time.timeSinceLevelLoad;
                 LevelAsset.MovedTileAni = movedTile;
                 LevelAsset.MovedCursorAni = movedCursor;

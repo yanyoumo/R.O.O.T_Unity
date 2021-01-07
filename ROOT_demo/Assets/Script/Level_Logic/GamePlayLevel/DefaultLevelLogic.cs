@@ -358,7 +358,7 @@ namespace ROOT
 
                 Animating = shouldCycle;
 
-                if (((AutoDrive.HasValue && AutoDrive.Value) || (shouldCycle && movedTile)) && (!_noRequirement))
+                if ((AutoDrive.HasValue && AutoDrive.Value || shouldCycle && movedTile) && (!_noRequirement))
                 {
                     if (LevelAsset.TimeLine.RequirementSatisfied)
                     {
