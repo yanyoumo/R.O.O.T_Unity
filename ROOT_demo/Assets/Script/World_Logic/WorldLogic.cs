@@ -1139,6 +1139,7 @@ namespace ROOT
 
     public static class WorldExecutor_Dispatcher
     {
+        //TODO 正在做FSM重构；这里的代码先都停掉。
         //RISK 这里应该尽量变成一个Dispatcher（尽量做dispatch），实际的逻辑放到WorldUtils
         //说白了，这个函数应该只发命令不管别的。
         public static void Root_Executor_void_PUBLIC(LogicCommand cmd, ref GameAssets gameAsset)

@@ -11,16 +11,45 @@ namespace ROOT
     using FSMActions = Dictionary<RootFSMStatus, Action>;
     using FSMTransitions = List<RootFSMTransition>;
 
-    //ÀïÃæ²»Í¬µÄÀàĞÍ¿ÉÒÔÊ¹ÓÃpartial¹Ø¼ü×Ö²ğ¿ª¹ÜÀí¡£
-    public abstract class FSMLevelLogic : LevelLogic //LEVEL-LOGIC/Ã¿Ò»¹Ø¶¼ÓĞÒ»¸öÕâ¸öÀà¡£
+    //é‡Œé¢ä¸åŒçš„ç±»å‹å¯ä»¥ä½¿ç”¨partialå…³é”®å­—æ‹†å¼€ç®¡ç†ã€‚
+    public abstract class FSMLevelLogic : LevelLogic //LEVEL-LOGIC/æ¯ä¸€å…³éƒ½æœ‰ä¸€ä¸ªè¿™ä¸ªç±»ã€‚
     {
-        [ReadOnly] bool shouldCycle = false;
+        //[ReadOnly] bool shouldCycle = false;
         [ReadOnly] bool movedTile = false;
         [ReadOnly] bool movedCursor = false;
 
+        #region TransitionReq
+
+        protected bool CheckInited()
+        {
+            return (ReadyToGo) && (!PendingCleanUp);
+        }
+
+        protected bool CheckAutoF()
+        {
+            return AutoDrive.HasValue && AutoDrive.Value;
+        }
+
+        protected bool CheckCtrlPackAny()
+        {
+            return CtrlPack.AnyFlag();
+        }
+
+        protected bool CheckAnimating()
+        {
+            return Animating;
+        }
+
+        protected bool CheckNotAnimating()
+        {
+            return !Animating;
+        }
+
+        #endregion
+
         #region BossStage
 
-        private static float BossStagePauseCostTimer = 0.0f;
+        /*private static float BossStagePauseCostTimer = 0.0f;
         private const float BossStagePauseCostInterval = 1.0f;
         private const int BossStagePricePerInterval = 1;
 
@@ -37,16 +66,15 @@ namespace ROOT
                 LevelAsset.ReqOkCount -= BossStagePricePerInterval;
 
                 if (LevelAsset.ReqOkCount > 0) continue;
-                WorldExecutor_Dispatcher.Root_Executor_void_PUBLIC(LogicCommand.BossUnpaused, ref LevelAsset);
+                WorldExecutor.BossStagePauseRunStop(ref LevelAsset);
                 yield break;
             }
         }
 
-        private bool _noRequirement;
+        private bool _noRequirement;*/
 
         #endregion
 
-        //ASSET
         private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
 
         private float AnimationLerper
@@ -59,8 +87,7 @@ namespace ROOT
         }
 
         private Coroutine animate_Co;
-
-
+        
         IEnumerator Animate()
         {
             while (AnimationLerper < 1.0f)
@@ -82,7 +109,7 @@ namespace ROOT
                     }
                 }
 
-                //¼ÓÉÏÔÊĞíÊÖ¶¯²½½øºó£¬Õâ¸öÂß¼­¾ÍÓ¦¸Ã¶ÀÁ¢³öÀ´ÁË¡£
+                //åŠ ä¸Šå…è®¸æ‰‹åŠ¨æ­¥è¿›åï¼Œè¿™ä¸ªé€»è¾‘å°±åº”è¯¥ç‹¬ç«‹å‡ºæ¥äº†ã€‚
                 if (LevelAsset.MovedTileAni)
                 {
                     if (LevelAsset.Shop)
@@ -100,7 +127,7 @@ namespace ROOT
 
             foreach (var moveableBase in LevelAsset.AnimationPendingObj)
             {
-                //Íê³ÉºóµÄpingpong
+                //å®Œæˆåçš„pingpong
                 moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
             }
 
@@ -123,14 +150,12 @@ namespace ROOT
             Animating = false;
         }
 
-        //ÏÖÔÚÒ»¹²Ìá¹©InfoµÄ¼ÆÊıÊÇ£ºBoss½×¶Î*BossInfoSprayCount*SprayCountPerAnimateInterval;
+        //ç°åœ¨ä¸€å…±æä¾›Infoçš„è®¡æ•°æ˜¯ï¼šBossé˜¶æ®µ*BossInfoSprayCount*SprayCountPerAnimateInterval;
         private const int SprayCountPerAnimateInterval = 4;
         private const float BossInfoSprayTimerIntervalOffsetRange = 0.5f;
 
-        private float _bossInfoSprayTimerIntervalBase =>
-            AnimationDuration / SprayCountPerAnimateInterval;
-        private float _bossInfoSprayTimerInterval =>
-            _bossInfoSprayTimerIntervalBase + _bossInfoSprayTimerIntervalOffset; 
+        private float _bossInfoSprayTimerIntervalBase => AnimationDuration / SprayCountPerAnimateInterval;
+        private float _bossInfoSprayTimerInterval => _bossInfoSprayTimerIntervalBase + _bossInfoSprayTimerIntervalOffset; 
 
         private float _bossInfoSprayTimerIntervalOffset = 0.0f;
         private float _bossInfoSprayTimer = 0.0f;
@@ -143,7 +168,7 @@ namespace ROOT
         {
             var bossStageCount = LevelAsset.ActionAsset.BossStageCount;
             var totalSprayCount = bossStageCount * SprayCountPerAnimateInterval;
-            //Õâ¸öÊı¾İ»¹µÃ´«¹ıÈ¥¡£
+            //è¿™ä¸ªæ•°æ®è¿˜å¾—ä¼ è¿‡å»ã€‚
             var targetInfoCount =
                 Mathf.RoundToInt(LevelAsset.ActionAsset.InfoCount * LevelAsset.ActionAsset.InfoTargetRatio);
             LevelAsset.SignalPanel.SignalTarget = targetInfoCount;
@@ -158,7 +183,7 @@ namespace ROOT
         }
         protected void BossUpdate()
         {
-            //SprayµÄÂß¼­¿ÉÒÔÔÙ×öÒ»Ğ©»¨»î¡£
+            //Sprayçš„é€»è¾‘å¯ä»¥å†åšä¸€äº›èŠ±æ´»ã€‚
             if (!WorldCycler.BossStagePause)
             {
                 _bossInfoSprayTimer += Time.deltaTime;
@@ -182,9 +207,6 @@ namespace ROOT
             }
         }
 
-        int _obselateStepID = -1;
-        bool lastDestoryBool = false;
-
         protected void PreInit()
         {
 
@@ -192,73 +214,148 @@ namespace ROOT
 
         protected void UpKeepAction()
         {
-            roundGist = LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
             _ctrlPack = WorldController.UpdateInputScheme(LevelAsset, out movedTile, out movedCursor, ref LevelAsset._boughtOnce);
-            RootDebug.Watch(_ctrlPack.CtrlCMD.ToString(), WatchID.YanYoumo_ExampleB);
-            //RISK ÁÙÊ±ÔÚÕâÀïÊÔÒ»ÏÂÏà¹Ø´úÂë
+            RootDebug.Watch(stage.ToString(), WatchID.YanYoumo_ExampleA);
+            WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK è¿™ä¸ªä¹Ÿè¦å¼„ã€‚
+            LightUpBoard();
+            //RISK ä¸´æ—¶åœ¨è¿™é‡Œè¯•ä¸€ä¸‹ç›¸å…³ä»£ç 
             if (Input.GetKeyDown(KeyCode.K))
             {
                 WorldCycler.ExpectedStepIncrement(5);
             }
         }
 
-        private void CycleKeepUp()
-        {
-            WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK Õâ¸öÒ²ÒªÅª¡£
-        }
-
         protected void ReactIO()
         {
-            CycleKeepUp();
+            //CycleKeepUp();
+            WorldExecutor.UpdateCursor_Unit(ref LevelAsset, in _ctrlPack, out movedTile, out movedCursor);
+            WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack);
+            LevelAsset.GameBoard.UpdateBoardRotate(); //TODO æ—‹è½¬ç°åœ¨è¿˜æ˜¯é—ªç°çš„ã€‚è¿™ä¸ªä¸ç”¨ç€æ€¥åšã€‚
+            var Res = WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
 
-            //RISK Õâ¸ö¶«Î÷Ò²ÏÈ²»ÒªÓÃ£»Õâ±ßÅªµÄ²î²»¶àÔÙÅª¡£
-            WorldExecutor_Dispatcher.Root_Executor_Compound_Ordered(
-                new[] {LogicCommand.UpdateUnitCursor, LogicCommand.RotateUnit},
-                ref LevelAsset, in _ctrlPack, out var res);
-            var tRes = (bool[]) res[LogicCommand.UpdateUnitCursor];
-            movedTile = tRes[0];
-            movedCursor = tRes[1];
-
-            LevelAsset.GameBoard.UpdateBoardRotate(); //TODO Ğı×ªÏÖÔÚ»¹ÊÇÉÁÏÖµÄ¡£Õâ¸ö²»ÓÃ×Å¼±×ö¡£
-
-            //RISK ÕâÀïÈÃ¹ºÂòµ¥ÔªÒ²±ä³ÉÇ¿ÖÆÒÆ¶¯Ò»²½¡£
-            WorldExecutor_Dispatcher.Root_Executor(LogicCommand.UpdateShop, ref LevelAsset, in _ctrlPack, out var pRes);
-            movedTile |= (bool) pRes;
-            movedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //Õâ¸öflagµÄÊµ¼Êº¬ÒåºÍÃû³ÆÓĞ³åÍ»¡£
+            movedTile |= Res;
+            movedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //è¿™ä¸ªflagçš„å®é™…å«ä¹‰å’Œåç§°æœ‰å†²çªã€‚
 
             LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled;
             LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
         }
 
-        public RoundGist? roundGist { get; private set; }
+        public RoundGist? roundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
         public StageType stage => roundGist?.Type ?? StageType.Shop;
+        bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
+        //è¿™ä¸ªAnykeydownä¸æ˜¯åŒä¸€å¸§äº†ï¼›æ‰€ä»¥ä¸èƒ½ç”¨äº†ã€‚
+        bool shouldCycle => (AutoDrive.HasValue) || WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
+        bool forwardCycle => (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
 
-        protected void ForwardCycle()
+        private void ForwardCycleCore(GameAssets currentLevelAsset)
         {
-            var forwardCycle = false;
+            //ç°åœ¨çš„æ¡†æ¶ä¸‹ï¼Œåœ¨ä¸€ä¸ªLoopçš„ä¸­æ®µStepUpè¿˜å‡‘æ´»ï¼Œä½†æ˜¯æ„Ÿè§‰æœ‰éšæ‚£ã€‚
+            WorldCycler.StepUp();
+            currentLevelAsset.TimeLine.Step();
+            currentLevelAsset.BoughtOnce = false;
 
-            var AutoDrive = WorldCycler.NeedAutoDriveStep;
-            forwardCycle = (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
+            if (currentLevelAsset.DestroyerEnabled) WorldExecutor.UpdateDestoryer(currentLevelAsset);
+            currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
 
-            if (forwardCycle)
+            if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
             {
-                WorldLogic.UpdateCycle(LevelAsset, stage);
+                currentLevelAsset.WarningDestoryer.Step(out var outCore);
+                currentLevelAsset.DestoryedCoreType = outCore;
             }
 
-            //RISK 
-            //Õâ¸öAnykeydown²»ÊÇÍ¬Ò»Ö¡ÁË£»ËùÒÔ²»ÄÜÓÃÁË¡£
-            shouldCycle = (AutoDrive.HasValue) || WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
+            WorldExecutor.UpdateBoardData(ref currentLevelAsset);
+        }
 
+        protected void UpdateRoundStatus_FSM(GameAssets currentLevelAsset, RoundGist roundGist)
+        {
+            int normalRval = 0;
+            int networkRval = 0;
+            var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
+            var isBossRound = roundGist.Type == StageType.Boss;
+            var isShopRound = roundGist.Type == StageType.Shop;
+            var isRequireRound = roundGist.Type == StageType.Require;
+            var isDestoryerRound = roundGist.Type == StageType.Destoryer;
+            var isSkillAllowed = !isShopRound;
+            var shouldCurrencyIo = (isRequireRound || isDestoryerRound);
+
+            if (isRequireRound && movedTile)
+            {
+                LevelAsset.GameBoard.UpdatePatternDiminishing();
+            }
+
+            if (isRequireRound || isShopRound)
+            {
+                normalRval = roundGist.normalReq;
+                networkRval = roundGist.networkReq;
+            }
+            
+            if ((lastDestoryBool && !isDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
+            {
+                Debug.Log("LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit()");
+                LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
+            }
+
+            if (roundGist.SwitchHeatsink(tCount))
+            {
+                if (_obselateStepID == -1 || _obselateStepID != LevelAsset.StepCount)
+                {
+                    LevelAsset.GameBoard.UpdatePatternID();
+                }
+                _obselateStepID = LevelAsset.StepCount;
+            }
+            
+            if ((LevelAsset.DestroyerEnabled && !isDestoryerRound) && !WorldCycler.BossStage)
+            {
+                LevelAsset.WarningDestoryer.ForceReset();
+            }
+
+            lastDestoryBool = isDestoryerRound;
+
+            LevelAsset.DestroyerEnabled = WorldCycler.BossStage;
+            LevelAsset.CurrencyIncomeEnabled = isRequireRound;
+            LevelAsset.CurrencyIOEnabled = shouldCurrencyIo;
+
+            int harDriverCountInt = 0, networkCountInt = 0;
+            _noRequirement = (normalRval == 0 && networkRval == 0);
+
+            if (_noRequirement)
+            {
+                currentLevelAsset.TimeLine.RequirementSatisfied = true;
+            }
+            else
+            {
+                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, currentLevelAsset.GameBoard, out harDriverCountInt);
+                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, currentLevelAsset.GameBoard, out networkCountInt);
+                currentLevelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
+            }
+
+            var discount = 0;
+            if (!LevelAsset.Shop.ShopOpening && isShopRound)
+            {
+                discount = LevelAsset.SkillMgr.CheckDiscount();
+            }
+            LevelAsset.Shop.OpenShop(isShopRound, discount);
+            LevelAsset.SkillEnabled = isSkillAllowed;
+
+            LevelAsset.SignalPanel.TgtNormalSignal = normalRval;
+            LevelAsset.SignalPanel.TgtNetworkSignal = networkRval;
+            LevelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
+            LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
+            LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
+            LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
+        }
+
+        protected void CareerCycle()
+        {
             if (roundGist.HasValue)
             {
-                UpdateRoundStatus(LevelAsset, roundGist.Value);
-            }
-
-            LightUpBoard();
-
-            if (LevelAsset.GameOverEnabled)
-            {
-                UpdateGameOverStatus(LevelAsset);
+                //è¿™ä¸ªè€ƒä¸è€ƒè™‘æå‡ºæˆä¸€ä¸ªæµç¨‹ï¼Œå› ä¸ºæœ¬è´¨ä¸Šæ˜¯Career modeçš„åŠŸèƒ½ã€‚
+                UpdateRoundStatus_FSM(LevelAsset, roundGist.Value);
+                if (LevelAsset.GameOverEnabled)
+                {
+                    //è¿™ä¸ªä»£ç ä¸¥æ ¼æ¥è¯´æ˜¯Careeræ¨¡å¼çš„ï¼›å…ˆæ”¾åœ¨è¿™é‡Œï¼Œä½†æ˜¯è¦å¤„ç†ã€‚
+                    UpdateGameOverStatus(LevelAsset);
+                }
             }
 
             if (((AutoDrive.HasValue && AutoDrive.Value || shouldCycle && movedTile)) && (!_noRequirement))
@@ -268,46 +365,57 @@ namespace ROOT
                     LevelAsset.ReqOkCount++;
                 }
             }
+        }
+
+        protected void ForwardCycle()
+        {
+            if (forwardCycle)
+            {
+                ForwardCycleCore(LevelAsset);
+            }
+
+            CareerCycle();
 
             Animating = shouldCycle;
 
             if (Animating)
             {
-                //ÕâÀïµÄÁ÷³ÌºÍ¶àÌ¬»ú»¹²»ÊÇÌØ±ğ¼æÈİ£¬²î²»¶àÁË»¹ÊÇÒªÕûÀíÒ»ÏÂ¡£
-                //RISK SkillÄÇ¸ö×´Ì¬²¢²»ÊÇFF¼¼ÄÜºÃÊ¹µÄÔ­Òò£»ÊÇÒòÎªÄÇ¸öÊ±ºò£¬¹ØÁËÊäÈë£¬µ«ÊÇÒ²ÅÜÁË¶ÔÓ¦ÊÂ¼ş³¤¶ÈµÄ¶¯»­¡£
-                //FFÇ°½øN¸öÊ±¿Ì£¬¾ÍÅÜN¸ö¿ÕÖ÷¶¯»­×èÈû£»Ö»ÊÇÇ¡ºÃÖ÷¶¯»­Ê±³¤ºÍÊ±¼äÖá¶¯»­Ê±³¤Æ¥Åä£»
-                //¾ÍÔì³ÉÁËÊ±¼äÖá¶¯»­¡°Æ¥Åä×èÈû¡±µÄ¡°¼ÙÏó¡±¡£
-                //ÔÚFSMÁ÷³ÌÖĞ£¬²»È¥ÅÜ´íÎóµÄ¿Õ¶¯»­ÁË£»¾ÍÆ¥Åä²»ÉÏÁË¡£
-                //£¨Ò²²»ÊÇËµÊ±ĞòµÄÎÊÌâ£»Ö»ÊÇAnimatingµÄ¼ÆËãÂß¼­Ô­±¾¼ÆËãÁËAutoDrive£¬Ö®Ç°ÎªÁË¼ò»¯É¾ÁË£»°´ÕÕÔ­Ê¼µÄÂß¼­²¹»ØÀ´¾ÍºÃÁË£©
-                //ÉÏÃæÊÇ¸öÖÎ±ê²»ÖÎ±¾µÄ·½·¨£¬¸Ğ¾õ»¹ÊÇÓĞ±È¡°¿Õ¶¯»­¡±µÄ¡°ÒâÍâ¡±×èÈû¸ü¼Ó¸ßÃ÷µÄËã·¨¡£
-                //SOLVED-»¹ÊÇÏÈ°Ñ¡°¿Õ¶¯»­¡±Õâ¸öÉè¼ÆÅª»ØÀ´ÁË£»ÏÈ´ÓĞÂÕûÀíÒ»ÏÂÔÙÅª¡£
+                //è¿™é‡Œçš„æµç¨‹å’Œå¤šæ€æœºè¿˜ä¸æ˜¯ç‰¹åˆ«å…¼å®¹ï¼Œå·®ä¸å¤šäº†è¿˜æ˜¯è¦æ•´ç†ä¸€ä¸‹ã€‚
+                //RISK Skillé‚£ä¸ªçŠ¶æ€å¹¶ä¸æ˜¯FFæŠ€èƒ½å¥½ä½¿çš„åŸå› ï¼›æ˜¯å› ä¸ºé‚£ä¸ªæ—¶å€™ï¼Œå…³äº†è¾“å…¥ï¼Œä½†æ˜¯ä¹Ÿè·‘äº†å¯¹åº”äº‹ä»¶é•¿åº¦çš„åŠ¨ç”»ã€‚
+                //FFå‰è¿›Nä¸ªæ—¶åˆ»ï¼Œå°±è·‘Nä¸ªç©ºä¸»åŠ¨ç”»é˜»å¡ï¼›åªæ˜¯æ°å¥½ä¸»åŠ¨ç”»æ—¶é•¿å’Œæ—¶é—´è½´åŠ¨ç”»æ—¶é•¿åŒ¹é…ï¼›
+                //å°±é€ æˆäº†æ—¶é—´è½´åŠ¨ç”»â€œåŒ¹é…é˜»å¡â€çš„â€œå‡è±¡â€ã€‚
+                //åœ¨FSMæµç¨‹ä¸­ï¼Œä¸å»è·‘é”™è¯¯çš„ç©ºåŠ¨ç”»äº†ï¼›å°±åŒ¹é…ä¸ä¸Šäº†ã€‚
+                //ï¼ˆä¹Ÿä¸æ˜¯è¯´æ—¶åºçš„é—®é¢˜ï¼›åªæ˜¯Animatingçš„è®¡ç®—é€»è¾‘åŸæœ¬è®¡ç®—äº†AutoDriveï¼Œä¹‹å‰ä¸ºäº†ç®€åŒ–åˆ äº†ï¼›æŒ‰ç…§åŸå§‹çš„é€»è¾‘è¡¥å›æ¥å°±å¥½äº†ï¼‰
+                //ä¸Šé¢æ˜¯ä¸ªæ²»æ ‡ä¸æ²»æœ¬çš„æ–¹æ³•ï¼Œæ„Ÿè§‰è¿˜æ˜¯æœ‰æ¯”â€œç©ºåŠ¨ç”»â€çš„â€œæ„å¤–â€é˜»å¡æ›´åŠ é«˜æ˜çš„ç®—æ³•ã€‚
+                //SOLVED-è¿˜æ˜¯å…ˆæŠŠâ€œç©ºåŠ¨ç”»â€è¿™ä¸ªè®¾è®¡å¼„å›æ¥äº†ï¼›å…ˆä»æ–°æ•´ç†ä¸€ä¸‹å†å¼„ã€‚
                 AnimationTimerOrigin = Time.timeSinceLevelLoad;
                 LevelAsset.MovedTileAni = movedTile;
                 LevelAsset.MovedCursorAni = movedCursor;
-                animate_Co = StartCoroutine(Animate()); //ÕâÀïÍê³Éºó»á°ÑAnimatingÉè»ØÀ´¡£
+                animate_Co = StartCoroutine(Animate()); //è¿™é‡Œå®Œæˆåä¼šæŠŠAnimatingè®¾å›æ¥ã€‚
             }
         }
 
         protected void ReverseCycle()
         {
-            CycleKeepUp();
+            //CycleKeepUp();
         }
 
         protected void AnimateAction()
         {
-            //Ä¿Ç°ÕâÀï»ù±¾¿ÕµÄ£¬µ½Ê±ºò¿ÉÄÜ°ÑAnimateµÄCoRoutineÀïÃæµÄ¶«Î÷Åª³öÀ´¡£
+            //ç›®å‰è¿™é‡ŒåŸºæœ¬ç©ºçš„ï¼Œåˆ°æ—¶å€™å¯èƒ½æŠŠAnimateçš„CoRoutineé‡Œé¢çš„ä¸œè¥¿å¼„å‡ºæ¥ã€‚
             Debug.Assert(animate_Co != null);
             WorldLogic.UpkeepLogic(LevelAsset, stage, Animating);
         }
 
         protected void CleanUp()
         {
-            shouldCycle = false;
+            //shouldCycle = false;
             movedTile = false;
             movedCursor = false;
             animate_Co = null;
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
             LevelAsset.DeltaCurrency = 0.0f;
+            LevelAsset.LevelProgress = LevelAsset.StepCount / (float)LevelAsset.ActionAsset.PlayableCount;
         }
 
         private RootFSM MainFSM;
@@ -339,7 +447,7 @@ namespace ROOT
 
         public sealed override void InitLevel()
         {
-            Debug.Assert(ReferenceOk); //ÒâÍâµÄÓĞÈ·¶¨ReferenceµÄ¡­¡­»¹ĞĞ¡­¡­
+            Debug.Assert(ReferenceOk); //æ„å¤–çš„æœ‰ç¡®å®šReferenceçš„â€¦â€¦è¿˜è¡Œâ€¦â€¦
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
             LevelAsset.DeltaCurrency = 0.0f;
@@ -359,7 +467,7 @@ namespace ROOT
             ReadyToGo = true;
             if (LevelAsset.ActionAsset.RoundDatas.Length > 0)
             {
-                //Õâ¸ö¶«Î÷·ÅÔÚÕâÀï»¹ÊÇÔõÃ´×Å£¿¾ÍÏÈÕâÑù°É¡£
+                //è¿™ä¸ªä¸œè¥¿æ”¾åœ¨è¿™é‡Œè¿˜æ˜¯æ€ä¹ˆç€ï¼Ÿå°±å…ˆè¿™æ ·å§ã€‚
                 WorldCycler.InitCycler();
                 LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             }
@@ -399,21 +507,12 @@ namespace ROOT
         }
         protected sealed override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
-            return base.UpdateGameOverStatus(currentLevelAsset);
+            return LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount);
         }
         protected sealed override void UpdateLogicLevelReference()
         {
             base.UpdateLogicLevelReference();
         }
-
-        #region Transitions
-
-        protected bool AutoTrans()
-        {
-            return true;
-        }
-
-        #endregion
 
         void Awake()
         {
@@ -424,13 +523,19 @@ namespace ROOT
 
             MainFSM.ReplaceActions(fsmActions);
             MainFSM.ReplaceTransition(RootFSMTransitions);
+
+            LevelAsset.AnimationPendingObj = new List<MoveableBase>();
         }
-        //ÏÖÔÚ²Ù×İÓĞÎ¢ÃîµÄÑÓ³Ù£¬ÊÇÒòÎªIOµÄ¿ØÖÆ×´Ì¬£¨Idle£©µ½Êµ¼ÊµÄ¶¯»­£¨¿ªÆô£©£¨Cycle£©Ö®¼ä»¹¸ôÁËÒ»Ö¡¡£
-        //´óÌåÉÏ»¹ÊÇÒª°ÑIO±ä³ÉÊÂ¼ş¡¢¿ÉÒÔ½«FSMÌøµ½Ä³¸ö×´Ì¬ÉÏ£»Òª²»È»»¹µÃÅª¡£
+        //ç°åœ¨å°±æ˜¯è¦å°†è¿˜æœ‰å¤§å‹åˆ†å‰çš„é€»è¾‘ä»¥çŠ¶æ€çš„å½¢å¼æ‹†å‡ºæ¥ã€å¦‚æœç®€å•çš„ä¸€ä¸ªif Guardå°±å¿äº†ï¼›
+        //ç„¶ååŸæœ¬è®¾è®¡çš„åŸºäºäº‹ä»¶çš„é€»è¾‘ï¼›å°±éœ€è¦å˜æˆï¼Œå‘å‡ºäº‹ä»¶æ˜¯ï¼šè¯·æ±‚é€»è¾‘çŠ¶æ€æœºç«‹åˆ»ï¼ˆæˆ–è€…å»¶è¿Ÿï¼‰åˆ‡æ¢çŠ¶æ€æˆ–è€…æ”¹å˜å‚æ•°ä»€ä¹ˆçš„ã€‚
+        //WorldLogicå°±åœ¨FSMçš„è¯­å¢ƒä¸‹æ‹†æ•£çš„world_executoré‡Œé¢å»äº†ã€‚
+
+        //ç°åœ¨æ“çºµæœ‰å¾®å¦™çš„å»¶è¿Ÿï¼Œæ˜¯å› ä¸ºIOçš„æ§åˆ¶çŠ¶æ€ï¼ˆIdleï¼‰åˆ°å®é™…çš„åŠ¨ç”»ï¼ˆå¼€å¯ï¼‰ï¼ˆCycleï¼‰ä¹‹é—´è¿˜éš”äº†ä¸€å¸§ã€‚
+        //å¤§ä½“ä¸Šè¿˜æ˜¯è¦æŠŠIOå˜æˆäº‹ä»¶ã€å¯ä»¥å°†FSMè·³åˆ°æŸä¸ªçŠ¶æ€ä¸Šï¼›è¦ä¸ç„¶è¿˜å¾—å¼„ã€‚
         void Update()
         {
-            //ÕâÀïÓĞ¸öºÜºÃµÄµØ·½£¬×´Ì¬×ªÒÆµ½ÊÇºÍUpdateÍêÈ«½âñîÁË¡£
-            //ÕâÀï¿ÉÒÔÈÃ¸÷¸ö×´Ì¬µÄÎïÀíÊÂ¼ş¼ä¸ô¼õÉÙ¡¢µ«ÊÇ¾ø¶Ô²»ÊÇ¿¿Æ×µÄ½â·¨£»»¹ÊÇÒªÓÃÊÂ¼ş¡£
+            //è¿™é‡Œæœ‰ä¸ªå¾ˆå¥½çš„åœ°æ–¹ï¼ŒçŠ¶æ€è½¬ç§»åˆ°æ˜¯å’ŒUpdateå®Œå…¨è§£è€¦äº†ã€‚
+            //è¿™é‡Œå¯ä»¥è®©å„ä¸ªçŠ¶æ€çš„ç‰©ç†äº‹ä»¶é—´éš”å‡å°‘ã€ä½†æ˜¯ç»å¯¹ä¸æ˜¯é è°±çš„è§£æ³•ï¼›è¿˜æ˜¯è¦ç”¨äº‹ä»¶ã€‚
             var transitPerFrame = 3;
             for (var i = 0; i < transitPerFrame; i++)
             {

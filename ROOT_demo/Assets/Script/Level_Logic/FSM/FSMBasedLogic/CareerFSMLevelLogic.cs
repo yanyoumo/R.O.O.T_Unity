@@ -10,7 +10,9 @@ using Random = UnityEngine.Random;
 namespace ROOT
 {
     using FSMActions = Dictionary<RootFSMStatus, Action>;
+    using Trans= RootFSMTransition;
     using FSMTransitions = List<RootFSMTransition>;
+    using Status = RootFSMStatus;
 
     public class CareerFSMLevelLogic : FSMLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
@@ -20,16 +22,17 @@ namespace ROOT
             {
                 var transitions = new FSMTransitions
                 {
-                    new PreInit_UpKeep_0(),
-                    new UpKeep_FCycle_2(),
-                    new UpKeep_RIO_1(),
-                    new UpKeep_UpKeep_0(),
-                    new RIO_FCycle_0(),
-                    new FCycle_Animate_1(),
-                    new FCycle_Clean_0(),
-                    new Animate_Clean_0(),
-                    new Animate_Animate_1(),
-                    new Clean_UpKeep_0(),
+                    new Trans(Status.PreInit,Status.UpKeep,1,CheckInited),
+                    new Trans(Status.PreInit),
+                    new Trans(Status.UpKeep,Status.F_Cycle,2,CheckAutoF),
+                    new Trans(Status.UpKeep,Status.R_IO,1,CheckCtrlPackAny),
+                    new Trans(Status.UpKeep),
+                    new Trans(Status.R_IO,Status.F_Cycle,0),
+                    new Trans(Status.F_Cycle,Status.Animate,1,CheckAnimating),
+                    new Trans(Status.F_Cycle,Status.CleanUp,0),
+                    new Trans(Status.Animate,Status.Animate,1,CheckAnimating),
+                    new Trans(Status.Animate,Status.CleanUp,0,CheckNotAnimating),
+                    new Trans(Status.CleanUp,Status.UpKeep,0),
                 };
                 return transitions;
             }
@@ -40,14 +43,14 @@ namespace ROOT
             {
                 var _fsmActions = new FSMActions
                 {
-                    {RootFSMStatus.PreInit, PreInit},
-                    {RootFSMStatus.UpKeep, UpKeepAction},
-                    {RootFSMStatus.F_Cycle, ForwardCycle},
-                    {RootFSMStatus.CleanUp, CleanUp},
-                    {RootFSMStatus.BossInit, BossInit},
-                    {RootFSMStatus.Boss, BossUpdate},
-                    {RootFSMStatus.Animate, AnimateAction},
-                    {RootFSMStatus.R_IO, ReactIO},
+                    {Status.PreInit, PreInit},
+                    {Status.UpKeep, UpKeepAction},
+                    {Status.F_Cycle, ForwardCycle},
+                    {Status.CleanUp, CleanUp},
+                    {Status.BossInit, BossInit},
+                    {Status.Boss, BossUpdate},
+                    {Status.Animate, AnimateAction},
+                    {Status.R_IO, ReactIO},
                 };
                 return _fsmActions;
             }
