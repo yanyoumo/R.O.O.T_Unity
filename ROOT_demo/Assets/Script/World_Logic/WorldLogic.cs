@@ -435,9 +435,16 @@ namespace ROOT
         }
     }
 
+    [Serializable]
+    public struct ActionPack
+    {
+        public string ActionName;
+        public InputActionEventData ActionEventData;
+    }
+
     public static class WorldEvent
     {
-        public delegate void ControllingEventHandler(ControllingPack ctrlPack);
+        public delegate void ControllingEventHandler(ActionPack actionPack);
     }
 
     //要把Asset和Logic，把Controller也要彻底拆开。

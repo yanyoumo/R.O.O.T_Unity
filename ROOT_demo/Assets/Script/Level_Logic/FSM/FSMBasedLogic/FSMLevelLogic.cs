@@ -403,6 +403,7 @@ namespace ROOT
         }
 
         private RootFSM MainFSM;
+        private ControlActionDriver actionDriver;
 
         private void InitDestoryer()
         {
@@ -498,52 +499,13 @@ namespace ROOT
             base.UpdateLogicLevelReference();
         }
 
-        private Queue<ControllingPack> ctrlPackQueue;
+        private Coroutine tmpCoroutine;
 
         public bool RequestToJumpStatus(RootFSMStatus desiredStatus)
         {
             MainFSM.currentStatus = desiredStatus;
             return true;
         }
-
-        private void RespondToControlEvent(ControllingPack ctrlpack)
-        {
-            //在这里直接把_ctrlPack注入进去。
-            //_ctrlPack = ctrlpack;
-            //RequestToJumpStatus(RootFSMStatus.R_IO);
-            ctrlPackQueue.Enqueue(ctrlpack);//从技术上能把这个东西接进来了；但是怎么处理就是大头了。
-            Debug.Log("RespondToControlEvent:" + _ctrlPack.CtrlCMD);
-        }
-
-        #region 这些代码具体放在哪不清楚、而且引用也是问题
-
-        public static event WorldEvent.ControllingEventHandler ControllingEvent;
-
-        public IEnumerator UpdateInputScheme_Keyboard_Coroutine_tmp()
-        {
-            while (true)
-            {
-                var ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-                try
-                {
-                    WorldController.GetCommand_Keyboard(LevelAsset, out ctrlPack);
-                }
-                catch (Exception)
-                {
-                    ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-                }
-                if (ctrlPack.AnyFlag())
-                {
-                    ControllingEvent?.Invoke(ctrlPack);
-                }
-
-                yield return 0;
-            }
-        }
-
-        #endregion
-
-        private Coroutine tmpCoroutine;
 
         void Awake()
         {
@@ -556,10 +518,7 @@ namespace ROOT
             MainFSM.ReplaceTransition(RootFSMTransitions);
 
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            ctrlPackQueue=new Queue<ControllingPack>();
-
-            ControllingEvent += RespondToControlEvent;
-            tmpCoroutine=StartCoroutine(UpdateInputScheme_Keyboard_Coroutine_tmp());
+            actionDriver = new ControlActionDriver(this, MainFSM);
         }
         //现在就是要将还有大型分叉的逻辑以状态的形式拆出来、如果简单的一个if Guard就忍了；
         //然后原本设计的基于事件的逻辑；就需要变成，发出事件是：请求逻辑状态机立刻（或者延迟）切换状态或者改变参数什么的。
@@ -579,12 +538,6 @@ namespace ROOT
                 RootDebug.Watch("FSM:" + MainFSM.currentStatus, WatchID.YanYoumo_ExampleA);
                 //RootDebug.Log("FSM:" + MainFSM.currentStatus, NameID.YanYoumo_Log);
             }
-        }
-
-        void OnDestroy()
-        {
-            StopCoroutine(tmpCoroutine);
-            ControllingEvent -= RespondToControlEvent;
         }
     }
 }

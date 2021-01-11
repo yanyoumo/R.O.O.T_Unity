@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using Rewired;
 using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 
