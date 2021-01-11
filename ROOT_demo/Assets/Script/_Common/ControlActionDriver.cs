@@ -20,23 +20,41 @@ namespace ROOT
             ControllingEventMgr.ControllingEvent += RespondToControlEvent;
         }
 
+        void filterDir(ActionPack actionPack,out RotationDirection? Direction)
+        {
+            switch (actionPack.ActionEventData.actionId)
+            {
+                case RewiredConsts.Action.CursorUp:
+                    Direction = RotationDirection.North;
+                    break;
+                case RewiredConsts.Action.CursorDown:
+                    Direction = RotationDirection.South;
+                    break;
+                case RewiredConsts.Action.CursorLeft:
+                    Direction = RotationDirection.West;
+                    break;
+                case RewiredConsts.Action.CursorRight:
+                    Direction = RotationDirection.East;
+                    break;
+            }
+            Direction = null;
+        }
+
         private void RespondToControlEvent(ActionPack actionPack)
         {
             var ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-            /*ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-            var anyDir = GetCommandDir(out var Direction);
-            var anyDirAxis = GetCamMovementVec_KB(out var directionAxis);
-            if (anyDir)
+            filterDir(actionPack,out var direction);
+            if (direction.HasValue)
             {
-                ctrlPack.CommandDir = Direction;
+                ctrlPack.CommandDir = direction.Value;
                 ctrlPack.ReplaceFlag(ControllingCommand.Move); //Replace
-                if (player.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT))
+                /*if (player.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT))
                 {
                     ctrlPack.ReplaceFlag(ControllingCommand.Drag); //Replace
-                }
+                }*/
             }
 
-            ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
+            /*ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
             ctrlPack.NextPos = currentLevelAsset.Cursor.GetCoord(ctrlPack.CommandDir);
 
             if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_REMOVEUNIT))

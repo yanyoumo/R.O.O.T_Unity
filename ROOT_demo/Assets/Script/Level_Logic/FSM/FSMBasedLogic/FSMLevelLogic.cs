@@ -216,7 +216,8 @@ namespace ROOT
 
         protected void UpKeepAction()
         {
-            _ctrlPack = WorldController.UpdateInputScheme(LevelAsset, out movedTile, out movedCursor, ref LevelAsset._boughtOnce);
+            _ctrlPack = WorldController.UpdateInputScheme(LevelAsset);
+            //_ctrlPack = actionDriver.CtrlQueueHeader;
             RootDebug.Watch(stage.ToString(), WatchID.YanYoumo_ExampleA);
             WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK 这个也要弄。
             LightUpBoard();

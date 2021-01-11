@@ -157,8 +157,7 @@ namespace ROOT
             {
                 #region UserIO
 
-                ctrlPack = WorldController.UpdateInputScheme(currentLevelAsset, out movedTile, out movedCursor,
-                    ref currentLevelAsset._boughtOnce);
+                ctrlPack = WorldController.UpdateInputScheme(currentLevelAsset);
 
                 if (currentLevelAsset.InputEnabled)
                 {
@@ -1087,12 +1086,8 @@ namespace ROOT
         }
 
         public static ControllingPack UpdateInputScheme(
-            GameAssets currentLevelAsset, out bool movedTile,
-            out bool movedCursor, ref bool boughtOnce)
+            GameAssets currentLevelAsset)
         {
-            movedTile = false;
-            movedCursor = false;
-
             var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (StartGameMgr.UseTouchScreen)
             {
