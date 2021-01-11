@@ -434,13 +434,6 @@ namespace ROOT
         }
     }
 
-    [Serializable]
-    public struct ActionPack
-    {
-        public string ActionName;
-        public InputActionEventData ActionEventData;
-    }
-
     public static class WorldEvent
     {
         public delegate void ControllingEventHandler(ActionPack actionPack);

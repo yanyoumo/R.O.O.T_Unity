@@ -500,7 +500,7 @@ namespace ROOT
             base.UpdateLogicLevelReference();
         }
 
-        private Coroutine tmpCoroutine;
+        //private Coroutine tmpCoroutine;
 
         public bool RequestToJumpStatus(RootFSMStatus desiredStatus)
         {
@@ -536,8 +536,7 @@ namespace ROOT
             {
                 MainFSM.Execute();
                 MainFSM.Transit();
-                RootDebug.Watch("FSM:" + MainFSM.currentStatus, WatchID.YanYoumo_ExampleA);
-                //RootDebug.Log("FSM:" + MainFSM.currentStatus, NameID.YanYoumo_Log);
+                //RootDebug.Watch("FSM:" + MainFSM.currentStatus, WatchID.YanYoumo_ExampleA);
             }
         }
     }

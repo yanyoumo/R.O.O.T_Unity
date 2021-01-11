@@ -247,6 +247,50 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &882287821
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 882287823}
+  - component: {fileID: 882287822}
+  m_Layer: 0
+  m_Name: ControllingEventMgr
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &882287822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882287821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 430e1bb80eecf0846845e8229f3bae8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerId: 0
+--- !u!4 &882287823
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882287821}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &952712528
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,8 +454,8 @@ MonoBehaviour:
         exportConsts_namespace: RewiredConsts
         exportConsts_actions: 1
         exportConsts_actionsClassName: Action
-        exportConsts_actionsIncludeActionCategory: 0
-        exportConsts_actionsCreateClassesForActionCategories: 0
+        exportConsts_actionsIncludeActionCategory: 1
+        exportConsts_actionsCreateClassesForActionCategories: 1
         exportConsts_mapCategories: 1
         exportConsts_mapCategoriesClassName: Category
         exportConsts_layouts: 1
@@ -489,7 +533,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 2
       _name: CursorDown
       _type: 1
@@ -498,7 +542,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 3
       _name: CursorLeft
       _type: 1
@@ -507,7 +551,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 4
       _name: CursorRight
       _type: 1
@@ -516,7 +560,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 5
       _name: BossPause
       _type: 1
@@ -525,7 +569,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 6
       _name: MoveUnit
       _type: 1
@@ -534,7 +578,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 3
     - _id: 7
       _name: RotateUnit
       _type: 1
@@ -543,7 +587,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 3
     - _id: 8
       _name: HintHDD
       _type: 1
@@ -552,7 +596,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 9
       _name: HintNetwork
       _type: 1
@@ -561,7 +605,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 10
       _name: HintControl
       _type: 1
@@ -570,7 +614,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 11
       _name: CycleNext
       _type: 1
@@ -579,7 +623,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 12
       _name: Func0
       _type: 1
@@ -588,7 +632,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 13
       _name: Func1
       _type: 1
@@ -597,7 +641,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 14
       _name: Func2
       _type: 1
@@ -606,7 +650,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 15
       _name: Func3
       _type: 1
@@ -615,7 +659,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 16
       _name: Func4
       _type: 1
@@ -624,7 +668,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 17
       _name: Func5
       _type: 1
@@ -633,7 +677,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 18
       _name: Func6
       _type: 1
@@ -642,7 +686,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 19
       _name: Func7
       _type: 1
@@ -651,7 +695,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 20
       _name: Func8
       _type: 1
@@ -660,7 +704,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 21
       _name: Func9
       _type: 1
@@ -669,7 +713,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 1
     - _id: 6
       _name: Confirm
       _type: 1
@@ -680,24 +724,120 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 0
     - _id: 22
-      _name: Confirm0
+      _name: MouseLeft
       _type: 1
-      _descriptiveName: Confirm
+      _descriptiveName: MouseLeftButtonPassthough
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 0
+      _categoryId: 4
+    - _id: 23
+      _name: MainAxis_X
+      _type: 0
+      _descriptiveName: X-axis value for a main analog input--could be mouse or a
+        analog stick
+      _positiveDescriptiveName: posX
+      _negativeDescriptiveName: negX
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
+    - _id: 26
+      _name: MainAxis_Y
+      _type: 0
+      _descriptiveName: Y-axis value for a main analog input--could be mouse or a
+        analog stick
+      _positiveDescriptiveName: posY
+      _negativeDescriptiveName: negY
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
+    - _id: 25
+      _name: SubAxis_X
+      _type: 0
+      _descriptiveName: X-axis value for secondray analog input.
+      _positiveDescriptiveName: posX
+      _negativeDescriptiveName: negX
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
+    - _id: 27
+      _name: SubAxis_Y
+      _type: 0
+      _descriptiveName: Y-axis value for secondray analog input.
+      _positiveDescriptiveName: posY
+      _negativeDescriptiveName: negY
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
+    - _id: 28
+      _name: Enter
+      _type: 1
+      _descriptiveName: Action0
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 4
+    - _id: 29
+      _name: LeftAlt
+      _type: 1
+      _descriptiveName: Action0
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 4
+    - _id: 30
+      _name: FuncComp
+      _type: 1
+      _descriptiveName: Composition of func0~9; convert actual ID to another val.
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 3
     actionCategories:
     - _name: Default
       _descriptiveName: Default
       _tag: 
       _id: 0
       _userAssignable: 1
+    - _name: Button
+      _descriptiveName: Action that mainly based on button
+      _tag: 
+      _id: 1
+      _userAssignable: 1
+    - _name: Analog
+      _descriptiveName: Action that mainly based on Analog Input(mouse axis/analog
+        stick)
+      _tag: 
+      _id: 2
+      _userAssignable: 1
+    - _name: Composite
+      _descriptiveName: Actions that composite from multiple actions or convert from
+        one action.
+      _tag: 
+      _id: 3
+      _userAssignable: 1
+    - _name: Passthough
+      _descriptiveName: Action carry a simple Raw input, act more lke a hardware
+        event
+      _tag: 
+      _id: 4
+      _userAssignable: 1
     actionCategoryMap:
       list:
       - categoryId: 0
-        actionIds: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f00000010000000110000001200000013000000140000001500000016000000
+        actionIds: 
+      - categoryId: 1
+        actionIds: 010000000200000003000000040000000500000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000
+      - categoryId: 2
+        actionIds: 170000001a000000190000001b000000
+      - categoryId: 3
+        actionIds: 06000000070000001e000000
+      - categoryId: 4
+        actionIds: 160000001c0000001d000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -1120,10 +1260,10 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 23
-    actionCategoryIdCounter: 1
+    actionIdCounter: 31
+    actionCategoryIdCounter: 5
     inputBehaviorIdCounter: 1
-    mapCategoryIdCounter: 1
+    mapCategoryIdCounter: 2
     joystickLayoutIdCounter: 1
     keyboardLayoutIdCounter: 1
     mouseLayoutIdCounter: 1

@@ -10,9 +10,18 @@ namespace ROOT
         private FSMLevelLogic _owner;
         private RootFSM _mainFsm;
         private Queue<ControllingPack> _ctrlPackQueue;
-        public ControllingPack CtrlQueueHeader => _ctrlPackQueue.Dequeue();
-        
-        public ControlActionDriver(FSMLevelLogic _owner,RootFSM _fsm)
+        public bool CtrlQueueNonEmpty => _ctrlPackQueue.Count != 0;
+        public ControllingPack CtrlQueueHeader
+        {
+            get
+            {
+                if (CtrlQueueNonEmpty) return _ctrlPackQueue.Dequeue();
+                var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+                return ctrlPack;
+            }
+        }
+
+        public ControlActionDriver(FSMLevelLogic _owner, RootFSM _fsm)
         {
             _ctrlPackQueue = new Queue<ControllingPack>();
             this._owner = _owner;
@@ -20,100 +29,98 @@ namespace ROOT
             ControllingEventMgr.ControllingEvent += RespondToControlEvent;
         }
 
-        void filterDir(ActionPack actionPack,out RotationDirection? Direction)
+        void filterDir(ActionPack actionPack, out RotationDirection? Direction)
         {
             switch (actionPack.ActionEventData.actionId)
             {
-                case RewiredConsts.Action.CursorUp:
+                case RewiredConsts.Action.Button.CursorUp:
                     Direction = RotationDirection.North;
-                    break;
-                case RewiredConsts.Action.CursorDown:
+                    return;
+                case RewiredConsts.Action.Button.CursorDown:
                     Direction = RotationDirection.South;
-                    break;
-                case RewiredConsts.Action.CursorLeft:
+                    return;
+                case RewiredConsts.Action.Button.CursorLeft:
                     Direction = RotationDirection.West;
-                    break;
-                case RewiredConsts.Action.CursorRight:
+                    return;
+                case RewiredConsts.Action.Button.CursorRight:
                     Direction = RotationDirection.East;
-                    break;
+                    return;
             }
+
             Direction = null;
+        }
+
+        private static bool SkillID(ref ControllingPack ctrlPack, in ActionPack actionPack)
+        {
+            if (actionPack.ActionID != RewiredConsts.Action.Composite.FuncComp) return false;
+            ctrlPack.SetFlag(ControllingCommand.Skill);
+            ctrlPack.ShopID = actionPack.FuncID;
+            return true;
+        }
+
+        private static bool ShopBuyID(ref ControllingPack ctrlPack, in ActionPack actionPack)
+        {
+            if (actionPack.ActionID != RewiredConsts.Action.Composite.FuncComp) return false;
+            ctrlPack.SetFlag(ControllingCommand.Buy);
+            ctrlPack.ShopID = actionPack.FuncID;
+            return true;
         }
 
         private void RespondToControlEvent(ActionPack actionPack)
         {
-            var ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-            filterDir(actionPack,out var direction);
-            if (direction.HasValue)
+            var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+            if (actionPack.ActionID == RewiredConsts.Action.Composite.MoveUnit)
             {
-                ctrlPack.CommandDir = direction.Value;
-                ctrlPack.ReplaceFlag(ControllingCommand.Move); //Replace
-                /*if (player.GetButton(StaticName.INPUT_BUTTON_NAME_MOVEUNIT))
+                ctrlPack.CommandDir = actionPack.ActionDirection;
+                ctrlPack.ReplaceFlag(ControllingCommand.Drag);
+            }
+            else
+            {
+                filterDir(actionPack, out var dir);
+                if (dir.HasValue)
                 {
-                    ctrlPack.ReplaceFlag(ControllingCommand.Drag); //Replace
-                }*/
+                    ctrlPack.CommandDir = dir.Value;
+                    ctrlPack.ReplaceFlag(ControllingCommand.Move);
+                }
             }
 
-            /*ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
-            ctrlPack.NextPos = currentLevelAsset.Cursor.GetCoord(ctrlPack.CommandDir);
+            ctrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
+            ctrlPack.NextPos = _owner.LevelAsset.Cursor.GetCoord(ctrlPack.CommandDir);
 
-            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_REMOVEUNIT))
-            {
-                //ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
-                //ctrlPack.SetFlag(ControllingCommand.RemoveUnit);
-            }
-
-            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_ROTATEUNIT) &&
+            if (actionPack.ActionID == RewiredConsts.Action.Composite.RotateUnit &&
                 ctrlPack.CtrlCMD == ControllingCommand.Nop)
             {
                 //移动和拖动的优先级比旋转高。
-                ctrlPack.CurrentPos = currentLevelAsset.Cursor.CurrentBoardPosition;
+                ctrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
                 ctrlPack.SetFlag(ControllingCommand.Rotate);
             }
 
-            if (player.GetButton(StaticName.INPUT_BUTTON_NAME_HINTHDD) ||
-                player.GetButton(StaticName.INPUT_BUTTON_NAME_HINTNET))
-            {
-                ctrlPack.SetFlag(ControllingCommand.SignalHint);
-            }
-
-            if (player.GetButton(StaticName.INPUT_BUTTON_NAME_HINTCTRL))
-            {
-                ctrlPack.SetFlag(ControllingCommand.PlayHint);
-            }
-
-            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CYCLENEXT))
+            if (actionPack.ActionID == RewiredConsts.Action.Button.CycleNext)
             {
                 ctrlPack.SetFlag(ControllingCommand.CycleNext);
             }
 
-            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CONFIRM))
+            if (actionPack.ActionID == RewiredConsts.Action.Passthough.Enter)
             {
                 ctrlPack.SetFlag(ControllingCommand.Confirm);
             }
 
-            if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_CANCELED))
+            if (actionPack.ActionID == RewiredConsts.Action.Passthough.LeftAlt)
             {
                 ctrlPack.SetFlag(ControllingCommand.Cancel);
             }
 
-            if (currentLevelAsset.BuyingCursor)
-            {
-                if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
-                {
-                    ctrlPack.SetFlag(ControllingCommand.BuyRandom);
-                }
-            }
-
-            var anyBuy = ShopBuyID(ref ctrlPack);
-            var anySkill = SkillID(ref ctrlPack);*/
+            ShopBuyID(ref ctrlPack, in actionPack);
+            SkillID(ref ctrlPack, in actionPack);
+            //Debug.Log("Enqueue:" + ctrlPack.CtrlCMD);
+            //还需要在这里标记一个ctrlPack是否是阻塞的数据。
             _ctrlPackQueue.Enqueue(ctrlPack);
         }
 
-         ~ControlActionDriver()
-         {
-             // ReSharper disable once DelegateSubtraction
-             ControllingEventMgr.ControllingEvent -= RespondToControlEvent;
-         }
+        ~ControlActionDriver()
+        {
+            // ReSharper disable once DelegateSubtraction
+            ControllingEventMgr.ControllingEvent -= RespondToControlEvent;
+        }
     }
 }

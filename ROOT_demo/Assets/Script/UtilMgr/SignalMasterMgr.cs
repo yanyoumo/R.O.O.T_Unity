@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace ROOT
 {
     public class SignalMasterMgr : MonoBehaviour
     {
-        private static SignalMasterMgr _instance;
+        [NotNull] private static SignalMasterMgr _instance;
         public static SignalMasterMgr Instance => _instance;
         public static int MaxNetworkDepth;
 
