@@ -19,6 +19,7 @@ namespace ROOT
         public Vector2 MouseScreenPosA;
         public Vector2 MouseScreenPosB;
         public int FuncID;//把之前Func0~9的ID都整合到一个compositeAction上面、然后把具体的ID写在这儿。
+        public int MoveTag; //set 1 if space is pressed down; set 0 if space is up
     }
 
     //这个类的实例化和相关初始化已经搞定。
@@ -50,6 +51,7 @@ namespace ROOT
 
         private void OnInputUpdate(InputActionEventData obj)
         {
+            
             var actionPack = new ActionPack
             {
                 //so on......
