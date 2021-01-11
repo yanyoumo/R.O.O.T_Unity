@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Rewired;
 using Sirenix.Utilities;
@@ -432,6 +433,11 @@ namespace ROOT
         {
             return (a & b) == b;
         }
+    }
+
+    public static class WorldEvent
+    {
+        public delegate void ControllingEventHandler(ControllingPack ctrlPack);
     }
 
     //要把Asset和Logic，把Controller也要彻底拆开。
@@ -1083,7 +1089,7 @@ namespace ROOT
             var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             if (StartGameMgr.UseTouchScreen)
             {
-                WorldController.GetCommand_Touch(currentLevelAsset, out ctrlPack);
+                GetCommand_Touch(currentLevelAsset, out ctrlPack);
             }
             else
             {
@@ -1107,11 +1113,11 @@ namespace ROOT
 
                     if (StartGameMgr.UseKeyboard)
                     {
-                        WorldController.GetCommand_Keyboard(currentLevelAsset, out ctrlPack);
+                        GetCommand_Keyboard(currentLevelAsset, out ctrlPack);
                     }
                     else if (StartGameMgr.UseMouse)
                     {
-                        WorldController.GetCommand_Mouse(currentLevelAsset, out ctrlPack);
+                        GetCommand_Mouse(currentLevelAsset, out ctrlPack);
                     }
                 }
 
@@ -1311,7 +1317,7 @@ namespace ROOT
             if (currentLevelAsset.CursorEnabled && movedCursor)
             {
                 currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
-                WorldExecutor.UpdateCursorPos(currentLevelAsset);
+                UpdateCursorPos(currentLevelAsset);
                 movedCursor = true;
             }
         }
@@ -1427,7 +1433,7 @@ namespace ROOT
                 for (var i = 0; i < count; i++)
                 {
                     Color col = currentLevelAsset.WarningDestoryer.GetWaringColor;
-                    currentLevelAsset.WarningGo[i] = WorldExecutor.CreateIndicator(currentLevelAsset, incomings[i], col, true);
+                    currentLevelAsset.WarningGo[i] = CreateIndicator(currentLevelAsset, incomings[i], col, true);
                 }
             }
         }
