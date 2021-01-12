@@ -13,6 +13,7 @@ namespace ROOT
         public readonly RootFSMStatus TargetingStatus; //Transit的高优先级要求，如果FSM不是这个状态则不考虑。
         public readonly Func<bool> AdditionalReq;
         public readonly Action Consequence;
+        public readonly bool WaitForFrameAfterTransition;
 
         public int CompareTo(RootFSMTransition other)
         {
@@ -27,33 +28,60 @@ namespace ROOT
         private void DefaultConsequence()
         {
             owner.currentStatus = TargetingStatus;
+            owner.waitForNextFrame = WaitForFrameAfterTransition;
         }
 
-        public RootFSMTransition(RootFSMStatus _loopingStatus) :
-            this(_loopingStatus, _loopingStatus, 0, AutoTrans)
-        { }
+        public RootFSMTransition(RootFSMStatus _loopingStatus)
+        {
+            StartingStatus = _loopingStatus;
+            TargetingStatus = _loopingStatus;
+            priority = 0;
+            AdditionalReq = AutoTrans;
+            Consequence = DefaultConsequence;
+            WaitForFrameAfterTransition = true;
+        }
 
-        public RootFSMTransition(RootFSMStatus _startingStatus, RootFSMStatus _targetingStatus, int _priority) :
+        public RootFSMTransition(RootFSMStatus _startingStatus, RootFSMStatus _targetingStatus, int _priority):
             this(_startingStatus, _targetingStatus, _priority, AutoTrans) {}
 
         public RootFSMTransition(RootFSMStatus _startingStatus, RootFSMStatus _targetingStatus, int _priority, Func<bool> req)
         {
-            //理论上讲，这么写也可以。
             StartingStatus = _startingStatus;
             TargetingStatus = _targetingStatus;
             priority = _priority;
             AdditionalReq = req;
             Consequence = DefaultConsequence;
+            WaitForFrameAfterTransition = false;
+        }
+
+        public RootFSMTransition(RootFSMStatus _startingStatus, RootFSMStatus _targetingStatus, int _priority, bool waitForNext, Func<bool> req)
+        {
+            StartingStatus = _startingStatus;
+            TargetingStatus = _targetingStatus;
+            priority = _priority;
+            AdditionalReq = req;
+            Consequence = DefaultConsequence;
+            WaitForFrameAfterTransition = waitForNext;
         }
 
         public RootFSMTransition(RootFSMStatus _startingStatus, RootFSMStatus _targetingStatus, int _priority, Func<bool> req, Action cons)
         {
-            //理论上讲，这么写也可以。
             StartingStatus = _startingStatus;
             TargetingStatus = _targetingStatus;
             priority = _priority;
             AdditionalReq = req;
             Consequence = cons;
+            WaitForFrameAfterTransition = false;
+        }
+
+        public RootFSMTransition(RootFSMStatus _startingStatus, RootFSMStatus _targetingStatus, int _priority,bool waitForNext, Func<bool> req, Action cons)
+        {
+            StartingStatus = _startingStatus;
+            TargetingStatus = _targetingStatus;
+            priority = _priority;
+            AdditionalReq = req;
+            Consequence = cons;
+            WaitForFrameAfterTransition = waitForNext;
         }
     }
 }

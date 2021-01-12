@@ -29,9 +29,11 @@ namespace ROOT
     {
         [ReadOnly] public LevelLogic owner;
         [ReadOnly] public RootFSMStatus currentStatus = RootFSMStatus.PreInit;
+        [ReadOnly] public bool waitForNextFrame = false;
 
         private List<RootFSMTransition> _transitions;
         private FSMActions _actions;
+        
 
         public void Transit()
         {

@@ -20,6 +20,12 @@ namespace ROOT
 
         #region TransitionReq
 
+        protected bool CheckIsSkill()
+        {
+            Debug.Log("CheckIsSkill:" + LevelAsset.SkillMgr.CurrentSkillType);
+            return LevelAsset.SkillMgr.CurrentSkillType.HasValue && LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
+        }
+
         protected bool CheckInited()
         {
             return (ReadyToGo) && (!PendingCleanUp);
@@ -42,7 +48,7 @@ namespace ROOT
 
         protected bool CheckAnimating()
         {
-            if (MainFSM.currentStatus == RootFSMStatus.Animate)
+            if (_mainFSM.currentStatus == RootFSMStatus.Animate)
             {
                 return Animating;
             }
@@ -59,7 +65,7 @@ namespace ROOT
 
         protected void TriggerAnimation()
         {
-            MainFSM.currentStatus = RootFSMStatus.Animate;
+            _mainFSM.currentStatus = RootFSMStatus.Animate;
             Animating = true;
             //这里的流程和多态机还不是特别兼容，差不多了还是要整理一下。
             //RISK Skill那个状态并不是FF技能好使的原因；是因为那个时候，关了输入，但是也跑了对应事件长度的动画。
@@ -89,49 +95,42 @@ namespace ROOT
         }
 
         private Coroutine animate_Co;
-        
+
+        private void AnimatingUpdate(MoveableBase moveableBase)
+        {
+            if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
+            {
+                moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.CurrentAndLerping);
+            }
+            else
+            {
+                moveableBase.LerpingBoardPosition = moveableBase.LerpBoardPos(AnimationLerper);
+            }
+        }
+
+        private void PostAnimationUpdate(MoveableBase moveableBase)
+        {
+            moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
+        }
+
         IEnumerator Animate()
         {
             while (AnimationLerper < 1.0f)
             {
                 yield return 0;
-                if (LevelAsset.AnimationPendingObj.Count > 0)
-                {
-                    foreach (var moveableBase in LevelAsset.AnimationPendingObj)
-                    {
-                        if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
-                        {
-                            moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition,
-                                PosSetFlag.CurrentAndLerping);
-                        }
-                        else
-                        {
-                            moveableBase.LerpingBoardPosition = moveableBase.LerpBoardPos(AnimationLerper);
-                        }
-                    }
-                }
-
+                LevelAsset.AnimationPendingObj.ForEach(AnimatingUpdate);
+                
                 //加上允许手动步进后，这个逻辑就应该独立出来了。
-                if (LevelAsset.MovedTileAni)
+                if (LevelAsset.MovedTileAni && LevelAsset.Shop && LevelAsset.Shop is IAnimatableShop shop)
                 {
-                    if (LevelAsset.Shop)
-                    {
-                        if (LevelAsset.Shop is IAnimatableShop shop)
-                        {
-                            shop.ShopUpdateAnimation(AnimationLerper);
-                        }
-                    }
+                    shop.ShopUpdateAnimation(AnimationLerper);
                 }
 
                 LevelAsset.GameBoard.UpdateBoardAnimation();
                 cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
             }
 
-            foreach (var moveableBase in LevelAsset.AnimationPendingObj)
-            {
-                //完成后的pingpong
-                moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
-            }
+            LevelAsset.AnimationPendingObj.ForEach(PostAnimationUpdate);
 
             if (LevelAsset.MovedTileAni)
             {
@@ -140,12 +139,9 @@ namespace ROOT
                     LevelAsset.GameBoard.UpdateBoardPostAnimation();
                 }
 
-                if (LevelAsset.Shop)
+                if (LevelAsset.Shop && LevelAsset.Shop is IAnimatableShop shop)
                 {
-                    if (LevelAsset.Shop is IAnimatableShop shop)
-                    {
-                        shop.ShopPostAnimationUpdate();
-                    }
+                    shop.ShopPostAnimationUpdate();
                 }
             }
 
@@ -211,14 +207,15 @@ namespace ROOT
 
         protected void PreInit()
         {
-
+            //NOP
+            //需要想办法初始化跑一下。
         }
 
         protected void UpKeepAction()
         {
             _ctrlPack = WorldController.UpdateInputScheme(LevelAsset);
-            //_ctrlPack = actionDriver.CtrlQueueHeader;
-            RootDebug.Watch(stage.ToString(), WatchID.YanYoumo_ExampleA);
+            //_ctrlPack = _actionDriver.CtrlQueueHeader;
+            //RootDebug.Watch(stage.ToString(), WatchID.YanYoumo_ExampleA);
             WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK 这个也要弄。
             LightUpBoard();
             //RISK 临时在这里试一下相关代码
@@ -242,7 +239,6 @@ namespace ROOT
             movedTile |= Res;
             movedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
 
-            LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled;
             LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
 
             //TODO LED的时刻不只是这个函数的问题，还是积分函数的调用；后面的的时序还是要比较大幅度的调整的；
@@ -281,8 +277,15 @@ namespace ROOT
             }
         }
 
+        protected void SkillMajorSkill()
+        {
+            LevelAsset.SkillMgr.SwapTick_FSM(LevelAsset, _ctrlPack);
+            movedTile = false;
+        }
+
         protected void UpdateRoundStatus_FSM(GameAssets currentLevelAsset, RoundGist roundGist)
         {
+            //Debug.Log("UpdateRoundStatus_FSM");
             int normalRval = 0;
             int networkRval = 0;
             var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
@@ -350,7 +353,8 @@ namespace ROOT
                 discount = LevelAsset.SkillMgr.CheckDiscount();
             }
             LevelAsset.Shop.OpenShop(isShopRound, discount);
-            LevelAsset.SkillEnabled = isSkillAllowed;
+            //Debug.Log("isSkillAllowed:" + isSkillAllowed);
+            LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = isSkillAllowed;
 
             LevelAsset.SignalPanel.TgtNormalSignal = normalRval;
             LevelAsset.SignalPanel.TgtNetworkSignal = networkRval;
@@ -403,8 +407,8 @@ namespace ROOT
             LevelAsset.LevelProgress = LevelAsset.StepCount / (float)LevelAsset.ActionAsset.PlayableCount;
         }
 
-        private RootFSM MainFSM;
-        private ControlActionDriver actionDriver;
+        private RootFSM _mainFSM;
+        private ControlActionDriver _actionDriver;
 
         private void InitDestoryer()
         {
@@ -500,26 +504,24 @@ namespace ROOT
             base.UpdateLogicLevelReference();
         }
 
-        //private Coroutine tmpCoroutine;
-
         public bool RequestToJumpStatus(RootFSMStatus desiredStatus)
         {
-            MainFSM.currentStatus = desiredStatus;
+            _mainFSM.currentStatus = desiredStatus;
             return true;
         }
 
         void Awake()
         {
             LevelAsset = new GameAssets();
-            MainFSM = new RootFSM {owner = this};
+            _mainFSM = new RootFSM {owner = this};
 
             UpdateLogicLevelReference();
 
-            MainFSM.ReplaceActions(fsmActions);
-            MainFSM.ReplaceTransition(RootFSMTransitions);
+            _mainFSM.ReplaceActions(fsmActions);
+            _mainFSM.ReplaceTransition(RootFSMTransitions);
 
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            actionDriver = new ControlActionDriver(this, MainFSM);
+            _actionDriver = new ControlActionDriver(this, _mainFSM);
         }
         //现在就是要将还有大型分叉的逻辑以状态的形式拆出来、如果简单的一个if Guard就忍了；
         //然后原本设计的基于事件的逻辑；就需要变成，发出事件是：请求逻辑状态机立刻（或者延迟）切换状态或者改变参数什么的。
@@ -532,12 +534,21 @@ namespace ROOT
             //这里有个很好的地方，状态转移到是和Update完全解耦了。
             //这里可以让各个状态的物理事件间隔减少、但是绝对不是靠谱的解法；还是要用事件。
             var transitPerFrame = 3;
+            //这里的常量一帧多态需要编程全动态的；用一个bool，例如叫WaitNextframe什么的。
+            //用这个标记是否要等一帧、要不用等就完全一帧多态；直到那个bool设为true；
+            //一些态要强制waitnextframe例如所有可能自循环的状态、和一些末端态，例如cleanUp。
             for (var i = 0; i < transitPerFrame; i++)
             {
-                MainFSM.Execute();
-                MainFSM.Transit();
-                //RootDebug.Watch("FSM:" + MainFSM.currentStatus, WatchID.YanYoumo_ExampleA);
+                _mainFSM.Execute();
+                _mainFSM.Transit();
+                //RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
+                RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_ExampleA);
             }
+            /*do
+            {
+                _mainFsm.Execute();
+                _mainFsm.Transit();
+            } while (!_mainFsm.waitForNextFrame);*/
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ROOT
         FastForward,            //β：快速演进时间。（收费可能有返利）
         Swap,                   //γ：单元交换位置。（操作是个问题）
         RefreshHeatSink,        //δ-0：强制刷新HeatsinkPattern
-        ResetHeatSink,        //δ-1：清理HeatSink添加的Pattern
+        ResetHeatSink,          //δ-1：清理HeatSink添加的Pattern
         Discount,               //ε：下次商店会有折扣。
     }
 
@@ -238,17 +238,6 @@ namespace ROOT
             CleanIndicatorFrame(currentLevelAsset);
         }
 
-        /*private GameObject CreateIndicator(GameAssets currentLevelAsset, Vector2Int pos, Color col)
-        {
-            var indicator = Instantiate(currentLevelAsset.CursorTemplate);
-            var indicatorCursor = indicator.GetComponent<Cursor>();
-            indicatorCursor.SetIndMesh();
-            indicatorCursor.InitPosWithAnimation(pos);
-            indicatorCursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransform(indicatorCursor.CurrentBoardPosition));
-            indicatorCursor.CursorColor = col;
-            return indicator;
-        }*/
-
         private void UpdateAIndicator(GameAssets currentLevelAsset, Vector2Int Pos)
         {
             var col = ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_SKILL_SWAP_UNITA);
@@ -278,8 +267,66 @@ namespace ROOT
             _mouseWaitingUnitB = true;
         }
 
+        public void SwapTick_FSM(GameAssets currentLevelAsset, ControllingPack ctrlPack)
+        {
+            Debug.Log("SwapTicking");
+            //RISK 这里键盘⌨和鼠标🖱只能是两种逻辑，但是就是中间切了输入怎么办？
+            //⌨=>🖱理论上哈可以，但是反过来是干脆缺一个阶段……
+            //有两大解决方案：
+            //1、给键盘强制多加一个阶段以和鼠标匹配。（可能还得这么搞，但是现在先不
+            //   目前是在swap过程中不识别切换
+            //2、干脆不允许局中切换……
+            Debug.Assert(_swapRadius != -1);
+
+            var crtPos = currentLevelAsset.Cursor.NextBoardPosition;//是因为时序上、这个和动画是同一帧了。
+
+            //RISK 这里切换的时候会出问题……
+            var res = Utils.PositionRandomization_NormalDistro(
+                crtPos, _swapRadius, 0.65f, Board.BoardLength,
+                out var selected);
+
+            if (oldCurrentPos != crtPos)
+            {
+                //这个加个Anti-spam。
+                CleanIndicatorFrame(currentLevelAsset);
+                //这里根据res把所有的标记都画出来。
+                UpdateBIndicator(currentLevelAsset, res);
+                oldCurrentPos = crtPos;
+            }
+
+            //Confirm Or Cancel Gate
+            if (!ctrlPack.HasFlag(ControllingCommand.Confirm) && !ctrlPack.HasFlag(ControllingCommand.Cancel)) return;
+
+            if (CurrentSkillType == SkillType.Swap)
+            {
+                if (ctrlPack.HasFlag(ControllingCommand.Confirm))
+                {
+                    var unitBPosition = res[selected];
+                    if (unitAPosition != unitBPosition)
+                    {
+                        var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
+                        if (!res1)
+                        {
+                            Debug.LogWarning("swap nothing to nothing!!");
+                        }
+                    }
+                }
+                else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
+                {
+                    currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
+                    swapAlipay = 0;
+                    WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                }
+
+                CleanIndicator(currentLevelAsset);
+                CurrentSkillType = null;
+            }
+        }
+
+
         public void SwapTick(GameAssets currentLevelAsset, ControllingPack ctrlPack)
         {
+            Debug.Log("SwapTicking");
             //RISK 这里键盘⌨和鼠标🖱只能是两种逻辑，但是就是中间切了输入怎么办？
             //⌨=>🖱理论上哈可以，但是反过来是干脆缺一个阶段……
             //有两大解决方案：

@@ -8,8 +8,8 @@ using UnityEngine;
 
 namespace ROOT
 {
-    //Õâ¸ö¶«Î÷±È½Ïµ°ÌÛ¡¢¼üÅÌ¡¢ÊÖ±úÀà»ùÓÚ°´¼üµÄ²Ù×÷ºÍÊó±êÕâÖÖ»ùÓÚÊ±ĞòµÄ²Ù×÷²»Í¬¡£
-    //ÕâÀïÓĞµãÊÇÁ½Â·ÊäÈëÆ´ÔÚÒ»Æğ¸Ğ¾õ¡¢µ«ÊÇÎªÁËÕâ¸öÊ±¼äÏµÍ³µÄ½âñî¡¢Ä¿Ç°¾ÍÖ»ÄÜÕâÃ´°ì¡£
+    //è¿™ä¸ªä¸œè¥¿æ¯”è¾ƒè›‹ç–¼ã€é”®ç›˜ã€æ‰‹æŸ„ç±»åŸºäºæŒ‰é”®çš„æ“ä½œå’Œé¼ æ ‡è¿™ç§åŸºäºæ—¶åºçš„æ“ä½œä¸åŒã€‚
+    //è¿™é‡Œæœ‰ç‚¹æ˜¯ä¸¤è·¯è¾“å…¥æ‹¼åœ¨ä¸€èµ·æ„Ÿè§‰ã€ä½†æ˜¯ä¸ºäº†è¿™ä¸ªæ—¶é—´ç³»ç»Ÿçš„è§£è€¦ã€ç›®å‰å°±åªèƒ½è¿™ä¹ˆåŠã€‚
     [Serializable]
     public struct ActionPack
     {
@@ -18,13 +18,23 @@ namespace ROOT
         public RotationDirection ActionDirection;
         public Vector2 MouseScreenPosA;
         public Vector2 MouseScreenPosB;
-        public int FuncID;//°ÑÖ®Ç°Func0~9µÄID¶¼ÕûºÏµ½Ò»¸öcompositeActionÉÏÃæ¡¢È»ºó°Ñ¾ßÌåµÄIDĞ´ÔÚÕâ¶ù¡£
-        public int MoveTag; //set 1 if space is pressed down; set 0 if space is up
+        public int FuncID;//æŠŠä¹‹å‰Func0~9çš„IDéƒ½æ•´åˆåˆ°ä¸€ä¸ªcompositeActionä¸Šé¢ã€ç„¶åæŠŠå…·ä½“çš„IDå†™åœ¨è¿™å„¿ã€‚
+        public bool HoldForDrag; //set TRUE if space is pressed down; set FALSE if space is up
+
+        public bool IsAction(int actionID)
+        {
+            return ActionPackIsAction(this, actionID);
+        }
+
+        public static bool ActionPackIsAction(ActionPack actPack,int actionID)
+        {
+            return actPack.ActionID == actionID;
+        }
     }
 
-    //Õâ¸öÀàµÄÊµÀı»¯ºÍÏà¹Ø³õÊ¼»¯ÒÑ¾­¸ã¶¨¡£
-    //Õâ¸öÀàÈÏÎªÊÇ¶ÔÍæ¼ÒÒâÔ¸µÄ½âÊÍ¡ª¡ªÄÃµ½RAWµÄÓ²¼şÊÂ¼şºó¡¢¡°ÊÔÍ¼¡±Àí½âÍæ¼ÒµÄÒâÍ¼£¬È»ºó×ª»¯ÎªActionÊµÀı¡£
-    //ÓĞÒ»µãÊÇ£¬Õâ¸öÀàÖ»×öÊÂÊµÅĞ¶Ï¡¢²»È¥¿¼ÂÇÊÇ·ñºÏ·¨¡£Ö»ÊÇÖØÊÓµØ·´À¡Íæ¼ÒÒâÍ¼µÄAction¡£
+    //è¿™ä¸ªç±»çš„å®ä¾‹åŒ–å’Œç›¸å…³åˆå§‹åŒ–å·²ç»æå®šã€‚
+    //è¿™ä¸ªç±»è®¤ä¸ºæ˜¯å¯¹ç©å®¶æ„æ„¿çš„è§£é‡Šâ€”â€”æ‹¿åˆ°RAWçš„ç¡¬ä»¶äº‹ä»¶åã€â€œè¯•å›¾â€ç†è§£ç©å®¶çš„æ„å›¾ï¼Œç„¶åè½¬åŒ–ä¸ºActionå®ä¾‹ã€‚
+    //æœ‰ä¸€ç‚¹æ˜¯ï¼Œè¿™ä¸ªç±»åªåšäº‹å®åˆ¤æ–­ã€ä¸å»è€ƒè™‘æ˜¯å¦åˆæ³•ã€‚åªæ˜¯é‡è§†åœ°åé¦ˆç©å®¶æ„å›¾çš„Actionã€‚
     public class ControllingEventMgr : MonoBehaviour
     {
         [NotNull] private static ControllingEventMgr _instance;

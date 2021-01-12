@@ -1,7 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using static RewiredConsts.Action.Button;
+using static RewiredConsts.Action.Composite;
+using static RewiredConsts.Action.Passthough;
 
 namespace ROOT
 {
@@ -33,16 +33,16 @@ namespace ROOT
         {
             switch (actionPack.ActionEventData.actionId)
             {
-                case RewiredConsts.Action.Button.CursorUp:
+                case CursorUp:
                     Direction = RotationDirection.North;
                     return;
-                case RewiredConsts.Action.Button.CursorDown:
+                case CursorDown:
                     Direction = RotationDirection.South;
                     return;
-                case RewiredConsts.Action.Button.CursorLeft:
+                case CursorLeft:
                     Direction = RotationDirection.West;
                     return;
-                case RewiredConsts.Action.Button.CursorRight:
+                case CursorRight:
                     Direction = RotationDirection.East;
                     return;
             }
@@ -52,7 +52,7 @@ namespace ROOT
 
         private static bool SkillID(ref ControllingPack ctrlPack, in ActionPack actionPack)
         {
-            if (actionPack.ActionID != RewiredConsts.Action.Composite.FuncComp) return false;
+            if (actionPack.ActionID != FuncComp) return false;
             ctrlPack.SetFlag(ControllingCommand.Skill);
             ctrlPack.ShopID = actionPack.FuncID;
             return true;
@@ -60,7 +60,7 @@ namespace ROOT
 
         private static bool ShopBuyID(ref ControllingPack ctrlPack, in ActionPack actionPack)
         {
-            if (actionPack.ActionID != RewiredConsts.Action.Composite.FuncComp) return false;
+            if (actionPack.ActionID != FuncComp) return false;
             ctrlPack.SetFlag(ControllingCommand.Buy);
             ctrlPack.ShopID = actionPack.FuncID;
             return true;
@@ -69,43 +69,32 @@ namespace ROOT
         private void RespondToControlEvent(ActionPack actionPack)
         {
             var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
-            if (actionPack.ActionID == RewiredConsts.Action.Composite.MoveUnit)
+            filterDir(actionPack, out var dir);
+            if (dir.HasValue)
             {
-                ctrlPack.CommandDir = actionPack.ActionDirection;
-                ctrlPack.ReplaceFlag(ControllingCommand.Drag);
+                ctrlPack.CommandDir = dir.Value;
+                ctrlPack.ReplaceFlag(actionPack.HoldForDrag ? ControllingCommand.Drag : ControllingCommand.Move);
+                ctrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
+                ctrlPack.NextPos = _owner.LevelAsset.Cursor.GetCoord(ctrlPack.CommandDir);
             }
-            else
-            {
-                filterDir(actionPack, out var dir);
-                if (dir.HasValue)
-                {
-                    ctrlPack.CommandDir = dir.Value;
-                    ctrlPack.ReplaceFlag(ControllingCommand.Move);
-                }
-            }
-
-            ctrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
-            ctrlPack.NextPos = _owner.LevelAsset.Cursor.GetCoord(ctrlPack.CommandDir);
-
-            if (actionPack.ActionID == RewiredConsts.Action.Composite.RotateUnit &&
-                ctrlPack.CtrlCMD == ControllingCommand.Nop)
+            else if (actionPack.IsAction(RotateUnit))
             {
                 //移动和拖动的优先级比旋转高。
                 ctrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
                 ctrlPack.SetFlag(ControllingCommand.Rotate);
             }
 
-            if (actionPack.ActionID == RewiredConsts.Action.Button.CycleNext)
+            if (actionPack.IsAction(CycleNext))
             {
                 ctrlPack.SetFlag(ControllingCommand.CycleNext);
             }
 
-            if (actionPack.ActionID == RewiredConsts.Action.Passthough.Enter)
+            if (actionPack.IsAction(Enter))
             {
                 ctrlPack.SetFlag(ControllingCommand.Confirm);
             }
 
-            if (actionPack.ActionID == RewiredConsts.Action.Passthough.LeftAlt)
+            if (actionPack.IsAction(LeftAlt))
             {
                 ctrlPack.SetFlag(ControllingCommand.Cancel);
             }
