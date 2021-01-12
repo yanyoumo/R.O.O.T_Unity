@@ -51,6 +51,7 @@ namespace ROOT
                     {Status.PreInit, PreInit},
                     {Status.UpKeep, UpKeepAction},
                     {Status.F_Cycle, ForwardCycle},
+                    {Status.R_Cycle, ReverseCycle},
                     {Status.Career_Cycle, CareerCycle},
                     {Status.CleanUp, CleanUp},
                     {Status.BossInit, BossInit},

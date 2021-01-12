@@ -277,6 +277,13 @@ namespace ROOT
             }
         }
 
+        protected void ReverseCycle()
+        {
+            WorldCycler.StepDown();
+            LevelAsset.TimeLine.Reverse();
+        }
+
+
         protected void SkillMajorSkill()
         {
             LevelAsset.SkillMgr.SwapTick_FSM(LevelAsset, _ctrlPack);
@@ -382,11 +389,6 @@ namespace ROOT
                     LevelAsset.ReqOkCount++;
                 }
             }
-        }
-
-        protected void ReverseCycle()
-        {
-            //CycleKeepUp();
         }
 
         protected void AnimateAction()
