@@ -26,7 +26,7 @@ namespace ROOT
             return ActionPackIsAction(this, actionID);
         }
 
-        public static bool ActionPackIsAction(ActionPack actPack,int actionID)
+        public static bool ActionPackIsAction(ActionPack actPack, int actionID)
         {
             return actPack.ActionID == actionID;
         }
@@ -40,11 +40,12 @@ namespace ROOT
         [NotNull] private static ControllingEventMgr _instance;
         public static ControllingEventMgr Instance => _instance;
 
-        [ReadOnly] public int playerId;
+        [ReadOnly] public int playerId = 0;
         private Player player;
 
         public static WorldEvent.ControllingEventHandler ControllingEvent;
 
+        private static bool holdForDrag = false;
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -56,19 +57,81 @@ namespace ROOT
 
             _instance = this;
             player = ReInput.players.GetPlayer(playerId);
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update,InputActionEventType.ButtonJustPressed);
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorUp");
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorDown");
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorLeft");
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorRight");
+
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func0");
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func1");
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func2");
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func3");
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func4");
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func5");
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func6");
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func7");
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func8");
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func9");
+
+            player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Confirm0");
+            player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, "Confirm0");
         }
 
-        private void OnInputUpdate(InputActionEventData obj)
+        private void OnInputUpdateCurser(InputActionEventData obj)
         {
-            
             var actionPack = new ActionPack
             {
                 //so on......
-                ActionEventData = obj
+                ActionEventData = obj,
+                HoldForDrag = holdForDrag,
+            };
+            switch (actionPack.ActionEventData.actionName)
+            {
+                case "CursorUp":
+                    actionPack.ActionDirection = RotationDirection.North;
+                    break;
+                case "CursorDown":
+                    actionPack.ActionDirection = RotationDirection.South;
+                    break;
+                case "CursorLeft":
+                    actionPack.ActionDirection = RotationDirection.West;
+                    break;
+                case "CursorRight":
+                    actionPack.ActionDirection = RotationDirection.East;
+                    break;
+            }
+
+            ControllingEvent?.Invoke(actionPack);
+        }
+
+        private void OnInputUpdateFunc(InputActionEventData obj)
+        {
+            var actionPack = new ActionPack
+            {
+                //so on......
+                ActionEventData = obj,
+                HoldForDrag = holdForDrag,
+            };
+            actionPack.FuncID = actionPack.ActionEventData.actionName[4] - '0';
+            ControllingEvent?.Invoke(actionPack);
+        }
+
+        private void OnInputUpdateSpaceDown(InputActionEventData obj)
+        {
+            holdForDrag = true;
+            var actionPack = new ActionPack
+            {
+                //so on......
+                ActionEventData = obj,
+                HoldForDrag = holdForDrag,
             };
             ControllingEvent?.Invoke(actionPack);
-            //Debug.Log("OnInputUpdate:" + obj.actionName);
+            Debug.Log("Down");
+        }
+        private void OnInputUpdateSpaceUp(InputActionEventData obj)
+        {
+            holdForDrag = false;
+            Debug.Log("Up");
         }
     }
 }
