@@ -54,6 +54,16 @@ namespace ROOT
             WaitForFrameAfterTransition = false;
         }
 
+        public RootFSMTransition(RootFSMStatus _startingStatus, RootFSMStatus _targetingStatus, int _priority, bool waitForNext)
+        {
+            StartingStatus = _startingStatus;
+            TargetingStatus = _targetingStatus;
+            priority = _priority;
+            AdditionalReq = AutoTrans;
+            Consequence = DefaultConsequence;
+            WaitForFrameAfterTransition = waitForNext;
+        }
+
         public RootFSMTransition(RootFSMStatus _startingStatus, RootFSMStatus _targetingStatus, int _priority, bool waitForNext, Func<bool> req)
         {
             StartingStatus = _startingStatus;

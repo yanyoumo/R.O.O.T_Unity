@@ -529,26 +529,20 @@ namespace ROOT
 
         //现在操纵有微妙的延迟，是因为IO的控制状态（Idle）到实际的动画（开启）（Cycle）之间还隔了一帧。
         //大体上还是要把IO变成事件、可以将FSM跳到某个状态上；要不然还得弄。
+        //上面的问题大体上使用“动态一帧多态”设计补充了。
         void Update()
         {
-            //这里有个很好的地方，状态转移到是和Update完全解耦了。
-            //这里可以让各个状态的物理事件间隔减少、但是绝对不是靠谱的解法；还是要用事件。
-            var transitPerFrame = 3;
-            //这里的常量一帧多态需要编程全动态的；用一个bool，例如叫WaitNextframe什么的。
-            //用这个标记是否要等一帧、要不用等就完全一帧多态；直到那个bool设为true；
-            //一些态要强制waitnextframe例如所有可能自循环的状态、和一些末端态，例如cleanUp。
-            for (var i = 0; i < transitPerFrame; i++)
+            do
             {
+                //现在这里是“动态一帧多态”设计、在一帧内现在会无限制地转移状态；
+                //只不过在有的状态转移时进行了标记（即：waitForNextFrame）
+                //进行标记后、就会强制等待新的一帧。
                 _mainFSM.Execute();
                 _mainFSM.Transit();
                 //RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
                 RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_ExampleA);
-            }
-            /*do
-            {
-                _mainFsm.Execute();
-                _mainFsm.Transit();
-            } while (!_mainFsm.waitForNextFrame);*/
+            } while (!_mainFSM.waitForNextFrame);
+            _mainFSM.waitForNextFrame = false;//默认是不等待的。
         }
     }
 }

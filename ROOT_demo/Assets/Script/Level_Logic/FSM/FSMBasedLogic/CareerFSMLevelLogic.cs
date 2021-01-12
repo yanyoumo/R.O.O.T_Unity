@@ -27,17 +27,17 @@ namespace ROOT
                     new Trans(Status.UpKeep, Status.F_Cycle, 2, CheckAutoF),
                     new Trans(Status.UpKeep, Status.R_IO, 1, CheckCtrlPackAny),
                     new Trans(Status.UpKeep),
-                    new Trans(Status.R_IO, Status.Skill, 3,CheckIsSkill),
+                    new Trans(Status.R_IO, Status.Skill, 3, CheckIsSkill),
                     new Trans(Status.R_IO, Status.F_Cycle, 2, CheckFCycle),
                     new Trans(Status.R_IO, Status.Animate, 1, CheckAnimating, TriggerAnimation),
-                    new Trans(Status.R_IO, Status.UpKeep, 0),
+                    new Trans(Status.R_IO, Status.UpKeep, 0,true),
                     new Trans(Status.F_Cycle, Status.Career_Cycle, 0),
                     new Trans(Status.Skill, Status.Career_Cycle, 0),
                     new Trans(Status.Career_Cycle, Status.Animate, 1, CheckAnimating, TriggerAnimation),
                     new Trans(Status.Career_Cycle, Status.CleanUp, 0),
-                    new Trans(Status.Animate, Status.Animate, 1, CheckAnimating),
+                    new Trans(Status.Animate, Status.Animate, 1, true, CheckAnimating),
                     new Trans(Status.Animate, Status.CleanUp, 0, CheckNotAnimating),
-                    new Trans(Status.CleanUp, Status.UpKeep, 0),
+                    new Trans(Status.CleanUp, Status.UpKeep, 0, true),
                 };
                 return transitions;
             }
