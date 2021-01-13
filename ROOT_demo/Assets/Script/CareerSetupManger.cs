@@ -8,7 +8,7 @@ namespace ROOT
 {
     public class CareerSetupManger : MonoBehaviour
     {
-        public LevelActionAssetLib ClassicGameActionAssetLib;
+        public LevelActionAsset[] ClassicGameActionAssetLib => LevelLib.Instance.CareerActionAssetList;
         public Button BackButton;
         public Button ContinueButton;
 
@@ -36,12 +36,12 @@ namespace ROOT
                 }
             }
             */
-            SceneManager.LoadScene(StaticName.SCENE_ID_CAREER, LoadSceneMode.Single);
+            SceneManager.LoadScene(StaticName.SCENE_ID_CAREER, LoadSceneMode.Additive);
         }
 
         void Continue()
         {
-            LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib.ActionAssetList[0].LevelLogic, ClassicGameActionAssetLib.ActionAssetList[0]);
+            LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib[0].LevelLogic, ClassicGameActionAssetLib[0]);
         }
     }
 }
