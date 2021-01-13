@@ -57,6 +57,7 @@ namespace ROOT
 
             _instance = this;
             player = ReInput.players.GetPlayer(playerId);
+
             player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorUp");
             player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorDown");
             player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorLeft");
@@ -75,13 +76,19 @@ namespace ROOT
 
             player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Confirm0");
             player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, "Confirm0");
+
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "BossPause");
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "RotateUnit");
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "HintHDD");
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "HintNetwork");
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "HintControl");
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CycleNext");
         }
 
         private void OnInputUpdateCurser(InputActionEventData obj)
         {
             var actionPack = new ActionPack
             {
-                //so on......
                 ActionEventData = obj,
                 HoldForDrag = holdForDrag,
             };
@@ -108,11 +115,11 @@ namespace ROOT
         {
             var actionPack = new ActionPack
             {
-                //so on......
                 ActionEventData = obj,
                 HoldForDrag = holdForDrag,
             };
             actionPack.FuncID = actionPack.ActionEventData.actionName[4] - '0';
+            Debug.Log("Func "+ actionPack.FuncID);
             ControllingEvent?.Invoke(actionPack);
         }
 
@@ -121,17 +128,25 @@ namespace ROOT
             holdForDrag = true;
             var actionPack = new ActionPack
             {
-                //so on......
                 ActionEventData = obj,
                 HoldForDrag = holdForDrag,
             };
             ControllingEvent?.Invoke(actionPack);
-            Debug.Log("Down");
         }
+
         private void OnInputUpdateSpaceUp(InputActionEventData obj)
         {
             holdForDrag = false;
-            Debug.Log("Up");
+        }
+
+        private void OnInputUpdate(InputActionEventData obj)
+        {
+            var actionPack = new ActionPack
+            {
+                ActionEventData = obj,
+                HoldForDrag = holdForDrag,
+            };
+            ControllingEvent?.Invoke(actionPack);
         }
     }
 }

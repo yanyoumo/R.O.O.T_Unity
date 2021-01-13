@@ -213,8 +213,8 @@ namespace ROOT
 
         protected void UpKeepAction()
         {
-            _ctrlPack = WorldController.UpdateInputScheme(LevelAsset);
-            //_ctrlPack = _actionDriver.CtrlQueueHeader;
+            //_ctrlPack = WorldController.UpdateInputScheme(LevelAsset);
+            _ctrlPack = _actionDriver.CtrlQueueHeader;
             //RootDebug.Watch(stage.ToString(), WatchID.YanYoumo_ExampleA);
             WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK 这个也要弄。
             LightUpBoard();
