@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 namespace ROOT
 {
     using FSMActions = Dictionary<RootFSMStatus, Action>;
-    using FSMTransitions = List<RootFSMTransition>;
+    using FSMTransitions = HashSet<RootFSMTransition>;
 
     //里面不同的类型可以使用partial关键字拆开管理。
     public abstract class FSMLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
@@ -50,21 +50,29 @@ namespace ROOT
             return CtrlPack.AnyFlag();
         }
 
-        protected bool CheckAnimating()
+        protected bool CheckStartAnimate()
         {
-            if (_mainFSM.currentStatus == RootFSMStatus.Animate)
-            {
-                return Animating;
-            }
-            else
-            {
-                return shouldStartAnimate;
-            }
+            return shouldStartAnimate;
+        }
+
+        protected bool CheckLoopAnimate()
+        {
+            return Animating;
         }
 
         protected bool CheckNotAnimating()
         {
             return !Animating;
+        }
+
+        protected bool IsBossStageInit()
+        {
+            return (stage == StageType.Boss)&&(!WorldCycler.BossStage);
+        }
+
+        protected bool IsBossStage()
+        {
+            return (stage == StageType.Boss);
         }
 
         protected void TriggerAnimation()
@@ -85,6 +93,7 @@ namespace ROOT
             animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
         }
 
+
         #endregion
 
         private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
@@ -99,6 +108,8 @@ namespace ROOT
         }
 
         private Coroutine animate_Co;
+
+        #region Animate
 
         private void AnimatingUpdate(MoveableBase moveableBase)
         {
@@ -152,6 +163,8 @@ namespace ROOT
             Animating = false;
         }
 
+        #endregion
+
         //现在一共提供Info的计数是：Boss阶段*BossInfoSprayCount*SprayCountPerAnimateInterval;
         private const int SprayCountPerAnimateInterval = 4;
         private const float BossInfoSprayTimerIntervalOffsetRange = 0.5f;
@@ -183,30 +196,37 @@ namespace ROOT
             ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualPollingBossPauseKey());
             WorldCycler.BossStage = true;
         }
-        protected void BossUpdate()
+
+        protected void BossMinorUpdate()
         {
             //Spray的逻辑可以再做一些花活。
-            if (!WorldCycler.BossStagePause)
+            if (!WorldCycler.BossStage) return;
+            if (WorldCycler.BossStagePause) return;//RISK 这个BossStage进来后不要留
+            _bossInfoSprayTimer += Time.deltaTime;
+            //RootDebug.Watch("_bossInfoSprayTimer:" + _bossInfoSprayTimer, WatchID.YanYoumo_WatchC);
+            //RootDebug.Watch("Time.time:" + Time.time, WatchID.YanYoumo_WatchD);
+            if (_bossInfoSprayTimer >= _bossInfoSprayTimerInterval)
             {
-                _bossInfoSprayTimer += Time.deltaTime;
-                if (_bossInfoSprayTimer >= _bossInfoSprayTimerInterval)
+                try
                 {
-                    try
-                    {
-                        LevelAsset.AirDrop.SprayInfo(SprayCountArray[SprayCounter]);
-                    }
-                    catch (IndexOutOfRangeException)
-                    {
-                        LevelAsset.AirDrop.SprayInfo(3);
-                    }
-
-                    _bossInfoSprayTimerIntervalOffset = Random.Range(
-                        -BossInfoSprayTimerIntervalOffsetRange,
-                        BossInfoSprayTimerIntervalOffsetRange);
-                    _bossInfoSprayTimer = 0.0f;
-                    SprayCounter++;
+                    LevelAsset.AirDrop.SprayInfo(SprayCountArray[SprayCounter]);
                 }
+                catch (IndexOutOfRangeException)
+                {
+                    LevelAsset.AirDrop.SprayInfo(3);
+                }
+
+                _bossInfoSprayTimerIntervalOffset = Random.Range(
+                    -BossInfoSprayTimerIntervalOffsetRange,
+                    BossInfoSprayTimerIntervalOffsetRange);
+                _bossInfoSprayTimer = 0.0f;
+                SprayCounter++;
             }
+        }
+
+        protected void BossMajorUpdate()
+        {
+
         }
 
         protected void PreInit()
@@ -215,19 +235,17 @@ namespace ROOT
             //需要想办法初始化跑一下。
         }
 
-        protected void UpKeepAction()
+        protected void MajorUpkeepAction()
         {
             _ctrlPack = WorldController.UpdateInputScheme(LevelAsset);
             //_ctrlPack = _actionDriver.CtrlQueueHeader;
-            //RootDebug.Watch(stage.ToString(), WatchID.YanYoumo_ExampleA);
             WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK 这个也要弄。
             LightUpBoard();
-            /*//RISK 临时在这里试一下相关代码
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                _ctrlPack.SetFlag(ControllingCommand.Skill);
-                WorldCycler.ExpectedStepDecrement(5);
-            }*/
+        }
+
+        protected void MinorUpKeepAction()
+        {
+
         }
 
         protected void ReactIO()
@@ -252,7 +270,6 @@ namespace ROOT
         public StageType stage => roundGist?.Type ?? StageType.Shop;
 
         private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
-        //这个Anykeydown不是同一帧了；所以不能用了。
         private bool shouldCycle => (AutoDrive.HasValue) || WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
         private bool shouldStartAnimate => shouldCycle;
         private bool forwardCycle => (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
@@ -545,7 +562,7 @@ namespace ROOT
                 _mainFSM.Execute();
                 _mainFSM.Transit();
                 //RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
-                RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_ExampleA);
+                RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//默认是不等待的。
         }
