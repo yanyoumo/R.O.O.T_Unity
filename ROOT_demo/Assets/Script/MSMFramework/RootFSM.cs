@@ -23,6 +23,7 @@ namespace ROOT
         BossInit,
         BossMajorUpKeep,
         BossMinorUpKeep,
+        BossPause,
         Animate,
         CleanUp,
     }

@@ -79,7 +79,7 @@ namespace ROOT
             }
             else if (actionPack.IsAction(RotateUnit))
             {
-                //ÒÆ¶¯ºÍÍÏ¶¯µÄÓÅÏÈ¼¶±ÈÐý×ª¸ß¡£
+                //ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ß¡ï¿½
                 ctrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
                 ctrlPack.SetFlag(ControllingCommand.Rotate);
             }
@@ -99,10 +99,15 @@ namespace ROOT
                 ctrlPack.SetFlag(ControllingCommand.Cancel);
             }
 
+            if (actionPack.IsAction(BossPause))
+            {
+                ctrlPack.SetFlag(ControllingCommand.BossPause);
+            }
+
             ShopBuyID(ref ctrlPack, in actionPack);
             SkillID(ref ctrlPack, in actionPack);
             //Debug.Log("Enqueue:" + ctrlPack.CtrlCMD);
-            //»¹ÐèÒªÔÚÕâÀï±ê¼ÇÒ»¸öctrlPackÊÇ·ñÊÇ×èÈûµÄÊý¾Ý¡£
+            //ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ctrlPackï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¡ï¿½
             _ctrlPackQueue.Enqueue(ctrlPack);
         }
 

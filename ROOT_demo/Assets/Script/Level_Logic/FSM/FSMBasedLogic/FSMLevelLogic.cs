@@ -20,9 +20,18 @@ namespace ROOT
 
         #region TransitionReq
 
+        protected bool CheckBossAndPaused()
+        {
+            return WorldCycler.BossStage && WorldCycler.BossStagePause;
+        }
+
+        protected bool CheckBossAndNotPaused()
+        {
+            return WorldCycler.BossStage && !WorldCycler.BossStagePause;
+        }
+
         protected bool CheckIsSkill()
         {
-            Debug.Log("CheckIsSkill:" + LevelAsset.SkillMgr.CurrentSkillType);
             return LevelAsset.SkillMgr.CurrentSkillType.HasValue && LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
         }
 
@@ -229,6 +238,11 @@ namespace ROOT
 
         }
 
+        protected void BossPauseAction()
+        {
+            WorldExecutor.UpdateBoardData(ref LevelAsset);
+        }
+
         protected void PreInit()
         {
             //NOP
@@ -241,6 +255,13 @@ namespace ROOT
             //_ctrlPack = _actionDriver.CtrlQueueHeader;
             WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK 这个也要弄。
             LightUpBoard();
+            //RISK 临时测试
+            if (Input.GetKeyDown(KeyCode.P))//无限同一帧了？
+            {
+                //BUG 这里还是有bug，能暂停、暂停时的逻辑也是对的；但是没法手动解除暂停。
+                _ctrlPack.SetFlag(ControllingCommand.BossPause);
+                _mainFSM.waitForNextFrame = true;
+            }
         }
 
         protected void MinorUpKeepAction()
@@ -260,6 +281,11 @@ namespace ROOT
             movedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
 
             LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
+
+            if (_ctrlPack.HasFlag(ControllingCommand.BossPause))
+            {
+                WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
+            }
 
             //TODO LED的时刻不只是这个函数的问题，还是积分函数的调用；后面的的时序还是要比较大幅度的调整的；
             //意外地优先级不高。
@@ -389,6 +415,9 @@ namespace ROOT
             LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
             LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
             LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
+            //BUG 这个东西的更新位置还得变。
+            LevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
+            LevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
         }
 
         protected void CareerCycle()
