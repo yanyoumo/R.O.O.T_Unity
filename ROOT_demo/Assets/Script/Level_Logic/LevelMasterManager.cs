@@ -48,7 +48,7 @@ namespace ROOT
         {
             AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
             Debug.Log("LoadCareerSetup_Coroutine start and load scene for SCENE_ID_CAREERSETUP");
-            yield return new WaitForSeconds(0.1f);//This is just a dummy wait, wouldn't do anything
+            yield return loadSceneAsync;//This is just a dummy wait, wouldn't do anything
         }
 
         IEnumerator LoadGamePlay_Coroutine(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)
@@ -73,10 +73,14 @@ namespace ROOT
         {
             if (_gameGlobalStatus.CurrentGameStatus != GameStatus.Playing)
             {
-                StartCoroutine(LoadCareerSetup_Coroutine(LevelLogicPrefab, actionAsset));
                 _gameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
                 StartCoroutine(LoadGamePlay_Coroutine(LevelLogicPrefab, actionAsset));
             }
+        }
+
+        public void LoadCareerSetup(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)
+        {
+            StartCoroutine(LoadCareerSetup_Coroutine(LevelLogicPrefab, actionAsset));
         }
 
         private GameOverMgr _gameOverMgr;
