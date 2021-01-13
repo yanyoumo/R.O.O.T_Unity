@@ -15,8 +15,8 @@ namespace ROOT
     public abstract class FSMLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         //[ReadOnly] bool shouldCycle = false;
-        [ReadOnly] bool movedTile = false;
-        [ReadOnly] bool movedCursor = false;
+        [ReadOnly] private bool movedTile = false;
+        [ReadOnly] private bool movedCursor = false;
 
         #region TransitionReq
 
@@ -35,12 +35,16 @@ namespace ROOT
         {
             return AutoDrive.HasValue && AutoDrive.Value;
         }
+        protected bool CheckAutoR()
+        {
+            return reverseCycle;
+        }
 
         protected bool CheckFCycle()
         {
             return forwardCycle;
         }
-
+        
         protected bool CheckCtrlPackAny()
         {
             return CtrlPack.AnyFlag();
@@ -113,7 +117,7 @@ namespace ROOT
             moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
         }
 
-        IEnumerator Animate()
+        private IEnumerator Animate()
         {
             while (AnimationLerper < 1.0f)
             {
@@ -218,14 +222,12 @@ namespace ROOT
             //RootDebug.Watch(stage.ToString(), WatchID.YanYoumo_ExampleA);
             WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK 这个也要弄。
             LightUpBoard();
-            //RISK 临时在这里试一下相关代码
+            /*//RISK 临时在这里试一下相关代码
             if (Input.GetKeyDown(KeyCode.K))
             {
-                //BUG 这块儿炸了，还得再看看。
-                //这里还是要不用Animation的流程做一个单纯的阻塞。
                 _ctrlPack.SetFlag(ControllingCommand.Skill);
-                WorldCycler.ExpectedStepIncrement(5);
-            }
+                WorldCycler.ExpectedStepDecrement(5);
+            }*/
         }
 
         protected void ReactIO()
@@ -248,11 +250,13 @@ namespace ROOT
 
         public RoundGist? roundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
         public StageType stage => roundGist?.Type ?? StageType.Shop;
-        bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
+
+        private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
         //这个Anykeydown不是同一帧了；所以不能用了。
-        bool shouldCycle => (AutoDrive.HasValue) || WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
-        bool shouldStartAnimate => shouldCycle;
-        bool forwardCycle => (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
+        private bool shouldCycle => (AutoDrive.HasValue) || WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
+        private bool shouldStartAnimate => shouldCycle;
+        private bool forwardCycle => (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
+        private bool reverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
 
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
         protected void ForwardCycle()
@@ -282,8 +286,7 @@ namespace ROOT
             WorldCycler.StepDown();
             LevelAsset.TimeLine.Reverse();
         }
-
-
+        
         protected void SkillMajorSkill()
         {
             LevelAsset.SkillMgr.SwapTick_FSM(LevelAsset, _ctrlPack);
@@ -512,7 +515,7 @@ namespace ROOT
             return true;
         }
 
-        void Awake()
+        private void Awake()
         {
             LevelAsset = new GameAssets();
             _mainFSM = new RootFSM {owner = this};
@@ -532,7 +535,7 @@ namespace ROOT
         //现在操纵有微妙的延迟，是因为IO的控制状态（Idle）到实际的动画（开启）（Cycle）之间还隔了一帧。
         //大体上还是要把IO变成事件、可以将FSM跳到某个状态上；要不然还得弄。
         //上面的问题大体上使用“动态一帧多态”设计补充了。
-        void Update()
+        private void Update()
         {
             do
             {
