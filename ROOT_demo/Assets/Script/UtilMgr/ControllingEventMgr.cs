@@ -78,12 +78,15 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Confirm0);
             player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Button.Confirm0);
 
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.BossPause);
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.RotateUnit);
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintHDD);
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintNetwork);
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintControl);
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CycleNext);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.BossPause);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.RotateUnit);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintHDD);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintNetwork);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintControl);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CycleNext);
+
+            player.AddInputEventDelegate(OnInputUpdateSingleClick, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseLeft);
+            player.AddInputEventDelegate(OnInputUpdateDoubleClick, UpdateLoopType.Update, InputActionEventType.ButtonJustDoublePressed, Passthough.MouseLeft);
         }
 
         private void OnInputUpdateCurser(InputActionEventData obj)
@@ -120,9 +123,8 @@ namespace ROOT
                 ActionID = Composite.FuncComp,
                 eventType = obj.eventType,
                 HoldForDrag = holdForDrag,
-                FuncID = obj.actionName[4] - '0',
+                FuncID = int.Parse(obj.actionName.Substring(4)),
             };
-            Debug.Log("Func "+ actionPack.FuncID);
             ControllingEvent?.Invoke(actionPack);
         }
 
@@ -143,7 +145,7 @@ namespace ROOT
             holdForDrag = false;
         }
 
-        private void OnInputUpdate(InputActionEventData obj)
+        private void OnInputUpdateBasicButton(InputActionEventData obj)
         {
             var actionPack = new ActionPack
             {
@@ -152,6 +154,30 @@ namespace ROOT
                 HoldForDrag = holdForDrag,
             };
             ControllingEvent?.Invoke(actionPack);
+        }
+
+        private void OnInputUpdateSingleClick(InputActionEventData obj)
+        {
+            var actionPack = new ActionPack
+            {
+                ActionID = obj.actionId,
+                eventType = obj.eventType,
+                HoldForDrag = holdForDrag,
+            };
+            ControllingEvent?.Invoke(actionPack);
+            Debug.Log("Single Click");
+        }
+
+        private void OnInputUpdateDoubleClick(InputActionEventData obj)
+        {
+            var actionPack = new ActionPack
+            {
+                ActionID = obj.actionId,
+                eventType = obj.eventType,
+                HoldForDrag = holdForDrag,
+            };
+            ControllingEvent?.Invoke(actionPack);
+            Debug.Log("Double Click");
         }
     }
 }
