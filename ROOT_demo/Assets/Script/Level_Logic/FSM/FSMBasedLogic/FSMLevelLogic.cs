@@ -27,6 +27,8 @@ namespace ROOT
 
         protected bool CheckBossAndNotPaused()
         {
+            Debug.Log("WorldCycler.BossStagePause:" + WorldCycler.BossStagePause);
+            //这个值又给设回去了？
             return WorldCycler.BossStage && !WorldCycler.BossStagePause;
         }
 
@@ -183,7 +185,7 @@ namespace ROOT
 
         private float _bossInfoSprayTimerIntervalOffset = 0.0f;
         private float _bossInfoSprayTimer = 0.0f;
-        private Coroutine ManualListenBossPauseKeyCoroutine;
+        //private Coroutine ManualListenBossPauseKeyCoroutine;
 
         private int[] SprayCountArray;
         private int SprayCounter = 0;
@@ -202,7 +204,8 @@ namespace ROOT
 
             LevelAsset.DestroyerEnabled = true;
             LevelAsset.SignalPanel.IsBossStage = true;
-            ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualPollingBossPauseKey());
+            //FSM状态下，这个东西不用了。
+            //ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualPollingBossPauseKey());
             WorldCycler.BossStage = true;
         }
 
@@ -255,18 +258,21 @@ namespace ROOT
             //_ctrlPack = _actionDriver.CtrlQueueHeader;
             WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK 这个也要弄。
             LightUpBoard();
-            //RISK 临时测试
-            if (Input.GetKeyDown(KeyCode.P))//无限同一帧了？
+            /*if (Input.GetKeyDown(KeyCode.P))
             {
-                //BUG 这里还是有bug，能暂停、暂停时的逻辑也是对的；但是没法手动解除暂停。
-                _ctrlPack.SetFlag(ControllingCommand.BossPause);
-                _mainFSM.waitForNextFrame = true;
-            }
+                //有可能在这里写硬件打断。
+                WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
+            }*/
         }
 
         protected void MinorUpKeepAction()
         {
-
+            //RISK 临时测试
+            /*if (Input.GetKeyDown(KeyCode.P))
+            {
+                //有可能在这里写硬件打断。
+                WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
+            }*/
         }
 
         protected void ReactIO()
@@ -284,6 +290,7 @@ namespace ROOT
 
             if (_ctrlPack.HasFlag(ControllingCommand.BossPause))
             {
+                Debug.Log(" WorldExecutor.BossStagePauseTriggered(ref LevelAsset)");
                 WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
             }
 
@@ -590,8 +597,8 @@ namespace ROOT
                 //进行标记后、就会强制等待新的一帧。
                 _mainFSM.Execute();
                 _mainFSM.Transit();
-                //RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
-                RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
+                RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
+                //RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//默认是不等待的。
         }

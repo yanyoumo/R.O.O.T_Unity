@@ -1230,12 +1230,14 @@ namespace ROOT
     {
         public static void BossStagePauseRunStop(ref GameAssets currentLevelAsset)
         {
+            Debug.Log("BossStagePauseRunStop");
             WorldCycler.BossStagePause = false;
             currentLevelAsset.Owner.StopBossStageCost();
         }
 
         public static void BossStagePauseTriggered(ref GameAssets currentLevelAsset)
         {
+            Debug.Log("BossStagePauseTriggered,WorldCycler.BossStagePause:" + WorldCycler.BossStagePause);
             Debug.Assert(WorldCycler.BossStage);
             if (currentLevelAsset.ReqOkCount <= 0) return;
             if (WorldCycler.BossStagePause)
