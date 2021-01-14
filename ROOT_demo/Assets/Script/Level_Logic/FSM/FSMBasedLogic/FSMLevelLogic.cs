@@ -20,6 +20,16 @@ namespace ROOT
 
         #region TransitionReq
 
+        protected bool CheckBossStageInit()
+        {
+            return (stage == StageType.Boss)&&(!WorldCycler.BossStage);
+        }
+
+        protected bool CheckBossStage()
+        {
+            return (stage == StageType.Boss);
+        }
+
         protected bool CheckBossAndPaused()
         {
             return WorldCycler.BossStage && WorldCycler.BossStagePause;
@@ -27,7 +37,7 @@ namespace ROOT
 
         protected bool CheckBossAndNotPaused()
         {
-            Debug.Log("WorldCycler.BossStagePause:" + WorldCycler.BossStagePause);
+            //Debug.Log("WorldCycler.BossStagePause:" + WorldCycler.BossStagePause);
             //这个值又给设回去了？
             return WorldCycler.BossStage && !WorldCycler.BossStagePause;
         }
@@ -75,17 +85,7 @@ namespace ROOT
         {
             return !Animating;
         }
-
-        protected bool IsBossStageInit()
-        {
-            return (stage == StageType.Boss)&&(!WorldCycler.BossStage);
-        }
-
-        protected bool IsBossStage()
-        {
-            return (stage == StageType.Boss);
-        }
-
+        
         protected void TriggerAnimation()
         {
             _mainFSM.currentStatus = RootFSMStatus.Animate;
@@ -211,12 +211,8 @@ namespace ROOT
 
         protected void BossMinorUpdate()
         {
-            //Spray的逻辑可以再做一些花活。
-            if (!WorldCycler.BossStage) return;
-            if (WorldCycler.BossStagePause) return;//RISK 这个BossStage进来后不要留
+            if (WorldCycler.BossStagePause) return;
             _bossInfoSprayTimer += Time.deltaTime;
-            //RootDebug.Watch("_bossInfoSprayTimer:" + _bossInfoSprayTimer, WatchID.YanYoumo_WatchC);
-            //RootDebug.Watch("Time.time:" + Time.time, WatchID.YanYoumo_WatchD);
             if (_bossInfoSprayTimer >= _bossInfoSprayTimerInterval)
             {
                 try
@@ -226,6 +222,10 @@ namespace ROOT
                 catch (IndexOutOfRangeException)
                 {
                     LevelAsset.AirDrop.SprayInfo(3);
+                }
+                catch (NullReferenceException)
+                {
+                    return;
                 }
 
                 _bossInfoSprayTimerIntervalOffset = Random.Range(
@@ -257,26 +257,22 @@ namespace ROOT
             _ctrlPack = _actionDriver.CtrlQueueHeader;
             WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK 这个也要弄。
             LightUpBoard();
-            /*if (Input.GetKeyDown(KeyCode.P))
-            {
-                //有可能在这里写硬件打断。
-                WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
-            }*/
         }
 
         protected void MinorUpKeepAction()
         {
-            //RISK 临时测试
-            /*if (Input.GetKeyDown(KeyCode.P))
+            if (_actionDriver.PendingRequestedBreak)
             {
-                //有可能在这里写硬件打断。
-                WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
-            }*/
+                if (CheckBossStage())
+                {
+                    WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
+                    _actionDriver.PendingRequestedBreak = false;
+                }
+            }
         }
 
         protected void ReactIO()
         {
-            //CycleKeepUp();
             WorldExecutor.UpdateCursor_Unit(ref LevelAsset, in _ctrlPack, out movedTile, out movedCursor);
             WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack);
             LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
@@ -289,7 +285,6 @@ namespace ROOT
 
             if (_ctrlPack.HasFlag(ControllingCommand.BossPause))
             {
-                Debug.Log(" WorldExecutor.BossStagePauseTriggered(ref LevelAsset)");
                 WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
             }
 
@@ -368,7 +363,7 @@ namespace ROOT
             
             if ((lastDestoryBool && !isDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
             {
-                Debug.Log("LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit()");
+                //Debug.Log("LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit()");
                 LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
             }
 
@@ -421,9 +416,6 @@ namespace ROOT
             LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
             LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
             LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
-            //BUG 这个东西的更新位置还得变。
-            LevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
-            LevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
         }
 
         protected void CareerCycle()
@@ -596,8 +588,8 @@ namespace ROOT
                 //进行标记后、就会强制等待新的一帧。
                 _mainFSM.Execute();
                 _mainFSM.Transit();
-                RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
-                //RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
+                //RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
+                RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//默认是不等待的。
         }

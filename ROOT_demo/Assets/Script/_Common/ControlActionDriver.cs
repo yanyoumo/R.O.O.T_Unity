@@ -11,6 +11,8 @@ namespace ROOT
         private RootFSM _mainFsm;
         private Queue<ControllingPack> _ctrlPackQueue;
         public bool CtrlQueueNonEmpty => _ctrlPackQueue.Count != 0;
+        public bool PendingRequestedBreak { get; set; }
+        //public Enum RequestedBreakType { get; private set; }
         public ControllingPack CtrlQueueHeader
         {
             get
@@ -107,10 +109,22 @@ namespace ROOT
                 ctrlPack.SetFlag(ControllingCommand.Cancel);
             }
 
-            if (actionPack.IsAction(BossPause))
+            //RISK 这里的逻辑具体怎么调整？
+            if (WorldCycler.BossStage)
             {
-                ctrlPack.SetFlag(ControllingCommand.BossPause);
+                if (actionPack.IsAction(BossPause))
+                {
+                    if (WorldCycler.BossStagePause)
+                    {
+                        ctrlPack.SetFlag(ControllingCommand.BossPause);
+                    }
+                    else
+                    {
+                        PendingRequestedBreak = true;
+                    }
+                }
             }
+
 
             //TODO 下面两套的流程应该能有更好的管理方法。
             ShopBuyID(ref ctrlPack, in actionPack);
