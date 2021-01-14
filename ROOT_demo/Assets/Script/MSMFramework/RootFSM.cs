@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +11,19 @@ namespace ROOT
 
     public enum RootFSMStatus
     {
-        //ÕâÀïĞ´È«²¿µÄ¡¢RootÏµÁĞÖĞ¡¢È«²¿¿ÉÒÔÊ¹ÓÃµÄÇ±ÔÚ×´Ì¬¡£
+        //è¿™é‡Œå†™å…¨éƒ¨çš„ã€Rootç³»åˆ—ä¸­ã€å…¨éƒ¨å¯ä»¥ä½¿ç”¨çš„æ½œåœ¨çŠ¶æ€ã€‚
         PreInit,
-        UpKeep,
+        MajorUpKeep,
+        MinorUpKeep,
         R_Cycle,
-        F_Cycle,//ÈÏÎªÊÇ×î»ù±¾µÄÂß¼­ºËĞÄ
-        Career_Cycle,//Ö»ÓĞÏÖÓĞ¡°Ö°Òµ¡±Ä£Ê½ĞèÒªµÄÂß¼­
+        F_Cycle,//è®¤ä¸ºæ˜¯æœ€åŸºæœ¬çš„é€»è¾‘æ ¸å¿ƒ
+        Career_Cycle,//åªæœ‰ç°æœ‰â€œèŒä¸šâ€æ¨¡å¼éœ€è¦çš„é€»è¾‘
         R_IO,//ReactToIO
         Skill,
         BossInit,
-        Boss,
+        BossMajorUpKeep,
+        BossMinorUpKeep,
+        BossPause,
         Animate,
         CleanUp,
     }
@@ -31,7 +34,7 @@ namespace ROOT
         [ReadOnly] public RootFSMStatus currentStatus = RootFSMStatus.PreInit;
         [ReadOnly] public bool waitForNextFrame = false;
 
-        private List<RootFSMTransition> _transitions;
+        private HashSet<RootFSMTransition> _transitions;
         private FSMActions _actions;
         
 
@@ -41,7 +44,7 @@ namespace ROOT
                 .Where(msmTransition => msmTransition.AdditionalReq()).ToList();
             if (satisfiedTransition.Count > 0)
             {
-                satisfiedTransition.Sort(); //Õâ¸öÊÇÉıĞò»¹ÊÇ½µĞò£¿ÏÖÔÚÊÇ½µĞò
+                satisfiedTransition.Sort(); //è¿™ä¸ªæ˜¯å‡åºè¿˜æ˜¯é™åºï¼Ÿç°åœ¨æ˜¯é™åº
                 satisfiedTransition[0].Consequence();
             }
         }
@@ -72,7 +75,7 @@ namespace ROOT
             _actions = actions;
         }
 
-        public void ReplaceTransition(List<RootFSMTransition> transitions)
+        public void ReplaceTransition(HashSet<RootFSMTransition> transitions)
         {
             _transitions = transitions;
             foreach (var msmTransition in _transitions)

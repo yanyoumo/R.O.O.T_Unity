@@ -11,6 +11,8 @@ namespace ROOT
         private RootFSM _mainFsm;
         private Queue<ControllingPack> _ctrlPackQueue;
         public bool CtrlQueueNonEmpty => _ctrlPackQueue.Count != 0;
+        public bool PendingRequestedBreak { get; set; }
+        //public Enum RequestedBreakType { get; private set; }
         public ControllingPack CtrlQueueHeader
         {
             get
@@ -31,7 +33,7 @@ namespace ROOT
 
         void filterDir(ActionPack actionPack, out RotationDirection? Direction)
         {
-            switch (actionPack.ActionEventData.actionId)
+            switch (actionPack.ActionID)
             {
                 case CursorUp:
                     Direction = RotationDirection.North;
@@ -54,7 +56,11 @@ namespace ROOT
         {
             if (actionPack.ActionID != FuncComp) return false;
             ctrlPack.SetFlag(ControllingCommand.Skill);
-            ctrlPack.ShopID = actionPack.FuncID;
+            ctrlPack.SkillID = actionPack.FuncID - 1;//base 0Âíåbase 1ÁöÑËΩ¨Êç¢„ÄÇ
+            if (ctrlPack.SkillID<0)
+            {
+                ctrlPack.SkillID += 10;
+            }
             return true;
         }
 
@@ -62,7 +68,11 @@ namespace ROOT
         {
             if (actionPack.ActionID != FuncComp) return false;
             ctrlPack.SetFlag(ControllingCommand.Buy);
-            ctrlPack.ShopID = actionPack.FuncID;
+            ctrlPack.SkillID = actionPack.FuncID - 1;//base 0Âíåbase 1ÁöÑËΩ¨Êç¢„ÄÇ
+            if (ctrlPack.SkillID < 0)
+            {
+                ctrlPack.SkillID += 10;
+            }
             return true;
         }
 
@@ -79,7 +89,7 @@ namespace ROOT
             }
             else if (actionPack.IsAction(RotateUnit))
             {
-                //“∆∂Ø∫ÕÕœ∂Øµƒ”≈œ»º∂±»–˝◊™∏ﬂ°£
+                //ÔøΩ∆∂ÔøΩÔøΩÔøΩÔøΩœ∂ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ»ºÔøΩÔøΩÔøΩÔøΩÔøΩ◊™ÔøΩﬂ°ÔøΩ
                 ctrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
                 ctrlPack.SetFlag(ControllingCommand.Rotate);
             }
@@ -99,10 +109,28 @@ namespace ROOT
                 ctrlPack.SetFlag(ControllingCommand.Cancel);
             }
 
+            //RISK ËøôÈáåÁöÑÈÄªËæëÂÖ∑‰ΩìÊÄé‰πàË∞ÉÊï¥Ôºü
+            if (WorldCycler.BossStage)
+            {
+                if (actionPack.IsAction(BossPause))
+                {
+                    if (WorldCycler.BossStagePause)
+                    {
+                        ctrlPack.SetFlag(ControllingCommand.BossPause);
+                    }
+                    else
+                    {
+                        PendingRequestedBreak = true;
+                    }
+                }
+            }
+
+
+            //TODO ‰∏ãÈù¢‰∏§Â•óÁöÑÊµÅÁ®ãÂ∫îËØ•ËÉΩÊúâÊõ¥Â•ΩÁöÑÁÆ°ÁêÜÊñπÊ≥ï„ÄÇ
             ShopBuyID(ref ctrlPack, in actionPack);
             SkillID(ref ctrlPack, in actionPack);
             //Debug.Log("Enqueue:" + ctrlPack.CtrlCMD);
-            //ªπ–Ë“™‘⁄’‚¿Ô±Íº«“ª∏ˆctrlPack «∑Ò «◊Ë»˚µƒ ˝æ›°£
+            //ÔøΩÔøΩÔøΩÔøΩ“™ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ“ªÔøΩÔøΩctrlPackÔøΩ«∑ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ›°ÔøΩ
             _ctrlPackQueue.Enqueue(ctrlPack);
         }
 

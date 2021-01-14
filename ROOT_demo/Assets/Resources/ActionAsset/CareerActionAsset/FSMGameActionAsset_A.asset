@@ -23,24 +23,24 @@ MonoBehaviour:
   Actions: []
   RoundDatas:
   - ID: 0
-    ShopLength: 10
-    RequireLength: 10
+    ShopLength: 2
+    RequireLength: 1
     NormalRequirement: 3
     NetworkRequirement: 4
-    DestoryerLength: 5
+    DestoryerLength: 3
     DestoryerCount: 0
     InfoCount: 0
   - ID: 1
-    ShopLength: 10
-    RequireLength: 10
+    ShopLength: 3
+    RequireLength: 2
     NormalRequirement: 7
     NetworkRequirement: 8
-    DestoryerLength: 10
+    DestoryerLength: 2
     DestoryerCount: 0
     InfoCount: 0
   - ID: 0
-    ShopLength: 10
-    RequireLength: 5
+    ShopLength: 1
+    RequireLength: 1
     NormalRequirement: 9
     NetworkRequirement: 9
     DestoryerLength: 40

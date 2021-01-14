@@ -119,6 +119,12 @@ namespace ROOT
         {
             //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
             //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
+            if (type == StageType.Boss)
+            {
+                currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
+                currentLevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
+            }
+
             if (type == StageType.Boss&& animating)
             {
                 currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
@@ -1230,12 +1236,14 @@ namespace ROOT
     {
         public static void BossStagePauseRunStop(ref GameAssets currentLevelAsset)
         {
+            Debug.Log("BossStagePauseRunStop");
             WorldCycler.BossStagePause = false;
             currentLevelAsset.Owner.StopBossStageCost();
         }
 
         public static void BossStagePauseTriggered(ref GameAssets currentLevelAsset)
         {
+            Debug.Log("BossStagePauseTriggered,WorldCycler.BossStagePause:" + WorldCycler.BossStagePause);
             Debug.Assert(WorldCycler.BossStage);
             if (currentLevelAsset.ReqOkCount <= 0) return;
             if (WorldCycler.BossStagePause)

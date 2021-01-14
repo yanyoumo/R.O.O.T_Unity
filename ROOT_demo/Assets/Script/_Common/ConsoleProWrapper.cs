@@ -14,8 +14,10 @@ namespace ROOT
 
     public enum WatchID
     {
-        YanYoumo_ExampleA,
-        YanYoumo_ExampleB,
+        YanYoumo_WatchA,
+        YanYoumo_WatchB,
+        YanYoumo_WatchC,
+        YanYoumo_WatchD,
         SuYuxuan_ExampleA,
         JiangDigong_ExampleA,
     }
