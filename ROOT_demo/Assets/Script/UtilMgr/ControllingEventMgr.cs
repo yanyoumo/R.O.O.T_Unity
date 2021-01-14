@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Rewired;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using static RewiredConsts.Action;
 
 namespace ROOT
 {
@@ -13,8 +14,8 @@ namespace ROOT
     [Serializable]
     public struct ActionPack
     {
-        public int ActionID => ActionEventData.actionId;
-        public InputActionEventData ActionEventData;
+        public int ActionID;
+        public InputActionEventType eventType;
         public RotationDirection ActionDirection;
         public Vector2 MouseScreenPosA;
         public Vector2 MouseScreenPosB;
@@ -58,52 +59,53 @@ namespace ROOT
             _instance = this;
             player = ReInput.players.GetPlayer(playerId);
 
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorUp");
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorDown");
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorLeft");
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CursorRight");
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed,Button.CursorUp);
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorDown);
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorLeft);
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorRight);
 
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func0");
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func1");
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func2");
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func3");
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func4");
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func5");
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func6");
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func7");
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func8");
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Func9");
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func0);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func1);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func2);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func3);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func4);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func5);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func6);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func7);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func8);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func9);
 
-            player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "Confirm0");
-            player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, "Confirm0");
+            player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Confirm0);
+            player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Button.Confirm0);
 
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "BossPause");
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "RotateUnit");
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "HintHDD");
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "HintNetwork");
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "HintControl");
-            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, "CycleNext");
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.BossPause);
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.RotateUnit);
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintHDD);
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintNetwork);
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintControl);
+            player.AddInputEventDelegate(OnInputUpdate, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CycleNext);
         }
 
         private void OnInputUpdateCurser(InputActionEventData obj)
         {
             var actionPack = new ActionPack
             {
-                ActionEventData = obj,
+                ActionID = obj.actionId,
+                eventType=obj.eventType,
                 HoldForDrag = holdForDrag,
             };
-            switch (actionPack.ActionEventData.actionName)
+            switch (actionPack.ActionID)
             {
-                case "CursorUp":
+                case Button.CursorUp:
                     actionPack.ActionDirection = RotationDirection.North;
                     break;
-                case "CursorDown":
+                case Button.CursorDown:
                     actionPack.ActionDirection = RotationDirection.South;
                     break;
-                case "CursorLeft":
+                case Button.CursorLeft:
                     actionPack.ActionDirection = RotationDirection.West;
                     break;
-                case "CursorRight":
+                case Button.CursorRight:
                     actionPack.ActionDirection = RotationDirection.East;
                     break;
             }
@@ -115,10 +117,11 @@ namespace ROOT
         {
             var actionPack = new ActionPack
             {
-                ActionEventData = obj,
+                ActionID = Composite.FuncComp,
+                eventType = obj.eventType,
                 HoldForDrag = holdForDrag,
+                FuncID = obj.actionName[4] - '0',
             };
-            actionPack.FuncID = actionPack.ActionEventData.actionName[4] - '0';
             Debug.Log("Func "+ actionPack.FuncID);
             ControllingEvent?.Invoke(actionPack);
         }
@@ -128,7 +131,8 @@ namespace ROOT
             holdForDrag = true;
             var actionPack = new ActionPack
             {
-                ActionEventData = obj,
+                ActionID = obj.actionId,
+                eventType = obj.eventType,
                 HoldForDrag = holdForDrag,
             };
             ControllingEvent?.Invoke(actionPack);
@@ -143,7 +147,8 @@ namespace ROOT
         {
             var actionPack = new ActionPack
             {
-                ActionEventData = obj,
+                ActionID = obj.actionId,
+                eventType = obj.eventType,
                 HoldForDrag = holdForDrag,
             };
             ControllingEvent?.Invoke(actionPack);

@@ -31,7 +31,7 @@ namespace ROOT
 
         void filterDir(ActionPack actionPack, out RotationDirection? Direction)
         {
-            switch (actionPack.ActionEventData.actionId)
+            switch (actionPack.ActionID)
             {
                 case CursorUp:
                     Direction = RotationDirection.North;
@@ -54,7 +54,11 @@ namespace ROOT
         {
             if (actionPack.ActionID != FuncComp) return false;
             ctrlPack.SetFlag(ControllingCommand.Skill);
-            ctrlPack.ShopID = actionPack.FuncID;
+            ctrlPack.SkillID = actionPack.FuncID - 1;//base 0和base 1的转换。
+            if (ctrlPack.SkillID<0)
+            {
+                ctrlPack.SkillID += 10;
+            }
             return true;
         }
 
@@ -62,7 +66,11 @@ namespace ROOT
         {
             if (actionPack.ActionID != FuncComp) return false;
             ctrlPack.SetFlag(ControllingCommand.Buy);
-            ctrlPack.ShopID = actionPack.FuncID;
+            ctrlPack.SkillID = actionPack.FuncID - 1;//base 0和base 1的转换。
+            if (ctrlPack.SkillID < 0)
+            {
+                ctrlPack.SkillID += 10;
+            }
             return true;
         }
 
@@ -104,6 +112,7 @@ namespace ROOT
                 ctrlPack.SetFlag(ControllingCommand.BossPause);
             }
 
+            //TODO 下面两套的流程应该能有更好的管理方法。
             ShopBuyID(ref ctrlPack, in actionPack);
             SkillID(ref ctrlPack, in actionPack);
             //Debug.Log("Enqueue:" + ctrlPack.CtrlCMD);

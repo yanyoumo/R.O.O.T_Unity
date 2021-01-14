@@ -254,8 +254,7 @@ namespace ROOT
 
         protected void MajorUpkeepAction()
         {
-            _ctrlPack = WorldController.UpdateInputScheme(LevelAsset);
-            //_ctrlPack = _actionDriver.CtrlQueueHeader;
+            _ctrlPack = _actionDriver.CtrlQueueHeader;
             WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK 这个也要弄。
             LightUpBoard();
             /*if (Input.GetKeyDown(KeyCode.P))
