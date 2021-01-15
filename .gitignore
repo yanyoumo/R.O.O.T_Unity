@@ -47,6 +47,7 @@
 /ROOT_demo/*.mdb
 /ROOT_demo/*.opendb
 /ROOT_demo/*.VC.db
+/ROOT_demo/.idea
 
 # Unity3D generated meta files
 /ROOT_demo/*.pidb.meta
