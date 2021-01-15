@@ -270,7 +270,6 @@ namespace ROOT
                         if (CheckBossAndNotPaused())
                         {
                             WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
-                            _actionDriver.BreakDealt();
                         }
                         break;
                     case BreakingCommand.QuitGame:
@@ -581,7 +580,7 @@ namespace ROOT
             _mainFSM.ReplaceTransition(RootFSMTransitions);
 
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            _actionDriver = new ControlActionDriver(this, _mainFSM);
+            _actionDriver = new CareerControlActionDriver(this, _mainFSM);
         }
         //现在就是要将还有大型分叉的逻辑以状态的形式拆出来、如果简单的一个if Guard就忍了；
         //然后原本设计的基于事件的逻辑；就需要变成，发出事件是：请求逻辑状态机立刻（或者延迟）切换状态或者改变参数什么的。
