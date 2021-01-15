@@ -376,7 +376,7 @@ namespace ROOT
         BuyRandom = 1 << 10,
         RemoveUnit = 1 << 11,
         Skill = 1 << 12,
-        BossUnPause = 1 << 13,
+        BossResume = 1 << 13,
         CameraMov = 1 << 14,
         ClickOnGrid = 1 << 15,//日了，这个还是要铺满场地。
         FloatingOnGrid = 1 << 16//估计也能搞，而且早晚也得搞。

@@ -130,11 +130,11 @@ namespace ROOT
             //RISK 这里的逻辑具体怎么调整？
             if (WorldCycler.BossStage)
             {
-                if (actionPack.IsAction(BossPause))
+                if (actionPack.IsAction(BossPause))//这是硬件的“暂停键”、可能是“暂停”和“解暂停”
                 {
                     if (WorldCycler.BossStagePause)
                     {
-                        ctrlPack.SetFlag(ControllingCommand.BossUnPause);
+                        ctrlPack.SetFlag(ControllingCommand.BossResume);
                     }
                     else
                     {

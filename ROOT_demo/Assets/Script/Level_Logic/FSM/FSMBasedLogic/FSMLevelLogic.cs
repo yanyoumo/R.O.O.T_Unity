@@ -291,7 +291,7 @@ namespace ROOT
 
             LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
 
-            if (_ctrlPack.HasFlag(ControllingCommand.BossUnPause))
+            if (_ctrlPack.HasFlag(ControllingCommand.BossResume))
             {
                 if (CheckBossAndPaused())
                 {
