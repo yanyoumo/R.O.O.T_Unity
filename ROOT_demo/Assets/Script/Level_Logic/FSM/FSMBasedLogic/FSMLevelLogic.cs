@@ -263,10 +263,18 @@ namespace ROOT
         {
             if (_actionDriver.PendingRequestedBreak)
             {
-                if (CheckBossStage())
+                //TODO 这个东西也要改成可配置的。
+                switch (_actionDriver.RequestedBreakType)
                 {
-                    WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
-                    _actionDriver.PendingRequestedBreak = false;
+                    case BreakingCommand.BossPause:
+                        if (CheckBossAndNotPaused())
+                        {
+                            WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
+                            _actionDriver.BreakDealt();
+                        }
+                        break;
+                    case BreakingCommand.QuitGame:
+                        break;
                 }
             }
         }
@@ -283,9 +291,12 @@ namespace ROOT
 
             LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
 
-            if (_ctrlPack.HasFlag(ControllingCommand.BossPause))
+            if (_ctrlPack.HasFlag(ControllingCommand.BossUnPause))
             {
-                WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
+                if (CheckBossAndPaused())
+                {
+                    WorldExecutor.BossStagePauseTriggered(ref LevelAsset);
+                }
             }
 
             //TODO LED的时刻不只是这个函数的问题，还是积分函数的调用；后面的的时序还是要比较大幅度的调整的；

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using static RewiredConsts.Action.Button;
 using static RewiredConsts.Action.Composite;
@@ -11,8 +12,20 @@ namespace ROOT
         private RootFSM _mainFsm;
         private Queue<ControllingPack> _ctrlPackQueue;
         public bool CtrlQueueNonEmpty => _ctrlPackQueue.Count != 0;
-        public bool PendingRequestedBreak { get; set; }
-        //public Enum RequestedBreakType { get; private set; }
+        public bool PendingRequestedBreak => _requestedBreakType.HasValue;
+        public BreakingCommand RequestedBreakType
+        {
+            get
+            {
+                if (PendingRequestedBreak)
+                {
+                    // ReSharper disable once PossibleInvalidOperationException
+                    return _requestedBreakType.Value;
+                }
+                throw new ArgumentException();
+            }
+        }
+        private BreakingCommand? _requestedBreakType;
         public ControllingPack CtrlQueueHeader
         {
             get
@@ -76,6 +89,11 @@ namespace ROOT
             return true;
         }
 
+        public void BreakDealt()
+        {
+            _requestedBreakType = null;
+        }
+
         private void RespondToControlEvent(ActionPack actionPack)
         {
             var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
@@ -116,11 +134,11 @@ namespace ROOT
                 {
                     if (WorldCycler.BossStagePause)
                     {
-                        ctrlPack.SetFlag(ControllingCommand.BossPause);
+                        ctrlPack.SetFlag(ControllingCommand.BossUnPause);
                     }
                     else
                     {
-                        PendingRequestedBreak = true;
+                        _requestedBreakType = BreakingCommand.BossPause;
                     }
                 }
             }

@@ -54,11 +54,9 @@ namespace ROOT
             if (_actions.ContainsKey(currentStatus))
             {
                 _actions[currentStatus]();
+                return;
             }
-            else
-            {
-                Debug.LogWarning("No action on assigned status!");
-            }
+            Debug.LogWarning("No action on assigned status!");
         }
 
         public void AppendAction(RootFSMStatus FSMStatus,Action action)
