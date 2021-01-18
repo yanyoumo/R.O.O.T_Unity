@@ -47,6 +47,8 @@ namespace ROOT
         public static WorldEvent.ControllingEventHandler ControllingEvent;
 
         private static bool holdForDrag = false;
+
+        private static Vector2 MouseScreenPos;
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -85,7 +87,8 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintControl);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CycleNext);
 
-            player.AddInputEventDelegate(OnInputUpdateSingleClick, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseLeft);
+            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickDown, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseLeft);
+            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickUp, UpdateLoopType.Update, InputActionEventType.ButtonShortPressJustReleased, Passthough.MouseLeft);
             player.AddInputEventDelegate(OnInputUpdateDoubleClick, UpdateLoopType.Update, InputActionEventType.ButtonJustDoublePressed, Passthough.MouseLeft);
         }
 
@@ -156,25 +159,27 @@ namespace ROOT
             ControllingEvent?.Invoke(actionPack);
         }
 
-        private void OnInputUpdateSingleClick(InputActionEventData obj)
+        private void OnInputUpdateMouseSingleClickDown(InputActionEventData obj)
+        {
+            MouseScreenPos = player.controllers.Mouse.screenPosition;
+            Debug.Log("Single Click Down");
+        }
+
+        private void OnInputUpdateMouseSingleClickUp(InputActionEventData obj)
         {
             var actionPack = new ActionPack
             {
-                ActionID = obj.actionId,
-                eventType = obj.eventType,
-                HoldForDrag = holdForDrag,
+                MouseScreenPosA = MouseScreenPos,
+                MouseScreenPosB = player.controllers.Mouse.screenPosition,
             };
-            ControllingEvent?.Invoke(actionPack);
-            Debug.Log("Single Click");
+            Debug.Log("Single Click Up");
         }
-
         private void OnInputUpdateDoubleClick(InputActionEventData obj)
         {
             var actionPack = new ActionPack
             {
                 ActionID = obj.actionId,
                 eventType = obj.eventType,
-                HoldForDrag = holdForDrag,
             };
             ControllingEvent?.Invoke(actionPack);
             Debug.Log("Double Click");
