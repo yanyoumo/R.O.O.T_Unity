@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
-
 // https://shimo.im/docs/Dd86KXTqHJpqxwYX
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
 namespace ROOT
@@ -231,7 +230,6 @@ namespace ROOT
             {
                 yield return 0;
             }
-
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
             LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();

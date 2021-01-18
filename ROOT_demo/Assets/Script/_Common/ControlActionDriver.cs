@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using static RewiredConsts.Action.Button;
 using static RewiredConsts.Action.Composite;
 using static RewiredConsts.Action.Passthough;
@@ -15,8 +17,37 @@ namespace ROOT
         private readonly Queue<ControllingPack> _ctrlPackQueue;
         private readonly Queue<BreakingCommand> _breakingCMDQueue;
 
-        //上面也说了；这个Driver本质上是要建立一棵树、没有特别好将这棵树进行量化和配置化的流程；
-        //目前的流程是每个不同的Driver都从头建立一棵树。（重载RespondToControlEvent函数）
+        private const int InputNumbTime=6;//in ms.
+        private float InputNumbTimer=.0f;//s.
+        protected bool InputNumbing { get; private set; }
+
+        private IEnumerator DeNumbing()
+        {
+            yield return 0;
+            do
+            {
+                InputNumbTimer += Time.deltaTime;
+                yield return 0;
+            } while (InputNumbTimer < InputNumbTime / 1000.0f);
+            InputNumbing = false;
+        }
+
+        private void RequestEnqueueCtrlPack()
+        {
+            if (!InputNumbing)
+            {
+                _ctrlPackQueue.Enqueue(CtrlPack);
+                InputNumbing = true;
+                InputNumbTimer = 0.0f;
+            }
+            _owner.StartCoroutine(DeNumbing());//
+        }
+        
+        /// <summary>
+        ///上面也说了；这个Driver本质上是要建立一棵树、没有特别好将这棵树进行量化和配置化的流程；
+        ///目前的流程是每个不同的Driver都从头建立一棵树。（重载RespondToControlEvent函数）
+        ///先用下面这个流程去弄，这个List是有序的。
+        /// </summary>
         protected abstract List<RespToCtrlEvent> RespondList { get; }
         
         protected void EnqueueBreakingCommand(BreakingCommand brkingCmd)
@@ -87,10 +118,10 @@ namespace ROOT
 
         protected ControlActionDriver(FSMLevelLogic owner, RootFSM fsm)
         {
+            _owner = owner;
+            _mainFsm = fsm;
             _ctrlPackQueue = new Queue<ControllingPack>();
             _breakingCMDQueue = new Queue<BreakingCommand>();
-            this._owner = owner;
-            _mainFsm = fsm;
             ControllingEventMgr.ControllingEvent += RespondToControlEvent;
         }
 
@@ -157,7 +188,7 @@ namespace ROOT
             }
             if (_shouldQueue)
             {
-                _ctrlPackQueue.Enqueue(CtrlPack);
+                RequestEnqueueCtrlPack();
             }
         }
 
@@ -200,7 +231,7 @@ namespace ROOT
             }
 
             //Boss阶段非暂停的时候、输入不进入队列。
-            //主要是下面这个、总觉得可能有冲突的问题。
+            //RISK 主要是下面这个、总觉得可能有冲突的问题。
             return !WorldCycler.BossStage || WorldCycler.BossStagePause;
         }
     }

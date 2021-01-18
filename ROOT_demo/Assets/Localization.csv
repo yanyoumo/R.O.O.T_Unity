@@ -52,6 +52,8 @@ Level_3,Text,,第三关,Level 3
 Level_4,Text,,第四关,Level 4
 Level_5,Text,,第五关,Level 5
 Level_Test,Text,,测试用,For Test
+Level_FSM_Test,Text,,FSM测试,For FSM Test
+Level_FSM_Barebone,Text,,FSM骨干,FSM barebone
 TutorialGoal,Text,,任务目标:,Need to do:
 KMEnterToReturn,Text,,"按""回车""以返回","Press ""Enter"" to Return"
 KMEnterToComplete,Text,,"按""回车""以完成任务","Press ""Enter"" to Complete"

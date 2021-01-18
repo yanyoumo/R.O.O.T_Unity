@@ -136,7 +136,10 @@ namespace ROOT
                 //总之稳了后，这个不能这么每帧调用。
                 currentLevelAsset.occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
                 currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-                currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
+                if (currentLevelAsset.SkillEnabled && currentLevelAsset.SkillMgr != null)
+                {
+                    currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
+                }
             }
         }
 
@@ -1495,12 +1498,12 @@ namespace ROOT
 
                 cost = ShopMgr.HeatSinkCost(currentLevelAsset.occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
             }
-
-            currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
+            
             currentLevelAsset.DeltaCurrency = inCome - cost;
 
             if (currentLevelAsset.CostChart != null)
             {
+                currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
                 currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
                 currentLevelAsset.CostChart.IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency);
             }

@@ -36,8 +36,18 @@ namespace ROOT
 
         private HashSet<RootFSMTransition> _transitions;
         private FSMActions _actions;
-        
+        private Dictionary<BreakingCommand, Action> _breakingActions;
 
+        public void Breaking(BreakingCommand breakingCommand)
+        {
+            if (_breakingActions.ContainsKey(breakingCommand))
+            {
+                _breakingActions[breakingCommand]();
+                return;
+            }
+            Debug.LogWarning("No action on assigned BreakingCommand!");
+        }
+        
         public void Transit()
         {
             var satisfiedTransition = _transitions.Where(a => a.StartingStatus == currentStatus)
@@ -73,6 +83,11 @@ namespace ROOT
             _actions = actions;
         }
 
+        public void ReplaceBreaking(Dictionary<BreakingCommand, Action> breakingActions)
+        {
+            _breakingActions = breakingActions;
+        }
+        
         public void ReplaceTransition(HashSet<RootFSMTransition> transitions)
         {
             _transitions = transitions;
