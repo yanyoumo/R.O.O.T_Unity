@@ -7,20 +7,61 @@ using static RewiredConsts.Action.Passthough;
 
 namespace ROOT
 {
-    using RespToCtrlEvent= Func<ActionPack,ControllingPack,ControllingPack>;
+    using RespToCtrlEvent= Func<ActionPack,bool>;
     public abstract class ControlActionDriver
     {
-        protected readonly FSMLevelLogic _owner;
-        protected RootFSM _mainFsm;
-        protected Queue<ControllingPack> _ctrlPackQueue;
-        protected Queue<BreakingCommand> _breakingCMDQueue;
+        private readonly FSMLevelLogic _owner;
+        private RootFSM _mainFsm;
+        private readonly Queue<ControllingPack> _ctrlPackQueue;
+        private readonly Queue<BreakingCommand> _breakingCMDQueue;
 
+        //上面也说了；这个Driver本质上是要建立一棵树、没有特别好将这棵树进行量化和配置化的流程；
+        //目前的流程是每个不同的Driver都从头建立一棵树。（重载RespondToControlEvent函数）
+        protected abstract List<RespToCtrlEvent> RespondList { get; }
+        
         protected void EnqueueBreakingCommand(BreakingCommand brkingCmd)
         {
             _breakingCMDQueue.Enqueue(brkingCmd);
         }
-        public bool CtrlQueueNonEmpty => _ctrlPackQueue.Count != 0;
+
+        private bool CtrlQueueNonEmpty => _ctrlPackQueue.Count != 0;
         public bool PendingRequestedBreak => _breakingCMDQueue.Count != 0;
+
+        protected bool CoreDrivingFunction(ActionPack actionPack)
+        {
+            FilterDir(actionPack, out var dir);
+            if (dir.HasValue)
+            {
+                CtrlPack.CommandDir = dir.Value;
+                CtrlPack.ReplaceFlag(actionPack.HoldForDrag ? ControllingCommand.Drag : ControllingCommand.Move);
+                CtrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
+                CtrlPack.NextPos = _owner.LevelAsset.Cursor.GetCoord(CtrlPack.CommandDir);
+            }
+            else if (actionPack.IsAction(RotateUnit))
+            {
+                CtrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
+                CtrlPack.SetFlag(ControllingCommand.Rotate);
+            }
+
+            if (actionPack.IsAction(CycleNext))
+            {
+                CtrlPack.SetFlag(ControllingCommand.CycleNext);
+            }
+
+            if (actionPack.IsAction(Enter))
+            {
+                CtrlPack.SetFlag(ControllingCommand.Confirm);
+            }
+
+            if (actionPack.IsAction(LeftAlt))
+            {
+                CtrlPack.SetFlag(ControllingCommand.Cancel);
+            }
+            //TODO 下面两套的流程应该能有更好的管理方法。
+            ShopBuyID(ref CtrlPack, in actionPack);
+            SkillID(ref CtrlPack, in actionPack);
+            return _shouldQueue;
+        }
         
         public BreakingCommand RequestedBreakType
         {
@@ -40,8 +81,7 @@ namespace ROOT
             get
             {
                 if (CtrlQueueNonEmpty) return _ctrlPackQueue.Dequeue();
-                var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
-                return ctrlPack;
+                return new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             }
         }
 
@@ -54,7 +94,7 @@ namespace ROOT
             ControllingEventMgr.ControllingEvent += RespondToControlEvent;
         }
 
-        protected void FilterDir(ActionPack actionPack, out RotationDirection? direction)
+        private void FilterDir(ActionPack actionPack, out RotationDirection? direction)
         {
             switch (actionPack.ActionID)
             {
@@ -75,34 +115,51 @@ namespace ROOT
             direction = null;
         }
 
-        protected static bool SkillID(ref ControllingPack ctrlPack, in ActionPack actionPack)
+        private int Base_1_0Conversion(int a)
+        {
+            a -= 1; //base 1=>0的转换。
+            if (a < 0)
+            {
+                a += 10;
+            }
+
+            return a;
+        }
+
+        private bool SkillID(ref ControllingPack ctrlPack, in ActionPack actionPack)
         {
             if (actionPack.ActionID != FuncComp) return false;
             ctrlPack.SetFlag(ControllingCommand.Skill);
-            ctrlPack.SkillID = actionPack.FuncID - 1; //base 0和base 1的转换。
-            if (ctrlPack.SkillID < 0)
-            {
-                ctrlPack.SkillID += 10;
-            }
+            ctrlPack.SkillID = Base_1_0Conversion(actionPack.FuncID);
             return true;
         }
 
-        protected static bool ShopBuyID(ref ControllingPack ctrlPack, in ActionPack actionPack)
+        private bool ShopBuyID(ref ControllingPack ctrlPack, in ActionPack actionPack)
         {
             if (actionPack.ActionID != FuncComp) return false;
             ctrlPack.SetFlag(ControllingCommand.Buy);
-            ctrlPack.SkillID = actionPack.FuncID - 1; //base 0和base 1的转换。
-            if (ctrlPack.SkillID < 0)
-            {
-                ctrlPack.SkillID += 10;
-            }
+            ctrlPack.ShopID = Base_1_0Conversion(actionPack.FuncID);
             return true;
         }
+
+        protected ControllingPack CtrlPack;
+        private bool _shouldQueue;
         
-        //protected virtual 
         
         //这个一定实要进行配置的、但是这个本质上是要构建一棵树、但是可以构建一棵树的方法还是FSM。
-        protected abstract void RespondToControlEvent(ActionPack actionPack);
+        private void RespondToControlEvent(ActionPack actionPack)
+        {
+            CtrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
+            _shouldQueue = true;
+            foreach (var rsp in RespondList)
+            {
+                _shouldQueue = rsp(actionPack);
+            }
+            if (_shouldQueue)
+            {
+                _ctrlPackQueue.Enqueue(CtrlPack);
+            }
+        }
 
         ~ControlActionDriver()
         {
@@ -114,49 +171,27 @@ namespace ROOT
     public class CareerControlActionDriver : ControlActionDriver
     {
         public CareerControlActionDriver(FSMLevelLogic owner, RootFSM fsm) : base(owner, fsm) { }
-        
-        //上面也说了；这个Driver本质上是要建立一棵树、没有特别好将这棵树进行量化和配置化的流程；
-        //目前的流程是每个不同的Driver都从头建立一棵树。（重载RespondToControlEvent函数）
-        protected override void RespondToControlEvent(ActionPack actionPack)
+
+        protected override List<RespToCtrlEvent> RespondList
         {
-            var ctrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
-            FilterDir(actionPack, out var dir);
-            if (dir.HasValue)
+            get
             {
-                ctrlPack.CommandDir = dir.Value;
-                ctrlPack.ReplaceFlag(actionPack.HoldForDrag ? ControllingCommand.Drag : ControllingCommand.Move);
-                ctrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
-                ctrlPack.NextPos = _owner.LevelAsset.Cursor.GetCoord(ctrlPack.CommandDir);
+                var res = new List<RespToCtrlEvent>
+                {
+                    CoreDrivingFunction, 
+                    BossRespondToControlEvent
+                };
+                return res;
             }
-            else if (actionPack.IsAction(RotateUnit))
-            {
-                ctrlPack.CurrentPos = _owner.LevelAsset.Cursor.CurrentBoardPosition;
-                ctrlPack.SetFlag(ControllingCommand.Rotate);
-            }
+        }
 
-            if (actionPack.IsAction(CycleNext))
-            {
-                ctrlPack.SetFlag(ControllingCommand.CycleNext);
-            }
-
-            if (actionPack.IsAction(Enter))
-            {
-                ctrlPack.SetFlag(ControllingCommand.Confirm);
-            }
-
-            if (actionPack.IsAction(LeftAlt))
-            {
-                ctrlPack.SetFlag(ControllingCommand.Cancel);
-            }
-            //TODO 下面两套的流程应该能有更好的管理方法。
-            ShopBuyID(ref ctrlPack, in actionPack);
-            SkillID(ref ctrlPack, in actionPack);
-
+        private bool BossRespondToControlEvent(ActionPack actionPack)
+        {
             if ((WorldCycler.BossStage && actionPack.IsAction(BossPause)))
             {
                 if (WorldCycler.BossStagePause)
                 {
-                    ctrlPack.SetFlag(ControllingCommand.BossResume);
+                    CtrlPack.SetFlag(ControllingCommand.BossResume);
                 }
                 else
                 {
@@ -164,12 +199,9 @@ namespace ROOT
                 }
             }
 
-            if (!WorldCycler.BossStage || WorldCycler.BossStagePause)
-            {
-                //Boss阶段非暂停的时候、输入不进入队列。
-                _ctrlPackQueue.Enqueue(ctrlPack);
-            }
+            //Boss阶段非暂停的时候、输入不进入队列。
+            //主要是下面这个、总觉得可能有冲突的问题。
+            return !WorldCycler.BossStage || WorldCycler.BossStagePause;
         }
-
     }
 }
