@@ -439,6 +439,14 @@ MonoBehaviour:
       - Pending
       Flags: 0000
       Languages_Touch: []
+    - Term: Continue
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u7EE7\u7EED"
+      - Continue
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
