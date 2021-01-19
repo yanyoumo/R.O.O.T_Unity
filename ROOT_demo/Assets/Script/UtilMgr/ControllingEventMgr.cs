@@ -49,6 +49,8 @@ namespace ROOT
         private static bool holdForDrag = false;
 
         private static Vector2 MouseScreenPos;
+
+        private const float minHoldShift = 1e-4f;
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -61,7 +63,7 @@ namespace ROOT
             _instance = this;
             player = ReInput.players.GetPlayer(playerId);
 
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed,Button.CursorUp);
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorUp);
             player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorDown);
             player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorLeft);
             player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorRight);
@@ -97,7 +99,7 @@ namespace ROOT
             var actionPack = new ActionPack
             {
                 ActionID = obj.actionId,
-                eventType=obj.eventType,
+                eventType = obj.eventType,
                 HoldForDrag = holdForDrag,
             };
             switch (actionPack.ActionID)
@@ -173,6 +175,9 @@ namespace ROOT
                 MouseScreenPosB = player.controllers.Mouse.screenPosition,
             };
             Debug.Log("Single Click Up");
+            actionPack.ActionID = Utils.GetCustomizedDistance(actionPack.MouseScreenPosA, actionPack.MouseScreenPosB) < minHoldShift ?
+                    Passthough.MouseLeft : Composite.Drag;
+            ControllingEvent?.Invoke(actionPack);
         }
         private void OnInputUpdateDoubleClick(InputActionEventData obj)
         {
