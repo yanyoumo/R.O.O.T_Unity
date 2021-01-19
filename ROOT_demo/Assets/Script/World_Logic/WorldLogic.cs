@@ -136,7 +136,10 @@ namespace ROOT
                 //总之稳了后，这个不能这么每帧调用。
                 currentLevelAsset.occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
                 currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-                currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
+                if (currentLevelAsset.SkillEnabled && currentLevelAsset.SkillMgr != null)
+                {
+                    currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
+                }
             }
         }
 
@@ -376,10 +379,17 @@ namespace ROOT
         BuyRandom = 1 << 10,
         RemoveUnit = 1 << 11,
         Skill = 1 << 12,
-        BossPause = 1 << 13,//这个用作为Toggle开关，就不做两个Command了。
+        BossResume = 1 << 13,
         CameraMov = 1 << 14,
         ClickOnGrid = 1 << 15,//日了，这个还是要铺满场地。
         FloatingOnGrid = 1 << 16//估计也能搞，而且早晚也得搞。
+    }
+
+    public enum BreakingCommand
+    {
+        Nop,
+        BossPause,
+        QuitGame,
     }
 
     [Serializable]
@@ -1488,15 +1498,46 @@ namespace ROOT
 
                 cost = ShopMgr.HeatSinkCost(currentLevelAsset.occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
             }
-
-            currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
+            
             currentLevelAsset.DeltaCurrency = inCome - cost;
 
             if (currentLevelAsset.CostChart != null)
             {
+                currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
                 currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
                 currentLevelAsset.CostChart.IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency);
             }
+        }
+        
+        public static void LightUpBoard(ref GameAssets currentLevelAsset,ControllingPack _ctrlPack)
+        {
+            if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid) ||
+                _ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
+            {
+                if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid))
+                {
+                    currentLevelAsset.GameBoard.LightUpBoardGird(_ctrlPack.CurrentPos);
+                }
+
+                if (_ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
+                {
+                    currentLevelAsset.GameBoard.LightUpBoardGird(_ctrlPack.CurrentPos,
+                        LightUpBoardGirdMode.REPLACE,
+                        LightUpBoardColor.Clicked);
+                }
+            }
+            else
+            {
+                currentLevelAsset.GameBoard.LightUpBoardGird(Vector2Int.zero, LightUpBoardGirdMode.CLEAR);
+            }
+        }
+
+        public static void InitCursor(ref GameAssets currentLevelAsset,Vector2Int pos)
+        {
+            currentLevelAsset.GameCursor = Object.Instantiate(currentLevelAsset.CursorTemplate);
+            Cursor cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
+            cursor.InitPosWithAnimation(pos);
+            cursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
     }
 

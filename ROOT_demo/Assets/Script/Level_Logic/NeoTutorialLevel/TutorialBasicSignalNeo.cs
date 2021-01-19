@@ -42,7 +42,8 @@ namespace ROOT
             LevelAsset.GameBoard.UpdateBoardAnimation();
             //LevelAsset.StartingScoreSet = new ScoreSet();
             //LevelAsset.StartingPerMoveData = new PerMoveData();
-            InitCursor(new Vector2Int(2, 3));
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
+
 
             LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;

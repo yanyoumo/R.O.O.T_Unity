@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
+    [Obsolete]
     public abstract class TutorialLogic : BranchingLevelLogic
     {
         protected bool ActionEnded { get; private set; } = false;
@@ -216,14 +217,6 @@ namespace ROOT
                 }
                 DealStep(LevelActionAsset.Actions[i]);
             }
-        }
-
-        protected void InitCursor(Vector2Int pos)
-        {
-            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
-            Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
 
         protected sealed override void Awake()

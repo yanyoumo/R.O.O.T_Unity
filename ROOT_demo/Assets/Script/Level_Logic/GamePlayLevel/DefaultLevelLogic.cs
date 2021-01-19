@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
-
 // https://shimo.im/docs/Dd86KXTqHJpqxwYX
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
 namespace ROOT
@@ -231,7 +230,6 @@ namespace ROOT
             {
                 yield return 0;
             }
-
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
             LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
             LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
@@ -261,6 +259,7 @@ namespace ROOT
     }
 
     //这一支儿是在FSM逻辑下好了之后随时整枝剪掉。
+    [Obsolete]
     public abstract class BranchingLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
@@ -540,6 +539,7 @@ namespace ROOT
         }
     }
 
+    [Obsolete]
     public class DefaultLevelLogic : BranchingLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         public override void InitLevel()
@@ -557,7 +557,7 @@ namespace ROOT
             InitShop();
             StartShop();
             InitDestoryer();
-            InitCursor(new Vector2Int(2, 3));
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.UpdateBoardAnimation();
             LevelAsset.ActionAsset = null;
@@ -580,13 +580,6 @@ namespace ROOT
         {
             //LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
             //LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
-        }
-        protected void InitCursor(Vector2Int pos)
-        {
-            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
-            Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
     }
 }

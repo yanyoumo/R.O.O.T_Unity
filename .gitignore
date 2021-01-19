@@ -47,6 +47,7 @@
 /ROOT_demo/*.mdb
 /ROOT_demo/*.opendb
 /ROOT_demo/*.VC.db
+/ROOT_demo/.idea
 
 # Unity3D generated meta files
 /ROOT_demo/*.pidb.meta
@@ -72,3 +73,4 @@ crashlytics-build.properties
 /Art_Assets/**/*
 ROOT_demo/Packages/packages-lock.json
 ROOT_demo/Assets/Revisions~
+.DS_Store

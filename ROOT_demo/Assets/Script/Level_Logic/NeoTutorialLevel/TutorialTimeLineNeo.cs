@@ -68,7 +68,8 @@ namespace ROOT
             LevelAsset.GameStateMgr = new GameStateMgr();
             LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
-            InitCursor(new Vector2Int(2, 3));
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
+
 
             LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;
@@ -77,7 +78,6 @@ namespace ROOT
             LevelAsset.HintEnabled = true;
             LevelAsset.CurrencyEnabled = true;
             LevelAsset.GameOverEnabled = true;
-            LevelAsset.CycleEnabled = true;
 
             LevelAsset.TimeLine.SetNoCount();
 

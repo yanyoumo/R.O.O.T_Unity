@@ -2,15 +2,15 @@ using System;
 
 namespace ROOT
 {
-    //ÕâÌ×FSMµÄÊµÏÖ£¬ÊÇ»ùÓÚTransitµÄÁ÷³Ì¡¢Ã¿¸ö²»Í¬µÄFSMÖ»ĞèÒªÔÚÒ»¿ªÊ¼×¢²á²»Í¬µÄTransit£¬ÄÇÃ´½«³ÉÎª²»Í¬µÄFSM¡£
-    //²»Í¬µÄFSMÔÚÏàÍ¬×´Ì¬Ö´ĞĞµÄÂß¼­ºÍÀë¿ªÂß¼­ÊÇÏàÍ¬µÄ¡£
-    //Ã¿¸ö×´Ì¬½«»áÓĞ½áÊøÂß¼­ºÍ×ªÒÆÂß¼­¡¢½áÊøºó²Å½øĞĞ×ªÒÆÂß¼­µÄÅĞ¶Ï¡£
+    //è¿™å¥—FSMçš„å®ç°ï¼Œæ˜¯åŸºäºTransitçš„æµç¨‹ã€æ¯ä¸ªä¸åŒçš„FSMåªéœ€è¦åœ¨ä¸€å¼€å§‹æ³¨å†Œä¸åŒçš„Transitï¼Œé‚£ä¹ˆå°†æˆä¸ºä¸åŒçš„FSMã€‚
+    //ä¸åŒçš„FSMåœ¨ç›¸åŒçŠ¶æ€æ‰§è¡Œçš„é€»è¾‘å’Œç¦»å¼€é€»è¾‘æ˜¯ç›¸åŒçš„ã€‚
+    //æ¯ä¸ªçŠ¶æ€å°†ä¼šæœ‰ç»“æŸé€»è¾‘å’Œè½¬ç§»é€»è¾‘ã€ç»“æŸåæ‰è¿›è¡Œè½¬ç§»é€»è¾‘çš„åˆ¤æ–­ã€‚
     public sealed class RootFSMTransition : IComparable<RootFSMTransition>
     {
         public RootFSM owner;
-        public readonly int priority; //Õâ¸öÖµÔ½¸ßÓÅÏÈ¼¶Ô½¸ß¡£
-        public readonly RootFSMStatus StartingStatus; //TransitµÄ¸ßÓÅÏÈ¼¶ÒªÇó£¬Èç¹ûFSM²»ÊÇÕâ¸ö×´Ì¬Ôò²»¿¼ÂÇ¡£
-        public readonly RootFSMStatus TargetingStatus; //TransitµÄ¸ßÓÅÏÈ¼¶ÒªÇó£¬Èç¹ûFSM²»ÊÇÕâ¸ö×´Ì¬Ôò²»¿¼ÂÇ¡£
+        public readonly int priority; //è¿™ä¸ªå€¼è¶Šé«˜ä¼˜å…ˆçº§è¶Šé«˜ã€‚
+        public readonly RootFSMStatus StartingStatus; //Transitçš„é«˜ä¼˜å…ˆçº§è¦æ±‚ï¼Œå¦‚æœFSMä¸æ˜¯è¿™ä¸ªçŠ¶æ€åˆ™ä¸è€ƒè™‘ã€‚
+        public readonly RootFSMStatus TargetingStatus; //Transitçš„é«˜ä¼˜å…ˆçº§è¦æ±‚ï¼Œå¦‚æœFSMä¸æ˜¯è¿™ä¸ªçŠ¶æ€åˆ™ä¸è€ƒè™‘ã€‚
         public readonly Func<bool> AdditionalReq;
         public readonly Action Consequence;
         public readonly bool WaitForFrameAfterTransition;

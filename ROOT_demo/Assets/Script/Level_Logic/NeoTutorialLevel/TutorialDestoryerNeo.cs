@@ -92,7 +92,7 @@ namespace ROOT
             LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
-            InitCursor(new Vector2Int(2, 3));
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
             InitDestoryer();
 
             LevelAsset.DisableAllCoreFunctionAndFeature();
@@ -103,7 +103,6 @@ namespace ROOT
             LevelAsset.CurrencyEnabled = true;
             LevelAsset.GameOverEnabled = true;
             LevelAsset.DestroyerEnabled = true;
-            LevelAsset.CycleEnabled = true;
 
             WorldCycler.InitCycler();
             LevelAsset.TimeLine.InitWithAssets(LevelAsset);

@@ -341,6 +341,30 @@ MonoBehaviour:
       - Level 5
       Flags: 0000
       Languages_Touch: []
+    - Term: Level_Test
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6D4B\u8BD5\u7528"
+      - For Test
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Level_FSM_Test
+      TermType: 0
+      Description: 
+      Languages:
+      - "FSM\u6D4B\u8BD5"
+      - For FSM Test
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Level_FSM_Barebone
+      TermType: 0
+      Description: 
+      Languages:
+      - "FSM\u9AA8\u5E72"
+      - FSM barebone
+      Flags: 0000
+      Languages_Touch: []
     - Term: TutorialGoal
       TermType: 0
       Description: 
@@ -413,22 +437,6 @@ MonoBehaviour:
       Languages:
       - "\u6309\u8FD9\u91CC\u53D6\u6D88\u8D2D\u4E70"
       - Pending
-      Flags: 0000
-      Languages_Touch: []
-    - Term: 'I '
-      TermType: 0
-      Description: 
-      Languages:
-      - 
-      - 
-      Flags: 0000
-      Languages_Touch: []
-    - Term: Level_Test
-      TermType: 0
-      Description: 
-      Languages:
-      - "\u6D4B\u8BD5\u7528"
-      - For Test
       Flags: 0000
       Languages_Touch: []
     CaseInsensitiveTerms: 0

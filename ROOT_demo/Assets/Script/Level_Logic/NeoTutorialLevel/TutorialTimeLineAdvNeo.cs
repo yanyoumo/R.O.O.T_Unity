@@ -76,7 +76,7 @@ namespace ROOT
             LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
-            InitCursor(new Vector2Int(2, 3));
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
             InitShop();
             StartShop();
 
@@ -87,9 +87,7 @@ namespace ROOT
             LevelAsset.HintEnabled = true;
             LevelAsset.CurrencyEnabled = true;
             LevelAsset.GameOverEnabled = true;
-            LevelAsset.CycleEnabled = true;
             LevelAsset.ShopEnabled = true;
-            LevelAsset.LCDCurrencyEnabled = true;
 
 
             ReadyToGo = true;
