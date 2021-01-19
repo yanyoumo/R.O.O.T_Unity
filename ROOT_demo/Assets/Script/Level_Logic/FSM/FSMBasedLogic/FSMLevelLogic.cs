@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -232,7 +231,7 @@ namespace ROOT
         bool IsSkillAllowed => !IsShopRound;
         bool ShouldCurrencyIo => (IsRequireRound || IsDestoryerRound);
         private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
-        private bool ShouldCycle => (AutoDrive.HasValue) || WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
+        private bool ShouldCycle => (AutoDrive.HasValue) || WorldExecutor.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
         private bool ShouldStartAnimate => ShouldCycle;
         private bool IsForwardCycle => (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
@@ -246,7 +245,7 @@ namespace ROOT
         protected void MajorUpkeepAction()
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
-            WorldLogic.UpkeepLogic(LevelAsset, Stage, false); //RISK 这个也要弄。
+            WorldExecutor.UpkeepLogic(LevelAsset, Stage, false); //RISK 这个也要弄。
             WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
 
@@ -433,7 +432,7 @@ namespace ROOT
         {
             //目前这里基本空的，到时候可能把Animate的CoRoutine里面的东西弄出来。
             Debug.Assert(animate_Co != null);
-            WorldLogic.UpkeepLogic(LevelAsset, Stage, Animating);
+            WorldExecutor.UpkeepLogic(LevelAsset, Stage, Animating);
         }
 
         protected void CleanUp()
@@ -495,7 +494,8 @@ namespace ROOT
         {
             base.StartShop();
         }
-        protected sealed override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
+
+        private bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             return LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount);
         }

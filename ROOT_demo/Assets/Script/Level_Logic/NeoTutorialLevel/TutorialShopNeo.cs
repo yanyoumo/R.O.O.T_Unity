@@ -12,7 +12,7 @@ namespace ROOT
         private int BoughtCount = 0;
         private readonly int BoughtCountTarget = 5;
 
-        protected override void Update()
+        /*protected override void Update()
         {
             bool haventBought = LevelAsset.BoughtOnce;
 
@@ -80,6 +80,6 @@ namespace ROOT
             LevelAsset.TimeLine.SetNoCount();
 
             ReadyToGo = true;
-        }
+        }*/
     }
 }

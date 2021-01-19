@@ -9,7 +9,7 @@ namespace ROOT
 {
     public class TutorialShopAdvNeo : TutorialLogic
     {
-        protected override void Update()
+        /*protected override void Update()
         {
             base.Update();
 
@@ -80,6 +80,6 @@ namespace ROOT
             LevelAsset.TimeLine.SetNoCount();
 
             ReadyToGo = true;
-        }
+        }*/
     }
 }

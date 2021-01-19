@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Rewired;
 using Sirenix.Utilities;
 using UnityEngine;
 using CommandDir = ROOT.RotationDirection;
@@ -54,7 +51,7 @@ namespace ROOT
         private static int lastInCome = -1;
         private static int lastCost = -1;
 
-        internal static void UpdateReverseCycle(GameAssets currentLevelAsset)
+        /*internal static void UpdateReverseCycle(GameAssets currentLevelAsset)
         {
             //TODO 从实施上还得想想时间反演的时候很多别的机制怎么办……
             //而且还有一个问题，这个作为一个反抗正反馈的机制（负反馈机制）（越穷越没时间、越没时间越穷）
@@ -63,9 +60,9 @@ namespace ROOT
             //目前这个系统也需要一个这样的参量，有几个候选：钱数、离红色区段太近等等。
             WorldCycler.StepDown();
             currentLevelAsset.TimeLine.Reverse();
-        }
+        }*/
 
-        internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type)
+        /*internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type)
         {
             WorldCycler.StepUp();
             currentLevelAsset.TimeLine.Step();
@@ -93,59 +90,11 @@ namespace ROOT
                 }
                 currentLevelAsset.DestoryedCoreType = outCore;
             }
-        }
-
-        public static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
-        {
-            var shouldCycleTMP = false;
-            var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
-            if (StartGameMgr.UseTouchScreen)
-            {
-                shouldCycleTMP = movedTile | hasCycleNext;
-            }
-            else if (StartGameMgr.UseMouse)
-            {
-                shouldCycleTMP = ((movedTile | movedCursor)) | hasCycleNext;
-            }
-            else
-            {
-                shouldCycleTMP = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
-            }
-
-            return shouldCycleTMP;
-        }
-
-        public static void UpkeepLogic(GameAssets currentLevelAsset, StageType type,bool animating)
-        {
-            //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
-            //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
-            if (type == StageType.Boss)
-            {
-                currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
-                currentLevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
-            }
-
-            if (type == StageType.Boss&& animating)
-            {
-                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-            }
-            else
-            {
-                WorldExecutor.CleanDestoryer(currentLevelAsset);
-                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
-                //总之稳了后，这个不能这么每帧调用。
-                currentLevelAsset.occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
-                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-                if (currentLevelAsset.SkillEnabled && currentLevelAsset.SkillMgr != null)
-                {
-                    currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
-                }
-            }
-        }
+        }*/
 
         //这个也要拆，实际逻辑和Upkeep要拆开、为了Animation的时候能KeepUp
         //Boss阶段诡异的时序是因为在此时Animation中的几秒没法做任何事儿。
-        public static void UpdateLogic(GameAssets currentLevelAsset, 
+        /*public static void UpdateLogic(GameAssets currentLevelAsset, 
             in StageType type, out ControllingPack ctrlPack,
             out bool movedTile, out bool movedCursor, 
             out bool shouldCycle, out bool? autoDrive)
@@ -248,7 +197,7 @@ namespace ROOT
             shouldCycle = (autoDrive.HasValue) || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
 
             #endregion
-        }
+        }*/
     }
 
     #endregion
@@ -455,7 +404,7 @@ namespace ROOT
     }
 
     //要把Asset和Logic，把Controller也要彻底拆开。
-    internal static class WorldController
+    /*internal static class WorldController
     {
         private static bool idle = false;
         private const float minHoldTime = 1.5f;
@@ -847,12 +796,6 @@ namespace ROOT
 
             if (currentLevelAsset.BuyingCursor)
             {
-
-                /*if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
-                {
-                    ctrlPack.SetFlag(ControllingCommand.Confirm);
-                }*/
-
                 if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
                 {
                     ctrlPack.SetFlag(ControllingCommand.BuyRandom);
@@ -1147,14 +1090,15 @@ namespace ROOT
 
             return ctrlPack;
         }
-    }
+    }*/
 
     #endregion
 
     #region WorldExecutor
 
-    public static class WorldExecutor_Dispatcher
+    /*public static class WorldExecutor_Dispatcher
     {
+
         //TODO 正在做FSM重构；这里的代码先都停掉。
         //RISK 这里应该尽量变成一个Dispatcher（尽量做dispatch），实际的逻辑放到WorldUtils
         //说白了，这个函数应该只发命令不管别的。
@@ -1238,12 +1182,60 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException(nameof(cmd), cmd, null);
             }
         }
-    }
+    }*/
     
     //原WORLD-UTILS 是为了进一步解耦，和一般的Utils只能基于基础数学不同，这个允许基于游戏逻辑和游戏制度。
     //现为：WorldExecutor，主要是执行具体的内部逻辑；想象为舰长和执行舰长的感觉吧。
     public static class WorldExecutor //WORLD-EXECUTOR
     {
+        public static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
+        {
+            var shouldCycleTMP = false;
+            var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
+            if (StartGameMgr.UseTouchScreen)
+            {
+                shouldCycleTMP = movedTile | hasCycleNext;
+            }
+            else if (StartGameMgr.UseMouse)
+            {
+                shouldCycleTMP = ((movedTile | movedCursor)) | hasCycleNext;
+            }
+            else
+            {
+                shouldCycleTMP = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
+            }
+
+            return shouldCycleTMP;
+        }
+
+        public static void UpkeepLogic(GameAssets currentLevelAsset, StageType type,bool animating)
+        {
+            //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
+            //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
+            if (type == StageType.Boss)
+            {
+                currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
+                currentLevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
+            }
+
+            if (type == StageType.Boss&& animating)
+            {
+                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
+            }
+            else
+            {
+                WorldExecutor.CleanDestoryer(currentLevelAsset);
+                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
+                //总之稳了后，这个不能这么每帧调用。
+                currentLevelAsset.occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
+                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
+                if (currentLevelAsset.SkillEnabled && currentLevelAsset.SkillMgr != null)
+                {
+                    currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
+                }
+            }
+        }       
+        
         public static void BossStagePauseRunStop(ref GameAssets currentLevelAsset)
         {
             Debug.Log("BossStagePauseRunStop");

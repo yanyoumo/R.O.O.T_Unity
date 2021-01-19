@@ -12,7 +12,7 @@ namespace ROOT
         /*private bool LevelCompleted = false;
         private bool PlayerRequestedEnd = false;*/
 
-        protected override void Update()
+        /*protected override void Update()
         {
             base.Update();
             if (ActionEnded)
@@ -55,6 +55,6 @@ namespace ROOT
 
 
             ReadyToGo = true;
-        }
+        }*/
     }
 }

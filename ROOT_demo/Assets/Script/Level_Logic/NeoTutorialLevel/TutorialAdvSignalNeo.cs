@@ -9,7 +9,7 @@ namespace ROOT
 {
     public class TutorialAdvSignalNeo : TutorialLogic
     {
-        protected override void Update()
+        /*protected override void Update()
         {
             base.Update();
 
@@ -89,6 +89,6 @@ namespace ROOT
             LevelAsset.GameOverEnabled = true;
 
             ReadyToGo = true;
-        }
+        }*/
     }
 }
