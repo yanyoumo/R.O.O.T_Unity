@@ -79,7 +79,7 @@ namespace ROOT
                 CtrlPack.SetFlag(ControllingCommand.CycleNext);
             }
 
-            if (actionPack.IsAction(Enter))
+            if (actionPack.IsAction(Confirm0))
             {
                 CtrlPack.SetFlag(ControllingCommand.Confirm);
             }
