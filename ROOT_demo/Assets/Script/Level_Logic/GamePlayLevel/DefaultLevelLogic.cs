@@ -259,6 +259,7 @@ namespace ROOT
     }
 
     //这一支儿是在FSM逻辑下好了之后随时整枝剪掉。
+    [Obsolete]
     public abstract class BranchingLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
@@ -538,6 +539,7 @@ namespace ROOT
         }
     }
 
+    [Obsolete]
     public class DefaultLevelLogic : BranchingLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         public override void InitLevel()

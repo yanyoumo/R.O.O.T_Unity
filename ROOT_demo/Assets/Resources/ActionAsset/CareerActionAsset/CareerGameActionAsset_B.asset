@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TitleTerm: Level_3
   Thumbnail: {fileID: 21300000, guid: 53e27874c263fec468d86516331a6776, type: 3}
-  LevelLogic: {fileID: 4449706927188418236, guid: 8e24390f20dc677429f6346686e591b1,
+  LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,
     type: 3}
   levelType: 1
   GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
