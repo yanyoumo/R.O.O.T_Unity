@@ -74,10 +74,7 @@ namespace ROOT
             LevelAsset.HintEnabled = true;
             LevelAsset.CurrencyEnabled = true;
             LevelAsset.GameOverEnabled = true;
-            LevelAsset.CycleEnabled = true;
-            LevelAsset.LCDCurrencyEnabled=true;
-            LevelAsset.LCDDeltaCurrencyEnabled = true;
-            
+
             WorldCycler.InitCycler();
             LevelAsset.TimeLine.InitWithAssets(LevelAsset);
             LevelAsset.TimeLine.SetNoCount();

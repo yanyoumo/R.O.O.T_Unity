@@ -91,9 +91,7 @@ namespace ROOT
         public bool CurrencyEnabled = true;
         public bool CurrencyIOEnabled = true;
         public bool CurrencyIncomeEnabled = true;
-
-        public bool CycleEnabled = true;
-
+        
         //FeatureFunctionFlag
         public bool CursorEnabled = true;
         public bool RotateEnabled = true;
@@ -106,12 +104,7 @@ namespace ROOT
         public bool GameOverEnabled = true;
 
         //UtilsFlag
-        public bool LCDCurrencyEnabled = true;
-        public bool LCDDeltaCurrencyEnabled = true;
-        public bool LCDTimeEnabled = true;
         public bool HintEnabled = true;
-        public bool ForceHddConnectionHint = false;
-        public bool ForceServerConnectionHint = false;
 
 
         //一些辅助函数可以在这里。
@@ -120,14 +113,12 @@ namespace ROOT
         {
             InputEnabled = true;
             CurrencyEnabled = true;
-            CycleEnabled = true;
         }
 
         internal void DisableAllCoreFunction()
         {
             InputEnabled = false;
             CurrencyEnabled = false;
-            CycleEnabled = false;
         }
 
         internal void EnableAllCoreFunctionAndFeature()
@@ -139,13 +130,9 @@ namespace ROOT
             RotateEnabled = true;
             ShopEnabled = true;
             SkillEnabled = true;
-            LCDCurrencyEnabled = true;
-            LCDDeltaCurrencyEnabled = true;
-            LCDTimeEnabled = true;
             CurrencyEnabled = true;
             DestroyerEnabled = true;
             HintEnabled = true;
-            CycleEnabled = true;
             GameOverEnabled = true;
         }
 
@@ -158,13 +145,9 @@ namespace ROOT
             RotateEnabled = false;
             ShopEnabled = false;
             SkillEnabled = false;
-            LCDCurrencyEnabled = false;
-            LCDDeltaCurrencyEnabled = false;
-            LCDTimeEnabled = false;
             CurrencyEnabled = false;
             DestroyerEnabled = false;
             HintEnabled = false;
-            CycleEnabled = false;
             GameOverEnabled = false;
         }
     }

@@ -87,7 +87,6 @@ namespace ROOT
             LevelAsset.HintEnabled = true;
             LevelAsset.CurrencyEnabled = true;
             LevelAsset.GameOverEnabled = true;
-            LevelAsset.CycleEnabled = true;
 
             ReadyToGo = true;
         }

@@ -103,7 +103,6 @@ namespace ROOT
             LevelAsset.CurrencyEnabled = true;
             LevelAsset.GameOverEnabled = true;
             LevelAsset.DestroyerEnabled = true;
-            LevelAsset.CycleEnabled = true;
 
             WorldCycler.InitCycler();
             LevelAsset.TimeLine.InitWithAssets(LevelAsset);

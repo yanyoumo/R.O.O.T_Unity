@@ -33,7 +33,6 @@ namespace ROOT
                 }
                 else if (ActionIndex == 3)
                 {
-                    LevelAsset.LCDCurrencyEnabled = true;
                 }
             }
 
@@ -77,7 +76,6 @@ namespace ROOT
             LevelAsset.HintEnabled = true;
             LevelAsset.CurrencyEnabled = true;
             LevelAsset.GameOverEnabled = true;
-            LevelAsset.CycleEnabled = true;
 
             LevelAsset.TimeLine.SetNoCount();
 

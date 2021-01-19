@@ -21,7 +21,6 @@ namespace ROOT
             LevelAsset.DisableAllCoreFunctionAndFeature();
             LevelAsset.InputEnabled = true;
             LevelAsset.CursorEnabled = true;
-            LevelAsset.CycleEnabled = true;
             LevelAsset.GameOverEnabled = true;
 
             WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));

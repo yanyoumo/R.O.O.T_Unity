@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 namespace ROOT
 {
     using FSMActions = Dictionary<RootFSMStatus, Action>;
-    using Trans= RootFSMTransition;
+    using Trans = RootFSMTransition;
     using FSMTransitions = HashSet<RootFSMTransition>;
     using Status = RootFSMStatus;
 
@@ -28,7 +28,8 @@ namespace ROOT
 
         private int[] SprayCountArray;
         private int SprayCounter = 0;
-        protected void BossInit()
+
+        private void BossInit()
         {
             var bossStageCount = LevelAsset.ActionAsset.BossStageCount;
             var totalSprayCount = bossStageCount * SprayCountPerAnimateInterval;
@@ -47,7 +48,7 @@ namespace ROOT
             WorldCycler.BossStage = true;
         }
 
-        protected void BossMinorUpdate()
+        private void BossMinorUpdate()
         {
             if (WorldCycler.BossStagePause) return;
             _bossInfoSprayTimer += Time.deltaTime;
@@ -74,12 +75,12 @@ namespace ROOT
             }
         }
 
-        protected void BossMajorUpdate()
+        private void BossMajorUpdate()
         {
 
         }
 
-        protected void BossPauseAction()
+        private void BossPauseAction()
         {
             WorldExecutor.UpdateBoardData(ref LevelAsset);
         }
@@ -184,7 +185,7 @@ namespace ROOT
                     {Status.BossPause, BossPauseAction},
                     {Status.Animate, AnimateAction},
                     {Status.R_IO, ReactIO},
-                    {Status.Skill, SkillMajorSkill},
+                    {Status.Skill, SkillMajorUpkeep},
                 };
                 return _fsmActions;
             }
