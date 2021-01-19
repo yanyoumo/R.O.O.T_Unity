@@ -84,8 +84,6 @@ namespace ROOT
 
         protected bool CheckBossAndNotPaused()
         {
-            //Debug.Log("WorldCycler.BossStagePause:" + WorldCycler.BossStagePause);
-            //这个值又给设回去了？
             return WorldCycler.BossStage && !WorldCycler.BossStagePause;
         }
 
@@ -150,8 +148,6 @@ namespace ROOT
             LevelAsset.MovedCursorAni = movedCursor;
             animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
         }
-
-
         #endregion
 
         #region Animate
@@ -279,6 +275,7 @@ namespace ROOT
 
             if (LevelAsset.SkillEnabled && LevelAsset.SkillMgr != null)
             {
+                //SkillMgr的分支怎么处理？
                 LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
             }
 
