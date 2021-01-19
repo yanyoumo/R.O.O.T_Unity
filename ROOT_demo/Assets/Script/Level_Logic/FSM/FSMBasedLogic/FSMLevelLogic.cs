@@ -241,6 +241,7 @@ namespace ROOT
         protected void MajorUpkeepAction()
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
+            WorldExecutor.UpdateBoardData(ref LevelAsset);//RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
             WorldExecutor.UpkeepLogic(LevelAsset, Stage, false); //RISK 这个也要弄。
             WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
@@ -295,7 +296,7 @@ namespace ROOT
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
         protected void ForwardCycle()
         {
-            if (IsForwardCycle)
+            if (IsForwardCycle)//这个guard应该去掉、但是姑且先留着。
             {
                 //现在的框架下，在一个Loop的中段StepUp还凑活，但是感觉有隐患。
                 WorldCycler.StepUp();
@@ -334,11 +335,11 @@ namespace ROOT
         {
             // ReSharper disable once PossibleInvalidOperationException
             var roundGist = RoundGist.Value;
-            var normalRval = 0;
-            var networkRval = 0;
+            int normalRval = 0;//必须声明成Int，要不然有问题。
+            int networkRval = 0;//必须声明成int，要不然有问题。
             var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
 
-            if (IsRequireRound && movedTile)
+            if (IsRequireRound && IsForwardCycle)
             {
                 LevelAsset.GameBoard.UpdatePatternDiminishing();
             }

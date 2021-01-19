@@ -1212,11 +1212,9 @@ namespace ROOT
         {
             //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
             //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
-            if (type == StageType.Boss)
-            {
-                currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
-                currentLevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
-            }
+            currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
+            currentLevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
+            
 
             if (type == StageType.Boss&& animating)
             {
@@ -1463,24 +1461,13 @@ namespace ROOT
         /// <param name="currentLevelAsset"></param>
         internal static void UpdateBoardData(ref GameAssets currentLevelAsset)
         {
-            //应该把这个、函数（包括round）这些相关的函数流程拆碎；然后用基于事件发布内容。
-            //
-            //这个函数已经被调用了太多次了，现在考虑稍微激进一些；准备调整为基于事件的？
-            //RISK 其实这里调用到的currentLevelAsset里面的数据修改后，这个函数其实都得重新调…………
-            //也有解决方案，其实就是对其使用的数据进行变化监听……不知道靠谱不靠谱。
             int inCome = 0, cost = 0;
-
-            //var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
-            //var tmpInComeB = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
-            //下面这个函数应该逻辑上等效，只不过目前还没有实际逻辑。
-            //这个东西是不是该改成基于事件的流程了？
+            
             var tmpInComeM = SignalMasterMgr.Instance.CalAllScoreAllSignal(currentLevelAsset.GameBoard);
             if (currentLevelAsset.CurrencyIOEnabled)
             {
-                //inCome += tmpInComeA;
                 inCome += Mathf.FloorToInt(tmpInComeM);
                 inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
-                //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
                 //TEMP 现在只有热力消耗。
                 if (!currentLevelAsset.CurrencyIncomeEnabled)
                 {

@@ -87,20 +87,20 @@ namespace ROOT
 
         void Start()
         {
-            //Õâ¸öÊ±ºò²»ÓÃÔÚÒâAwakeºÍUnitµÄAwakeÖ®¼äµÄÎÊÌâ£»
-            //ÓÐ¡°ºê¹ÛÊ±Ðò¡±°ïÃ¦ÊØ×ÅÄØ£¬unit±ØÈ»ÊÇÔÚËü³õÊ¼»¯³¡¾°Ö®ºó²Å±»ÖÆ×÷¡£
+            //ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Awakeï¿½ï¿½Unitï¿½ï¿½AwakeÖ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â£»
+            //ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ò¡±°ï¿½Ã¦ï¿½ï¿½ï¿½ï¿½ï¿½Ø£ï¿½unitï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             signalAssetLib = new Dictionary<SignalType, SignalAssetBase>();
             foreach (var signalBase in GetComponentsInChildren<SignalAssetBase>())
             {
                 signalAssetLib.Add(signalBase.Type, signalBase);
             }
-            //¿ÉÄÜÕâÀï»¹Òª·ÅÒ»¸öÑéÖ¤º¯Êý£¿
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï»¹Òªï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
 
         #region Delegate
 
-        //ÕâÀïÊÇÍ¨¹ý´úÀí£¬¿ÉÒÔµ÷ÓÃSignalAssetÀïÃæµÄ¡°×¼¾²Ì¬¡±º¯Êý¡£
-        //Èç¹û×¼¾²Ì¬º¯ÊýÀàÐÍ¼ÓÁË£¬ÕâÀïÖ»ÄÜÊÖ¶¯¼Ó¡£
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôµï¿½ï¿½ï¿½SignalAssetï¿½ï¿½ï¿½ï¿½Ä¡ï¿½×¼ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        //ï¿½ï¿½ï¿½×¼ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½Ë£ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½Ó¡ï¿½
         public bool ShowSignal(SignalType type, RotationDirection dir, Unit unit, Unit otherUnit)
         {
             return signalAssetLib[type].ShowSignal(dir, unit, otherUnit);
