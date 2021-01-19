@@ -24,7 +24,7 @@ namespace ROOT
             LevelAsset.CycleEnabled = true;
             LevelAsset.GameOverEnabled = true;
 
-            InitCursor(new Vector2Int(2, 3));
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
             //LevelAsset.GameBoard.InitBoardRealStart();
             LevelAsset.GameBoard.UpdateBoardAnimation();
 
@@ -32,14 +32,6 @@ namespace ROOT
 //LevelAsset.StartingPerMoveData = new PerMoveData();
 
             ReadyToGo = true;
-        }
-
-        protected void InitCursor(Vector2Int pos)
-        {
-            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
-            Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
     }
 }

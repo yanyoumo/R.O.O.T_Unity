@@ -75,7 +75,7 @@ namespace ROOT
                 switch (data.ActionType)
                 {
                     case TutorialActionType.CreateCursor:
-                        InitCursor(data.Pos);
+                        WorldExecutor.InitCursor(ref LevelAsset,data.Pos);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

@@ -1508,6 +1508,37 @@ namespace ROOT
                 currentLevelAsset.CostChart.IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency);
             }
         }
+        
+        public static void LightUpBoard(ref GameAssets currentLevelAsset,ControllingPack _ctrlPack)
+        {
+            if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid) ||
+                _ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
+            {
+                if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid))
+                {
+                    currentLevelAsset.GameBoard.LightUpBoardGird(_ctrlPack.CurrentPos);
+                }
+
+                if (_ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
+                {
+                    currentLevelAsset.GameBoard.LightUpBoardGird(_ctrlPack.CurrentPos,
+                        LightUpBoardGirdMode.REPLACE,
+                        LightUpBoardColor.Clicked);
+                }
+            }
+            else
+            {
+                currentLevelAsset.GameBoard.LightUpBoardGird(Vector2Int.zero, LightUpBoardGirdMode.CLEAR);
+            }
+        }
+
+        public static void InitCursor(ref GameAssets currentLevelAsset,Vector2Int pos)
+        {
+            currentLevelAsset.GameCursor = Object.Instantiate(currentLevelAsset.CursorTemplate);
+            Cursor cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
+            cursor.InitPosWithAnimation(pos);
+            cursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+        }
     }
 
     #endregion

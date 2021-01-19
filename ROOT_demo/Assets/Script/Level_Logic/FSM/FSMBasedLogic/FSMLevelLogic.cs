@@ -39,17 +39,24 @@ namespace ROOT
             PopulateArtLevelReference();
         }
 
+        #region FSM参数
+        private RootFSM _mainFSM;
+        private ControlActionDriver _actionDriver;
+        protected abstract FSMActions fsmActions { get; }
+        protected abstract FSMTransitions RootFSMTransitions { get; }
+        protected virtual Dictionary<BreakingCommand, Action> RootFSMBreakings => new Dictionary<BreakingCommand, Action>();
+        #endregion
         
         #region TransitionReq
 
         protected bool CheckBossStageInit()
         {
-            return (stage == StageType.Boss)&&(!WorldCycler.BossStage);
+            return (Stage == StageType.Boss)&&(!WorldCycler.BossStage);
         }
 
         protected bool CheckBossStage()
         {
-            return (stage == StageType.Boss);
+            return (Stage == StageType.Boss);
         }
 
         protected bool CheckBossAndPaused()
@@ -80,12 +87,12 @@ namespace ROOT
         }
         protected bool CheckAutoR()
         {
-            return reverseCycle;
+            return IsReverseCycle;
         }
 
         protected bool CheckFCycle()
         {
-            return forwardCycle;
+            return IsForwardCycle;
         }
         
         protected bool CheckCtrlPackAny()
@@ -95,7 +102,7 @@ namespace ROOT
 
         protected bool CheckStartAnimate()
         {
-            return shouldStartAnimate;
+            return ShouldStartAnimate;
         }
 
         protected bool CheckLoopAnimate()
@@ -129,8 +136,8 @@ namespace ROOT
 
         #endregion
 
+        #region Animate
         private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
-
         private float AnimationLerper
         {
             get
@@ -141,9 +148,6 @@ namespace ROOT
         }
 
         private Coroutine animate_Co;
-
-        #region Animate
-
         private void AnimatingUpdate(MoveableBase moveableBase)
         {
             if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
@@ -198,6 +202,23 @@ namespace ROOT
 
         #endregion
 
+        #region 类属性
+
+        private RoundGist? RoundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
+        private StageType Stage => RoundGist?.Type ?? StageType.Shop;
+        bool IsBossRound => Stage == StageType.Boss;
+        bool IsShopRound => Stage == StageType.Shop;
+        bool IsRequireRound => Stage == StageType.Require;
+        bool IsDestoryerRound => Stage == StageType.Destoryer;
+        bool IsSkillAllowed => !IsShopRound;
+        bool ShouldCurrencyIo => (IsRequireRound || IsDestoryerRound);
+        private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
+        private bool ShouldCycle => (AutoDrive.HasValue) || WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
+        private bool ShouldStartAnimate => ShouldCycle;
+        private bool IsForwardCycle => (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
+        private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
+        #endregion
+        
         protected void PreInit()
         {
             //NOP
@@ -207,8 +228,8 @@ namespace ROOT
         protected void MajorUpkeepAction()
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
-            WorldLogic.UpkeepLogic(LevelAsset, stage, false); //RISK 这个也要弄。
-            LightUpBoard();
+            WorldLogic.UpkeepLogic(LevelAsset, Stage, false); //RISK 这个也要弄。
+            WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
 
         protected void DealBossPauseBreaking()
@@ -257,19 +278,10 @@ namespace ROOT
             WorldExecutor.UpdateBoardData(ref LevelAsset);
         }
 
-        private RoundGist? roundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
-        private StageType stage => roundGist?.Type ?? StageType.Shop;
-
-        private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
-        private bool shouldCycle => (AutoDrive.HasValue) || WorldLogic.ShouldCycle(in _ctrlPack, true, in movedTile, in movedCursor);
-        private bool shouldStartAnimate => shouldCycle;
-        private bool forwardCycle => (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
-        private bool reverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
-
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
         protected void ForwardCycle()
         {
-            if (forwardCycle)
+            if (IsForwardCycle)
             {
                 //现在的框架下，在一个Loop的中段StepUp还凑活，但是感觉有隐患。
                 WorldCycler.StepUp();
@@ -304,31 +316,26 @@ namespace ROOT
             movedTile = false;
         }
 
-        private void UpdateRoundStatus_FSM(GameAssets currentLevelAsset, RoundGist roundGist)
+        private void UpdateRoundStatus_FSM()
         {
-            //Debug.Log("UpdateRoundStatus_FSM");
-            int normalRval = 0;
-            int networkRval = 0;
+            // ReSharper disable once PossibleInvalidOperationException
+            var roundGist = RoundGist.Value;
+            var normalRval = 0;
+            var networkRval = 0;
             var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
-            var isBossRound = roundGist.Type == StageType.Boss;
-            var isShopRound = roundGist.Type == StageType.Shop;
-            var isRequireRound = roundGist.Type == StageType.Require;
-            var isDestoryerRound = roundGist.Type == StageType.Destoryer;
-            var isSkillAllowed = !isShopRound;
-            var shouldCurrencyIo = (isRequireRound || isDestoryerRound);
 
-            if (isRequireRound && movedTile)
+            if (IsRequireRound && movedTile)
             {
                 LevelAsset.GameBoard.UpdatePatternDiminishing();
             }
 
-            if (isRequireRound || isShopRound)
+            if (IsRequireRound || IsShopRound)
             {
                 normalRval = roundGist.normalReq;
                 networkRval = roundGist.networkReq;
             }
             
-            if ((lastDestoryBool && !isDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
+            if ((lastDestoryBool && !IsDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
             {
                 //Debug.Log("LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit()");
                 LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
@@ -343,40 +350,39 @@ namespace ROOT
                 _obselateStepID = LevelAsset.StepCount;
             }
             
-            if ((LevelAsset.DestroyerEnabled && !isDestoryerRound) && !WorldCycler.BossStage)
+            if ((LevelAsset.DestroyerEnabled && !IsDestoryerRound) && !WorldCycler.BossStage)
             {
                 LevelAsset.WarningDestoryer.ForceReset();
             }
 
-            lastDestoryBool = isDestoryerRound;
+            lastDestoryBool = IsDestoryerRound;
 
             LevelAsset.DestroyerEnabled = WorldCycler.BossStage;
-            LevelAsset.CurrencyIncomeEnabled = isRequireRound;
-            LevelAsset.CurrencyIOEnabled = shouldCurrencyIo;
+            LevelAsset.CurrencyIncomeEnabled = IsRequireRound;
+            LevelAsset.CurrencyIOEnabled = ShouldCurrencyIo;
 
             int harDriverCountInt = 0, networkCountInt = 0;
             _noRequirement = (normalRval == 0 && networkRval == 0);
 
             if (_noRequirement)
             {
-                currentLevelAsset.TimeLine.RequirementSatisfied = true;
+                LevelAsset.TimeLine.RequirementSatisfied = true;
             }
             else
             {
-                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, currentLevelAsset.GameBoard, out harDriverCountInt);
-                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, currentLevelAsset.GameBoard, out networkCountInt);
-                currentLevelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
+                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, LevelAsset.GameBoard, out harDriverCountInt);
+                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, LevelAsset.GameBoard, out networkCountInt);
+                LevelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
             }
 
             var discount = 0;
-            if (!LevelAsset.Shop.ShopOpening && isShopRound)
+            if (!LevelAsset.Shop.ShopOpening && IsShopRound)
             {
                 discount = LevelAsset.SkillMgr.CheckDiscount();
             }
-            LevelAsset.Shop.OpenShop(isShopRound, discount);
-            //Debug.Log("isSkillAllowed:" + isSkillAllowed);
-            LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = isSkillAllowed;
-
+            
+            LevelAsset.Shop.OpenShop(IsShopRound, discount);
+            LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = IsSkillAllowed;
             LevelAsset.SignalPanel.TgtNormalSignal = normalRval;
             LevelAsset.SignalPanel.TgtNetworkSignal = networkRval;
             LevelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
@@ -387,16 +393,16 @@ namespace ROOT
 
         protected void CareerCycle()
         {
-            if (roundGist.HasValue)
+            if (RoundGist.HasValue)
             {
-                UpdateRoundStatus_FSM(LevelAsset, roundGist.Value);
+                UpdateRoundStatus_FSM();
                 if (LevelAsset.GameOverEnabled)
                 {
                     UpdateGameOverStatus(LevelAsset);
                 }
             }
 
-            if (((AutoDrive.HasValue && AutoDrive.Value || shouldCycle && movedTile)) && (!_noRequirement))
+            if (((AutoDrive.HasValue && AutoDrive.Value || ShouldCycle && movedTile)) && (!_noRequirement))
             {
                 if (LevelAsset.TimeLine.RequirementSatisfied)
                 {
@@ -409,7 +415,7 @@ namespace ROOT
         {
             //目前这里基本空的，到时候可能把Animate的CoRoutine里面的东西弄出来。
             Debug.Assert(animate_Co != null);
-            WorldLogic.UpkeepLogic(LevelAsset, stage, Animating);
+            WorldLogic.UpkeepLogic(LevelAsset, Stage, Animating);
         }
 
         protected void CleanUp()
@@ -422,9 +428,6 @@ namespace ROOT
             LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.LevelProgress = LevelAsset.StepCount / (float)LevelAsset.ActionAsset.PlayableCount;
         }
-
-        private RootFSM _mainFSM;
-        private ControlActionDriver _actionDriver;
 
         private void InitDestoryer()
         {
@@ -442,13 +445,10 @@ namespace ROOT
                 LevelAsset.Shop.excludedTypes = LevelAsset.ActionAsset.ShopExcludedType;
             }
         }
-
-        private void InitCursor(Vector2Int pos)
+        
+        protected virtual void AdditionalInitLevel()
         {
-            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
-            Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+            //BaseVerison,DoNothing.
         }
 
         public sealed override void InitLevel()
@@ -458,63 +458,21 @@ namespace ROOT
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
             LevelAsset.DeltaCurrency = 0.0f;
-
             LevelAsset.GameStateMgr = new GameStateMgr();
             LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
-            if (LevelAsset.CostChart != null)
-            {
-                LevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(LevelAsset.GameStateMgr.GetCurrency());
-            }
 
             InitShop();
             InitDestoryer();
-            InitCursor(new Vector2Int(2, 3));
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
             StartShop();
-
+            AdditionalInitLevel();
+            
             ReadyToGo = true;
-            if (LevelAsset.ActionAsset.RoundDatas.Length > 0)
-            {
-                //这个东西放在这里还是怎么着？就先这样吧。
-                WorldCycler.InitCycler();
-                if (LevelAsset.TimeLine != null)
-                {
-                    LevelAsset.TimeLine.InitWithAssets(LevelAsset);
-                }
-            }
-
             LevelAsset.HintMaster.ShouldShowCheckList = false;
         }
-
-        private void LightUpBoard()
-        {
-            if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid) ||
-                _ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
-            {
-                if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid))
-                {
-                    LevelAsset.GameBoard.LightUpBoardGird(_ctrlPack.CurrentPos);
-                }
-
-                if (_ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
-                {
-                    LevelAsset.GameBoard.LightUpBoardGird(_ctrlPack.CurrentPos,
-                        LightUpBoardGirdMode.REPLACE,
-                        LightUpBoardColor.Clicked);
-                }
-            }
-            else
-            {
-                LevelAsset.GameBoard.LightUpBoardGird(Vector2Int.zero, LightUpBoardGirdMode.CLEAR);
-            }
-        }
-
-        protected abstract FSMActions fsmActions { get; }
-        protected abstract FSMTransitions RootFSMTransitions { get; }
-        protected abstract Dictionary<BreakingCommand,Action> RootFSMBreakings { get; }
-
         protected sealed override void StartShop()
         {
             base.StartShop();
@@ -527,13 +485,7 @@ namespace ROOT
         {
             base.UpdateLogicLevelReference();
         }
-
-        public bool RequestToJumpStatus(RootFSMStatus desiredStatus)
-        {
-            _mainFSM.currentStatus = desiredStatus;
-            return true;
-        }
-
+        
         private void Awake()
         {
             LevelAsset = new GameAssets();
@@ -560,8 +512,7 @@ namespace ROOT
                 //RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
                 RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
             } while (!_mainFSM.waitForNextFrame);
-            _mainFSM.waitForNextFrame = false;//默认是不等待的。
+            _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
         }
     }
 }
-

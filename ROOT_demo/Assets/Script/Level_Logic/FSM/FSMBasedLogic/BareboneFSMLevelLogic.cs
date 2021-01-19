@@ -51,6 +51,5 @@ namespace ROOT
                 return transitions;
             }
         }
-        protected override Dictionary<BreakingCommand, Action> RootFSMBreakings => new Dictionary<BreakingCommand, Action>();
     }
 }

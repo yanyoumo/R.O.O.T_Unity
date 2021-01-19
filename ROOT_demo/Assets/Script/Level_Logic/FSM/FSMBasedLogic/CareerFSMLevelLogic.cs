@@ -84,6 +84,23 @@ namespace ROOT
             WorldExecutor.UpdateBoardData(ref LevelAsset);
         }
 
+        protected override void AdditionalInitLevel()
+        {
+            if (LevelAsset.CostChart != null)
+            {
+                LevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(LevelAsset.GameStateMgr.GetCurrency());
+            }
+            if (LevelAsset.ActionAsset.RoundDatas.Length > 0)
+            {
+                //这个东西放在这里还是怎么着？就先这样吧。
+                WorldCycler.InitCycler();
+                if (LevelAsset.TimeLine != null)
+                {
+                    LevelAsset.TimeLine.InitWithAssets(LevelAsset);
+                }
+            }
+        }
+
         #endregion
         
         protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
@@ -141,17 +158,12 @@ namespace ROOT
             {
                 var breakings = new Dictionary<BreakingCommand, Action>
                 {
-                    [BreakingCommand.BossPause] = DealBossPauseBreaking
+                    {BreakingCommand.BossPause, DealBossPauseBreaking},
                 };
                 return breakings;
             }
         }
-
-        //现在Upkeep分为Major和Minor两种；
-        //Major可以写消耗较高的地方、在Animate期间不会被调用；
-        //Minor原则上应该只写一些消耗较小的代码、这个在Animate期间会被调用。
-        //即——常规Loop：Major先调用；Minor后调用。
-        //     动画Loop：只有Minor会被调用。
+        
         protected override FSMActions fsmActions
         {
             get

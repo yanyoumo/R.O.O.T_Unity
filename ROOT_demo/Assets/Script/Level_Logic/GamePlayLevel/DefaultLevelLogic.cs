@@ -555,7 +555,7 @@ namespace ROOT
             InitShop();
             StartShop();
             InitDestoryer();
-            InitCursor(new Vector2Int(2, 3));
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.UpdateBoardAnimation();
             LevelAsset.ActionAsset = null;
@@ -578,13 +578,6 @@ namespace ROOT
         {
             //LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
             //LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
-        }
-        protected void InitCursor(Vector2Int pos)
-        {
-            LevelAsset.GameCursor = Instantiate(LevelAsset.CursorTemplate);
-            Cursor cursor = LevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
     }
 }
