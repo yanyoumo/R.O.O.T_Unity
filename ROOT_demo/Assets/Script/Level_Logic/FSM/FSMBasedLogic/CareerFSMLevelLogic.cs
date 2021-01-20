@@ -46,6 +46,22 @@ namespace ROOT
             {
                 BossInit();
             }
+            if (Stage == StageType.Boss && Animating)
+            {
+                LevelAsset.GameBoard.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
+            }
+            else
+            {
+                WorldExecutor.CleanDestoryer(LevelAsset);
+                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
+                //总之稳了后，这个不能这么每帧调用。
+                LevelAsset.occupiedHeatSink = LevelAsset.GameBoard.CheckHeatSink(Stage);
+                LevelAsset.GameBoard.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
+                if (LevelAsset.SkillEnabled)
+                {
+                    LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
+                }
+            }
         }
 
         protected override void AddtionalMinorUpkeep()

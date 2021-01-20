@@ -59,7 +59,7 @@ namespace ROOT
         #region 类属性
 
         private RoundGist? RoundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
-        private StageType Stage => RoundGist?.Type ?? StageType.Shop;
+        protected StageType Stage => RoundGist?.Type ?? StageType.Shop;
         bool IsBossRound => Stage == StageType.Boss;
         bool IsShopRound => Stage == StageType.Shop;
         bool IsRequireRound => Stage == StageType.Require;
@@ -401,9 +401,9 @@ namespace ROOT
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
             WorldExecutor.UpdateBoardData(ref LevelAsset);//RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
-            UpkeepLogic(); //RISK 这个也要弄。
-            WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
+            BasicMajorUpkeepLogic();
             AddtionalMajorUpkeep();
+            WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
         
         //现在在MinorUpkeep流程中、会将队列的break命令一口气全处理完。
@@ -429,9 +429,7 @@ namespace ROOT
                     LevelAsset.TimeLine.Step();
                 }
                 LevelAsset.BoughtOnce = false;
-
                 LevelAsset.GameStateMgr.PerMove(LevelAsset.DeltaCurrency);
-
                 WorldExecutor.UpdateBoardData(ref LevelAsset);
             }
         }
@@ -449,7 +447,6 @@ namespace ROOT
                 WorldExecutor.UpdateDestoryer(LevelAsset);
                 if (LevelAsset.WarningDestoryer != null)
                 {
-                    Debug.Log("LevelAsset.WarningDestoryer.Step(out var outCore);");
                     LevelAsset.WarningDestoryer.Step(out var outCore);
                     LevelAsset.DestoryedCoreType = outCore;
                 }
@@ -457,7 +454,77 @@ namespace ROOT
 
             if (RoundGist.HasValue)
             {
-                UpdateRoundStatus_FSM();
+                // ReSharper disable once PossibleInvalidOperationException
+                var roundGist = RoundGist.Value;
+                int normalRval = 0; //必须声明成Int，要不然有问题。
+                int networkRval = 0; //必须声明成int，要不然有问题。
+                var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
+
+                if (IsRequireRound && IsForwardCycle)
+                {
+                    LevelAsset.GameBoard.UpdatePatternDiminishing();
+                }
+
+                if (IsRequireRound || IsShopRound)
+                {
+                    normalRval = roundGist.normalReq;
+                    networkRval = roundGist.networkReq;
+                }
+
+                if ((lastDestoryBool && !IsDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
+                {
+                    LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
+                }
+
+                if (roundGist.SwitchHeatsink(tCount))
+                {
+                    if (_obselateStepID == -1 || _obselateStepID != LevelAsset.StepCount)
+                    {
+                        LevelAsset.GameBoard.UpdatePatternID();
+                    }
+
+                    _obselateStepID = LevelAsset.StepCount;
+                }
+
+                if ((LevelAsset.DestroyerEnabled && !IsDestoryerRound) && !WorldCycler.BossStage)
+                {
+                    LevelAsset.WarningDestoryer.ForceReset();
+                }
+
+                lastDestoryBool = IsDestoryerRound;
+
+                LevelAsset.DestroyerEnabled = WorldCycler.BossStage;
+                LevelAsset.CurrencyIncomeEnabled = IsRequireRound;
+                LevelAsset.CurrencyIOEnabled = ShouldCurrencyIo;
+
+                int harDriverCountInt = 0, networkCountInt = 0;
+                _noRequirement = (normalRval == 0 && networkRval == 0);
+
+                if (_noRequirement)
+                {
+                    LevelAsset.TimeLine.RequirementSatisfied = true;
+                }
+                else
+                {
+                    SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, LevelAsset.GameBoard, out harDriverCountInt);
+                    SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, LevelAsset.GameBoard, out networkCountInt);
+                    LevelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
+                }
+
+                var discount = 0;
+                if (!LevelAsset.Shop.ShopOpening && IsShopRound)
+                {
+                    discount = LevelAsset.SkillMgr.CheckDiscount();
+                }
+                LevelAsset.Shop.OpenShop(IsShopRound, discount);
+                LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = IsSkillAllowed;
+                LevelAsset.SignalPanel.TgtNormalSignal = normalRval;
+                LevelAsset.SignalPanel.TgtNetworkSignal = networkRval;
+                LevelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
+                LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
+                LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
+                LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
+                
                 if (LevelAsset.GameOverEnabled)
                 {
                     UpdateGameOverStatus();
@@ -489,7 +556,7 @@ namespace ROOT
         {
             //目前这里基本空的，到时候可能把Animate的CoRoutine里面的东西弄出来。
             Debug.Assert(animate_Co != null);
-            UpkeepLogic();
+            BasicMajorUpkeepLogic();
         }
         
         protected void ReactIO()
@@ -518,11 +585,8 @@ namespace ROOT
 
         #endregion
         
-        private void UpkeepLogic()
+        private void BasicMajorUpkeepLogic()
         {
-            //TODO 这个东西争取拆开。
-            //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
-            //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
             if (LevelAsset.TimeLine != null)
             {
                 LevelAsset.TimeLine.SetCurrentCount = LevelAsset.ReqOkCount;
@@ -531,98 +595,6 @@ namespace ROOT
             {
                 LevelAsset.SignalPanel.CrtMission = LevelAsset.ReqOkCount;
             }
-            
-            
-            if (Stage == StageType.Boss && Animating)
-            {
-                LevelAsset.GameBoard.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
-            }
-            else
-            {
-                WorldExecutor.CleanDestoryer(LevelAsset);
-                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
-                //总之稳了后，这个不能这么每帧调用。
-                LevelAsset.occupiedHeatSink = LevelAsset.GameBoard.CheckHeatSink(Stage);
-                LevelAsset.GameBoard.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
-                if (LevelAsset.SkillEnabled && LevelAsset.SkillMgr != null)
-                {
-                    LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
-                }
-            }
-        }
-
-        private void UpdateRoundStatus_FSM()
-        {
-            // ReSharper disable once PossibleInvalidOperationException
-            var roundGist = RoundGist.Value;
-            int normalRval = 0;//必须声明成Int，要不然有问题。
-            int networkRval = 0;//必须声明成int，要不然有问题。
-            var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
-
-            if (IsRequireRound && IsForwardCycle)
-            {
-                LevelAsset.GameBoard.UpdatePatternDiminishing();
-            }
-
-            if (IsRequireRound || IsShopRound)
-            {
-                normalRval = roundGist.normalReq;
-                networkRval = roundGist.networkReq;
-            }
-            
-            if ((lastDestoryBool && !IsDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
-            {
-                LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
-            }
-
-            if (roundGist.SwitchHeatsink(tCount))
-            {
-                if (_obselateStepID == -1 || _obselateStepID != LevelAsset.StepCount)
-                {
-                    LevelAsset.GameBoard.UpdatePatternID();
-                }
-                _obselateStepID = LevelAsset.StepCount;
-            }
-            
-            if ((LevelAsset.DestroyerEnabled && !IsDestoryerRound) && !WorldCycler.BossStage)
-            {
-                LevelAsset.WarningDestoryer.ForceReset();
-            }
-
-            lastDestoryBool = IsDestoryerRound;
-
-            LevelAsset.DestroyerEnabled = WorldCycler.BossStage;
-            LevelAsset.CurrencyIncomeEnabled = IsRequireRound;
-            LevelAsset.CurrencyIOEnabled = ShouldCurrencyIo;
-
-            int harDriverCountInt = 0, networkCountInt = 0;
-            _noRequirement = (normalRval == 0 && networkRval == 0);
-
-            if (_noRequirement)
-            {
-                LevelAsset.TimeLine.RequirementSatisfied = true;
-            }
-            else
-            {
-                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, LevelAsset.GameBoard, out harDriverCountInt);
-                SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, LevelAsset.GameBoard, out networkCountInt);
-                LevelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
-            }
-
-            var discount = 0;
-            if (!LevelAsset.Shop.ShopOpening && IsShopRound)
-            {
-                discount = LevelAsset.SkillMgr.CheckDiscount();
-            }
-            
-            LevelAsset.Shop.OpenShop(IsShopRound, discount);
-            LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = IsSkillAllowed;
-            LevelAsset.SignalPanel.TgtNormalSignal = normalRval;
-            LevelAsset.SignalPanel.TgtNetworkSignal = networkRval;
-            LevelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
-            LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
-            LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
-            LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
         }
 
         private bool UpdateGameOverStatus()
