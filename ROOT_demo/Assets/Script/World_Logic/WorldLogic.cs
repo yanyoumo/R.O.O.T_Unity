@@ -1187,79 +1187,29 @@ namespace ROOT
     //原WORLD-UTILS 是为了进一步解耦，和一般的Utils只能基于基础数学不同，这个允许基于游戏逻辑和游戏制度。
     //现为：WorldExecutor，主要是执行具体的内部逻辑；想象为舰长和执行舰长的感觉吧。
     public static class WorldExecutor //WORLD-EXECUTOR
-    {
-        public static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
+    { 
+        public static void InitDestoryer(ref GameAssets LevelAsset)
         {
-            var shouldCycleTMP = false;
-            var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
-            if (StartGameMgr.UseTouchScreen)
-            {
-                shouldCycleTMP = movedTile | hasCycleNext;
-            }
-            else if (StartGameMgr.UseMouse)
-            {
-                shouldCycleTMP = ((movedTile | movedCursor)) | hasCycleNext;
-            }
-            else
-            {
-                shouldCycleTMP = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
-            }
-
-            return shouldCycleTMP;
+            LevelAsset.WarningDestoryer = new MeteoriteBomber {GameBoard = LevelAsset.GameBoard};
+            LevelAsset.WarningDestoryer.Init(4, 1);
         }
 
-        public static void UpkeepLogic(GameAssets currentLevelAsset, StageType type,bool animating)
+        public static void InitShop(ref GameAssets LevelAsset)
         {
-            //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
-            //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
-            currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
-            currentLevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
-            
-
-            if (type == StageType.Boss&& animating)
+            LevelAsset.Shop.ShopInit(LevelAsset);
+            LevelAsset.Shop.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
+            if (LevelAsset.ActionAsset.ExcludedShop)
             {
-                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
+                LevelAsset.Shop.excludedTypes = LevelAsset.ActionAsset.ShopExcludedType;
             }
-            else
-            {
-                WorldExecutor.CleanDestoryer(currentLevelAsset);
-                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
-                //总之稳了后，这个不能这么每帧调用。
-                currentLevelAsset.occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
-                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-                if (currentLevelAsset.SkillEnabled && currentLevelAsset.SkillMgr != null)
-                {
-                    currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
-                }
-            }
-        }       
+        }
         
-        public static void BossStagePauseRunStop(ref GameAssets currentLevelAsset)
+        public static void StartShop(ref GameAssets LevelAsset)
         {
-            Debug.Log("BossStagePauseRunStop");
-            WorldCycler.BossStagePause = false;
-            currentLevelAsset.Owner.StopBossStageCost();
+            LevelAsset.Shop.ShopStart();
         }
-
-        public static void BossStagePauseTriggered(ref GameAssets currentLevelAsset)
-        {
-            Debug.Log("BossStagePauseTriggered,WorldCycler.BossStagePause:" + WorldCycler.BossStagePause);
-            Debug.Assert(WorldCycler.BossStage);
-            if (currentLevelAsset.ReqOkCount <= 0) return;
-            if (WorldCycler.BossStagePause)
-            {
-                WorldCycler.BossStagePause = false;
-                currentLevelAsset.Owner.StopBossStageCost();
-            }
-            else
-            {
-                WorldCycler.BossStagePause = true;
-                currentLevelAsset.Owner.StartBossStageCost();
-            }
-
-            currentLevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
-        }
-
+        
         public static void UpdateRotate(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
             if (ctrlPack.HasFlag(ControllingCommand.Rotate))
@@ -1418,7 +1368,7 @@ namespace ROOT
             return indicator;
         }
 
-        public static void UpdateCursorPos(GameAssets currentLevelAsset)
+        private static void UpdateCursorPos(GameAssets currentLevelAsset)
         {
             currentLevelAsset.Cursor.SetPosWithAnimation(Board.ClampPosInBoard(currentLevelAsset.Cursor.CurrentBoardPosition), PosSetFlag.Current);
             currentLevelAsset.Cursor.SetPosWithAnimation(Board.ClampPosInBoard(currentLevelAsset.Cursor.NextBoardPosition), PosSetFlag.Next);
@@ -1471,7 +1421,7 @@ namespace ROOT
                 //TEMP 现在只有热力消耗。
                 if (!currentLevelAsset.CurrencyIncomeEnabled)
                 {
-                    //RISK 现在在红色区间没有任何价格收入。靠谱吗？
+                    //现在在红色区间没有任何价格收入。靠谱吗？
                     inCome = 0;
                 }
 

@@ -11,10 +11,97 @@ namespace ROOT
     using FSMTransitions = HashSet<RootFSMTransition>;
     using Status = RootFSMStatus;
 
-    public class CareerFSMLevelLogic : FSMLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
+    public class CareerFSMLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
-        #region BossRelated
+        private void BossMinorUpdate()
+        {
+            if (WorldCycler.BossStagePause) return;
+            _bossInfoSprayTimer += Time.deltaTime;
+            if (_bossInfoSprayTimer >= _bossInfoSprayTimerInterval)
+            {
+                try
+                {
+                    LevelAsset.AirDrop.SprayInfo(SprayCountArray[SprayCounter]);
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    LevelAsset.AirDrop.SprayInfo(3);
+                }
+                catch (NullReferenceException)
+                {
+                    return;
+                }
 
+                _bossInfoSprayTimerIntervalOffset = Random.Range(
+                    -BossInfoSprayTimerIntervalOffsetRange,
+                    BossInfoSprayTimerIntervalOffsetRange);
+                _bossInfoSprayTimer = 0.0f;
+                SprayCounter++;
+            }
+        }
+
+        protected override void AddtionalMajorUpkeep()
+        {
+            if (CheckBossStageInit())
+            {
+                BossInit();
+            }
+        }
+
+        protected override void AddtionalMinorUpkeep()
+        {
+            if (CheckBossStage())
+            {
+                BossMinorUpdate();
+            }
+        }
+
+        protected override void AddtionalRecatIO()
+        {
+            AddtionalRecatIO_Skill();
+            AddtionalRecatIO_Boss();
+        }
+
+        private void AddtionalRecatIO_Skill()
+        {
+            if (LevelAsset.SkillEnabled)
+            {
+                LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
+            }
+        }
+        
+        #region BossRelated
+        private void AddtionalRecatIO_Boss()
+        {
+            if (_ctrlPack.HasFlag(ControllingCommand.BossResume) && CheckBossAndPaused())
+            {
+                BossStagePauseTriggered();
+            }
+        }
+
+        private void BossStagePauseTriggered()
+        {
+            if (LevelAsset.ReqOkCount <= 0) return;
+            if (WorldCycler.BossStagePause)
+            {
+                WorldCycler.BossStagePause = false;
+                LevelAsset.Owner.StopBossStageCost();
+            }
+            else
+            {
+                WorldCycler.BossStagePause = true;
+                LevelAsset.Owner.StartBossStageCost();
+            }
+            LevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
+        }
+        private void DealBossPauseBreaking()
+        {
+            if (CheckBossAndNotPaused())
+            {
+                BossStagePauseTriggered();
+            }
+        }
+        
         //现在一共提供Info的计数是：Boss阶段*BossInfoSprayCount*SprayCountPerAnimateInterval;
         private const int SprayCountPerAnimateInterval = 4;
         private const float BossInfoSprayTimerIntervalOffsetRange = 0.5f;
@@ -46,38 +133,6 @@ namespace ROOT
             //FSM状态下，这个东西不用了。
             //ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualPollingBossPauseKey());
             WorldCycler.BossStage = true;
-        }
-
-        private void BossMinorUpdate()
-        {
-            if (WorldCycler.BossStagePause) return;
-            _bossInfoSprayTimer += Time.deltaTime;
-            if (_bossInfoSprayTimer >= _bossInfoSprayTimerInterval)
-            {
-                try
-                {
-                    LevelAsset.AirDrop.SprayInfo(SprayCountArray[SprayCounter]);
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    LevelAsset.AirDrop.SprayInfo(3);
-                }
-                catch (NullReferenceException)
-                {
-                    return;
-                }
-
-                _bossInfoSprayTimerIntervalOffset = Random.Range(
-                    -BossInfoSprayTimerIntervalOffsetRange,
-                    BossInfoSprayTimerIntervalOffsetRange);
-                _bossInfoSprayTimer = 0.0f;
-                SprayCounter++;
-            }
-        }
-
-        private void BossMajorUpdate()
-        {
-
         }
 
         private void BossPauseAction()
@@ -122,8 +177,7 @@ namespace ROOT
                 {
                     new Trans(Status.PreInit, Status.F_Cycle, 1, CheckInited),
                     new Trans(Status.PreInit),
-                    new Trans(Status.MajorUpKeep, Status.BossInit, 5, CheckBossStageInit),
-                    new Trans(Status.MajorUpKeep, Status.BossMajorUpKeep, 4, CheckBossAndNotPaused),
+                    new Trans(Status.MajorUpKeep, Status.F_Cycle, 4, CheckBossAndNotPaused),
                     new Trans(Status.MajorUpKeep, Status.R_Cycle, 3, CheckAutoR),
                     new Trans(Status.MajorUpKeep, Status.F_Cycle, 2, CheckAutoF),
                     new Trans(Status.MajorUpKeep, Status.R_IO, 1, CheckCtrlPackAny),
@@ -133,19 +187,14 @@ namespace ROOT
                     new Trans(Status.R_IO, Status.F_Cycle, 2, CheckFCycle),
                     new Trans(Status.R_IO, Status.Animate, 1, CheckStartAnimate, TriggerAnimation),
                     new Trans(Status.R_IO, Status.MajorUpKeep, 0, true),
-                    new Trans(Status.BossInit, Status.BossMajorUpKeep),
-                    new Trans(Status.BossMajorUpKeep, Status.F_Cycle),
                     new Trans(Status.BossPause,Status.Career_Cycle),
                     new Trans(Status.F_Cycle, Status.Career_Cycle),
                     new Trans(Status.R_Cycle, Status.Career_Cycle),
                     new Trans(Status.Skill, Status.Career_Cycle),
-                    new Trans(Status.Career_Cycle, Status.Animate, 2, CheckStartAnimate, TriggerAnimation),
-                    new Trans(Status.Career_Cycle, Status.BossMinorUpKeep,1,CheckBossStage),
+                    new Trans(Status.Career_Cycle, Status.Animate, 1, CheckStartAnimate, TriggerAnimation),
                     new Trans(Status.Career_Cycle, Status.MinorUpKeep),
                     new Trans(Status.MinorUpKeep, Status.Animate, 1, true, CheckLoopAnimate),
                     new Trans(Status.MinorUpKeep, Status.CleanUp),
-                    new Trans(Status.BossMinorUpKeep, Status.MinorUpKeep),
-                    new Trans(Status.Animate, Status.BossMinorUpKeep, 1, CheckBossStage),
                     new Trans(Status.Animate, Status.MinorUpKeep),
                     new Trans(Status.CleanUp, Status.MajorUpKeep, 0, true),
                 };
@@ -179,9 +228,6 @@ namespace ROOT
                     {Status.R_Cycle, ReverseCycle},
                     {Status.Career_Cycle, CareerCycle},
                     {Status.CleanUp, CleanUp},
-                    {Status.BossInit, BossInit},
-                    {Status.BossMajorUpKeep, BossMajorUpdate},
-                    {Status.BossMinorUpKeep, BossMinorUpdate},
                     {Status.BossPause, BossPauseAction},
                     {Status.Animate, AnimateAction},
                     {Status.R_IO, ReactIO},

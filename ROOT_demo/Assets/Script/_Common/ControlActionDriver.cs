@@ -12,7 +12,7 @@ namespace ROOT
     using RespToCtrlEvent= Func<ActionPack,bool>;
     public abstract class ControlActionDriver
     {
-        private readonly FSMLevelLogic _owner;
+        private readonly LevelLogic _owner;
         private RootFSM _mainFsm;
         private readonly Queue<ControllingPack> _ctrlPackQueue;
         private readonly Queue<BreakingCommand> _breakingCMDQueue;
@@ -116,7 +116,7 @@ namespace ROOT
             }
         }
 
-        protected ControlActionDriver(FSMLevelLogic owner, RootFSM fsm)
+        protected ControlActionDriver(LevelLogic owner, RootFSM fsm)
         {
             _owner = owner;
             _mainFsm = fsm;
@@ -201,7 +201,7 @@ namespace ROOT
 
     public class CareerControlActionDriver : ControlActionDriver
     {
-        public CareerControlActionDriver(FSMLevelLogic owner, RootFSM fsm) : base(owner, fsm) { }
+        public CareerControlActionDriver(LevelLogic owner, RootFSM fsm) : base(owner, fsm) { }
 
         protected override List<RespToCtrlEvent> RespondList
         {
