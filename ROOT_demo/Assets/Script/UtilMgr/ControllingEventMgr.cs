@@ -50,7 +50,7 @@ namespace ROOT
 
         private static Vector2 MouseScreenPos;
 
-        private const float minHoldShift = 1e-4f;
+        private const float minHoldShift = 1e-6f;
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -92,6 +92,7 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateMouseSingleClickDown, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseLeft);
             player.AddInputEventDelegate(OnInputUpdateMouseSingleClickUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Passthough.MouseLeft);
             player.AddInputEventDelegate(OnInputUpdateMouseDoubleClick, UpdateLoopType.Update, InputActionEventType.ButtonJustDoublePressed, Passthough.MouseLeft);
+            player.AddInputEventDelegate(OnInputUpdateMouseHold, UpdateLoopType.Update, InputActionEventType.ButtonJustPressedForTime, Passthough.MouseLeft, new object[] { 1.5f });
         }
 
         private void OnInputUpdateCurser(InputActionEventData obj)
