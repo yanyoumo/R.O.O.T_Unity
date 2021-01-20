@@ -1188,6 +1188,16 @@ namespace ROOT
     //现为：WorldExecutor，主要是执行具体的内部逻辑；想象为舰长和执行舰长的感觉吧。
     public static class WorldExecutor //WORLD-EXECUTOR
     { 
+        //这里哪敢随便改成基于事件的啊；这里都是很看重时序的东西。
+        //但是改成基于事件的解耦特性还是值得弄的、但是得注意。
+        public static void InitCursor(ref GameAssets currentLevelAsset,Vector2Int pos)
+        {
+            currentLevelAsset.GameCursor = Object.Instantiate(currentLevelAsset.CursorTemplate);
+            Cursor cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
+            cursor.InitPosWithAnimation(pos);
+            cursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+        }
+
         public static void InitDestoryer(ref GameAssets LevelAsset)
         {
             LevelAsset.WarningDestoryer = new MeteoriteBomber {GameBoard = LevelAsset.GameBoard};
@@ -1440,6 +1450,7 @@ namespace ROOT
         
         public static void LightUpBoard(ref GameAssets currentLevelAsset,ControllingPack _ctrlPack)
         {
+            //TODO 这里的代码未来要自己去取鼠标的值。
             if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid) ||
                 _ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
             {
@@ -1459,14 +1470,6 @@ namespace ROOT
             {
                 currentLevelAsset.GameBoard.LightUpBoardGird(Vector2Int.zero, LightUpBoardGirdMode.CLEAR);
             }
-        }
-
-        public static void InitCursor(ref GameAssets currentLevelAsset,Vector2Int pos)
-        {
-            currentLevelAsset.GameCursor = Object.Instantiate(currentLevelAsset.CursorTemplate);
-            Cursor cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
     }
 

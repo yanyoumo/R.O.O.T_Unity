@@ -69,7 +69,8 @@ namespace ROOT
         private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
         private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in movedTile, in movedCursor);
         private bool ShouldStartAnimate => ShouldCycle;
-        private bool IsForwardCycle => (AutoDrive.HasValue && AutoDrive.Value) || movedTile;
+        private bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
+        private bool IsForwardCycle => AutoForward || movedTile;
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
         #endregion
         
@@ -512,10 +513,12 @@ namespace ROOT
                 }
 
                 var discount = 0;
+                
                 if (!LevelAsset.Shop.ShopOpening && IsShopRound)
                 {
                     discount = LevelAsset.SkillMgr.CheckDiscount();
                 }
+                
                 LevelAsset.Shop.OpenShop(IsShopRound, discount);
                 LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = IsSkillAllowed;
                 LevelAsset.SignalPanel.TgtNormalSignal = normalRval;
@@ -530,9 +533,8 @@ namespace ROOT
                     UpdateGameOverStatus();
                 }
             }
-
-            //RISK 这个不太行，要处理掉。
-            if (((AutoDrive.HasValue && AutoDrive.Value || ShouldCycle && movedTile)) && (!_noRequirement))
+           
+            if ((AutoForward || ShouldCycle) && movedTile && !_noRequirement)
             {
                 if (LevelAsset.TimeLine.RequirementSatisfied)
                 {
