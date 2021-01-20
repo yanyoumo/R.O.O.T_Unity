@@ -90,8 +90,8 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CycleNext);
 
             player.AddInputEventDelegate(OnInputUpdateMouseSingleClickDown, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseLeft);
-            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickUp, UpdateLoopType.Update, InputActionEventType.ButtonShortPressJustReleased, Passthough.MouseLeft);
-            player.AddInputEventDelegate(OnInputUpdateDoubleClick, UpdateLoopType.Update, InputActionEventType.ButtonJustDoublePressed, Passthough.MouseLeft);
+            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Passthough.MouseLeft);
+            player.AddInputEventDelegate(OnInputUpdateMouseDoubleClick, UpdateLoopType.Update, InputActionEventType.ButtonJustDoublePressed, Passthough.MouseLeft);
         }
 
         private void OnInputUpdateCurser(InputActionEventData obj)
@@ -117,7 +117,6 @@ namespace ROOT
                     actionPack.ActionDirection = RotationDirection.East;
                     break;
             }
-
             ControllingEvent?.Invoke(actionPack);
         }
 
@@ -164,7 +163,7 @@ namespace ROOT
         private void OnInputUpdateMouseSingleClickDown(InputActionEventData obj)
         {
             MouseScreenPos = player.controllers.Mouse.screenPosition;
-            Debug.Log("Single Click Down");
+            Debug.Log("Mouse Single Click Down");
         }
 
         private void OnInputUpdateMouseSingleClickUp(InputActionEventData obj)
@@ -174,12 +173,23 @@ namespace ROOT
                 MouseScreenPosA = MouseScreenPos,
                 MouseScreenPosB = player.controllers.Mouse.screenPosition,
             };
-            Debug.Log("Single Click Up");
-            actionPack.ActionID = Utils.GetCustomizedDistance(actionPack.MouseScreenPosA, actionPack.MouseScreenPosB) < minHoldShift ?
-                    Passthough.MouseLeft : Composite.Drag;
+            Debug.Log("Mouse Single Click Up");
+            if (Utils.GetCustomizedDistance(actionPack.MouseScreenPosA, actionPack.MouseScreenPosB) < minHoldShift)
+            {
+                actionPack.ActionID = Passthough.MouseLeft;
+                actionPack.eventType = InputActionEventType.ButtonSinglePressed;
+                Debug.Log("Mouse Single Click");
+            }
+            else
+            {
+                actionPack.ActionID = Composite.Drag;
+                actionPack.eventType = InputActionEventType.AxisActive;
+                Debug.Log("Mouse Drag");
+            }
             ControllingEvent?.Invoke(actionPack);
         }
-        private void OnInputUpdateDoubleClick(InputActionEventData obj)
+
+        private void OnInputUpdateMouseDoubleClick(InputActionEventData obj)
         {
             var actionPack = new ActionPack
             {
@@ -187,7 +197,18 @@ namespace ROOT
                 eventType = obj.eventType,
             };
             ControllingEvent?.Invoke(actionPack);
-            Debug.Log("Double Click");
+            Debug.Log("Mouse Double Click");
+        }
+
+        private void OnInputUpdateMouseHold(InputActionEventData obj)
+        {
+            var actionPack = new ActionPack
+            {
+                ActionID = obj.actionId,
+                eventType = obj.eventType,
+            };
+            ControllingEvent?.Invoke(actionPack);
+            Debug.Log("Mouse Hold");
         }
     }
 }
