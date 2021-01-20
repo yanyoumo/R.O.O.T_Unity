@@ -11,6 +11,7 @@ namespace ROOT
         public LevelActionAsset[] ClassicGameActionAssetLib => LevelLib.Instance.CareerActionAssetList;
         public Button BackButton;
         public Button ContinueButton;
+        public static int sceneId;
 
         // Start is called before the first frame update
         void Start()
@@ -27,21 +28,14 @@ namespace ROOT
 
         void Back()
         {
-            /***
-            for (var i = 0; i < SceneManager.sceneCount; i++)
-            {
-                if (SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_CAREERSETUP) != SceneManager.GetSceneAt(i))
-                {
-                    SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(i));
-                }
-            }
-            */
             SceneManager.LoadScene(StaticName.SCENE_ID_CAREER, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
         }
 
         void Continue()
-        {
-            LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib[0].LevelLogic, ClassicGameActionAssetLib[0]);
+        {   
+            LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib[sceneId].LevelLogic, ClassicGameActionAssetLib[sceneId]);
+            SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
         }
     }
 }
