@@ -191,7 +191,7 @@ namespace ROOT
             {
                 var transitions = new FSMTransitions
                 {
-                    new Trans(Status.PreInit, Status.F_Cycle, 1, CheckInited),
+                    new Trans(Status.PreInit, Status.MajorUpKeep, 1, CheckInited),
                     new Trans(Status.PreInit),
                     new Trans(Status.MajorUpKeep, Status.F_Cycle, 4, CheckBossAndNotPaused),
                     new Trans(Status.MajorUpKeep, Status.R_Cycle, 3, CheckAutoR),

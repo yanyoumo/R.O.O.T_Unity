@@ -34,7 +34,7 @@ namespace ROOT
             {
                 var transitions = new FSMTransitions
                 {
-                    new Trans(Status.PreInit, Status.F_Cycle, 1, CheckInited),
+                    new Trans(Status.PreInit, Status.MajorUpKeep, 1, CheckInited),
                     new Trans(Status.PreInit),
                     new Trans(Status.F_Cycle, Status.Animate, 1, CheckStartAnimate, TriggerAnimation),
                     new Trans(Status.F_Cycle, Status.MinorUpKeep),

@@ -39,7 +39,7 @@ namespace ROOT
         [ReadOnly] public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
         [ReadOnly] public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
         
-        private bool movedTile = false;
+        public bool movedTile = false;
         private bool movedCursor = false;
         
         protected internal GameAssets LevelAsset;
@@ -53,24 +53,38 @@ namespace ROOT
         public static readonly float BossAnimationDuration = 1.5f; //都是秒
 
         protected int _obselateStepID = -1;
-        protected bool lastDestoryBool = false;
-        protected bool _noRequirement;
+        //protected bool lastDestoryBool = false;
 
         #region 类属性
 
-        private RoundGist? RoundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
+        public RoundGist? RoundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
+
+        public RoundGist? LastRoundGist
+        {
+            get
+            {
+                if ((LevelAsset.StepCount - 1)>=0)
+                {
+                    return LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount - 1);
+                }
+                else
+                {
+                    return RoundGist;
+                }
+            }
+        }
         protected StageType Stage => RoundGist?.Type ?? StageType.Shop;
-        bool IsBossRound => Stage == StageType.Boss;
-        bool IsShopRound => Stage == StageType.Shop;
-        bool IsRequireRound => Stage == StageType.Require;
-        bool IsDestoryerRound => Stage == StageType.Destoryer;
-        bool IsSkillAllowed => !IsShopRound;
-        bool ShouldCurrencyIo => (IsRequireRound || IsDestoryerRound);
+        public bool IsBossRound => Stage == StageType.Boss;
+        public bool IsShopRound => Stage == StageType.Shop;
+        public bool IsRequireRound => Stage == StageType.Require;
+        public bool IsDestoryerRound => Stage == StageType.Destoryer;
+        public bool IsSkillAllowed => !IsShopRound;
+        public bool ShouldCurrencyIo => (IsRequireRound || IsDestoryerRound);
         private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
-        private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in movedTile, in movedCursor);
+        public bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in movedTile, in movedCursor);
         private bool ShouldStartAnimate => ShouldCycle;
-        private bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
-        private bool IsForwardCycle => AutoForward || movedTile;
+        public bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
+        public bool IsForwardCycle => AutoForward || movedTile;
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
         #endregion
         
@@ -421,18 +435,18 @@ namespace ROOT
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
         protected void ForwardCycle()
         {
-            if (IsForwardCycle)//这个guard应该去掉、但是姑且先留着。
-            {
+            /*if (IsForwardCycle) //这个guard应该去掉了、但是姑且先留着，主要是放着第一循环的代码。
+            {*/
                 //现在的框架下，在一个Loop的中段StepUp还凑活，但是感觉有隐患。
                 WorldCycler.StepUp();
                 if (LevelAsset.TimeLine != null)
                 {
                     LevelAsset.TimeLine.Step();
                 }
-                LevelAsset.BoughtOnce = false;
+
                 LevelAsset.GameStateMgr.PerMove(LevelAsset.DeltaCurrency);
                 WorldExecutor.UpdateBoardData(ref LevelAsset);
-            }
+            //}
         }
 
         protected void ReverseCycle()
@@ -452,93 +466,13 @@ namespace ROOT
                     LevelAsset.DestoryedCoreType = outCore;
                 }
             }
-
+            
             if (RoundGist.HasValue)
             {
-                // ReSharper disable once PossibleInvalidOperationException
-                var roundGist = RoundGist.Value;
-                int normalRval = 0; //必须声明成Int，要不然有问题。
-                int networkRval = 0; //必须声明成int，要不然有问题。
-                var tCount = LevelAsset.ActionAsset.GetTruncatedCount(LevelAsset.StepCount, out var count);
-
-                if (IsRequireRound && IsForwardCycle)
-                {
-                    LevelAsset.GameBoard.UpdatePatternDiminishing();
-                }
-
-                if (IsRequireRound || IsShopRound)
-                {
-                    normalRval = roundGist.normalReq;
-                    networkRval = roundGist.networkReq;
-                }
-
-                if ((lastDestoryBool && !IsDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
-                {
-                    LevelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
-                }
-
-                if (roundGist.SwitchHeatsink(tCount))
-                {
-                    if (_obselateStepID == -1 || _obselateStepID != LevelAsset.StepCount)
-                    {
-                        LevelAsset.GameBoard.UpdatePatternID();
-                    }
-
-                    _obselateStepID = LevelAsset.StepCount;
-                }
-
-                if ((LevelAsset.DestroyerEnabled && !IsDestoryerRound) && !WorldCycler.BossStage)
-                {
-                    LevelAsset.WarningDestoryer.ForceReset();
-                }
-
-                lastDestoryBool = IsDestoryerRound;
-
-                LevelAsset.DestroyerEnabled = WorldCycler.BossStage;
-                LevelAsset.CurrencyIncomeEnabled = IsRequireRound;
-                LevelAsset.CurrencyIOEnabled = ShouldCurrencyIo;
-
-                int harDriverCountInt = 0, networkCountInt = 0;
-                _noRequirement = (normalRval == 0 && networkRval == 0);
-
-                if (_noRequirement)
-                {
-                    LevelAsset.TimeLine.RequirementSatisfied = true;
-                }
-                else
-                {
-                    SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, LevelAsset.GameBoard, out harDriverCountInt);
-                    SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, LevelAsset.GameBoard, out networkCountInt);
-                    LevelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
-                }
-
-                var discount = 0;
-                
-                if (!LevelAsset.Shop.ShopOpening && IsShopRound)
-                {
-                    discount = LevelAsset.SkillMgr.CheckDiscount();
-                }
-                
-                LevelAsset.Shop.OpenShop(IsShopRound, discount);
-                LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = IsSkillAllowed;
-                LevelAsset.SignalPanel.TgtNormalSignal = normalRval;
-                LevelAsset.SignalPanel.TgtNetworkSignal = networkRval;
-                LevelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
-                LevelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
-                LevelAsset.SignalPanel.NetworkTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
-                LevelAsset.SignalPanel.NormalTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
-                
+                WorldExecutor.UpdateRoundData(ref LevelAsset);
                 if (LevelAsset.GameOverEnabled)
                 {
                     UpdateGameOverStatus();
-                }
-            }
-           
-            if ((AutoForward || ShouldCycle) && movedTile && !_noRequirement)
-            {
-                if (LevelAsset.TimeLine.RequirementSatisfied)
-                {
-                    LevelAsset.ReqOkCount++;
                 }
             }
         }
@@ -549,6 +483,7 @@ namespace ROOT
             movedTile = false;
             movedCursor = false;
             animate_Co = null;
+            LevelAsset.BoughtOnce = false;
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
             LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.LevelProgress = LevelAsset.StepCount / (float)LevelAsset.ActionAsset.PlayableCount;

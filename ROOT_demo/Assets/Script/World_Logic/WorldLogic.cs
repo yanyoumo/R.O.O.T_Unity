@@ -48,7 +48,7 @@ namespace ROOT
     internal static class WorldLogic //WORLD-LOGIC
     {
         //TEMP 每次修改这两个值的时候才应该改一次。
-        private static int lastInCome = -1;
+        /*private static int lastInCome = -1;
         private static int lastCost = -1;
 
         /*internal static void UpdateReverseCycle(GameAssets currentLevelAsset)
@@ -1187,7 +1187,95 @@ namespace ROOT
     //原WORLD-UTILS 是为了进一步解耦，和一般的Utils只能基于基础数学不同，这个允许基于游戏逻辑和游戏制度。
     //现为：WorldExecutor，主要是执行具体的内部逻辑；想象为舰长和执行舰长的感觉吧。
     public static class WorldExecutor //WORLD-EXECUTOR
-    { 
+    {
+        private static void ResetSignalPanel(ref GameAssets levelAsset)
+        {
+            levelAsset.SignalPanel.TgtNormalSignal = 0;
+            levelAsset.SignalPanel.TgtNetworkSignal = 0;
+            levelAsset.SignalPanel.CrtNormalSignal = 0;
+            levelAsset.SignalPanel.CrtNetworkSignal = 0;
+        }
+
+        private static void UpdateLevelAsset(ref GameAssets levelAsset,ref LevelLogic lvlLogic)
+        {
+            var lastStage = lvlLogic.LastRoundGist?.Type ?? StageType.Shop;
+            var lastDestoryBool = lastStage == StageType.Destoryer;
+            
+            if (lvlLogic.IsRequireRound && lvlLogic.IsForwardCycle)
+            {
+                levelAsset.GameBoard.UpdatePatternDiminishing();
+            }
+
+            if ((lastDestoryBool && !lvlLogic.IsDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
+            {
+                levelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
+            }
+
+            if ((levelAsset.DestroyerEnabled && !lvlLogic.IsDestoryerRound) && !WorldCycler.BossStage)
+            {
+                levelAsset.WarningDestoryer.ForceReset();
+            }
+        }
+        
+        public static void UpdateRoundData(ref GameAssets levelAsset)
+        {
+            //TODO 准备把CareerCycle直接吸收掉；这个变成AdditionalFCycle的流程。
+            //不行，因为这个Cycle实指要绕开F-Cycle，所以不行。
+            ResetSignalPanel(ref levelAsset);
+            var lvlLogic = levelAsset.Owner;
+            // ReSharper disable once PossibleInvalidOperationException
+            var roundGist = lvlLogic.RoundGist.Value;
+            var tCount = levelAsset.ActionAsset.GetTruncatedCount(levelAsset.StepCount, out var count);
+            if (roundGist.SwitchHeatsink(tCount))
+            {
+                //RISK 这里需要每Step只调用一次。
+                levelAsset.GameBoard.UpdatePatternID();
+            }
+            
+            UpdateLevelAsset(ref levelAsset, ref levelAsset.Owner);
+            
+            levelAsset.DestroyerEnabled = WorldCycler.BossStage;
+            levelAsset.CurrencyIncomeEnabled = lvlLogic.IsRequireRound;
+            levelAsset.CurrencyIOEnabled =lvlLogic.ShouldCurrencyIo;
+
+            if (lvlLogic.IsRequireRound || lvlLogic.IsShopRound)
+            {
+                var normalRval = roundGist.normalReq;
+                var networkRval = roundGist.networkReq;
+                var noRequirement = (normalRval == 0 && networkRval == 0);
+                if (noRequirement)
+                {
+                    levelAsset.TimeLine.RequirementSatisfied = true;
+                }
+                else
+                {
+                    SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, levelAsset.GameBoard, out var harDriverCountInt);
+                    SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, levelAsset.GameBoard, out var networkCountInt);
+                    levelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
+                    levelAsset.SignalPanel.TgtNormalSignal = normalRval;
+                    levelAsset.SignalPanel.TgtNetworkSignal = networkRval;
+                    levelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
+                    levelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
+                    if (levelAsset.TimeLine.RequirementSatisfied)
+                    {
+                        levelAsset.ReqOkCount++;
+                    }
+                }
+            }
+
+            var discount = 0;
+
+            if (!levelAsset.Shop.ShopOpening && lvlLogic.IsShopRound)
+            {
+                discount = levelAsset.SkillMgr.CheckDiscount();
+            }
+
+            levelAsset.Shop.OpenShop(lvlLogic.IsShopRound, discount);
+            levelAsset.SkillMgr.SkillEnabled = levelAsset.SkillEnabled = lvlLogic.IsSkillAllowed;
+            levelAsset.SignalPanel.NetworkTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
+            levelAsset.SignalPanel.NormalTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
+        }
+
         //这里哪敢随便改成基于事件的啊；这里都是很看重时序的东西。
         //但是改成基于事件的解耦特性还是值得弄的、但是得注意。
         public static void InitCursor(ref GameAssets currentLevelAsset,Vector2Int pos)
