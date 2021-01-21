@@ -10,7 +10,6 @@ namespace ROOT
     using Trans = RootFSMTransition;
     using FSMTransitions = HashSet<RootFSMTransition>;
     using Status = RootFSMStatus;
-
     public class CareerFSMLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         private void BossMinorUpdate()
@@ -198,12 +197,12 @@ namespace ROOT
                     new Trans(Status.MajorUpKeep, Status.F_Cycle, 2, CheckAutoF),
                     new Trans(Status.MajorUpKeep, Status.R_IO, 1, CheckCtrlPackAny),
                     new Trans(Status.MajorUpKeep),
-                    new Trans(Status.R_IO,Status.BossPause,4,CheckBossAndPaused),
+                    new Trans(Status.R_IO, Status.BossPause, 4, CheckBossAndPaused),
                     new Trans(Status.R_IO, Status.Skill, 3, CheckIsSkill),
                     new Trans(Status.R_IO, Status.F_Cycle, 2, CheckFCycle),
                     new Trans(Status.R_IO, Status.Animate, 1, CheckStartAnimate, TriggerAnimation),
                     new Trans(Status.R_IO, Status.MajorUpKeep, 0, true),
-                    new Trans(Status.BossPause,Status.Career_Cycle),
+                    new Trans(Status.BossPause, Status.Career_Cycle),
                     new Trans(Status.F_Cycle, Status.Career_Cycle),
                     new Trans(Status.R_Cycle, Status.Career_Cycle),
                     new Trans(Status.Skill, Status.Career_Cycle),

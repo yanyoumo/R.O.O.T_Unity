@@ -10,7 +10,7 @@ namespace ROOT
         public RootFSM owner;
         public readonly int priority; //这个值越高优先级越高。
         public readonly RootFSMStatus StartingStatus; //Transit的高优先级要求，如果FSM不是这个状态则不考虑。
-        public readonly RootFSMStatus TargetingStatus; //Transit的高优先级要求，如果FSM不是这个状态则不考虑。
+        public readonly RootFSMStatus TargetingStatus;
         public readonly Func<bool> AdditionalReq;
         public readonly Action Consequence;
         public readonly bool WaitForFrameAfterTransition;
