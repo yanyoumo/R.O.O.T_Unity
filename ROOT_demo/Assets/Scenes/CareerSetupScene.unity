@@ -264,7 +264,6 @@ GameObject:
   m_Component:
   - component: {fileID: 318183859}
   - component: {fileID: 318183860}
-  - component: {fileID: 318183861}
   m_Layer: 0
   m_Name: CareerSetupManager
   m_TagString: Untagged
@@ -300,18 +299,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BackButton: {fileID: 1539220046}
   ContinueButton: {fileID: 1943617359}
---- !u!114 &318183861
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 318183858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5bbcd18e9e5b6d4dadc82cc58967b38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &336300646
 GameObject:
   m_ObjectHideFlags: 0

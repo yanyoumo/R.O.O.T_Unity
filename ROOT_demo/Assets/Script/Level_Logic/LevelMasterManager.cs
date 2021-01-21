@@ -44,13 +44,6 @@ namespace ROOT
             _lls = FindObjectOfType<LevelLogicSpawner>();
         }
 
-        IEnumerator LoadCareerSetup_Coroutine(GameObject LevelLogicPrefab, LevelActionAsset actionAsset) 
-        {
-            AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
-            Debug.Log("LoadCareerSetup_Coroutine start and load scene for SCENE_ID_CAREERSETUP");
-            yield return loadSceneAsync;//This is just a dummy wait, wouldn't do anything
-        }
-
         IEnumerator LoadGamePlay_Coroutine(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)
         {
             //目前这个框架下，所有的Logic Scene只能是一个，但是基于LLS就没有问题。
@@ -80,7 +73,7 @@ namespace ROOT
 
         public void LoadCareerSetup(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)
         {
-            StartCoroutine(LoadCareerSetup_Coroutine(LevelLogicPrefab, actionAsset));
+            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
         }
 
         private GameOverMgr _gameOverMgr;
