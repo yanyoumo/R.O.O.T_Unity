@@ -21,8 +21,12 @@ MonoBehaviour:
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
+  RoundDatasGist:
+    NormalRoundCount: 5
+    HasBossRound: 0
   RoundDatas:
   - ID: 0
+    RoundType: 0
     ShopLength: 12
     RequireLength: 16
     NormalRequirement: 3
@@ -31,6 +35,7 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   - ID: 1
+    RoundType: 0
     ShopLength: 12
     RequireLength: 18
     NormalRequirement: 5
@@ -39,6 +44,7 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   - ID: 2
+    RoundType: 0
     ShopLength: 9
     RequireLength: 14
     NormalRequirement: 10
@@ -47,6 +53,7 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   - ID: 3
+    RoundType: 0
     ShopLength: 12
     RequireLength: 20
     NormalRequirement: 12
@@ -55,6 +62,7 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   - ID: 4
+    RoundType: 0
     ShopLength: 10
     RequireLength: 24
     NormalRequirement: 18

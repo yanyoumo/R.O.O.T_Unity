@@ -18,27 +18,27 @@ namespace ROOT
         private readonly Queue<BreakingCommand> _breakingCMDQueue;
 
         private const int InputNumbTime=6;//in ms.
-        private float InputNumbTimer=.0f;//s.
-        protected bool InputNumbing { get; private set; }
+        private float _inputNumbTimer=.0f;//s.
+        private bool _inputNumbing;
 
         private IEnumerator DeNumbing()
         {
             yield return 0;
             do
             {
-                InputNumbTimer += Time.deltaTime;
+                _inputNumbTimer += Time.deltaTime;
                 yield return 0;
-            } while (InputNumbTimer < InputNumbTime / 1000.0f);
-            InputNumbing = false;
+            } while (_inputNumbTimer < InputNumbTime / 1000.0f);
+            _inputNumbing = false;
         }
 
         private void RequestEnqueueCtrlPack()
         {
-            if (!InputNumbing)
+            if (!_inputNumbing)
             {
                 _ctrlPackQueue.Enqueue(CtrlPack);
-                InputNumbing = true;
-                InputNumbTimer = 0.0f;
+                _inputNumbing = true;
+                _inputNumbTimer = 0.0f;
             }
             _owner.StartCoroutine(DeNumbing());//
         }

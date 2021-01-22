@@ -51,10 +51,7 @@ namespace ROOT
         public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? AutoAnimationDuration : DefaultAnimationDuration;
         public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
         public static readonly float AutoAnimationDuration = 1.5f; //都是秒
-
-        protected int _obselateStepID = -1;
-        //protected bool lastDestoryBool = false;
-
+        
         #region 类属性
 
         public RoundGist? RoundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);

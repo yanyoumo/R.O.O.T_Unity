@@ -42,6 +42,20 @@ namespace ROOT
         }
     }
 
+    [Serializable]
+    public struct UnitGist
+    {
+        [Header("Basic")]
+        public CoreType Core;
+        public SideType[] Sides;
+        [Range(1,5)]
+        public int Tier;
+
+        [Header("OnBoardInfo")]
+        public Vector2Int Pos;
+        public bool IsStation;
+    }
+    
     public sealed partial class ShopMgr : ShopBase
     {
         /// <summary>
