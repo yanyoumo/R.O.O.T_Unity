@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,16 +15,16 @@ namespace ROOT
         public static int sceneId;
 
         // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
+            //这种“自我初始化”建议卸载Awake里面。
             BackButton.onClick.AddListener(Back);
             ContinueButton.onClick.AddListener(Continue);
         }
 
-        // Update is called once per frame
-        void Update()
+        private void OnGUI()
         {
-
+            //这里的函数到时候写在这里、这个和Update等效的；只不过是跟UI的更新更加相关。
         }
 
         void Back()

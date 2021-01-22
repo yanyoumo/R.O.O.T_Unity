@@ -38,8 +38,7 @@ namespace ROOT
 
         IEnumerator DoLoading(int buttonId)
         {
-            CareerSetupManger.sceneId = buttonId;
-            LevelMasterManager.Instance.LoadCareerSetup();
+            LevelMasterManager.Instance.LoadCareerSetup(buttonId);
             yield return 0;
             SceneManager.UnloadSceneAsync(IsCareer ? StaticName.SCENE_ID_CAREER : StaticName.SCENE_ID_TUTORIAL);
         }
