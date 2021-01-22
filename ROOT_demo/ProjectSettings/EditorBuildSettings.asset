@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CareerScene.unity
     guid: 2ea85a5de81a22b4ba0d16e670dc70b8
+  - enabled: 1
+    path: Assets/Scenes/CareerSetupScene.unity
+    guid: b8bfc8f7773524044b53e9a6cb134c2f
   m_configObjects: {}

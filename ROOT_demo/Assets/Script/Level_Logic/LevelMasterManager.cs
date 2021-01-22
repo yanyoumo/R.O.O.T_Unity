@@ -71,6 +71,11 @@ namespace ROOT
             }
         }
 
+        public void LoadCareerSetup(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)
+        {
+            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
+        }
+
         private GameOverMgr _gameOverMgr;
 
         private IEnumerator FindGameOverMgrAfterLoad()
