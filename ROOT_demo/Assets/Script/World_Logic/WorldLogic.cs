@@ -16,8 +16,8 @@ namespace ROOT
         RotateUnit = 1 << 1,
         UpdateUnitCursor = 1 << 2,
         UpdateBoardData = 1 << 3,
-        BossUnpaused = 1 << 4,
-        BossTryUnpause = 1 << 5,
+        TelemetryUnpaused = 1 << 4,
+        TelemetryTryUnpause = 1 << 5,
 
         //这个既然作为ESC命令、又是标记这个enum的结尾、
         //加的所有值需要在它上面，并且调整它的值

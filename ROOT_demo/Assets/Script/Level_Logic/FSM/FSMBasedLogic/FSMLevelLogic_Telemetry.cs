@@ -178,7 +178,7 @@ namespace ROOT
                 WorldCycler.TelemetryStagePause = true;
                 StartTelemetryCost();
             }
-            LevelAsset.SignalPanel.BossStagePaused = WorldCycler.TelemetryStagePause;
+            LevelAsset.SignalPanel.TelemetryPaused = WorldCycler.TelemetryStagePause;
         }
         private void DealTelemetryPauseBreaking()
         {
@@ -214,7 +214,7 @@ namespace ROOT
                 LevelAsset.ActionAsset.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
-            LevelAsset.SignalPanel.IsBossStage = true;
+            LevelAsset.SignalPanel.IsTelemetryStage = true;
             //FSM状态下，这个东西不用了。
             //ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualPollingBossPauseKey());
             WorldCycler.TelemetryStage = true;

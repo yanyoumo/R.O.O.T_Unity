@@ -74,7 +74,6 @@ namespace ROOT
             }
         }
         protected StageType Stage => RoundGist?.Type ?? StageType.Shop;
-        public bool IsBossRound => Stage == StageType.Boss;
         public bool IsShopRound => Stage == StageType.Shop;
         public bool IsRequireRound => Stage == StageType.Require;
         public bool IsDestoryerRound => Stage == StageType.Destoryer;
