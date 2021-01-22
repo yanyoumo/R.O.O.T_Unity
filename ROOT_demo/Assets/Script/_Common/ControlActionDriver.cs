@@ -210,17 +210,17 @@ namespace ROOT
                 var res = new List<RespToCtrlEvent>
                 {
                     CoreDrivingFunction, 
-                    BossRespondToControlEvent
+                    TelemetryRespondToControlEvent
                 };
                 return res;
             }
         }
 
-        private bool BossRespondToControlEvent(ActionPack actionPack)
+        private bool TelemetryRespondToControlEvent(ActionPack actionPack)
         {
-            if ((WorldCycler.TelemetryStage && actionPack.IsAction(BossPause)))
+            if ((WorldCycler.TelemetryStage && actionPack.IsAction(TelemetryPause)))
             {
-                if (WorldCycler.TelemetryStagePause)
+                if (WorldCycler.TelemetryPause)
                 {
                     CtrlPack.SetFlag(ControllingCommand.TelemetryResume);
                 }
@@ -232,7 +232,7 @@ namespace ROOT
 
             //Boss阶段非暂停的时候、输入不进入队列。
             //RISK 主要是下面这个、总觉得可能有冲突的问题。
-            return !WorldCycler.TelemetryStage || WorldCycler.TelemetryStagePause;
+            return !WorldCycler.TelemetryStage || WorldCycler.TelemetryPause;
         }
     }
 }

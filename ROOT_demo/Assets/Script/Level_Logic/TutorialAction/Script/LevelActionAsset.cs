@@ -46,7 +46,7 @@ namespace ROOT
         Shop,
         Require,
         Destoryer,
-        Boss,
+        Telemetry,
         Ending,
     }
 
@@ -59,7 +59,7 @@ namespace ROOT
         public int shopLength;
         public int[] HSSwTruncatedIdx;
 
-        public int BossLength;
+        public int TelemetryLength;
         public int DestoryerCount;
         public int InfoCount;
 
@@ -121,7 +121,7 @@ namespace ROOT
                 {
                     if (isFinalRound && dic[idx].Item1 == StageType.Destoryer)
                     {
-                        return StageType.Boss;
+                        return StageType.Telemetry;
                     }
                     return dic[idx].Item1;
                 }
@@ -222,7 +222,7 @@ namespace ROOT
             return StepCount >= PlayableCount;
         }
 
-        public int BossStageCount => RoundDatas[RoundDatas.Length - 1].DestoryerLength;
+        public int TelemetryCount => RoundDatas[RoundDatas.Length - 1].DestoryerLength;
 
         /// <summary>
         /// 获得改时间线上End前玩家可以玩的步长。
@@ -269,7 +269,7 @@ namespace ROOT
             var stage = type.Value;
             if (_round == RoundDatas.Length - 1 && stage == StageType.Destoryer)
             {
-                stage = StageType.Boss;
+                stage = StageType.Telemetry;
             }
 
             return ExtractGist(stage, round);
@@ -291,8 +291,8 @@ namespace ROOT
                     break;
                 case StageType.Destoryer:
                     break;
-                case StageType.Boss:
-                    roundGist.BossLength = round.DestoryerLength;
+                case StageType.Telemetry:
+                    roundGist.TelemetryLength = round.DestoryerLength;
                     roundGist.DestoryerCount = round.DestoryerCount;
                     roundGist.InfoCount = round.InfoCount;
                     break;

@@ -25,7 +25,7 @@ namespace ROOT
 
     public static class StaticName
     {
-        public static readonly string INPUT_BUTTON_BOSS_PAUSE = "BossPause";
+        public static readonly string INPUT_BUTTON_TELEMETRY_PAUSE = "TelemetryPause";
 
         public static readonly string INPUT_BUTTON_NAME_CURSORUP = "CursorUp";
         public static readonly string INPUT_BUTTON_NAME_CURSORDOWN = "CursorDown";

@@ -562,9 +562,9 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 1
     - _id: 5
-      _name: BossPause
+      _name: TelemetryPause
       _type: 1
-      _descriptiveName: BossPause
+      _descriptiveName: TelemetryPause
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0

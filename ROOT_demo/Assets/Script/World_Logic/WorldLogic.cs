@@ -45,12 +45,12 @@ namespace ROOT
     
     internal static class WorldCycler
     {
-        public static bool AnimationTimeLongSwitch => TelemetryStage && !TelemetryStagePause;
+        public static bool AnimationTimeLongSwitch => TelemetryStage && !TelemetryPause;
 
         public static int Step => ActualStep;
 
         public static bool TelemetryStage = false;
-        public static bool TelemetryStagePause = false;
+        public static bool TelemetryPause = false;
 
         private static bool? RawNeedAutoDriveStep
         {
@@ -72,7 +72,7 @@ namespace ROOT
             {
                 if (TelemetryStage)
                 {
-                    if (TelemetryStagePause)
+                    if (TelemetryPause)
                     {
                         return null;
                     }

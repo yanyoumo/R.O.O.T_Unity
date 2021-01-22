@@ -17,7 +17,7 @@ namespace ROOT
         Ending = 3,//Black
         HeatSinkSwitch = 4,//ICON
         ShopOpened = 5,//
-        BossStage = 6,//Purple
+        TelemetryStage = 6,//Purple
     }
 
     [Serializable]

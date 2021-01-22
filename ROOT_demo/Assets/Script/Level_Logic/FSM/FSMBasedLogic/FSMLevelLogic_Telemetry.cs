@@ -23,7 +23,7 @@ namespace ROOT
         private void TelemetryPauseRunStop()
         {
             Debug.Log("BossStagePauseRunStop");
-            WorldCycler.TelemetryStagePause = false;
+            WorldCycler.TelemetryPause = false;
             StopTelemetryCost();
         }
 
@@ -63,29 +63,29 @@ namespace ROOT
 
         private bool CheckTelemetryStageInit()
         {
-            return (Stage == StageType.Boss)&&(!WorldCycler.TelemetryStage);
+            return (Stage == StageType.Telemetry)&&(!WorldCycler.TelemetryStage);
         }
 
         private bool CheckTelemetryStage()
         {
-            return (Stage == StageType.Boss);
+            return (Stage == StageType.Telemetry);
         }
 
         private bool CheckTelemetryAndPaused()
         {
-            return WorldCycler.TelemetryStage && WorldCycler.TelemetryStagePause;
+            return WorldCycler.TelemetryStage && WorldCycler.TelemetryPause;
         }
 
         private bool CheckTelemetryAndNotPaused()
         {
-            return WorldCycler.TelemetryStage && !WorldCycler.TelemetryStagePause;
+            return WorldCycler.TelemetryStage && !WorldCycler.TelemetryPause;
         }
 
         #endregion
         
         private void TelemetryMinorUpdate()
         {
-            if (WorldCycler.TelemetryStagePause) return;
+            if (WorldCycler.TelemetryPause) return;
             _telemetryInfoSprayTimer += Time.deltaTime;
             if (_telemetryInfoSprayTimer >= _telemetryInfoSprayTimerInterval)
             {
@@ -116,7 +116,7 @@ namespace ROOT
             {
                 TelemetryInit();
             }
-            if (Stage == StageType.Boss && Animating)
+            if (Stage == StageType.Telemetry && Animating)
             {
                 LevelAsset.GameBoard.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
             }
@@ -168,17 +168,17 @@ namespace ROOT
         private void TelemetryPauseTriggered()
         {
             if (LevelAsset.ReqOkCount <= 0) return;
-            if (WorldCycler.TelemetryStagePause)
+            if (WorldCycler.TelemetryPause)
             {
-                WorldCycler.TelemetryStagePause = false;
+                WorldCycler.TelemetryPause = false;
                 StopTelemetryCost();
             }
             else
             {
-                WorldCycler.TelemetryStagePause = true;
+                WorldCycler.TelemetryPause = true;
                 StartTelemetryCost();
             }
-            LevelAsset.SignalPanel.TelemetryPaused = WorldCycler.TelemetryStagePause;
+            LevelAsset.SignalPanel.TelemetryPaused = WorldCycler.TelemetryPause;
         }
         private void DealTelemetryPauseBreaking()
         {
@@ -203,7 +203,7 @@ namespace ROOT
 
         private void TelemetryInit()
         {
-            var bossStageCount = LevelAsset.ActionAsset.BossStageCount;
+            var bossStageCount = LevelAsset.ActionAsset.TelemetryCount;
             var totalSprayCount = bossStageCount * SprayCountPerAnimateInterval;
             //这个数据还得传过去。
             var targetInfoCount =
