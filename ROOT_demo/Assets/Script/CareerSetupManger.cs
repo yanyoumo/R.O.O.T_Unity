@@ -8,7 +8,7 @@ namespace ROOT
 {
     public class CareerSetupManger : MonoBehaviour
     {
-        public LevelActionAsset[] ClassicGameActionAssetLib => LevelLib.Instance.CareerActionAssetList;
+        //public LevelActionAsset[] ClassicGameActionAssetLib => LevelLib.Instance.CareerActionAssetList;
         public Button BackButton;
         public Button ContinueButton;
         public static int sceneId;
@@ -33,8 +33,9 @@ namespace ROOT
         }
 
         void Continue()
-        {   
-            LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib[sceneId].LevelLogic, ClassicGameActionAssetLib[sceneId]);
+        {
+            var actionAsset = LevelLib.Instance.CareerActionAssetList[sceneId];
+            LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset);
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
         }
     }

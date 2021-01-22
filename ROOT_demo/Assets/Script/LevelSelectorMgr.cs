@@ -38,8 +38,8 @@ namespace ROOT
 
         IEnumerator DoLoading(int buttonId)
         {
-            CareerSetupManger.sceneId = buttonId;//TODO 从理论上讲、如果那个的加载用个Coroutine、这个数据就能直接传进去了。但是先这样吧。
-            LevelMasterManager.Instance.LoadCareerSetup(ActionAssetList[buttonId].LevelLogic,ActionAssetList[buttonId]);
+            CareerSetupManger.sceneId = buttonId;
+            LevelMasterManager.Instance.LoadCareerSetup();
             yield return 0;
             SceneManager.UnloadSceneAsync(IsCareer ? StaticName.SCENE_ID_CAREER : StaticName.SCENE_ID_TUTORIAL);
         }

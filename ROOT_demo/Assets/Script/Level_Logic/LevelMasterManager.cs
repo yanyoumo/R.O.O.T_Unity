@@ -44,12 +44,12 @@ namespace ROOT
             _lls = FindObjectOfType<LevelLogicSpawner>();
         }
 
-        IEnumerator LoadGamePlay_Coroutine(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)
+        IEnumerator LoadGamePlay_Coroutine(LevelActionAsset actionAsset)
         {
             //目前这个框架下，所有的Logic Scene只能是一个，但是基于LLS就没有问题。
             AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDTIVELOGIC, LoadSceneMode.Additive);
             yield return StartCoroutine(FindLlsAfterLoad(loadSceneAsync));
-            _gameLogic = _lls.SpawnLevelLogic(LevelLogicPrefab);//这里Level-logic的Awake就进行初始化了。主要是LevelLogic的实例去拿CoreLogic场景里面的东西。
+            _gameLogic = _lls.SpawnLevelLogic(actionAsset.LevelLogic);//这里Level-logic的Awake就进行初始化了。主要是LevelLogic的实例去拿CoreLogic场景里面的东西。
             Debug.Log(_gameLogic.LevelAsset);
             _gameLogic.LevelAsset.ActionAsset = actionAsset;
             _lls = null;
@@ -62,16 +62,16 @@ namespace ROOT
             _gameLogic.InitLevel();//最后的初始化和启动游戏，运行此之前，需要的引用必须齐整。
         }
 
-        public void LoadLevelThenPlay(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)
+        public void LoadLevelThenPlay(LevelActionAsset actionAsset)
         {
             if (_gameGlobalStatus.CurrentGameStatus != GameStatus.Playing)
             {
                 _gameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
-                StartCoroutine(LoadGamePlay_Coroutine(LevelLogicPrefab, actionAsset));
+                StartCoroutine(LoadGamePlay_Coroutine(actionAsset));
             }
         }
 
-        public void LoadCareerSetup(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)
+        public void LoadCareerSetup()
         {
             SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
         }
