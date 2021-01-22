@@ -13,7 +13,7 @@ namespace ROOT
             Destroy(transform.gameObject);
         }
 
-        public LevelLogic SpawnLevelLogic<T>() where T : LevelLogic
+        public FSMLevelLogic SpawnLevelLogic<T>() where T : FSMLevelLogic
         {
             var o = new GameObject("LevelLogic");
             var gameMgr = o.AddComponent<T>(); //加哪个Level就是玩哪关。
@@ -21,10 +21,10 @@ namespace ROOT
             return gameMgr;
         }
 
-        public LevelLogic SpawnLevelLogic(GameObject levelLogicPrefab)
+        public FSMLevelLogic SpawnLevelLogic(GameObject levelLogicPrefab)
         {
             var go=Instantiate(levelLogicPrefab);
-            var gameMgr = go.GetComponentInChildren<LevelLogic>();
+            var gameMgr = go.GetComponentInChildren<FSMLevelLogic>();
             StartCoroutine(KillNextFrame());
             return gameMgr;
         }

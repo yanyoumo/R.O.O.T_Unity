@@ -21,7 +21,7 @@ namespace ROOT
         
         //只是给co-routine用一下，这个master里面原则上不留变量。
         private LevelLogicSpawner _lls;
-        private LevelLogic _gameLogic;
+        private FSMLevelLogic _gameLogic;
         void Awake()
         {
             if (_instance != null && _instance != this)

@@ -651,7 +651,7 @@ namespace ROOT
             if (WorldNeighboringData == null) return;
             RotationList.ForEach(ResetConnector);
             ConnectorLocalDir.Values.ForEach(val => val.Connected = false);
-            var ignoreVal = WorldCycler.BossStage && !WorldCycler.BossStagePause;
+            var ignoreVal = WorldCycler.TelemetryStage && !WorldCycler.TelemetryStagePause;
             RotationList.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
         }
 

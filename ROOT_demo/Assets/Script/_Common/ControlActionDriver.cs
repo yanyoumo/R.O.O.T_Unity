@@ -12,7 +12,7 @@ namespace ROOT
     using RespToCtrlEvent= Func<ActionPack,bool>;
     public abstract class ControlActionDriver
     {
-        private readonly LevelLogic _owner;
+        private readonly FSMLevelLogic _owner;
         private RootFSM _mainFsm;
         private readonly Queue<ControllingPack> _ctrlPackQueue;
         private readonly Queue<BreakingCommand> _breakingCMDQueue;
@@ -116,7 +116,7 @@ namespace ROOT
             }
         }
 
-        protected ControlActionDriver(LevelLogic owner, RootFSM fsm)
+        protected ControlActionDriver(FSMLevelLogic owner, RootFSM fsm)
         {
             _owner = owner;
             _mainFsm = fsm;
@@ -201,7 +201,7 @@ namespace ROOT
 
     public class CareerControlActionDriver : ControlActionDriver
     {
-        public CareerControlActionDriver(LevelLogic owner, RootFSM fsm) : base(owner, fsm) { }
+        public CareerControlActionDriver(FSMLevelLogic owner, RootFSM fsm) : base(owner, fsm) { }
 
         protected override List<RespToCtrlEvent> RespondList
         {
@@ -218,21 +218,21 @@ namespace ROOT
 
         private bool BossRespondToControlEvent(ActionPack actionPack)
         {
-            if ((WorldCycler.BossStage && actionPack.IsAction(BossPause)))
+            if ((WorldCycler.TelemetryStage && actionPack.IsAction(BossPause)))
             {
-                if (WorldCycler.BossStagePause)
+                if (WorldCycler.TelemetryStagePause)
                 {
-                    CtrlPack.SetFlag(ControllingCommand.BossResume);
+                    CtrlPack.SetFlag(ControllingCommand.TelemetryResume);
                 }
                 else
                 {
-                    EnqueueBreakingCommand(BreakingCommand.BossPause);
+                    EnqueueBreakingCommand(BreakingCommand.TelemetryPause);
                 }
             }
 
             //Boss阶段非暂停的时候、输入不进入队列。
             //RISK 主要是下面这个、总觉得可能有冲突的问题。
-            return !WorldCycler.BossStage || WorldCycler.BossStagePause;
+            return !WorldCycler.TelemetryStage || WorldCycler.TelemetryStagePause;
         }
     }
 }

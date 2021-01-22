@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
@@ -11,13 +12,82 @@ namespace ROOT
     using FSMTransitions = HashSet<RootFSMTransition>;
     using Status = RootFSMStatus;
 
-    public class CareerFSMLevelLogic : LevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
+    public class FSMLevelLogic_Telemetry : FSMLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
-        private void BossMinorUpdate()
+        #region TelemetryStage
+
+        private static float _TelemetryPauseCostTimer = 0.0f;
+        private const float TelemetryPauseCostInterval = 1.0f;
+        private const int TelemetryPricePerInterval = 1;
+
+        private void TelemetryPauseRunStop()
         {
-            if (WorldCycler.BossStagePause) return;
-            _bossInfoSprayTimer += Time.deltaTime;
-            if (_bossInfoSprayTimer >= _bossInfoSprayTimerInterval)
+            Debug.Log("BossStagePauseRunStop");
+            WorldCycler.TelemetryStagePause = false;
+            StopTelemetryCost();
+        }
+
+        private IEnumerator TelemetryPauseCost()
+        {
+            yield return 0;
+            while (true)
+            {
+                yield return 0;
+                _TelemetryPauseCostTimer += Time.deltaTime;
+
+                if (!(_TelemetryPauseCostTimer >= TelemetryPauseCostInterval)) continue;
+                _TelemetryPauseCostTimer = 0.0f;
+                LevelAsset.ReqOkCount -= TelemetryPricePerInterval;
+
+                if (LevelAsset.ReqOkCount > 0) continue;
+                TelemetryPauseRunStop();
+                yield break;
+            }
+        }
+
+        private Coroutine TelemetryPauseCostCo { set; get; }
+        public void StartTelemetryCost()
+        {
+            TelemetryPauseCostCo=StartCoroutine(TelemetryPauseCost());
+        }
+
+        private void StopTelemetryCost()
+        {
+            StopCoroutine(TelemetryPauseCostCo);
+            TelemetryPauseCostCo = null;
+        }
+
+        #endregion
+
+        #region TelemetryTransit
+
+        private bool CheckTelemetryStageInit()
+        {
+            return (Stage == StageType.Boss)&&(!WorldCycler.TelemetryStage);
+        }
+
+        private bool CheckTelemetryStage()
+        {
+            return (Stage == StageType.Boss);
+        }
+
+        private bool CheckTelemetryAndPaused()
+        {
+            return WorldCycler.TelemetryStage && WorldCycler.TelemetryStagePause;
+        }
+
+        private bool CheckTelemetryAndNotPaused()
+        {
+            return WorldCycler.TelemetryStage && !WorldCycler.TelemetryStagePause;
+        }
+
+        #endregion
+        
+        private void TelemetryMinorUpdate()
+        {
+            if (WorldCycler.TelemetryStagePause) return;
+            _telemetryInfoSprayTimer += Time.deltaTime;
+            if (_telemetryInfoSprayTimer >= _telemetryInfoSprayTimerInterval)
             {
                 try
                 {
@@ -32,19 +102,19 @@ namespace ROOT
                     return;
                 }
 
-                _bossInfoSprayTimerIntervalOffset = Random.Range(
-                    -BossInfoSprayTimerIntervalOffsetRange,
-                    BossInfoSprayTimerIntervalOffsetRange);
-                _bossInfoSprayTimer = 0.0f;
+                _telemetryInfoSprayTimerIntervalOffset = Random.Range(
+                    -TelemetryInfoSprayTimerIntervalOffsetRange,
+                    TelemetryInfoSprayTimerIntervalOffsetRange);
+                _telemetryInfoSprayTimer = 0.0f;
                 SprayCounter++;
             }
         }
 
         protected override void AddtionalMajorUpkeep()
         {
-            if (CheckBossStageInit())
+            if (CheckTelemetryStageInit())
             {
-                BossInit();
+                TelemetryInit();
             }
             if (Stage == StageType.Boss && Animating)
             {
@@ -66,16 +136,16 @@ namespace ROOT
 
         protected override void AddtionalMinorUpkeep()
         {
-            if (CheckBossStage())
+            if (CheckTelemetryStage())
             {
-                BossMinorUpdate();
+                TelemetryMinorUpdate();
             }
         }
 
         protected override void AddtionalRecatIO()
         {
             AddtionalRecatIO_Skill();
-            AddtionalRecatIO_Boss();
+            AddtionalRecatIO_Telemetry();
         }
 
         private void AddtionalRecatIO_Skill()
@@ -86,53 +156,52 @@ namespace ROOT
             }
         }
         
-        #region BossRelated
-        private void AddtionalRecatIO_Boss()
+        #region TelemetryRelated
+        private void AddtionalRecatIO_Telemetry()
         {
-            if (_ctrlPack.HasFlag(ControllingCommand.BossResume) && CheckBossAndPaused())
+            if (_ctrlPack.HasFlag(ControllingCommand.TelemetryResume) && CheckTelemetryAndPaused())
             {
-                BossStagePauseTriggered();
+                TelemetryPauseTriggered();
             }
         }
 
-        private void BossStagePauseTriggered()
+        private void TelemetryPauseTriggered()
         {
             if (LevelAsset.ReqOkCount <= 0) return;
-            if (WorldCycler.BossStagePause)
+            if (WorldCycler.TelemetryStagePause)
             {
-                WorldCycler.BossStagePause = false;
-                LevelAsset.Owner.StopBossStageCost();
+                WorldCycler.TelemetryStagePause = false;
+                StopTelemetryCost();
             }
             else
             {
-                WorldCycler.BossStagePause = true;
-                LevelAsset.Owner.StartBossStageCost();
+                WorldCycler.TelemetryStagePause = true;
+                StartTelemetryCost();
             }
-            LevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
+            LevelAsset.SignalPanel.BossStagePaused = WorldCycler.TelemetryStagePause;
         }
-        private void DealBossPauseBreaking()
+        private void DealTelemetryPauseBreaking()
         {
-            if (CheckBossAndNotPaused())
+            if (CheckTelemetryAndNotPaused())
             {
-                BossStagePauseTriggered();
+                TelemetryPauseTriggered();
             }
         }
         
         //现在一共提供Info的计数是：Boss阶段*BossInfoSprayCount*SprayCountPerAnimateInterval;
         private const int SprayCountPerAnimateInterval = 4;
-        private const float BossInfoSprayTimerIntervalOffsetRange = 0.5f;
+        private const float TelemetryInfoSprayTimerIntervalOffsetRange = 0.5f;
 
-        private float _bossInfoSprayTimerIntervalBase => AnimationDuration / SprayCountPerAnimateInterval;
-        private float _bossInfoSprayTimerInterval => _bossInfoSprayTimerIntervalBase + _bossInfoSprayTimerIntervalOffset; 
+        private float _telemetryInfoSprayTimerIntervalBase => AnimationDuration / SprayCountPerAnimateInterval;
+        private float _telemetryInfoSprayTimerInterval => _telemetryInfoSprayTimerIntervalBase + _telemetryInfoSprayTimerIntervalOffset; 
 
-        private float _bossInfoSprayTimerIntervalOffset = 0.0f;
-        private float _bossInfoSprayTimer = 0.0f;
-        //private Coroutine ManualListenBossPauseKeyCoroutine;
+        private float _telemetryInfoSprayTimerIntervalOffset = 0.0f;
+        private float _telemetryInfoSprayTimer = 0.0f;
 
         private int[] SprayCountArray;
         private int SprayCounter = 0;
 
-        private void BossInit()
+        private void TelemetryInit()
         {
             var bossStageCount = LevelAsset.ActionAsset.BossStageCount;
             var totalSprayCount = bossStageCount * SprayCountPerAnimateInterval;
@@ -148,10 +217,10 @@ namespace ROOT
             LevelAsset.SignalPanel.IsBossStage = true;
             //FSM状态下，这个东西不用了。
             //ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualPollingBossPauseKey());
-            WorldCycler.BossStage = true;
+            WorldCycler.TelemetryStage = true;
         }
 
-        private void BossPauseAction()
+        private void TelemetryPauseAction()
         {
             WorldExecutor.UpdateBoardData(ref LevelAsset);
         }
@@ -193,17 +262,17 @@ namespace ROOT
                 {
                     new Trans(Status.PreInit, Status.MajorUpKeep, 1, CheckInited),
                     new Trans(Status.PreInit),
-                    new Trans(Status.MajorUpKeep, Status.F_Cycle, 4, CheckBossAndNotPaused),
+                    new Trans(Status.MajorUpKeep, Status.F_Cycle, 4, CheckTelemetryAndNotPaused),
                     new Trans(Status.MajorUpKeep, Status.R_Cycle, 3, CheckAutoR),
                     new Trans(Status.MajorUpKeep, Status.F_Cycle, 2, CheckAutoF),
                     new Trans(Status.MajorUpKeep, Status.R_IO, 1, CheckCtrlPackAny),
                     new Trans(Status.MajorUpKeep),
-                    new Trans(Status.R_IO,Status.BossPause,4,CheckBossAndPaused),
+                    new Trans(Status.R_IO,Status.TelemetryPause,4,CheckTelemetryAndPaused),
                     new Trans(Status.R_IO, Status.Skill, 3, CheckIsSkill),
                     new Trans(Status.R_IO, Status.F_Cycle, 2, CheckFCycle),
                     new Trans(Status.R_IO, Status.Animate, 1, CheckStartAnimate, TriggerAnimation),
                     new Trans(Status.R_IO, Status.MajorUpKeep, 0, true),
-                    new Trans(Status.BossPause,Status.Career_Cycle),
+                    new Trans(Status.TelemetryPause,Status.Career_Cycle),
                     new Trans(Status.F_Cycle, Status.Career_Cycle),
                     new Trans(Status.R_Cycle, Status.Career_Cycle),
                     new Trans(Status.Skill, Status.Career_Cycle),
@@ -224,7 +293,7 @@ namespace ROOT
             {
                 var breakings = new Dictionary<BreakingCommand, Action>
                 {
-                    {BreakingCommand.BossPause, DealBossPauseBreaking},
+                    {BreakingCommand.TelemetryPause, DealTelemetryPauseBreaking},
                 };
                 return breakings;
             }
@@ -244,7 +313,7 @@ namespace ROOT
                     {Status.R_Cycle, ReverseCycle},
                     {Status.Career_Cycle, CareerCycle},
                     {Status.CleanUp, CleanUp},
-                    {Status.BossPause, BossPauseAction},
+                    {Status.TelemetryPause, TelemetryPauseAction},
                     {Status.Animate, AnimateAction},
                     {Status.R_IO, ReactIO},
                     {Status.Skill, SkillMajorUpkeep},

@@ -21,13 +21,13 @@ namespace ROOT
         Career_Cycle,//现有“职业”模式需要的逻辑、包含但不限于对时间轴数据的更新、等等。
         R_IO,//ReactToIO、对从Driver获得的CtrlPack转换成实际执行的逻辑。
         Skill,//这个是在使用某些技能的时候需要进行Upkeep的代码。
-        BossPause,//在Boss暂停的时候执行的代码。
+        TelemetryPause,//在Boss暂停的时候执行的代码。
         Animate,//将动画向前执行一帧、但是Root的动画流程时绑定时间而不是绑定帧数的。
         CleanUp,//将所有FSM的类数据重置、并且是FSM流程等待一帧的充分条件。
     }
     
     //里面不同的类型可以使用partial关键字拆开管理。
-    public abstract class LevelLogic:MonoBehaviour   //LEVEL-LOGIC/每一关都有一个这个类。
+    public abstract class FSMLevelLogic:MonoBehaviour   //LEVEL-LOGIC/每一关都有一个这个类。
     {
         [ReadOnly] public bool Playing { get; set; }
         [ReadOnly] public bool Animating = false;
@@ -48,9 +48,9 @@ namespace ROOT
         public ControllingPack CtrlPack => _ctrlPack;
 
         protected float AnimationTimerOrigin = 0.0f; //都是秒
-        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? BossAnimationDuration : DefaultAnimationDuration;
+        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? AutoAnimationDuration : DefaultAnimationDuration;
         public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
-        public static readonly float BossAnimationDuration = 1.5f; //都是秒
+        public static readonly float AutoAnimationDuration = 1.5f; //都是秒
 
         protected int _obselateStepID = -1;
         //protected bool lastDestoryBool = false;
@@ -86,49 +86,6 @@ namespace ROOT
         public bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
         public bool IsForwardCycle => AutoForward || movedTile;
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
-        #endregion
-        
-        #region BossStage
-
-        protected static float BossStagePauseCostTimer = 0.0f;
-        protected const float BossStagePauseCostInterval = 1.0f;
-        protected const int BossStagePricePerInterval = 1;
-        
-        protected void BossStagePauseRunStop(ref GameAssets currentLevelAsset)
-        {
-            Debug.Log("BossStagePauseRunStop");
-            WorldCycler.BossStagePause = false;
-            currentLevelAsset.Owner.StopBossStageCost();
-        }
-        protected IEnumerator BossStagePauseCost()
-        {
-            yield return 0;
-            while (true)
-            {
-                yield return 0;
-                BossStagePauseCostTimer += Time.deltaTime;
-
-                if (!(BossStagePauseCostTimer >= BossStagePauseCostInterval)) continue;
-                BossStagePauseCostTimer = 0.0f;
-                LevelAsset.ReqOkCount -= BossStagePricePerInterval;
-
-                if (LevelAsset.ReqOkCount > 0) continue;
-                BossStagePauseRunStop(ref LevelAsset);
-                yield break;
-            }
-        }
-
-        public Coroutine BossStagePauseCostCo { private set; get; }
-        public void StartBossStageCost()
-        {
-            BossStagePauseCostCo=StartCoroutine(BossStagePauseCost());
-        }
-        public void StopBossStageCost()
-        {
-            StopCoroutine(BossStagePauseCostCo);
-            BossStagePauseCostCo = null;
-        }
-
         #endregion
 
         public bool CheckReference()
@@ -173,26 +130,6 @@ namespace ROOT
         #endregion
         
         #region TransitionReq
-
-        protected bool CheckBossStageInit()
-        {
-            return (Stage == StageType.Boss)&&(!WorldCycler.BossStage);
-        }
-
-        protected bool CheckBossStage()
-        {
-            return (Stage == StageType.Boss);
-        }
-
-        protected bool CheckBossAndPaused()
-        {
-            return WorldCycler.BossStage && WorldCycler.BossStagePause;
-        }
-
-        protected bool CheckBossAndNotPaused()
-        {
-            return WorldCycler.BossStage && !WorldCycler.BossStagePause;
-        }
 
         protected bool CheckIsSkill()
         {

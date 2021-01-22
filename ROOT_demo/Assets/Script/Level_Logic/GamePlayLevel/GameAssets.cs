@@ -33,7 +33,7 @@ namespace ROOT
         /// <summary>
         /// 裁判同时要担任神使，神要通过这里影响世界。
         /// </summary>
-        public LevelLogic Owner;
+        public FSMLevelLogic Owner;
 
         public bool? TutorialCompleted = null;
 

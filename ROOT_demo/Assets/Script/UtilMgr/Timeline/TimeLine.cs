@@ -113,7 +113,7 @@ namespace ROOT
         {
             get
             {
-                float res = animationTimer / LevelLogic.AnimationDuration;
+                float res = animationTimer / FSMLevelLogic.AnimationDuration;
                 res = Mathf.Clamp01(res);
                 return Utils.EaseInOutCubic(res);
             }

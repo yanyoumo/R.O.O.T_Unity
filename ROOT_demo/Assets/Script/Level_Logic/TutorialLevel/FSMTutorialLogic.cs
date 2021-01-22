@@ -6,7 +6,7 @@ namespace ROOT
     using FSMActions = Dictionary<RootFSMStatus, Action>;
     using Trans= RootFSMTransition;
     using FSMTransitions = HashSet<RootFSMTransition>;
-    public abstract class FSMTutorialLogic : LevelLogic
+    public abstract class FSMTutorialLogic : FSMLevelLogic
     {
         protected override FSMActions fsmActions
         {
