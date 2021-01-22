@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Rewired;
 using Sirenix.Utilities;
 using UnityEngine;
 using CommandDir = ROOT.RotationDirection;
@@ -51,10 +48,10 @@ namespace ROOT
     internal static class WorldLogic //WORLD-LOGIC
     {
         //TEMP 每次修改这两个值的时候才应该改一次。
-        private static int lastInCome = -1;
+        /*private static int lastInCome = -1;
         private static int lastCost = -1;
 
-        internal static void UpdateReverseCycle(GameAssets currentLevelAsset)
+        /*internal static void UpdateReverseCycle(GameAssets currentLevelAsset)
         {
             //TODO 从实施上还得想想时间反演的时候很多别的机制怎么办……
             //而且还有一个问题，这个作为一个反抗正反馈的机制（负反馈机制）（越穷越没时间、越没时间越穷）
@@ -63,9 +60,9 @@ namespace ROOT
             //目前这个系统也需要一个这样的参量，有几个候选：钱数、离红色区段太近等等。
             WorldCycler.StepDown();
             currentLevelAsset.TimeLine.Reverse();
-        }
+        }*/
 
-        internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type)
+        /*internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type)
         {
             WorldCycler.StepUp();
             currentLevelAsset.TimeLine.Step();
@@ -93,59 +90,11 @@ namespace ROOT
                 }
                 currentLevelAsset.DestoryedCoreType = outCore;
             }
-        }
-
-        public static bool ShouldCycle(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
-        {
-            var shouldCycleTMP = false;
-            var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
-            if (StartGameMgr.UseTouchScreen)
-            {
-                shouldCycleTMP = movedTile | hasCycleNext;
-            }
-            else if (StartGameMgr.UseMouse)
-            {
-                shouldCycleTMP = ((movedTile | movedCursor)) | hasCycleNext;
-            }
-            else
-            {
-                shouldCycleTMP = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
-            }
-
-            return shouldCycleTMP;
-        }
-
-        public static void UpkeepLogic(GameAssets currentLevelAsset, StageType type,bool animating)
-        {
-            //之所以Upkeep现在都要调出来时因为现在要在Animation时段都要做Upkeep。
-            //即：这个函数在Animation时期也会每帧调一下；有什么需要的放在这儿。
-            if (type == StageType.Boss)
-            {
-                currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
-                currentLevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
-            }
-
-            if (type == StageType.Boss&& animating)
-            {
-                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-            }
-            else
-            {
-                WorldExecutor.CleanDestoryer(currentLevelAsset);
-                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
-                //总之稳了后，这个不能这么每帧调用。
-                currentLevelAsset.occupiedHeatSink = currentLevelAsset.GameBoard.CheckHeatSink(type);
-                currentLevelAsset.GameBoard.UpdateInfoZone(currentLevelAsset); //RISK 这里先放在这
-                if (currentLevelAsset.SkillEnabled && currentLevelAsset.SkillMgr != null)
-                {
-                    currentLevelAsset.SkillMgr.UpKeepSkill(currentLevelAsset);
-                }
-            }
-        }
+        }*/
 
         //这个也要拆，实际逻辑和Upkeep要拆开、为了Animation的时候能KeepUp
         //Boss阶段诡异的时序是因为在此时Animation中的几秒没法做任何事儿。
-        public static void UpdateLogic(GameAssets currentLevelAsset, 
+        /*public static void UpdateLogic(GameAssets currentLevelAsset, 
             in StageType type, out ControllingPack ctrlPack,
             out bool movedTile, out bool movedCursor, 
             out bool shouldCycle, out bool? autoDrive)
@@ -248,7 +197,7 @@ namespace ROOT
             shouldCycle = (autoDrive.HasValue) || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
 
             #endregion
-        }
+        }*/
     }
 
     #endregion
@@ -455,7 +404,7 @@ namespace ROOT
     }
 
     //要把Asset和Logic，把Controller也要彻底拆开。
-    internal static class WorldController
+    /*internal static class WorldController
     {
         private static bool idle = false;
         private const float minHoldTime = 1.5f;
@@ -847,12 +796,6 @@ namespace ROOT
 
             if (currentLevelAsset.BuyingCursor)
             {
-
-                /*if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPCONFIRM))
-                {
-                    ctrlPack.SetFlag(ControllingCommand.Confirm);
-                }*/
-
                 if (player.GetButtonDown(StaticName.INPUT_BUTTON_NAME_SHOPRANDOM))
                 {
                     ctrlPack.SetFlag(ControllingCommand.BuyRandom);
@@ -1147,14 +1090,15 @@ namespace ROOT
 
             return ctrlPack;
         }
-    }
+    }*/
 
     #endregion
 
     #region WorldExecutor
 
-    public static class WorldExecutor_Dispatcher
+    /*public static class WorldExecutor_Dispatcher
     {
+
         //TODO 正在做FSM重构；这里的代码先都停掉。
         //RISK 这里应该尽量变成一个Dispatcher（尽量做dispatch），实际的逻辑放到WorldUtils
         //说白了，这个函数应该只发命令不管别的。
@@ -1238,38 +1182,132 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException(nameof(cmd), cmd, null);
             }
         }
-    }
+    }*/
     
     //原WORLD-UTILS 是为了进一步解耦，和一般的Utils只能基于基础数学不同，这个允许基于游戏逻辑和游戏制度。
     //现为：WorldExecutor，主要是执行具体的内部逻辑；想象为舰长和执行舰长的感觉吧。
     public static class WorldExecutor //WORLD-EXECUTOR
     {
-        public static void BossStagePauseRunStop(ref GameAssets currentLevelAsset)
+        private static void ResetSignalPanel(ref GameAssets levelAsset)
         {
-            Debug.Log("BossStagePauseRunStop");
-            WorldCycler.BossStagePause = false;
-            currentLevelAsset.Owner.StopBossStageCost();
+            levelAsset.SignalPanel.TgtNormalSignal = 0;
+            levelAsset.SignalPanel.TgtNetworkSignal = 0;
+            levelAsset.SignalPanel.CrtNormalSignal = 0;
+            levelAsset.SignalPanel.CrtNetworkSignal = 0;
         }
 
-        public static void BossStagePauseTriggered(ref GameAssets currentLevelAsset)
+        private static void UpdateLevelAsset(ref GameAssets levelAsset,ref LevelLogic lvlLogic)
         {
-            Debug.Log("BossStagePauseTriggered,WorldCycler.BossStagePause:" + WorldCycler.BossStagePause);
-            Debug.Assert(WorldCycler.BossStage);
-            if (currentLevelAsset.ReqOkCount <= 0) return;
-            if (WorldCycler.BossStagePause)
+            var lastStage = lvlLogic.LastRoundGist?.Type ?? StageType.Shop;
+            var lastDestoryBool = lastStage == StageType.Destoryer;
+            
+            if (lvlLogic.IsRequireRound && lvlLogic.IsForwardCycle)
             {
-                WorldCycler.BossStagePause = false;
-                currentLevelAsset.Owner.StopBossStageCost();
-            }
-            else
-            {
-                WorldCycler.BossStagePause = true;
-                currentLevelAsset.Owner.StartBossStageCost();
+                levelAsset.GameBoard.UpdatePatternDiminishing();
             }
 
-            currentLevelAsset.SignalPanel.BossStagePaused = WorldCycler.BossStagePause;
+            if ((lastDestoryBool && !lvlLogic.IsDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
+            {
+                levelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
+            }
+
+            if ((levelAsset.DestroyerEnabled && !lvlLogic.IsDestoryerRound) && !WorldCycler.BossStage)
+            {
+                levelAsset.WarningDestoryer.ForceReset();
+            }
+        }
+        
+        public static void UpdateRoundData(ref GameAssets levelAsset)
+        {
+            //TODO 准备把CareerCycle直接吸收掉；这个变成AdditionalFCycle的流程。
+            //不行，因为这个Cycle实指要绕开F-Cycle，所以不行。
+            ResetSignalPanel(ref levelAsset);
+            var lvlLogic = levelAsset.Owner;
+            // ReSharper disable once PossibleInvalidOperationException
+            var roundGist = lvlLogic.RoundGist.Value;
+            var tCount = levelAsset.ActionAsset.GetTruncatedCount(levelAsset.StepCount, out var count);
+            if (roundGist.SwitchHeatsink(tCount))
+            {
+                //RISK 这里需要每Step只调用一次。
+                levelAsset.GameBoard.UpdatePatternID();
+            }
+            
+            UpdateLevelAsset(ref levelAsset, ref levelAsset.Owner);
+            
+            levelAsset.DestroyerEnabled = WorldCycler.BossStage;
+            levelAsset.CurrencyIncomeEnabled = lvlLogic.IsRequireRound;
+            levelAsset.CurrencyIOEnabled =lvlLogic.ShouldCurrencyIo;
+
+            if (lvlLogic.IsRequireRound || lvlLogic.IsShopRound)
+            {
+                var normalRval = roundGist.normalReq;
+                var networkRval = roundGist.networkReq;
+                var noRequirement = (normalRval == 0 && networkRval == 0);
+                if (noRequirement)
+                {
+                    levelAsset.TimeLine.RequirementSatisfied = true;
+                }
+                else
+                {
+                    SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, levelAsset.GameBoard, out var harDriverCountInt);
+                    SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, levelAsset.GameBoard, out var networkCountInt);
+                    levelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
+                    levelAsset.SignalPanel.TgtNormalSignal = normalRval;
+                    levelAsset.SignalPanel.TgtNetworkSignal = networkRval;
+                    levelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
+                    levelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
+                    if (levelAsset.TimeLine.RequirementSatisfied)
+                    {
+                        levelAsset.ReqOkCount++;
+                    }
+                }
+            }
+
+            var discount = 0;
+
+            if (!levelAsset.Shop.ShopOpening && lvlLogic.IsShopRound)
+            {
+                discount = levelAsset.SkillMgr.CheckDiscount();
+            }
+
+            levelAsset.Shop.OpenShop(lvlLogic.IsShopRound, discount);
+            levelAsset.SkillMgr.SkillEnabled = levelAsset.SkillEnabled = lvlLogic.IsSkillAllowed;
+            levelAsset.SignalPanel.NetworkTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
+            levelAsset.SignalPanel.NormalTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
         }
 
+        //这里哪敢随便改成基于事件的啊；这里都是很看重时序的东西。
+        //但是改成基于事件的解耦特性还是值得弄的、但是得注意。
+        public static void InitCursor(ref GameAssets currentLevelAsset,Vector2Int pos)
+        {
+            currentLevelAsset.GameCursor = Object.Instantiate(currentLevelAsset.CursorTemplate);
+            Cursor cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
+            cursor.InitPosWithAnimation(pos);
+            cursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+        }
+
+        public static void InitDestoryer(ref GameAssets LevelAsset)
+        {
+            LevelAsset.WarningDestoryer = new MeteoriteBomber {GameBoard = LevelAsset.GameBoard};
+            LevelAsset.WarningDestoryer.Init(4, 1);
+        }
+
+        public static void InitShop(ref GameAssets LevelAsset)
+        {
+            LevelAsset.Shop.ShopInit(LevelAsset);
+            LevelAsset.Shop.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
+            if (LevelAsset.ActionAsset.ExcludedShop)
+            {
+                LevelAsset.Shop.excludedTypes = LevelAsset.ActionAsset.ShopExcludedType;
+            }
+        }
+        
+        public static void StartShop(ref GameAssets LevelAsset)
+        {
+            LevelAsset.Shop.ShopStart();
+        }
+        
         public static void UpdateRotate(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
             if (ctrlPack.HasFlag(ControllingCommand.Rotate))
@@ -1428,7 +1466,7 @@ namespace ROOT
             return indicator;
         }
 
-        public static void UpdateCursorPos(GameAssets currentLevelAsset)
+        private static void UpdateCursorPos(GameAssets currentLevelAsset)
         {
             currentLevelAsset.Cursor.SetPosWithAnimation(Board.ClampPosInBoard(currentLevelAsset.Cursor.CurrentBoardPosition), PosSetFlag.Current);
             currentLevelAsset.Cursor.SetPosWithAnimation(Board.ClampPosInBoard(currentLevelAsset.Cursor.NextBoardPosition), PosSetFlag.Next);
@@ -1471,28 +1509,17 @@ namespace ROOT
         /// <param name="currentLevelAsset"></param>
         internal static void UpdateBoardData(ref GameAssets currentLevelAsset)
         {
-            //应该把这个、函数（包括round）这些相关的函数流程拆碎；然后用基于事件发布内容。
-            //
-            //这个函数已经被调用了太多次了，现在考虑稍微激进一些；准备调整为基于事件的？
-            //RISK 其实这里调用到的currentLevelAsset里面的数据修改后，这个函数其实都得重新调…………
-            //也有解决方案，其实就是对其使用的数据进行变化监听……不知道靠谱不靠谱。
             int inCome = 0, cost = 0;
-
-            //var tmpInComeA = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateProcessorScore(out int A));
-            //var tmpInComeB = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateServerScore(out int B));
-            //下面这个函数应该逻辑上等效，只不过目前还没有实际逻辑。
-            //这个东西是不是该改成基于事件的流程了？
+            
             var tmpInComeM = SignalMasterMgr.Instance.CalAllScoreAllSignal(currentLevelAsset.GameBoard);
             if (currentLevelAsset.CurrencyIOEnabled)
             {
-                //inCome += tmpInComeA;
                 inCome += Mathf.FloorToInt(tmpInComeM);
                 inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
-                //cost = Mathf.FloorToInt(currentLevelAsset.BoardDataCollector.CalculateCost());
                 //TEMP 现在只有热力消耗。
                 if (!currentLevelAsset.CurrencyIncomeEnabled)
                 {
-                    //RISK 现在在红色区间没有任何价格收入。靠谱吗？
+                    //现在在红色区间没有任何价格收入。靠谱吗？
                     inCome = 0;
                 }
 
@@ -1511,6 +1538,7 @@ namespace ROOT
         
         public static void LightUpBoard(ref GameAssets currentLevelAsset,ControllingPack _ctrlPack)
         {
+            //TODO 这里的代码未来要自己去取鼠标的值。
             if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid) ||
                 _ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
             {
@@ -1530,14 +1558,6 @@ namespace ROOT
             {
                 currentLevelAsset.GameBoard.LightUpBoardGird(Vector2Int.zero, LightUpBoardGirdMode.CLEAR);
             }
-        }
-
-        public static void InitCursor(ref GameAssets currentLevelAsset,Vector2Int pos)
-        {
-            currentLevelAsset.GameCursor = Object.Instantiate(currentLevelAsset.CursorTemplate);
-            Cursor cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
         }
     }
 

@@ -7,7 +7,7 @@ namespace ROOT
 {
     public class TutorialDestoryerNeo : TutorialLogic
     {
-        IEnumerator ForceWindingDestroyer()
+        /*IEnumerator ForceWindingDestroyer()
         {
             while (LevelAsset.WarningDestoryer.GetStatus != WarningDestoryerStatus.Striking)
             {
@@ -108,6 +108,6 @@ namespace ROOT
             LevelAsset.TimeLine.InitWithAssets(LevelAsset);
 
             ReadyToGo = true;
-        }
+        }*/
     }
 }

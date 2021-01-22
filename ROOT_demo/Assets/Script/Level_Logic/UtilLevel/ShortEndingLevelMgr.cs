@@ -10,7 +10,7 @@ namespace ROOT
     {
         //public override LevelType GetLevelType => LevelType.SimpleLevel;
 
-        public override void InitLevel()
+        /*public override void InitLevel()
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
@@ -31,6 +31,6 @@ namespace ROOT
 //LevelAsset.StartingPerMoveData = new PerMoveData();
 
             ReadyToGo = true;
-        }
+        }*/
     }
 }

@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
+    [Obsolete]
     public class MonitoringLevelLogic : BranchingLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
-        public override void InitLevel()
+        /*public override void InitLevel()
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
@@ -54,8 +56,8 @@ namespace ROOT
         }
         protected void InitCurrencyIoMgr()
         {
-            /*LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
-            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;*/
+            LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
+            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
         }
 
         protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
@@ -64,6 +66,6 @@ namespace ROOT
             LevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
             LevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
             return res;
-        }
+        }*/
     }
 }

@@ -26,7 +26,7 @@ MonoBehaviour:
     ShopLength: 9
     RequireLength: 18
     NormalRequirement: 4
-    NetworkRequirement: 2
+    NetworkRequirement: 10
     DestoryerLength: 9
     DestoryerCount: 0
     InfoCount: 0

@@ -9,7 +9,7 @@ namespace ROOT
 {
     public class TutorialTimeLineAdvNeo : TutorialLogic
     {
-        protected override void Update()
+        /*protected override void Update()
         {
             base.Update();
             if (ReadyToGo)
@@ -91,6 +91,6 @@ namespace ROOT
 
 
             ReadyToGo = true;
-        }
+        }*/
     }
 }

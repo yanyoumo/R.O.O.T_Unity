@@ -44,6 +44,10 @@ namespace ROOT
                 //给你在ScanUnitSignalCore.cs的129行左右留了更多的内容。
                 res = signalCore.CalScore(out var count, ref maxCount, ref maxScore, ref maxLength);
             }
+            if (maxScore == Int32.MinValue)
+            {
+                maxScore = 0;
+            }
             SignalMasterMgr.MaxNetworkDepth = hardwareCount = maxScore;
             return res;
         }

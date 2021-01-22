@@ -806,6 +806,24 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 1
+    - _id: 32
+      _name: Drag
+      _type: 1
+      _descriptiveName: Drag
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 3
+    - _id: 33
+      _name: Hold
+      _type: 1
+      _descriptiveName: Hold
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 4
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -844,9 +862,9 @@ MonoBehaviour:
       - categoryId: 2
         actionIds: 170000001a000000190000001b000000
       - categoryId: 3
-        actionIds: 06000000070000001e000000
+        actionIds: 06000000070000001e00000020000000
       - categoryId: 4
-        actionIds: 160000001c0000001d000000
+        actionIds: 160000001c0000001d00000021000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -1269,7 +1287,7 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 32
+    actionIdCounter: 34
     actionCategoryIdCounter: 5
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 2
@@ -1372,19 +1390,13 @@ MonoBehaviour:
     CurrencyEnabled: 1
     CurrencyIOEnabled: 1
     CurrencyIncomeEnabled: 1
-    CycleEnabled: 1
     CursorEnabled: 1
     RotateEnabled: 1
     ShopEnabled: 1
     SkillEnabled: 1
     DestroyerEnabled: 1
     GameOverEnabled: 1
-    LCDCurrencyEnabled: 1
-    LCDDeltaCurrencyEnabled: 1
-    LCDTimeEnabled: 1
     HintEnabled: 1
-    ForceHddConnectionHint: 0
-    ForceServerConnectionHint: 0
 --- !u!1 &1351526066
 GameObject:
   m_ObjectHideFlags: 0

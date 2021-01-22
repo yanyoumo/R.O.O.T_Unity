@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 namespace ROOT
 {
     [Obsolete]
-    public abstract class TutorialLogic : BranchingLevelLogic
+    public class TutorialLogic : BranchingLevelLogic
     {
-        protected bool ActionEnded { get; private set; } = false;
+        /*protected bool ActionEnded { get; private set; } = false;
         protected int ActionIndex { get; private set; } = -1;
         protected int LastActionCount { get; private set; } = 0;
 
@@ -268,12 +268,12 @@ namespace ROOT
         protected void InitCurrencyIoMgr()
         {
             /*LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
-            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;*/
+            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
         }
 
         protected bool AllUnitConnected()
         {
             return LevelAsset.GameBoard.UnitsGameObjects.All(gameBoardUnit => gameBoardUnit.Value.GetComponentInChildren<Unit>().AnyConnection);
-        }
+        }*/
     }
 }
