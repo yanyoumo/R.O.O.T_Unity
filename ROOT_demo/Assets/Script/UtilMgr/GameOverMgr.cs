@@ -101,7 +101,7 @@ namespace ROOT
         public void NextTutorial()
         {
             LevelActionAsset nextLevelActionAsset = LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset);
-            LevelMasterManager.Instance.LoadLevelThenPlay(nextLevelActionAsset.LevelLogic, nextLevelActionAsset);
+            LevelMasterManager.Instance.LoadLevelThenPlay(nextLevelActionAsset);
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
         }
 

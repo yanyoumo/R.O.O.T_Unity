@@ -234,6 +234,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5315385621050760641, guid: 32374fa99f4178b47819361fbfd90790,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5315385621050760641, guid: 32374fa99f4178b47819361fbfd90790,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -249,6 +254,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5315385621050760641, guid: 32374fa99f4178b47819361fbfd90790,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5315385621050760641, guid: 32374fa99f4178b47819361fbfd90790,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -261,16 +271,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5315385621050760641, guid: 32374fa99f4178b47819361fbfd90790,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5315385621050760641, guid: 32374fa99f4178b47819361fbfd90790,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5315385621050760641, guid: 32374fa99f4178b47819361fbfd90790,
         type: 3}
@@ -412,7 +412,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 34.997314, y: 33.00055}
+  m_AnchoredPosition: {x: 34.99707, y: 33.00049}
   m_SizeDelta: {x: 210.22766, y: 77.559296}
   m_Pivot: {x: 0.00000020675361, y: 0.00000039488077}
 --- !u!114 &851929386
@@ -429,6 +429,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -584,6 +585,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!223 &1005878415
 Canvas:
   m_ObjectHideFlags: 0
@@ -1007,7 +1009,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 172.79999, y: -70.100006}
+  m_AnchoredPosition: {x: 172.7998, y: -70.1001}
   m_SizeDelta: {x: 259.59998, y: 73.20001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2046123771

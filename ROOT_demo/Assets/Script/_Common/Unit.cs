@@ -42,6 +42,27 @@ namespace ROOT
         }
     }
 
+    public enum PlayingSignalSelector
+    {
+        TypeA,
+        TypeB,
+    }
+    
+    [Serializable]
+    public struct UnitGist
+    {
+        [Header("Basic")] 
+        public PlayingSignalSelector PlayingSignalSelector;
+        public CoreGenre CoreGenre;
+        public SideType[] Sides;
+        [Range(1,5)]
+        public int Tier;
+
+        [Header("OnBoardInfo")]
+        public Vector2Int Pos;
+        public bool IsStation;
+    }
+    
     public sealed partial class ShopMgr : ShopBase
     {
         /// <summary>
@@ -651,7 +672,7 @@ namespace ROOT
             if (WorldNeighboringData == null) return;
             RotationList.ForEach(ResetConnector);
             ConnectorLocalDir.Values.ForEach(val => val.Connected = false);
-            var ignoreVal = WorldCycler.BossStage && !WorldCycler.BossStagePause;
+            var ignoreVal = WorldCycler.TelemetryStage && !WorldCycler.TelemetryPause;
             RotationList.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
         }
 

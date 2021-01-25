@@ -21,8 +21,12 @@ MonoBehaviour:
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
+  RoundDatasGist:
+    NormalRoundCount: 3
+    HasBossRound: 0
   RoundDatas:
   - ID: 0
+    RoundType: 0
     ShopLength: 8
     RequireLength: 12
     NormalRequirement: 3
@@ -31,6 +35,7 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   - ID: 1
+    RoundType: 0
     ShopLength: 12
     RequireLength: 14
     NormalRequirement: 5
@@ -39,6 +44,7 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   - ID: 2
+    RoundType: 0
     ShopLength: 14
     RequireLength: 14
     NormalRequirement: 8
@@ -47,12 +53,16 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   InitalBoard:
-  - Core: 2
+  - PlayingSignalSelector: 1
+    SignalType: 1
+    CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 4, y: 4}
     IsStation: 0
-  - Core: 5
+  - PlayingSignalSelector: 0
+    SignalType: 0
+    CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 1, y: 1}
@@ -61,3 +71,7 @@ MonoBehaviour:
   InfoVariantRatio: 0.1
   InfoTargetRatio: 0.3
   StationaryRateList: []
+  AdditionalGameSetup:
+    GameID: 0
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1

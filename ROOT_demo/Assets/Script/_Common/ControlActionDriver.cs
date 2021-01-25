@@ -12,33 +12,33 @@ namespace ROOT
     using RespToCtrlEvent= Func<ActionPack,bool>;
     public abstract class ControlActionDriver
     {
-        private readonly LevelLogic _owner;
+        private readonly FSMLevelLogic _owner;
         private RootFSM _mainFsm;
         private readonly Queue<ControllingPack> _ctrlPackQueue;
         private readonly Queue<BreakingCommand> _breakingCMDQueue;
 
         private const int InputNumbTime=6;//in ms.
-        private float InputNumbTimer=.0f;//s.
-        protected bool InputNumbing { get; private set; }
+        private float _inputNumbTimer=.0f;//s.
+        private bool _inputNumbing;
 
         private IEnumerator DeNumbing()
         {
             yield return 0;
             do
             {
-                InputNumbTimer += Time.deltaTime;
+                _inputNumbTimer += Time.deltaTime;
                 yield return 0;
-            } while (InputNumbTimer < InputNumbTime / 1000.0f);
-            InputNumbing = false;
+            } while (_inputNumbTimer < InputNumbTime / 1000.0f);
+            _inputNumbing = false;
         }
 
         private void RequestEnqueueCtrlPack()
         {
-            if (!InputNumbing)
+            if (!_inputNumbing)
             {
                 _ctrlPackQueue.Enqueue(CtrlPack);
-                InputNumbing = true;
-                InputNumbTimer = 0.0f;
+                _inputNumbing = true;
+                _inputNumbTimer = 0.0f;
             }
             _owner.StartCoroutine(DeNumbing());//
         }
@@ -116,7 +116,7 @@ namespace ROOT
             }
         }
 
-        protected ControlActionDriver(LevelLogic owner, RootFSM fsm)
+        protected ControlActionDriver(FSMLevelLogic owner, RootFSM fsm)
         {
             _owner = owner;
             _mainFsm = fsm;
@@ -201,7 +201,7 @@ namespace ROOT
 
     public class CareerControlActionDriver : ControlActionDriver
     {
-        public CareerControlActionDriver(LevelLogic owner, RootFSM fsm) : base(owner, fsm) { }
+        public CareerControlActionDriver(FSMLevelLogic owner, RootFSM fsm) : base(owner, fsm) { }
 
         protected override List<RespToCtrlEvent> RespondList
         {
@@ -210,29 +210,29 @@ namespace ROOT
                 var res = new List<RespToCtrlEvent>
                 {
                     CoreDrivingFunction, 
-                    BossRespondToControlEvent
+                    TelemetryRespondToControlEvent
                 };
                 return res;
             }
         }
 
-        private bool BossRespondToControlEvent(ActionPack actionPack)
+        private bool TelemetryRespondToControlEvent(ActionPack actionPack)
         {
-            if ((WorldCycler.BossStage && actionPack.IsAction(BossPause)))
+            if ((WorldCycler.TelemetryStage && actionPack.IsAction(TelemetryPause)))
             {
-                if (WorldCycler.BossStagePause)
+                if (WorldCycler.TelemetryPause)
                 {
-                    CtrlPack.SetFlag(ControllingCommand.BossResume);
+                    CtrlPack.SetFlag(ControllingCommand.TelemetryResume);
                 }
                 else
                 {
-                    EnqueueBreakingCommand(BreakingCommand.BossPause);
+                    EnqueueBreakingCommand(BreakingCommand.TelemetryPause);
                 }
             }
 
             //Boss阶段非暂停的时候、输入不进入队列。
             //RISK 主要是下面这个、总觉得可能有冲突的问题。
-            return !WorldCycler.BossStage || WorldCycler.BossStagePause;
+            return !WorldCycler.TelemetryStage || WorldCycler.TelemetryPause;
         }
     }
 }

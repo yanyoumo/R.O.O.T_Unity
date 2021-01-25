@@ -189,7 +189,7 @@ namespace ROOT
 
         public void GameStart()
         {
-            LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib.ActionAssetList[0].LevelLogic, ClassicGameActionAssetLib.ActionAssetList[0]);
+            LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib.ActionAssetList[0]);
             SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
         }
 

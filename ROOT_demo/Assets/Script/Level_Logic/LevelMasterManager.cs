@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +21,7 @@ namespace ROOT
         
         //只是给co-routine用一下，这个master里面原则上不留变量。
         private LevelLogicSpawner _lls;
-        private LevelLogic _gameLogic;
+        private FSMLevelLogic _gameLogic;
         void Awake()
         {
             if (_instance != null && _instance != this)
@@ -44,12 +44,12 @@ namespace ROOT
             _lls = FindObjectOfType<LevelLogicSpawner>();
         }
 
-        IEnumerator LoadGamePlay_Coroutine(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)
+        IEnumerator LoadGamePlay_Coroutine(LevelActionAsset actionAsset)
         {
             //目前这个框架下，所有的Logic Scene只能是一个，但是基于LLS就没有问题。
             AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDTIVELOGIC, LoadSceneMode.Additive);
             yield return StartCoroutine(FindLlsAfterLoad(loadSceneAsync));
-            _gameLogic = _lls.SpawnLevelLogic(LevelLogicPrefab);//这里Level-logic的Awake就进行初始化了。主要是LevelLogic的实例去拿CoreLogic场景里面的东西。
+            _gameLogic = _lls.SpawnLevelLogic(actionAsset.LevelLogic);//这里Level-logic的Awake就进行初始化了。主要是LevelLogic的实例去拿CoreLogic场景里面的东西。
             Debug.Log(_gameLogic.LevelAsset);
             _gameLogic.LevelAsset.ActionAsset = actionAsset;
             _lls = null;
@@ -62,13 +62,23 @@ namespace ROOT
             _gameLogic.InitLevel();//最后的初始化和启动游戏，运行此之前，需要的引用必须齐整。
         }
 
-        public void LoadLevelThenPlay(GameObject LevelLogicPrefab, LevelActionAsset actionAsset)
+        public void LoadLevelThenPlay(LevelActionAsset actionAsset,AdditionalGameSetup _additionalGameSetup=null)
         {
-            if (_gameGlobalStatus.CurrentGameStatus != GameStatus.Playing)
+            //TODO additionalGameSetup还没有实际地接进去、主要是方便UI那边先接着。
+            if (_gameGlobalStatus.CurrentGameStatus == GameStatus.Playing) return;
+            _gameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
+            if (_additionalGameSetup == null)
             {
-                _gameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
-                StartCoroutine(LoadGamePlay_Coroutine(LevelLogicPrefab, actionAsset));
+                _additionalGameSetup = new AdditionalGameSetup();
             }
+            actionAsset.AdditionalGameSetup = _additionalGameSetup;
+            StartCoroutine(LoadGamePlay_Coroutine(actionAsset));
+        }
+
+        public void LoadCareerSetup(int buttonId)
+        {
+            CareerSetupManger.sceneId = buttonId;//RISK 从理论上讲、如果那个的加载用个Coroutine、这个数据就能直接传进去了。但是先这样吧。
+            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
         }
 
         private GameOverMgr _gameOverMgr;

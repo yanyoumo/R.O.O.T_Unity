@@ -84,8 +84,8 @@ namespace ROOT
                 case StageType.Ending:
                     gistList.Add((int)TimeLineTokenType.Ending);
                     break;
-                case StageType.Boss:
-                    gistList.Add((int) TimeLineTokenType.BossStage);
+                case StageType.Telemetry:
+                    gistList.Add((int) TimeLineTokenType.TelemetryStage);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

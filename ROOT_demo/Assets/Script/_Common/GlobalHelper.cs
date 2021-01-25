@@ -25,7 +25,7 @@ namespace ROOT
 
     public static class StaticName
     {
-        public static readonly string INPUT_BUTTON_BOSS_PAUSE = "BossPause";
+        public static readonly string INPUT_BUTTON_TELEMETRY_PAUSE = "TelemetryPause";
 
         public static readonly string INPUT_BUTTON_NAME_CURSORUP = "CursorUp";
         public static readonly string INPUT_BUTTON_NAME_CURSORDOWN = "CursorDown";
@@ -110,6 +110,7 @@ namespace ROOT
         public static readonly int SCENE_ID_ADDTIVELOGIC = 4;
         public static readonly int SCENE_ID_TUTORIAL = 5;
         public static readonly int SCENE_ID_CAREER = 6;
+        public static readonly int SCENE_ID_CAREERSETUP = 7;
 
 
         public static readonly string SOURCE_CORE_NODE_NAME = "SourceCore";

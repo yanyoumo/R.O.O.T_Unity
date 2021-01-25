@@ -17,7 +17,7 @@ namespace ROOT
         Ending = 3,//Black
         HeatSinkSwitch = 4,//ICON
         ShopOpened = 5,//
-        BossStage = 6,//Purple
+        TelemetryStage = 6,//Purple
     }
 
     [Serializable]
@@ -113,7 +113,7 @@ namespace ROOT
         {
             get
             {
-                float res = animationTimer / LevelLogic.AnimationDuration;
+                float res = animationTimer / FSMLevelLogic.AnimationDuration;
                 res = Mathf.Clamp01(res);
                 return Utils.EaseInOutCubic(res);
             }

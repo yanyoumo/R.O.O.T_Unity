@@ -11,7 +11,7 @@ namespace ROOT
 
     public sealed class RootFSM
     {
-        [ReadOnly] public LevelLogic owner;
+        [ReadOnly] public FSMLevelLogic owner;
         [ReadOnly] public RootFSMStatus currentStatus = RootFSMStatus.PreInit;
         [ReadOnly] public bool waitForNextFrame = false;
 

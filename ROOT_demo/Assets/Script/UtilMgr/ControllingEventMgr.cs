@@ -82,7 +82,7 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Confirm0);
             player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Button.Confirm0);
 
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.BossPause);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.TelemetryPause);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.RotateUnit);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintHDD);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintNetwork);
@@ -163,8 +163,8 @@ namespace ROOT
 
         private void OnInputUpdateMouseSingleClickDown(InputActionEventData obj)
         {
-            MouseScreenPos = player.controllers.Mouse.screenPosition;
-            Debug.Log("Mouse Single Click Down");
+            MouseScreenPos = player.controllers.Mouse.screenPosition; 
+            RootDebug.Log("Mouse Single Click Down",NameID.JiangDigong_Log);
         }
 
         private void OnInputUpdateMouseSingleClickUp(InputActionEventData obj)
@@ -174,18 +174,18 @@ namespace ROOT
                 MouseScreenPosA = MouseScreenPos,
                 MouseScreenPosB = player.controllers.Mouse.screenPosition,
             };
-            Debug.Log("Mouse Single Click Up");
+            RootDebug.Log("Mouse Single Click Up",NameID.JiangDigong_Log);
             if (Utils.GetCustomizedDistance(actionPack.MouseScreenPosA, actionPack.MouseScreenPosB) < minHoldShift)
             {
                 actionPack.ActionID = Passthough.MouseLeft;
                 actionPack.eventType = InputActionEventType.ButtonSinglePressed;
-                Debug.Log("Mouse Single Click");
+                RootDebug.Log("Mouse Single Click",NameID.JiangDigong_Log);
             }
             else
             {
                 actionPack.ActionID = Composite.Drag;
                 actionPack.eventType = InputActionEventType.AxisActive;
-                Debug.Log("Mouse Drag");
+                RootDebug.Log("Mouse Drag",NameID.JiangDigong_Log);
             }
             ControllingEvent?.Invoke(actionPack);
         }
@@ -198,7 +198,7 @@ namespace ROOT
                 eventType = obj.eventType,
             };
             ControllingEvent?.Invoke(actionPack);
-            Debug.Log("Mouse Double Click");
+            RootDebug.Log("Mouse Double Click",NameID.JiangDigong_Log);
         }
 
         private void OnInputUpdateMouseHold(InputActionEventData obj)
@@ -209,7 +209,7 @@ namespace ROOT
                 eventType = obj.eventType,
             };
             ControllingEvent?.Invoke(actionPack);
-            Debug.Log("Mouse Hold");
+            RootDebug.Log("Mouse Hold",NameID.JiangDigong_Log);
         }
     }
 }

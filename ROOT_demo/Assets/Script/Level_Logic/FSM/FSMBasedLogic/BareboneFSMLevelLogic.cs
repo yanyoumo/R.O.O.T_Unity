@@ -9,7 +9,7 @@ namespace ROOT
     using Trans= RootFSMTransition;
     using FSMTransitions = HashSet<RootFSMTransition>;
     using Status = RootFSMStatus;
-    public class BareboneFSMLevelLogic : LevelLogic
+    public class BareboneFSMLevelLogic : FSMLevelLogic
     {
         protected override FSMActions fsmActions
         {

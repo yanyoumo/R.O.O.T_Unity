@@ -7,19 +7,19 @@ namespace ROOT
     {
         public void Awake()
         {
-            IsBossStage = false;
-            BossStagePaused = false;
+            IsTelemetryStage = false;
+            TelemetryPaused = false;
         }
 
         [HideInInspector]
-        private bool _isBossStage;
+        private bool _isTelemetryStage;
 
-        public bool IsBossStage
+        public bool IsTelemetryStage
         {
             set
             {
-                _isBossStage = value;
-                if (_isBossStage)
+                _isTelemetryStage = value;
+                if (_isTelemetryStage)
                 {
                     NormalSignal.enabled = false;
                     NetworkSignal.enabled = false;
@@ -40,7 +40,7 @@ namespace ROOT
                     SignalText.enabled = false;
                 }
             }
-            get => _isBossStage;
+            get => _isTelemetryStage;
         }
 
         public TextMeshPro NormalSignal;
@@ -53,9 +53,9 @@ namespace ROOT
         public TextMeshPro SignalText;
         public TextMeshPro PausedTag;
 
-        public bool BossStagePaused
+        public bool TelemetryPaused
         {
-            set => PausedTag.enabled = value&& _isBossStage;
+            set => PausedTag.enabled = value&& _isTelemetryStage;
         }
 
         private int _crtNormalSignal;

@@ -65,43 +65,25 @@ namespace ROOT
 
     public abstract class ShopBase : MonoBehaviour
     {
-        //目前这两个是写死的；之后商店这个种类也改成可配置的；
-        protected SignalType SignalTypeA => SignalType.Matrix;
-        protected SignalType SignalTypeB => SignalType.Scan;
+        //目前这两个是写死的；之后商店这个种类也改成可配置的；DONE
+        protected SignalType SignalTypeA = SignalType.Matrix;
+        protected SignalType SignalTypeB = SignalType.Matrix;
 
-        protected CoreType CoreUnitTypeA
+        protected ((CoreType, CoreType), (CoreType, CoreType)) UnitType => (UnitTypeA,UnitTypeB);
+        private (CoreType, CoreType) UnitTypeA
         {
             get
             {
                 SignalMasterMgr.Instance.UnitTypeFromSignal(SignalTypeA, out var coreUnit, out var fieldUnit);
-                return coreUnit;
+                return (coreUnit, fieldUnit);
             }
         }
-
-        protected CoreType FieldUnitTypeA
-        {
-            get
-            {
-                SignalMasterMgr.Instance.UnitTypeFromSignal(SignalTypeA, out var coreUnit, out var fieldUnit);
-                return fieldUnit;
-            }
-        }
-
-        protected CoreType CoreUnitTypeB
+        private (CoreType, CoreType) UnitTypeB
         {
             get
             {
                 SignalMasterMgr.Instance.UnitTypeFromSignal(SignalTypeB, out var coreUnit, out var fieldUnit);
-                return coreUnit;
-            }
-        }
-
-        protected CoreType FieldUnitTypeB
-        {
-            get
-            {
-                SignalMasterMgr.Instance.UnitTypeFromSignal(SignalTypeB, out var coreUnit, out var fieldUnit);
-                return fieldUnit;
+                return (coreUnit, fieldUnit);
             }
         }
 

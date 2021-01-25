@@ -7,7 +7,6 @@ using Object = UnityEngine.Object;
 // ReSharper disable PossiblyImpureMethodCallOnReadonlyVariable
 namespace ROOT
 {
-    #region WorldLogic
 
     [Flags]
     public enum LogicCommand
@@ -17,8 +16,8 @@ namespace ROOT
         RotateUnit = 1 << 1,
         UpdateUnitCursor = 1 << 2,
         UpdateBoardData = 1 << 3,
-        BossUnpaused = 1 << 4,
-        BossTryUnpause = 1 << 5,
+        TelemetryUnpaused = 1 << 4,
+        TelemetryTryUnpause = 1 << 5,
 
         //这个既然作为ESC命令、又是标记这个enum的结尾、
         //加的所有值需要在它上面，并且调整它的值
@@ -39,183 +38,19 @@ namespace ROOT
             return (a & b) == b;
         }
     }
-
-
-    //要把Asset和Logic彻底拆开。
-    /// <summary>
-    /// 世界本身的运行逻辑、应该类比于物理世界，高程度独立。
-    /// </summary>
-    internal static class WorldLogic //WORLD-LOGIC
-    {
-        //TEMP 每次修改这两个值的时候才应该改一次。
-        /*private static int lastInCome = -1;
-        private static int lastCost = -1;
-
-        /*internal static void UpdateReverseCycle(GameAssets currentLevelAsset)
-        {
-            //TODO 从实施上还得想想时间反演的时候很多别的机制怎么办……
-            //而且还有一个问题，这个作为一个反抗正反馈的机制（负反馈机制）（越穷越没时间、越没时间越穷）
-            //如果还需要花钱，那么效率可能不高；但是这个机制如果没有门槛，那么就会被滥用。
-            //这种负反馈的机制最好参考马车，但是马车里面有个很方便的量化“负状态”的参量——排名。
-            //目前这个系统也需要一个这样的参量，有几个候选：钱数、离红色区段太近等等。
-            WorldCycler.StepDown();
-            currentLevelAsset.TimeLine.Reverse();
-        }*/
-
-        /*internal static void UpdateCycle(GameAssets currentLevelAsset, StageType type)
-        {
-            WorldCycler.StepUp();
-            currentLevelAsset.TimeLine.Step();
-            currentLevelAsset.BoughtOnce = false;
-
-            if (currentLevelAsset.DestroyerEnabled) WorldExecutor.UpdateDestoryer(currentLevelAsset);
-            //目前整个游戏的流程框架太过简单了，现在只有流程调用和flag。可能UpdateBoardData这个需要类似基于事件和触发的事件更新(?)
-            if (currentLevelAsset.CurrencyEnabled)
-            {
-                WorldExecutor_Dispatcher.Root_Executor(LogicCommand.UpdateBoardData, ref currentLevelAsset);
-            }
-
-            //RISK DeltaCurrency在UpdateBoardData里面才弄完。
-            currentLevelAsset.GameStateMgr.PerMove(currentLevelAsset.DeltaCurrency);
-
-            if (currentLevelAsset.ShopEnabled && (currentLevelAsset.Shop is IAnimatableShop shop))
-                shop.ShopPreAnimationUpdate();
-
-            if (currentLevelAsset.WarningDestoryer != null && currentLevelAsset.DestroyerEnabled)
-            {
-                currentLevelAsset.WarningDestoryer.Step(out var outCore);
-                if (outCore.HasValue)
-                {
-                    WorldExecutor_Dispatcher.Root_Executor(LogicCommand.UpdateBoardData, ref currentLevelAsset);
-                }
-                currentLevelAsset.DestoryedCoreType = outCore;
-            }
-        }*/
-
-        //这个也要拆，实际逻辑和Upkeep要拆开、为了Animation的时候能KeepUp
-        //Boss阶段诡异的时序是因为在此时Animation中的几秒没法做任何事儿。
-        /*public static void UpdateLogic(GameAssets currentLevelAsset, 
-            in StageType type, out ControllingPack ctrlPack,
-            out bool movedTile, out bool movedCursor, 
-            out bool shouldCycle, out bool? autoDrive)
-        {
-            currentLevelAsset.DeltaCurrency = 0.0f;
-            movedTile = movedCursor = false;
-            ctrlPack = new ControllingPack { CtrlCMD = ControllingCommand.Nop };
-
-            UpkeepLogic(currentLevelAsset, type, false);//RISK 这个也要弄。
-
-            autoDrive = WorldCycler.NeedAutoDriveStep;
-
-            //不一定必然是相反的，有可能是双false。
-            var forwardCycle = false;
-            var reverseCycle = false;
-
-            if (!autoDrive.HasValue)//RISK
-            {
-                #region UserIO
-
-                ctrlPack = WorldController.UpdateInputScheme(currentLevelAsset);
-
-                if (currentLevelAsset.InputEnabled)
-                {
-                    WorldExecutor_Dispatcher.Root_Executor_Compound_Ordered(
-                        new [] {LogicCommand.UpdateUnitCursor, LogicCommand.RotateUnit},
-                        ref currentLevelAsset,in ctrlPack,out var res);
-                    var tRes = (bool[]) res[LogicCommand.UpdateUnitCursor];
-                    movedTile = tRes[0];
-                    movedCursor = tRes[1];
-                    
-                    currentLevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
-
-                    if (currentLevelAsset.ShopEnabled)
-                    {
-                        //RISK 这里让购买单元也变成强制移动一步。
-                        WorldExecutor_Dispatcher.Root_Executor(LogicCommand.UpdateShop, ref currentLevelAsset, in ctrlPack, out var pRes);
-                        Debug.Assert(pRes!=null);
-                        // ReSharper disable once PossibleNullReferenceException
-                        movedTile |= (bool) pRes;
-                    }
-
-                    movedTile |= ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
-
-                    currentLevelAsset.SkillMgr.SkillEnabled = currentLevelAsset.SkillEnabled;
-                    currentLevelAsset.SkillMgr.TriggerSkill(currentLevelAsset, ctrlPack);
-                }
-
-                forwardCycle = movedTile;
-
-                #endregion
-            }
-            else
-            {
-                forwardCycle = autoDrive.Value;
-                reverseCycle = !autoDrive.Value;
-            }
-
-            if (currentLevelAsset.SkillMgr.CurrentSkillType.HasValue &&
-                currentLevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap)
-            {
-                currentLevelAsset.SkillMgr.SwapTick(currentLevelAsset, ctrlPack);
-                movedTile = false;
-            }
-            else
-            {
-                if (!(WorldCycler.BossStage && WorldCycler.BossStagePause))
-                {
-                    if (forwardCycle)
-                    {
-                        #region FORWARD
-
-                        //这里把计分逻辑也跳过去了，所以在Boss阶段就不会有那个更新。
-                        UpdateCycle(currentLevelAsset, type);
-
-                        #endregion
-                    }
-                    else if (reverseCycle)
-                    {
-                        #region REVERSE
-
-                        UpdateReverseCycle(currentLevelAsset);
-
-                        #endregion
-                    }
-                }
-                else if (WorldCycler.BossStage && WorldCycler.BossStagePause)
-                {
-                    if (forwardCycle)
-                    {
-                        //这里是boss的暂停阶段还进行的逻辑。
-                        WorldExecutor_Dispatcher.Root_Executor(LogicCommand.UpdateBoardData, ref currentLevelAsset);
-                    }
-                }
-            }
-
-            #region CLEANUP
-
-            //RISK 
-            shouldCycle = (autoDrive.HasValue) || ShouldCycle(in ctrlPack, Input.anyKeyDown, in movedTile, in movedCursor);
-
-            #endregion
-        }*/
-    }
-
-    #endregion
     
     #region WorldCycler
-
-    /// <summary>
-    /// WorldLogic或者Controller还是要通过这个来影响Cycle，毕竟之后可以快速往前还能往后。
-    /// 现在的一个问题就是Level对Step的动作是一个单向的。就是Level单纯地提高Step的计数。
-    /// </summary>
+    
+    //telemetry：遥感（Boss）
+    
     internal static class WorldCycler
     {
-        public static bool AnimationTimeLongSwitch => BossStage && !BossStagePause;
+        public static bool AnimationTimeLongSwitch => TelemetryStage && !TelemetryPause;
 
         public static int Step => ActualStep;
 
-        public static bool BossStage = false;
-        public static bool BossStagePause = false;
+        public static bool TelemetryStage = false;
+        public static bool TelemetryPause = false;
 
         private static bool? RawNeedAutoDriveStep
         {
@@ -235,9 +70,9 @@ namespace ROOT
         {
             get
             {
-                if (BossStage)
+                if (TelemetryStage)
                 {
-                    if (BossStagePause)
+                    if (TelemetryPause)
                     {
                         return null;
                     }
@@ -328,7 +163,7 @@ namespace ROOT
         BuyRandom = 1 << 10,
         RemoveUnit = 1 << 11,
         Skill = 1 << 12,
-        BossResume = 1 << 13,
+        TelemetryResume = 1 << 13,
         CameraMov = 1 << 14,
         ClickOnGrid = 1 << 15,//日了，这个还是要铺满场地。
         FloatingOnGrid = 1 << 16//估计也能搞，而且早晚也得搞。
@@ -337,7 +172,7 @@ namespace ROOT
     public enum BreakingCommand
     {
         Nop,
-        BossPause,
+        TelemetryPause,
         QuitGame,
     }
 
@@ -1196,9 +1031,9 @@ namespace ROOT
             levelAsset.SignalPanel.CrtNetworkSignal = 0;
         }
 
-        private static void UpdateLevelAsset(ref GameAssets levelAsset,ref LevelLogic lvlLogic)
+        private static void UpdateLevelAsset(ref GameAssets levelAsset,ref FSMLevelLogic lvlLogic)
         {
-            var lastStage = lvlLogic.LastRoundGist?.Type ?? StageType.Shop;
+            var lastStage = lvlLogic.PreviousRoundGist?.Type ?? StageType.Shop;
             var lastDestoryBool = lastStage == StageType.Destoryer;
             
             if (lvlLogic.IsRequireRound && lvlLogic.IsForwardCycle)
@@ -1211,7 +1046,7 @@ namespace ROOT
                 levelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
             }
 
-            if ((levelAsset.DestroyerEnabled && !lvlLogic.IsDestoryerRound) && !WorldCycler.BossStage)
+            if ((levelAsset.DestroyerEnabled && !lvlLogic.IsDestoryerRound) && !WorldCycler.TelemetryStage)
             {
                 levelAsset.WarningDestoryer.ForceReset();
             }
@@ -1234,7 +1069,7 @@ namespace ROOT
             
             UpdateLevelAsset(ref levelAsset, ref levelAsset.Owner);
             
-            levelAsset.DestroyerEnabled = WorldCycler.BossStage;
+            levelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
             levelAsset.CurrencyIncomeEnabled = lvlLogic.IsRequireRound;
             levelAsset.CurrencyIOEnabled =lvlLogic.ShouldCurrencyIo;
 

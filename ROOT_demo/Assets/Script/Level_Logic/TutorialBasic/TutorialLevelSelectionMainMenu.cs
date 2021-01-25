@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,6 +7,7 @@ using UnityEngine.UI;
 
 namespace ROOT
 {
+    [Serializable]
     public struct TutorialQuadDataPack
     {
         public string TitleTerm;

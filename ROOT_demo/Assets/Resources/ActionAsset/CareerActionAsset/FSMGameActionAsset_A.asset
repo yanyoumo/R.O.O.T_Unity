@@ -21,8 +21,12 @@ MonoBehaviour:
   ExcludedShop: 0
   ShopExcludedType: 
   Actions: []
+  RoundDatasGist:
+    NormalRoundCount: 3
+    HasBossRound: 0
   RoundDatas:
   - ID: 0
+    RoundType: 0
     ShopLength: 13
     RequireLength: 10
     NormalRequirement: 3
@@ -31,6 +35,7 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   - ID: 1
+    RoundType: 0
     ShopLength: 15
     RequireLength: 8
     NormalRequirement: 7
@@ -39,6 +44,7 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   - ID: 0
+    RoundType: 0
     ShopLength: 15
     RequireLength: 9
     NormalRequirement: 9
@@ -47,42 +53,58 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   InitalBoard:
-  - Core: 2
+  - PlayingSignalSelector: 1
+    SignalType: 1
+    CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 0, y: 2}
     IsStation: 0
-  - Core: 1
+  - PlayingSignalSelector: 1
+    SignalType: 1
+    CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 2, y: 5}
     IsStation: 0
-  - Core: 1
+  - PlayingSignalSelector: 1
+    SignalType: 1
+    CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 2
     Pos: {x: 0, y: 3}
     IsStation: 0
-  - Core: 1
+  - PlayingSignalSelector: 1
+    SignalType: 1
+    CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 3
     Pos: {x: 3, y: 3}
     IsStation: 0
-  - Core: 4
+  - PlayingSignalSelector: 0
+    SignalType: 0
+    CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 4
     Pos: {x: 4, y: 3}
     IsStation: 0
-  - Core: 1
+  - PlayingSignalSelector: 1
+    SignalType: 1
+    CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 5, y: 3}
     IsStation: 0
-  - Core: 5
+  - PlayingSignalSelector: 0
+    SignalType: 0
+    CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 1, y: 2}
     IsStation: 0
-  - Core: 4
+  - PlayingSignalSelector: 0
+    SignalType: 0
+    CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 2, y: 4}
@@ -96,3 +118,7 @@ MonoBehaviour:
   - {x: 8, y: 2}
   - {x: 7, y: 1}
   - {x: 0, y: 0}
+  AdditionalGameSetup:
+    GameID: 0
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1
