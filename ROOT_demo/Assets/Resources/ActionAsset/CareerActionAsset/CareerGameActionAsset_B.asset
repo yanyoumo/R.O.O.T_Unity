@@ -71,22 +71,26 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   InitalBoard:
-  - Core: 2
+  - SignalType: 1
+    CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 4, y: 1}
     IsStation: 0
-  - Core: 2
+  - SignalType: 1
+    CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 1, y: 4}
     IsStation: 0
-  - Core: 5
+  - SignalType: 0
+    CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 4, y: 4}
     IsStation: 0
-  - Core: 5
+  - SignalType: 0
+    CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 1, y: 1}
