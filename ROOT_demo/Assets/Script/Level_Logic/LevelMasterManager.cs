@@ -62,14 +62,14 @@ namespace ROOT
             _gameLogic.InitLevel();//最后的初始化和启动游戏，运行此之前，需要的引用必须齐整。
         }
 
-        public void LoadLevelThenPlay(LevelActionAsset actionAsset,AdditionalGameSetup additionalGameSetup = new AdditionalGameSetup())
+        public void LoadLevelThenPlay(LevelActionAsset actionAsset,AdditionalGameSetup _additionalGameSetup=null)
         {
             //TODO additionalGameSetup还没有实际地接进去、主要是方便UI那边先接着。
-            if (_gameGlobalStatus.CurrentGameStatus != GameStatus.Playing)
-            {
-                _gameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
-                StartCoroutine(LoadGamePlay_Coroutine(actionAsset));
-            }
+            if (_gameGlobalStatus.CurrentGameStatus == GameStatus.Playing) return;
+            _gameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
+            _additionalGameSetup ??= new AdditionalGameSetup();
+            actionAsset.AdditionalGameSetup = _additionalGameSetup;
+            StartCoroutine(LoadGamePlay_Coroutine(actionAsset));
         }
 
         public void LoadCareerSetup(int buttonId)

@@ -102,3 +102,7 @@ MonoBehaviour:
   - {x: 8, y: 2}
   - {x: 7, y: 1}
   - {x: 0, y: 0}
+  AdditionalGameSetup:
+    GameID: 0
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1

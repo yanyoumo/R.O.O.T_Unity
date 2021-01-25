@@ -135,7 +135,6 @@ namespace ROOT
         /// <summary>
         /// 获得改时间线上End前玩家可以玩的步长。
         /// </summary>
-        [HideInInspector]
         public int PlayableCount => RoundDatas.Sum(round => round.TotalLength);
 
         public int GetTruncatedCount(int TotalCount, out int RoundCount)
@@ -224,5 +223,8 @@ namespace ROOT
             }*/
             return roundGist;
         }
+
+        [ReadOnly]
+        public AdditionalGameSetup AdditionalGameSetup;
     }
 }

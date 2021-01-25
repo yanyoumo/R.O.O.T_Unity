@@ -45,6 +45,8 @@ namespace ROOT
     [Serializable]
     public struct UnitGist
     {
+        public SignalType SignalType;
+        public CoreGenre coreGenre;
         [Header("Basic")]
         public CoreType Core;
         public SideType[] Sides;

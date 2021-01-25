@@ -76,3 +76,7 @@ MonoBehaviour:
   InfoVariantRatio: 0.25
   InfoTargetRatio: 0.4
   StationaryRateList: []
+  AdditionalGameSetup:
+    GameID: 0
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1

@@ -1033,7 +1033,7 @@ namespace ROOT
 
         private static void UpdateLevelAsset(ref GameAssets levelAsset,ref FSMLevelLogic lvlLogic)
         {
-            var lastStage = lvlLogic.LastRoundGist?.Type ?? StageType.Shop;
+            var lastStage = lvlLogic.PreviousRoundGist?.Type ?? StageType.Shop;
             var lastDestoryBool = lastStage == StageType.Destoryer;
             
             if (lvlLogic.IsRequireRound && lvlLogic.IsForwardCycle)
