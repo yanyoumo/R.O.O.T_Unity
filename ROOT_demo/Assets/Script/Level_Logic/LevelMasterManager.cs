@@ -67,7 +67,10 @@ namespace ROOT
             //TODO additionalGameSetup还没有实际地接进去、主要是方便UI那边先接着。
             if (_gameGlobalStatus.CurrentGameStatus == GameStatus.Playing) return;
             _gameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
-            _additionalGameSetup ??= new AdditionalGameSetup();
+            if (_additionalGameSetup == null)
+            {
+                _additionalGameSetup = new AdditionalGameSetup();
+            }
             actionAsset.AdditionalGameSetup = _additionalGameSetup;
             StartCoroutine(LoadGamePlay_Coroutine(actionAsset));
         }

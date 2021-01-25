@@ -226,38 +226,5 @@ namespace ROOT
 
         [ReadOnly]
         public AdditionalGameSetup AdditionalGameSetup;
-
-        [Button]
-        public void RefreshAllUnitGistType()
-        {
-            for (var i = 0; i < InitalBoard.Length; i++)
-            {
-                InitalBoard[i].OnUnitTypeChanged();
-            }
-        }
-        
-        /*public void RemakeAllUnitGistType()
-        {
-            for (var i = 0; i < InitalBoard.Length; i++)
-            {
-                var coreType = InitalBoard[i].Core;
-                foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
-                {
-                    SignalMasterMgr.Instance.UnitTypeFromSignal(signalType,out var coreUnit,out var fieldUnit);
-                    if (coreUnit==coreType)
-                    {
-                        InitalBoard[i].SignalType = signalType;
-                        InitalBoard[i].CoreGenre = CoreGenre.Source;
-                        break;
-                    }
-                    if (fieldUnit==coreType)
-                    {
-                        InitalBoard[i].SignalType = signalType;
-                        InitalBoard[i].CoreGenre = CoreGenre.Destination;
-                        break;
-                    }
-                }
-            }
-        }*/
     }
 }

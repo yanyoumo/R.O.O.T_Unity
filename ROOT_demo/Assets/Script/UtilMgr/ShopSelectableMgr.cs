@@ -136,20 +136,20 @@ namespace ROOT
             return go;
         }
 
-        protected CoreType GenerateSelfCoreAndTier(in int i, out int tier)
+        private CoreType GenerateSelfCoreAndTier(in int i, out int tier)
         {
             tier = TierProgress(currentLevelAsset.LevelProgress);
             switch (i)
             {
                 case 0:
-                    return FieldUnitTypeA;
+                    return UnitType.Item1.Item2;
                 case 1:
                 default:
-                    return FieldUnitTypeB;
+                    return UnitType.Item2.Item2;
             }
         }
 
-        protected SideType[] GenerateSide(in int i)
+        private SideType[] GenerateSide(in int i)
         {
             switch (i)
             {
@@ -176,8 +176,8 @@ namespace ROOT
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
-        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(CoreUnitTypeB) > 0;
-        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(CoreUnitTypeA) > 0;
+        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(UnitType.Item2.Item1) > 0;
+        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(UnitType.Item1.Item1) > 0;
 
         private void CreatePremiumUnit(int i, int j, int discount)
         {
@@ -192,16 +192,16 @@ namespace ROOT
             }
             else if (CoreUnitTypeBOnBoard)
             {
-                core = CoreUnitTypeA;
+                core = UnitType.Item1.Item1;
             }
             else if (CoreUnitTypeAOnBoard)
             {
-                core = CoreUnitTypeB;
+                core = UnitType.Item2.Item1;
             }
             else
             {
                 //hmmmmm这里先这样吧…………
-                core = Random.value > 0.5 ? CoreUnitTypeA : CoreUnitTypeB;
+                core = Random.value > 0.5 ? UnitType.Item1.Item1 : UnitType.Item2.Item1;
             }
 
             //TEMP 这个Tier到时候还是统一管理一下。
@@ -250,6 +250,8 @@ namespace ROOT
             currentLevelAsset = _currentLevelAsset;
             _items = new GameObject[MaxDisplayCount];
             _hardwarePrices = new float[MaxDisplayCount];
+            SignalTypeA = _currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA;
+            SignalTypeB = _currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB;
         }
 
         public override void ShopStart()

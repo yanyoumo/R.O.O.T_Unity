@@ -551,14 +551,45 @@ namespace ROOT
             return go;
         }
 
-        public void CreateUnitOnBoard(UnitGist unitGist)
+        CoreType UnitCoreFromSignalAndGenre(SignalType signalType,CoreGenre coreGenre)
+        {
+            SignalMasterMgr.Instance.UnitTypeFromSignal(signalType, out var coreUnit, out var fieldUnit);
+            if (coreGenre==CoreGenre.Source)
+            {
+                return coreUnit;
+            }
+            if (coreGenre==CoreGenre.Destination)
+            {
+                return fieldUnit;
+            }
+
+            return CoreType.PCB;
+        }
+        SignalType SignalTypeFromAdditionalGameSetup(AdditionalGameSetup additionalGameSetup,PlayingSignalSelector selector)
+        {
+            if (selector == PlayingSignalSelector.TypeA)
+            {
+                return additionalGameSetup.PlayingSignalTypeA;
+            }
+
+            if (selector == PlayingSignalSelector.TypeB)
+            {
+                return additionalGameSetup.PlayingSignalTypeB;
+            }
+
+            return SignalType.Matrix;
+        }
+        
+        private void CreateUnitOnBoard(UnitGist unitGist,AdditionalGameSetup additionalGameSetup)
         {
             var unitGO = Instantiate(UnitTemplate);
             unitGO.name = "Unit_" + Hash128.Compute(unitGist.Pos.ToString());
             Unit unit = unitGO.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(unitGist.Pos);
             UnitsGameObjects.Add(unitGist.Pos, unitGO);
-            unit.InitUnit(unitGist.Core, unitGist.Sides, unitGist.Tier, this);
+            var signalType = SignalTypeFromAdditionalGameSetup(additionalGameSetup, unitGist.PlayingSignalSelector);
+            var unitCore = UnitCoreFromSignalAndGenre(signalType,unitGist.CoreGenre);
+            unit.InitUnit(unitCore, unitGist.Sides, unitGist.Tier, this);
             if (unitGist.IsStation)
             {
                 unit.SetupStationUnit();
@@ -575,7 +606,7 @@ namespace ROOT
         {
             foreach (var unitGist in actionAsset.InitalBoard)
             {
-                CreateUnitOnBoard(unitGist);
+                CreateUnitOnBoard(unitGist, actionAsset.AdditionalGameSetup);
             }
         }
 

@@ -42,53 +42,25 @@ namespace ROOT
         }
     }
 
-    /*// Delayed and DelayedProperty attributes are virtually identical...
-    [Delayed]
-    [OnValueChanged("OnValueChanged")]
-    public int DelayedField;
-
-// ... but the DelayedProperty can, as the name suggests, also be applied to properties.
-    [ShowInInspector, DelayedProperty]
-    [OnValueChanged("OnValueChanged")]
-    public string DelayedProperty { get; set; }
-
-    private void OnValueChanged()
+    public enum PlayingSignalSelector
     {
-    Debug.Log("Value changed!");
-    }*/
+        TypeA,
+        TypeB,
+    }
     
     [Serializable]
     public struct UnitGist
     {
-        [OnValueChanged("OnUnitTypeChanged")]
-        public SignalType SignalType;
-        public CoreGenre CoreGenre;
         [Header("Basic")] 
-        //public CoreType Core;
+        public PlayingSignalSelector PlayingSignalSelector;
+        public CoreGenre CoreGenre;
         public SideType[] Sides;
-        [ShowInInspector,DelayedProperty,ReadOnly]
-        public CoreType Core { get; private set; }
         [Range(1,5)]
         public int Tier;
 
         [Header("OnBoardInfo")]
         public Vector2Int Pos;
         public bool IsStation;
-        
-        public void OnUnitTypeChanged()
-        {
-            SignalMasterMgr.Instance.UnitTypeFromSignal(SignalType, out var coreUnit, out var fieldUnit);
-            if (CoreGenre==CoreGenre.Source)
-            {
-                Core = coreUnit;
-                return;
-            }
-            if (CoreGenre==CoreGenre.Destination)
-            {
-                Core = fieldUnit;
-                return;
-            }
-        }
     }
     
     public sealed partial class ShopMgr : ShopBase

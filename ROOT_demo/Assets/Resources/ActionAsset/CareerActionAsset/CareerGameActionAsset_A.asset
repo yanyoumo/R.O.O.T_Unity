@@ -62,13 +62,15 @@ MonoBehaviour:
     DestoryerCount: 0
     InfoCount: 0
   InitalBoard:
-  - SignalType: 1
+  - PlayingSignalSelector: 1
+    SignalType: 1
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 2, y: 2}
     IsStation: 0
-  - SignalType: 0
+  - PlayingSignalSelector: 0
+    SignalType: 0
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1

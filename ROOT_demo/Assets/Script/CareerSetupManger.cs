@@ -11,13 +11,11 @@ namespace ROOT
     public class AdditionalGameSetup
     {
         //这个就稍微有些蠢、这个类需要能静态指定一个默认值、但是struct搞不了这件事儿；就只能用class……
-        public int GameID;
         public SignalType PlayingSignalTypeA;
         public SignalType PlayingSignalTypeB;
 
         public AdditionalGameSetup()
         {
-            GameID = 0;
             PlayingSignalTypeA = SignalType.Matrix;
             PlayingSignalTypeB = SignalType.Scan;
         }
