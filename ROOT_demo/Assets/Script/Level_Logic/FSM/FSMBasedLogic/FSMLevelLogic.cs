@@ -39,7 +39,7 @@ namespace ROOT
         [ReadOnly] public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
         [ReadOnly] public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
         
-        public bool movedTile = false;
+        [ReadOnly]public bool movedTile = false;
         private bool movedCursor = false;
         
         protected internal GameAssets LevelAsset;
