@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e09bcd9a449f1174f9abb0a95a52fea7, type: 3}
   m_Name: MatrixFieldUnit
   m_EditorClassIdentifier: 
-  UnitType: 4
+  UnitType: 0
   UnitGenre: 1
   UnitPrice: 2
   BaseRate: 45
