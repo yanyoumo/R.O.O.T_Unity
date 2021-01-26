@@ -14,7 +14,7 @@ namespace ROOT
         Thermo,
     }
 
-    public enum CoreGenre
+    public enum HardwareType
     {
         Core,
         Field,
@@ -71,6 +71,7 @@ namespace ROOT
         //这个应该也是要放在Asset里面，因为一系列Token的长度不同，下面的设置应该也完全不同。
         //原来用的Tuple<int,int>，但是Tuple好像在Odin里面没法正常序列化
         //所以为了在ActionAsset里面用，就只能先用V2Int了。
+        //静态单位的概念意外地可以试试复活了。
         private readonly Vector2Int[] DefaultStationaryRateList =
         {
             new Vector2Int(12,9),//75%

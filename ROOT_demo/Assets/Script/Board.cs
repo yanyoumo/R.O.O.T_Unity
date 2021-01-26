@@ -76,8 +76,8 @@ namespace ROOT
             {
                 var unit = UnitsGameObjects[vector2Int].GetComponentInChildren<Unit>();
 
-                if ((unit.UnitCore == SignalType.Matrix && unit.UnitCoreGenre == CoreGenre.Field) ||
-                    ((unit.UnitCore == SignalType.Scan && unit.UnitCoreGenre == CoreGenre.Field) &&
+                if ((unit.UnitSignal == SignalType.Matrix && unit.UnitHardware == HardwareType.Field) ||
+                    ((unit.UnitSignal == SignalType.Scan && unit.UnitHardware == HardwareType.Field) &&
                      unit.SignalCore.InServerGrid && unit.SignalCore.ServerDepth == 1))
                 {
                     if (vector2Int == Pos)
@@ -444,9 +444,9 @@ namespace ROOT
 
         public Dictionary<Vector2Int, GameObject> UnitsGameObjects { get; private set; }
 
-        public int GetTotalTierCountByCoreType(SignalType signal,CoreGenre genre)
+        public int GetTotalTierCountByCoreType(SignalType signal,HardwareType genre)
         {
-            return Units.Where(unit => unit.UnitCore == signal&&unit.UnitCoreGenre == genre).Sum(unit => unit.Tier);
+            return Units.Where(unit => unit.UnitSignal == signal&&unit.UnitHardware == genre).Sum(unit => unit.Tier);
         }
         public int GetUnitCount => UnitsGameObjects.Count;
         //public int GetNonPCBUnitCount => Units.Count(unit => unit.UnitCore != CoreType.PCB);
@@ -458,9 +458,9 @@ namespace ROOT
             return pos.y * BoardLength + pos.x;
         }
 
-        public Unit[] FindUnitWithCoreType(SignalType signal,CoreGenre genre)
+        public Unit[] FindUnitWithCoreType(SignalType signal,HardwareType genre)
         {
-            return Units.Where(u => u.UnitCore == signal && u.UnitCoreGenre == genre).ToArray();
+            return Units.Where(u => u.UnitSignal == signal && u.UnitHardware == genre).ToArray();
         }
 
         [CanBeNull]
@@ -542,7 +542,7 @@ namespace ROOT
             }
         }
 
-        public GameObject InitUnit(Vector2Int board_pos,SignalType signal,CoreGenre genre,SideType[] sides,int Tier)
+        public GameObject InitUnit(Vector2Int board_pos,SignalType signal,HardwareType genre,SideType[] sides,int Tier)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(board_pos.ToString());
@@ -745,7 +745,7 @@ namespace ROOT
             if (CheckBoardPosValidAndFilled(pos))
             {
                 UnitsGameObjects.TryGetValue(pos, out GameObject go);
-                destoryedCore = go.GetComponentInChildren<Unit>().UnitCore;
+                destoryedCore = go.GetComponentInChildren<Unit>().UnitSignal;
                 Destroy(go);
                 UnitsGameObjects.Remove(pos);
                 //想办法需要在这儿调双个计分函数。
@@ -764,7 +764,7 @@ namespace ROOT
                 UnitsGameObjects.TryGetValue(pos, out GameObject go);
                 if (!go.GetComponentInChildren<Unit>().StationUnit)
                 {
-                    destoryedCore = go.GetComponentInChildren<Unit>().UnitCore;
+                    destoryedCore = go.GetComponentInChildren<Unit>().UnitSignal;
                     Destroy(go);
                     UnitsGameObjects.Remove(pos);
                     UpdateBoard();
@@ -775,7 +775,7 @@ namespace ROOT
             return false;
         }
 
-        public int GetCountByType(SignalType signal,CoreGenre genre)
+        public int GetCountByType(SignalType signal,HardwareType genre)
         {
             return FindUnitWithCoreType(signal, genre).Length;
         }
@@ -809,7 +809,7 @@ namespace ROOT
             foreach (var unit in UnitsGameObjects)
             {
                 Unit unitComp = unit.Value.GetComponentInChildren<Unit>();
-                if (unitComp.UnitCore == SignalType.Scan)
+                if (unitComp.UnitSignal == SignalType.Scan)
                 {                  
                     //现在网络只显示网线和服务器，不会有错，但是有可能有更好的解决方案？
                     if (unitComp.SignalCore.InServerGrid)
@@ -823,7 +823,7 @@ namespace ROOT
 
         public float CalculateTotalIncomes()
         {
-            return Units.Where(unit => unit.IsSource).Sum(unit => unit.SignalCore.CalScore());
+            return Units.Where(unit => unit.IsCore).Sum(unit => unit.SignalCore.CalScore());
         }
     }
 }

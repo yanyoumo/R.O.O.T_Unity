@@ -24,7 +24,7 @@ namespace ROOT
     {
         public bool HasConnector;
         public bool Connected;
-        public CoreGenre ConnectedToGenre;
+        public HardwareType ConnectedToGenre;
         private Unit _otherUnit;
 
         public Unit OtherUnit
@@ -37,7 +37,7 @@ namespace ROOT
         {
             HasConnector = hasConnector;
             Connected = false;
-            ConnectedToGenre = CoreGenre.Other;
+            ConnectedToGenre = HardwareType.Other;
             _otherUnit = null;
         }
     }
@@ -53,7 +53,7 @@ namespace ROOT
     {
         [Header("Basic")] 
         public PlayingSignalSelector PlayingSignalSelector;
-        public CoreGenre CoreGenre;
+        public HardwareType CoreGenre;
         public SideType[] Sides;
         [Range(1,5)]
         public int Tier;
@@ -123,7 +123,7 @@ namespace ROOT
             }
         }
 
-        private GameObject InitUnitShop(SignalType signalType,CoreGenre genre, SideType[] sides, out float hardwarePrice, int ID, int _cost,
+        private GameObject InitUnitShop(SignalType signalType,HardwareType genre, SideType[] sides, out float hardwarePrice, int ID, int _cost,
             int tier)
         {
             var go = InitUnitShopCore(signalType, genre, sides, ID, _cost, tier);
@@ -154,14 +154,14 @@ namespace ROOT
         public UnitSignalCoreBase SignalCore;
 
         public TextMeshPro BillBoardText;
-        public int Cost { get; internal set; } = 0;
+        private int Cost { get; set; } = 0;
 
         private int _tier = 0;
 
         public int Tier
         {
             get => _tier;
-            internal set
+            private set
             {
                 _tier = value;
                 TierTag.text = Utils.PaddingNum2Digit(_tier);
@@ -211,12 +211,12 @@ namespace ROOT
         public Transform ShopBackPlane;
         public Transform ShopDiscountRoot;
 
-        public bool IsActiveMatrixFieldUnit => SignalCore.InMatrix && (UnitCore == SignalType.Matrix && UnitCoreGenre == CoreGenre.Field);
-        public bool IsEndingScanFieldUnit => SignalCore.InServerGrid && (UnitCore == SignalType.Scan && UnitCoreGenre == CoreGenre.Field) && SignalCore.ServerDepth == 1;
+        public bool IsActiveMatrixFieldUnit => SignalCore.InMatrix && (UnitSignal == SignalType.Matrix && UnitHardware == HardwareType.Field);
+        public bool IsEndingScanFieldUnit => SignalCore.InServerGrid && (UnitSignal == SignalType.Scan && UnitHardware == HardwareType.Field) && SignalCore.ServerDepth == 1;
 
         private bool _hasDiscount = false;
 
-        public bool HasDiscount
+        private bool HasDiscount
         {
             set
             {
@@ -296,9 +296,9 @@ namespace ROOT
 
         protected string UnitName { get; }
 
-        public SignalType UnitCore { get; private set; }
-        public CoreGenre UnitCoreGenre { get; private set; }
-        public bool IsSource => UnitCoreGenre == CoreGenre.Core;
+        public SignalType UnitSignal { get; private set; }
+        public HardwareType UnitHardware { get; private set; }
+        public bool IsCore => UnitHardware == HardwareType.Core;
         public Dictionary<RotationDirection, SideType> UnitSides { get; private set; }
 
         private RotationDirection _unitRotation;
@@ -338,7 +338,7 @@ namespace ROOT
             }
         }
 
-        [HideInInspector] public readonly RotationDirection[] RotationList =
+        private readonly RotationDirection[] RotationList =
         {
             RotationDirection.East,
             RotationDirection.North,
@@ -346,11 +346,12 @@ namespace ROOT
             RotationDirection.West
         };
 
-        [HideInInspector] public Vector2Int LastNetworkPos = Vector2Int.zero;
+        [HideInInspector] 
+        public Vector2Int LastNetworkPos = Vector2Int.zero;
 
         private void InitConnector(Connector connector, SideType sideType)
         {
-            connector.UseScrVersion = (UnitCoreGenre == CoreGenre.Core);
+            connector.UseScrVersion = (UnitHardware == HardwareType.Core);
             connector.gameObject.SetActive(sideType == SideType.Connection);
             connector.Signal_A_Val = 0;
             connector.Signal_B_Val = 0;
@@ -369,13 +370,13 @@ namespace ROOT
             }
         }
 
-        protected void InitUnitMeshByCore(SignalType signal,CoreGenre genre)
+        private void InitUnitMeshByCore(SignalType signal,HardwareType genre)
         {
-            UnitCoreGenre = genre;
+            UnitHardware = genre;
             var connectorMasterNodeName = "";
             var coreMeshNodeName = "";
 
-            if (UnitCoreGenre == CoreGenre.Core)
+            if (UnitHardware == HardwareType.Core)
             {
                 connectorMasterNodeName = StaticName.SOURCE_CONNECTOR_MASTER_NODE_NAME;
                 coreMeshNodeName = StaticName.SOURCE_CORE_NODE_NAME;
@@ -422,7 +423,7 @@ namespace ROOT
                 {RotationDirection.West, _localWestConnector},
             };
 
-            TierLEDs.gameObject.SetActive(!IsSource);
+            TierLEDs.gameObject.SetActive(!IsCore);
         }
 
         public void SetCoreEmissive(Color color)
@@ -436,16 +437,16 @@ namespace ROOT
             Tier = tier;
         }
 
-        public void InitUnit(SignalType signal,CoreGenre genre, SideType[] sides, int tier, Board gameBoard = null)
+        public void InitUnit(SignalType signal,HardwareType genre, SideType[] sides, int tier, Board gameBoard = null)
         {
             Debug.Assert(sides.Length == 4);
             InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3], tier, gameBoard);
         }
 
-        public void InitUnit(SignalType signal,CoreGenre genre, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
+        public void InitUnit(SignalType signal,HardwareType genre, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
             int tier, Board gameBoard = null)
         {
-            UnitCore = signal;
+            UnitSignal = signal;
             InitUnitMeshByCore(signal,genre);
 
             UnitSides.Add(RotationDirection.North, lNSide);
@@ -559,7 +560,7 @@ namespace ROOT
                              SideType.Connection);
                         if (connectionData.Connected)
                         {
-                            connectionData.ConnectedToGenre = otherUnit.UnitCoreGenre;
+                            connectionData.ConnectedToGenre = otherUnit.UnitHardware;
                         }
                     }
                 }
@@ -711,7 +712,7 @@ namespace ROOT
         public void Blink(RotationDirection? fromDirection)
         {
             //Server那里用不用迪公帮忙把路径捋出来？目前看不用
-            if (UnitCore == SignalType.Matrix&& UnitCoreGenre == CoreGenre.Field)
+            if (UnitSignal == SignalType.Matrix&& UnitHardware == HardwareType.Field)
             {
                 if (SignalCore.SignalFromDir == RotationDirection.West || SignalCore.SignalFromDir == RotationDirection.South)
                 {
@@ -727,7 +728,7 @@ namespace ROOT
 
                 StartCoroutine(NextBlinkGap(BlinkDuration));
             }
-            else if (UnitCore == SignalType.Scan&& UnitCoreGenre == CoreGenre.Field)
+            else if (UnitSignal == SignalType.Scan&& UnitHardware == HardwareType.Field)
             {
                 foreach (var currentSideDirection in RotationList)
                 {
@@ -769,12 +770,12 @@ namespace ROOT
         }
         private void NextBlink(RotationDirection? nextDirection)
         {
-            if (UnitCore == SignalType.Matrix&& UnitCoreGenre == CoreGenre.Field)
+            if (UnitSignal == SignalType.Matrix&& UnitHardware == HardwareType.Field)
             {
                 var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalCore.SignalFromDir);
                 if (nextUnit != null) nextUnit.Blink(null);
             }
-            else if ((UnitCore == SignalType.Scan&& UnitCoreGenre == CoreGenre.Field) && nextDirection.HasValue)
+            else if ((UnitSignal == SignalType.Scan&& UnitHardware == HardwareType.Field) && nextDirection.HasValue)
             {
                 var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, nextDirection.Value);
                 if (nextUnit != null) nextUnit.Blink(Utils.GetInvertDirection(nextDirection.Value));
