@@ -31,15 +31,15 @@ namespace ROOT
         private Dictionary<SignalType, SignalAssetBase> signalAssetLib;
         public SignalType[] SignalLib => signalAssetLib.Keys.ToArray();
 
-        public void UnitTypeFromSignal(SignalType signalType,out CoreType coreUnit,out CoreType fieldUnit)
+        /*public void UnitTypeFromSignal(SignalType signalType,out CoreType coreUnit,out CoreType fieldUnit)
         {
             coreUnit = signalAssetLib[signalType].CoreUnitAsset.UnitType;
             fieldUnit = signalAssetLib[signalType].FieldUnitAsset.UnitType;
-        }
+        }*/
 
         #region Getter
 
-        private SignalAssetBase GetSignalAssetByUnitType(CoreType unitType)
+        /*private SignalAssetBase GetSignalAssetByUnitType(CoreType unitType)
         {
             try
             {
@@ -60,27 +60,35 @@ namespace ROOT
                 }
             }
             throw new ArgumentException();
-        }
+        }*/
 
-        public UnitAsset GetUnitAssetByUnitType(CoreType unitType)
+        public UnitAsset GetUnitAssetByUnitType(SignalType signalType,CoreGenre genre)
         {
-            var signalBase = GetSignalAssetByUnitType(unitType);
-            return signalBase.CoreUnitAsset.UnitType == unitType ? signalBase.CoreUnitAsset : signalBase.FieldUnitAsset;
+            var asset = signalAssetLib[signalType];
+            switch (genre)
+            {
+                case CoreGenre.Core:
+                    return asset.CoreUnitAsset;
+                case CoreGenre.Field:
+                    return asset.FieldUnitAsset;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(genre), genre, null);
+            }
         }
 
-        public float PriceFromUnit(CoreType unitType)
+        public float PriceFromUnit(SignalType signalType,CoreGenre genre)
         {
-            return GetUnitAssetByUnitType(unitType).UnitPrice;
+            return GetUnitAssetByUnitType(signalType,genre).UnitPrice;
         }
 
-        public SignalType SignalTypeFromUnit(CoreType unitType)
+        /*public SignalType SignalTypeFromUnit(CoreType unitType)
         {
             return GetSignalAssetByUnitType(unitType).Type;
-        }
+        }*/
 
-        public Material GetMatByUnitType(CoreType unitType)
+        public Material GetMatByUnitType(SignalType signalType,CoreGenre genre)
         {
-            return GetUnitAssetByUnitType(unitType).UnitMat;
+            return GetUnitAssetByUnitType(signalType,genre).UnitMat;
         }
 
         #endregion

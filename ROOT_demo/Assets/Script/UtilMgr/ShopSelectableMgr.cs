@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
+    using UnitTypeCombo=Tuple<SignalType,CoreGenre>;
     public class ShopSelectableMgr : ShopBase
     {
         private void UpdateShopSelf(int discount)
@@ -113,22 +114,22 @@ namespace ROOT
         }
 
         //TEMP 这个还是要统一管理起来。
-        private int UnitHardwarePrice(CoreType core, SideType[] sides)
+        private int UnitHardwarePrice(SignalType signal,CoreGenre genre, SideType[] sides)
         {
-            var corePrice = SignalMasterMgr.Instance.PriceFromUnit(core);
+            var corePrice = SignalMasterMgr.Instance.PriceFromUnit(signal, genre);
             var sideCount = sides.Count(side => side == SideType.Connection);
             var sidePrice = Mathf.Pow(2.0f, sideCount);
             var hardwarePrice = corePrice + sidePrice;
             return Mathf.RoundToInt(hardwarePrice);
         }
 
-        private GameObject InitUnitShop(CoreType core, SideType[] sides, out int hardwarePrice, int ID, int _cost,
+        private GameObject InitUnitShop(SignalType signal,CoreGenre genre, SideType[] sides, out int hardwarePrice, int ID, int _cost,
             int tier, int discount)
         {
-            var go = InitUnitShopCore(core, sides, ID, _cost, tier);
+            var go = InitUnitShopCore(signal,genre, sides, ID, _cost, tier);
             go.transform.parent = DisplayRoot;
             var unit = go.GetComponentInChildren<Unit>();
-            hardwarePrice = UnitHardwarePrice(core, sides);
+            hardwarePrice = UnitHardwarePrice(signal,genre, sides);
             _hardwarePrices[ID] = hardwarePrice;
             //TODO
             unit.SetShop(ID, UnitRetailPrice(ID, tier), discount, _cost, true);
@@ -136,7 +137,7 @@ namespace ROOT
             return go;
         }
 
-        private CoreType GenerateSelfCoreAndTier(in int i, out int tier)
+        private UnitTypeCombo GenerateSelfCoreAndTier(in int i, out int tier)
         {
             tier = TierProgress(currentLevelAsset.LevelProgress);
             switch (i)
@@ -172,18 +173,18 @@ namespace ROOT
         {
             var ID = IJtoID(i, j);
             var core = GenerateSelfCoreAndTier(in i, out var tier);
-            var go = InitUnitShop(core, GenerateSide(j), out var hardwarePrice, ID, 0, tier, discount);
+            var go = InitUnitShop(core.Item1,core.Item2, GenerateSide(j), out var hardwarePrice, ID, 0, tier, discount);
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
-        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(UnitType.Item2.Item1) > 0;
-        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(UnitType.Item1.Item1) > 0;
+        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(SignalTypeB,CoreGenre.Core) > 0;
+        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(SignalTypeA,CoreGenre.Core) > 0;
 
         private void CreatePremiumUnit(int i, int j, int discount)
         {
             var ID = IJtoID(i, j);
 
-            CoreType core;
+            UnitTypeCombo core;
             if (CoreUnitTypeBOnBoard && CoreUnitTypeAOnBoard)
             {
                 //RISK 这里的生成有问题。还是要确认一下。
@@ -216,11 +217,13 @@ namespace ROOT
                 do
                 {
                     //PB的Unit接口数至少是3。
-                    sides = GenerateRandomSideArray(core);
+                    //TODO 现在随机生成的流程要重做、先搁在这儿。
+                    sides = new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.NoConnection};
+                    //sides = GenerateRandomSideArray(core);
                 } while (sides.Count(side => side == SideType.Connection) < 3);
             }
 
-            var go = InitUnitShop(core, sides, out var hardwarePrice, ID, 0, tier, discount);
+            var go = InitUnitShop(core.Item1, core.Item2, sides, out var hardwarePrice, ID, 0, tier, discount);
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
@@ -257,7 +260,7 @@ namespace ROOT
         public override void ShopStart()
         {
             InitPrice();
-            InitSideCoreWeight();
+            //InitSideCoreWeight();
             CreateSelfUnit();
         }
 
@@ -267,7 +270,7 @@ namespace ROOT
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(Vector2Int.zero);
-            unit.InitUnit(SelfUnit.UnitCore, SelfUnit.UnitSides.Values.ToArray(), SelfUnit.Tier);
+            unit.InitUnit(SelfUnit.UnitCore, SelfUnit.UnitCoreGenre, SelfUnit.UnitSides.Values.ToArray(), SelfUnit.Tier);
             return go;
         }
 

@@ -37,7 +37,7 @@ namespace ROOT
             var maxScore = Int32.MinValue;
             var maxLength = maxCount;
             float res = 0;
-            foreach (var signalCore in gameBoard.FindUnitWithCoreType(CoreUnitType).Select(unit => unit.SignalCore as ScanUnitSignalCore))
+            foreach (var signalCore in gameBoard.FindUnitWithCoreType(Type,CoreGenre.Core).Select(unit => unit.SignalCore as ScanUnitSignalCore))
             {
                 //懂了，主要是CalScore代码之间需要交互这三个数据。
                 //这个可以搞的，写一个CalScore的重写，里面写上需要的out变量就行了。

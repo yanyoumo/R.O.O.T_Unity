@@ -717,21 +717,21 @@ namespace ROOT
         {
             switch (SrcGenre)
             {
-                case CoreGenre.Source:
+                case CoreGenre.Core:
                     return ConnectionMeshType.NoChange;
-                case CoreGenre.Destination:
+                case CoreGenre.Field:
                     if (OtherGenre == null)
                     {
                         return ConnectionMeshType.NoConnectionMesh;
                     }
                     else
                     {
-                        if (OtherGenre == CoreGenre.Source)
+                        if (OtherGenre == CoreGenre.Core)
                         {
                             return ConnectionMeshType.DtSConnectedMesh;
                         }
 
-                        if (OtherGenre == CoreGenre.Destination)
+                        if (OtherGenre == CoreGenre.Field)
                         {
                             return ConnectionMeshType.DtoDConnectedMesh;
                         }

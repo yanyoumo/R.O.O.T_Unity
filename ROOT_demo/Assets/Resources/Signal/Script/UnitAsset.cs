@@ -12,7 +12,7 @@ namespace ROOT
     public class UnitAsset : ScriptableObject
     {
         [Title("Basic Data")]
-        public CoreType UnitType;
+        public SignalType UnitType;
         public CoreGenre UnitGenre;
         public float UnitPrice;
         [Title("Ratio Data")]

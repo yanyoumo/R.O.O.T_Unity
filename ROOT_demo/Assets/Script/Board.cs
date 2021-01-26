@@ -76,8 +76,9 @@ namespace ROOT
             {
                 var unit = UnitsGameObjects[vector2Int].GetComponentInChildren<Unit>();
 
-                if (unit.UnitCore == CoreType.HardDrive ||
-                    (unit.UnitCore == CoreType.NetworkCable && unit.SignalCore.InServerGrid && unit.SignalCore.ServerDepth == 1))
+                if ((unit.UnitCore == SignalType.Matrix && unit.UnitCoreGenre == CoreGenre.Field) ||
+                    ((unit.UnitCore == SignalType.Scan && unit.UnitCoreGenre == CoreGenre.Field) &&
+                     unit.SignalCore.InServerGrid && unit.SignalCore.ServerDepth == 1))
                 {
                     if (vector2Int == Pos)
                     {
@@ -443,12 +444,12 @@ namespace ROOT
 
         public Dictionary<Vector2Int, GameObject> UnitsGameObjects { get; private set; }
 
-        public int GetTotalTierCountByCoreType(CoreType coreType)
+        public int GetTotalTierCountByCoreType(SignalType signal,CoreGenre genre)
         {
-            return Units.Where(unit => unit.UnitCore == coreType).Sum(unit => unit.Tier);
+            return Units.Where(unit => unit.UnitCore == signal&&unit.UnitCoreGenre == genre).Sum(unit => unit.Tier);
         }
         public int GetUnitCount => UnitsGameObjects.Count;
-        public int GetNonPCBUnitCount => Units.Count(unit => unit.UnitCore != CoreType.PCB);
+        //public int GetNonPCBUnitCount => Units.Count(unit => unit.UnitCore != CoreType.PCB);
 
         public Unit[] Units => UnitsGameObjects.Values.Select(unitsValue => unitsValue.GetComponentInChildren<Unit>()).ToArray();
         
@@ -457,9 +458,9 @@ namespace ROOT
             return pos.y * BoardLength + pos.x;
         }
 
-        public Unit[] FindUnitWithCoreType(CoreType type)
+        public Unit[] FindUnitWithCoreType(SignalType signal,CoreGenre genre)
         {
-            return Units.Where(u => u.UnitCore == type).ToArray();
+            return Units.Where(u => u.UnitCore == signal && u.UnitCoreGenre == genre).ToArray();
         }
 
         [CanBeNull]
@@ -541,30 +542,16 @@ namespace ROOT
             }
         }
 
-        public GameObject InitUnit(Vector2Int board_pos,CoreType core,SideType[] sides,int Tier)
+        public GameObject InitUnit(Vector2Int board_pos,SignalType signal,CoreGenre genre,SideType[] sides,int Tier)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(board_pos.ToString());
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(board_pos);
-            unit.InitUnit(core, sides, Tier);
+            unit.InitUnit(signal,genre, sides, Tier);
             return go;
         }
 
-        CoreType UnitCoreFromSignalAndGenre(SignalType signalType,CoreGenre coreGenre)
-        {
-            SignalMasterMgr.Instance.UnitTypeFromSignal(signalType, out var coreUnit, out var fieldUnit);
-            if (coreGenre==CoreGenre.Source)
-            {
-                return coreUnit;
-            }
-            if (coreGenre==CoreGenre.Destination)
-            {
-                return fieldUnit;
-            }
-
-            return CoreType.PCB;
-        }
         SignalType SignalTypeFromAdditionalGameSetup(AdditionalGameSetup additionalGameSetup,PlayingSignalSelector selector)
         {
             if (selector == PlayingSignalSelector.TypeA)
@@ -588,8 +575,7 @@ namespace ROOT
             unit.InitPosWithAnimation(unitGist.Pos);
             UnitsGameObjects.Add(unitGist.Pos, unitGO);
             var signalType = SignalTypeFromAdditionalGameSetup(additionalGameSetup, unitGist.PlayingSignalSelector);
-            var unitCore = UnitCoreFromSignalAndGenre(signalType,unitGist.CoreGenre);
-            unit.InitUnit(unitCore, unitGist.Sides, unitGist.Tier, this);
+            unit.InitUnit(signalType,unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, this);
             if (unitGist.IsStation)
             {
                 unit.SetupStationUnit();
@@ -754,7 +740,7 @@ namespace ROOT
             return TryDeleteCertainUnit(pos, out var destoryedCore);
         }
 
-        public bool TryDeleteCertainUnit(Vector2Int pos, out CoreType? destoryedCore)
+        public bool TryDeleteCertainUnit(Vector2Int pos, out SignalType? destoryedCore)
         {
             if (CheckBoardPosValidAndFilled(pos))
             {
@@ -771,7 +757,7 @@ namespace ROOT
             return false;
         }
 
-        public bool TryDeleteCertainNoStationUnit(Vector2Int pos,out CoreType? destoryedCore)
+        public bool TryDeleteCertainNoStationUnit(Vector2Int pos,out SignalType? destoryedCore)
         {
             if (CheckBoardPosValidAndFilled(pos))
             {
@@ -789,9 +775,9 @@ namespace ROOT
             return false;
         }
 
-        public int GetCountByType(CoreType coreType)
+        public int GetCountByType(SignalType signal,CoreGenre genre)
         {
-            return FindUnitWithCoreType(coreType).Length;
+            return FindUnitWithCoreType(signal, genre).Length;
         }
 
         public void ResetUnitEmission()
@@ -823,7 +809,7 @@ namespace ROOT
             foreach (var unit in UnitsGameObjects)
             {
                 Unit unitComp = unit.Value.GetComponentInChildren<Unit>();
-                if (unitComp.UnitCore==CoreType.NetworkCable||unitComp.UnitCore==CoreType.Server)
+                if (unitComp.UnitCore == SignalType.Scan)
                 {                  
                     //现在网络只显示网线和服务器，不会有错，但是有可能有更好的解决方案？
                     if (unitComp.SignalCore.InServerGrid)

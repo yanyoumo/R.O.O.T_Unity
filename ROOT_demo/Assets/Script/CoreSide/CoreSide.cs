@@ -11,26 +11,13 @@ namespace ROOT
     {
         Matrix,
         Scan,
-    }
-
-    public enum CoreType
-    {
-        PCB,
-        NetworkCable,
-        Server,
-        Bridge,
-        HardDrive,
-        Processor,
-        Cooler,
-        BackPlate,
-        HQ,
-        CORETYPECOUNT
+        Thermo,
     }
 
     public enum CoreGenre
     {
-        Source,
-        Destination,
+        Core,
+        Field,
         Support,
         Other
     }
@@ -54,25 +41,25 @@ namespace ROOT
 
     public partial class Unit : MoveableBase
     {
-        protected readonly CoreType[] SourceCoreTypeLib =
+        /*protected readonly CoreType[] SourceCoreTypeLib =
         {
-            CoreType.Server,
-            CoreType.Processor,
+            CoreType.ScanCore,
+            CoreType.MatrixCore,
             CoreType.HQ
-        };
+        };*/
 
-        public CoreGenre GetCoreGenreByCoreType(CoreType coreType)
+        /*public CoreGenre GetCoreGenreByCoreType(CoreType coreType)
         {
             foreach (var type in SourceCoreTypeLib)
             {
                 if (coreType == type)
                 {
-                    return CoreGenre.Source;
+                    return CoreGenre.Core;
                 }
             }
 
-            return CoreGenre.Destination;
-        }
+            return CoreGenre.Field;
+        }*/
     }
 
     public sealed partial class ShopMgr : ShopBase

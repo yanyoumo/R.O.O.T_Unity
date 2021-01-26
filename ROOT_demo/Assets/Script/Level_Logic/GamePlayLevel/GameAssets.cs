@@ -48,7 +48,7 @@ namespace ROOT
         public TimeLine TimeLine;
         public CostLine CostLine;
         public CostChart CostChart;
-        public CoreType? DestoryedCoreType;
+        public SignalType? DestoryedCoreType;
         public SignalPanel SignalPanel;
         public InfoAirdrop AirDrop;
         public int ReqOkCount;

@@ -32,7 +32,7 @@ namespace ROOT
         public Vector2Int Pos;
         [ShowIf("ActionType", TutorialActionType.CreateUnit)]
         [VerticalGroup("Split/Left")]
-        public CoreType Core;
+        public SignalType Core;
         [ShowIf("ActionType", TutorialActionType.CreateUnit)]
         [VerticalGroup("Split/Right")]
         public SideType[] Sides;
@@ -60,7 +60,7 @@ namespace ROOT
 
         public bool ExcludedShop=false;
         [ShowIf("@this.ExcludedShop==true")]
-        public List<CoreType> ShopExcludedType;
+        public List<SignalType> ShopExcludedType;
 
         [Header("Tutorial")]
         [ShowIf("levelType", LevelType.Tutorial)]

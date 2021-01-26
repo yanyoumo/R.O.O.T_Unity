@@ -22,7 +22,8 @@ namespace ROOT
     public class BoardGist
     {
         private readonly int BoardLength = 6;
-        private CoreType?[] UnitList;
+        private (SignalType, CoreGenre)?[] UnitList;
+        //private CoreType?[] UnitList;
         //RISK 一个大坑，bool？即使是null也会被解释为false而不是null。
         public bool?[] ConnectionList { get; }
 
@@ -34,7 +35,7 @@ namespace ROOT
         {
             BoardLength = _boardLength;
             var flag=VaildConnectionID(0);
-            UnitList = new CoreType?[BoardLength * BoardLength];
+            UnitList = new (SignalType, CoreGenre)?[BoardLength * BoardLength];
             UnitList.ForEach(tmp => tmp = null);
             ConnectionList = new bool?[2 * BoardLength * BoardLength];
             for (var i = 0; i < ConnectionList.Length; i++)
@@ -42,15 +43,16 @@ namespace ROOT
                 ConnectionList[i] = VaildConnectionID(i) ? (bool?) false : null;
             }
         }
-        
+
         /// <summary>
         /// 设置某个位置上的CoreType
         /// </summary>
-        /// <param name="Pos">所需的位置</param>
-        /// <param name="Core">所需的种类</param>
-        public void SetCoreType(Vector2Int Pos, CoreType Core)
+        /// <param name="pos">所需的位置</param>
+        /// <param name="signal">所需信号的种类</param>
+        /// <param name="genre">所需硬件的种类</param>
+        public void SetCoreType(Vector2Int pos, SignalType signal,CoreGenre genre)
         {
-            UnitList[PosToID(Pos)] = Core;
+            UnitList[PosToID(pos)] = (signal, genre);
         }
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace ROOT
         /// </summary>
         /// <param name="Pos">所需的位置</param>
         /// <returns>所查询的结果，如果没有Unit，则返回NULL</returns>
-        public CoreType? GetCoreType(Vector2Int Pos)
+        public (SignalType, CoreGenre)? GetCoreType(Vector2Int Pos)
         {
             return UnitList[PosToID(Pos)];
         }

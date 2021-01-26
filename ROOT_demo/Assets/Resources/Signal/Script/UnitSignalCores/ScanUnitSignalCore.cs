@@ -19,7 +19,7 @@ namespace ROOT
             int cnt = 0;
             while (vis != 0ul)
             {
-                if (now.UnitCore == CoreType.NetworkCable)
+                if (now.UnitCore == SignalType.Scan && now.UnitCoreGenre == CoreGenre.Field)
                 {
                     cnt += now.Tier;
                 }
@@ -42,7 +42,7 @@ namespace ROOT
             {
                 unit.SignalCore.ServerDepth = length--;
                 unit.SignalCore.ServerSignalDepth = cnt;
-                if (unit.UnitCore == CoreType.NetworkCable)
+                if (unit.UnitCore == SignalType.Scan&&unit.UnitCoreGenre == CoreGenre.Field)
                 {
                     cnt -= unit.Tier;
                 }
@@ -88,7 +88,8 @@ namespace ROOT
                 foreach (var unitConnectedToHardDrive in hardDrive.GetConnectedOtherUnit.Where(unit =>
                     IsVis(unit, vis) == false))
                 {
-                    if (unitConnectedToHardDrive.UnitCore == CoreType.NetworkCable &&
+                    if ((unitConnectedToHardDrive.UnitCore == SignalType.Scan &&
+                         unitConnectedToHardDrive.UnitCoreGenre == CoreGenre.Field) &&
                         unitConnectedToHardDrive.SignalCore.Visited == false)
                     {
                         isLast = false;

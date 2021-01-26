@@ -8,7 +8,8 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
-    using CoreWeight = Dictionary<CoreType, float>;
+    //using CoreWeight = Dictionary<CoreType, float>;
+    using UnitTypeCombo=Tuple<SignalType,CoreGenre>;
 
     /*public partial class BoardDataCollector : MonoBehaviour
     {
@@ -63,35 +64,22 @@ namespace ROOT
         void ResetRequire();
     }
 
+    
     public abstract class ShopBase : MonoBehaviour
     {
         //目前这两个是写死的；之后商店这个种类也改成可配置的；DONE
         protected SignalType SignalTypeA = SignalType.Matrix;
-        protected SignalType SignalTypeB = SignalType.Matrix;
+        protected SignalType SignalTypeB = SignalType.Scan;
 
-        protected ((CoreType, CoreType), (CoreType, CoreType)) UnitType => (UnitTypeA,UnitTypeB);
-        private (CoreType, CoreType) UnitTypeA
-        {
-            get
-            {
-                SignalMasterMgr.Instance.UnitTypeFromSignal(SignalTypeA, out var coreUnit, out var fieldUnit);
-                return (coreUnit, fieldUnit);
-            }
-        }
-        private (CoreType, CoreType) UnitTypeB
-        {
-            get
-            {
-                SignalMasterMgr.Instance.UnitTypeFromSignal(SignalTypeB, out var coreUnit, out var fieldUnit);
-                return (coreUnit, fieldUnit);
-            }
-        }
+        protected ((UnitTypeCombo, UnitTypeCombo), (UnitTypeCombo, UnitTypeCombo)) UnitType => (UnitTypeA,UnitTypeB);
+        private (UnitTypeCombo, UnitTypeCombo) UnitTypeA=> (new UnitTypeCombo(SignalTypeA, CoreGenre.Core), new UnitTypeCombo(SignalTypeA, CoreGenre.Field));
+        private (UnitTypeCombo, UnitTypeCombo) UnitTypeB => (new UnitTypeCombo(SignalTypeB, CoreGenre.Core), new UnitTypeCombo(SignalTypeB, CoreGenre.Field));
 
         public GameObject UnitTemplate;
         protected GameAssets currentLevelAsset;
         public Board GameBoard;
         public GameStateMgr CurrentGameStateMgr;
-        public List<CoreType> excludedTypes = new List<CoreType>();
+        public List<SignalType> excludedTypes = new List<SignalType>();
 
         public abstract void ShopInit(GameAssets _currentLevelAsset);
         public abstract void ShopStart();
@@ -113,13 +101,13 @@ namespace ROOT
 
         protected float[] _hardwarePrices;
 
-        protected GameObject InitUnitShopCore(CoreType core, SideType[] sides, int ID, int _cost, int tier)
+        protected GameObject InitUnitShopCore(SignalType signal,CoreGenre genre, SideType[] sides, int ID, int _cost, int tier)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(Vector2Int.zero);
-            unit.InitUnit(core, sides, tier);
+            unit.InitUnit(signal,genre, sides, tier);
             return go;
         }
 
@@ -235,7 +223,7 @@ namespace ROOT
 
         private SignalType[] TotalSignals => SignalMasterMgr.Instance.SignalLib;
 
-        private void AppendSignalWeight(SignalType type, ref CoreWeight dict)
+        /*private void AppendSignalWeight(SignalType type, ref CoreWeight dict)
         {
             //现在没有根据现有单元动态调整的逻辑。
             SignalMasterMgr.Instance.UnitTypeFromSignal(type,out var coreUnit,out var fieldUnit);
@@ -243,11 +231,13 @@ namespace ROOT
             var fieldUnitAsset=SignalMasterMgr.Instance.GetUnitAssetByUnitType(fieldUnit);
             dict.Add(coreUnit, coreUnitAsset.BaseRate);
             dict.Add(fieldUnit, fieldUnitAsset.BaseRate);
-        }
+        }*/
 
-        protected CoreType GenerateRandomCore()
+        protected UnitTypeCombo GenerateRandomCore()
         {
-            var lib = new CoreWeight();
+            //TODO 如果真这么写，随即生成流程还真得大改；但是早晚要改。
+            return new UnitTypeCombo(SignalType.Scan, CoreGenre.Field);
+            /*var lib = new CoreWeight();
             foreach (var totalSignal in TotalSignals)
             {
                 AppendSignalWeight(totalSignal, ref lib);
@@ -265,10 +255,10 @@ namespace ROOT
             }
 
             NormalizeDicVal(ref lib);
-            return Utils.GenerateWeightedRandom(lib);
+            return Utils.GenerateWeightedRandom(lib);*/
         }
 
-        protected SideType[] GenerateRandomSideArray(CoreType core = CoreType.PCB)
+        /*protected SideType[] GenerateRandomSideArray(UnitTypeCombo combo)
         {
             var unitAsset = SignalMasterMgr.Instance.GetUnitAssetByUnitType(core);
             var ratio = unitAsset.AdditionalPortRate;
@@ -298,11 +288,11 @@ namespace ROOT
             } while (!CheckConformKeySide(core, res));
 
             return res;
-        }
+        }*/
 
 
         //KeySide minCount
-        protected Dictionary<CoreType, Tuple<SideType, int>> _keySideLib { private set; get; }
+        /*protected Dictionary<CoreType, Tuple<SideType, int>> _keySideLib { private set; get; }
 
         //按照某套概率生成一个随机单元的需求肯定有、但是现在的优先级没有那么高。
         [Obsolete]
@@ -311,25 +301,25 @@ namespace ROOT
             _keySideLib = new Dictionary<CoreType, Tuple<SideType, int>>()
             {
                 {CoreType.PCB, new Tuple<SideType, int>(SideType.NoConnection, 4)},
-                {CoreType.NetworkCable, new Tuple<SideType, int>(SideType.Connection, 2)},
-                {CoreType.Server, new Tuple<SideType, int>(SideType.Connection, 1)},
-                {CoreType.HardDrive, new Tuple<SideType, int>(SideType.Connection, 1)},
-                {CoreType.Processor, new Tuple<SideType, int>(SideType.Connection, 1)},
+                {CoreType.ScanField, new Tuple<SideType, int>(SideType.Connection, 2)},
+                {CoreType.ScanCore, new Tuple<SideType, int>(SideType.Connection, 1)},
+                {CoreType.MatrixField, new Tuple<SideType, int>(SideType.Connection, 1)},
+                {CoreType.MatrixCore, new Tuple<SideType, int>(SideType.Connection, 1)},
             };
-        }
+        }*/
 
         #endregion
 
-        private bool CheckConformKeySide(CoreType core, SideType[] sides)
+        private bool CheckConformKeySide(UnitTypeCombo type, SideType[] sides)
         {
-
-            if (!_keySideLib.TryGetValue(core, out var data))
+            return true;
+            /*if (!_keySideLib.TryGetValue(core, out var data))
             {
                 //no constrain always ok
                 return true;
             }
 
-            return Utils.GetSideCount(data.Item1, sides) >= data.Item2;
+            return Utils.GetSideCount(data.Item1, sides) >= data.Item2;*/
         }
 
         public static void NormalizeDicVal<T>(ref Dictionary<T, float> lib)
@@ -470,7 +460,7 @@ namespace ROOT
         public override void ShopStart()
         {
             InitPrice();
-            InitSideCoreWeight();
+            //InitSideCoreWeight();
 
             TotalCount = 0;
 
@@ -508,18 +498,18 @@ namespace ROOT
             }
         }
 
-        private CoreType GenerateCoreAndTier(out int tier)
+        private UnitTypeCombo GenerateCoreAndTier(out int tier)
         {
             var offsetedUnitCount = TotalCount - unitCountOffset;
             if (normalMadateArray.Contains(offsetedUnitCount))
             {
                 tier = madateBaseTier;
-                return CoreType.HardDrive;
+                return new UnitTypeCombo(SignalType.Matrix, CoreGenre.Field);
             }
             else if (networkMadateArray.Contains(offsetedUnitCount))
             {
                 tier = madateBaseTier;
-                return CoreType.NetworkCable;
+                return new UnitTypeCombo(SignalType.Scan, CoreGenre.Field);
             }
             else
             {
@@ -544,8 +534,7 @@ namespace ROOT
                     var (item1, item2, CostMultiplier) = TierMultiplier(tier);
                     CostMultiplier = 0.0f;
                     _cost = Mathf.RoundToInt(_cost * CostMultiplier);
-                    _items[i] = InitUnitShop(core, GenerateRandomSideArray(core), out _hardwarePrices[i], i, _cost,
-                        tier);
+                    _items[i] = InitUnitShop(core.Item1,core.Item2, new [] {SideType.Connection,SideType.Connection,SideType.NoConnection,SideType.NoConnection}, out _hardwarePrices[i], i, _cost, tier);
                     _itemUnit[i].SetShop(i, UnitRetailPrice(i), 0, _cost, TotalCount % 2 == 0);
                     currentPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);
                     nextPosS[i] = _posA + new Vector3(_posDisplace * i, 0, 0);

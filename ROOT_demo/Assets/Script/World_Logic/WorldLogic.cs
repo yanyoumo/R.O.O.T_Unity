@@ -1107,8 +1107,8 @@ namespace ROOT
 
             levelAsset.Shop.OpenShop(lvlLogic.IsShopRound, discount);
             levelAsset.SkillMgr.SkillEnabled = levelAsset.SkillEnabled = lvlLogic.IsSkillAllowed;
-            levelAsset.SignalPanel.NetworkTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.NetworkCable);
-            levelAsset.SignalPanel.NormalTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(CoreType.HardDrive);
+            levelAsset.SignalPanel.NetworkTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(SignalType.Scan,CoreGenre.Field);
+            levelAsset.SignalPanel.NormalTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(SignalType.Matrix,CoreGenre.Field);
         }
 
         //这里哪敢随便改成基于事件的啊；这里都是很看重时序的东西。

@@ -24,7 +24,7 @@ namespace ROOT
         Vector2Int[] NextStrikingPos(out int count);
         void Init(int counterLoopMedian = 4, int counterLoopVariance = 1);
         void Step();
-        void Step(out CoreType? destoryedCore);
+        void Step(out SignalType? destoryedCore);
         void ForceReset();
     }
 
@@ -73,7 +73,7 @@ namespace ROOT
                     pos = ComplexRandomTarget();
                     if (GameBoard.UnitsGameObjects.TryGetValue(pos, out var value))
                     {
-                        noSource = (value.GetComponentInChildren<Unit>().UnitCoreGenre != CoreGenre.Source);
+                        noSource = (value.GetComponentInChildren<Unit>().UnitCoreGenre != CoreGenre.Core);
                     }
                     else
                     {
@@ -220,10 +220,10 @@ namespace ROOT
 
         public virtual void Step()
         {
-            Step(out CoreType? destoryedCore);
+            Step(out SignalType? destoryedCore);
         }
 
-        public virtual void Step(out CoreType? destoryedCore)
+        public virtual void Step(out SignalType? destoryedCore)
         {
             destoryedCore = null;
             //这里计算的节奏意外地关键。

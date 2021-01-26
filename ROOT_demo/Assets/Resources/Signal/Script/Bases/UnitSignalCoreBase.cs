@@ -9,7 +9,9 @@ namespace ROOT
     {
         public Unit Owner;
         protected Board GameBoard => Owner.GameBoard;
+        //返回对应的信号的enum
         public abstract SignalType Type { get; }
+        //为返回对应的在 遥测阶段 中获得的遥测范围。
         public abstract List<Vector2Int> SingleInfoCollectorZone { get; }
 
         [ReadOnly] public RotationDirection SignalFromDir;
@@ -48,6 +50,8 @@ namespace ROOT
         {
             return CalScore(out var a);
         }
+        
+        //从某个独立单元计分的逻辑、主要是为SignalAsset中总体计算的BackUp函数。 
         public abstract float CalScore(out int hardwareCount);
     }
 }
