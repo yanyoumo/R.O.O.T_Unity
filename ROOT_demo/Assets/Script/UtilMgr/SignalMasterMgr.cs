@@ -62,21 +62,21 @@ namespace ROOT
             throw new ArgumentException();
         }*/
 
-        public UnitAsset GetUnitAssetByUnitType(SignalType signalType,CoreGenre genre)
+        public UnitAsset GetUnitAssetByUnitType(SignalType signalType,HardwareType genre)
         {
             var asset = signalAssetLib[signalType];
             switch (genre)
             {
-                case CoreGenre.Core:
+                case HardwareType.Core:
                     return asset.CoreUnitAsset;
-                case CoreGenre.Field:
+                case HardwareType.Field:
                     return asset.FieldUnitAsset;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(genre), genre, null);
             }
         }
 
-        public float PriceFromUnit(SignalType signalType,CoreGenre genre)
+        public float PriceFromUnit(SignalType signalType,HardwareType genre)
         {
             return GetUnitAssetByUnitType(signalType,genre).UnitPrice;
         }
@@ -86,7 +86,7 @@ namespace ROOT
             return GetSignalAssetByUnitType(unitType).Type;
         }*/
 
-        public Material GetMatByUnitType(SignalType signalType,CoreGenre genre)
+        public Material GetMatByUnitType(SignalType signalType,HardwareType genre)
         {
             return GetUnitAssetByUnitType(signalType,genre).UnitMat;
         }

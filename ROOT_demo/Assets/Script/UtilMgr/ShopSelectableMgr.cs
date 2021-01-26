@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace ROOT
 {
-    using UnitTypeCombo=Tuple<SignalType,CoreGenre>;
+    using UnitTypeCombo=Tuple<SignalType,HardwareType>;
     public class ShopSelectableMgr : ShopBase
     {
         private void UpdateShopSelf(int discount)
@@ -114,7 +114,7 @@ namespace ROOT
         }
 
         //TEMP 这个还是要统一管理起来。
-        private int UnitHardwarePrice(SignalType signal,CoreGenre genre, SideType[] sides)
+        private int UnitHardwarePrice(SignalType signal,HardwareType genre, SideType[] sides)
         {
             var corePrice = SignalMasterMgr.Instance.PriceFromUnit(signal, genre);
             var sideCount = sides.Count(side => side == SideType.Connection);
@@ -123,7 +123,7 @@ namespace ROOT
             return Mathf.RoundToInt(hardwarePrice);
         }
 
-        private GameObject InitUnitShop(SignalType signal,CoreGenre genre, SideType[] sides, out int hardwarePrice, int ID, int _cost,
+        private GameObject InitUnitShop(SignalType signal,HardwareType genre, SideType[] sides, out int hardwarePrice, int ID, int _cost,
             int tier, int discount)
         {
             var go = InitUnitShopCore(signal,genre, sides, ID, _cost, tier);
@@ -177,8 +177,8 @@ namespace ROOT
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
-        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(SignalTypeB,CoreGenre.Core) > 0;
-        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(SignalTypeA,CoreGenre.Core) > 0;
+        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(SignalTypeB,HardwareType.Core) > 0;
+        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(SignalTypeA,HardwareType.Core) > 0;
 
         private void CreatePremiumUnit(int i, int j, int discount)
         {
@@ -270,7 +270,7 @@ namespace ROOT
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(Vector2Int.zero);
-            unit.InitUnit(SelfUnit.UnitCore, SelfUnit.UnitCoreGenre, SelfUnit.UnitSides.Values.ToArray(), SelfUnit.Tier);
+            unit.InitUnit(SelfUnit.UnitSignal, SelfUnit.UnitHardware, SelfUnit.UnitSides.Values.ToArray(), SelfUnit.Tier);
             return go;
         }
 

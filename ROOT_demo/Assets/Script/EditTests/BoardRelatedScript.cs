@@ -47,12 +47,12 @@ namespace Tests
             }
         }
 
-        private void RandomCore(out SignalType signal,out CoreGenre genre)
+        private void RandomCore(out SignalType signal,out HardwareType genre)
         {
             Array valuesA = Enum.GetValues(typeof(SignalType));
-            Array valuesB = Enum.GetValues(typeof(CoreGenre));
+            Array valuesB = Enum.GetValues(typeof(HardwareType));
             signal = (SignalType) valuesA.GetValue(Mathf.FloorToInt(Random.value * valuesA.Length));
-            genre = (CoreGenre) valuesB.GetValue(Mathf.FloorToInt(Random.value * valuesB.Length));
+            genre = (HardwareType) valuesB.GetValue(Mathf.FloorToInt(Random.value * valuesB.Length));
         }
 
         private RotationDirection RandomDir()

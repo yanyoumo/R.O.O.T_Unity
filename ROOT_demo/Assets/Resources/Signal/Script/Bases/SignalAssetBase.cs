@@ -30,7 +30,7 @@ namespace ROOT
             float res = 0;
             int reshdCount = 0;
             foreach (var signalCore in gameBoard.Units
-                .Where(unit => unit.UnitCore == Type && unit.UnitCoreGenre == CoreGenre.Core).Select(unit => unit.SignalCore))
+                .Where(unit => unit.UnitSignal == Type && unit.UnitHardware == HardwareType.Core).Select(unit => unit.SignalCore))
             {
                 res += signalCore.CalScore(out var count);
                 reshdCount += count;

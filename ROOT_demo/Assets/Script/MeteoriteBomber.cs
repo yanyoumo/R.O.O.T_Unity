@@ -73,7 +73,7 @@ namespace ROOT
                     pos = ComplexRandomTarget();
                     if (GameBoard.UnitsGameObjects.TryGetValue(pos, out var value))
                     {
-                        noSource = (value.GetComponentInChildren<Unit>().UnitCoreGenre != CoreGenre.Core);
+                        noSource = (value.GetComponentInChildren<Unit>().UnitHardware != HardwareType.Core);
                     }
                     else
                     {

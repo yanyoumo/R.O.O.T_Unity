@@ -33,8 +33,8 @@ namespace ROOT
         private void initCounting(Unit unit)
         {
             unit.SignalCore.Visited = false;
-            unit.SignalCore.InMatrix = (unit.UnitCore == SignalType.Matrix && unit.UnitCoreGenre == CoreGenre.Core);
-            unit.SignalCore.InMatrixSignal = (unit.UnitCore == SignalType.Matrix && unit.UnitCoreGenre == CoreGenre.Core);
+            unit.SignalCore.InMatrix = (unit.UnitSignal == SignalType.Matrix && unit.UnitHardware == HardwareType.Core);
+            unit.SignalCore.InMatrixSignal = (unit.UnitSignal == SignalType.Matrix && unit.UnitHardware == HardwareType.Core);
         }
 
         public override float CalAllScore(Board gameBoard, out int driverCountInt)
@@ -44,9 +44,9 @@ namespace ROOT
 
             gameBoard.Units.ForEach(initCounting);
 
-            if (gameBoard.GetCountByType(Type,CoreGenre.Core) == 0) return 0.0f;
+            if (gameBoard.GetCountByType(Type,HardwareType.Core) == 0) return 0.0f;
 
-            foreach (var unit in gameBoard.FindUnitWithCoreType(Type, CoreGenre.Core))
+            foreach (var unit in gameBoard.FindUnitWithCoreType(Type, HardwareType.Core))
             {
                 if (unit.SignalCore.Visited) continue;
                 unit.SignalCore.CalScore(out var hardwareCount);

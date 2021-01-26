@@ -13,7 +13,7 @@ namespace ROOT
     {
         [Title("Basic Data")]
         public SignalType UnitType;
-        public CoreGenre UnitGenre;
+        public HardwareType UnitGenre;
         public float UnitPrice;
         [Title("Ratio Data")]
         [Range(0,100)]

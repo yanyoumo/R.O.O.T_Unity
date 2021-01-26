@@ -708,39 +708,39 @@ namespace ROOT
             }
         }
 
-        public static ConnectionMeshType GetRelationNoConnection(CoreGenre SrcGenre)
+        public static ConnectionMeshType GetRelationNoConnection(HardwareType SrcGenre)
         {
             return GetRelationBetweenGenre(SrcGenre, null);
         }
 
-        public static ConnectionMeshType GetRelationBetweenGenre(CoreGenre SrcGenre, CoreGenre? OtherGenre)
+        public static ConnectionMeshType GetRelationBetweenGenre(HardwareType SrcGenre, HardwareType? OtherGenre)
         {
             switch (SrcGenre)
             {
-                case CoreGenre.Core:
+                case HardwareType.Core:
                     return ConnectionMeshType.NoChange;
-                case CoreGenre.Field:
+                case HardwareType.Field:
                     if (OtherGenre == null)
                     {
                         return ConnectionMeshType.NoConnectionMesh;
                     }
                     else
                     {
-                        if (OtherGenre == CoreGenre.Core)
+                        if (OtherGenre == HardwareType.Core)
                         {
                             return ConnectionMeshType.DtSConnectedMesh;
                         }
 
-                        if (OtherGenre == CoreGenre.Field)
+                        if (OtherGenre == HardwareType.Field)
                         {
                             return ConnectionMeshType.DtoDConnectedMesh;
                         }
                     }
 
                     break;
-                case CoreGenre.Support:
+                case HardwareType.Support:
                     return ConnectionMeshType.NoChange;
-                case CoreGenre.Other:
+                case HardwareType.Other:
                     return ConnectionMeshType.NoChange;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(SrcGenre), SrcGenre, null);

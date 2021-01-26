@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 namespace ROOT
 {
     //using CoreWeight = Dictionary<CoreType, float>;
-    using UnitTypeCombo=Tuple<SignalType,CoreGenre>;
+    using UnitTypeCombo=Tuple<SignalType,HardwareType>;
 
     /*public partial class BoardDataCollector : MonoBehaviour
     {
@@ -72,8 +72,8 @@ namespace ROOT
         protected SignalType SignalTypeB = SignalType.Scan;
 
         protected ((UnitTypeCombo, UnitTypeCombo), (UnitTypeCombo, UnitTypeCombo)) UnitType => (UnitTypeA,UnitTypeB);
-        private (UnitTypeCombo, UnitTypeCombo) UnitTypeA=> (new UnitTypeCombo(SignalTypeA, CoreGenre.Core), new UnitTypeCombo(SignalTypeA, CoreGenre.Field));
-        private (UnitTypeCombo, UnitTypeCombo) UnitTypeB => (new UnitTypeCombo(SignalTypeB, CoreGenre.Core), new UnitTypeCombo(SignalTypeB, CoreGenre.Field));
+        private (UnitTypeCombo, UnitTypeCombo) UnitTypeA=> (new UnitTypeCombo(SignalTypeA, HardwareType.Core), new UnitTypeCombo(SignalTypeA, HardwareType.Field));
+        private (UnitTypeCombo, UnitTypeCombo) UnitTypeB => (new UnitTypeCombo(SignalTypeB, HardwareType.Core), new UnitTypeCombo(SignalTypeB, HardwareType.Field));
 
         public GameObject UnitTemplate;
         protected GameAssets currentLevelAsset;
@@ -101,7 +101,7 @@ namespace ROOT
 
         protected float[] _hardwarePrices;
 
-        protected GameObject InitUnitShopCore(SignalType signal,CoreGenre genre, SideType[] sides, int ID, int _cost, int tier)
+        protected GameObject InitUnitShopCore(SignalType signal,HardwareType genre, SideType[] sides, int ID, int _cost, int tier)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
@@ -236,7 +236,7 @@ namespace ROOT
         protected UnitTypeCombo GenerateRandomCore()
         {
             //TODO 如果真这么写，随即生成流程还真得大改；但是早晚要改。
-            return new UnitTypeCombo(SignalType.Scan, CoreGenre.Field);
+            return new UnitTypeCombo(SignalType.Scan, HardwareType.Field);
             /*var lib = new CoreWeight();
             foreach (var totalSignal in TotalSignals)
             {
@@ -504,12 +504,12 @@ namespace ROOT
             if (normalMadateArray.Contains(offsetedUnitCount))
             {
                 tier = madateBaseTier;
-                return new UnitTypeCombo(SignalType.Matrix, CoreGenre.Field);
+                return new UnitTypeCombo(SignalType.Matrix, HardwareType.Field);
             }
             else if (networkMadateArray.Contains(offsetedUnitCount))
             {
                 tier = madateBaseTier;
-                return new UnitTypeCombo(SignalType.Scan, CoreGenre.Field);
+                return new UnitTypeCombo(SignalType.Scan, HardwareType.Field);
             }
             else
             {

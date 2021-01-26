@@ -38,7 +38,7 @@ namespace ROOT
             var signalCore = unit?.SignalCore;
             if (unit == null || signalCore.Visited) return score;
 
-            if (unit.UnitCore == Type && unit.UnitCoreGenre == CoreGenre.Field)
+            if (unit.UnitSignal == Type && unit.UnitHardware == HardwareType.Field)
             {
                 var (scoreMultiplier, item2, item3) = ShopBase.TierMultiplier(unit.Tier);
                 score += scoreMultiplier;
