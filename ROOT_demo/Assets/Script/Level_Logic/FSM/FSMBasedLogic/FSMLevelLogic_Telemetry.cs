@@ -253,6 +253,36 @@ namespace ROOT
             LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
             LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
         }
+
+        private void CareerCycle()
+        {
+            if (LevelAsset.DestroyerEnabled)
+            {
+                WorldExecutor.UpdateDestoryer(LevelAsset);
+                if (LevelAsset.WarningDestoryer != null)
+                {
+                    LevelAsset.WarningDestoryer.Step(out var outCore);
+                    LevelAsset.DestoryedCoreType = outCore;
+                }
+            }
+            
+            if (RoundGist.HasValue)
+            {
+                WorldExecutor.UpdateRoundData(ref LevelAsset);
+                if (LevelAsset.GameOverEnabled)
+                {
+                    UpdateGameOverStatus();
+                }
+            }
+        }
+
+        
+        private void InitCareer()
+        {
+            CareerCycle();
+            _mainFSM.currentStatus = RootFSMStatus.MajorUpKeep;
+            _mainFSM.waitForNextFrame = false;
+        }
         
         protected override FSMTransitions RootFSMTransitions
         {
@@ -260,19 +290,19 @@ namespace ROOT
             {
                 var transitions = new FSMTransitions
                 {
-                    new Trans(Status.PreInit, Status.F_Cycle, 1, CheckInited),
+                    new Trans(Status.PreInit, Status.MajorUpKeep, 1, CheckInited, InitCareer),
                     new Trans(Status.PreInit),
                     new Trans(Status.MajorUpKeep, Status.F_Cycle, 4, CheckTelemetryAndNotPaused),
                     new Trans(Status.MajorUpKeep, Status.R_Cycle, 3, CheckAutoR),
                     new Trans(Status.MajorUpKeep, Status.F_Cycle, 2, CheckAutoF),
                     new Trans(Status.MajorUpKeep, Status.R_IO, 1, CheckCtrlPackAny),
                     new Trans(Status.MajorUpKeep),
-                    new Trans(Status.R_IO,Status.TelemetryPause,4,CheckTelemetryAndPaused),
+                    new Trans(Status.R_IO, Status.TelemetryPause, 4, CheckTelemetryAndPaused),
                     new Trans(Status.R_IO, Status.Skill, 3, CheckIsSkill),
                     new Trans(Status.R_IO, Status.F_Cycle, 2, CheckFCycle),
                     new Trans(Status.R_IO, Status.Animate, 1, CheckStartAnimate, TriggerAnimation),
                     new Trans(Status.R_IO, Status.MajorUpKeep, 0, true),
-                    new Trans(Status.TelemetryPause,Status.Career_Cycle),
+                    new Trans(Status.TelemetryPause, Status.Career_Cycle),
                     new Trans(Status.F_Cycle, Status.Career_Cycle),
                     new Trans(Status.R_Cycle, Status.Career_Cycle),
                     new Trans(Status.Skill, Status.Career_Cycle),

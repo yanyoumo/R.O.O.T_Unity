@@ -224,7 +224,7 @@ namespace ROOT
             return roundGist;
         }
 
-        [ReadOnly]
+        //[ReadOnly]
         public AdditionalGameSetup AdditionalGameSetup;
     }
 }

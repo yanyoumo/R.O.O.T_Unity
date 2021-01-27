@@ -104,7 +104,7 @@ namespace ROOT
         }
 
         #region FSM参数
-        private RootFSM _mainFSM;
+        protected RootFSM _mainFSM;
         private ControlActionDriver _actionDriver;
         protected abstract FSMActions fsmActions { get; }
         protected abstract FSMTransitions RootFSMTransitions { get; }
@@ -373,29 +373,7 @@ namespace ROOT
             WorldCycler.StepDown();
             LevelAsset.TimeLine.Reverse();
         }
-
-        protected void CareerCycle()
-        {
-            if (LevelAsset.DestroyerEnabled)
-            {
-                WorldExecutor.UpdateDestoryer(LevelAsset);
-                if (LevelAsset.WarningDestoryer != null)
-                {
-                    LevelAsset.WarningDestoryer.Step(out var outCore);
-                    LevelAsset.DestoryedCoreType = outCore;
-                }
-            }
-            
-            if (RoundGist.HasValue)
-            {
-                WorldExecutor.UpdateRoundData(ref LevelAsset);
-                if (LevelAsset.GameOverEnabled)
-                {
-                    UpdateGameOverStatus();
-                }
-            }
-        }
-
+        
         protected void CleanUp()
         {
             //shouldCycle = false;
@@ -453,7 +431,7 @@ namespace ROOT
             }
         }
 
-        private bool UpdateGameOverStatus()
+        protected bool UpdateGameOverStatus()
         {
             return LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount);
         }

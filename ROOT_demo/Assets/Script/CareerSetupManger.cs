@@ -49,9 +49,9 @@ namespace ROOT
 
         void Continue()
         {
-            var additionalGameSetup = new AdditionalGameSetup();//这个就是需要这个界面去设置、并且注入的“数据包”。
+            //var additionalGameSetup = new AdditionalGameSetup();//这个就是需要这个界面去设置、并且注入的“数据包”。
             var actionAsset = LevelLib.Instance.CareerActionAssetList[sceneId];
-            LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset,additionalGameSetup);
+            LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset);
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
         }
     }

@@ -18,4 +18,4 @@ MonoBehaviour:
   BaseRate: 0
   NecessaryPortCount: 0
   AdditionalPortRate: 0
-  UnitMat: {fileID: 0}
+  UnitMat: {fileID: 2100000, guid: e0e41b89f37639c4391e575b6447c0a4, type: 2}

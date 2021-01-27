@@ -63,14 +63,12 @@ MonoBehaviour:
     InfoCount: 0
   InitalBoard:
   - PlayingSignalSelector: 0
-    SignalType: 0
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 2, y: 2}
     IsStation: 0
   - PlayingSignalSelector: 1
-    SignalType: 1
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
@@ -86,6 +84,5 @@ MonoBehaviour:
   - {x: 6, y: 1}
   - {x: 0, y: 0}
   AdditionalGameSetup:
-    GameID: 0
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1

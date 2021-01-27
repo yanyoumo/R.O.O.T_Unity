@@ -296,7 +296,11 @@ namespace ROOT
 
         protected string UnitName { get; }
 
+        [ReadOnly]
+        [ShowInInspector]
         public SignalType UnitSignal { get; private set; }
+        [ReadOnly]
+        [ShowInInspector]
         public HardwareType UnitHardware { get; private set; }
         public bool IsCore => UnitHardware == HardwareType.Core;
         public Dictionary<RotationDirection, SideType> UnitSides { get; private set; }
@@ -633,6 +637,9 @@ namespace ROOT
                     connector.Signal_A_Val = ignoreVal ? 0 : val;
                     break;
                 case SignalType.Scan:
+                    connector.Signal_B_Val = ignoreVal ? 0 : val;
+                    break;
+                case SignalType.Thermo:
                     connector.Signal_B_Val = ignoreVal ? 0 : val;
                     break;
                 default:

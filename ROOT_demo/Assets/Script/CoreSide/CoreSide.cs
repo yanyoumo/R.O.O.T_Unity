@@ -39,7 +39,7 @@ namespace ROOT
         NoChange
     }
 
-    public partial class Unit : MoveableBase
+    public partial class Unit
     {
         /*protected readonly CoreType[] SourceCoreTypeLib =
         {

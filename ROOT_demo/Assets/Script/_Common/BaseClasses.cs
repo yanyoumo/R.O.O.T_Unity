@@ -16,6 +16,13 @@ namespace ROOT
         All,
     }
 
+    public enum RotateCommand
+    {
+        NOP,
+        Clockwise,
+        CounterClockwise,
+    }
+    
     public abstract class MoveableBase : MonoBehaviour//, IPlaceable
     {
         protected bool _immovable = false;
