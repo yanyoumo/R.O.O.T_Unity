@@ -30,8 +30,28 @@ namespace ROOT
         public Vector2Int CurrentBoardPosition { get;protected set; }
         public Vector2Int NextBoardPosition { get; protected set; }
         public Vector2 LerpingBoardPosition { get; set; }
+
+        protected RotationDirection ApparentRotationDirection
+        {
+            get => CurrentRotationDirection;
+            set => CurrentRotationDirection = value;
+        }
+
+        private RotationDirection CurrentRotationDirection;
+        private float RotationDirectionLerper;
+        private RotationDirection NextRotationDirection;
         public abstract void UpdateTransform(Vector3 pos);
 
+        private Quaternion QuaternionApparentRotation
+        {
+            get
+            {
+                var currentQuaternion = RotationToQuaternion(CurrentRotationDirection);
+                var nextQuaternion = RotationToQuaternion(NextRotationDirection);
+                return Quaternion.Slerp(currentQuaternion, nextQuaternion, RotationDirectionLerper);
+            }
+        }
+        
         public int PosHash => CurrentBoardPosition.x * 10 + CurrentBoardPosition.y;
 
         public Vector2 LerpBoardPos(float lerp)
@@ -41,6 +61,22 @@ namespace ROOT
             return new Vector2(x, y);
         }
 
+        protected static Quaternion RotationToQuaternion(RotationDirection direction)
+        {
+            switch (direction)
+            {
+                case RotationDirection.North:
+                    return Quaternion.Euler(0, 0, 0);
+                case RotationDirection.East:
+                    return Quaternion.Euler(0, 90, 0);
+                case RotationDirection.West:
+                    return Quaternion.Euler(0, 270, 0);
+                default:
+                    return Quaternion.Euler(0, 180, 0);
+            }
+        }
+
+        
         #region MoveToNeigbour
 
         public virtual void Move(CommandDir Dir)

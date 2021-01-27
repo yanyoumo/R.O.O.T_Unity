@@ -154,8 +154,8 @@ namespace ROOT
         public UnitSignalCoreBase SignalCore;
 
         public TextMeshPro BillBoardText;
-        private int Cost { get; set; } = 0;
-
+        
+        private int Cost = 0;
         private int _tier = 0;
 
         public int Tier
@@ -305,7 +305,11 @@ namespace ROOT
         public bool IsCore => UnitHardware == HardwareType.Core;
         public Dictionary<RotationDirection, SideType> UnitSides { get; private set; }
 
-        private RotationDirection _unitRotation;
+        private RotationDirection _unitRotation
+        {
+            get => ApparentRotationDirection;
+            set => ApparentRotationDirection = value;
+        }
         private Transform _rootTransform => transform.parent;
         private Material _coreMat;
 
@@ -482,7 +486,7 @@ namespace ROOT
             }
         }
 
-        protected virtual void Awake()
+        protected void Awake()
         {
             ShopID = -1;
             CurrentBoardPosition = new Vector2Int(0, 0);
@@ -520,25 +524,10 @@ namespace ROOT
             UnitSides.TryGetValue(desiredLocalSideDirection, out var res);
             return res;
         }
-
+        
         public void UpdateWorldRotationTransform()
         {
-            switch (_unitRotation)
-            {
-                case RotationDirection.North:
-                    _rootTransform.rotation = Quaternion.Euler(0, 0, 0);
-                    break;
-                case RotationDirection.East:
-                    _rootTransform.rotation = Quaternion.Euler(0, 90, 0);
-                    break;
-                case RotationDirection.West:
-                    _rootTransform.rotation = Quaternion.Euler(0, 270, 0);
-                    break;
-                case RotationDirection.South:
-                    _rootTransform.rotation = Quaternion.Euler(0, 180, 0);
-                    break;
-            }
-
+            _rootTransform.rotation = RotationToQuaternion(_unitRotation);
             UpdateNeighboringDataAndSideMesh();
         }
 
