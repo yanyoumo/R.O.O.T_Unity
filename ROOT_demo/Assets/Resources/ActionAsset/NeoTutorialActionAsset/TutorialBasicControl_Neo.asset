@@ -28,6 +28,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 00000000
     Tier: 0
   - ActionIdx: 0
@@ -37,6 +38,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 0
@@ -46,6 +48,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 1
@@ -55,6 +58,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 1
@@ -63,7 +67,8 @@ MonoBehaviour:
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 2, y: 1}
-    Core: 4
+    Core: 0
+    HardwareType: 0
     Sides: 01000000010000000000000001000000
     Tier: 1
   - ActionIdx: 2
@@ -73,6 +78,7 @@ MonoBehaviour:
     DoppelgangerText: "\u6574\u4E2A\u6E38\u620F\u4F7F\u7528\u89E6\u6478\u5C4F\u5373\u53EF\u64CD\u4F5C\u3002"
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 2
@@ -82,6 +88,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 3, y: 2}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 3
@@ -91,6 +98,7 @@ MonoBehaviour:
     DoppelgangerText: "\u5728\u5C4F\u5E55\u4E0A\u76F4\u63A5\u62D6\u52A8\u5355\u5143\u5373\u53EF\u79FB\u52A8\uFF0C\u53CC\u51FB\u5355\u5143\u53EF\u4EE5\u65CB\u8F6C"
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 4
@@ -100,6 +108,7 @@ MonoBehaviour:
     DoppelgangerText: "\u8BDD\u8BF4\uFF0C\u5728\u4E4B\u540E\u548C\u6B63\u5F0F\u6E38\u620F\u4E2D\u968F\u65F6\u53EF\u4EE5\u6309\u4F4F\u5C4F\u5E55\u53F3\u4E0B\u89D2\u6765\u663E\u793A\u64CD\u4F5C\u63D0\u793A\u3002"
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 5
@@ -109,6 +118,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 6
@@ -118,6 +128,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 6
@@ -126,7 +137,8 @@ MonoBehaviour:
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
-    Core: 4
+    Core: 0
+    HardwareType: 0
     Sides: 01000000000000000100000001000000
     Tier: 1
   - ActionIdx: 6
@@ -136,6 +148,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 6
@@ -144,7 +157,8 @@ MonoBehaviour:
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
-    Core: 4
+    Core: 0
+    HardwareType: 0
     Sides: 01000000010000000100000000000000
     Tier: 1
   - ActionIdx: 6
@@ -153,7 +167,8 @@ MonoBehaviour:
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
-    Core: 4
+    Core: 0
+    HardwareType: 0
     Sides: 01000000010000000000000001000000
     Tier: 1
   - ActionIdx: 6
@@ -163,9 +178,18 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
-  TimeLineTokens: []
+  RoundDatasGist:
+    NormalRoundCount: 0
+    HasBossRound: 0
+  RoundDatas: []
   InitalBoard: []
-  TargetCount: 0
+  InfoCount: 0
+  InfoVariantRatio: 0
+  InfoTargetRatio: 0
   StationaryRateList: []
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1

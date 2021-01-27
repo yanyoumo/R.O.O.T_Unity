@@ -17,30 +17,30 @@ namespace ROOT
         private readonly Queue<ControllingPack> _ctrlPackQueue;
         private readonly Queue<BreakingCommand> _breakingCMDQueue;
 
-        private const int InputNumbTime=6;//in ms.
-        private float _inputNumbTimer=.0f;//s.
-        private bool _inputNumbing;
+        private const int InputAntiSpamTime=6;//in ms.
+        private float _inputAntiSpamTimer=.0f;//s.
+        private bool _inputAntiSpam;
 
-        private IEnumerator DeNumbing()
+        private IEnumerator AntiSpamCoolDown()
         {
             yield return 0;
             do
             {
-                _inputNumbTimer += Time.deltaTime;
+                _inputAntiSpamTimer += Time.deltaTime;
                 yield return 0;
-            } while (_inputNumbTimer < InputNumbTime / 1000.0f);
-            _inputNumbing = false;
+            } while (_inputAntiSpamTimer < InputAntiSpamTime / 1000.0f);
+            _inputAntiSpam = false;
         }
 
         private void RequestEnqueueCtrlPack()
         {
-            if (!_inputNumbing)
+            if (!_inputAntiSpam)
             {
                 _ctrlPackQueue.Enqueue(CtrlPack);
-                _inputNumbing = true;
-                _inputNumbTimer = 0.0f;
+                _inputAntiSpam = true;
+                _inputAntiSpamTimer = 0.0f;
             }
-            _owner.StartCoroutine(DeNumbing());//
+            _owner.StartCoroutine(AntiSpamCoolDown());//
         }
         
         /// <summary>
@@ -81,6 +81,7 @@ namespace ROOT
 
             if (actionPack.IsAction(Confirm0))
             {
+                //Debug.Log("CtrlPack.SetFlag(ControllingCommand.Confirm);");
                 CtrlPack.SetFlag(ControllingCommand.Confirm);
             }
 

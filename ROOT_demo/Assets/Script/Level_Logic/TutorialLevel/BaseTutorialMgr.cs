@@ -3,13 +3,16 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static ROOT.TextProcessHelper;
 
 namespace ROOT
 {
     [Obsolete]
-    public class TutorialLogic : BranchingLevelLogic
+    public class TutorialLogic : BranchingLevelLogic { }
+    
+    public abstract partial class FSMTutorialLogic
     {
-        /*protected bool ActionEnded { get; private set; } = false;
+        protected bool ActionEnded { get; private set; } = false;
         protected int ActionIndex { get; private set; } = -1;
         protected int LastActionCount { get; private set; } = 0;
 
@@ -25,62 +28,18 @@ namespace ROOT
         protected virtual string SecondaryGoalEntryContent { get; } = "";
 
         public LevelActionAsset LevelActionAsset => LevelAsset.ActionAsset;
-        protected bool ShowText
+
+        private bool ShowText
         {
             set => LevelAsset.HintMaster.RequestedShowTutorialContent = value;
         }
 
-        protected bool ShowCheckList
+        private bool ShowCheckList
         {
             set => LevelAsset.HintMaster.ShouldShowCheckList = value;
         }
 
-        #region TextProcess
-
-        public static string TmpColorBlueXml(string content)
-        {
-            return TmpColorXml(content, Color.blue);
-        }
-
-        public static string TmpColorGreenXml(string content)
-        {
-            return TmpColorXml(content, Color.green * 0.35f);
-        }
-
-        public static string TmpColorXml(string content, Color col)
-        {
-            var hexCol = ColorUtility.ToHtmlStringRGB(col);
-            return "<color=#" + hexCol + ">" + content + "</color>";
-        }
-
-        public static string TmpColorBold(string content)
-        {
-            return "<b>" + content + "</b>";
-        }
-
-        public static string TmpBracket(string content)
-        {
-            return "[" + content + "]";
-        }
-
-        public static string TmpBracketAndBold(string content)
-        {
-            return TmpColorBold("[" + content + "]");
-        }
-
-        public static string TMPNormalDataCompo()
-        {
-            return TmpBracketAndBold(TmpColorGreenXml("一般数据"));
-        }
-
-        public static string TMPNetworkDataCompo()
-        {
-            return TmpBracketAndBold(TmpColorBlueXml("网络数据"));
-        }
-
-        #endregion
-
-        protected override bool UpdateGameOverStatus(GameAssets currentLevelAsset)
+        protected bool UpdateGameOverStatus(GameAssets currentLevelAsset)
         {
             if (LevelCompleted && PlayerRequestedEnd)
             {
@@ -100,32 +59,10 @@ namespace ROOT
                 return false;
             }
         }
-
-        public override IEnumerator UpdateArtLevelReference(AsyncOperation aOP)
-        {
-            while (!aOP.isDone)
-            {
-                yield return 0;
-            }
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
-            LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
-            LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
-            LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
-            LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
-            PopulateArtLevelReference();
-        }
-
-        public override void PopulateArtLevelReference()
-        {
-            base.PopulateArtLevelReference();
-            LevelAsset.HintMaster.TutorialCheckList.SetupEntryContent(MainGoalEntryContent, SecondaryGoalEntryContent);
-        }
-
-        public abstract override void InitLevel();
-
+        
         protected void CreateUnitOnBoard(TutorialActionData data)
         {
-            GameObject go = LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core, Utils.Shuffle(data.Sides), data.Tier);
+            GameObject go = LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core,data.HardwareType, Utils.Shuffle(data.Sides), data.Tier);
             if (data.Pos.x < 0 || data.Pos.y < 0)
             {
                 LevelAsset.GameBoard.DeliverUnitRandomPlace(go);
@@ -137,7 +74,7 @@ namespace ROOT
             LevelAsset.GameBoard.UpdateBoardInit();
         }
 
-        protected virtual void StepForward()
+        private void StepForward()
         {
             ActionIndex++;
         }
@@ -159,17 +96,19 @@ namespace ROOT
             return Text;
         }
 
-        protected virtual void DisplayText(string text)
+        private void DisplayText(string text)
         {
             //Debug.Log(text);
             LevelAsset.HintMaster.TutorialContent = ProcessText(text);
         }
 
+        protected abstract void AddtionalDealStep(TutorialActionData data);
+        
         /// <summary>
         /// Tutorial父类里面会为通用的动作做一个处理。如果没有会throw
         /// </summary>
         /// <param name="data">输入的TutorialActionData</param>
-        protected virtual void DealStep(TutorialActionData data)
+        private void DealStep(TutorialActionData data)
         {
             switch (data.ActionType)
             {
@@ -202,7 +141,8 @@ namespace ROOT
                     ShowCheckList = false;
                     break;
                 default:
-                    throw new NotImplementedException();
+                    AddtionalDealStep(data);
+                    break;
             }
         }
         protected void DealStepMgr()
@@ -219,13 +159,13 @@ namespace ROOT
             }
         }
 
-        protected sealed override void Awake()
+        /*protected sealed override void Awake()
         {
             base.Awake();
             LevelAsset.TutorialCompleted = false;
-        }
+        }*/
 
-        protected override void Update()
+        /*protected override void Update()
         {
             base.Update(); //严格来说ControlPack在这里搞定了。
 
@@ -246,7 +186,7 @@ namespace ROOT
                     }
                 }
             }
-        }
+        }*/
 
         protected void InitShop()
         {
@@ -265,15 +205,9 @@ namespace ROOT
             obj?.ForceSetDestoryer(nextIncome);
         }
 
-        protected void InitCurrencyIoMgr()
-        {
-            /*LevelAsset.BoardDataCollector = gameObject.AddComponent<BoardDataCollector>();
-            LevelAsset.BoardDataCollector.m_Board = LevelAsset.GameBoard;
-        }
-
         protected bool AllUnitConnected()
         {
             return LevelAsset.GameBoard.UnitsGameObjects.All(gameBoardUnit => gameBoardUnit.Value.GetComponentInChildren<Unit>().AnyConnection);
-        }*/
+        }
     }
 }

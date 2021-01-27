@@ -19,11 +19,13 @@ namespace ROOT
         R_Cycle,//倒行逻辑的部分。
         F_Cycle,//整形逻辑的核心逻辑、主要是执行具体的主干更新、数据更新等等。
         Career_Cycle,//现有“职业”模式需要的逻辑、包含但不限于对时间轴数据的更新、等等。
+        Tutorial_Cycle,//教程相关流程的演进。
         R_IO,//ReactToIO、对从Driver获得的CtrlPack转换成实际执行的逻辑。
         Skill,//这个是在使用某些技能的时候需要进行Upkeep的代码。
         TelemetryPause,//在Boss暂停的时候执行的代码。
         Animate,//将动画向前执行一帧、但是Root的动画流程时绑定时间而不是绑定帧数的。
         CleanUp,//将所有FSM的类数据重置、并且是FSM流程等待一帧的充分条件。
+        COUNT,//搁在最后、计数的。
     }
     
     //里面不同的类型可以使用partial关键字拆开管理。

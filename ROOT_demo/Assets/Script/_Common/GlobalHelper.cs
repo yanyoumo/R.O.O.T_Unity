@@ -22,7 +22,6 @@ namespace ROOT
         public static readonly string TAG_NAME_TUTORIAL_FRAME = "TutorialTextFrame";
         public static readonly string TAG_NAME_ADV_SHOP_PANEL = "AdvShopPanel";
     }
-
     public static class StaticName
     {
         public static readonly string INPUT_BUTTON_TELEMETRY_PAUSE = "TelemetryPause";
@@ -126,7 +125,6 @@ namespace ROOT
         public static readonly string LOCAL_SOUTH_SIDE_MESH_RENDERER_NAME = "LocalSouthSide";
         public static readonly string LOCAL_WEST_SIDE_MESH_RENDERER_NAME = "LocalWestSide";
     }
-
     public static class Utils
     {
         public static float GetCustomizedDistance(Vector2 from, Vector2 to)
@@ -902,7 +900,6 @@ namespace ROOT
             return V2toV2Int(normalizedIn * rhs + center);
         }
     }
-
     public class FileIOUtility
     {
         public static void WriteString(string Content,string path)
@@ -918,6 +915,42 @@ namespace ROOT
             var content = reader.ReadToEnd();
             reader.Close();
             return content;
+        }
+    }
+    public static class TextProcessHelper
+    {
+        public static string TmpColorBlueXml(string content)
+        {
+            return TmpColorXml(content, Color.blue);
+        }
+        public static string TmpColorGreenXml(string content)
+        {
+            return TmpColorXml(content, Color.green * 0.35f);
+        }
+        public static string TmpColorXml(string content, Color col)
+        {
+            var hexCol = ColorUtility.ToHtmlStringRGB(col);
+            return "<color=#" + hexCol + ">" + content + "</color>";
+        }
+        public static string TmpColorBold(string content)
+        {
+            return "<b>" + content + "</b>";
+        }
+        public static string TmpBracket(string content)
+        {
+            return "[" + content + "]";
+        }
+        public static string TmpBracketAndBold(string content)
+        {
+            return TmpColorBold("[" + content + "]");
+        }
+        public static string TMPNormalDataCompo()
+        {
+            return TmpBracketAndBold(TmpColorGreenXml("一般数据"));
+        }
+        public static string TMPNetworkDataCompo()
+        {
+            return TmpBracketAndBold(TmpColorBlueXml("网络数据"));
         }
     }
 }

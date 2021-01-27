@@ -34,6 +34,9 @@ namespace ROOT
         [VerticalGroup("Split/Left")]
         public SignalType Core;
         [ShowIf("ActionType", TutorialActionType.CreateUnit)]
+        [VerticalGroup("Split/Left")]
+        public HardwareType HardwareType;
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
         [VerticalGroup("Split/Right")]
         public SideType[] Sides;
         [ShowIf("ActionType", TutorialActionType.CreateUnit)]
