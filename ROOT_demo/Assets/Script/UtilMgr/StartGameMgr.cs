@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -95,6 +96,141 @@ namespace ROOT
         {
 
         }
+
+        /*int rollD6()
+        {
+            return Random.Range(1, 7);
+        }
+
+        int doSearch_pureRandom()
+        {
+            var res = new int[6];
+            for (var i = 0; i < res.Length; i++)
+            {
+                res[i] = rollD6();
+            }
+            var resT1 = res[0] * 100 + res[1] * 10 + res[2];
+            var resT2 = res[3] * 100 + res[4] * 10 + res[5];
+            return resT1 - resT2;
+        }
+
+        int doSearch_BasicTechniqueA()
+        {
+            var res = new int[6];
+            int valA0 = rollD6();
+            int valA1 = rollD6();
+            res[0] = valA0 > valA1 ? valA0 : valA1;
+            res[3] = valA0 < valA1 ? valA0 : valA1;
+            int valA2 = rollD6();
+            int valA3 = rollD6();
+            res[1] = valA2 > valA3 ? valA2 : valA3;
+            res[4] = valA2 < valA3 ? valA2 : valA3;
+            int valA4 = rollD6();
+            int valA5 = rollD6();
+            res[2] = valA4 > valA5 ? valA4 : valA5;
+            res[5] = valA4 < valA5 ? valA4 : valA5;
+            var resT1 = res[0] * 100 + res[1] * 10 + res[2];
+            var resT2 = res[3] * 100 + res[4] * 10 + res[5];
+            return resT1 - resT2;
+        }
+        
+        int doSearch_BasicTechniqueB()
+        {
+            int valA0 = rollD6();
+            int valA1 = rollD6();
+            int del = Math.Abs(valA0 - valA1);
+            //0,1,2,3,4,5
+            var res = new int[6];
+            if (del==0)
+            {
+                res[0] = valA0;
+                res[1] = valA1;
+            }
+            else if (del<=1)
+            {
+                res[0] = valA0 > valA1 ? valA0 : valA1;
+                res[1] = valA0 < valA1 ? valA0 : valA1;
+            }
+            else if (del >= 4)
+            {
+                res[2] = valA0 < valA1 ? valA0 : valA1;
+                res[5] = valA0 > valA1 ? valA0 : valA1;
+            }
+
+            return 0;
+        }
+
+        [Button]
+        void PureRandomSearch()
+        {
+            int Trial = 1000000;
+            int badCount = 0;
+            int critCount = 0;
+            int goodCount = 0;
+            int goodSum = 0;
+            float goodAvg = 0.0f;
+            for (int i = 0; i < Trial; i++)
+            {
+                int res = doSearch_pureRandom();
+                if (res < 0||res>=100)
+                {
+                    badCount++;
+                }
+                else if (res == 0)
+                {
+                    critCount++;
+                }
+                else
+                {
+                    goodCount++;
+                    goodSum += res;
+                }
+
+                goodAvg = goodSum / (float) goodCount;
+            }
+
+            float badPer = (badCount / (float) Trial) * 100;
+            float critPer = (critCount / (float) Trial) * 100;
+            float goodPer = (goodCount / (float) Trial) * 100;
+            Debug.Log("Using Random Method Searching--bad:" + badPer + "% crit:" + critPer + "% good:" + goodPer +
+                      "%@" + goodAvg);
+        }
+
+        [Button]
+        void BasicTechniqueA()
+        {
+            int Trial = 1000000;
+            int badCount = 0;
+            int critCount = 0;
+            int goodCount = 0;
+            int goodSum = 0;
+            float goodAvg = 0.0f;
+            for (int i = 0; i < Trial; i++)
+            {
+                int res = doSearch_BasicTechniqueA();
+                if (res < 0||res>=100)
+                {
+                    badCount++;
+                }
+                else if (res == 0)
+                {
+                    critCount++;
+                }
+                else
+                {
+                    goodCount++;
+                    goodSum += res;
+                }
+
+                goodAvg = goodSum / (float) goodCount;
+            }
+
+            float badPer = (badCount / (float) Trial) * 100;
+            float critPer = (critCount / (float) Trial) * 100;
+            float goodPer = (goodCount / (float) Trial) * 100;
+            Debug.Log("Using Basic Technique A Method Searching--bad:" + badPer + "% crit:" + critPer + "% good:" + goodPer +
+                      "%@" + goodAvg);
+        }*/
 
         void Awake()
         {
