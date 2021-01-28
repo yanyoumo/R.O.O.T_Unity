@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace UtopianEngine
 {
+    using ValInBox=Tuple<int,int>;
     public class UtopianEngineSearchCalculator : MonoBehaviour
     {
         int rollD6()
@@ -41,6 +42,27 @@ namespace UtopianEngine
             (3,5),
             (4,5),
         };
+        
+        private List<int[]> Get2DiceAllPremutation()
+        {
+            var reslist = new List<int[]>();
+            int[] res = {-1, 0};
+            do
+            {
+                res[0]++;
+                if (res[0] > 5)
+                {
+                    res[0] = 0;
+                    res[1]++;
+                }
+                if (res[1] > 5)
+                {
+                    throw new InternalBufferOverflowException();
+                }
+                reslist.Add(new []{res[0],res[1]});
+            } while (res[0] != 5 || res[1] != 5);
+            return reslist;
+        }
         
         private List<int[]> Get4DiceAllPremutation()
         {
@@ -78,6 +100,10 @@ namespace UtopianEngine
             public Vector2Int firstPairVal;
             public Vector2Int firstPairPos;
         
+            //[0][1][2]
+            //[3][4][5]
+            public int[] BoxVals; 
+            
             public float BadPer;
             public float critPer;
             public float goodPer;
@@ -107,6 +133,134 @@ namespace UtopianEngine
             foreach (var dataRes in orderByDescending)
             {
                 Debug.Log(dataRes);
+            }
+        }
+
+        [Button]
+        void TestCalcThirdPairChance()
+        {
+            ValInBox A = new ValInBox(1, 0);
+            ValInBox B = new ValInBox(5, 2);
+            ValInBox C = new ValInBox(1, 3);
+            ValInBox D = new ValInBox(3, 4);
+            Debug.Log(CalcThirdPairChance(A,B,C,D));
+        }
+
+        DataRes CalcSecondPairChanceW2Rolls(ValInBox A,ValInBox B,int rollA,int rollB)
+        {
+            //这里需要为第二组的数据挑一组最好的结果。（对、按照什么标准挑呢？）
+            throw new NotImplementedException();
+        }
+        
+        DataRes CalcThirdPairChance(ValInBox A,ValInBox B,ValInBox C,ValInBox D)
+        {
+            float totalBadPer = 0.0f;
+            float totalcritPer = 0.0f;
+            float totalgoodPer = 0.0f;
+            float totalfairPer = 0.0f;
+
+            int badCount = 0;
+            int critCount = 0;
+            int goodCount = 0;
+            int fairCount = 0;
+            int Trial = 0;
+            var Roll2 = Get2DiceAllPremutation();
+            int[] val = new int[6];
+            foreach (var ints in Roll2)
+            {
+                val = CalcThirdPairChanceW2Rolls(A, B, C, D, ints[0], ints[1]);
+                int res = SearchBoxRes(val);
+                if (res < 0 || res >= 100)
+                {
+                    badCount++;
+                }
+                else if (res == 0)
+                {
+                    critCount++;
+                }
+                else if (res <= 10)
+                {
+                    goodCount++;
+                }
+                else
+                {
+                    fairCount++;
+                }
+
+                Trial++;
+            }
+
+            totalBadPer = badCount / (float) Roll2.Count;
+            totalcritPer = critCount / (float) Roll2.Count;
+            totalgoodPer = goodCount / (float) Roll2.Count;
+            totalfairPer = fairCount / (float) Roll2.Count;
+
+            var resData = new DataRes
+            {
+                BoxVals = val,
+                BadPer = totalBadPer * 100,
+                critPer = totalcritPer * 100,
+                goodPer = totalgoodPer * 100,
+                fairPer = totalfairPer * 100
+            };
+
+            return resData;
+        }
+
+        int[] CalcThirdPairChanceW2Rolls(ValInBox A,ValInBox B,ValInBox C,ValInBox D,int RollValA,int RollValB)
+        {
+            int emptyPosA=0;
+            int emptyPosB=0;
+            for (int i = 0; i < 6; i++)
+            {
+                if (i != A.Item2 && i != B.Item2 && i != C.Item2 && i != D.Item2)
+                {
+                    emptyPosA = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < 6; i++)
+            {
+                if (i != A.Item2 && i != B.Item2 && i != C.Item2 && i != D.Item2 && i != emptyPosA)
+                {
+                    emptyPosB = i;
+                    break;
+                }
+            }
+
+            ValInBox E0 = new ValInBox(RollValA, emptyPosA);
+            ValInBox F0 = new ValInBox(RollValB, emptyPosB);
+            
+            ValInBox E1 = new ValInBox(RollValA, emptyPosB);
+            ValInBox F1 = new ValInBox(RollValB, emptyPosA);
+            
+            var res0 = new int[6];
+            res0[A.Item2] = A.Item1;
+            res0[B.Item2] = B.Item1;
+            res0[C.Item2] = C.Item1;
+            res0[D.Item2] = D.Item1;
+            res0[E0.Item2] = E0.Item1;
+            res0[F0.Item2] = F0.Item1;
+            
+            var res1 = new int[6];
+            res1[A.Item2] = A.Item1;
+            res1[B.Item2] = B.Item1;
+            res1[C.Item2] = C.Item1;
+            res1[D.Item2] = D.Item1;
+            res1[E1.Item2] = E1.Item1;
+            res1[F1.Item2] = F1.Item1;
+
+            int val0 = SearchBoxRes(res0);
+            int val1 = SearchBoxRes(res1);
+
+            if ((val0 < 0 && val1 < 0) || (val0 > 0 && val1 > 0))
+            {
+                return Math.Abs(val0) <= Math.Abs(val1) ? res0 : res1;
+            }
+            else
+            {
+                return val0 > val1 ? res0 : res1;
             }
         }
 
