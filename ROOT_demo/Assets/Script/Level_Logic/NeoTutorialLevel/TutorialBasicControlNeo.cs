@@ -13,6 +13,27 @@ namespace ROOT
 
     public class TutorialBasicControlNeo : FSMTutorialLogic
     {
+        protected bool AllUnitConnected()
+        {
+            return LevelAsset.GameBoard.Units.All(u => u.AnyConnection);
+        }
+
+        protected override void TutorialMinorUpkeep()
+        {
+            LevelCompleted = AllUnitConnected();
+            LevelFailed = !LevelCompleted;
+            
+            
+            if (ActionEnded)
+            {
+                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = LevelCompleted = AllUnitConnected();
+            }
+            if (LevelCompleted)
+            {
+                PlayerRequestedEnd = CtrlPack.HasFlag(ControllingCommand.NextButton);
+            }
+        }
+
         protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
         {
             //LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
@@ -43,8 +64,8 @@ namespace ROOT
             //throw new NotImplementedException();
         }
 
-        protected override string MainGoalEntryContent => "测试测试测试测试测试";
-
+        protected override string MainGoalEntryContent => "将所有单元链接起来";
+        
         /*private bool LevelCompleted = false;
         private bool PlayerRequestedEnd = false;*/
 
