@@ -45,6 +45,13 @@ namespace ROOT
     
     internal static class WorldCycler
     {
+        public static void Reset()
+        {
+            TelemetryStage = false;
+            TelemetryPause = false;
+            InitCycler();
+        }
+
         public static bool AnimationTimeLongSwitch => TelemetryStage && !TelemetryPause;
 
         public static int Step => ActualStep;

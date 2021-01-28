@@ -107,7 +107,7 @@ namespace ROOT
 
         #region FSM参数
         protected RootFSM _mainFSM;
-        private ControlActionDriver _actionDriver;
+        protected ControlActionDriver _actionDriver;
         protected abstract FSMActions fsmActions { get; }
         protected abstract FSMTransitions RootFSMTransitions { get; }
         protected virtual Dictionary<BreakingCommand, Action> RootFSMBreakings => new Dictionary<BreakingCommand, Action>();
@@ -351,6 +351,7 @@ namespace ROOT
                 //这个东西也要改成可配置的。 DONE
                 _mainFSM.Breaking(_actionDriver.RequestedBreakType);
             }
+            UpdateGameOverStatus();
         }
 
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
@@ -433,11 +434,18 @@ namespace ROOT
             }
         }
 
-        protected bool UpdateGameOverStatus()
+        private void ClassicGameOverStatus()
         {
-            return LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount);
+            if (!LevelAsset.GameStateMgr.EndGameCheck()) return;
+            PendingCleanUp = true;
+            LevelMasterManager.Instance.LevelFinished(LevelAsset);
         }
         
+        protected virtual void UpdateGameOverStatus()
+        {
+            ClassicGameOverStatus();
+        }
+
         private void Awake()
         {
             LevelAsset = new GameAssets();
@@ -465,6 +473,12 @@ namespace ROOT
                 RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
+        }
+
+        private void OnDestroy()
+        {
+            _actionDriver.unsubscribe();
+            _actionDriver = null;
         }
     }
 }

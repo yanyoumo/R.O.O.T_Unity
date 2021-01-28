@@ -47,17 +47,15 @@ namespace ROOT
                 LevelAsset.TutorialCompleted = true;
                 LevelMasterManager.Instance.LevelFinished(LevelAsset);
                 return true;
-            }else if (LevelFailed && PlayerRequestedQuit)
+            }
+            if (LevelFailed && PlayerRequestedQuit)
             {
                 PendingCleanUp = true;
                 LevelAsset.TutorialCompleted = false;
                 LevelMasterManager.Instance.LevelFinished(LevelAsset);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         
         protected void CreateUnitOnBoard(TutorialActionData data)
