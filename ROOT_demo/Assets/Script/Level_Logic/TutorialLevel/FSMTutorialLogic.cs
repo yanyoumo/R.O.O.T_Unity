@@ -13,6 +13,11 @@ namespace ROOT
 
     public abstract partial class FSMTutorialLogic : FSMLevelLogic
     {
+        protected bool AllUnitConnected()
+        {
+            return LevelAsset.GameBoard.Units.All(u => u.AnyConnection);
+        }
+        
         #region TutorialRelated
 
         protected bool ActionEnded { get; private set; } = false;
@@ -104,6 +109,15 @@ namespace ROOT
             LevelAsset.HintMaster.TutorialContent = ProcessText(text);
         }
 
+        protected override void AddtionalRecatIO()
+        {
+            if (LevelCompleted)
+            {
+                //这段代码想着放到AdditionalRIO里面去。
+                PlayerRequestedEnd = CtrlPack.HasFlag(ControllingCommand.Confirm);
+            }
+        }
+        
         protected abstract void AddtionalDealStep(TutorialActionData data);
 
         /// <summary>
@@ -187,9 +201,13 @@ namespace ROOT
         private bool shouldInitTutorial = true;
         private bool TutorialOnHand = false;
 
+        private bool CompletedAndRequestedEnd()
+        {
+            return LevelCompleted && PlayerRequestedEnd;
+        }
+        
         private bool CheckTutorialCycle()
         {
-            //Debug.Log("CtrlPack.HasFlag(ControllingCommand.Confirm):" + CtrlPack.HasFlag(ControllingCommand.Confirm));
             return CtrlPack.HasFlag(ControllingCommand.Confirm);
         }
 
@@ -217,6 +235,9 @@ namespace ROOT
             if (!shouldInitTutorial) return;
             shouldInitTutorial = false;
             LevelAsset.HintMaster.HideTutorialFrame = true;
+            LevelAsset.HintMaster.TutorialCheckList.SetupEntryContent(MainGoalEntryContent, SecondaryGoalEntryContent);
+            StepForward();
+            DealStepMgr();
         }
 
         protected override void AddtionalMajorUpkeep()
@@ -269,6 +290,7 @@ namespace ROOT
                     new Trans(RootFSMStatus.MajorUpKeep),
                     new Trans(RootFSMStatus.MinorUpKeep, RootFSMStatus.Animate, 1, true, CheckLoopAnimate),
                     new Trans(RootFSMStatus.MinorUpKeep, RootFSMStatus.CleanUp),
+                    new Trans(RootFSMStatus.R_IO, RootFSMStatus.F_Cycle, 5, CompletedAndRequestedEnd),
                     new Trans(RootFSMStatus.R_IO, RootFSMStatus.Tutorial_Cycle, 4, CheckTutorialCycle),
                     new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, 3, CheckNotOnHand),
                     new Trans(RootFSMStatus.R_IO, RootFSMStatus.F_Cycle, 2, CheckFCycle),

@@ -216,7 +216,7 @@ namespace ROOT
             //BaseVerison,DoNothing.
         }
 
-        public void InitLevel()
+        public virtual void InitLevel()
         {
             //TODO 这个也要将Career和Boss尽量拆干净。
             Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
@@ -422,7 +422,7 @@ namespace ROOT
 
         #endregion
         
-        private void BasicMajorUpkeepLogic()
+        protected void BasicMajorUpkeepLogic()
         {
             if (LevelAsset.TimeLine != null)
             {
@@ -469,8 +469,8 @@ namespace ROOT
                 //进行标记后、就会强制等待新的一帧。
                 _mainFSM.Execute();
                 _mainFSM.Transit();
-                //RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
-                RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
+                RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
+                //RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
         }
