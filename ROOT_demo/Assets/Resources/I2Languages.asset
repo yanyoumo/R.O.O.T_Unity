@@ -447,6 +447,30 @@ MonoBehaviour:
       - Continue
       Flags: 0000
       Languages_Touch: []
+    - Term: Thermal Core
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u70ED\u529B\u5355\u5143"
+      - Thermal Core
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Matrix Core
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u77E9\u9635\u5355\u5143"
+      - Matrix Core
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Scan Core
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u626B\u63CF\u5355\u5143"
+      - Scan Core
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
