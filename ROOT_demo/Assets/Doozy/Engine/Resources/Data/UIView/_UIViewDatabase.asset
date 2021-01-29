@@ -19,8 +19,10 @@ MonoBehaviour:
   - General
   - Support
   - MajorUI
+  - MinorUI
   Categories:
   - {fileID: 11400000, guid: b01e98f4801f7124ba39e1dac4debf90, type: 2}
   - {fileID: 11400000, guid: c4ddfac8462f0464eb282db28566f3ed, type: 2}
   - {fileID: 11400000, guid: 9a80cb9fc5a1d9245b1be8fad9478172, type: 2}
   - {fileID: 11400000, guid: 734240e1e813b2a4182491bfb2b5d65c, type: 2}
+  - {fileID: 11400000, guid: 25aacca60c03be84fb96cc4aa42e3f16, type: 2}
