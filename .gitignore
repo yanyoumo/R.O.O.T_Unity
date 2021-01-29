@@ -77,3 +77,4 @@ crashlytics-build.properties
 ROOT_demo/Packages/packages-lock.json
 ROOT_demo/Assets/Revisions~
 .DS_Store
+ROOT_demo/UserSettings/EditorUserSettings.asset
