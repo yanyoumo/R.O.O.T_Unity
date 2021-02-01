@@ -40,7 +40,7 @@ MonoBehaviour:
     RequireLength: 1
     NormalRequirement: 7
     NetworkRequirement: 8
-    DestoryerLength: 20
+    DestoryerLength: 3
     DestoryerCount: 0
     InfoCount: 0
   InitalBoard:

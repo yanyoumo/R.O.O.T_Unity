@@ -193,7 +193,7 @@ namespace ROOT
             }
         }
 
-        ~ControlActionDriver()
+        public void unsubscribe()
         {
             // ReSharper disable once DelegateSubtraction
             ControllingEventMgr.ControllingEvent -= RespondToControlEvent;

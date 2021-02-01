@@ -107,7 +107,7 @@ namespace ROOT
 
         #region FSM参数
         protected RootFSM _mainFSM;
-        private ControlActionDriver _actionDriver;
+        protected ControlActionDriver _actionDriver;
         protected abstract FSMActions fsmActions { get; }
         protected abstract FSMTransitions RootFSMTransitions { get; }
         protected virtual Dictionary<BreakingCommand, Action> RootFSMBreakings => new Dictionary<BreakingCommand, Action>();
@@ -216,7 +216,7 @@ namespace ROOT
             //BaseVerison,DoNothing.
         }
 
-        public void InitLevel()
+        public virtual void InitLevel()
         {
             //TODO 这个也要将Career和Boss尽量拆干净。
             Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
@@ -351,6 +351,7 @@ namespace ROOT
                 //这个东西也要改成可配置的。 DONE
                 _mainFSM.Breaking(_actionDriver.RequestedBreakType);
             }
+            UpdateGameOverStatus();
         }
 
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
@@ -421,7 +422,7 @@ namespace ROOT
 
         #endregion
         
-        private void BasicMajorUpkeepLogic()
+        protected void BasicMajorUpkeepLogic()
         {
             if (LevelAsset.TimeLine != null)
             {
@@ -433,11 +434,18 @@ namespace ROOT
             }
         }
 
-        protected bool UpdateGameOverStatus()
+        private void ClassicGameOverStatus()
         {
-            return LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount);
+            if (!LevelAsset.GameStateMgr.EndGameCheck()) return;
+            PendingCleanUp = true;
+            LevelMasterManager.Instance.LevelFinished(LevelAsset);
         }
         
+        protected virtual void UpdateGameOverStatus()
+        {
+            ClassicGameOverStatus();
+        }
+
         private void Awake()
         {
             LevelAsset = new GameAssets();
@@ -461,10 +469,16 @@ namespace ROOT
                 //进行标记后、就会强制等待新的一帧。
                 _mainFSM.Execute();
                 _mainFSM.Transit();
-                //RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
-                RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
+                RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
+                //RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
+        }
+
+        private void OnDestroy()
+        {
+            _actionDriver.unsubscribe();
+            _actionDriver = null;
         }
     }
 }

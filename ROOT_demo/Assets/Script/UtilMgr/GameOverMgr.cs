@@ -40,6 +40,7 @@ namespace ROOT
 
         void UpdateUIContent()
         {
+            //这里控制游戏结束部分的代码。
             if (_lastGameAssets.Owner.IsTutorialLevel)
             {
                 System.Diagnostics.Debug.Assert(_lastGameAssets.TutorialCompleted != null, "_lastGameAssets.TutorialCompleted != null");

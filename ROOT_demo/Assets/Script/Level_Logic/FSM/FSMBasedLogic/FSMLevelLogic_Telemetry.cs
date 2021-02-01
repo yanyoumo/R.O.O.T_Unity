@@ -253,6 +253,16 @@ namespace ROOT
             LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
         }
 
+        protected override void UpdateGameOverStatus()
+        {
+            //这个函数就很接近裁判要做的事儿了。
+            if (!LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount)) return;
+            PendingCleanUp = true;
+            WorldCycler.Reset();
+            //_actionDriver = null;
+            LevelMasterManager.Instance.LevelFinished(LevelAsset);
+        }
+        
         private void CareerCycle()
         {
             if (LevelAsset.DestroyerEnabled)
@@ -268,10 +278,6 @@ namespace ROOT
             if (RoundGist.HasValue)
             {
                 WorldExecutor.UpdateRoundData(ref LevelAsset);
-                if (LevelAsset.GameOverEnabled)
-                {
-                    UpdateGameOverStatus();
-                }
             }
         }
 

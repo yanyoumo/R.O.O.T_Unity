@@ -68,8 +68,8 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 2, y: 1}
     Core: 0
-    HardwareType: 0
-    Sides: 01000000010000000000000001000000
+    HardwareType: 1
+    Sides: 01000000000000000100000001000000
     Tier: 1
   - ActionIdx: 2
     ActionType: 0
@@ -138,8 +138,8 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 0
-    HardwareType: 0
-    Sides: 01000000000000000100000001000000
+    HardwareType: 1
+    Sides: 01000000010000000000000001000000
     Tier: 1
   - ActionIdx: 6
     ActionType: 6
@@ -158,8 +158,8 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 0
-    HardwareType: 0
-    Sides: 01000000010000000100000000000000
+    HardwareType: 1
+    Sides: 01000000010000000000000001000000
     Tier: 1
   - ActionIdx: 6
     ActionType: 1
@@ -168,7 +168,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 0
-    HardwareType: 0
+    HardwareType: 1
     Sides: 01000000010000000000000001000000
     Tier: 1
   - ActionIdx: 6
