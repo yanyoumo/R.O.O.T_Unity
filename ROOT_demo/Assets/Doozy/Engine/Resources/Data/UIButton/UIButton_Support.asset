@@ -16,3 +16,7 @@ MonoBehaviour:
   DatabaseType: 0
   Names:
   - InGameManualToggle
+  - InGameManualLastPage
+  - InGameManualNextPage
+  - InGameManualSectionSelector
+  - InGameManualSectionReturn

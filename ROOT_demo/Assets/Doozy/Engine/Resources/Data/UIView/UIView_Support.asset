@@ -17,3 +17,5 @@ MonoBehaviour:
   Names:
   - InGameManualBackground
   - InGameManualMaster
+  - InGameManualSectionListBackground
+  - InGameManualSectionContent
