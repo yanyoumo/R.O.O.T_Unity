@@ -42,6 +42,7 @@ namespace ROOT
             thermoItemCountInt = 0;
             foreach (var ThermoCoreUnit in gameBoard.FindUnitWithCoreType(Type, HardwareType.Core))
             {
+                Debug.Log("ThermoCore:"+ ThermoCoreUnit.CurrentBoardPosition);
                 if (ThermoCoreUnit.SignalCore.Visited)
                     continue;
                 var queue=new Queue<Unit>();
@@ -57,6 +58,7 @@ namespace ROOT
                         if (unit.UnitSignal != SignalType.Thermo || unit.UnitHardware != HardwareType.Field) continue;
                         unit.IsActiveThermoFieldUnit = true;
                         ++thermoItemCountInt;
+                        Debug.Log("ThermoUnit:" + unit.CurrentBoardPosition);
                     }
                 }
             }

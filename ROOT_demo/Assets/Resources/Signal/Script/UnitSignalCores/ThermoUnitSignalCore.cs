@@ -8,6 +8,10 @@ namespace ROOT
     {
         public override SignalType Type => SignalType.Thermo;
 
+        private bool isValidPos(Vector2Int pos)
+        {
+            return pos.x >= 0 && pos.x < Board.BoardLength && pos.y >= 0 && pos.y < Board.BoardLength;
+        }
         public override List<Vector2Int> SingleInfoCollectorZone
         {
             get
@@ -25,10 +29,29 @@ namespace ROOT
             return 1f;
         }
 
-        public float CalScore()
+        public override float CalScore()
         {
-            //TODO
-            return 1f;
+            var sum = 0;
+            var counting = 0;
+            foreach (var pattern in Utils.GetPixelateCircle_Tier(Owner.Tier).PatternList)
+            {
+                var currentPos = Owner.CurrentBoardPosition + pattern;
+                if (isValidPos(currentPos))
+                {
+                    ++sum;
+                    if (Owner.GameBoard.CheckBoardPosValidAndEmpty(currentPos))
+                        ++counting;
+                }
+            }
+
+            Debug.Log("Sum:"+sum+" counting:"+counting);
+            return getScoreFromPercentage(1f*counting/sum);
+        }
+
+        private float getScoreFromPercentage(float x)
+        {
+            float k = 1, b = 1;
+            return k * x + b;
         }
     }
 }
