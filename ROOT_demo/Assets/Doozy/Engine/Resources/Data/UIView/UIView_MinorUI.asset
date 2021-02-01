@@ -16,3 +16,4 @@ MonoBehaviour:
   DatabaseType: 2
   Names:
   - GamePlay_TutorialGoal
+  - GamePlay_TutorialTextFrame

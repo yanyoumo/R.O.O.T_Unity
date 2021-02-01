@@ -28,7 +28,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 0
     ActionType: 7
     Text: 
@@ -36,7 +38,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 0
     ActionType: 0
     Text: "\u4ECA\u5929\u6765\u8BB2\u89E3\u4E00\u4E0B\u65F6\u95F4\u7EBF."
@@ -44,7 +48,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 1
     ActionType: 0
     Text: "\u5C4F\u5E55\u7684\u53F3\u4FA7,\u6709\u4E00\u6839\u65F6\u95F4\u7EBF."
@@ -52,7 +58,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 2
     ActionType: 0
     Text: "\u4F60\u5728\u68CB\u76D8\u4E0A\u7684\u64CD\u4F5C\u5C31\u4F1A\u4F7F\u5F97\u65F6\u95F4\u7EBF\u524D\u8FDB\u4E00\u6B65\u3002"
@@ -60,47 +68,59 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 2
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 3, y: 1}
-    Core: 4
-    Sides: 00000000010000000100000000000000
+    Core: 0
+    HardwareType: 1
+    Sides: 00000000010000000000000001000000
+    Tier: 1
   - ActionIdx: 2
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 4, y: 3}
-    Core: 4
+    Core: 0
+    HardwareType: 1
     Sides: 00000000010000000000000000000000
+    Tier: 1
   - ActionIdx: 2
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 1, y: 5}
-    Core: 4
+    Core: 0
+    HardwareType: 1
     Sides: 00000000000000000100000001000000
+    Tier: 1
   - ActionIdx: 2
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
-    Core: 4
+    Core: 0
+    HardwareType: 1
     Sides: 01000000010000000100000000000000
+    Tier: 1
   - ActionIdx: 2
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 2, y: 3}
-    Core: 5
+    Core: 0
+    HardwareType: 0
     Sides: 01000000010000000000000001000000
+    Tier: 1
   - ActionIdx: 3
     ActionType: 0
     Text: "\u5982\u679C\u65F6\u95F4\u7EBF\u8FDB\u5C55\u5230<b>[\u9ED1\u8272]</b>,\u90A3\u5C31\u8BF4\u660E\u4F60\u65F6\u95F4\u5230\u4E86."
@@ -108,7 +128,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 4
     ActionType: 0
     Text: "\u6240\u4EE5\u8BF4,\u5728\u505A\u5404\u79CD\u64CD\u4F5C\u7684\u65F6\u5019,\u90FD\u76EF\u7740\u70B9\u65F6\u95F4\u7EBF."
@@ -116,31 +138,39 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 5
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 3, y: 2}
-    Core: 4
+    Core: 0
+    HardwareType: 1
     Sides: 00000000010000000100000000000000
+    Tier: 1
   - ActionIdx: 5
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 5, y: 5}
-    Core: 4
+    Core: 0
+    HardwareType: 1
     Sides: 01000000000000000100000000000000
+    Tier: 1
   - ActionIdx: 5
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 5, y: 0}
-    Core: 4
+    Core: 0
+    HardwareType: 1
     Sides: 00000000010000000000000000000000
+    Tier: 1
   - ActionIdx: 5
     ActionType: 4
     Text: 
@@ -148,7 +178,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 5
     ActionType: 6
     Text: 
@@ -156,7 +188,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 5
     ActionType: 5
     Text: 
@@ -164,11 +198,18 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
-  TimeLineTokens:
-  - TokenID: 0
-    type: 3
-    RequireAmount: 0
-    Range: {x: 20, y: -1}
+    Tier: 0
+  RoundDatasGist:
+    NormalRoundCount: 0
+    HasBossRound: 0
+  RoundDatas: []
   InitalBoard: []
-  TargetCount: 0
+  InfoCount: 0
+  InfoVariantRatio: 0
+  InfoTargetRatio: 0
+  StationaryRateList: []
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1

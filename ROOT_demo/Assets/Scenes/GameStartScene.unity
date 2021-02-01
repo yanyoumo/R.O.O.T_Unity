@@ -656,7 +656,7 @@ MonoBehaviour:
   ButtonCategory: General
   ButtonName: GameStart
   ClickMode: 0
-  DeselectButtonAfterClick: 0
+  DeselectButtonAfterClick: 1
   DisableButtonBetweenClicksInterval: 1
   DoubleClickRegisterInterval: 0.2
   InputData:

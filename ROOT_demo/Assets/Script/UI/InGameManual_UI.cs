@@ -33,7 +33,7 @@ namespace ROOT.UI
                 var uiButton = go.GetComponent<UIButton>();
                 go.name = keyValuePair.Key;
                 uiButton.TextMeshProLabel.text = keyValuePair.Key;
-                uiButton.OnClick.OnTrigger = new UIAction {Action = ShowSectionList};
+                uiButton.OnClick.OnTrigger = new UIAction {Action = ShowSectionContent};
                 index++;
             }
 
@@ -55,15 +55,15 @@ namespace ROOT.UI
 
         Action<int> Test;
 
-        private void ShowSectionList(GameObject go)
+        private void ShowSectionList()
         {
-            InGameManualSectionContentTMP.text = TestManualContent[go.name];
             InGameManualSectionList.Show();
             InGameManualSectionContent.Hide();
         }
         
-        public void ShowSectionContent()
+        public void ShowSectionContent(GameObject go)
         {
+            InGameManualSectionContentTMP.text = TestManualContent[go.name];
             InGameManualSectionList.Hide();
             InGameManualSectionContent.Show();
         }

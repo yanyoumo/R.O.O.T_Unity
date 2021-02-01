@@ -202,10 +202,15 @@ namespace ROOT
             SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));*/
         }
 
+        private bool OnceGuard = false;
         public void CareerStart()
         {
-            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREER, LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
+            if (!OnceGuard)
+            {
+                SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREER, LoadSceneMode.Additive);
+                SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
+                OnceGuard = true;
+            }
         }
     }
 }
