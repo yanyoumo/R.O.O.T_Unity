@@ -213,6 +213,7 @@ namespace ROOT
 
         public bool IsActiveMatrixFieldUnit => SignalCore.InMatrix && (UnitSignal == SignalType.Matrix && UnitHardware == HardwareType.Field);
         public bool IsEndingScanFieldUnit => SignalCore.InServerGrid && (UnitSignal == SignalType.Scan && UnitHardware == HardwareType.Field) && SignalCore.ServerDepth == 1;
+        public bool IsActiveThermoFieldUnit;
 
         private bool _hasDiscount = false;
 

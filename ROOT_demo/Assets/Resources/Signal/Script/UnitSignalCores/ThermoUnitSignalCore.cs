@@ -20,8 +20,14 @@ namespace ROOT
 
         public override float CalScore(out int thermoItemCount)
         {
-            //TODO
+            //Redundant
             thermoItemCount = 1;
+            return 1f;
+        }
+
+        public float CalScore()
+        {
+            //TODO
             return 1f;
         }
     }
