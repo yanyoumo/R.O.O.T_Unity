@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.Signal
 {
     public class ThermoUnitSignalCore : UnitSignalCoreBase
     {
@@ -19,6 +19,15 @@ namespace ROOT
                 //TODO
                 var res = new List<Vector2Int>();
                 return res;
+            }
+        }
+
+        public override int GetActivationStatus
+        {
+            get
+            {
+                //TODO
+                return 0;
             }
         }
 

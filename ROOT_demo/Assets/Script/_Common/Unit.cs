@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ROOT.Signal;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
@@ -152,8 +153,10 @@ namespace ROOT
     public partial class Unit : MoveableBase
     {
         public UnitSignalCoreBase SignalCore;
-
         public TextMeshPro BillBoardText;
+
+        public MeshRenderer UnitConnectivityLEDMat;
+        public Color[] UnitConnectivityLEDMat_Colors;
         
         private int Cost = 0;
         private int _tier = 0;
@@ -210,10 +213,6 @@ namespace ROOT
 
         public Transform ShopBackPlane;
         public Transform ShopDiscountRoot;
-
-        public bool IsActiveMatrixFieldUnit => SignalCore.InMatrix && (UnitSignal == SignalType.Matrix && UnitHardware == HardwareType.Field);
-        public bool IsEndingScanFieldUnit => SignalCore.InServerGrid && (UnitSignal == SignalType.Scan && UnitHardware == HardwareType.Field) && SignalCore.ServerDepth == 1;
-        public bool IsActiveThermoFieldUnit;
 
         private bool _hasDiscount = false;
 
@@ -446,13 +445,20 @@ namespace ROOT
             Tier = tier;
         }
 
-        public void InitUnit(SignalType signal,HardwareType genre, SideType[] sides, int tier, Board gameBoard = null)
+        public void InitUnit(SignalType signal,HardwareType genre, SideType[] sides,
+            int tier, Board gameBoard = null)
         {
             Debug.Assert(sides.Length == 4);
-            InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3], tier, gameBoard);
+            InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3],
+                tier, gameBoard);
         }
 
-        public void InitUnit(SignalType signal,HardwareType genre, SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
+        public static SignalType PlayingSignalA;
+        public static SignalType PlayingSignalB;
+        
+        
+        public void InitUnit(SignalType signal,HardwareType genre, 
+            SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
             int tier, Board gameBoard = null)
         {
             UnitSignal = signal;
@@ -464,7 +470,7 @@ namespace ROOT
             UnitSides.Add(RotationDirection.East, lESide);
 
             _coreMeshRenderer.material = SignalMasterMgr.Instance.GetMatByUnitType(signal, genre);
-            Debug.Assert(_coreMeshRenderer.material);
+            //Debug.Assert(_coreMeshRenderer.material);
 
             InitConnector(_localNorthConnector, lNSide);
             InitConnector(_localEastConnector, lESide);
@@ -477,6 +483,8 @@ namespace ROOT
 
             UpdateSideMesh();
 
+            UnitConnectivityLEDMat.material.color = UnitHardware == HardwareType.Core ? UnitConnectivityLEDMat_Colors[1] : UnitConnectivityLEDMat_Colors[0];
+            
             if (SignalCore == null)
             {
                 var signalType = signal;
@@ -621,20 +629,12 @@ namespace ROOT
         {
             //这个函数是将信号配置到具体的接口LED上面、这个东西只能手动配置；相当于信号和硬件儿的映射。
             //这个相当于硬件软件间的一个接口、这个具体放在哪就还好。
-            switch (type)
-            {
-                case SignalType.Matrix:
-                    connector.Signal_A_Val = ignoreVal ? 0 : val;
-                    break;
-                case SignalType.Scan:
-                    connector.Signal_B_Val = ignoreVal ? 0 : val;
-                    break;
-                case SignalType.Thermo:
-                    connector.Signal_B_Val = ignoreVal ? 0 : val;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
+            if (type == PlayingSignalA)
+                connector.Signal_A_Val = ignoreVal ? 0 : val;
+            else if (type == PlayingSignalB)
+                connector.Signal_B_Val = ignoreVal ? 0 : val;
+            else
+                Debug.LogWarning(type + " of signal is not processed.");
         }
 
         private void SetConnector(RotationDirection crtDir, bool ignoreVal = false)
@@ -665,7 +665,7 @@ namespace ROOT
             return data.HasConnector && data.Connected && SideFilter(dir) && data.OtherUnit != null;
         }
 
-        public void UpdateSideMesh()
+        private void UpdateSideMesh()
         {
             if (WorldNeighboringData == null) return;
             RotationList.ForEach(ResetConnector);
@@ -674,10 +674,24 @@ namespace ROOT
             RotationList.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
         }
 
+        private void UpdateConnectivityLED()
+        {
+            int noSignalIndex = UnitHardware == HardwareType.Core ? 1 : 0;
+            if (AnyConnection && SignalCore.GetActivationStatus != 0)
+            {
+                UnitConnectivityLEDMat.material.color = UnitConnectivityLEDMat_Colors[SignalCore.GetActivationStatus];
+            }
+            else
+            {
+                UnitConnectivityLEDMat.material.color = UnitConnectivityLEDMat_Colors[noSignalIndex];
+            }
+        }
+
         public void UpdateNeighboringDataAndSideMesh()
         {
             UpdateNeighboringData();
             UpdateSideMesh();
+            UpdateConnectivityLED();
         }
 
         #region Blink
@@ -743,7 +757,7 @@ namespace ROOT
                         if (otherUnit == null) continue;
 
                         var showNetLed = SignalCore.InServerGrid && otherUnit.SignalCore.InServerGrid;
-                        showNetLed &= Math.Abs(SignalCore.ServerDepth - otherUnit.SignalCore.ServerDepth) <= 1;
+                        showNetLed &= Math.Abs(SignalCore.ScanSignalPathDepth - otherUnit.SignalCore.ScanSignalPathDepth) <= 1;
 
                         if (showNetLed)
                         {

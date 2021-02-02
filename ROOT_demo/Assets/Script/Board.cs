@@ -78,7 +78,7 @@ namespace ROOT
 
                 if ((unit.UnitSignal == SignalType.Matrix && unit.UnitHardware == HardwareType.Field) ||
                     ((unit.UnitSignal == SignalType.Scan && unit.UnitHardware == HardwareType.Field) &&
-                     unit.SignalCore.InServerGrid && unit.SignalCore.ServerDepth == 1))
+                     unit.SignalCore.InServerGrid && unit.SignalCore.ScanSignalPathDepth == 1))
                 {
                     if (vector2Int == Pos)
                     {
@@ -115,7 +115,7 @@ namespace ROOT
         {
             //这里保证前面调过一次计分函数，实在不行在这儿再调一遍。
             var res = new List<Vector2Int>();
-            Units.Where(u => u.IsActiveMatrixFieldUnit || u.IsEndingScanFieldUnit).ForEach(u => res.AddRange(u.SignalCore.SingleInfoCollectorZone));
+            Units.Select(u=>u.SignalCore).Where(s => s.IsActiveMatrixFieldUnit || s.IsEndingScanFieldUnit).ForEach(s => res.AddRange(s.SingleInfoCollectorZone));
             return res.Where(CheckBoardPosValid).Distinct().ToList();
         }
 
@@ -566,8 +566,8 @@ namespace ROOT
 
             return SignalType.Matrix;
         }
-        
-        private void CreateUnitOnBoard(UnitGist unitGist,AdditionalGameSetup additionalGameSetup)
+
+        private void CreateUnitOnBoard(UnitGist unitGist, AdditionalGameSetup additionalGameSetup)
         {
             var unitGO = Instantiate(UnitTemplate);
             unitGO.name = "Unit_" + Hash128.Compute(unitGist.Pos.ToString());
@@ -575,7 +575,7 @@ namespace ROOT
             unit.InitPosWithAnimation(unitGist.Pos);
             UnitsGameObjects.Add(unitGist.Pos, unitGO);
             var signalType = SignalTypeFromAdditionalGameSetup(additionalGameSetup, unitGist.PlayingSignalSelector);
-            unit.InitUnit(signalType,unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, this);
+            unit.InitUnit(signalType, unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, this);
             if (unitGist.IsStation)
             {
                 unit.SetupStationUnit();
@@ -590,6 +590,8 @@ namespace ROOT
 
         public void InitBoardWAsset(LevelActionAsset actionAsset)
         {
+            Unit.PlayingSignalA = actionAsset.AdditionalGameSetup.PlayingSignalTypeA;
+            Unit.PlayingSignalB = actionAsset.AdditionalGameSetup.PlayingSignalTypeB;
             foreach (var unitGist in actionAsset.InitalBoard)
             {
                 CreateUnitOnBoard(unitGist, actionAsset.AdditionalGameSetup);

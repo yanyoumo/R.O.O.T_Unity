@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.Signal
 {
     public abstract class SignalAssetBase : MonoBehaviour
     {

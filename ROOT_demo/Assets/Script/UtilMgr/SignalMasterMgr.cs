@@ -5,7 +5,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.Signal
 {
     public class SignalMasterMgr : MonoBehaviour
     {
@@ -30,12 +30,6 @@ namespace ROOT
 
         private Dictionary<SignalType, SignalAssetBase> signalAssetLib;
         public SignalType[] SignalLib => signalAssetLib.Keys.ToArray();
-
-        /*public void UnitTypeFromSignal(SignalType signalType,out CoreType coreUnit,out CoreType fieldUnit)
-        {
-            coreUnit = signalAssetLib[signalType].CoreUnitAsset.UnitType;
-            fieldUnit = signalAssetLib[signalType].FieldUnitAsset.UnitType;
-        }*/
 
         #region Getter
 

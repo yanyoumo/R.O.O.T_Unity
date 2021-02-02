@@ -5,7 +5,7 @@ using ROOT;
 using Sirenix.Utilities;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.Signal
 {
     public class ThermoSignalAsset : SignalAssetBase
     {

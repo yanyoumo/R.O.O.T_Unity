@@ -7,13 +7,27 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    public class TutorialTimeLineNeo : TutorialLogic
+    public class TutorialTimeLineNeo : FSMTutorialLogic
     {
-        /*protected override void Update()
+        protected override string MainGoalEntryContent => "将接收端单元都链至发送端";
+        protected override string SecondaryGoalEntryContent => "在时间线结束之前完成任务";
+        protected override void AddtionalDealStep(TutorialActionData data)
         {
-            base.Update();
+            //throw new NotImplementedException();
+        }
 
+        protected override void AdditionalFSMActionsOperating(ref Dictionary<RootFSMStatus, Action> actions)
+        {
+            //throw new NotImplementedException();
+        }
 
+        protected override void AdditionalFSMTransitionOperating(ref HashSet<RootFSMTransition> transitions)
+        {
+            //throw new NotImplementedException();
+        }
+
+        protected override void TutorialMinorUpkeep()
+        {
             if (ReadyToGo)
             {
                 if (ActionIndex == 2)
@@ -21,7 +35,6 @@ namespace ROOT
                     if (!OnceFlagA)
                     {
                         OnceFlagA = true;
-                        //Debug.Assert(LevelAsset.ActionAsset.TimeLineTokens.Length > 0);
                         WorldCycler.InitCycler();
                         LevelAsset.TimeLine.InitWithAssets(LevelAsset);
                     }
@@ -37,10 +50,10 @@ namespace ROOT
 
             if (LevelCompleted)
             {
-                PlayerRequestedEnd = CtrlPack.HasFlag(ControllingCommand.NextButton);
+                PlayerRequestedEnd = CtrlPack.HasFlag(ControllingCommand.Confirm);
             }
 
-            if (LevelActionAsset.HasEnded(LevelAsset.StepCount))
+            if (LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount))
             {
                 LevelFailed = true;
                 OnceFlagB = true;
@@ -48,40 +61,20 @@ namespace ROOT
 
             if (LevelFailed)
             {
-                PlayerRequestedQuit = CtrlPack.HasFlag(ControllingCommand.NextButton);
+                PlayerRequestedQuit = CtrlPack.HasFlag(ControllingCommand.Confirm);
                 LevelAsset.HintMaster.TutorialCheckList.TutorialFailed = true;
             }
+            
         }
 
-        protected override string MainGoalEntryContent => "将接收端单元都链至发送端";
-        protected override string SecondaryGoalEntryContent => "在时间线结束之前完成任务";
-
-        public override void InitLevel()
+        protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
         {
-            Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+            LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
+        }
 
-            InitCurrencyIoMgr();
-            LevelAsset.DeltaCurrency = 0.0f;
-
-            LevelAsset.DeltaCurrency = 0.0f;
-            LevelAsset.GameStateMgr = new GameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
-            LevelAsset.GameBoard.UpdateBoardAnimation();
-            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
-
-
-            LevelAsset.DisableAllCoreFunctionAndFeature();
-            LevelAsset.InputEnabled = true;
-            LevelAsset.CursorEnabled = true;
-            LevelAsset.RotateEnabled = true;
-            LevelAsset.HintEnabled = true;
-            LevelAsset.CurrencyEnabled = true;
-            LevelAsset.GameOverEnabled = true;
-
+        protected override void AdditionalInitLevel()
+        {
             LevelAsset.TimeLine.SetNoCount();
-
-            ReadyToGo = true;
-        }*/
+        }
     }
 }

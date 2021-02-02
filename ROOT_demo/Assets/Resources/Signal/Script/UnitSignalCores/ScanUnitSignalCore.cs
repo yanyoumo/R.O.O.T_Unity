@@ -6,7 +6,7 @@ using Sirenix.Utilities;
 using UnityEngine;
 
 
-namespace ROOT
+namespace ROOT.Signal
 {
     using networkCableStatus = Tuple<Unit, int, int, ulong>;
 
@@ -40,7 +40,7 @@ namespace ROOT
             var length = unitPathList.Count;
             foreach (var unit in unitPathList)
             {
-                unit.SignalCore.ServerDepth = length--;
+                unit.SignalCore.ScanSignalPathDepth = length--;
                 unit.SignalCore.ServerSignalDepth = cnt;
                 if (unit.UnitSignal == SignalType.Scan&&unit.UnitHardware == HardwareType.Field)
                 {
@@ -207,6 +207,15 @@ namespace ROOT
                 zone.PatternList.ForEach(vec =>
                     res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
                 return res;
+            }
+        }
+
+        public override int GetActivationStatus
+        {
+            get
+            {
+                //TODO.
+                return 0;
             }
         }
 

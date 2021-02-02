@@ -5,10 +5,11 @@ using System.Linq;
 using Sirenix.Utilities;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.Signal
 {
     public class MatrixSignalAsset : SignalAssetBase
     {
+       
         void Awake()
         {
             UnitSignalCoreType = gameObject.AddComponent<MatrixUnitSignalCore>().GetType();
@@ -27,7 +28,7 @@ namespace ROOT
         public override int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             var showSig = ShowSignal(dir, unit, otherUnit);
-            return showSig ? Math.Min(unit.SignalCore.MatrixVal, otherUnit.SignalCore.MatrixVal) : 0;
+            return showSig ? Math.Min(unit.SignalCore.EnteringSignalData[SignalType.Matrix], otherUnit.SignalCore.EnteringSignalData[SignalType.Matrix]) : 0;
         }
 
         private void initCounting(Unit unit)
