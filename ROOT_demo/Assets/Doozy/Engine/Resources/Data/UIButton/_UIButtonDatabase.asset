@@ -18,7 +18,9 @@ MonoBehaviour:
   - Example
   - General
   - Support
+  - CareerSetup
   Categories:
   - {fileID: 11400000, guid: 40f9e81ff80114a47a3721228ba749ed, type: 2}
   - {fileID: 11400000, guid: c061d0a19efe9fa4eb1749f860c3a40e, type: 2}
   - {fileID: 11400000, guid: 9006c5f7f101fac4d9e02ccd0c6994c1, type: 2}
+  - {fileID: 11400000, guid: a42e9bb0b055cd84a83e19e14155c75b, type: 2}
