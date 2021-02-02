@@ -210,6 +210,15 @@ namespace ROOT.Signal
             }
         }
 
+        public override int GetActivationStatus
+        {
+            get
+            {
+                //TODO.
+                return 0;
+            }
+        }
+
         public override float CalScore(out int networkCount)
         {
             int maxCount = Board.BoardLength * Board.BoardLength;

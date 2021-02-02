@@ -40,7 +40,9 @@ namespace ROOT.Signal
         /// <summary>
         /// 标记一次计分后，本单元是否处于必要最长序列中。不处于的需要显式记为false。
         /// </summary>
-        [ReadOnly] public bool InServerGrid; //for scoring purpose
+        [ReadOnly] 
+        [ShowInInspector]
+        public bool InServerGrid; //for scoring purpose
 
         void Awake()
         {
@@ -61,6 +63,11 @@ namespace ROOT.Signal
             }
         }
 
+        //0:no signal.
+        //1:has signal but no active.
+        //2:signal and active.
+        public abstract int GetActivationStatus { get; }
+        
         public float CalScore()
         {
             return CalScore(out var a);

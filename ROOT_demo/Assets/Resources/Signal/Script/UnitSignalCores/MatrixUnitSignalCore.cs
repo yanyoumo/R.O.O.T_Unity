@@ -75,6 +75,25 @@ namespace ROOT.Signal
             }
         }
 
+        [ShowInInspector]
+        public override int GetActivationStatus
+        {
+            get
+            {
+                if (InMatrixSignal)
+                {
+                    return 2;
+                }
+
+                if (InMatrix || InServerGrid)
+                {
+                    return 1;
+                }
+
+                return 0;
+            }
+        }
+
         public override float CalScore(out int driverCountInt)
         {
             driverCountInt =

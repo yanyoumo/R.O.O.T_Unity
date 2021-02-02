@@ -154,6 +154,9 @@ namespace ROOT
     {
         public UnitSignalCoreBase SignalCore;
         public TextMeshPro BillBoardText;
+
+        public MeshRenderer UnitConnectivityLEDMat;
+        public Color[] UnitConnectivityLEDMat_Colors;
         
         private int Cost = 0;
         private int _tier = 0;
@@ -480,6 +483,8 @@ namespace ROOT
 
             UpdateSideMesh();
 
+            UnitConnectivityLEDMat.material.color = UnitHardware == HardwareType.Core ? UnitConnectivityLEDMat_Colors[1] : UnitConnectivityLEDMat_Colors[0];
+            
             if (SignalCore == null)
             {
                 var signalType = signal;
@@ -660,7 +665,7 @@ namespace ROOT
             return data.HasConnector && data.Connected && SideFilter(dir) && data.OtherUnit != null;
         }
 
-        public void UpdateSideMesh()
+        private void UpdateSideMesh()
         {
             if (WorldNeighboringData == null) return;
             RotationList.ForEach(ResetConnector);
@@ -669,10 +674,24 @@ namespace ROOT
             RotationList.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
         }
 
+        private void UpdateConnectivityLED()
+        {
+            int noSignalIndex = UnitHardware == HardwareType.Core ? 1 : 0;
+            if (AnyConnection && SignalCore.GetActivationStatus != 0)
+            {
+                UnitConnectivityLEDMat.material.color = UnitConnectivityLEDMat_Colors[SignalCore.GetActivationStatus];
+            }
+            else
+            {
+                UnitConnectivityLEDMat.material.color = UnitConnectivityLEDMat_Colors[noSignalIndex];
+            }
+        }
+
         public void UpdateNeighboringDataAndSideMesh()
         {
             UpdateNeighboringData();
             UpdateSideMesh();
+            UpdateConnectivityLED();
         }
 
         #region Blink

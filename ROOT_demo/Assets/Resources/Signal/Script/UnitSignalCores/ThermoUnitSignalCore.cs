@@ -18,6 +18,15 @@ namespace ROOT.Signal
             }
         }
 
+        public override int GetActivationStatus
+        {
+            get
+            {
+                //TODO
+                return 0;
+            }
+        }
+
         public override float CalScore(out int thermoItemCount)
         {
             //TODO
