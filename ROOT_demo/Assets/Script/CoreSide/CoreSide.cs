@@ -12,6 +12,7 @@ namespace ROOT
         Matrix,
         Scan,
         Thermo,
+        //Firewall,
     }
 
     public enum HardwareType

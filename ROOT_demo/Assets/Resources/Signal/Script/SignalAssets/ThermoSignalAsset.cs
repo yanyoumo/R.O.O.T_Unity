@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ROOT;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.Signal
 {
     public class ThermoSignalAsset : SignalAssetBase
     {

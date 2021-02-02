@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using ROOT.Signal;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -101,13 +102,14 @@ namespace ROOT
 
         protected float[] _hardwarePrices;
 
-        protected GameObject InitUnitShopCore(SignalType signal,HardwareType genre, SideType[] sides, int ID, int _cost, int tier)
+        protected GameObject InitUnitShopCore(SignalType signal, HardwareType genre, SideType[] sides, int ID,
+            int _cost, int tier)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(Vector2Int.zero);
-            unit.InitUnit(signal,genre, sides, tier);
+            unit.InitUnit(signal, genre, sides,  tier);
             return go;
         }
 

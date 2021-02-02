@@ -6,7 +6,7 @@ using Sirenix.Utilities;
 using UnityEngine;
 
 
-namespace ROOT
+namespace ROOT.Signal
 {
     using networkCableStatus = Tuple<Unit, int, int, ulong>;
 
@@ -40,7 +40,7 @@ namespace ROOT
             var length = unitPathList.Count;
             foreach (var unit in unitPathList)
             {
-                unit.SignalCore.ServerDepth = length--;
+                unit.SignalCore.ScanSignalPathDepth = length--;
                 unit.SignalCore.ServerSignalDepth = cnt;
                 if (unit.UnitSignal == SignalType.Scan&&unit.UnitHardware == HardwareType.Field)
                 {

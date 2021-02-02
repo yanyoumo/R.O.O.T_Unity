@@ -1,12 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.Signal
 {
     public class MatrixUnitSignalCore : UnitSignalCoreBase
     {
+        [ReadOnly]
+        [ShowInInspector]
+        public int MatrixVal=> EnteringSignalData[SignalType.Matrix];
         public static bool ShowSignal(Unit unit, Unit otherUnit)
         {
             return unit.SignalCore.InMatrixSignal && otherUnit.SignalCore.InMatrixSignal;
@@ -14,7 +18,7 @@ namespace ROOT
 
         public static int SignalVal(Unit unit, Unit otherUnit)
         {
-            return Math.Min(unit.SignalCore.MatrixVal, otherUnit.SignalCore.MatrixVal);
+            return Math.Min(unit.SignalCore.EnteringSignalData[SignalType.Matrix], otherUnit.SignalCore.EnteringSignalData[SignalType.Matrix]);
         }
 
         private float CalculateProcessorScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
@@ -54,7 +58,7 @@ namespace ROOT
             score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.South, depth);
 
             signalCore.SignalFromDir = dir;
-            signalCore.MatrixVal = (int) score;
+            signalCore.EnteringSignalData[SignalType.Matrix] = (int) score;
             return score;
         }
 
