@@ -13,21 +13,19 @@ namespace ROOT.Signal
         //返回对应的信号的enum
         public abstract SignalType Type { get; }
 
+        [Obsolete]
         public Dictionary<SignalType, int> SignalStrength;
         //主要通过以下这个数据结构将整个棋盘中的数据网络记录下来。
-        public Dictionary<SignalType, (int, int)> SignalStrength2;//Signal:信号 第一个int：物理的深度 第二个int：只计算对应型号场单元的深度。
+        public Dictionary<SignalType, (int, int)> SignalStrengthComplex;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
 
-        public void GetBoardSignalStrength(Board board)
+        public void ResetSignalStrengthComplex()
         {
-            //TODO
-            foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
+            foreach (var signalType in SignalStrengthComplex.Keys)
             {
-                //init all unit()
-
+                SignalStrengthComplex[signalType] = (0, 0);
             }
-            throw new NotImplementedException();
         }
- 
+        
         //为返回对应的在 遥测阶段 中获得的遥测范围。
         public abstract List<Vector2Int> SingleInfoCollectorZone { get; }
 
@@ -64,16 +62,18 @@ namespace ROOT.Signal
             InServerGrid = false;
             InMatrix = false;
             SignalStrength = new Dictionary<SignalType, int>();
+            SignalStrengthComplex = new Dictionary<SignalType, (int, int)>();
             try
             {
                 foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
                 {
                     SignalStrength.Add(signalType, 0);
+                    SignalStrengthComplex.Add(signalType, (0, 0));
                 }
             }
             catch (NullReferenceException)
             {
-                Debug.Log("This is template Core, no need to set EnteringSignalData.");
+                Debug.Log("This is template Core, no need to set SignalStrength Dic.");
             }
         }
 

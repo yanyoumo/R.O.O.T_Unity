@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT.Signal
@@ -93,6 +94,20 @@ namespace ROOT.Signal
             foreach (var signalBase in GetComponentsInChildren<SignalAssetBase>())
             {
                 signalAssetLib.Add(signalBase.Type, signalBase);
+            }
+        }
+
+        public void RefreshBoardAllSignalStrength(Board board)
+        {
+            RefreshBoardSelectedSignalStrength(board, SignalLib);
+        }
+
+        public void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
+        {
+            board.Units.Select(u => u.SignalCore).ForEach(s => s.ResetSignalStrengthComplex());
+            foreach (var signalAssetBase in signalAssetLib.Where(v=>selectedTypes.Contains(v.Key)).Select(v=>v.Value))
+            {
+                signalAssetBase.RefreshBoardSignalStrength(board);
             }
         }
 
