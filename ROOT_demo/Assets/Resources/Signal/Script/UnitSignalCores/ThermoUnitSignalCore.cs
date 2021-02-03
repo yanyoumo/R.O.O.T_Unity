@@ -38,7 +38,7 @@ namespace ROOT.Signal
             return 1f;
         }
 
-        public override float CalScore()
+        public float CalScore()
         {
             var sum = 0;
             var counting = 0;

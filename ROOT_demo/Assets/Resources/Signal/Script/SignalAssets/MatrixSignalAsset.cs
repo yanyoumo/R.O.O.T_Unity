@@ -28,7 +28,7 @@ namespace ROOT.Signal
         public override int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             var showSig = ShowSignal(dir, unit, otherUnit);
-            return showSig ? Math.Min(unit.SignalCore.EnteringSignalData[SignalType.Matrix], otherUnit.SignalCore.EnteringSignalData[SignalType.Matrix]) : 0;
+            return showSig ? Math.Min(unit.SignalCore.SignalStrength[SignalType.Matrix], otherUnit.SignalCore.SignalStrength[SignalType.Matrix]) : 0;
         }
 
         private void initCounting(Unit unit)

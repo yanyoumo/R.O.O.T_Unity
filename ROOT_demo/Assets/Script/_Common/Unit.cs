@@ -214,6 +214,8 @@ namespace ROOT
         public Transform ShopBackPlane;
         public Transform ShopDiscountRoot;
 
+        public bool IsActiveThermoFieldUnit;
+
         private bool _hasDiscount = false;
 
         private bool HasDiscount

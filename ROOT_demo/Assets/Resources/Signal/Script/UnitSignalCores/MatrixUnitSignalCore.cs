@@ -10,7 +10,7 @@ namespace ROOT.Signal
     {
         [ReadOnly]
         [ShowInInspector]
-        public int MatrixVal=> EnteringSignalData[SignalType.Matrix];
+        public int MatrixVal=> SignalStrength[SignalType.Matrix];
         public static bool ShowSignal(Unit unit, Unit otherUnit)
         {
             return unit.SignalCore.InMatrixSignal && otherUnit.SignalCore.InMatrixSignal;
@@ -18,7 +18,7 @@ namespace ROOT.Signal
 
         public static int SignalVal(Unit unit, Unit otherUnit)
         {
-            return Math.Min(unit.SignalCore.EnteringSignalData[SignalType.Matrix], otherUnit.SignalCore.EnteringSignalData[SignalType.Matrix]);
+            return Math.Min(unit.SignalCore.SignalStrength[SignalType.Matrix], otherUnit.SignalCore.SignalStrength[SignalType.Matrix]);
         }
 
         private float CalculateProcessorScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
@@ -58,7 +58,7 @@ namespace ROOT.Signal
             score += CalculateProcessorScoreSingleDir(unit, hostKey, RotationDirection.South, depth);
 
             signalCore.SignalFromDir = dir;
-            signalCore.EnteringSignalData[SignalType.Matrix] = (int) score;
+            signalCore.SignalStrength[SignalType.Matrix] = (int) score;
             return score;
         }
 

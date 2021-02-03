@@ -12,8 +12,22 @@ namespace ROOT.Signal
         protected Board GameBoard => Owner.GameBoard;
         //返回对应的信号的enum
         public abstract SignalType Type { get; }
+
+        public Dictionary<SignalType, int> SignalStrength;
         //主要通过以下这个数据结构将整个棋盘中的数据网络记录下来。
-        public Dictionary<SignalType, int> EnteringSignalData;
+        public Dictionary<SignalType, (int, int)> SignalStrength2;//Signal:信号 第一个int：物理的深度 第二个int：只计算对应型号场单元的深度。
+
+        public void GetBoardSignalStrength(Board board)
+        {
+            //TODO
+            foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
+            {
+                //init all unit()
+
+            }
+            throw new NotImplementedException();
+        }
+ 
         //为返回对应的在 遥测阶段 中获得的遥测范围。
         public abstract List<Vector2Int> SingleInfoCollectorZone { get; }
 
@@ -34,8 +48,8 @@ namespace ROOT.Signal
         [ShowInInspector]
         public int ServerSignalDepth
         {
-            get => EnteringSignalData[SignalType.Scan];
-            set => EnteringSignalData[SignalType.Scan] = value;
+            get => SignalStrength[SignalType.Scan];
+            set => SignalStrength[SignalType.Scan] = value;
         }
         /// <summary>
         /// 标记一次计分后，本单元是否处于必要最长序列中。不处于的需要显式记为false。
@@ -49,12 +63,12 @@ namespace ROOT.Signal
             Visited = false;
             InServerGrid = false;
             InMatrix = false;
-            EnteringSignalData = new Dictionary<SignalType, int>();
+            SignalStrength = new Dictionary<SignalType, int>();
             try
             {
                 foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
                 {
-                    EnteringSignalData.Add(signalType, 0);
+                    SignalStrength.Add(signalType, 0);
                 }
             }
             catch (NullReferenceException)
