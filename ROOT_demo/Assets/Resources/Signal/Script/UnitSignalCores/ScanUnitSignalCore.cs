@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -210,12 +211,13 @@ namespace ROOT.Signal
             }
         }
 
-        public override int GetActivationStatus
+        [ShowInInspector]
+        public override bool GetActivationStatusPerSignal
         {
             get
             {
-                //TODO.
-                return 0;
+                //TODO
+                return false;
             }
         }
 

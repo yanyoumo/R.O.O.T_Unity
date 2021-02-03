@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace ROOT.Signal
@@ -19,15 +20,6 @@ namespace ROOT.Signal
                 //TODO
                 var res = new List<Vector2Int>();
                 return res;
-            }
-        }
-
-        public override int GetActivationStatus
-        {
-            get
-            {
-                //TODO
-                return 0;
             }
         }
 

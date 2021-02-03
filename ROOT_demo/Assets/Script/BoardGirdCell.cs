@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.Utilities;
+using TMPro;
 using UnityEngine;
 
 namespace ROOT
@@ -39,6 +40,8 @@ namespace ROOT
 
         private CellStatus _cellStatus = CellStatus.Normal;
 
+        public TextMeshPro FloatingText;
+        
         public CellStatus CellStatus
         {
             set

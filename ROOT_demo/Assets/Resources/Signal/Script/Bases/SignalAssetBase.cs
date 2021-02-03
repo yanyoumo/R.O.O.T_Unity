@@ -65,6 +65,7 @@ namespace ROOT.Signal
         public virtual void RefreshBoardSignalStrength(Board board)
         {
             //TODO 这个函数只需要某种信号的“一层”即可、并且每次调用前所有数据已经清零。
+            //而且除了最后具体存储的两个int、所有别的数据最好都写成类变量。
         }
     }
 }

@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
+
+//这个函数的优化点就是在于，在得到全局信号深度后；将非0值作为一个个“岛”、之后选择“岛”中最小的即可。
 
 namespace ROOT.Signal
 {
@@ -16,8 +19,12 @@ namespace ROOT.Signal
         [Obsolete]
         public Dictionary<SignalType, int> SignalStrength;
         //主要通过以下这个数据结构将整个棋盘中的数据网络记录下来。
+        [ReadOnly]
+        [ShowInInspector]
         public Dictionary<SignalType, (int, int)> SignalStrengthComplex;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
 
+        protected (int, int) CorrespondingSignalData => SignalStrengthComplex[Type];
+        
         public void ResetSignalStrengthComplex()
         {
             foreach (var signalType in SignalStrengthComplex.Keys)
@@ -80,7 +87,25 @@ namespace ROOT.Signal
         //0:no signal.
         //1:has signal but no active.
         //2:signal and active.
-        public abstract int GetActivationStatus { get; }
+        public virtual bool GetActivationStatusPerSignal => CorrespondingSignalData.Item1 > 0;//默认看硬件深度。
+        
+        public int GetActivationStatus
+        {
+            get
+            {
+                if (GetActivationStatusPerSignal)
+                {
+                    return 2;
+                }
+
+                if (SignalStrengthComplex.Values.Any(valueTuple => valueTuple.Item1 > 0))
+                {
+                    return 1;
+                }
+                
+                return 0;
+            }
+        }
         
         public float CalScore()
         {

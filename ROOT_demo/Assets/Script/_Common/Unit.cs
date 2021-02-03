@@ -155,8 +155,8 @@ namespace ROOT
         public UnitSignalCoreBase SignalCore;
         public TextMeshPro BillBoardText;
 
-        public MeshRenderer UnitConnectivityLEDMat;
-        public Color[] UnitConnectivityLEDMat_Colors;
+        public MeshRenderer UnitActivationLEDMat;
+        public Color[] UnitActivationLEDMat_Colors;
         
         private int Cost = 0;
         private int _tier = 0;
@@ -209,7 +209,6 @@ namespace ROOT
 
         public MeshRenderer AdditionalClampMesh;
         public bool StationUnit { get; private set; }
-        public Dictionary<RotationDirection, Tuple<int, int>> StationRequirement;
 
         public Transform ShopBackPlane;
         public Transform ShopDiscountRoot;
@@ -485,7 +484,7 @@ namespace ROOT
 
             UpdateSideMesh();
 
-            UnitConnectivityLEDMat.material.color = UnitHardware == HardwareType.Core ? UnitConnectivityLEDMat_Colors[1] : UnitConnectivityLEDMat_Colors[0];
+            UnitActivationLEDMat.material.color = UnitHardware == HardwareType.Core ? UnitActivationLEDMat_Colors[1] : UnitActivationLEDMat_Colors[0];
             
             if (SignalCore == null)
             {
@@ -676,16 +675,16 @@ namespace ROOT
             RotationList.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
         }
 
-        private void UpdateConnectivityLED()
+        private void UpdateActivationLED()
         {
             int noSignalIndex = UnitHardware == HardwareType.Core ? 1 : 0;
             if (AnyConnection && SignalCore.GetActivationStatus != 0)
             {
-                UnitConnectivityLEDMat.material.color = UnitConnectivityLEDMat_Colors[SignalCore.GetActivationStatus];
+                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[SignalCore.GetActivationStatus];
             }
             else
             {
-                UnitConnectivityLEDMat.material.color = UnitConnectivityLEDMat_Colors[noSignalIndex];
+                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[noSignalIndex];
             }
         }
 
@@ -693,7 +692,7 @@ namespace ROOT
         {
             UpdateNeighboringData();
             UpdateSideMesh();
-            UpdateConnectivityLED();
+            UpdateActivationLED();
         }
 
         #region Blink

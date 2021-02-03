@@ -1375,11 +1375,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SignalCore: {fileID: 0}
   BillBoardText: {fileID: 8761583895662260726}
-  UnitConnectivityLEDMat: {fileID: 3993381946835525045}
-  UnitConnectivityLEDMat_Colors:
-  - {r: 0.5754717, g: 0, b: 0, a: 1}
-  - {r: 0.9150943, g: 0.49111903, b: 0.005755197, a: 1}
-  - {r: 0.05101881, g: 0.9150943, b: 0, a: 1}
+  UnitActivationLEDMat: {fileID: 3993381946835525045}
+  UnitActivationLEDMat_Colors:
+  - {r: 0.8235294, g: 0.029849496, b: 0, a: 1}
+  - {r: 1, g: 0.86275464, b: 0.25157225, a: 1}
+  - {r: 0.43255687, g: 0.84199995, b: 0.34010196, a: 1}
   TierLEDs: {fileID: 814975058593057325}
   TierTag: {fileID: 1445302186819268858}
   CostTag: {fileID: 5671821018749382508}
@@ -1391,6 +1391,7 @@ MonoBehaviour:
   AdditionalClampMesh: {fileID: 5168225995973686400}
   ShopBackPlane: {fileID: 3879975519063178855}
   ShopDiscountRoot: {fileID: 3146945582300183988}
+  IsActiveThermoFieldUnit: 0
   _localNorthConnector: {fileID: 7880363094986583513}
   _localEastConnector: {fileID: 8039069398988845131}
   _localWestConnector: {fileID: 6997640945046645840}
@@ -1562,7 +1563,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8371685381634498454}
   m_Layer: 0
-  m_Name: UnitConnectivityLED_root
+  m_Name: UnitActivationLED_root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2212,7 +2213,7 @@ GameObject:
   - component: {fileID: 3993381946835525045}
   - component: {fileID: 7893763565276406476}
   m_Layer: 0
-  m_Name: UnitConnectivityLED
+  m_Name: UnitActivationLED
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

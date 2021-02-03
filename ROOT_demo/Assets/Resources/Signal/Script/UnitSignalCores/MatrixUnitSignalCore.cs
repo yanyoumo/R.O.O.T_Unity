@@ -11,7 +11,7 @@ namespace ROOT.Signal
         [ReadOnly]
         [ShowInInspector]
         public int MatrixVal=> SignalStrength[SignalType.Matrix];
-        public static bool ShowSignal(Unit unit, Unit otherUnit)
+        /*public static bool ShowSignal(Unit unit, Unit otherUnit)
         {
             return unit.SignalCore.InMatrixSignal && otherUnit.SignalCore.InMatrixSignal;
         }
@@ -19,7 +19,7 @@ namespace ROOT.Signal
         public static int SignalVal(Unit unit, Unit otherUnit)
         {
             return Math.Min(unit.SignalCore.SignalStrength[SignalType.Matrix], otherUnit.SignalCore.SignalStrength[SignalType.Matrix]);
-        }
+        }*/
 
         private float CalculateProcessorScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
         {
@@ -72,25 +72,6 @@ namespace ROOT.Signal
                 var res = new List<Vector2Int>();
                 zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
                 return res;
-            }
-        }
-
-        [ShowInInspector]
-        public override int GetActivationStatus
-        {
-            get
-            {
-                if (InMatrixSignal)
-                {
-                    return 2;
-                }
-
-                if (InMatrix || InServerGrid)
-                {
-                    return 1;
-                }
-
-                return 0;
             }
         }
 
