@@ -9,6 +9,7 @@
 /ROOT_demo/[Bb]uilds/
 /ROOT_demo/[Ll]ogs/
 /ROOT_demo/[Mm]emoryCaptures/
+/ROOT_demo/[Uu]ser[Ss]ettings/
 
 /ROOT_demo/**/*.ttc
 /ROOT_demo/**/*.ttc.meta
@@ -77,4 +78,3 @@ crashlytics-build.properties
 ROOT_demo/Packages/packages-lock.json
 ROOT_demo/Assets/Revisions~
 .DS_Store
-ROOT_demo/UserSettings/EditorUserSettings.asset
