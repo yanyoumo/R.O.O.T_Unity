@@ -106,12 +106,9 @@ namespace ROOT.Signal
                 return 0;
             }
         }
-        
-        public float CalScore()
-        {
-            return CalScore(out var a);
-        }
-        
+
+        public abstract float CalSingleUnitScore();
+
         //从某个独立单元计分的逻辑、主要是为SignalAsset中总体计算的BackUp函数。 
         public abstract float CalScore(out int hardwareCount);
     }

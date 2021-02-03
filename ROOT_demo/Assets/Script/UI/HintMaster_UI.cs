@@ -7,6 +7,8 @@ namespace ROOT.UI
     public static class UIEvent
     {
         public delegate void InGameManualFootterUpdate(int TotalPageCount, int CurrentPageCount);
+
+        public delegate void InGameOverlayToggle();
     }
     
     public class HintMaster_UI : MonoBehaviour

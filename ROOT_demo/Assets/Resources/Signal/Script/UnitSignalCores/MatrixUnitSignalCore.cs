@@ -75,11 +75,19 @@ namespace ROOT.Signal
             }
         }
 
+        private const int perMatrixFieldUnitPrice = 1;
+        
+        public override float CalSingleUnitScore()
+        {
+            //TODO 这个数据也不对、还没有减去HeatSink的流程。
+            return InMatrixSignal ? perMatrixFieldUnitPrice : 0.0f;
+        }
+
         public override float CalScore(out int driverCountInt)
         {
             driverCountInt =
                 Mathf.RoundToInt(CalculateProcessorScoreCore(Owner.CurrentBoardPosition, RotationDirection.North, 0));
-            return driverCountInt;
+            return driverCountInt * perMatrixFieldUnitPrice;
         }
     }
 }

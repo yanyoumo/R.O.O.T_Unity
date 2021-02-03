@@ -221,6 +221,16 @@ namespace ROOT.Signal
             }
         }
 
+        public override float CalSingleUnitScore()
+        {
+            //TODO
+            if (IsEndingScanFieldUnit)
+            {
+                return 10.0f; //这个数据不对、还要弄。
+            }
+            return 0.0f;
+        }
+
         public override float CalScore(out int networkCount)
         {
             int maxCount = Board.BoardLength * Board.BoardLength;

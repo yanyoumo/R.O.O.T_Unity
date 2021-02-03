@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
@@ -28,9 +29,9 @@ namespace ROOT
         private Color FloatingStrokeColor => ColorUtilityWrapper.ParseHtmlString("#99bcac").Value;
         private Color HighLightedStrokeColor => ColorUtilityWrapper.ParseHtmlString("#ee7959").Value;
 
-        [HideInInspector]
+        [ReadOnly]
         public Board owner;
-        [HideInInspector]
+        [ReadOnly]
         public Vector2Int OnboardPos;
 
         public List<SpriteRenderer> Edges;
@@ -41,6 +42,11 @@ namespace ROOT
         private CellStatus _cellStatus = CellStatus.Normal;
 
         public TextMeshPro FloatingText;
+        public TextMeshPro CashingText;
+
+        public Color NegativeCashColoring;
+        public Color PositiveCashColoring;
+        public Color NeutralCashColoring;
         
         public CellStatus CellStatus
         {
@@ -151,6 +157,74 @@ namespace ROOT
             BoardStrokeMesh.material.color = NormalStrokeColor;
         }
 
+        private int GetCashIO()
+        {
+            if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
+            {
+                return 0;
+            }
+
+            var unit=owner.FindUnitUnderBoardPos(OnboardPos)?.GetComponentInChildren<Unit>();
+            if (unit != null)
+            {
+                return Mathf.RoundToInt(unit.SignalCore.CalSingleUnitScore());
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+        
+        private void SetText(int number)
+        {
+            if (number == 0)
+            {
+                if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
+                {
+                    CashingText.color = NeutralCashColoring;
+                    CashingText.text = "+00";
+                    return;
+                }
+
+                if (_cellStatus == CellStatus.Warning)
+                {
+                    CashingText.color = NegativeCashColoring;
+                    CashingText.text = "+00";
+                }
+                else
+                {
+                    CashingText.color = PositiveCashColoring;
+                    CashingText.text = "+00";
+                }
+            }
+            else if (number > 0)
+            {
+                CashingText.color = PositiveCashColoring;
+                CashingText.text = "+" + Utils.PaddingNum2Digit(number);
+            }
+            else
+            {
+                CashingText.color = NegativeCashColoring;
+                CashingText.text = "-" + Utils.PaddingNum2Digit(Math.Abs(number));
+            }
+        }
+
+        private void Update()
+        {
+            if (CashingText.enabled)
+            {
+                SetText(GetCashIO());
+            }
+        }
+
+        private void TextToggle()
+        {
+            //RISK 如果真是Toggle的话、那么还针对随着单元移动而修改位置。到是姑且可以写在Update里面。
+            //就相当浪费、但是目前也没有很好的办法。
+            CashingText.enabled = !CashingText.enabled;
+            SetText(GetCashIO());
+        }
+        
         void Awake()
         {
             BoardStrokeMesh.material.color = NormalStrokeColor;
@@ -163,7 +237,13 @@ namespace ROOT
                 {RotationDirection.West, Edges[2]},
                 {RotationDirection.South, Edges[3]}
             };
+
+            ControlActionDriver.InGameOverlayToggleEvent += TextToggle;
+            
             ClearEdge();
+
+            CashingText.color = NeutralCashColoring;
+            CashingText.enabled = false;
         }
     }
 }

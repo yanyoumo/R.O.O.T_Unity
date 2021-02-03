@@ -23,6 +23,12 @@ namespace ROOT.Signal
             }
         }
 
+        public override float CalSingleUnitScore()
+        {
+           //throw new System.NotImplementedException();
+           return 0.0f;
+        }
+
         public override float CalScore(out int thermoItemCount)
         {
             //Redundant

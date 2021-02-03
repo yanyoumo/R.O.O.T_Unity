@@ -12,6 +12,8 @@ namespace ROOT
     using RespToCtrlEvent= Func<ActionPack,bool>;
     public abstract class ControlActionDriver
     {
+        public static UI.UIEvent.InGameOverlayToggle InGameOverlayToggleEvent;
+        
         private readonly FSMLevelLogic _owner;
         private RootFSM _mainFsm;
         private readonly Queue<ControllingPack> _ctrlPackQueue;
@@ -88,6 +90,11 @@ namespace ROOT
             if (actionPack.IsAction(LeftAlt))
             {
                 CtrlPack.SetFlag(ControllingCommand.Cancel);
+            }
+            
+            if (actionPack.IsAction(InGameOverLayToggle))
+            {
+                InGameOverlayToggleEvent.Invoke();
             }
             //TODO 下面两套的流程应该能有更好的管理方法。
             ShopBuyID(ref CtrlPack, in actionPack);

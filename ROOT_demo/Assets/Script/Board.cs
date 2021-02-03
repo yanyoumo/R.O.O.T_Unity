@@ -823,9 +823,9 @@ namespace ROOT
             }
         }
 
-        public float CalculateTotalIncomes()
+        /*public float CalculateTotalIncomes()
         {
             return Units.Where(unit => unit.IsCore).Sum(unit => unit.SignalCore.CalScore());
-        }
+        }*/
     }
 }
