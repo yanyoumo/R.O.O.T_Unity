@@ -43,7 +43,7 @@ namespace ROOT.Signal
                     {
                         var now = queue.Dequeue();
                         var physicalDepth = now.SignalCore.SignalStrengthComplex[signalType].Item1;
-                        var scoringDepth= now.SignalCore.SignalStrengthComplex[signalType].Item2;
+                        var scoringDepth = now.SignalCore.SignalStrengthComplex[signalType].Item2;
                         foreach (var unit in now.GetConnectedOtherUnit.Where(unit => unit.SignalCore.Visited == false))
                         {
                             unit.SignalCore.Visited = true;
@@ -51,7 +51,7 @@ namespace ROOT.Signal
                                 continue;
                             var item1 = unit.SignalCore.SignalStrengthComplex[signalType].Item1;
                             var item2 = unit.SignalCore.SignalStrengthComplex[signalType].Item2;
-                            bool renew = false;
+                            var renew = false;
                             if (physicalDepth + 1 < item1)
                             {
                                 item1 = physicalDepth + 1;
