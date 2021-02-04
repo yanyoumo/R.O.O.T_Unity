@@ -163,7 +163,7 @@ namespace ROOT
             if (unit != null)
             {
                 //这么写的话、CalSingleUnitScore到是可以不考虑HeatSink了。
-                return Mathf.RoundToInt(unit.SignalCore.CalSingleUnitScore()) - HeatSinkCost;
+                return Mathf.RoundToInt(unit.SignalCore.SingleUnitScore) - HeatSinkCost;
             }
             else
             {

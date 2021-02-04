@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ namespace ROOT.Signal
             return Math.Min(unit.SignalCore.SignalStrength[SignalType.Matrix], otherUnit.SignalCore.SignalStrength[SignalType.Matrix]);
         }*/
 
+        /*[Obsolete]
         private float CalculateProcessorScoreSingleDir(Unit unit, Vector2Int hostKey, RotationDirection direction, int depth)
         {
             if (unit.GetWorldSpaceUnitSide(direction) != SideType.Connection) return 0.0f;
@@ -60,9 +62,9 @@ namespace ROOT.Signal
             signalCore.SignalFromDir = dir;
             signalCore.SignalStrength[SignalType.Matrix] = (int) score;
             return score;
-        }
+        }*/
 
-        public override SignalType Type => SignalType.Matrix;
+        public override SignalType SignalType => SignalType.Matrix;
 
         public override List<Vector2Int> SingleInfoCollectorZone
         {
@@ -76,18 +78,23 @@ namespace ROOT.Signal
         }
 
         private const int perMatrixFieldUnitPrice = 1;
-        
-        public override float CalSingleUnitScore()
-        {
-            //TODO 这个数据也不对、还没有减去HeatSink的流程。
-            return InMatrixSignal ? perMatrixFieldUnitPrice : 0.0f;
-        }
 
-        public override float CalScore(out int driverCountInt)
+        //public override bool IsSignalUnitCoreActive => SignalStrengthComplex[SignalType].Item1 > 0;
+
+        //这个数据也不对、还没有减去HeatSink的流程。不在这里不减了。
+        public override float SingleUnitScore => IsSignalUnitCoreActive ? perMatrixFieldUnitPrice : 0.0f;
+
+        /*public override float CalScore(out int hardwareCount)
         {
-            driverCountInt =
-                Mathf.RoundToInt(CalculateProcessorScoreCore(Owner.CurrentBoardPosition, RotationDirection.North, 0));
+            hardwareCount = GameBoard.Units.Where(u => u.SignalCore is MatrixUnitSignalCore).Count(u => u.SignalCore.SignalStrengthComplex[SignalType.Matrix].Item1 > 0);
+            return Mathf.RoundToInt(hardwareCount * perMatrixFieldUnitPrice);
+        }*/
+
+        /*[Obsolete]
+        public float CalScore_Old(out int driverCountInt)
+        {
+            driverCountInt = Mathf.RoundToInt(CalculateProcessorScoreCore(Owner.CurrentBoardPosition, RotationDirection.North, 0));
             return driverCountInt * perMatrixFieldUnitPrice;
-        }
+        }*/
     }
 }

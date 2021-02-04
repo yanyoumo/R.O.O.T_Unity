@@ -827,7 +827,7 @@ namespace ROOT
             float time = Time.timeSinceLevelLoad;
             foreach (var unit in UnitsGameObjects)
             {
-                if (unit.Value.GetComponentInChildren<Unit>().SignalCore.InMatrixSignal)
+                if (unit.Value.GetComponentInChildren<Unit>().SignalCore.HasCertainSignal(SignalType.Matrix))
                 {
                     Color color = (Mathf.Sin(time * 10) + 1.0f) * Color.red;
                     unit.Value.GetComponentInChildren<Unit>().SetCoreEmissive(color);

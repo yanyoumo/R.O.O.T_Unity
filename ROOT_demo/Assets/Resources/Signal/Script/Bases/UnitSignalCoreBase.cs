@@ -15,7 +15,7 @@ namespace ROOT.Signal
         public Unit Owner;
         protected Board GameBoard => Owner.GameBoard;
         //返回对应的信号的enum
-        public abstract SignalType Type { get; }
+        public abstract SignalType SignalType { get; }
 
         [Obsolete]
         public Dictionary<SignalType, int> SignalStrength;
@@ -24,7 +24,7 @@ namespace ROOT.Signal
         [ShowInInspector]
         public Dictionary<SignalType, (int, int)> SignalStrengthComplex;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
 
-        protected (int, int) CorrespondingSignalData => SignalStrengthComplex[Type];
+        protected (int, int) CorrespondingSignalData => SignalStrengthComplex[SignalType];
 
         public void ResetSignalStrengthComplex()
         {
@@ -41,10 +41,15 @@ namespace ROOT.Signal
         [ReadOnly] public RotationDirection SignalFromDir;
         [ReadOnly] public bool Visited;//dequeue
         [ReadOnly] public bool Visiting;//enqueue
-        [ReadOnly] public bool InMatrix;
-        [ReadOnly] public bool InMatrixSignal;
 
-        public bool IsActiveMatrixFieldUnit => InMatrix && (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field);
+        [ShowInInspector]
+        public bool IsActiveMatrixFieldUnit => (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field) && IsSignalUnitCoreActive;
+
+        public bool HasCertainSignal(SignalType signalType)
+        {
+            return SignalStrengthComplex[signalType].Item1 > 0;
+        }
+        
         public bool IsEndingScanFieldUnit => InServerGrid && (Owner.UnitSignal == SignalType.Scan && Owner.UnitHardware == HardwareType.Field) && ScanSignalPathDepth == 1;
 
 
@@ -69,7 +74,7 @@ namespace ROOT.Signal
         {
             Visited = false;
             InServerGrid = false;
-            InMatrix = false;
+            //IsMatrixFieldAndHasMatrixSignal = false;
             SignalStrength = new Dictionary<SignalType, int>();
             SignalStrengthComplex = new Dictionary<SignalType, (int, int)>();
             try
@@ -108,10 +113,9 @@ namespace ROOT.Signal
                 return 0;
             }
         }
-
-        public abstract float CalSingleUnitScore();
-
-        //从某个独立单元计分的逻辑、主要是为SignalAsset中总体计算的BackUp函数。 
-        public abstract float CalScore(out int hardwareCount);
+        
+        public virtual bool IsSignalUnitCoreActive => HasCertainSignal(SignalType);
+        
+        public abstract float SingleUnitScore { get; }
     }
 }

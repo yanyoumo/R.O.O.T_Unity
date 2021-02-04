@@ -193,7 +193,7 @@ namespace ROOT.Signal
             return GetServerIncomeByLength(maxScore);
         }
 
-        public override SignalType Type => SignalType.Scan;
+        public override SignalType SignalType => SignalType.Scan;
 
         public override List<Vector2Int> SingleInfoCollectorZone
         {
@@ -221,7 +221,7 @@ namespace ROOT.Signal
             }
         }
 
-        public override float CalSingleUnitScore()
+        /*public override float SingleUnitScore()
         {
             //TODO
             if (IsEndingScanFieldUnit)
@@ -239,6 +239,6 @@ namespace ROOT.Signal
             //这里实际应该有问题，迪公的这个代码应该没法这么实际运行？总之有空让他把这儿弄成一个能用的版本。
             //这里跑的逻辑应该是假设除了这个Server其他Server都不存在的计算结果。
             return CalScore(out networkCount, ref maxCount, ref maxScore, ref maxLength);
-        }
+        }*/
     }
 }

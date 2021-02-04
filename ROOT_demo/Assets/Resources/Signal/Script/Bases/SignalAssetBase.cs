@@ -33,25 +33,15 @@ namespace ROOT.Signal
         //从整个信号视角计算信号总和。
         public virtual float CalAllScore(Board gameBoard, out int hardwareCount)
         {
-            float res = 0;
-            int reshdCount = 0;
-            foreach (var signalCore in gameBoard.Units
-                .Where(unit => unit.UnitSignal == SignalType && unit.UnitHardware == HardwareType.Core)
-                .Select(unit => unit.SignalCore))
-            {
-                res += signalCore.CalScore(out var count);
-                reshdCount += count;
-            }
-
-            hardwareCount = reshdCount;
-            return res;
+            var targetSignalCore = gameBoard.Units.Where(u => u.UnitSignal == SignalType).Select(u => u.SignalCore).ToArray();
+            hardwareCount=targetSignalCore.Count(s => s.IsSignalUnitCoreActive);
+            return targetSignalCore.Sum(s => s.SingleUnitScore);
         }
 
         public float CalAllScore(Board gameBoard)
         {
             return CalAllScore(gameBoard, out var A);
         }
-
 
         //把新的流程在这里再正式化一下：
         //目的：标准量化多个种类信号的信号值；对齐不同信号的计分时序；并且为一些简单、通用计分标准提供大幅简化的基本。

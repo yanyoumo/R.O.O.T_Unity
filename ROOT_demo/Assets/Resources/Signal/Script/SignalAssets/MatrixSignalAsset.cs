@@ -19,7 +19,7 @@ namespace ROOT.Signal
 
         public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
-            var showScan = unit.SignalCore.InMatrixSignal && otherUnit.SignalCore.InMatrixSignal;
+            var showScan = unit.SignalCore.HasCertainSignal(SignalType.Matrix) && otherUnit.SignalCore.HasCertainSignal(SignalType.Matrix);
             var solidScanSignal = (unit.SignalCore.SignalFromDir == dir);
             solidScanSignal |= (Utils.GetInvertDirection(otherUnit.SignalCore.SignalFromDir) == dir);
             showScan &= solidScanSignal;
@@ -31,14 +31,14 @@ namespace ROOT.Signal
             return showSig ? Math.Min(unit.SignalCore.SignalStrength[SignalType.Matrix], otherUnit.SignalCore.SignalStrength[SignalType.Matrix]) : 0;
         }
 
-        private void initCounting(Unit unit)
+        /*private void initCounting(Unit unit)
         {
             unit.SignalCore.Visited = false;
-            unit.SignalCore.InMatrix = (unit.UnitSignal == SignalType.Matrix && unit.UnitHardware == HardwareType.Core);
-            unit.SignalCore.InMatrixSignal = (unit.UnitSignal == SignalType.Matrix && unit.UnitHardware == HardwareType.Core);
-        }
+            unit.SignalCore.IsMatrixFieldAndHasMatrixSignal = (unit.UnitSignal == SignalType.Matrix && unit.UnitHardware == HardwareType.Core);
+            unit.SignalCore.HasMatrixSignal = (unit.UnitSignal == SignalType.Matrix && unit.UnitHardware == HardwareType.Core);
+        }*/
 
-        public override float CalAllScore(Board gameBoard, out int driverCountInt)
+        /*public override float CalAllScore(Board gameBoard, out int driverCountInt)
         {
             var driverCount = 0.0f;
             driverCountInt = 0;
@@ -56,6 +56,6 @@ namespace ROOT.Signal
 
             driverCountInt = Mathf.FloorToInt(driverCount);
             return Mathf.FloorToInt(driverCount * SignalMasterMgr.GetPerDriverIncome);
-        }
+        }*/
     }
 }

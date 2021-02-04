@@ -7,7 +7,7 @@ namespace ROOT.Signal
 {
     public class ThermoUnitSignalCore : UnitSignalCoreBase
     {
-        public override SignalType Type => SignalType.Thermo;
+        public override SignalType SignalType => SignalType.Thermo;
 
         private bool isValidPos(Vector2Int pos)
         {
@@ -23,7 +23,17 @@ namespace ROOT.Signal
             }
         }
 
-        public override float CalSingleUnitScore()
+        public override bool IsSignalUnitCoreActive
+        {
+            get
+            {
+                HasCertainSignal(SignalType);
+            }
+        }
+
+        public override float SingleUnitScore { get; }
+
+        /*public override float SingleUnitScore()
         {
            //throw new System.NotImplementedException();
            return 0.0f;
@@ -34,7 +44,7 @@ namespace ROOT.Signal
             //Redundant
             thermoItemCount = 1;
             return 1f;
-        }
+        }*/
 
         public float CalScore()
         {
