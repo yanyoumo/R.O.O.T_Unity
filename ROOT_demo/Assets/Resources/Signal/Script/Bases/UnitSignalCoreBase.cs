@@ -24,7 +24,7 @@ namespace ROOT.Signal
         [ShowInInspector]
         public Dictionary<SignalType, (int, int)> SignalStrengthComplex;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
 
-        protected (int, int) CorrespondingSignalData => SignalStrengthComplex[SignalType];
+        private (int, int) CorrespondingSignalData => SignalStrengthComplex[SignalType];
 
         public void ResetSignalStrengthComplex()
         {
@@ -43,7 +43,7 @@ namespace ROOT.Signal
         [ReadOnly] public bool Visiting;//enqueue
 
         [ShowInInspector]
-        public bool IsActiveMatrixFieldUnit => (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field) && IsSignalUnitCoreActive;
+        public bool IsActiveMatrixFieldUnit => (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field) && IsUnitActive;
 
         public bool HasCertainSignal(SignalType signalType)
         {
@@ -113,8 +113,8 @@ namespace ROOT.Signal
                 return 0;
             }
         }
-        
-        public virtual bool IsSignalUnitCoreActive => HasCertainSignal(SignalType);
+
+        public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
         
         public abstract float SingleUnitScore { get; }
     }

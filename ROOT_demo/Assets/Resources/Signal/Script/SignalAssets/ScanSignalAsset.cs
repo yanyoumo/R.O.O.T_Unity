@@ -31,8 +31,10 @@ namespace ROOT.Signal
             return showSig ? Math.Min(unit.SignalCore.ServerSignalDepth, otherUnit.SignalCore.ServerSignalDepth) : 0;
         }
 
+        [Obsolete]
         public override float CalAllScore(Board gameBoard, out int hardwareCount)
         {
+            //TODO SingleUnitScore实现后、这个函数就要被干掉了。
             int maxCount = Board.BoardLength * Board.BoardLength;
             var maxScore = Int32.MinValue;
             var maxLength = maxCount;

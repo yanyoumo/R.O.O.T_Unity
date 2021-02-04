@@ -221,24 +221,16 @@ namespace ROOT.Signal
             }
         }
 
-        /*public override float SingleUnitScore()
+        public override bool IsUnitActive
         {
-            //TODO
-            if (IsEndingScanFieldUnit)
+            get
             {
-                return 10.0f; //这个数据不对、还要弄。
+                //TODO 
+                return false;
             }
-            return 0.0f;
         }
 
-        public override float CalScore(out int networkCount)
-        {
-            int maxCount = Board.BoardLength * Board.BoardLength;
-            var maxScore = Int32.MinValue;
-            var maxLength = maxCount;
-            //这里实际应该有问题，迪公的这个代码应该没法这么实际运行？总之有空让他把这儿弄成一个能用的版本。
-            //这里跑的逻辑应该是假设除了这个Server其他Server都不存在的计算结果。
-            return CalScore(out networkCount, ref maxCount, ref maxScore, ref maxLength);
-        }*/
+        //TODO
+        public override float SingleUnitScore => 0.0f;
     }
 }

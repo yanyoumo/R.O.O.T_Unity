@@ -23,52 +23,34 @@ namespace ROOT.Signal
             }
         }
 
-        public override bool IsSignalUnitCoreActive
-        {
-            get
-            {
-                HasCertainSignal(SignalType);
-            }
-        }
-
-        public override float SingleUnitScore { get; }
-
-        /*public override float SingleUnitScore()
-        {
-           //throw new System.NotImplementedException();
-           return 0.0f;
-        }
-
-        public override float CalScore(out int thermoItemCount)
-        {
-            //Redundant
-            thermoItemCount = 1;
-            return 1f;
-        }*/
-
-        public float CalScore()
-        {
-            var sum = 0;
-            var counting = 0;
-            foreach (var pattern in Utils.GetPixelateCircle_Tier(Owner.Tier).PatternList)
-            {
-                var currentPos = Owner.CurrentBoardPosition + pattern;
-                if (isValidPos(currentPos))
-                {
-                    ++sum;
-                    if (Owner.GameBoard.CheckBoardPosValidAndEmpty(currentPos))
-                        ++counting;
-                }
-            }
-
-            Debug.Log("Sum:"+sum+" counting:"+counting);
-            return getScoreFromPercentage(1f*counting/sum);
-        }
-
         private float getScoreFromPercentage(float x)
         {
             float k = 1, b = 1;
             return k * x + b;
+        }
+
+        public override bool IsUnitActive => HasCertainSignal(SignalType);
+
+        public override float SingleUnitScore
+        {
+            get
+            {
+                var sum = 0;
+                var counting = 0;
+                foreach (var pattern in Utils.GetPixelateCircle_Tier(Owner.Tier).PatternList)
+                {
+                    var currentPos = Owner.CurrentBoardPosition + pattern;
+                    if (isValidPos(currentPos))
+                    {
+                        ++sum;
+                        if (Owner.GameBoard.CheckBoardPosValidAndEmpty(currentPos))
+                            ++counting;
+                    }
+                }
+
+                Debug.Log("Sum:"+sum+" counting:"+counting);
+                return getScoreFromPercentage(1f*counting/sum);
+            }
         }
     }
 }

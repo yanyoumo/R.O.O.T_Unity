@@ -97,6 +97,7 @@ namespace ROOT.Signal
             }
         }
 
+        //这里需要找到一个方法，检测单元的拓扑修改了，发现一次改一次。
         public void RefreshBoardAllSignalStrength(Board board)
         {
             RefreshBoardSelectedSignalStrength(board, SignalLib);
