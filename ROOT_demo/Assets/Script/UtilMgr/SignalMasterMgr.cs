@@ -93,7 +93,7 @@ namespace ROOT.Signal
             signalAssetLib = new Dictionary<SignalType, SignalAssetBase>();
             foreach (var signalBase in GetComponentsInChildren<SignalAssetBase>())
             {
-                signalAssetLib.Add(signalBase.Type, signalBase);
+                signalAssetLib.Add(signalBase.SignalType, signalBase);
             }
         }
 
@@ -102,7 +102,7 @@ namespace ROOT.Signal
             RefreshBoardSelectedSignalStrength(board, SignalLib);
         }
 
-        public void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
+        private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
         {
             board.Units.Select(u => u.SignalCore).ForEach(s => s.ResetSignalStrengthComplex());
             foreach (var signalAssetBase in signalAssetLib.Where(v=>selectedTypes.Contains(v.Key)).Select(v=>v.Value))

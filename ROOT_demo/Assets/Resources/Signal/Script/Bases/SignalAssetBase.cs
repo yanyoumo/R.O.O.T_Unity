@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT.Signal
@@ -9,17 +10,22 @@ namespace ROOT.Signal
     public abstract class SignalAssetBase : MonoBehaviour
     {
         public Type UnitSignalCoreType { protected set; get; }
+
         //返回对应的信号的enum
-        public abstract SignalType Type { get; }
+        public abstract SignalType SignalType { get; }
+
         //public CoreType CoreUnitType => CoreUnitAsset.UnitType;
         //public CoreType FieldUnitType => FieldUnitAsset.UnitType;
         public UnitAsset CoreUnitAsset;
+
         public UnitAsset FieldUnitAsset;
+
         //在LED屏幕上是否显示本信号的的逻辑。
-        public abstract bool ShowSignal(RotationDirection dir,Unit unit,Unit otherUnit);
+        public abstract bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit);
+
         //在LED屏幕上显示本信号的具体数值的逻辑。（此数据为绝对值、不要归一化）
-        public abstract int SignalVal(RotationDirection dir, Unit unit,Unit otherUnit);
-        
+        public abstract int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit);
+
         //从这里看，就是将会有一个地方可以对某类信号统一调用结果；
         //但是现在相当于要把视角放在单元上；
         //然后将这个函数统一放在这里。这是最费劲的事儿，这里需要Board的引用，先留个口吧。
@@ -30,7 +36,8 @@ namespace ROOT.Signal
             float res = 0;
             int reshdCount = 0;
             foreach (var signalCore in gameBoard.Units
-                .Where(unit => unit.UnitSignal == Type && unit.UnitHardware == HardwareType.Core).Select(unit => unit.SignalCore))
+                .Where(unit => unit.UnitSignal == SignalType && unit.UnitHardware == HardwareType.Core)
+                .Select(unit => unit.SignalCore))
             {
                 res += signalCore.CalScore(out var count);
                 reshdCount += count;
@@ -45,7 +52,7 @@ namespace ROOT.Signal
             return CalAllScore(gameBoard, out var A);
         }
 
-        
+
         //把新的流程在这里再正式化一下：
         //目的：标准量化多个种类信号的信号值；对齐不同信号的计分时序；并且为一些简单、通用计分标准提供大幅简化的基本。
         //流程：所有计分流程都是以这套强度修改的时序来同步；具体表现为、所有计分还是都以【强度数据+单元连接拓扑】；
@@ -62,10 +69,63 @@ namespace ROOT.Signal
         //      即使现有“必要最短”函数复杂度是O(n)，那么这个计算强度的总复杂度就是：
         //          per信号*per场单元*per核心单元*O(n);理论上高达O(n^4)。
         //          但是考虑到核心单元和信号的实际数量不会太高，就先实现出来，再优化。
-        public virtual void RefreshBoardSignalStrength(Board board)
+        public void RefreshBoardSignalStrength(Board board)
         {
-            //TODO 这个函数只需要某种信号的“一层”即可、并且每次调用前所有数据已经清零。
             //而且除了最后具体存储的两个int、所有别的数据最好都写成类变量。
+            var signalType = SignalType;
+            board.Units.ForEach(unit => unit.SignalCore.SignalStrengthComplex[signalType] = (int.MaxValue, int.MaxValue));
+            foreach (var coreUnit in board.FindUnitWithCoreType(SignalType, HardwareType.Core))
+            {
+                board.Units.ForEach(unit => unit.SignalCore.Visited = false);
+                var queue = new Queue<Unit>();
+                coreUnit.SignalCore.SignalStrengthComplex[signalType] = (0, 0);
+                coreUnit.SignalCore.Visited = true;
+                queue.Enqueue(coreUnit);
+                while (queue.Count != 0)
+                {
+                    var now = queue.Dequeue();
+                    var physicalDepth = now.SignalCore.SignalStrengthComplex[signalType].Item1;
+                    var scoringDepth = now.SignalCore.SignalStrengthComplex[signalType].Item2;
+                    foreach (var unit in now.GetConnectedOtherUnit.Where(unit => unit.SignalCore.Visited == false))
+                    {
+                        unit.SignalCore.Visited = true;
+                        if (unit.UnitSignal == signalType && unit.UnitHardware == HardwareType.Core)
+                            continue;
+                        var item1 = unit.SignalCore.SignalStrengthComplex[signalType].Item1;
+                        var item2 = unit.SignalCore.SignalStrengthComplex[signalType].Item2;
+                        var renew = false;
+                        if (physicalDepth + 1 < item1)
+                        {
+                            item1 = physicalDepth + 1;
+                            renew = true;
+                        }
+
+                        if (unit.UnitSignal == signalType && unit.UnitHardware == HardwareType.Field)
+                        {
+                            if (scoringDepth + 1 < item2)
+                            {
+                                item2 = scoringDepth + 1;
+                                renew = true;
+                            }
+
+                            unit.SignalCore.SignalStrengthComplex[signalType] = (item1, item2);
+                        }
+                        else
+                        {
+                            if (scoringDepth < item2)
+                            {
+                                item2 = scoringDepth;
+                                renew = true;
+                            }
+
+                            unit.SignalCore.SignalStrengthComplex[signalType] = (item1, item2);
+                        }
+
+                        if (renew)
+                            queue.Enqueue(unit);
+                    }
+                }
+            }
         }
     }
 }

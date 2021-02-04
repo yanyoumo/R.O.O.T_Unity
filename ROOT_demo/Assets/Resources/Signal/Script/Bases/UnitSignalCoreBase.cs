@@ -28,58 +28,10 @@ namespace ROOT.Signal
 
         public void ResetSignalStrengthComplex()
         {
-            foreach (var signalType in SignalStrengthComplex.Keys)
+            SignalStrengthComplex = new Dictionary<SignalType, (int, int)>();
+            foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
             {
-                GameBoard.Units.ForEach(unit =>
-                    unit.SignalCore.SignalStrengthComplex[signalType] = (int.MaxValue, int.MaxValue));
-                foreach (var coreUnit in GameBoard.FindUnitWithCoreType(Type, HardwareType.Core))
-                {
-                    GameBoard.Units.ForEach(unit => unit.SignalCore.Visited = false);
-                    var queue = new Queue<Unit>();
-                    coreUnit.SignalCore.SignalStrengthComplex[signalType] = (0, 0);
-                    coreUnit.SignalCore.Visited = true;
-                    queue.Enqueue(coreUnit);
-                    while (queue.Count != 0)
-                    {
-                        var now = queue.Dequeue();
-                        var physicalDepth = now.SignalCore.SignalStrengthComplex[signalType].Item1;
-                        var scoringDepth = now.SignalCore.SignalStrengthComplex[signalType].Item2;
-                        foreach (var unit in now.GetConnectedOtherUnit.Where(unit => unit.SignalCore.Visited == false))
-                        {
-                            unit.SignalCore.Visited = true;
-                            if (unit.UnitSignal == signalType && unit.UnitHardware == HardwareType.Core)
-                                continue;
-                            var item1 = unit.SignalCore.SignalStrengthComplex[signalType].Item1;
-                            var item2 = unit.SignalCore.SignalStrengthComplex[signalType].Item2;
-                            var renew = false;
-                            if (physicalDepth + 1 < item1)
-                            {
-                                item1 = physicalDepth + 1;
-                                renew = true;
-                            }
-                            if (unit.UnitSignal == signalType && unit.UnitHardware == HardwareType.Field)
-                            {
-                                if (scoringDepth + 1 < item2)
-                                {
-                                    item2 = scoringDepth + 1;
-                                    renew = true;
-                                }
-                                unit.SignalCore.SignalStrengthComplex[signalType] = (item1, item2);
-                            }
-                            else
-                            {
-                                if (scoringDepth < item2)
-                                {
-                                    item2 = scoringDepth;
-                                    renew = true;
-                                }
-                                unit.SignalCore.SignalStrengthComplex[signalType] = (item1, item2);
-                            }
-                            if (renew)
-                                queue.Enqueue(unit);
-                        }
-                    }
-                }
+                SignalStrengthComplex[signalType] = (0, 0);
             }
         }
 

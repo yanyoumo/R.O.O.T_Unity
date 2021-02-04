@@ -15,7 +15,7 @@ namespace ROOT.Signal
             UnitSignalCoreType = gameObject.AddComponent<MatrixUnitSignalCore>().GetType();
         }
 
-        public override SignalType Type => SignalType.Matrix;
+        public override SignalType SignalType => SignalType.Matrix;
 
         public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
@@ -45,9 +45,9 @@ namespace ROOT.Signal
 
             gameBoard.Units.ForEach(initCounting);
 
-            if (gameBoard.GetCountByType(Type,HardwareType.Core) == 0) return 0.0f;
+            if (gameBoard.GetCountByType(SignalType,HardwareType.Core) == 0) return 0.0f;
 
-            foreach (var unit in gameBoard.FindUnitWithCoreType(Type, HardwareType.Core))
+            foreach (var unit in gameBoard.FindUnitWithCoreType(SignalType, HardwareType.Core))
             {
                 if (unit.SignalCore.Visited) continue;
                 unit.SignalCore.CalScore(out var hardwareCount);

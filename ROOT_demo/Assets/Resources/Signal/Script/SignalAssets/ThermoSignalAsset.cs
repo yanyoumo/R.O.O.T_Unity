@@ -14,7 +14,7 @@ namespace ROOT.Signal
             UnitSignalCoreType = gameObject.AddComponent<ThermoUnitSignalCore>().GetType();
         }
 
-        public override SignalType Type => SignalType.Thermo;
+        public override SignalType SignalType => SignalType.Thermo;
 
         public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
@@ -40,7 +40,7 @@ namespace ROOT.Signal
         private void FindActiveThermoFieldUnit(Board gameBoard, out int thermoItemCountInt)
         {
             thermoItemCountInt = 0;
-            foreach (var ThermoCoreUnit in gameBoard.FindUnitWithCoreType(Type, HardwareType.Core))
+            foreach (var ThermoCoreUnit in gameBoard.FindUnitWithCoreType(SignalType, HardwareType.Core))
             {
                 Debug.Log("ThermoCore:"+ ThermoCoreUnit.CurrentBoardPosition);
                 if (ThermoCoreUnit.SignalCore.Visited)
@@ -67,7 +67,7 @@ namespace ROOT.Signal
         {
             gameBoard.Units.ForEach(InitCounting);
             FindActiveThermoFieldUnit(gameBoard, out thermoItemCountInt);
-            return gameBoard.FindUnitWithCoreType(Type, HardwareType.Core)
+            return gameBoard.FindUnitWithCoreType(SignalType, HardwareType.Core)
                 .Where(unit => unit.UnitSignal == SignalType.Thermo && unit.UnitHardware == HardwareType.Field && unit.IsActiveThermoFieldUnit)
                 .Select(unit => unit.SignalCore as ThermoUnitSignalCore)
                 .Sum(ThermoField => ThermoField.CalScore());
