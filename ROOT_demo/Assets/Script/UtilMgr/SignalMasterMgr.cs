@@ -103,12 +103,19 @@ namespace ROOT.Signal
             RefreshBoardSelectedSignalStrength(board, SignalLib);
         }
 
+        public List<Unit> tempScanPath;
         private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
         {
             board.Units.Select(u => u.SignalCore).ForEach(s => s.ResetSignalStrengthComplex());
-            foreach (var signalAssetBase in signalAssetLib.Where(v=>selectedTypes.Contains(v.Key)).Select(v=>v.Value))
+            foreach (var signalAssetBase in signalAssetLib.Where(v => selectedTypes.Contains(v.Key))
+                .Select(v => v.Value))
             {
                 signalAssetBase.RefreshBoardSignalStrength(board);
+                if (signalAssetBase.SignalType == SignalType.Scan)
+                {
+                    var asset=signalAssetBase as ScanSignalAsset;
+                    tempScanPath=asset.CalAllScore(board);
+                }
             }
         }
 

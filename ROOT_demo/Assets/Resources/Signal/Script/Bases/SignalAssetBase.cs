@@ -12,7 +12,7 @@ namespace ROOT.Signal
         public Type UnitSignalCoreType { protected set; get; }
 
         public abstract SignalType SignalType { get; }
-        
+
         public UnitAsset CoreUnitAsset;
         public UnitAsset FieldUnitAsset;
 
@@ -21,11 +21,11 @@ namespace ROOT.Signal
 
         //在LED屏幕上显示本信号的具体数值的逻辑。（此数据为绝对值、不要归一化）
         public abstract int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit);
-        
+
         public virtual float CalAllScore(Board gameBoard, out int hardwareCount)
         {
             var targetSignalCore = gameBoard.Units.Where(u => u.UnitSignal == SignalType).Select(u => u.SignalCore).ToArray();
-            hardwareCount=targetSignalCore.Count(s => s.IsUnitActive);
+            hardwareCount = targetSignalCore.Count(s => s.IsUnitActive);
             return targetSignalCore.Sum(s => s.SingleUnitScore);
         }
 
@@ -54,12 +54,12 @@ namespace ROOT.Signal
         {
             //而且除了最后具体存储的两个int、所有别的数据最好都写成类变量。
             var signalType = SignalType;
-            board.Units.ForEach(unit => unit.SignalCore.SignalStrengthComplex[signalType] = (int.MaxValue, int.MaxValue));
+            board.Units.ForEach(unit => unit.SignalCore.SignalStrengthComplex[signalType] = (int.MaxValue, int.MaxValue, int.MaxValue));
             foreach (var coreUnit in board.FindUnitWithCoreType(SignalType, HardwareType.Core))
             {
                 board.Units.ForEach(unit => unit.SignalCore.Visited = false);
                 var queue = new Queue<Unit>();
-                coreUnit.SignalCore.SignalStrengthComplex[signalType] = (0, 0);
+                coreUnit.SignalCore.SignalStrengthComplex[signalType] = (0, 0, 0);
                 coreUnit.SignalCore.Visited = true;
                 queue.Enqueue(coreUnit);
                 while (queue.Count != 0)
@@ -67,6 +67,7 @@ namespace ROOT.Signal
                     var now = queue.Dequeue();
                     var physicalDepth = now.SignalCore.SignalStrengthComplex[signalType].Item1;
                     var scoringDepth = now.SignalCore.SignalStrengthComplex[signalType].Item2;
+                    var tieredDepth = now.SignalCore.SignalStrengthComplex[signalType].Item3;
                     foreach (var unit in now.GetConnectedOtherUnit.Where(unit => unit.SignalCore.Visited == false))
                     {
                         unit.SignalCore.Visited = true;
@@ -74,6 +75,7 @@ namespace ROOT.Signal
                             continue;
                         var item1 = unit.SignalCore.SignalStrengthComplex[signalType].Item1;
                         var item2 = unit.SignalCore.SignalStrengthComplex[signalType].Item2;
+                        var item3 = unit.SignalCore.SignalStrengthComplex[signalType].Item3;
                         var renew = false;
                         if (physicalDepth + 1 < item1)
                         {
@@ -89,7 +91,13 @@ namespace ROOT.Signal
                                 renew = true;
                             }
 
-                            unit.SignalCore.SignalStrengthComplex[signalType] = (item1, item2);
+                            if (tieredDepth + unit.Tier < item3)
+                            {
+                                item3 = tieredDepth + unit.Tier;
+                                renew = true;
+                            }
+
+                            unit.SignalCore.SignalStrengthComplex[signalType] = (item1, item2, item3);
                         }
                         else
                         {
@@ -99,13 +107,25 @@ namespace ROOT.Signal
                                 renew = true;
                             }
 
-                            unit.SignalCore.SignalStrengthComplex[signalType] = (item1, item2);
+                            if (tieredDepth < item3)
+                            {
+                                item3 = tieredDepth;
+                                renew = true;
+                            }
+
+                            unit.SignalCore.SignalStrengthComplex[signalType] = (item1, item2, item3);
                         }
 
                         if (renew)
                             queue.Enqueue(unit);
                     }
                 }
+            }
+
+            foreach (var fieldUnit in board.FindUnitWithCoreType(SignalType, HardwareType.Core))
+            {
+                if (fieldUnit.SignalCore.SignalStrengthComplex[signalType] == (int.MaxValue, int.MaxValue, int.MaxValue))
+                    fieldUnit.SignalCore.SignalStrengthComplex[signalType] = (0, 0, 0);
             }
         }
     }
