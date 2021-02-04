@@ -325,6 +325,14 @@ namespace ROOT
             return Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(now.Tier).Item1);
         }
 
+        public static readonly RotationDirection[] ROTATION_LIST =
+        {
+            RotationDirection.East,
+            RotationDirection.North,
+            RotationDirection.South,
+            RotationDirection.West
+        };
+
         public static RotationDirection GetInvertDirection(RotationDirection orgRotationDirection)
         {
             switch (orgRotationDirection)

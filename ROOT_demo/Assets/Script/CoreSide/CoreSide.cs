@@ -112,13 +112,6 @@ namespace ROOT
             return maxMultiplier * gameProgress + 1.0f;
         }
 
-        public static int HeatSinkCost(int occupiedHeatSink, int HeatSinkCount)
-        {
-            //目前是卡死单价、但是同一个Array全占满总价不同。
-            const float pow = 1.25f;
-            return Mathf.CeilToInt(Mathf.Pow(pow, occupiedHeatSink) - 1);
-        }
-
         private float PostalMultiplier(float gameProgress)
         {
             const float baseMul = 1.6f;

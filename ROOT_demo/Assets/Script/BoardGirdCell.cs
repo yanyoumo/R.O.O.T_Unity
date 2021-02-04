@@ -17,7 +17,7 @@ namespace ROOT
         InfoCol,//先凑活一下。
     }
 
-    public class BoardGirdCell : MonoBehaviour
+    public partial class BoardGirdCell : MonoBehaviour
     {
         private Color NormalColor=> ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_MAT_BOARDGRID_NORMAL);
         private Color WarningColor=> ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_MAT_BOARDGRID_WARNING);
@@ -48,6 +48,8 @@ namespace ROOT
         public Color PositiveCashColoring;
         public Color NeutralCashColoring;
         
+        
+        
         public CellStatus CellStatus
         {
             set
@@ -77,13 +79,6 @@ namespace ROOT
             get => _cellStatus;
         }
 
-        private RotationDirection[] rotLib = {
-            RotationDirection.North,
-            RotationDirection.East,
-            RotationDirection.West,
-            RotationDirection.South
-        };
-
         private void UpdateEdgeSingleSide(RotationDirection side, List<Vector2Int> zone)
         {
             var res = false;
@@ -96,7 +91,7 @@ namespace ROOT
         public void UpdateEdge(List<Vector2Int> zone)
         {
             if (!zone.Contains(OnboardPos)) return;
-            rotLib.ForEach(edge => UpdateEdgeSingleSide(edge, zone));
+            Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone));
         }
 
         public void ClearEdge()
@@ -167,7 +162,8 @@ namespace ROOT
             var unit=owner.FindUnitUnderBoardPos(OnboardPos)?.GetComponentInChildren<Unit>();
             if (unit != null)
             {
-                return Mathf.RoundToInt(unit.SignalCore.CalSingleUnitScore());
+                //这么写的话、CalSingleUnitScore到是可以不考虑HeatSink了。
+                return Mathf.RoundToInt(unit.SignalCore.CalSingleUnitScore()) - HeatSinkCost;
             }
             else
             {

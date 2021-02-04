@@ -5,6 +5,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Sirenix.Utilities;
 using UnityEngine;
+using static ROOT.Utils;
 using Random = UnityEngine.Random;
 
 namespace ROOT
@@ -23,6 +24,12 @@ namespace ROOT
         Unhovered,
     }
 
+    public partial class BoardGirdCell
+    {
+        public int HeatSinkID { get; internal set; }//Always Positive.
+        public int HeatSinkCost { get; internal set; }//Always Positive.
+    }
+    
     public sealed class Board : MonoBehaviour
     {
         public InfoAirdrop AirDrop;
@@ -37,8 +44,8 @@ namespace ROOT
         }
         public static Vector2Int? WorldPosToXZGrid(Vector2 worldPosXZ)
         {
-            var xN = Utils.SignalChannelSplit(LFLocatorStatic.transform.position.x, URLocatorStatic.transform.position.x, BoardLength, worldPosXZ.x);
-            var yN = Utils.SignalChannelSplit(LFLocatorStatic.transform.position.z, URLocatorStatic.transform.position.z, BoardLength, worldPosXZ.y);
+            var xN = SignalChannelSplit(LFLocatorStatic.transform.position.x, URLocatorStatic.transform.position.x, BoardLength, worldPosXZ.x);
+            var yN = SignalChannelSplit(LFLocatorStatic.transform.position.z, URLocatorStatic.transform.position.z, BoardLength, worldPosXZ.y);
             var res= new Vector2Int(xN, yN);
             return CheckBoardPosValidStatic(res) ? (Vector2Int?) res : null;
         }
@@ -136,7 +143,7 @@ namespace ROOT
         public int MinHeatSinkCount=> ActualHeatSinkPos.Length;
         //private Vector2Int[] RawHeatSinkPos => HeatSinkPatterns.Lib[_currentHeatSinkPatternsID].Lib.ToArray();
         private Vector2Int[] RawHeatSinkPos => new Vector2Int[0];//现在使初始pattern都是空的。
-        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward().Select(vec => Utils.PermutateV2I(vec, BoardLength-1, _HeatSinkPermutation)).ToArray();
+        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward().ForEach(vec => PermutateV2I(vec, BoardLength-1, _HeatSinkPermutation)).ToArray();
 
         public int DiminishingStep { get; private set; }
 
@@ -298,13 +305,8 @@ namespace ROOT
         [CanBeNull]
         public Unit[] OverlapHeatSinkUnit => CheckHeatSink(StageType.Shop) != 0 ? Units.Where(unit => ActualHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray() : null;
 
-        /// <summary>
-        /// 这里是检查时候又fix的HeatSink被占用。
-        /// </summary>
-        /// <returns>返回有多少个HeatSink格没有被满足，返回0即均满足。</returns>
-        public int CheckHeatSink(StageType type)
+        private CellStatus GettargetingStatus(StageType type)
         {
-            //这里需要把status接进来，然后判是什么阶段的。
             CellStatus targetingStatus;
             switch (type)
             {
@@ -323,36 +325,65 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
 
+            return targetingStatus;
+        }
+
+        private void ResetGridStatus()
+        {
             BoardGirds.Values.ForEach(grid => grid.CellStatus = CellStatus.Normal);
+        }
+
+        private int CalcTotalHeatSinkCost(int totalCount)
+        {
+            const float pow = 1.25f;
+            return Mathf.CeilToInt(Mathf.Pow(pow, totalCount) - 1);
+        }
+        
+        private int CalcPerHeatSinkCost(int index)
+        {
+            Debug.Assert(index >= 0);
+            int x1 = index + 1;
+            int x0 = index;
+            return CalcTotalHeatSinkCost(x1) - CalcTotalHeatSinkCost(x0);
+        }
+
+        public int heatSinkCost=0;//现在对他的调用是读取的、需要可能改成触发的。
+        public int CheckHeatSink(StageType type)
+        {
+            //在这里计算每个HeatSink的价值。
+            ResetGridStatus();
+            //这里需要把status接进来，然后判是什么阶段的。
             if (type == StageType.Require)
             {
                 var waringTile = new List<Vector2Int>();
-                RotationDirection[] RotationList =
-                {
-                    RotationDirection.East,
-                    RotationDirection.North,
-                    RotationDirection.South,
-                    RotationDirection.West
-                };
-
                 foreach (var actualHeatSinkPo in ActualHeatSinkPos)
                 {
-                    foreach (var rotationDirection in RotationList)
-                    {
-                        var offset = Utils.ConvertDirectionToBoardPosOffset(rotationDirection);
-                        var tmpPos = actualHeatSinkPo + offset;
-                        if (!waringTile.Contains(tmpPos))
-                        {
-                            waringTile.Add(tmpPos);
-                        }
-                    }
+                    ROTATION_LIST
+                        .Select(o => ConvertDirectionToBoardPosOffset(o) + actualHeatSinkPo)
+                        .Where(s => !waringTile.Contains(s))
+                        .ForEach(waringTile.Add);
                 }
 
-                BoardGirds.Where(val => waringTile.Contains(val.Key)).ForEach(val => val.Value.CellStatus = CellStatus.PreWarning);
+                BoardGirds.Where(val => waringTile.Contains(val.Key))
+                    .ForEach(val => val.Value.CellStatus = CellStatus.PreWarning);
             }
-            BoardGirds.Where(val => ActualHeatSinkPos.Contains(val.Key)).ForEach(val => val.Value.CellStatus = targetingStatus);
-            
-            return ActualHeatSinkPos.Count(pos => CheckBoardPosValidAndEmpty(pos) == false);
+
+            heatSinkCost = 0;
+            var overlappedHeatSink = 0;
+            for (var i = 0; i < ActualHeatSinkPos.Length; i++)
+            {
+                var key = ActualHeatSinkPos[i];
+                BoardGirds[key].HeatSinkID = i;
+                BoardGirds[key].HeatSinkCost = CalcPerHeatSinkCost(i);
+                BoardGirds[key].CellStatus = GettargetingStatus(type);
+                if (CheckBoardPosValidAndFilled(key))
+                {
+                    overlappedHeatSink++;
+                    heatSinkCost+=CalcPerHeatSinkCost(i);
+                }
+            }
+
+            return overlappedHeatSink;
         }
 
         /// <summary>
@@ -584,7 +615,7 @@ namespace ROOT
 
         public Unit GetUnitWithPosAndDir(Vector2Int center, RotationDirection offsetDirection)
         {
-            var nextPos = center + Utils.ConvertDirectionToBoardPosOffset(offsetDirection);
+            var nextPos = center + ConvertDirectionToBoardPosOffset(offsetDirection);
             return CheckBoardPosValidAndFilled(nextPos) ? UnitsGameObjects[nextPos].GetComponentInChildren<Unit>() : null;
         }
 
@@ -688,7 +719,7 @@ namespace ROOT
                 deliveringPos = Vector2Int.zero;
                 return false;
             }
-            Vector2Int randomPlace = Utils.GenerateWeightedRandom(emptyPlace);
+            Vector2Int randomPlace = GenerateWeightedRandom(emptyPlace);
             unit.GetComponentInChildren<Unit>().InitPosWithAnimation(randomPlace);
             unit.GetComponentInChildren<Unit>().GameBoard = this;
             UnitsGameObjects.Add(randomPlace, unit);          

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ROOT.Signal;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -1366,7 +1367,7 @@ namespace ROOT
                     inCome = 0;
                 }
 
-                cost = ShopMgr.HeatSinkCost(currentLevelAsset.occupiedHeatSink, currentLevelAsset.GameBoard.MinHeatSinkCount);
+                cost = currentLevelAsset.GameBoard.heatSinkCost;
             }
             
             currentLevelAsset.DeltaCurrency = inCome - cost;
