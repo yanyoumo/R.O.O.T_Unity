@@ -795,5 +795,16 @@ namespace ROOT
         }
 
         #endregion
+
+        public override int GetHashCode()
+        {
+            var A = CurrentBoardPosition.GetHashCode();
+            var B = _unitRotation.GetHashCode();
+            var C = SignalCore.GetHashCode();
+            var D = UnitHardware.GetHashCode();
+            var E = UnitSides.GetHashCode();
+            var F = _tier.GetHashCode();
+            return A ^ B ^ C ^ D ^ E ^ F;
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using ROOT.Signal;
 using Sirenix.Utilities;
 using UnityEngine;
 using static ROOT.Utils;
@@ -851,6 +852,34 @@ namespace ROOT
                         unit.Value.GetComponentInChildren<Unit>().SetCoreEmissive(color);
                     }
                 }
+            }
+        }
+
+        private int lastUnitsHashCode = 0;
+
+        private int UnitsHashCode
+        {
+            get
+            {
+                int res = 0;
+                foreach (var result in Units.Select(u=>u.GetHashCode()))
+                {
+                    res ^= result;
+                }
+
+                return res;
+            }
+        }
+        
+        private void Update()
+        {
+            //这里面需要搞一个BoardUnitsHash的那个东西、如果改了那么就触发RefreshSignalStrength
+            var hashCode = UnitsHashCode;
+            if (lastUnitsHashCode != hashCode)
+            {
+                lastUnitsHashCode = hashCode;
+                Debug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode);
+                SignalMasterMgr.Instance.RefreshBoardAllSignalStrength(this);
             }
         }
 
