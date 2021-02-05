@@ -22,16 +22,16 @@ namespace ROOT.Signal
         //主要通过以下这个数据结构将整个棋盘中的数据网络记录下来。
         [ReadOnly]
         [ShowInInspector]
-        public Dictionary<SignalType, (int, int)> SignalStrengthComplex;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
+        public Dictionary<SignalType, (int, int, int)> SignalStrengthComplex;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
 
-        private (int, int) CorrespondingSignalData => SignalStrengthComplex[SignalType];
+        private (int, int, int) CorrespondingSignalData => SignalStrengthComplex[SignalType];
 
         public void ResetSignalStrengthComplex()
         {
-            SignalStrengthComplex = new Dictionary<SignalType, (int, int)>();
+            SignalStrengthComplex = new Dictionary<SignalType, (int, int, int)>();
             foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
             {
-                SignalStrengthComplex[signalType] = (0, 0);
+                SignalStrengthComplex[signalType] = (0, 0, 0);
             }
         }
 
@@ -49,7 +49,7 @@ namespace ROOT.Signal
         {
             return SignalStrengthComplex[signalType].Item1 > 0;
         }
-        
+
         public bool IsEndingScanFieldUnit => InServerGrid && (Owner.UnitSignal == SignalType.Scan && Owner.UnitHardware == HardwareType.Field) && ScanSignalPathDepth == 1;
 
 
@@ -76,13 +76,13 @@ namespace ROOT.Signal
             InServerGrid = false;
             //IsMatrixFieldAndHasMatrixSignal = false;
             SignalStrength = new Dictionary<SignalType, int>();
-            SignalStrengthComplex = new Dictionary<SignalType, (int, int)>();
+            SignalStrengthComplex = new Dictionary<SignalType, (int, int, int)>();
             try
             {
                 foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
                 {
                     SignalStrength.Add(signalType, 0);
-                    SignalStrengthComplex.Add(signalType, (0, 0));
+                    SignalStrengthComplex.Add(signalType, (0, 0, 0));
                 }
             }
             catch (NullReferenceException)
@@ -115,7 +115,7 @@ namespace ROOT.Signal
         }
 
         public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
-        
+
         public abstract float SingleUnitScore { get; }
     }
 }

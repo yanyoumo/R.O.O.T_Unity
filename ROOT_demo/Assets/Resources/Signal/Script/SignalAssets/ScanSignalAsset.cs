@@ -39,7 +39,7 @@ namespace ROOT.Signal
             var maxScore = Int32.MinValue;
             var maxLength = maxCount;
             float res = 0;
-            foreach (var signalCore in gameBoard.FindUnitWithCoreType(SignalType,HardwareType.Core).Select(unit => unit.SignalCore as ScanUnitSignalCore))
+            foreach (var signalCore in gameBoard.FindUnitWithCoreType(SignalType, HardwareType.Core).Select(unit => unit.SignalCore as ScanUnitSignalCore))
             {
                 //懂了，主要是CalScore代码之间需要交互这三个数据。
                 //这个可以搞的，写一个CalScore的重写，里面写上需要的out变量就行了。
@@ -53,6 +53,19 @@ namespace ROOT.Signal
             SignalMasterMgr.MaxNetworkDepth = hardwareCount = maxScore;
             return res;
         }
-
+        public List<Unit> CalAllScore(Board gameBoard)
+        {
+            int maxCount = Board.BoardLength * Board.BoardLength;
+            var maxScore = Int32.MinValue;
+            var maxLength = maxCount;
+            var res = new List<Unit>();
+            foreach (var signalCore in gameBoard.FindUnitWithCoreType(SignalType, HardwareType.Core).Select(unit => unit.SignalCore as ScanUnitSignalCore))
+            {
+                var tmp = signalCore.CalScore(ref maxCount, ref maxScore, ref maxLength);
+                if (tmp.Count != 0)
+                    res = tmp;
+            }
+            return res;
+        }
     }
 }

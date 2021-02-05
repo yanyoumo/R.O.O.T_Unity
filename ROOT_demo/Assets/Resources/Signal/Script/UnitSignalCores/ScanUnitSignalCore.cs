@@ -43,7 +43,7 @@ namespace ROOT.Signal
             {
                 unit.SignalCore.ScanSignalPathDepth = length--;
                 unit.SignalCore.ServerSignalDepth = cnt;
-                if (unit.UnitSignal == SignalType.Scan&&unit.UnitHardware == HardwareType.Field)
+                if (unit.UnitSignal == SignalType.Scan && unit.UnitHardware == HardwareType.Field)
                 {
                     cnt -= unit.Tier;
                 }
@@ -114,7 +114,7 @@ namespace ROOT.Signal
 
         public float GetServerIncomeByLength(int length)
         {
-            float[] incomeArrayDel = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
+            float[] incomeArrayDel = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f };
             float incomeArrayBase = 0.0f;
             float income = incomeArrayBase;
             for (int i = 0; i < length; i++)
@@ -193,6 +193,71 @@ namespace ROOT.Signal
             return GetServerIncomeByLength(maxScore);
         }
 
+        public List<Unit> CalScore(ref int maxCount, ref int maxScore, ref int maxLength)
+        {
+            var res = new List<Unit>();
+            var thisLevelDict = new Dictionary<Unit, networkCableStatus>();
+            var lastLevelDict = new Dictionary<Unit, networkCableStatus>();
+            Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.Visited = unit.SignalCore.Visiting = false);
+            Owner.SignalCore.Visiting = true;
+            var networkCableQueue = new Queue<networkCableStatus>();
+            networkCableQueue.Enqueue(new networkCableStatus(Owner, 0, 0, AddPath(Owner, 0ul)));
+            while (networkCableQueue.Count != 0)
+            {
+                var (networkCable, length, score, vis) = networkCableQueue.Dequeue();
+                if (thisLevelDict.Count > 0 &&
+                    length > thisLevelDict.First().Value.Item2)
+                {
+                    lastLevelDict = thisLevelDict;
+                    thisLevelDict = new Dictionary<Unit, networkCableStatus>
+                    {
+                        {networkCable, new networkCableStatus(networkCable, length, score, vis)}
+                    };
+                }
+                else
+                    thisLevelDict.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
+
+                if (length > maxLength)
+                    break;
+                networkCable.SignalCore.Visited = true;
+                networkCable.SignalCore.Visiting = false;
+                var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
+                hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
+                if (FindNextLevelNetworkCable(networkCableQueue, hardDriveQueue, length, score) &&
+                    ((length < maxLength && length != 0) || length == maxLength))
+                {
+                    if (length < maxLength || (length == maxLength && score > maxScore))
+                    {
+                        maxScore = score;
+                        maxLength = length;
+                        Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
+                        res = GeneratePath(Owner, vis);
+                    }
+
+                    foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit.Where(unit =>
+                        lastLevelDict.ContainsKey(unit)))
+                    {
+                        var lastNodeButOne = lastLevelDict[unitConnectedToLastNode];
+                        if (PathContains(vis, lastNodeButOne.Item4) == false &&
+                            lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable) > maxScore)
+                        {
+                            maxScore = lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable);
+                            Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
+                            res = GeneratePath(Owner, AddPath(networkCable, lastNodeButOne.Item4));
+                        }
+                    }
+                }
+            }
+
+            if (maxLength == maxCount)
+            {
+                Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
+                maxScore = 0;
+            }
+
+            return res;
+        }
+
         public override SignalType SignalType => SignalType.Scan;
 
         public override List<Vector2Int> SingleInfoCollectorZone
@@ -221,16 +286,19 @@ namespace ROOT.Signal
             }
         }
 
-        public override bool IsUnitActive
-        {
-            get
-            {
+
                 //TODO 
                 //首先、想利用已有的数据地图计算扫描的算法绝对有：
                 //利用图像处理的思路；只考虑扫描信号深度场的本地峰值的最小值。那个值就是"必要最短路径的末端单元（激活单元）"。
                 //知道了激活单元后、在自激活单元的位置、做全部考虑的单元的、在扫描信号硬件深度场上做梯度下降就可以了。
                 //细一想有点OverHype了
-                return false;
+        public override bool IsUnitActive
+        {
+            get
+            {
+                if (SignalMasterMgr.Instance.tempScanPath.Count == 0)
+                    return false;
+                return Owner == SignalMasterMgr.Instance.tempScanPath.Last();
             }
         }
 
