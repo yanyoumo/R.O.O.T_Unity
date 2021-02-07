@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -104,9 +105,14 @@ namespace ROOT.Signal
             RefreshBoardSelectedSignalStrength(board, SignalLib);
         }
 
+        [ReadOnly]
+        [ShowInInspector]
+        public Dictionary<SignalType, List<List<Vector2Int>>> Paths;
+        
         public List<Unit> tempScanPath;
         private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
         {
+            Paths = new Dictionary<SignalType, List<List<Vector2Int>>>();
             board.Units.Select(u => u.SignalCore).ForEach(s => s.ResetSignalStrengthComplex());
             foreach (var signalAssetBase in signalAssetLib.Where(v => selectedTypes.Contains(v.Key))
                 .Select(v => v.Value))
@@ -130,6 +136,8 @@ namespace ROOT.Signal
                             tempScanPath[i].SignalCore.SignalDataPackList[SignalType.Scan].Item3,
                             tempScanPath[i - 1]);
                 }
+
+                Paths[signalAssetBase.SignalType] = signalAssetBase.FindAllPathSingleLayer(board);
             }
         }
 

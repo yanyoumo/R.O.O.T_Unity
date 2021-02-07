@@ -49,22 +49,19 @@ namespace ROOT
         TypeA,
         TypeB,
     }
-    
+
     [Serializable]
     public struct UnitGist
     {
-        [Header("Basic")] 
-        public PlayingSignalSelector PlayingSignalSelector;
+        [Header("Basic")] public PlayingSignalSelector PlayingSignalSelector;
         public HardwareType CoreGenre;
         public SideType[] Sides;
-        [Range(1,5)]
-        public int Tier;
+        [Range(1, 5)] public int Tier;
 
-        [Header("OnBoardInfo")]
-        public Vector2Int Pos;
+        [Header("OnBoardInfo")] public Vector2Int Pos;
         public bool IsStation;
     }
-    
+
     public sealed partial class ShopMgr : ShopBase
     {
         /// <summary>
@@ -125,7 +122,8 @@ namespace ROOT
             }
         }
 
-        private GameObject InitUnitShop(SignalType signalType,HardwareType genre, SideType[] sides, out float hardwarePrice, int ID, int _cost,
+        private GameObject InitUnitShop(SignalType signalType, HardwareType genre, SideType[] sides,
+            out float hardwarePrice, int ID, int _cost,
             int tier)
         {
             var go = InitUnitShopCore(signalType, genre, sides, ID, _cost, tier);
@@ -137,7 +135,7 @@ namespace ROOT
             }
             else
             {
-                var corePrice = SignalMasterMgr.Instance.PriceFromUnit(signalType,genre);
+                var corePrice = SignalMasterMgr.Instance.PriceFromUnit(signalType, genre);
                 hardwarePrice = corePrice + sides.Sum(TryGetPrice);
             }
 
@@ -816,64 +814,14 @@ namespace ROOT
         public List<Vector2Int> FindSignalPath_Iter(SignalType targetSignalType)
         {
             var res = new List<Vector2Int> {CurrentBoardPosition};
-            var unit=SignalCore.SignalDataPackList[targetSignalType].Item4;
+            var unit = SignalCore.SignalDataPackList[targetSignalType].Item4;
             if (unit != null)
             {
                 //这样做出来的路径是终叶到Core的。
                 res.AddRange(unit.FindSignalPath_Iter(targetSignalType));
             }
+
             return res;
         }
-        
-        /*public void SetInSignalTypeMesh_Iter(SignalType targetSignalType)
-        {
-            //Debug.Log("SetInSignalTypeMesh_Iter");
-            if (!SignalCore.CertainSignalData(targetSignalType).Item4)
-            {
-                var a = SignalCore.SignalDataPackList[targetSignalType].Item1;
-                var b = SignalCore.SignalDataPackList[targetSignalType].Item2;
-                var c = SignalCore.SignalDataPackList[targetSignalType].Item3;
-                //SignalCore.SignalDataPackList[targetSignalType] = new Tuple<int, int, int, bool>(a, b, c, true);
-                FindSignalDirUnit(targetSignalType)?.SetInSignalTypeMesh_Iter(targetSignalType);
-            }
-        }
-
-        [ShowInInspector]
-        public Unit[] tmpU;
-        
-        [CanBeNull]
-        public Unit FindSignalDirUnit(SignalType targetSignalType)
-        {
-
-            var thisTargetSignalTypeHardWareDepth = SignalCore.CertainSignalData(targetSignalType).Item1;
-            if (thisTargetSignalTypeHardWareDepth == 0)
-            {
-                return null;
-            }
-
-            var tmpUnit = GetConnectedOtherUnit.Where(u => u.SignalCore.CertainSignalData(targetSignalType).Item1 < thisTargetSignalTypeHardWareDepth).ToArray();
-
-            tmpU = GetConnectedOtherUnit.ToArray();
-            
-            if (tmpUnit.Length == 0)
-            {
-                return null;
-            }
-
-            if (tmpUnit.Length == 1)
-            {
-                return tmpUnit[0];
-            }
-
-            tmpUnit = tmpUnit.OrderByDescending(u => u.SignalCore.CertainSignalData(targetSignalType).Item2).ToArray();
-
-            if (tmpUnit[0].SignalCore.CertainSignalData(targetSignalType).Item2 != tmpUnit[1].SignalCore.CertainSignalData(targetSignalType).Item2)
-            {
-                return tmpUnit[0];
-            }
-
-            tmpUnit = tmpUnit.OrderByDescending(u => u.SignalCore.CertainSignalData(targetSignalType).Item3).ToArray();
-            return tmpUnit[0];
-        }*/
     }
 }

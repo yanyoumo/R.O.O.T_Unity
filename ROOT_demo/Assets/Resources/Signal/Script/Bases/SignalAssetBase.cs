@@ -7,6 +7,7 @@ using UnityEngine;
 namespace ROOT.Signal
 {
     using SignalDataPack = Tuple<int, int, int, Unit>;
+
     public abstract class SignalAssetBase : MonoBehaviour
     {
         public Type UnitSignalCoreType { protected set; get; }
@@ -29,13 +30,15 @@ namespace ROOT.Signal
         //在LED屏幕上是否显示本信号的的逻辑。
         public virtual bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
-            var checkA = unit.SignalCore.HasCertainSignal(SignalType) && otherUnit.SignalCore.HasCertainSignal(SignalType);
+            var checkA = unit.SignalCore.HasCertainSignal(SignalType) &&
+                         otherUnit.SignalCore.HasCertainSignal(SignalType);
             /*var signalStrengthComplex = rectifyIntTuple(unit.SignalCore.CorrespondingSignalData);
             var othersignalStrengthComplex = rectifyIntTuple(otherUnit.SignalCore.CorrespondingSignalData);*/
             //var delTieredSignal = Math.Abs(othersignalStrengthComplex.Item3 - signalStrengthComplex.Item3);
             //var signalTier = unit.UnitSignal == SignalType ? unit.Tier : 0;
             return checkA;
         }
+
         public virtual int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             var showSig = ShowSignal(dir, unit, otherUnit);
@@ -46,7 +49,8 @@ namespace ROOT.Signal
 
         public virtual float CalAllScore(Board gameBoard, out int hardwareCount)
         {
-            var targetSignalCore = gameBoard.Units.Where(u => u.UnitSignal == SignalType).Select(u => u.SignalCore).ToArray();
+            var targetSignalCore = gameBoard.Units.Where(u => u.UnitSignal == SignalType).Select(u => u.SignalCore)
+                .ToArray();
             hardwareCount = targetSignalCore.Count(s => s.IsUnitActive);
             return targetSignalCore.Sum(s => s.SingleUnitScore);
         }
@@ -56,29 +60,84 @@ namespace ROOT.Signal
             return CalAllScore(gameBoard, out var A);
         }
 
-        public List<Vector2Int> TruncatePath(List<Vector2Int> vector2Ints,Board board)
+        private List<Vector2Int> TruncatePath(List<Vector2Int> vector2Ints, Board board)
         {
             var TruncateAmount = 0;
             for (var i = vector2Ints.Count - 1; i >= 0; i--)
             {
-                var unit=board.FindUnitUnderBoardPos(vector2Ints[i]).GetComponentInChildren<Unit>();
-                if (unit.UnitSignal!=SignalType)
+                //RISK
+                //这个玩意儿和动画、可能有竞争冒险效应。
+                var unit = board.FindUnitUnderBoardPos(vector2Ints[i]).GetComponentInChildren<Unit>();
+                if (unit.UnitSignal != SignalType)
                 {
                     TruncateAmount++;
-                        }
-                        else
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (TruncateAmount == 0) return vector2Ints;
+            for (int i = 0; i < TruncateAmount; i++)
+            {
+                vector2Ints.RemoveAt(vector2Ints.Count - 1 - i);
+            }
+
+            return vector2Ints;
+        }
+
+        public bool SamePath(List<Vector2Int> a, List<Vector2Int> b)
+        {
+            if (a.Count!=b.Count)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < a.Count; i++)
+            {
+                if (a[i] != b[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        
+        public List<List<Vector2Int>> FindAllPathSingleLayer(Board board)
+        {
+            //用Unit还是用Key存是个问题。
+            var path = new List<List<Vector2Int>>();
+            var units = board.FindEndingUnit.ToList();
+            var maxHardwareDepth = board.Units.Max(u => u.SignalCore.CertainSignalData(SignalType).Item1);
+            units.AddRange(board.Units.Where(u => u.SignalCore.CertainSignalData(SignalType).Item1 == maxHardwareDepth));
+            units = units.Distinct().ToList();
+            Debug.Log("units.Count"+units.Count+"/"+SignalType);
+            var rawPath=units.Select(u => u.FindSignalPath_Iter(SignalType)).ToList();
+            foreach (var vector2Ints in rawPath.Distinct())
+            {
+                if (vector2Ints.Count>1)
+                {
+                    vector2Ints.Reverse();
+                    var tmp = TruncatePath(vector2Ints, board);
+                    var hasSamePath = false;
+                    foreach (var ints in path)
+                    {
+                        if (SamePath(tmp,ints))
                         {
+                            hasSamePath = true;
                             break;
                         }
                     }
-                    if (TruncateAmount==0) return vector2Ints;
-                    for (int i = 0; i < TruncateAmount; i++)
+                    if (!hasSamePath)
                     {
-                        vector2Ints.RemoveAt(vector2Ints.Count - 1 - i);
+                        path.Add(tmp);
                     }
-                    return vector2Ints;
                 }
-
+            }
+            return path.ToList();
+        }
 
         //把新的流程在这里再正式化一下：
         //目的：标准量化多个种类信号的信号值；对齐不同信号的计分时序；并且为一些简单、通用计分标准提供大幅简化的基本。
@@ -100,7 +159,8 @@ namespace ROOT.Signal
         {
             //而且除了最后具体存储的两个int、所有别的数据最好都写成类变量。
             var signalType = SignalType;
-            board.Units.ForEach(unit => unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(int.MaxValue, 0, 0, null));
+            board.Units.ForEach(unit =>
+                unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(int.MaxValue, 0, 0, null));
             foreach (var coreUnit in board.FindUnitWithCoreType(SignalType, HardwareType.Core))
             {
                 board.Units.ForEach(unit => unit.SignalCore.Visited = false);
@@ -179,21 +239,8 @@ namespace ROOT.Signal
                         unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(item1, item2, item3, now);
                         queue.Enqueue(unit);
                     }
-        
-        public List<List<Vector2Int>> FindAllPathSingleLayer(Board board)
-        {
-            var path = new List<List<Vector2Int>>();
-            var units = board.FindEndingUnit.ToArray();
-            var maxHardwareDepth = board.Units.Max(u => u.SignalCore.CertainSignalData(SignalType).Item1);
-            units.AddRange(board.Units.Where(u => u.SignalCore.CertainSignalData(SignalType).Item1 == maxHardwareDepth));
-            units = units.Distinct().ToArray();
-            var rawPath=units.Select(u => u.FindSignalPath_Iter(SignalType)).ToList();
-            foreach (var vector2Ints in rawPath)
-            {
-                vector2Ints.Reverse();
-                path.Add(TruncatePath(vector2Ints, board));
+                }
             }
-            return path;
         }
     }
 }
