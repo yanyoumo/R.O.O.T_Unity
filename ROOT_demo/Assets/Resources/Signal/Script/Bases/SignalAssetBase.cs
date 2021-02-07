@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    using SignalDataPack = Tuple<int, int, int,bool>;
+    using SignalDataPack = Tuple<int, int, int, Unit>;
     public abstract class SignalAssetBase : MonoBehaviour
     {
         public Type UnitSignalCoreType { protected set; get; }
@@ -18,14 +18,14 @@ namespace ROOT.Signal
 
         private int RectifyInt(int a)
         {
-            return a==int.MaxValue ? 0 : a;
+            return a == int.MaxValue ? 0 : a;
         }
 
         private (int, int, int) rectifyIntTuple((int, int, int) a)
         {
             return (RectifyInt(a.Item1), RectifyInt(a.Item2), RectifyInt(a.Item3));
         }
-        
+
         //在LED屏幕上是否显示本信号的的逻辑。
         public virtual bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
@@ -56,8 +56,8 @@ namespace ROOT.Signal
             return CalAllScore(gameBoard, out var A);
         }
 
-        
-        
+
+
         //把新的流程在这里再正式化一下：
         //目的：标准量化多个种类信号的信号值；对齐不同信号的计分时序；并且为一些简单、通用计分标准提供大幅简化的基本。
         //流程：所有计分流程都是以这套强度修改的时序来同步；具体表现为、所有计分还是都以【强度数据+单元连接拓扑】；
@@ -78,12 +78,12 @@ namespace ROOT.Signal
         {
             //而且除了最后具体存储的两个int、所有别的数据最好都写成类变量。
             var signalType = SignalType;
-            board.Units.ForEach(unit => unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(int.MaxValue, int.MaxValue, int.MaxValue,false));
+            board.Units.ForEach(unit => unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(int.MaxValue, 0, 0, null));
             foreach (var coreUnit in board.FindUnitWithCoreType(SignalType, HardwareType.Core))
             {
                 board.Units.ForEach(unit => unit.SignalCore.Visited = false);
                 var queue = new Queue<Unit>();
-                coreUnit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0,false);
+                coreUnit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0, null);
                 coreUnit.SignalCore.Visited = true;
                 queue.Enqueue(coreUnit);
                 while (queue.Count != 0)
@@ -105,43 +105,57 @@ namespace ROOT.Signal
                         {
                             item1 = physicalDepth + 1;
                             renew = true;
-                        }
-
-                        if (unit.UnitSignal == signalType && unit.UnitHardware == HardwareType.Field)
-                        {
-                            if (scoringDepth + 1 < item2)
-                            {
-                                item2 = scoringDepth + 1;
-                                renew = true;
-                            }
-
-                            if (tieredDepth + unit.Tier < item3)
+                            if (unit.UnitSignal == signalType && unit.UnitHardware == HardwareType.Field)
                             {
                                 item3 = tieredDepth + unit.Tier;
-                                renew = true;
+                                item2 = scoringDepth + 1;
                             }
 
-                            unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(item1, item2, item3, false);
-                        }
-                        else
-                        {
-                            if (scoringDepth < item2)
-                            {
-                                item2 = scoringDepth;
-                                renew = true;
-                            }
-
-                            if (tieredDepth < item3)
+                            else
                             {
                                 item3 = tieredDepth;
-                                renew = true;
+                                item2 = scoringDepth;
                             }
-
-                            unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(item1, item2, item3, false);
                         }
 
-                        if (renew)
-                            queue.Enqueue(unit);
+                        else if (physicalDepth + 1 == item1)
+                        {
+                            if (unit.UnitSignal == signalType && unit.UnitHardware == HardwareType.Field)
+                            {
+                                if (tieredDepth + unit.Tier > item3)
+                                {
+                                    item3 = tieredDepth + unit.Tier;
+                                    item2 = scoringDepth + 1;
+                                    renew = true;
+                                }
+
+                                else if (tieredDepth + unit.Tier == item3 && scoringDepth + 1 < item2)
+                                {
+                                    item2 = scoringDepth + 1;
+                                    renew = true;
+                                }
+                            }
+
+                            else
+                            {
+                                if (tieredDepth > item3)
+                                {
+                                    item3 = tieredDepth;
+                                    item2 = scoringDepth;
+                                    renew = true;
+                                }
+
+                                else if (scoringDepth < item2)
+                                {
+                                    item2 = scoringDepth;
+                                    renew = true;
+                                }
+                            }
+                        }
+
+                        if (!renew) continue;
+                        unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(item1, item2, item3, now);
+                        queue.Enqueue(unit);
                     }
                 }
             }
@@ -149,12 +163,12 @@ namespace ROOT.Signal
             //就是把所有都maxValue了；这个还是遍历。
             foreach (var fieldUnit in board.Units)
             {
-                if (Equals(fieldUnit.SignalCore.SignalDataPackList[signalType], new SignalDataPack(int.MaxValue, int.MaxValue, int.MaxValue, false)))
-                    fieldUnit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0, false);
+                if (Equals(fieldUnit.SignalCore.SignalDataPackList[signalType], new SignalDataPack(int.MaxValue, 0, 0, null)))
+                    fieldUnit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0, null);
             }
-            
+
             var maxHardwareDepth = board.Units.Max(u => u.SignalCore.CertainSignalData(signalType).Item1);
-            foreach (var unit in board.Units.Where(u => u.SignalCore.CertainSignalData(signalType).Item1==maxHardwareDepth))
+            foreach (var unit in board.Units.Where(u => u.SignalCore.CertainSignalData(signalType).Item1 == maxHardwareDepth))
             {
                 unit.SetInSignalTypeMesh_Iter(signalType);
             }
