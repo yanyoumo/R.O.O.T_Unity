@@ -813,7 +813,19 @@ namespace ROOT
             return A ^ B ^ C ^ D ^ E ^ F;
         }
 
-        public void SetInSignalTypeMesh_Iter(SignalType targetSignalType)
+        public List<Vector2Int> FindSignalPath_Iter(SignalType targetSignalType)
+        {
+            var res = new List<Vector2Int> {CurrentBoardPosition};
+            var unit=SignalCore.SignalDataPackList[targetSignalType].Item4;
+            if (unit != null)
+            {
+                //这样做出来的路径是终叶到Core的。
+                res.AddRange(unit.FindSignalPath_Iter(targetSignalType));
+            }
+            return res;
+        }
+        
+        /*public void SetInSignalTypeMesh_Iter(SignalType targetSignalType)
         {
             //Debug.Log("SetInSignalTypeMesh_Iter");
             if (!SignalCore.CertainSignalData(targetSignalType).Item4)
@@ -841,7 +853,7 @@ namespace ROOT
 
             var tmpUnit = GetConnectedOtherUnit.Where(u => u.SignalCore.CertainSignalData(targetSignalType).Item1 < thisTargetSignalTypeHardWareDepth).ToArray();
 
-            tmpU = tmpUnit;
+            tmpU = GetConnectedOtherUnit.ToArray();
             
             if (tmpUnit.Length == 0)
             {
@@ -855,14 +867,13 @@ namespace ROOT
 
             tmpUnit = tmpUnit.OrderByDescending(u => u.SignalCore.CertainSignalData(targetSignalType).Item2).ToArray();
 
-            if (tmpUnit[0].SignalCore.CertainSignalData(targetSignalType).Item2 !=
-                tmpUnit[1].SignalCore.CertainSignalData(targetSignalType).Item2)
+            if (tmpUnit[0].SignalCore.CertainSignalData(targetSignalType).Item2 != tmpUnit[1].SignalCore.CertainSignalData(targetSignalType).Item2)
             {
                 return tmpUnit[0];
             }
 
             tmpUnit = tmpUnit.OrderByDescending(u => u.SignalCore.CertainSignalData(targetSignalType).Item3).ToArray();
             return tmpUnit[0];
-        }
+        }*/
     }
 }

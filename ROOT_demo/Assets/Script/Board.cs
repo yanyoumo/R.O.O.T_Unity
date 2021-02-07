@@ -883,9 +883,6 @@ namespace ROOT
             }
         }
 
-        /*public float CalculateTotalIncomes()
-        {
-            return Units.Where(unit => unit.IsCore).Sum(unit => unit.SignalCore.CalScore());
-        }*/
+        public IEnumerable<Unit> FindEndingUnit => Units.Where(u => u.GetConnectedOtherUnit.Count == 1); //目前算出来的终叶节点不一定是匹配信号的，而是全部的终叶节点。
     }
 }

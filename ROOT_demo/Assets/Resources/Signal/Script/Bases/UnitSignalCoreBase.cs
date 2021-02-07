@@ -10,8 +10,8 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    using SignalDataPack = Tuple<int, int, int,bool>;
-    
+    using SignalDataPack = Tuple<int, int, int,Unit>;
+
     public abstract class UnitSignalCoreBase : MonoBehaviour
     {
         public Unit Owner;
@@ -30,7 +30,7 @@ namespace ROOT.Signal
             SignalDataPackList = new Dictionary<SignalType,SignalDataPack>();
             foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
             {
-                SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0, false);
+                SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0, null);
             }
         }
 
@@ -86,7 +86,7 @@ namespace ROOT.Signal
                 foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
                 {
                     //SignalStrength.Add(signalType, 0);
-                    SignalDataPackList.Add(signalType, new SignalDataPack(0, 0, 0, false));
+                    SignalDataPackList.Add(signalType, new SignalDataPack(0, 0, 0, null));
                 }
             }
             catch (NullReferenceException)
