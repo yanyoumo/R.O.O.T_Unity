@@ -10,28 +10,27 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
+    using SignalDataPack = Tuple<int, int, int,bool>;
+    
     public abstract class UnitSignalCoreBase : MonoBehaviour
     {
         public Unit Owner;
         protected Board GameBoard => Owner.GameBoard;
         //返回对应的信号的enum
         public abstract SignalType SignalType { get; }
-
-        [Obsolete]
-        public Dictionary<SignalType, int> SignalStrength;
-        //主要通过以下这个数据结构将整个棋盘中的数据网络记录下来。
+        
         [ReadOnly]
         [ShowInInspector]
-        public Dictionary<SignalType, (int, int, int)> SignalStrengthComplex;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
+        public Dictionary<SignalType,SignalDataPack> SignalDataPackList;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
 
-        private (int, int, int) CorrespondingSignalData => SignalStrengthComplex[SignalType];
+        public SignalDataPack CorrespondingSignalData => SignalDataPackList[SignalType];
 
         public void ResetSignalStrengthComplex()
         {
-            SignalStrengthComplex = new Dictionary<SignalType, (int, int, int)>();
+            SignalDataPackList = new Dictionary<SignalType,SignalDataPack>();
             foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
             {
-                SignalStrengthComplex[signalType] = (0, 0, 0);
+                SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0, false);
             }
         }
 
@@ -45,24 +44,29 @@ namespace ROOT.Signal
         [ShowInInspector]
         public bool IsActiveMatrixFieldUnit => (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field) && IsUnitActive;
 
+        private int RectifyInt(int a)
+        {
+            return a==int.MaxValue ? 0 : a;
+        }
+        
         public bool HasCertainSignal(SignalType signalType)
         {
-            return SignalStrengthComplex[signalType].Item1 > 0;
+            return RectifyInt(SignalDataPackList[signalType].Item1) > 0;
         }
 
+        public SignalDataPack CertainSignalData(SignalType signalType)
+        {
+            return SignalDataPackList[signalType];
+        }
+        
         public bool IsEndingScanFieldUnit => InServerGrid && (Owner.UnitSignal == SignalType.Scan && Owner.UnitHardware == HardwareType.Field) && ScanSignalPathDepth == 1;
 
 
         //标记扫描信号的路径的参数。
         [ReadOnly] public int ScanSignalPathDepth; //for scoring purpose
 
-        [ReadOnly]
-        [ShowInInspector]
-        public int ServerSignalDepth
-        {
-            get => SignalStrength[SignalType.Scan];
-            set => SignalStrength[SignalType.Scan] = value;
-        }
+        [ReadOnly] [ShowInInspector] public int ServerSignalDepth;
+
         /// <summary>
         /// 标记一次计分后，本单元是否处于必要最长序列中。不处于的需要显式记为false。
         /// </summary>
@@ -75,14 +79,14 @@ namespace ROOT.Signal
             Visited = false;
             InServerGrid = false;
             //IsMatrixFieldAndHasMatrixSignal = false;
-            SignalStrength = new Dictionary<SignalType, int>();
-            SignalStrengthComplex = new Dictionary<SignalType, (int, int, int)>();
+            //SignalStrength = new Dictionary<SignalType, int>();
+            SignalDataPackList = new Dictionary<SignalType, SignalDataPack>();
             try
             {
                 foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
                 {
-                    SignalStrength.Add(signalType, 0);
-                    SignalStrengthComplex.Add(signalType, (0, 0, 0));
+                    //SignalStrength.Add(signalType, 0);
+                    SignalDataPackList.Add(signalType, new SignalDataPack(0, 0, 0, false));
                 }
             }
             catch (NullReferenceException)
@@ -94,18 +98,18 @@ namespace ROOT.Signal
         //0:no signal.
         //1:has signal but no active.
         //2:signal and active.
-        public virtual bool GetActivationStatusPerSignal => CorrespondingSignalData.Item1 > 0;//默认看硬件深度。
+        //public virtual bool GetActivationStatusPerSignal => CorrespondingSignalData.Item1 > 0;//默认看硬件深度。
 
         public int GetActivationStatus
         {
             get
             {
-                if (GetActivationStatusPerSignal)
+                if (IsUnitActive)
                 {
                     return 2;
                 }
 
-                if (SignalStrengthComplex.Values.Any(valueTuple => valueTuple.Item1 > 0))
+                if (SignalDataPackList.Values.Any(valueTuple => valueTuple.Item1 > 0))
                 {
                     return 1;
                 }

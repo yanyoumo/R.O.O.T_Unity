@@ -17,7 +17,7 @@ namespace ROOT.Signal
         //这里的代码未来还要考虑到这些数据的位置会变。
         public override SignalType SignalType => SignalType.Scan;
 
-        public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
+        /*public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             //这快儿是有问题的，主要是因为之前为了避免绕近道，强制一次一步、但是这么设计没法根据Tier调整数据。
             //可能有需要ServerDepth和HardwareDepth两个平行数据。再否则就是类似阵列信号那边，有一个FromDir。
@@ -29,7 +29,7 @@ namespace ROOT.Signal
         {
             var showSig = ShowSignal(dir, unit, otherUnit);
             return showSig ? Math.Min(unit.SignalCore.ServerSignalDepth, otherUnit.SignalCore.ServerSignalDepth) : 0;
-        }
+        }*/
 
         [Obsolete]
         public override float CalAllScore(Board gameBoard, out int hardwareCount)

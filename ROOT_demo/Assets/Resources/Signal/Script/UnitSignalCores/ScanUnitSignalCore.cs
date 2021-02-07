@@ -114,7 +114,7 @@ namespace ROOT.Signal
 
         public float GetServerIncomeByLength(int length)
         {
-            float[] incomeArrayDel = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f };
+            float[] incomeArrayDel = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
             float incomeArrayBase = 0.0f;
             float income = incomeArrayBase;
             for (int i = 0; i < length; i++)
@@ -276,22 +276,14 @@ namespace ROOT.Signal
             }
         }
 
-        [ShowInInspector]
-        public override bool GetActivationStatusPerSignal
-        {
-            get
-            {
-                //TODO
-                return false;
-            }
-        }
+        //[ShowInInspector] public override bool GetActivationStatusPerSignal => IsUnitActive;
 
 
-                //TODO 
-                //首先、想利用已有的数据地图计算扫描的算法绝对有：
-                //利用图像处理的思路；只考虑扫描信号深度场的本地峰值的最小值。那个值就是"必要最短路径的末端单元（激活单元）"。
-                //知道了激活单元后、在自激活单元的位置、做全部考虑的单元的、在扫描信号硬件深度场上做梯度下降就可以了。
-                //细一想有点OverHype了
+        //TODO 
+        //首先、想利用已有的数据地图计算扫描的算法绝对有：
+        //利用图像处理的思路；只考虑扫描信号深度场的本地峰值的最小值。那个值就是"必要最短路径的末端单元（激活单元）"。
+        //知道了激活单元后、在自激活单元的位置、做全部考虑的单元的、在扫描信号硬件深度场上做梯度下降就可以了。
+        //细一想有点OverHype了
         public override bool IsUnitActive
         {
             get

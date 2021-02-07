@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
@@ -7,6 +6,7 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
+    using SignalDataPack = Tuple<int, int, int,bool>;
     public abstract class SignalAssetBase : MonoBehaviour
     {
         public Type UnitSignalCoreType { protected set; get; }
@@ -16,11 +16,33 @@ namespace ROOT.Signal
         public UnitAsset CoreUnitAsset;
         public UnitAsset FieldUnitAsset;
 
-        //在LED屏幕上是否显示本信号的的逻辑。
-        public abstract bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit);
+        private int RectifyInt(int a)
+        {
+            return a==int.MaxValue ? 0 : a;
+        }
 
-        //在LED屏幕上显示本信号的具体数值的逻辑。（此数据为绝对值、不要归一化）
-        public abstract int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit);
+        private (int, int, int) rectifyIntTuple((int, int, int) a)
+        {
+            return (RectifyInt(a.Item1), RectifyInt(a.Item2), RectifyInt(a.Item3));
+        }
+        
+        //在LED屏幕上是否显示本信号的的逻辑。
+        public virtual bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
+        {
+            var checkA = unit.SignalCore.HasCertainSignal(SignalType) && otherUnit.SignalCore.HasCertainSignal(SignalType);
+            /*var signalStrengthComplex = rectifyIntTuple(unit.SignalCore.CorrespondingSignalData);
+            var othersignalStrengthComplex = rectifyIntTuple(otherUnit.SignalCore.CorrespondingSignalData);*/
+            //var delTieredSignal = Math.Abs(othersignalStrengthComplex.Item3 - signalStrengthComplex.Item3);
+            //var signalTier = unit.UnitSignal == SignalType ? unit.Tier : 0;
+            return checkA;
+        }
+        public virtual int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
+        {
+            var showSig = ShowSignal(dir, unit, otherUnit);
+            var ValA = unit.SignalCore.SignalDataPackList[SignalType.Matrix].Item3;
+            var ValB = otherUnit.SignalCore.SignalDataPackList[SignalType.Matrix].Item3;
+            return showSig ? Math.Max(ValA, ValB) : 0;
+        }
 
         public virtual float CalAllScore(Board gameBoard, out int hardwareCount)
         {
@@ -56,28 +78,28 @@ namespace ROOT.Signal
         {
             //而且除了最后具体存储的两个int、所有别的数据最好都写成类变量。
             var signalType = SignalType;
-            board.Units.ForEach(unit => unit.SignalCore.SignalStrengthComplex[signalType] = (int.MaxValue, int.MaxValue, int.MaxValue));
+            board.Units.ForEach(unit => unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(int.MaxValue, int.MaxValue, int.MaxValue,false));
             foreach (var coreUnit in board.FindUnitWithCoreType(SignalType, HardwareType.Core))
             {
                 board.Units.ForEach(unit => unit.SignalCore.Visited = false);
                 var queue = new Queue<Unit>();
-                coreUnit.SignalCore.SignalStrengthComplex[signalType] = (0, 0, 0);
+                coreUnit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0,false);
                 coreUnit.SignalCore.Visited = true;
                 queue.Enqueue(coreUnit);
                 while (queue.Count != 0)
                 {
                     var now = queue.Dequeue();
-                    var physicalDepth = now.SignalCore.SignalStrengthComplex[signalType].Item1;
-                    var scoringDepth = now.SignalCore.SignalStrengthComplex[signalType].Item2;
-                    var tieredDepth = now.SignalCore.SignalStrengthComplex[signalType].Item3;
+                    var physicalDepth = now.SignalCore.SignalDataPackList[signalType].Item1;
+                    var scoringDepth = now.SignalCore.SignalDataPackList[signalType].Item2;
+                    var tieredDepth = now.SignalCore.SignalDataPackList[signalType].Item3;
                     foreach (var unit in now.GetConnectedOtherUnit.Where(unit => unit.SignalCore.Visited == false))
                     {
                         unit.SignalCore.Visited = true;
                         if (unit.UnitSignal == signalType && unit.UnitHardware == HardwareType.Core)
                             continue;
-                        var item1 = unit.SignalCore.SignalStrengthComplex[signalType].Item1;
-                        var item2 = unit.SignalCore.SignalStrengthComplex[signalType].Item2;
-                        var item3 = unit.SignalCore.SignalStrengthComplex[signalType].Item3;
+                        var item1 = unit.SignalCore.SignalDataPackList[signalType].Item1;
+                        var item2 = unit.SignalCore.SignalDataPackList[signalType].Item2;
+                        var item3 = unit.SignalCore.SignalDataPackList[signalType].Item3;
                         var renew = false;
                         if (physicalDepth + 1 < item1)
                         {
@@ -99,7 +121,7 @@ namespace ROOT.Signal
                                 renew = true;
                             }
 
-                            unit.SignalCore.SignalStrengthComplex[signalType] = (item1, item2, item3);
+                            unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(item1, item2, item3, false);
                         }
                         else
                         {
@@ -115,7 +137,7 @@ namespace ROOT.Signal
                                 renew = true;
                             }
 
-                            unit.SignalCore.SignalStrengthComplex[signalType] = (item1, item2, item3);
+                            unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(item1, item2, item3, false);
                         }
 
                         if (renew)
@@ -124,10 +146,26 @@ namespace ROOT.Signal
                 }
             }
 
-            foreach (var fieldUnit in board.FindUnitWithCoreType(SignalType, HardwareType.Core))
+            //就是把所有都maxValue了；这个还是遍历。
+            foreach (var fieldUnit in board.Units)
             {
-                if (fieldUnit.SignalCore.SignalStrengthComplex[signalType] == (int.MaxValue, int.MaxValue, int.MaxValue))
-                    fieldUnit.SignalCore.SignalStrengthComplex[signalType] = (0, 0, 0);
+                if (Equals(fieldUnit.SignalCore.SignalDataPackList[signalType], new SignalDataPack(int.MaxValue, int.MaxValue, int.MaxValue, false)))
+                    fieldUnit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0, false);
+            }
+            
+            var maxHardwareDepth = board.Units.Max(u => u.SignalCore.CertainSignalData(signalType).Item1);
+            foreach (var unit in board.Units.Where(u => u.SignalCore.CertainSignalData(signalType).Item1==maxHardwareDepth))
+            {
+                unit.SetInSignalTypeMesh_Iter(signalType);
+            }
+
+            foreach (var boardUnit in board.Units)
+            {
+                if (boardUnit.UnitSignal == signalType && boardUnit.GetConnectedOtherUnit.Count == 1)
+                {
+                    Debug.Log(signalType + "/" + boardUnit.CurrentBoardPosition);
+                    boardUnit.SetInSignalTypeMesh_Iter(signalType);
+                }
             }
         }
     }

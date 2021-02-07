@@ -27,7 +27,7 @@ MonoBehaviour:
   RoundDatas:
   - ID: 0
     RoundType: 0
-    ShopLength: 1
+    ShopLength: 56
     RequireLength: 1
     NormalRequirement: 3
     NetworkRequirement: 4

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using ROOT.Signal;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -157,7 +158,7 @@ namespace ROOT
 
         public MeshRenderer UnitActivationLEDMat;
         public Color[] UnitActivationLEDMat_Colors;
-        
+
         private int Cost = 0;
         private int _tier = 0;
 
@@ -181,7 +182,9 @@ namespace ROOT
             internal set
             {
                 _retailPrice = value;
-                PriceTag.text = _retailPrice<=99 ? Utils.PaddingNum2Digit(_retailPrice) : Utils.PaddingNum3Digit(_retailPrice);
+                PriceTag.text = _retailPrice <= 99
+                    ? Utils.PaddingNum2Digit(_retailPrice)
+                    : Utils.PaddingNum3Digit(_retailPrice);
             }
         }
 
@@ -297,12 +300,8 @@ namespace ROOT
 
         protected string UnitName { get; }
 
-        [ReadOnly]
-        [ShowInInspector]
-        public SignalType UnitSignal { get; private set; }
-        [ReadOnly]
-        [ShowInInspector]
-        public HardwareType UnitHardware { get; private set; }
+        [ReadOnly] [ShowInInspector] public SignalType UnitSignal { get; private set; }
+        [ReadOnly] [ShowInInspector] public HardwareType UnitHardware { get; private set; }
         public bool IsCore => UnitHardware == HardwareType.Core;
         public Dictionary<RotationDirection, SideType> UnitSides { get; private set; }
 
@@ -311,6 +310,7 @@ namespace ROOT
             get => ApparentRotationDirection;
             set => ApparentRotationDirection = value;
         }
+
         private Transform _rootTransform => transform.parent;
         private Material _coreMat;
 
@@ -355,8 +355,7 @@ namespace ROOT
             RotationDirection.West
         };
 
-        [HideInInspector] 
-        public Vector2Int LastNetworkPos = Vector2Int.zero;
+        [HideInInspector] public Vector2Int LastNetworkPos = Vector2Int.zero;
 
         private void InitConnector(Connector connector, SideType sideType)
         {
@@ -379,7 +378,7 @@ namespace ROOT
             }
         }
 
-        private void InitUnitMeshByCore(SignalType signal,HardwareType genre)
+        private void InitUnitMeshByCore(SignalType signal, HardwareType genre)
         {
             UnitHardware = genre;
             var connectorMasterNodeName = "";
@@ -446,7 +445,7 @@ namespace ROOT
             Tier = tier;
         }
 
-        public void InitUnit(SignalType signal,HardwareType genre, SideType[] sides,
+        public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides,
             int tier, Board gameBoard = null)
         {
             Debug.Assert(sides.Length == 4);
@@ -456,14 +455,14 @@ namespace ROOT
 
         public static SignalType PlayingSignalA;
         public static SignalType PlayingSignalB;
-        
-        
-        public void InitUnit(SignalType signal,HardwareType genre, 
+
+
+        public void InitUnit(SignalType signal, HardwareType genre,
             SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
             int tier, Board gameBoard = null)
         {
             UnitSignal = signal;
-            InitUnitMeshByCore(signal,genre);
+            InitUnitMeshByCore(signal, genre);
 
             UnitSides.Add(RotationDirection.North, lNSide);
             UnitSides.Add(RotationDirection.South, lSSide);
@@ -484,8 +483,10 @@ namespace ROOT
 
             UpdateSideMesh();
 
-            UnitActivationLEDMat.material.color = UnitHardware == HardwareType.Core ? UnitActivationLEDMat_Colors[1] : UnitActivationLEDMat_Colors[0];
-            
+            UnitActivationLEDMat.material.color = UnitHardware == HardwareType.Core
+                ? UnitActivationLEDMat_Colors[1]
+                : UnitActivationLEDMat_Colors[0];
+
             if (SignalCore == null)
             {
                 var signalType = signal;
@@ -534,7 +535,7 @@ namespace ROOT
             UnitSides.TryGetValue(desiredLocalSideDirection, out var res);
             return res;
         }
-        
+
         public void UpdateWorldRotationTransform()
         {
             _rootTransform.rotation = RotationToQuaternion(_unitRotation);
@@ -708,6 +709,7 @@ namespace ROOT
             yield return new WaitForSeconds(duration);
             NextBlink(nextBlinkDir);
         }
+
         internal void SimpleBlink(RotationDirection requiredDirection)
         {
             if (requiredDirection == RotationDirection.West || requiredDirection == RotationDirection.South)
@@ -721,12 +723,14 @@ namespace ROOT
 
             throw new ArgumentException();
         }
+
         public void Blink(RotationDirection? fromDirection)
         {
             //Server那里用不用迪公帮忙把路径捋出来？目前看不用
-            if (UnitSignal == SignalType.Matrix&& UnitHardware == HardwareType.Field)
+            if (UnitSignal == SignalType.Matrix && UnitHardware == HardwareType.Field)
             {
-                if (SignalCore.SignalFromDir == RotationDirection.West || SignalCore.SignalFromDir == RotationDirection.South)
+                if (SignalCore.SignalFromDir == RotationDirection.West ||
+                    SignalCore.SignalFromDir == RotationDirection.South)
                 {
                     var localRotation = Utils.RotateDirectionBeforeRotation(SignalCore.SignalFromDir, _unitRotation);
                     ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
@@ -740,7 +744,7 @@ namespace ROOT
 
                 StartCoroutine(NextBlinkGap(BlinkDuration));
             }
-            else if (UnitSignal == SignalType.Scan&& UnitHardware == HardwareType.Field)
+            else if (UnitSignal == SignalType.Scan && UnitHardware == HardwareType.Field)
             {
                 foreach (var currentSideDirection in RotationList)
                 {
@@ -758,7 +762,8 @@ namespace ROOT
                         if (otherUnit == null) continue;
 
                         var showNetLed = SignalCore.InServerGrid && otherUnit.SignalCore.InServerGrid;
-                        showNetLed &= Math.Abs(SignalCore.ScanSignalPathDepth - otherUnit.SignalCore.ScanSignalPathDepth) <= 1;
+                        showNetLed &=
+                            Math.Abs(SignalCore.ScanSignalPathDepth - otherUnit.SignalCore.ScanSignalPathDepth) <= 1;
 
                         if (showNetLed)
                         {
@@ -780,14 +785,15 @@ namespace ROOT
                 }
             }
         }
+
         private void NextBlink(RotationDirection? nextDirection)
         {
-            if (UnitSignal == SignalType.Matrix&& UnitHardware == HardwareType.Field)
+            if (UnitSignal == SignalType.Matrix && UnitHardware == HardwareType.Field)
             {
                 var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalCore.SignalFromDir);
                 if (nextUnit != null) nextUnit.Blink(null);
             }
-            else if ((UnitSignal == SignalType.Scan&& UnitHardware == HardwareType.Field) && nextDirection.HasValue)
+            else if ((UnitSignal == SignalType.Scan && UnitHardware == HardwareType.Field) && nextDirection.HasValue)
             {
                 var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, nextDirection.Value);
                 if (nextUnit != null) nextUnit.Blink(Utils.GetInvertDirection(nextDirection.Value));
@@ -805,6 +811,58 @@ namespace ROOT
             var E = UnitSides.GetHashCode();
             var F = _tier.GetHashCode();
             return A ^ B ^ C ^ D ^ E ^ F;
+        }
+
+        public void SetInSignalTypeMesh_Iter(SignalType targetSignalType)
+        {
+            //Debug.Log("SetInSignalTypeMesh_Iter");
+            if (!SignalCore.CertainSignalData(targetSignalType).Item4)
+            {
+                var a = SignalCore.SignalDataPackList[targetSignalType].Item1;
+                var b = SignalCore.SignalDataPackList[targetSignalType].Item2;
+                var c = SignalCore.SignalDataPackList[targetSignalType].Item3;
+                SignalCore.SignalDataPackList[targetSignalType] = new Tuple<int, int, int, bool>(a, b, c, true);
+                FindSignalDirUnit(targetSignalType)?.SetInSignalTypeMesh_Iter(targetSignalType);
+            }
+        }
+
+        [ShowInInspector]
+        public Unit[] tmpU;
+        
+        [CanBeNull]
+        public Unit FindSignalDirUnit(SignalType targetSignalType)
+        {
+
+            var thisTargetSignalTypeHardWareDepth = SignalCore.CertainSignalData(targetSignalType).Item1;
+            if (thisTargetSignalTypeHardWareDepth == 0)
+            {
+                return null;
+            }
+
+            var tmpUnit = GetConnectedOtherUnit.Where(u => u.SignalCore.CertainSignalData(targetSignalType).Item1 < thisTargetSignalTypeHardWareDepth).ToArray();
+
+            tmpU = tmpUnit;
+            
+            if (tmpUnit.Length == 0)
+            {
+                return null;
+            }
+
+            if (tmpUnit.Length == 1)
+            {
+                return tmpUnit[0];
+            }
+
+            tmpUnit = tmpUnit.OrderByDescending(u => u.SignalCore.CertainSignalData(targetSignalType).Item2).ToArray();
+
+            if (tmpUnit[0].SignalCore.CertainSignalData(targetSignalType).Item2 !=
+                tmpUnit[1].SignalCore.CertainSignalData(targetSignalType).Item2)
+            {
+                return tmpUnit[0];
+            }
+
+            tmpUnit = tmpUnit.OrderByDescending(u => u.SignalCore.CertainSignalData(targetSignalType).Item3).ToArray();
+            return tmpUnit[0];
         }
     }
 }
