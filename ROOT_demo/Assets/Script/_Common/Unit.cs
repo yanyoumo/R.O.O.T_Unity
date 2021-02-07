@@ -833,7 +833,7 @@ namespace ROOT
                 var a = SignalCore.SignalDataPackList[targetSignalType].Item1;
                 var b = SignalCore.SignalDataPackList[targetSignalType].Item2;
                 var c = SignalCore.SignalDataPackList[targetSignalType].Item3;
-                SignalCore.SignalDataPackList[targetSignalType] = new Tuple<int, int, int, bool>(a, b, c, true);
+                //SignalCore.SignalDataPackList[targetSignalType] = new Tuple<int, int, int, bool>(a, b, c, true);
                 FindSignalDirUnit(targetSignalType)?.SetInSignalTypeMesh_Iter(targetSignalType);
             }
         }

@@ -10,8 +10,7 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    using SignalDataPack = Tuple<int, int, int,Unit>;
-
+    using SignalDataPack = Tuple<int, int, int, Unit>;
     public abstract class UnitSignalCoreBase : MonoBehaviour
     {
         public Unit Owner;

@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
+    using SignalDataPack = Tuple<int, int, int, Unit>;
     public class SignalMasterMgr : MonoBehaviour
     {
         [NotNull] private static SignalMasterMgr _instance;
@@ -57,7 +58,7 @@ namespace ROOT.Signal
             throw new ArgumentException();
         }*/
 
-        public UnitAsset GetUnitAssetByUnitType(SignalType signalType,HardwareType genre)
+        public UnitAsset GetUnitAssetByUnitType(SignalType signalType, HardwareType genre)
         {
             var asset = signalAssetLib[signalType];
             switch (genre)
@@ -71,9 +72,9 @@ namespace ROOT.Signal
             }
         }
 
-        public float PriceFromUnit(SignalType signalType,HardwareType genre)
+        public float PriceFromUnit(SignalType signalType, HardwareType genre)
         {
-            return GetUnitAssetByUnitType(signalType,genre).UnitPrice;
+            return GetUnitAssetByUnitType(signalType, genre).UnitPrice;
         }
 
         /*public SignalType SignalTypeFromUnit(CoreType unitType)
@@ -81,9 +82,9 @@ namespace ROOT.Signal
             return GetSignalAssetByUnitType(unitType).Type;
         }*/
 
-        public Material GetMatByUnitType(SignalType signalType,HardwareType genre)
+        public Material GetMatByUnitType(SignalType signalType, HardwareType genre)
         {
-            return GetUnitAssetByUnitType(signalType,genre).UnitMat;
+            return GetUnitAssetByUnitType(signalType, genre).UnitMat;
         }
 
         #endregion
@@ -113,8 +114,21 @@ namespace ROOT.Signal
                 signalAssetBase.RefreshBoardSignalStrength(board);
                 if (signalAssetBase.SignalType == SignalType.Scan)
                 {
-                    var asset=signalAssetBase as ScanSignalAsset;
-                    tempScanPath=asset.CalAllScore(board);
+                    var asset = signalAssetBase as ScanSignalAsset;
+                    tempScanPath = asset.CalAllScore(board);
+                    //clear path
+                    foreach (var unit in board.Units)
+                        unit.SignalCore.SignalDataPackList[SignalType.Scan] = new SignalDataPack(
+                            unit.SignalCore.SignalDataPackList[SignalType.Scan].Item1,
+                            unit.SignalCore.SignalDataPackList[SignalType.Scan].Item2,
+                            unit.SignalCore.SignalDataPackList[SignalType.Scan].Item3,
+                            null);
+                    for (var i = tempScanPath.Count - 1; i >= 1; --i)
+                        tempScanPath[i].SignalCore.SignalDataPackList[SignalType.Scan] = new SignalDataPack(
+                            tempScanPath[i].SignalCore.SignalDataPackList[SignalType.Scan].Item1,
+                            tempScanPath[i].SignalCore.SignalDataPackList[SignalType.Scan].Item2,
+                            tempScanPath[i].SignalCore.SignalDataPackList[SignalType.Scan].Item3,
+                            tempScanPath[i - 1]);
                 }
             }
         }
