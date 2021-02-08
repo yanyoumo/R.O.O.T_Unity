@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    using SignalDataPack = Tuple<int, int, int, Unit>;
     public abstract class UnitSignalCoreBase : MonoBehaviour
     {
         public Unit Owner;
@@ -20,16 +19,16 @@ namespace ROOT.Signal
         
         [ReadOnly]
         [ShowInInspector]
-        public Dictionary<SignalType,SignalDataPack> SignalDataPackList;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
+        public Dictionary<SignalType,SignalData> SignalDataPackList;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
 
-        public SignalDataPack CorrespondingSignalData => SignalDataPackList[SignalType];
+        public SignalData CorrespondingSignalData => SignalDataPackList[SignalType];
 
         public void ResetSignalStrengthComplex()
         {
-            SignalDataPackList = new Dictionary<SignalType,SignalDataPack>();
+            SignalDataPackList = new Dictionary<SignalType,SignalData>();
             foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
             {
-                SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0, null);
+                SignalDataPackList[signalType] = new SignalData(0, 0, 0, null);
             }
         }
 
@@ -50,10 +49,10 @@ namespace ROOT.Signal
         
         public bool HasCertainSignal(SignalType signalType)
         {
-            return RectifyInt(SignalDataPackList[signalType].Item1) > 0;
+            return RectifyInt(SignalDataPackList[signalType].HardwareDepth) > 0;
         }
 
-        public SignalDataPack CertainSignalData(SignalType signalType)
+        public SignalData CertainSignalData(SignalType signalType)
         {
             return SignalDataPackList[signalType];
         }
@@ -79,13 +78,13 @@ namespace ROOT.Signal
             InServerGrid = false;
             //IsMatrixFieldAndHasMatrixSignal = false;
             //SignalStrength = new Dictionary<SignalType, int>();
-            SignalDataPackList = new Dictionary<SignalType, SignalDataPack>();
+            SignalDataPackList = new Dictionary<SignalType, SignalData>();
             try
             {
                 foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
                 {
                     //SignalStrength.Add(signalType, 0);
-                    SignalDataPackList.Add(signalType, new SignalDataPack(0, 0, 0, null));
+                    SignalDataPackList.Add(signalType, new SignalData(0, 0, 0, null));
                 }
             }
             catch (NullReferenceException)
@@ -108,7 +107,7 @@ namespace ROOT.Signal
                     return 2;
                 }
 
-                if (SignalDataPackList.Values.Any(valueTuple => valueTuple.Item1 > 0))
+                if (SignalDataPackList.Values.Any(valueTuple => valueTuple.HardwareDepth > 0))
                 {
                     return 1;
                 }

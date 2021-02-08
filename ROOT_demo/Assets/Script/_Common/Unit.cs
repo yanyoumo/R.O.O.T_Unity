@@ -811,16 +811,15 @@ namespace ROOT
             return A ^ B ^ C ^ D ^ E ^ F;
         }
 
-        public List<Vector2Int> FindSignalPath_Iter(SignalType targetSignalType)
+        public SignalPath FindSignalPath_Iter(SignalType targetSignalType)
         {
-            var res = new List<Vector2Int> {CurrentBoardPosition};
-            var unit = SignalCore.SignalDataPackList[targetSignalType].Item4;
+            var res = new SignalPath {this};
+            var unit = SignalCore.SignalDataPackList[targetSignalType].UpstreamUnit;
             if (unit != null)
             {
                 //这样做出来的路径是终叶到Core的。
                 res.AddRange(unit.FindSignalPath_Iter(targetSignalType));
             }
-
             return res;
         }
     }

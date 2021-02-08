@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    using SignalDataPack = Tuple<int, int, int, Unit>;
+    //using SignalData = Tuple<int, int, int, Unit>;
 
     public abstract class SignalAssetBase : MonoBehaviour
     {
@@ -16,16 +16,6 @@ namespace ROOT.Signal
 
         public UnitAsset CoreUnitAsset;
         public UnitAsset FieldUnitAsset;
-
-        private int RectifyInt(int a)
-        {
-            return a == int.MaxValue ? 0 : a;
-        }
-
-        private (int, int, int) rectifyIntTuple((int, int, int) a)
-        {
-            return (RectifyInt(a.Item1), RectifyInt(a.Item2), RectifyInt(a.Item3));
-        }
 
         //在LED屏幕上是否显示本信号的的逻辑。
         public virtual bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
@@ -42,8 +32,8 @@ namespace ROOT.Signal
         public virtual int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             var showSig = ShowSignal(dir, unit, otherUnit);
-            var ValA = unit.SignalCore.SignalDataPackList[SignalType.Matrix].Item3;
-            var ValB = otherUnit.SignalCore.SignalDataPackList[SignalType.Matrix].Item3;
+            var ValA = unit.SignalCore.SignalDataPackList[SignalType.Matrix].SignalDepth;
+            var ValB = otherUnit.SignalCore.SignalDataPackList[SignalType.Matrix].SignalDepth;
             return showSig ? Math.Max(ValA, ValB) : 0;
         }
 
@@ -60,83 +50,25 @@ namespace ROOT.Signal
             return CalAllScore(gameBoard, out var A);
         }
 
-        private List<Vector2Int> TruncatePath(List<Vector2Int> vector2Ints, Board board)
+        public IEnumerable<SignalPath> FindAllPathSingleLayer(Board board)
         {
-            var TruncateAmount = 0;
-            for (var i = vector2Ints.Count - 1; i >= 0; i--)
-            {
-                //RISK
-                //这个玩意儿和动画、可能有竞争冒险效应。
-                var unit = board.FindUnitUnderBoardPos(vector2Ints[i]).GetComponentInChildren<Unit>();
-                if (unit.UnitSignal != SignalType)
-                {
-                    TruncateAmount++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            if (TruncateAmount == 0) return vector2Ints;
-            for (int i = 0; i < TruncateAmount; i++)
-            {
-                vector2Ints.RemoveAt(vector2Ints.Count - 1 - i);
-            }
-
-            return vector2Ints;
-        }
-
-        public bool SamePath(List<Vector2Int> a, List<Vector2Int> b)
-        {
-            if (a.Count!=b.Count)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < a.Count; i++)
-            {
-                if (a[i] != b[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-        
-        public List<List<Vector2Int>> FindAllPathSingleLayer(Board board)
-        {
-            //用Unit还是用Key存是个问题。
-            var path = new List<List<Vector2Int>>();
+            var path = new List<SignalPath>();
             var units = board.FindEndingUnit.ToList();
-            var maxHardwareDepth = board.Units.Max(u => u.SignalCore.CertainSignalData(SignalType).Item1);
-            units.AddRange(board.Units.Where(u => u.SignalCore.CertainSignalData(SignalType).Item1 == maxHardwareDepth));
-            units = units.Distinct().ToList();
-            Debug.Log("units.Count"+units.Count+"/"+SignalType);
-            var rawPath=units.Select(u => u.FindSignalPath_Iter(SignalType)).ToList();
-            foreach (var vector2Ints in rawPath.Distinct())
+            var maxHardwareDepth = board.Units.Max(u => u.SignalCore.CertainSignalData(SignalType).HardwareDepth);
+            units.AddRange(board.Units.Where(u => u.SignalCore.CertainSignalData(SignalType).HardwareDepth == maxHardwareDepth));
+            var rawPath =  units.Distinct().Select(u => u.FindSignalPath_Iter(SignalType).Reverse());
+            var rawSignalPath = rawPath.Select(enumerable => (SignalPath) enumerable.ToList()).ToList();
+
+            foreach (var signalPath in  rawSignalPath)
             {
-                if (vector2Ints.Count>1)
+                signalPath.TruncatePath(SignalType);
+                if (signalPath.IsValidPath)
                 {
-                    vector2Ints.Reverse();
-                    var tmp = TruncatePath(vector2Ints, board);
-                    var hasSamePath = false;
-                    foreach (var ints in path)
-                    {
-                        if (SamePath(tmp,ints))
-                        {
-                            hasSamePath = true;
-                            break;
-                        }
-                    }
-                    if (!hasSamePath)
-                    {
-                        path.Add(tmp);
-                    }
+                    path.Add(signalPath);
                 }
             }
-            return path.ToList();
+            
+            return path.Distinct();
         }
 
         //把新的流程在这里再正式化一下：
@@ -155,33 +87,32 @@ namespace ROOT.Signal
         //      即使现有“必要最短”函数复杂度是O(n)，那么这个计算强度的总复杂度就是：
         //          per信号*per场单元*per核心单元*O(n);理论上高达O(n^4)。
         //          但是考虑到核心单元和信号的实际数量不会太高，就先实现出来，再优化。
-        public void RefreshBoardSignalStrength(Board board)
+        public virtual void RefreshBoardSignalStrength(Board board)
         {
             //而且除了最后具体存储的两个int、所有别的数据最好都写成类变量。
             var signalType = SignalType;
-            board.Units.ForEach(unit =>
-                unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(int.MaxValue, 0, 0, null));
+            board.Units.ForEach(unit => unit.SignalCore.SignalDataPackList[signalType] = new SignalData(int.MaxValue, 0, 0, null));
             foreach (var coreUnit in board.FindUnitWithCoreType(SignalType, HardwareType.Core))
             {
                 board.Units.ForEach(unit => unit.SignalCore.Visited = false);
                 var queue = new Queue<Unit>();
-                coreUnit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(0, 0, 0, null);
+                coreUnit.SignalCore.SignalDataPackList[signalType] = new SignalData(0, 0, 0, null);
                 coreUnit.SignalCore.Visited = true;
                 queue.Enqueue(coreUnit);
                 while (queue.Count != 0)
                 {
                     var now = queue.Dequeue();
-                    var physicalDepth = now.SignalCore.SignalDataPackList[signalType].Item1;
-                    var scoringDepth = now.SignalCore.SignalDataPackList[signalType].Item2;
-                    var tieredDepth = now.SignalCore.SignalDataPackList[signalType].Item3;
+                    var physicalDepth = now.SignalCore.SignalDataPackList[signalType].HardwareDepth;
+                    var scoringDepth = now.SignalCore.SignalDataPackList[signalType].FlatSignalDepth;
+                    var tieredDepth = now.SignalCore.SignalDataPackList[signalType].SignalDepth;
                     foreach (var unit in now.GetConnectedOtherUnit.Where(unit => unit.SignalCore.Visited == false))
                     {
                         unit.SignalCore.Visited = true;
                         if (unit.UnitSignal == signalType && unit.UnitHardware == HardwareType.Core)
                             continue;
-                        var item1 = unit.SignalCore.SignalDataPackList[signalType].Item1;
-                        var item2 = unit.SignalCore.SignalDataPackList[signalType].Item2;
-                        var item3 = unit.SignalCore.SignalDataPackList[signalType].Item3;
+                        var item1 = unit.SignalCore.SignalDataPackList[signalType].HardwareDepth;
+                        var item2 = unit.SignalCore.SignalDataPackList[signalType].FlatSignalDepth;
+                        var item3 = unit.SignalCore.SignalDataPackList[signalType].SignalDepth;
                         var renew = false;
                         if (physicalDepth + 1 < item1)
                         {
@@ -236,7 +167,7 @@ namespace ROOT.Signal
                         }
 
                         if (!renew) continue;
-                        unit.SignalCore.SignalDataPackList[signalType] = new SignalDataPack(item1, item2, item3, now);
+                        unit.SignalCore.SignalDataPackList[signalType] = new SignalData(item1, item2, item3, now);
                         queue.Enqueue(unit);
                     }
                 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -9,7 +10,183 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    using SignalDataPack = Tuple<int, int, int, Unit>;
+    //using SignalData = Tuple<int, int, int, Unit>;
+
+    [Serializable]
+    public sealed class SignalData
+    {
+        [ReadOnly] public int HardwareDepth = 0;
+        [ReadOnly] public int FlatSignalDepth = 0;
+        [ReadOnly] public int SignalDepth = 0;
+        [ReadOnly] public Unit UpstreamUnit = null;
+
+        public SignalData()
+        {
+            HardwareDepth = 0;
+            FlatSignalDepth = 0;
+            SignalDepth = 0;
+            UpstreamUnit = null;
+        }
+
+        public SignalData(int _hardwareDepth, int _flatSignalDepth, int _signalDepth, Unit unit)
+        {
+            HardwareDepth = _hardwareDepth;
+            FlatSignalDepth = _flatSignalDepth;
+            SignalDepth = _signalDepth;
+            UpstreamUnit = unit;
+        }
+    }
+
+    public sealed class SignalPath: IList<Unit>
+    {
+        private List<Unit> _core;
+
+        public SignalPath()
+        {
+            _core = new List<Unit>();
+        }
+
+        public SignalPath(IList<Unit> core)
+        {
+            _core = core.ToList();
+        }
+
+        public SignalPath(SignalPath other):this(other._core) { }
+        
+        ~SignalPath()
+        {
+            _core = null;
+        }
+
+        public bool IsValidPath=>_core.Count > 1;
+
+        public void TruncatePath(SignalType signalType)
+        {
+            var truncateAmount = 0;
+
+            for (var i = _core.Count - 1; i >= 0; i--)
+            {
+                var unit = _core[i];
+                if (unit.UnitSignal != signalType)
+                {
+                    truncateAmount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (truncateAmount == 0) return;
+            for (var i = 0; i < truncateAmount; i++)
+            {
+                var rIndex = _core.Count - 1 - i;
+                if (rIndex >= 0 && rIndex <= _core.Count - 1)
+                {
+                    _core.RemoveAt(rIndex);
+                }
+                else
+                {
+                    //Truncate to Null;
+                    _core = new List<Unit>();
+                    return;
+                }
+            }
+        }
+
+        
+        public override string ToString()
+        {
+            List<Vector2Int> listV2 = this;
+            var res = "";
+            for (var index = 0; index < listV2.Count; index++)
+            {
+                var vector2Int = listV2[index];
+                res += "[" + vector2Int.x + "," + vector2Int.y + "]";
+                if (index!=listV2.Count-1)
+                {
+                    res += ",";
+                }
+            }
+            return res;
+        }
+
+        public static implicit operator List<Vector2Int>(SignalPath path) => path._core.Select(unit => unit.CurrentBoardPosition).ToList();
+
+        public static explicit operator SignalPath(List<Unit> path) => new SignalPath(path);
+
+        
+        public override bool Equals(object obj)
+        {
+            if (!(obj is SignalPath)) return false;
+            return GetHashCode() == ((SignalPath) obj).GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            if (_core.Count==0) return 0;
+            return _core.Aggregate(0, (current, unit) => current ^ unit.GetHashCode());
+        }
+
+        public IEnumerator<Unit> GetEnumerator()
+        {
+            return _core.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Add(Unit item)
+        {
+            _core.Add(item);
+        }
+
+        public void Clear()
+        {
+            _core.Clear();
+        }
+
+        public bool Contains(Unit item)
+        {
+            return _core.Contains(item);
+        }
+
+        public void CopyTo(Unit[] array, int arrayIndex)
+        {
+            _core.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(Unit item)
+        {
+            return _core.Remove(item);
+        }
+
+        public int Count => _core.Count;
+        public bool IsReadOnly => false;
+        public int IndexOf(Unit item)
+        {
+            return _core.IndexOf(item);
+        }
+
+        public void Insert(int index, Unit item)
+        {
+            _core.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _core.RemoveAt(index);
+        }
+
+        public Unit this[int index]
+        {
+            get => _core[index];
+            set => _core[index] = value;
+        }
+    }
+    
     public class SignalMasterMgr : MonoBehaviour
     {
         [NotNull] private static SignalMasterMgr _instance;
@@ -35,29 +212,6 @@ namespace ROOT.Signal
         public SignalType[] SignalLib => signalAssetLib.Keys.ToArray();
 
         #region Getter
-
-        /*private SignalAssetBase GetSignalAssetByUnitType(CoreType unitType)
-        {
-            try
-            {
-                var v1 = signalAssetLib.Values.First(v => v.CoreUnitAsset.UnitType == unitType);
-                if (v1 != null) return v1;
-            }
-            catch (InvalidOperationException)
-            {
-                try
-                {
-
-                    var v2 = signalAssetLib.Values.First(v => v.FieldUnitAsset.UnitType == unitType);
-                    if (v2 != null) return v2;
-                }
-                catch (InvalidOperationException)
-                {
-                    throw new ArgumentException();
-                }
-            }
-            throw new ArgumentException();
-        }*/
 
         public UnitAsset GetUnitAssetByUnitType(SignalType signalType, HardwareType genre)
         {
@@ -105,39 +259,41 @@ namespace ROOT.Signal
             RefreshBoardSelectedSignalStrength(board, SignalLib);
         }
 
+
         [ReadOnly]
         [ShowInInspector]
-        public Dictionary<SignalType, List<List<Vector2Int>>> Paths;
-        
-        public List<Unit> tempScanPath;
-        private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
+        public Dictionary<SignalType, List<List<Vector2Int>>> PathsVec2
         {
-            Paths = new Dictionary<SignalType, List<List<Vector2Int>>>();
-            board.Units.Select(u => u.SignalCore).ForEach(s => s.ResetSignalStrengthComplex());
-            foreach (var signalAssetBase in signalAssetLib.Where(v => selectedTypes.Contains(v.Key))
-                .Select(v => v.Value))
+            get
             {
-                signalAssetBase.RefreshBoardSignalStrength(board);
-                if (signalAssetBase.SignalType == SignalType.Scan)
+                if (Paths == null || Paths.Count == 0)
                 {
-                    var asset = signalAssetBase as ScanSignalAsset;
-                    tempScanPath = asset.CalAllScore(board);
-                    //clear path
-                    foreach (var unit in board.Units)
-                        unit.SignalCore.SignalDataPackList[SignalType.Scan] = new SignalDataPack(
-                            unit.SignalCore.SignalDataPackList[SignalType.Scan].Item1,
-                            unit.SignalCore.SignalDataPackList[SignalType.Scan].Item2,
-                            unit.SignalCore.SignalDataPackList[SignalType.Scan].Item3,
-                            null);
-                    for (var i = tempScanPath.Count - 1; i >= 1; --i)
-                        tempScanPath[i].SignalCore.SignalDataPackList[SignalType.Scan] = new SignalDataPack(
-                            tempScanPath[i].SignalCore.SignalDataPackList[SignalType.Scan].Item1,
-                            tempScanPath[i].SignalCore.SignalDataPackList[SignalType.Scan].Item2,
-                            tempScanPath[i].SignalCore.SignalDataPackList[SignalType.Scan].Item3,
-                            tempScanPath[i - 1]);
+                    return new Dictionary<SignalType, List<List<Vector2Int>>>();
                 }
 
-                Paths[signalAssetBase.SignalType] = signalAssetBase.FindAllPathSingleLayer(board);
+                var res = new Dictionary<SignalType, List<List<Vector2Int>>>();
+                foreach (var keyValuePair in Paths)
+                {
+                    res[keyValuePair.Key] =
+                        keyValuePair.Value.Select(signalPath => (List<Vector2Int>) signalPath).ToList();
+                }
+
+                return res;
+            }
+        }
+
+        public Dictionary<SignalType, List<SignalPath>> Paths => _paths == null ? new Dictionary<SignalType, List<SignalPath>>() : _paths;
+        private Dictionary<SignalType, List<SignalPath>> _paths;
+
+
+        private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
+        {
+            _paths = new Dictionary<SignalType, List<SignalPath>>();
+            board.Units.Select(u => u.SignalCore).ForEach(s => s.ResetSignalStrengthComplex());
+            foreach (var signalAssetBase in signalAssetLib.Where(v => selectedTypes.Contains(v.Key)).Select(v => v.Value))
+            {
+                signalAssetBase.RefreshBoardSignalStrength(board);
+                Paths[signalAssetBase.SignalType] = signalAssetBase.FindAllPathSingleLayer(board).ToList();
             }
         }
 

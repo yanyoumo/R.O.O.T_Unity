@@ -9,7 +9,7 @@ namespace ROOT.Signal
 {
     public class MatrixUnitSignalCore : UnitSignalCoreBase
     {
-        [ShowInInspector] public int MatrixVal=> SignalDataPackList[SignalType.Matrix].Item1;
+        [ShowInInspector] public int MatrixVal=> SignalDataPackList[SignalType.Matrix].HardwareDepth;
         [ShowInInspector] public override SignalType SignalType => SignalType.Matrix;
 
         public override List<Vector2Int> SingleInfoCollectorZone

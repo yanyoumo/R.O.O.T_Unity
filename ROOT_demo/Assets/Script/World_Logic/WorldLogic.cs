@@ -1354,8 +1354,7 @@ namespace ROOT
         internal static void UpdateBoardData(ref GameAssets currentLevelAsset)
         {
             int inCome = 0, cost = 0;
-
-            SignalMasterMgr.Instance.RefreshBoardAllSignalStrength(currentLevelAsset.GameBoard);
+            //SignalMasterMgr.Instance.RefreshBoardAllSignalStrength(currentLevelAsset.GameBoard);
             var tmpInComeM = SignalMasterMgr.Instance.CalAllScoreAllSignal(currentLevelAsset.GameBoard);
             if (currentLevelAsset.CurrencyIOEnabled)
             {

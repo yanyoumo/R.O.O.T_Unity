@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 // ReSharper disable PossibleNullReferenceException
 
@@ -16,20 +17,6 @@ namespace ROOT.Signal
 
         //这里的代码未来还要考虑到这些数据的位置会变。
         public override SignalType SignalType => SignalType.Scan;
-
-        /*public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
-        {
-            //这快儿是有问题的，主要是因为之前为了避免绕近道，强制一次一步、但是这么设计没法根据Tier调整数据。
-            //可能有需要ServerDepth和HardwareDepth两个平行数据。再否则就是类似阵列信号那边，有一个FromDir。
-            var ShowNetLED = unit.SignalCore.InServerGrid && otherUnit.SignalCore.InServerGrid;
-            ShowNetLED &= Math.Abs(unit.SignalCore.ScanSignalPathDepth - otherUnit.SignalCore.ScanSignalPathDepth) <= 1;
-            return ShowNetLED;
-        }
-        public override int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
-        {
-            var showSig = ShowSignal(dir, unit, otherUnit);
-            return showSig ? Math.Min(unit.SignalCore.ServerSignalDepth, otherUnit.SignalCore.ServerSignalDepth) : 0;
-        }*/
 
         [Obsolete]
         public override float CalAllScore(Board gameBoard, out int hardwareCount)
@@ -53,7 +40,9 @@ namespace ROOT.Signal
             SignalMasterMgr.MaxNetworkDepth = hardwareCount = maxScore;
             return res;
         }
-        public List<Unit> CalAllScore(Board gameBoard)
+
+        //这个函数名不得不改、要不然调它的时候引用会飘到基类上-youmo
+        private List<Unit> CalAllScore_Scan(Board gameBoard)
         {
             int maxCount = Board.BoardLength * Board.BoardLength;
             var maxScore = Int32.MinValue;
@@ -66,6 +55,21 @@ namespace ROOT.Signal
                     res = tmp;
             }
             return res;
+        }
+
+
+        private List<Unit> tempScanPath;
+        public override void RefreshBoardSignalStrength(Board board)
+        {
+            base.RefreshBoardSignalStrength(board);
+            tempScanPath = CalAllScore_Scan(board);
+            //clear path
+            foreach (var unit in board.Units)
+                unit.SignalCore.SignalDataPackList[SignalType].UpstreamUnit = null;
+            for (var i = tempScanPath.Count - 1; i >= 1; --i)
+            {
+                tempScanPath[i].SignalCore.SignalDataPackList[SignalType].UpstreamUnit = tempScanPath[i - 1];
+            }
         }
     }
 }
