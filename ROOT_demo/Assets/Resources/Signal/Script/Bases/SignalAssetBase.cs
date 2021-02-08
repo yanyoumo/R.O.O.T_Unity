@@ -48,7 +48,8 @@ namespace ROOT.Signal
         public virtual IEnumerable<SignalPath> FindAllPathSingleLayer(Board board)
         {
             var path = new List<SignalPath>();
-            var rawPath =  board.FindEndingUnit.Select(u => u.FindSignalPath_Iter(SignalType).Reverse());
+            var endingUnit = board.FindEndingUnit(SignalType);
+            var rawPath =  endingUnit.Select(u => u.FindSignalPath_Iter(SignalType).Reverse());
             var rawSignalPath = rawPath.Select(enumerable => (SignalPath) enumerable.ToList()).ToList();
 
             foreach (var signalPath in  rawSignalPath)

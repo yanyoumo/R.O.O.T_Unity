@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework.Internal;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -43,14 +44,25 @@ namespace ROOT.Signal
         [ShowInInspector]
         public bool IsActiveMatrixFieldUnit => (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field) && IsUnitActive;
 
-        private int RectifyInt(int a)
+        [ShowInInspector] public int Test => FindCertainSignalDiv_FlatSignal(SignalType.Matrix);
+        
+        public int FindCertainSignalDiv_FlatSignal(SignalType signalType)
         {
-            return a==int.MaxValue ? 0 : a;
+            var hw0 = CertainSignalData(signalType).FlatSignalDepth;
+            var others = Owner.GetConnectedOtherUnit;
+            if (others.Count==0) return 0;
+            var dels = new int[others.Count];
+            for (var i = 0; i < others.Count; i++)
+            {
+                dels[i] = hw0 - others[i].SignalCore.SignalDataPackList[signalType].FlatSignalDepth;
+            }
+
+            return dels.Sum();
         }
         
         public bool HasCertainSignal(SignalType signalType)
         {
-            return RectifyInt(SignalDataPackList[signalType].HardwareDepth) > 0;
+            return SignalDataPackList[signalType].HardwareDepth > 0;
         }
 
         public SignalData CertainSignalData(SignalType signalType)
@@ -84,8 +96,7 @@ namespace ROOT.Signal
             {
                 foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
                 {
-                    //SignalStrength.Add(signalType, 0);
-                    SignalDataPackList.Add(signalType, new SignalData(0, 0, 0, null));
+                    SignalDataPackList.Add(signalType, new SignalData());
                 }
             }
             catch (NullReferenceException)
@@ -117,11 +128,11 @@ namespace ROOT.Signal
             }
         }
 
-        public bool IsLocalEndingUnit()
+        /*public bool IsLocalEndingUnit()
         {
             var hardwareDepth = CorrespondingSignalData.HardwareDepth;
             return Owner.GetConnectedOtherUnit.Select(u => u.SignalCore.CorrespondingSignalData).All(d => d.HardwareDepth <= hardwareDepth);
-        }
+        }*/
         
         public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
 
