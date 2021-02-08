@@ -315,14 +315,6 @@ namespace ROOT.Signal
             {
                 signalAssetBase.RefreshBoardSignalStrength(board);
                 Paths[signalAssetBase.SignalType] = signalAssetBase.FindAllPathSingleLayer(board).ToList();
-                //TODO 下面的是临时的、还是需要处理一下。
-                foreach (var unitSignalCoreBase in board.Units.Select(s=>s.SignalCore))
-                {
-                    foreach (var keyValuePair in unitSignalCoreBase.SignalDataPackList.Where(keyValuePair => keyValuePair.Value.HardwareDepth==Int32.MaxValue))
-                    {
-                        keyValuePair.Value.HardwareDepth = 0;
-                    }
-                }
             }
         }
 
