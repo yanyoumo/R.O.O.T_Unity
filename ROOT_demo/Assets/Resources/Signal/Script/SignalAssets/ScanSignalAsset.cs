@@ -71,5 +71,11 @@ namespace ROOT.Signal
                 tempScanPath[i].SignalCore.SignalDataPackList[SignalType].UpstreamUnit = tempScanPath[i - 1];
             }
         }
+
+        public override IEnumerable<SignalPath> FindAllPathSingleLayer(Board board)
+        {
+            var res = new SignalPath(tempScanPath);
+            return new[] {res};
+        }
     }
 }

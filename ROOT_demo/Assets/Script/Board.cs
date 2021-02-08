@@ -883,6 +883,6 @@ namespace ROOT
             }
         }
 
-        public IEnumerable<Unit> FindEndingUnit => Units.Where(u => u.GetConnectedOtherUnit.Count == 1); //目前算出来的终叶节点不一定是匹配信号的，而是全部的终叶节点。
+        public IEnumerable<Unit> FindEndingUnit => Units.Where(u => u.GetConnectedOtherUnit.Count == 1 || u.SignalCore.IsLocalEndingUnit()).Distinct(); //目前算出来的终叶节点不一定是匹配信号的，而是全部的终叶节点。
     }
 }

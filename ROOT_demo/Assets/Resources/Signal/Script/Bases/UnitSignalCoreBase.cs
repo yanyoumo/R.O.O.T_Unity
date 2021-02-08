@@ -39,6 +39,7 @@ namespace ROOT.Signal
         [ReadOnly] public bool Visited;//dequeue
         [ReadOnly] public bool Visiting;//enqueue
 
+        //这个偶尔会报个Excp、到时候要看看。
         [ShowInInspector]
         public bool IsActiveMatrixFieldUnit => (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field) && IsUnitActive;
 
@@ -116,6 +117,12 @@ namespace ROOT.Signal
             }
         }
 
+        public bool IsLocalEndingUnit()
+        {
+            var hardwareDepth = CorrespondingSignalData.HardwareDepth;
+            return Owner.GetConnectedOtherUnit.Select(u => u.SignalCore.CorrespondingSignalData).All(d => d.HardwareDepth <= hardwareDepth);
+        }
+        
         public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
 
         public abstract float SingleUnitScore { get; }

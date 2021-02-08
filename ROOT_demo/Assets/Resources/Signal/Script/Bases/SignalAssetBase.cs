@@ -20,20 +20,15 @@ namespace ROOT.Signal
         //在LED屏幕上是否显示本信号的的逻辑。
         public virtual bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
-            var checkA = unit.SignalCore.HasCertainSignal(SignalType) &&
-                         otherUnit.SignalCore.HasCertainSignal(SignalType);
-            /*var signalStrengthComplex = rectifyIntTuple(unit.SignalCore.CorrespondingSignalData);
-            var othersignalStrengthComplex = rectifyIntTuple(otherUnit.SignalCore.CorrespondingSignalData);*/
-            //var delTieredSignal = Math.Abs(othersignalStrengthComplex.Item3 - signalStrengthComplex.Item3);
-            //var signalTier = unit.UnitSignal == SignalType ? unit.Tier : 0;
-            return checkA;
+            return SignalMasterMgr.Instance.WithinCertainSignalSamePath(unit, otherUnit, SignalType);
         }
 
         public virtual int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             var showSig = ShowSignal(dir, unit, otherUnit);
-            var ValA = unit.SignalCore.SignalDataPackList[SignalType.Matrix].SignalDepth;
-            var ValB = otherUnit.SignalCore.SignalDataPackList[SignalType.Matrix].SignalDepth;
+            //TODO 这里显示的LED逻辑还是需要弄一下、现在是最远最大、考虑反过来。
+            var ValA = unit.SignalCore.SignalDataPackList[SignalType].SignalDepth + 1;
+            var ValB = otherUnit.SignalCore.SignalDataPackList[SignalType].SignalDepth + 1;
             return showSig ? Math.Max(ValA, ValB) : 0;
         }
 
@@ -50,13 +45,10 @@ namespace ROOT.Signal
             return CalAllScore(gameBoard, out var A);
         }
 
-        public IEnumerable<SignalPath> FindAllPathSingleLayer(Board board)
+        public virtual IEnumerable<SignalPath> FindAllPathSingleLayer(Board board)
         {
             var path = new List<SignalPath>();
-            var units = board.FindEndingUnit.ToList();
-            var maxHardwareDepth = board.Units.Max(u => u.SignalCore.CertainSignalData(SignalType).HardwareDepth);
-            units.AddRange(board.Units.Where(u => u.SignalCore.CertainSignalData(SignalType).HardwareDepth == maxHardwareDepth));
-            var rawPath =  units.Distinct().Select(u => u.FindSignalPath_Iter(SignalType).Reverse());
+            var rawPath =  board.FindEndingUnit.Select(u => u.FindSignalPath_Iter(SignalType).Reverse());
             var rawSignalPath = rawPath.Select(enumerable => (SignalPath) enumerable.ToList()).ToList();
 
             foreach (var signalPath in  rawSignalPath)

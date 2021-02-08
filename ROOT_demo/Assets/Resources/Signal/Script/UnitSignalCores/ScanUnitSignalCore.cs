@@ -280,10 +280,15 @@ namespace ROOT.Signal
         {
             get
             {
-                var dict = SignalMasterMgr.Instance.Paths;
-                if (!dict.ContainsKey(SignalType) || dict[SignalType].Count <= 0 || dict[SignalType][0].Count == 0)
+                if (!SignalMasterMgr.Instance.HasAnyPath(SignalType)) return false;
+                try
+                {
+                    return Owner == SignalMasterMgr.Instance.Paths[SignalType][0].Last();
+                }
+                catch (InvalidOperationException)
+                {
                     return false;
-                return Owner == SignalMasterMgr.Instance.Paths[SignalType][0].Last();
+                }
             }
         }
 

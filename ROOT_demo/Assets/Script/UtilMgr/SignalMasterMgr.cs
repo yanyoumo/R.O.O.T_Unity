@@ -80,17 +80,7 @@ namespace ROOT.Signal
             if (truncateAmount == 0) return;
             for (var i = 0; i < truncateAmount; i++)
             {
-                var rIndex = _core.Count - 1 - i;
-                if (rIndex >= 0 && rIndex <= _core.Count - 1)
-                {
-                    _core.RemoveAt(rIndex);
-                }
-                else
-                {
-                    //Truncate to Null;
-                    _core = new List<Unit>();
-                    return;
-                }
+                _core.RemoveAt(_core.Count-1);//要持续敲掉最后一个。而且越敲越短。
             }
         }
 
@@ -283,9 +273,40 @@ namespace ROOT.Signal
         }
 
         public Dictionary<SignalType, List<SignalPath>> Paths => _paths == null ? new Dictionary<SignalType, List<SignalPath>>() : _paths;
+        
         private Dictionary<SignalType, List<SignalPath>> _paths;
 
+        public bool HasAnyPath(SignalType signalType)
+        {
+            return _paths != null && _paths.ContainsKey(signalType) && _paths[signalType].Count > 0;
+        }
 
+        public bool WithinAnyPath(Unit unit)
+        {
+            return _paths.Values.Any(v => v.Any(s => s.Contains(unit)));
+        }
+        
+        public bool WithinCRPDSignalPath(Unit unit)
+        {
+            return WithinCertainSignalPath(unit, unit.UnitSignal);
+        }
+        
+        public bool WithinCertainSignalPath(Unit unit,SignalType signalType)
+        {
+            return HasAnyPath(signalType) && _paths[signalType].Any(signalPath => signalPath.Contains(unit));
+        }
+        
+        public bool WithinAnySamePath(Unit unitA,Unit unitB)
+        {
+            return _paths.Keys.Any(k => WithinCertainSignalSamePath(unitA, unitB, k));
+        }
+        
+        public bool WithinCertainSignalSamePath(Unit unitA,Unit unitB,SignalType signalType)
+        {
+            return HasAnyPath(signalType) && _paths[signalType].Any(s => (s.Contains(unitA) && s.Contains(unitB)));
+        }
+        
+        
         private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
         {
             _paths = new Dictionary<SignalType, List<SignalPath>>();
@@ -294,6 +315,14 @@ namespace ROOT.Signal
             {
                 signalAssetBase.RefreshBoardSignalStrength(board);
                 Paths[signalAssetBase.SignalType] = signalAssetBase.FindAllPathSingleLayer(board).ToList();
+                //TODO 下面的是临时的、还是需要处理一下。
+                foreach (var unitSignalCoreBase in board.Units.Select(s=>s.SignalCore))
+                {
+                    foreach (var keyValuePair in unitSignalCoreBase.SignalDataPackList.Where(keyValuePair => keyValuePair.Value.HardwareDepth==Int32.MaxValue))
+                    {
+                        keyValuePair.Value.HardwareDepth = 0;
+                    }
+                }
             }
         }
 
