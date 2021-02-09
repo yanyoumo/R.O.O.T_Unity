@@ -40,11 +40,12 @@ namespace ROOT
             {"ThermalCoreUIToggle", SignalType.Thermo},
             {"ScanCoreUIToggle", SignalType.Scan}
         };
+        private UIPopup uiPopup;
 
         // Start is called before the first frame update
         void Awake()
         {
-
+            //GameObject.Find("UIPopup").GetComponent<UIPopup>().Hide(true);
         }
 
         private void OnGUI()
@@ -129,22 +130,31 @@ namespace ROOT
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
         }
 
+        public void uiPopUpDisappear() 
+        {
+            GameObject.Find("UIPopup").GetComponent<UIPopup>().Hide();
+        }
+
         public void Continue()
         {
-            var actionAsset = LevelLib.Instance.CareerActionAssetList[sceneId];
+            //var actionAsset = LevelLib.Instance.CareerActionAssetList[sceneId];
             additionalGameSetup.updateSignal();
             Debug.Log("the PlayingSignalType is " + additionalGameSetup.PlayingSignalTypeA + ", and " + additionalGameSetup.PlayingSignalTypeB);
             if (!additionalGameSetup.PlayingSignalTypeA.Equals(additionalGameSetup.PlayingSignalTypeB))
             {
+                /**
                 actionAsset.AdditionalGameSetup = additionalGameSetup;
                 LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset);
                 SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
+                */
             }
             else 
             {
                 Debug.LogWarning("additionalGameSetup is not properly setup, player hasn't selected two cores");
                 //need to add an animation or pop up in the UI to tell the player to correctly select cores
                 //Otherwise, the game should not proceed
+                uiPopup = GameObject.Find("UIPopup").GetComponent<UIPopup>();
+                uiPopup.Show();
             }
 
         }
