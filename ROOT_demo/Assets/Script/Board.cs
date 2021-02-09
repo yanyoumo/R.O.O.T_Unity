@@ -885,15 +885,7 @@ namespace ROOT
 
         public IEnumerable<Unit> FindEndingUnit(SignalType signalType)
         {
-            //TODO 求的梯度和散度是对的、但是并不能求终叶节点；散度是求出来了、但是相当于把所有对应信号的单元求出来了。
-            //实质的流程估计还是"one connection"+"localMax"+"localMaxSpawnOff"三个流程放下来，估计也就是这样了。
-            var rawEndingUnit = Units.Where(s => s.SignalCore.FindCertainSignalDiv_FlatSignal(signalType) != 0).ToList();
-            /*foreach (var unit in rawEndingUnit.Where(u=>u.GetConnectedOtherUnit.Count>1))
-            {
-                var otherUnit = unit.GetConnectedOtherUnit;
-                rawEndingUnit.AddRange(otherUnit.Where(u=>u!=unit.SignalCore.CertainSignalData(signalType).UpstreamUnit));
-            }*/
-            return rawEndingUnit.Distinct();
+            return Units.Where(u => u.NotBeingSignallyReferenced(signalType));
         }
     }
 }

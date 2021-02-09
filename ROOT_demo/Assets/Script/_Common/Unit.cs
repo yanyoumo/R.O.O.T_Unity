@@ -154,8 +154,15 @@ namespace ROOT
         public UnitSignalCoreBase SignalCore;
         public TextMeshPro BillBoardText;
 
+        public Dictionary<SignalType, SignalData> SignalDataPackList => SignalCore.SignalDataPackList;
+
+        public SignalData SignalDataVal(SignalType signalType)
+        {
+            return SignalDataPackList[signalType];
+        }
+        
         public MeshRenderer UnitActivationLEDMat;
-        public Color[] UnitActivationLEDMat_Colors;
+        public Color[] UnitActivationLEDMat_Colors => SignalMasterMgr.Instance.UnitActivationLED_Colors;
 
         private int Cost = 0;
         private int _tier = 0;
@@ -648,6 +655,8 @@ namespace ROOT
 
             var shouldShow = false;
 
+            var signal = new[] {SignalType.Thermo};
+            
             foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
             {
                 var tmpShouldShow = SignalMasterMgr.Instance.ShowSignal(signalType, crtDir, this, otherUnit);
@@ -821,6 +830,13 @@ namespace ROOT
                 res.AddRange(unit.FindSignalPath_Iter(targetSignalType));
             }
             return res;
+        }
+
+        public bool NotBeingSignallyReferenced(SignalType targetSignalType)
+        {
+            var otherUnits = GetConnectedOtherUnit;
+            if (otherUnits.Count==0) return false;
+            return otherUnits.All(u => u.SignalDataVal(targetSignalType).UpstreamUnit != this);
         }
     }
 }

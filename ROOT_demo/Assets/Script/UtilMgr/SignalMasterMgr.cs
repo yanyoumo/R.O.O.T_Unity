@@ -185,6 +185,8 @@ namespace ROOT.Signal
 
         public static float GetPerDriverIncome = 1.5f;
 
+        public Color[] UnitActivationLED_Colors;
+        
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -283,7 +285,7 @@ namespace ROOT.Signal
 
         public bool WithinAnyPath(Unit unit)
         {
-            return _paths.Values.Any(v => v.Any(s => s.Contains(unit)));
+            return _paths != null && _paths.Values.Any(v => v.Any(s => s.Contains(unit)));
         }
         
         public bool WithinCRPDSignalPath(Unit unit)
@@ -298,7 +300,7 @@ namespace ROOT.Signal
         
         public bool WithinAnySamePath(Unit unitA,Unit unitB)
         {
-            return _paths.Keys.Any(k => WithinCertainSignalSamePath(unitA, unitB, k));
+            return _paths != null && _paths.Keys.Any(k => WithinCertainSignalSamePath(unitA, unitB, k));
         }
         
         public bool WithinCertainSignalSamePath(Unit unitA,Unit unitB,SignalType signalType)

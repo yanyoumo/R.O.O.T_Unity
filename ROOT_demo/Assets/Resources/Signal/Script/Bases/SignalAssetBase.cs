@@ -34,8 +34,7 @@ namespace ROOT.Signal
 
         public virtual float CalAllScore(Board gameBoard, out int hardwareCount)
         {
-            var targetSignalCore = gameBoard.Units.Where(u => u.UnitSignal == SignalType).Select(u => u.SignalCore)
-                .ToArray();
+            var targetSignalCore = gameBoard.Units.Where(u => u.UnitSignal == SignalType).Select(u => u.SignalCore).ToArray();
             hardwareCount = targetSignalCore.Count(s => s.IsUnitActive);
             return targetSignalCore.Sum(s => s.SingleUnitScore);
         }

@@ -108,18 +108,25 @@ namespace ROOT.Signal
         //0:no signal.
         //1:has signal but no active.
         //2:signal and active.
-        //public virtual bool GetActivationStatusPerSignal => CorrespondingSignalData.Item1 > 0;//默认看硬件深度。
 
         public int GetActivationStatus
         {
             get
             {
+                //TODO 现在认为扫描信号只有终端单元是激活的、这个还是要改。
+                //尽量需要一个这个点亮系统的配置流程、这个可以搞。
+                //这个激活还是要弄、要不然所有其他干线的networkSignal都不算的、这个还是得弄。
+                if (Owner.UnitSignal == SignalType.Scan && Owner.UnitHardware == HardwareType.Field)
+                {
+
+                }
+
                 if (IsUnitActive)
                 {
                     return 2;
                 }
 
-                if (SignalDataPackList.Values.Any(valueTuple => valueTuple.HardwareDepth > 0))
+                if (SignalMasterMgr.Instance.WithinAnyPath(Owner))
                 {
                     return 1;
                 }
@@ -128,12 +135,6 @@ namespace ROOT.Signal
             }
         }
 
-        /*public bool IsLocalEndingUnit()
-        {
-            var hardwareDepth = CorrespondingSignalData.HardwareDepth;
-            return Owner.GetConnectedOtherUnit.Select(u => u.SignalCore.CorrespondingSignalData).All(d => d.HardwareDepth <= hardwareDepth);
-        }*/
-        
         public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
 
         public abstract float SingleUnitScore { get; }

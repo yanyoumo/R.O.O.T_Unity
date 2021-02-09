@@ -16,7 +16,7 @@ namespace ROOT.Signal
 
         public override SignalType SignalType => SignalType.Thermo;
 
-        public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
+        /*public override bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             //TODO
             var ShowNetLED = true;
@@ -28,6 +28,6 @@ namespace ROOT.Signal
             //TODO
             var showSig = ShowSignal(dir, unit, otherUnit);
             return showSig ? 1 : 0;
-        }
+        }*/
     }
 }

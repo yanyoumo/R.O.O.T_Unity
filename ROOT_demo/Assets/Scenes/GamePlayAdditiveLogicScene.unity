@@ -1279,7 +1279,7 @@ MonoBehaviour:
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
-        _keyboardKeyCode: 104
+        _keyboardKeyCode: 9
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
@@ -1506,6 +1506,7 @@ MonoBehaviour:
   LFLocator: {fileID: 1476339}
   URLocator: {fileID: 952712529}
   HeatSinkPatterns: {fileID: 11400000, guid: 1d512935b48b42b45a51784e5466eb82, type: 2}
+  heatSinkCost: 0
   UnitTemplate: {fileID: 4688034594746405584, guid: 44794b1f4e158b24791064bd426e575e,
     type: 3}
   BoardGridTemplate: {fileID: 8600621977452058256, guid: d34961eb3a92e45459f82159a24bde59,

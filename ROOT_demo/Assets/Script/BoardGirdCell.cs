@@ -171,8 +171,10 @@ namespace ROOT
             }
         }
         
+        
         private void SetText(int number)
         {
+            //TODO 这里还需要现有流程的状态。
             if (number == 0)
             {
                 if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
