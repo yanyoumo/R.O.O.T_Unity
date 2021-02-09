@@ -32,11 +32,11 @@ namespace ROOT.Signal
             return showSig ? Math.Max(ValA, ValB) : 0;
         }
 
-        public virtual float CalAllScore(Board gameBoard, out int hardwareCount)
+        public float CalAllScore(Board gameBoard, out int hardwareCount)
         {
             var targetSignalCore = gameBoard.Units.Where(u => u.UnitSignal == SignalType).Select(u => u.SignalCore).ToArray();
             hardwareCount = targetSignalCore.Count(s => s.IsUnitActive);
-            return targetSignalCore.Sum(s => s.SingleUnitScore);
+            return targetSignalCore.Where(s => s.IsUnitActive).Sum(u => u.Owner.Tier);
         }
 
         public float CalAllScore(Board gameBoard)

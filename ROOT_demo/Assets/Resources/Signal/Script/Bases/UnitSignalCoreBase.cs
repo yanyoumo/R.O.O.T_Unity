@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework.Internal;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
 //这个函数的优化点就是在于，在得到全局信号深度后；将非0值作为一个个“岛”、之后选择“岛”中最小的即可。
@@ -62,7 +59,7 @@ namespace ROOT.Signal
         
         public bool HasCertainSignal(SignalType signalType)
         {
-            return SignalDataPackList[signalType].HardwareDepth > 0;
+            return SignalDataPackList[signalType].FlatSignalDepth > 0;
         }
 
         public SignalData CertainSignalData(SignalType signalType)
@@ -118,7 +115,13 @@ namespace ROOT.Signal
                 //这个激活还是要弄、要不然所有其他干线的networkSignal都不算的、这个还是得弄。
                 if (Owner.UnitSignal == SignalType.Scan && Owner.UnitHardware == HardwareType.Field)
                 {
-
+                    //TODO 先写在这里、到时候估计还要整。
+                    var core = Owner.SignalCore as ScanUnitSignalCore;
+                    Debug.Assert(core != null);
+                    if (core.IsUnitVeryActive)
+                    {
+                        return 3;
+                    }
                 }
 
                 if (IsUnitActive)

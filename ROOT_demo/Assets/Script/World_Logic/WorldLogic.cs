@@ -245,6 +245,9 @@ namespace ROOT
     public static class WorldEvent
     {
         public delegate void ControllingEventHandler(ActionPack actionPack);
+
+        public delegate void BoardReady();//这个系统可以利用起来、一些时序信号用这个调整。
+        public delegate void BoardUpdated();//这个系统可以利用起来、一些时序信号用这个调整。
     }
 
     //要把Asset和Logic，把Controller也要彻底拆开。
@@ -1093,13 +1096,15 @@ namespace ROOT
                 }
                 else
                 {
-                    SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, levelAsset.GameBoard, out var harDriverCountInt);
-                    SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, levelAsset.GameBoard, out var networkCountInt);
-                    levelAsset.TimeLine.RequirementSatisfied = (harDriverCountInt >= normalRval) && (networkCountInt >= networkRval);
+                    SignalMasterMgr.Instance.RefreshBoardAllSignalStrength(levelAsset.GameBoard);
+                    //TODO 这里还要把playing什么的连进来、
+                    var matrixSignalCount = SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, levelAsset.GameBoard);
+                    var scanSignalCount = SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, levelAsset.GameBoard);
+                    levelAsset.TimeLine.RequirementSatisfied = (matrixSignalCount >= normalRval) && (scanSignalCount >= networkRval);
                     levelAsset.SignalPanel.TgtNormalSignal = normalRval;
                     levelAsset.SignalPanel.TgtNetworkSignal = networkRval;
-                    levelAsset.SignalPanel.CrtNormalSignal = harDriverCountInt;
-                    levelAsset.SignalPanel.CrtNetworkSignal = networkCountInt;
+                    levelAsset.SignalPanel.CrtNormalSignal = Mathf.RoundToInt(matrixSignalCount);
+                    levelAsset.SignalPanel.CrtNetworkSignal = Mathf.RoundToInt(scanSignalCount);
                     if (levelAsset.TimeLine.RequirementSatisfied)
                     {
                         levelAsset.ReqOkCount++;

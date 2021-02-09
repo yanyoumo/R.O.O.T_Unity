@@ -51,6 +51,7 @@ namespace ROOT.Signal
 
         public override IEnumerable<SignalPath> FindAllPathSingleLayer(Board board)
         {
+            if (tempScanPath.Count < 1) return new List<SignalPath>();
             var res = new SignalPath(tempScanPath);
             return new[] {res};
         }

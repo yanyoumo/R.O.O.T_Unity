@@ -209,22 +209,25 @@ namespace ROOT.Signal
             }
         }
 
+        internal bool IsUnitVeryActive
+        {
+            get
+            {
+                if (SignalMasterMgr.Instance.Paths == null || !SignalMasterMgr.Instance.HasAnyPath(SignalType)) return false;
+                return Owner == SignalMasterMgr.Instance.Paths[SignalType][0].Last();
+            }
+        }
+
         public override bool IsUnitActive
         {
             get
             {
                 if (!SignalMasterMgr.Instance.HasAnyPath(SignalType)) return false;
-                try
-                {
-                    return Owner == SignalMasterMgr.Instance.Paths[SignalType][0].Last();
-                }
-                catch (InvalidOperationException)
-                {
-                    return false;
-                }
+                var normalActive=SignalMasterMgr.Instance.WithinCertainSignalPath(Owner, SignalType);
+                return normalActive || IsUnitVeryActive;
             }
         }
 
-        public override float SingleUnitScore => IsUnitActive ? GetServerIncomeByLength(Owner.SignalCore.SignalDataPackList[SignalType.Scan].SignalDepth) : 0.0f;
+        public override float SingleUnitScore => IsUnitVeryActive ? GetServerIncomeByLength(Owner.SignalCore.SignalDataPackList[SignalType.Scan].SignalDepth) : 0.0f;
     }
 }

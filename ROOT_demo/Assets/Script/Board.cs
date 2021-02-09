@@ -30,9 +30,23 @@ namespace ROOT
         public int HeatSinkID { get; internal set; }//Always Positive.
         public int HeatSinkCost { get; internal set; }//Always Positive.
     }
+
+    public sealed class BoardGirdDriver
+    {
+        public Dictionary<Vector2Int, BoardGirdCell> BoardGirds;
+    }
     
     public sealed class Board : MonoBehaviour
     {
+        public static WorldEvent.BoardUpdated BoardUpdatedEvent;
+        public static WorldEvent.BoardReady BoardReadyEvent;
+
+        private BoardGirdDriver _boardGirdDriver;
+        public Dictionary<Vector2Int, BoardGirdCell> BoardGirds { 
+            get=>_boardGirdDriver.BoardGirds; 
+            private set=>_boardGirdDriver.BoardGirds=value; 
+        }
+
         public InfoAirdrop AirDrop;
         public Transform LFLocator;
         public Transform URLocator;
@@ -142,7 +156,6 @@ namespace ROOT
         private int _currentHeatSinkDiminishingID = 0;
 
         public int MinHeatSinkCount=> ActualHeatSinkPos.Length;
-        //private Vector2Int[] RawHeatSinkPos => HeatSinkPatterns.Lib[_currentHeatSinkPatternsID].Lib.ToArray();
         private Vector2Int[] RawHeatSinkPos => new Vector2Int[0];//现在使初始pattern都是空的。
         private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward().ForEach(vec => PermutateV2I(vec, BoardLength-1, _HeatSinkPermutation)).ToArray();
 
@@ -420,9 +433,7 @@ namespace ROOT
 
             return noHeatSinkCount;
         }
-
-        public Dictionary<Vector2Int, BoardGirdCell> BoardGirds { get; private set; }
-
+        
         public void LightUpBoardGird(
             Vector2Int pos,
             LightUpBoardGirdMode mode=LightUpBoardGirdMode.REPLACE, 
@@ -653,6 +664,7 @@ namespace ROOT
         void Awake()
         {
             UnitsGameObjects = new Dictionary<Vector2Int, GameObject>();
+            _boardGirdDriver = new BoardGirdDriver();
             InitBoardGird();
             CheckHeatSink(StageType.Shop);
             LFLocatorStatic = LFLocator;
@@ -878,8 +890,9 @@ namespace ROOT
             if (lastUnitsHashCode != hashCode)
             {
                 lastUnitsHashCode = hashCode;
-                Debug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode);
+                //Debug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode);
                 SignalMasterMgr.Instance.RefreshBoardAllSignalStrength(this);
+                BoardUpdatedEvent?.Invoke();
             }
         }
 
