@@ -45,7 +45,6 @@ namespace ROOT
         // Start is called before the first frame update
         void Awake()
         {
-            //GameObject.Find("UIPopup").GetComponent<UIPopup>().Hide(true);
         }
 
         private void OnGUI()
@@ -137,16 +136,14 @@ namespace ROOT
 
         public void Continue()
         {
-            //var actionAsset = LevelLib.Instance.CareerActionAssetList[sceneId];
+            var actionAsset = LevelLib.Instance.CareerActionAssetList[sceneId];
             additionalGameSetup.updateSignal();
             Debug.Log("the PlayingSignalType is " + additionalGameSetup.PlayingSignalTypeA + ", and " + additionalGameSetup.PlayingSignalTypeB);
             if (!additionalGameSetup.PlayingSignalTypeA.Equals(additionalGameSetup.PlayingSignalTypeB))
             {
-                /**
                 actionAsset.AdditionalGameSetup = additionalGameSetup;
                 LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset);
                 SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
-                */
             }
             else 
             {
