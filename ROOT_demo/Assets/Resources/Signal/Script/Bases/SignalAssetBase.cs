@@ -164,6 +164,11 @@ namespace ROOT.Signal
                     }
                 }
             }
+            foreach (var fieldUnit in board.Units)
+            {
+                if (Equals(fieldUnit.SignalCore.SignalDataPackList[signalType], new SignalData(int.MaxValue, 0, 0, null)))
+                    fieldUnit.SignalCore.SignalDataPackList[signalType] = new SignalData();
+            }
         }
     }
 }

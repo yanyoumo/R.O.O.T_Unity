@@ -114,7 +114,7 @@ namespace ROOT.Signal
 
         public float GetServerIncomeByLength(int length)
         {
-            float[] incomeArrayDel = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
+            float[] incomeArrayDel = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f };
             float incomeArrayBase = 0.0f;
             float income = incomeArrayBase;
             for (int i = 0; i < length; i++)
@@ -124,73 +124,6 @@ namespace ROOT.Signal
             }
 
             return Mathf.Floor(income);
-        }
-
-        public float CalScore(out int networkCount, ref int maxCount, ref int maxScore, ref int maxLength)
-        {
-            //这里调一下你那个有更多的输出变量CalScore函数就行了。（函数名想变都能变。
-            //return CalScore(out networkCount, out var A, out var B, out var C);
-            var thisLevelDict = new Dictionary<Unit, networkCableStatus>();
-            var lastLevelDict = new Dictionary<Unit, networkCableStatus>();
-            Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.Visited = unit.SignalCore.Visiting = false);
-            Owner.SignalCore.Visiting = true;
-            var networkCableQueue = new Queue<networkCableStatus>();
-            networkCableQueue.Enqueue(new networkCableStatus(Owner, 0, 0, AddPath(Owner, 0ul)));
-            while (networkCableQueue.Count != 0)
-            {
-                var (networkCable, length, score, vis) = networkCableQueue.Dequeue();
-                if (thisLevelDict.Count > 0 &&
-                    length > thisLevelDict.First().Value.Item2)
-                {
-                    lastLevelDict = thisLevelDict;
-                    thisLevelDict = new Dictionary<Unit, networkCableStatus>
-                    {
-                        {networkCable, new networkCableStatus(networkCable, length, score, vis)}
-                    };
-                }
-                else
-                    thisLevelDict.Add(networkCable, new networkCableStatus(networkCable, length, score, vis));
-
-                if (length > maxLength)
-                    break;
-                networkCable.SignalCore.Visited = true;
-                networkCable.SignalCore.Visiting = false;
-                var hardDriveQueue = new Queue<Tuple<Unit, ulong>>();
-                hardDriveQueue.Enqueue(new Tuple<Unit, ulong>(networkCable, vis));
-                if (FindNextLevelNetworkCable(networkCableQueue, hardDriveQueue, length, score) &&
-                    ((length < maxLength && length != 0) || length == maxLength))
-                {
-                    if (length < maxLength || (length == maxLength && score > maxScore))
-                    {
-                        maxScore = score;
-                        maxLength = length;
-                        Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
-                        GeneratePath(Owner, vis);
-                    }
-
-                    foreach (var unitConnectedToLastNode in networkCable.GetConnectedOtherUnit.Where(unit =>
-                        lastLevelDict.ContainsKey(unit)))
-                    {
-                        var lastNodeButOne = lastLevelDict[unitConnectedToLastNode];
-                        if (PathContains(vis, lastNodeButOne.Item4) == false &&
-                            lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable) > maxScore)
-                        {
-                            maxScore = lastNodeButOne.Item3 + Utils.GetUnitTierInt(networkCable);
-                            Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
-                            GeneratePath(Owner, AddPath(networkCable, lastNodeButOne.Item4));
-                        }
-                    }
-                }
-            }
-
-            if (maxLength == maxCount)
-            {
-                Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.InServerGrid = false);
-                maxScore = 0;
-            }
-
-            SignalMasterMgr.MaxNetworkDepth = networkCount = maxScore;
-            return GetServerIncomeByLength(maxScore);
         }
 
         public List<Unit> CalScore(ref int maxCount, ref int maxScore, ref int maxLength)
@@ -292,7 +225,6 @@ namespace ROOT.Signal
             }
         }
 
-        //TODO
-        public override float SingleUnitScore => 0.0f;
+        public override float SingleUnitScore => IsUnitActive ? GetServerIncomeByLength(Owner.SignalCore.SignalDataPackList[SignalType.Scan].SignalDepth) : 0.0f;
     }
 }
