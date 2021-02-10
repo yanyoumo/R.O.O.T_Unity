@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using com.ootii.Messages;
 using JetBrains.Annotations;
 using Rewired;
+using ROOT.Message;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using static RewiredConsts.Action;
@@ -12,15 +12,15 @@ namespace ROOT
     //这个东西比较蛋疼、键盘、手柄类基于按键的操作和鼠标这种基于时序的操作不同。
     //这里有点是两路输入拼在一起感觉、但是为了这个时间系统的解耦、目前就只能这么办。
     [Serializable]
-    public struct ActionPack
+    public class ActionPack : RootMessageBase
     {
         public int ActionID;
         public InputActionEventType eventType;
         public RotationDirection ActionDirection;
         public Vector2 MouseScreenPosA;
         public Vector2 MouseScreenPosB;
-        public int FuncID;//把之前Func0~9的ID都整合到一个compositeAction上面、然后把具体的ID写在这儿。
-        public bool HoldForDrag; //set TRUE if space is pressed down; set FALSE if space is up
+        public int FuncID;
+        public bool HoldForDrag;
 
         public bool IsAction(int actionID)
         {
@@ -30,6 +30,18 @@ namespace ROOT
         public static bool ActionPackIsAction(ActionPack actPack, int actionID)
         {
             return actPack.ActionID == actionID;
+        }
+
+        public override string Type
+        {
+            get => WorldEvent.ControllingEvent;
+            set{}
+        }
+        
+        public override float Delay
+        {
+            get => 0.0f;
+            set{}
         }
     }
 
@@ -44,7 +56,7 @@ namespace ROOT
         [ReadOnly] public int playerId = 0;
         private Player player;
 
-        public static WorldEvent.ControllingEventHandler ControllingEvent;
+        //public static WorldEvent.ControllingEventHandler ControllingEvent;
 
         private static bool holdForDrag = false;
 
@@ -103,6 +115,7 @@ namespace ROOT
                 ActionID = obj.actionId,
                 eventType = obj.eventType,
                 HoldForDrag = holdForDrag,
+                Sender = this,
             };
             switch (actionPack.ActionID)
             {
@@ -119,7 +132,8 @@ namespace ROOT
                     actionPack.ActionDirection = RotationDirection.East;
                     break;
             }
-            ControllingEvent?.Invoke(actionPack);
+            actionPack.Sender = this;
+            MessageDispatcher.SendMessage(actionPack);
         }
 
         private void OnInputUpdateFunc(InputActionEventData obj)
@@ -130,8 +144,9 @@ namespace ROOT
                 eventType = obj.eventType,
                 HoldForDrag = holdForDrag,
                 FuncID = int.Parse(obj.actionName.Substring(4)),
+                Sender = this,
             };
-            ControllingEvent?.Invoke(actionPack);
+            MessageDispatcher.SendMessage(actionPack);
         }
 
         private void OnInputUpdateSpaceDown(InputActionEventData obj)
@@ -142,8 +157,9 @@ namespace ROOT
                 ActionID = obj.actionId,
                 eventType = obj.eventType,
                 HoldForDrag = holdForDrag,
+                Sender = this,
             };
-            ControllingEvent?.Invoke(actionPack);
+            MessageDispatcher.SendMessage(actionPack);
         }
 
         private void OnInputUpdateSpaceUp(InputActionEventData obj)
@@ -158,8 +174,9 @@ namespace ROOT
                 ActionID = obj.actionId,
                 eventType = obj.eventType,
                 HoldForDrag = holdForDrag,
+                Sender = this,
             };
-            ControllingEvent?.Invoke(actionPack);
+            MessageDispatcher.SendMessage(actionPack);
         }
 
         private void OnInputUpdateMouseSingleClickDown(InputActionEventData obj)
@@ -174,6 +191,7 @@ namespace ROOT
             {
                 MouseScreenPosA = MouseScreenPos,
                 MouseScreenPosB = player.controllers.Mouse.screenPosition,
+                Sender = this,
             };
             RootDebug.Log("Mouse Single Click Up",NameID.JiangDigong_Log);
             if (Utils.GetCustomizedDistance(actionPack.MouseScreenPosA, actionPack.MouseScreenPosB) < minHoldShift)
@@ -188,7 +206,7 @@ namespace ROOT
                 actionPack.eventType = InputActionEventType.AxisActive;
                 RootDebug.Log("Mouse Drag",NameID.JiangDigong_Log);
             }
-            ControllingEvent?.Invoke(actionPack);
+            MessageDispatcher.SendMessage(actionPack);
         }
 
         private void OnInputUpdateMouseDoubleClick(InputActionEventData obj)
@@ -197,8 +215,9 @@ namespace ROOT
             {
                 ActionID = obj.actionId,
                 eventType = obj.eventType,
+                Sender = this,
             };
-            ControllingEvent?.Invoke(actionPack);
+            MessageDispatcher.SendMessage(actionPack);
             RootDebug.Log("Mouse Double Click",NameID.JiangDigong_Log);
         }
 
@@ -208,8 +227,9 @@ namespace ROOT
             {
                 ActionID = obj.actionId,
                 eventType = obj.eventType,
+                Sender = this,
             };
-            ControllingEvent?.Invoke(actionPack);
+            MessageDispatcher.SendMessage(actionPack);
             RootDebug.Log("Mouse Hold",NameID.JiangDigong_Log);
         }
     }

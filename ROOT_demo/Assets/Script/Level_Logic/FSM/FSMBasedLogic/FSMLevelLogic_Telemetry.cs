@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using com.ootii.Messages;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -221,7 +222,7 @@ namespace ROOT
 
         private void TelemetryPauseAction()
         {
-            WorldExecutor.UpdateBoardData(ref LevelAsset);
+            WorldExecutor.UpdateBoardData_Stepped(ref LevelAsset);
         }
 
         protected override void AdditionalInitLevel()
@@ -277,15 +278,15 @@ namespace ROOT
             
             if (RoundGist.HasValue)
             {
-                WorldExecutor.UpdateRoundData_Instant(ref LevelAsset);
+                WorldExecutor.UpdateRoundData_Stepped(ref LevelAsset);
             }
         }
 
-        protected override void BoardUpdatedHandler()
+        protected override void BoardUpdatedHandler(IMessage rMessage)
         {
+            base.BoardUpdatedHandler(rMessage);
             if (RoundGist.HasValue)
             {
-                //TODO 还真的就把时序问题解决了一些，但是还要细调。
                 WorldExecutor.UpdateRoundData_Instant(ref LevelAsset);
             }
         }

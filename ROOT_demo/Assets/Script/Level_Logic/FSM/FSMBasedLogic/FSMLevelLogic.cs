@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using com.ootii.Messages;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -336,8 +337,7 @@ namespace ROOT
         protected void MajorUpkeepAction()
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
-            WorldExecutor.UpdateBoardData(ref LevelAsset);//RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
-            BasicMajorUpkeepLogic();
+            WorldExecutor.UpdateBoardData_Stepped(ref LevelAsset);//RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
             AddtionalMajorUpkeep();
             WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
@@ -357,18 +357,13 @@ namespace ROOT
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
         protected void ForwardCycle()
         {
-            /*if (IsForwardCycle) //这个guard应该去掉了、但是姑且先留着，主要是放着第一循环的代码。
-            {*/
-                //现在的框架下，在一个Loop的中段StepUp还凑活，但是感觉有隐患。
-                WorldCycler.StepUp();
-                if (LevelAsset.TimeLine != null)
-                {
-                    LevelAsset.TimeLine.Step();
-                }
+            WorldCycler.StepUp();
+            if (LevelAsset.TimeLine != null)
+            {
+                LevelAsset.TimeLine.Step();
+            }
 
-                LevelAsset.GameStateMgr.PerMove(LevelAsset.DeltaCurrency);
-                WorldExecutor.UpdateBoardData(ref LevelAsset);
-            //}
+            LevelAsset.GameStateMgr.PerMove(LevelAsset.DeltaCurrency);
         }
 
         protected void ReverseCycle()
@@ -393,7 +388,7 @@ namespace ROOT
         {
             //目前这里基本空的，到时候可能把Animate的CoRoutine里面的东西弄出来。
             Debug.Assert(animate_Co != null);
-            BasicMajorUpkeepLogic();
+            WorldExecutor.UpdateBoardData_Stepped(ref LevelAsset);
         }
         
         protected void ReactIO()
@@ -408,10 +403,6 @@ namespace ROOT
             movedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
 
             AddtionalRecatIO();
-
-            //意外地优先级不高。
-            //TODO LED的时刻不只是这个函数的问题，还是积分函数的调用；后面的的时序还是要比较大幅度的调整的；
-            WorldExecutor.UpdateBoardData(ref LevelAsset);
         }
 
         protected void SkillMajorUpkeep()
@@ -421,18 +412,6 @@ namespace ROOT
         }
 
         #endregion
-        
-        protected void BasicMajorUpkeepLogic()
-        {
-            if (LevelAsset.TimeLine != null)
-            {
-                LevelAsset.TimeLine.SetCurrentCount = LevelAsset.ReqOkCount;
-            }
-            if (LevelAsset.SignalPanel != null)
-            {
-                LevelAsset.SignalPanel.CrtMission = LevelAsset.ReqOkCount;
-            }
-        }
 
         private void ClassicGameOverStatus()
         {
@@ -446,9 +425,9 @@ namespace ROOT
             ClassicGameOverStatus();
         }
 
-        protected virtual void BoardUpdatedHandler()
+        protected virtual void BoardUpdatedHandler(IMessage rMessage)
         {
-            //BaseVerison-DoNothing.
+            WorldExecutor.UpdateBoardData_Instance(ref LevelAsset);
         }
         
         private void Awake()
@@ -465,7 +444,7 @@ namespace ROOT
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
             _actionDriver = new CareerControlActionDriver(this, _mainFSM);
 
-            Board.BoardUpdatedEvent += BoardUpdatedHandler;
+            MessageDispatcher.AddListener(WorldEvent.BoardUpdatedEvent, BoardUpdatedHandler);
         }
         private void Update()
         {
@@ -484,7 +463,7 @@ namespace ROOT
 
         private void OnDestroy()
         {
-            Board.BoardUpdatedEvent -= BoardUpdatedHandler;
+            MessageDispatcher.RemoveListener(WorldEvent.BoardUpdatedEvent, BoardUpdatedHandler);
             _actionDriver.unsubscribe();
             _actionDriver = null;
         }

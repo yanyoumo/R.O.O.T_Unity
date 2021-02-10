@@ -5,6 +5,8 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
+using com.ootii.Messages;
+using static ROOT.WorldEvent;
 
 namespace ROOT
 {
@@ -222,6 +224,16 @@ namespace ROOT
             CashingText.enabled = !CashingText.enabled;
             SetText(GetCashIO());
         }
+
+        private void BoardGridHintUpdate(IMessage rmessage)
+        {
+            
+        }
+        
+        /*private void TestA(IMessage rmessage)
+        {
+            Debug.Log("TestA");
+        }*/
         
         void Awake()
         {
@@ -242,6 +254,13 @@ namespace ROOT
 
             CashingText.color = NeutralCashColoring;
             CashingText.enabled = false;
+
+            MessageDispatcher.AddListener(Visual_Event.BoardGridHintUpdateEvent, BoardGridHintUpdate);
+        }
+
+        private void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(Visual_Event.BoardGridHintUpdateEvent, BoardGridHintUpdate);
         }
     }
 }

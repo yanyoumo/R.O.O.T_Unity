@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ROOT.Message;
 using ROOT.Signal;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -244,9 +245,19 @@ namespace ROOT
 
     public static class WorldEvent
     {
-        public delegate void ControllingEventHandler(ActionPack actionPack);
+        /// <summary>
+        /// 这里主要是一些不需要回调的事件，主要是一些实时数据更新等等。
+        /// </summary>
+        public static class Visual_Event
+        {
+            public static string BoardGridHintUpdateEvent = "BoardGridHintUpdateEvent";
+        }
+        
+        public static string BoardShouldUpdateEvent = "BoardShouldUpdateEvent";
+        public static string BoardUpdatedEvent = "BoardUpdatedEvent";
+        public static string BoardReadyEvent = "BoardReadyEvent";
 
-        public delegate void WorldTimingDelegate();
+        public static string ControllingEvent = "ControllingEvent";
     }
 
     //要把Asset和Logic，把Controller也要彻底拆开。
@@ -1063,30 +1074,27 @@ namespace ROOT
             }
         }
 
+        private static float TypeASignalScore = 0;//Instance写
+        private static float TypeBSignalScore = 0;//Stepped读
+        private static int TypeASignalCount = 0;//Instance写
+        private static int TypeBSignalCount = 0;//Stepped读
+        
         //即将拆分、步进的拆一半；基于事件的拆另一半。
         public static void UpdateRoundData_Stepped(ref GameAssets levelAsset)
         {
-            
-        }
-        
-        public static void UpdateRoundData_Instant(ref GameAssets levelAsset)
-        {
-            ResetSignalPanel(ref levelAsset);
             var lvlLogic = levelAsset.Owner;
             var roundGist = lvlLogic.RoundGist.Value;
             var tCount = levelAsset.ActionAsset.GetTruncatedCount(levelAsset.StepCount, out var count);
             if (roundGist.SwitchHeatsink(tCount))
             {
-                //RISK 这里需要每Step只调用一次。
                 levelAsset.GameBoard.UpdatePatternID();
             }
-            
             UpdateLevelAsset(ref levelAsset, ref levelAsset.Owner);
             
             levelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
             levelAsset.CurrencyIncomeEnabled = lvlLogic.IsRequireRound;
             levelAsset.CurrencyIOEnabled =lvlLogic.ShouldCurrencyIo;
-
+            
             if (lvlLogic.IsRequireRound || lvlLogic.IsShopRound)
             {
                 var normalRval = roundGist.normalReq;
@@ -1098,22 +1106,14 @@ namespace ROOT
                 }
                 else
                 {
-                    SignalMasterMgr.Instance.RefreshBoardAllSignalStrength(levelAsset.GameBoard);
-                    //TODO 这里还要把playing什么的连进来、
-                    var matrixSignalCount = SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, levelAsset.GameBoard);
-                    var scanSignalCount = SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, levelAsset.GameBoard);
-                    levelAsset.TimeLine.RequirementSatisfied = (matrixSignalCount >= normalRval) && (scanSignalCount >= networkRval);
                     levelAsset.SignalPanel.TgtNormalSignal = normalRval;
                     levelAsset.SignalPanel.TgtNetworkSignal = networkRval;
-                    levelAsset.SignalPanel.CrtNormalSignal = Mathf.RoundToInt(matrixSignalCount);
-                    levelAsset.SignalPanel.CrtNetworkSignal = Mathf.RoundToInt(scanSignalCount);
                     if (levelAsset.TimeLine.RequirementSatisfied)
                     {
                         levelAsset.ReqOkCount++;
                     }
                 }
             }
-
             var discount = 0;
 
             if (!levelAsset.Shop.ShopOpening && lvlLogic.IsShopRound)
@@ -1123,8 +1123,22 @@ namespace ROOT
 
             levelAsset.Shop.OpenShop(lvlLogic.IsShopRound, discount);
             levelAsset.SkillMgr.SkillEnabled = levelAsset.SkillEnabled = lvlLogic.IsSkillAllowed;
-            levelAsset.SignalPanel.NetworkTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(SignalType.Scan,HardwareType.Field);
-            levelAsset.SignalPanel.NormalTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(SignalType.Matrix,HardwareType.Field);
+        }
+
+        public static void UpdateRoundData_Instant(ref GameAssets levelAsset)
+        {
+            var lvlLogic = levelAsset.Owner;
+            var roundGist = lvlLogic.RoundGist.Value;
+            
+            if (lvlLogic.IsRequireRound || lvlLogic.IsShopRound)
+            {
+                levelAsset.TimeLine.RequirementSatisfied = (TypeASignalCount >= roundGist.normalReq) && (TypeBSignalCount >= roundGist.networkReq);
+            }
+
+            levelAsset.SignalPanel.CrtNormalSignal = TypeASignalCount;
+            levelAsset.SignalPanel.CrtNetworkSignal = TypeBSignalCount;
+            levelAsset.SignalPanel.NetworkTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(SignalType.Scan, HardwareType.Field);
+            levelAsset.SignalPanel.NormalTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(SignalType.Matrix, HardwareType.Field);
         }
 
         //这里哪敢随便改成基于事件的啊；这里都是很看重时序的东西。
@@ -1353,16 +1367,17 @@ namespace ROOT
             currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
         }
 
-        /// <summary>
-        /// 这个函数主要是将目前场面上的数据反映到UI和玩家的视野中，这个很可能是不能单纯用flow的框架来搞？
-        /// 这个真的不能瞎调，每调用一次就会让场上单位调用一次。
-        /// </summary>
-        /// <param name="currentLevelAsset"></param>
-        internal static void UpdateBoardData(ref GameAssets currentLevelAsset)
+
+        internal static void UpdateBoardData_Instance(ref GameAssets currentLevelAsset)
         {
-            int inCome = 0, cost = 0;
-            //SignalMasterMgr.Instance.RefreshBoardAllSignalStrength(currentLevelAsset.GameBoard);
-            var tmpInComeM = SignalMasterMgr.Instance.CalAllScoreAllSignal(currentLevelAsset.GameBoard);
+            //TODO 这里还要把playing什么的连进来
+            TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, currentLevelAsset.GameBoard,out var hardwareACount,out TypeASignalCount);
+            TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, currentLevelAsset.GameBoard,out var hardwareBCount,out TypeBSignalCount);
+
+            var inCome = 0;
+            var cost = 0;
+
+            var tmpInComeM = TypeASignalScore + TypeBSignalScore;
             if (currentLevelAsset.CurrencyIOEnabled)
             {
                 inCome += Mathf.FloorToInt(tmpInComeM);
@@ -1376,7 +1391,7 @@ namespace ROOT
 
                 cost = currentLevelAsset.GameBoard.heatSinkCost;
             }
-            
+
             currentLevelAsset.DeltaCurrency = inCome - cost;
 
             if (currentLevelAsset.CostChart != null)
@@ -1384,6 +1399,18 @@ namespace ROOT
                 currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
                 currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
                 currentLevelAsset.CostChart.IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency);
+            }
+        }
+
+        internal static void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)
+        {
+            if (currentLevelAsset.TimeLine != null)
+            {
+                currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
+            }
+            if (currentLevelAsset.SignalPanel != null)
+            {
+                currentLevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
             }
         }
         

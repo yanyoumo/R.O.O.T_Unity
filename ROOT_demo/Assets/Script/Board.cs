@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using com.ootii.Messages;
 using JetBrains.Annotations;
 using ROOT.Signal;
 using Sirenix.Utilities;
@@ -96,9 +97,9 @@ namespace ROOT
     
     public sealed class Board : MonoBehaviour
     {
-        public static WorldEvent.WorldTimingDelegate BoardShouldUpdateEvent;
+        /*public static WorldEvent.WorldTimingDelegate BoardShouldUpdateEvent;
         public static WorldEvent.WorldTimingDelegate BoardUpdatedEvent;
-        public static WorldEvent.WorldTimingDelegate BoardReadyEvent;
+        public static WorldEvent.WorldTimingDelegate BoardReadyEvent;*/
 
         private BoardGirdDriver _boardGirdDriver;
         public Dictionary<Vector2Int, BoardGirdCell> BoardGirds { 
@@ -728,7 +729,8 @@ namespace ROOT
             CheckHeatSink(StageType.Shop);
             LFLocatorStatic = LFLocator;
             URLocatorStatic = URLocator;
-            BoardShouldUpdateEvent += FullyUpdateBoardData;
+            MessageDispatcher.AddListener(WorldEvent.BoardShouldUpdateEvent,FullyUpdateBoardData);
+            //BoardShouldUpdateEvent += FullyUpdateBoardData;
         }
 
         public Vector2Int[] GetAllEmptySpace()
@@ -932,7 +934,7 @@ namespace ROOT
 
         private int UnitsHashCode => Units.Select(u => u.GetHashCode()).Aggregate(0, (current, result) => current ^ result);
 
-        private void FullyUpdateBoardData()
+        private void FullyUpdateBoardData(IMessage rMessage)
         {
             //现在要假设所有场景内容全是错的，准备更新。
             Units.ForEach(u => u.UpdateNeighboringData());
@@ -942,7 +944,8 @@ namespace ROOT
             Units.ForEach(u => u.UpdateSideMesh());
             Units.ForEach(u => u.UpdateActivationLED());
             //至此所有单元提示灯具设置完成。
-            BoardUpdatedEvent?.Invoke();//发送完成信号。
+            MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent);
+            MessageDispatcher.SendMessage(WorldEvent.Visual_Event.BoardGridHintUpdateEvent);
         }
         
         private void Update()
@@ -953,7 +956,7 @@ namespace ROOT
             {
                 lastUnitsHashCode = hashCode;
                 Debug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode);
-                BoardShouldUpdateEvent?.Invoke();
+                MessageDispatcher.SendMessage(WorldEvent.BoardShouldUpdateEvent);
             }
         }
 
@@ -964,7 +967,7 @@ namespace ROOT
 
         private void OnDestroy()
         {
-            BoardShouldUpdateEvent -= FullyUpdateBoardData;
+            MessageDispatcher.RemoveListener(WorldEvent.BoardShouldUpdateEvent,FullyUpdateBoardData);
         }
     }
 }

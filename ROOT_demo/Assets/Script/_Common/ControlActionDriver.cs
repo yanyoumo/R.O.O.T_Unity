@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using com.ootii.Messages;
+using ROOT.Message;
 using UnityEngine;
 using static RewiredConsts.Action.Button;
 using static RewiredConsts.Action.Composite;
@@ -130,7 +132,7 @@ namespace ROOT
             _mainFsm = fsm;
             _ctrlPackQueue = new Queue<ControllingPack>();
             _breakingCMDQueue = new Queue<BreakingCommand>();
-            ControllingEventMgr.ControllingEvent += RespondToControlEvent;
+            MessageDispatcher.AddListener(WorldEvent.ControllingEvent,RespondToControlEvent);
         }
 
         private void FilterDir(ActionPack actionPack, out RotationDirection? direction)
@@ -186,8 +188,9 @@ namespace ROOT
         
         
         //这个一定实要进行配置的、但是这个本质上是要构建一棵树、但是可以构建一棵树的方法还是FSM。
-        private void RespondToControlEvent(ActionPack actionPack)
+        private void RespondToControlEvent(IMessage rMessage)
         {
+            var actionPack= rMessage as ActionPack;
             CtrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             _shouldQueue = true;
             foreach (var rsp in RespondList)
@@ -202,8 +205,7 @@ namespace ROOT
 
         public void unsubscribe()
         {
-            // ReSharper disable once DelegateSubtraction
-            ControllingEventMgr.ControllingEvent -= RespondToControlEvent;
+            MessageDispatcher.RemoveListener(WorldEvent.ControllingEvent,RespondToControlEvent);
         }
     }
 

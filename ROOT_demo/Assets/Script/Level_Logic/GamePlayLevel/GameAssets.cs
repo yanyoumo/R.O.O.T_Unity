@@ -47,6 +47,7 @@ namespace ROOT
         public HintMaster HintMaster;
         public TimeLine TimeLine;
         public CostLine CostLine;
+        [Obsolete]
         public CostChart CostChart;
         public SignalType? DestoryedCoreType;
         public SignalPanel SignalPanel;
