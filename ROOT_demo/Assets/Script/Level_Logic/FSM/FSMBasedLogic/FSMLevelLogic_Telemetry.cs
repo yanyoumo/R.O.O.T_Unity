@@ -277,16 +277,16 @@ namespace ROOT
             
             if (RoundGist.HasValue)
             {
-                WorldExecutor.UpdateRoundData(ref LevelAsset);
+                WorldExecutor.UpdateRoundData_Instant(ref LevelAsset);
             }
         }
 
-        protected override void BoardUpdateHandler()
+        protected override void BoardUpdatedHandler()
         {
             if (RoundGist.HasValue)
             {
                 //TODO 还真的就把时序问题解决了一些，但是还要细调。
-                WorldExecutor.UpdateRoundData(ref LevelAsset);
+                WorldExecutor.UpdateRoundData_Instant(ref LevelAsset);
             }
         }
 

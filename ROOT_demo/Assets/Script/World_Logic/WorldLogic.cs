@@ -1062,14 +1062,17 @@ namespace ROOT
                 levelAsset.WarningDestoryer.ForceReset();
             }
         }
-        
-        public static void UpdateRoundData(ref GameAssets levelAsset)
+
+        //即将拆分、步进的拆一半；基于事件的拆另一半。
+        public static void UpdateRoundData_Stepped(ref GameAssets levelAsset)
         {
-            //TODO 准备把CareerCycle直接吸收掉；这个变成AdditionalFCycle的流程。
-            //不行，因为这个Cycle实指要绕开F-Cycle，所以不行。
+            
+        }
+        
+        public static void UpdateRoundData_Instant(ref GameAssets levelAsset)
+        {
             ResetSignalPanel(ref levelAsset);
             var lvlLogic = levelAsset.Owner;
-            // ReSharper disable once PossibleInvalidOperationException
             var roundGist = lvlLogic.RoundGist.Value;
             var tCount = levelAsset.ActionAsset.GetTruncatedCount(levelAsset.StepCount, out var count);
             if (roundGist.SwitchHeatsink(tCount))

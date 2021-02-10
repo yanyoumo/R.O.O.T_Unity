@@ -446,7 +446,7 @@ namespace ROOT
             ClassicGameOverStatus();
         }
 
-        protected virtual void BoardUpdateHandler()
+        protected virtual void BoardUpdatedHandler()
         {
             //BaseVerison-DoNothing.
         }
@@ -465,7 +465,7 @@ namespace ROOT
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
             _actionDriver = new CareerControlActionDriver(this, _mainFSM);
 
-            Board.BoardUpdatedEvent += BoardUpdateHandler;
+            Board.BoardUpdatedEvent += BoardUpdatedHandler;
         }
         private void Update()
         {
@@ -484,7 +484,7 @@ namespace ROOT
 
         private void OnDestroy()
         {
-            Board.BoardUpdatedEvent -= BoardUpdateHandler;
+            Board.BoardUpdatedEvent -= BoardUpdatedHandler;
             _actionDriver.unsubscribe();
             _actionDriver = null;
         }

@@ -18,12 +18,12 @@ namespace ROOT.Signal
         public UnitAsset FieldUnitAsset;
 
         //在LED屏幕上是否显示本信号的的逻辑。
-        public virtual bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
+        public bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             return SignalMasterMgr.Instance.WithinCertainSignalSamePath(unit, otherUnit, SignalType);
         }
 
-        public virtual int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
+        public int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
             var showSig = ShowSignal(dir, unit, otherUnit);
             //TODO 这里显示的LED逻辑还是需要弄一下、现在是最远最大、考虑反过来。
