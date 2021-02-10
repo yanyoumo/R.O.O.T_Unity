@@ -246,8 +246,7 @@ namespace ROOT
     {
         public delegate void ControllingEventHandler(ActionPack actionPack);
 
-        public delegate void BoardReady();//这个系统可以利用起来、一些时序信号用这个调整。
-        public delegate void BoardUpdated();//这个系统可以利用起来、一些时序信号用这个调整。
+        public delegate void WorldTimingDelegate();
     }
 
     //要把Asset和Logic，把Controller也要彻底拆开。
@@ -1166,7 +1165,7 @@ namespace ROOT
                     var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
                     System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
                     unit.GetComponentInChildren<Unit>().UnitRotateCw();
-                    currentLevelAsset.GameBoard.UpdateBoard();
+                    //currentLevelAsset.GameBoard.UpdateBoard();
                 }
             }
         }

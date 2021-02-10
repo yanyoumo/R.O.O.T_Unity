@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
@@ -13,6 +14,7 @@ namespace ROOT.Signal
     //using SignalData = Tuple<int, int, int, Unit>;
 
     [Serializable]
+    [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
     public sealed class SignalData
     {
         [ReadOnly] public int HardwareDepth = 0;
@@ -26,6 +28,27 @@ namespace ROOT.Signal
             FlatSignalDepth = 0;
             SignalDepth = 0;
             UpstreamUnit = null;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (!(obj is SignalData)) return false;
+            return GetHashCode() == ((SignalData) obj).GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            if (UpstreamUnit != null)
+            {
+                return HardwareDepth.GetHashCode()
+                       ^ FlatSignalDepth.GetHashCode()
+                       ^ SignalDepth.GetHashCode()
+                       ^ UpstreamUnit.GetHashCode();
+            }
+
+            return HardwareDepth.GetHashCode()
+                   ^ FlatSignalDepth.GetHashCode()
+                   ^ SignalDepth.GetHashCode();
         }
 
         public SignalData(int _hardwareDepth, int _flatSignalDepth, int _signalDepth, Unit unit)

@@ -39,30 +39,7 @@ namespace ROOT
         StSConnectedMesh,
         NoChange
     }
-
-    public partial class Unit
-    {
-        /*protected readonly CoreType[] SourceCoreTypeLib =
-        {
-            CoreType.ScanCore,
-            CoreType.MatrixCore,
-            CoreType.HQ
-        };*/
-
-        /*public CoreGenre GetCoreGenreByCoreType(CoreType coreType)
-        {
-            foreach (var type in SourceCoreTypeLib)
-            {
-                if (coreType == type)
-                {
-                    return CoreGenre.Core;
-                }
-            }
-
-            return CoreGenre.Field;
-        }*/
-    }
-
+    
     public sealed partial class ShopMgr : ShopBase
     {
         private int StationaryRateListLastIndex = 0;

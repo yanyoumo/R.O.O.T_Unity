@@ -544,39 +544,9 @@ namespace ROOT
         public void UpdateWorldRotationTransform()
         {
             _rootTransform.rotation = RotationToQuaternion(_unitRotation);
-            UpdateNeighboringDataAndSideMesh();
         }
 
-        public void UpdateNeighboringData()
-        {
-            WorldNeighboringData = new Dictionary<RotationDirection, ConnectionData>();
-            if (GameBoard == null) return;
-            foreach (var currentSideDirection in RotationList)
-            {
-                var connectionData = new ConnectionData();
 
-                if (GetWorldSpaceUnitSide(currentSideDirection) == SideType.Connection)
-                {
-                    connectionData.HasConnector = true;
-                    var otherUnitPos = GetNeigbourCoord(currentSideDirection);
-                    GameBoard.UnitsGameObjects.TryGetValue(otherUnitPos, out var value);
-                    if (value != null)
-                    {
-                        var otherUnit = value.GetComponentInChildren<Unit>();
-                        connectionData.OtherUnit = otherUnit;
-                        connectionData.Connected =
-                            (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(currentSideDirection)) ==
-                             SideType.Connection);
-                        if (connectionData.Connected)
-                        {
-                            connectionData.ConnectedToGenre = otherUnit.UnitHardware;
-                        }
-                    }
-                }
-
-                WorldNeighboringData.Add(currentSideDirection, connectionData);
-            }
-        }
 
         [Obsolete]
         private void UpdateDestConnectionSide(ConnectionMeshType connectionMeshType, ref Connector connector)
@@ -673,36 +643,7 @@ namespace ROOT
             WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
             return data.HasConnector && data.Connected && SideFilter(dir) && data.OtherUnit != null;
         }
-
-        private void UpdateSideMesh()
-        {
-            if (WorldNeighboringData == null) return;
-            RotationList.ForEach(ResetConnector);
-            ConnectorLocalDir.Values.ForEach(val => val.Connected = false);
-            var ignoreVal = WorldCycler.TelemetryStage && !WorldCycler.TelemetryPause;
-            RotationList.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
-        }
-
-        private void UpdateActivationLED()
-        {
-            int noSignalIndex = UnitHardware == HardwareType.Core ? 1 : 0;
-            if (AnyConnection && SignalCore.GetActivationStatus != 0)
-            {
-                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[SignalCore.GetActivationStatus];
-            }
-            else
-            {
-                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[noSignalIndex];
-            }
-        }
-
-        public void UpdateNeighboringDataAndSideMesh()
-        {
-            UpdateNeighboringData();
-            UpdateSideMesh();
-            UpdateActivationLED();
-        }
-
+        
         #region Blink
 
         //这里需要完全重做、但是优先级没有多高。

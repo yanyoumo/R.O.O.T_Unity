@@ -36,10 +36,69 @@ namespace ROOT
         public Dictionary<Vector2Int, BoardGirdCell> BoardGirds;
     }
     
+    public partial class Unit
+    {
+        //Board Only function
+        
+        internal void UpdateNeighboringData()
+        {
+            WorldNeighboringData = new Dictionary<RotationDirection, ConnectionData>();
+            if (GameBoard == null) return;
+            foreach (var currentSideDirection in RotationList)
+            {
+                var connectionData = new ConnectionData();
+
+                if (GetWorldSpaceUnitSide(currentSideDirection) == SideType.Connection)
+                {
+                    connectionData.HasConnector = true;
+                    var otherUnitPos = GetNeigbourCoord(currentSideDirection);
+                    GameBoard.UnitsGameObjects.TryGetValue(otherUnitPos, out var value);
+                    if (value != null)
+                    {
+                        var otherUnit = value.GetComponentInChildren<Unit>();
+                        connectionData.OtherUnit = otherUnit;
+                        connectionData.Connected =
+                            (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(currentSideDirection)) ==
+                             SideType.Connection);
+                        if (connectionData.Connected)
+                        {
+                            connectionData.ConnectedToGenre = otherUnit.UnitHardware;
+                        }
+                    }
+                }
+
+                WorldNeighboringData.Add(currentSideDirection, connectionData);
+            }
+        }
+        
+        internal void UpdateSideMesh()
+        {
+            if (WorldNeighboringData == null) return;
+            RotationList.ForEach(ResetConnector);
+            ConnectorLocalDir.Values.ForEach(val => val.Connected = false);
+            var ignoreVal = WorldCycler.TelemetryStage && !WorldCycler.TelemetryPause;
+            RotationList.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
+        }
+        
+        internal void UpdateActivationLED()
+        {
+            int noSignalIndex = UnitHardware == HardwareType.Core ? 1 : 0;
+            if (AnyConnection && SignalCore.GetActivationStatus != 0)
+            {
+                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[SignalCore.GetActivationStatus];
+            }
+            else
+            {
+                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[noSignalIndex];
+            }
+        }
+    }
+    
     public sealed class Board : MonoBehaviour
     {
-        public static WorldEvent.BoardUpdated BoardUpdatedEvent;
-        public static WorldEvent.BoardReady BoardReadyEvent;
+        public static WorldEvent.WorldTimingDelegate BoardShouldUpdateEvent;
+        public static WorldEvent.WorldTimingDelegate BoardUpdatedEvent;
+        public static WorldEvent.WorldTimingDelegate BoardReadyEvent;
 
         private BoardGirdDriver _boardGirdDriver;
         public Dictionary<Vector2Int, BoardGirdCell> BoardGirds { 
@@ -579,10 +638,10 @@ namespace ROOT
 
         public void UpdateBoardPostAnimation()
         {
-            foreach (var unit in Units)
+            /*foreach (var unit in Units)
             {
                 unit.UpdateNeighboringDataAndSideMesh();
-            }
+            }*/
         }
 
         public GameObject InitUnit(Vector2Int board_pos,SignalType signal,HardwareType genre,SideType[] sides,int Tier)
@@ -669,6 +728,7 @@ namespace ROOT
             CheckHeatSink(StageType.Shop);
             LFLocatorStatic = LFLocator;
             URLocatorStatic = URLocator;
+            BoardShouldUpdateEvent += FullyUpdateBoardData;
         }
 
         public Vector2Int[] GetAllEmptySpace()
@@ -715,7 +775,7 @@ namespace ROOT
             if (!CheckBoardPosValidAndFilled(From)) return false;
             UnitsGameObjects.TryGetValue(From, out GameObject go);
             UnitsGameObjects.Remove(From);
-            UpdateBoard();
+            //UpdateBoard();
             return DeliverUnitAssignedPlace(go, To);
         }
 
@@ -741,6 +801,7 @@ namespace ROOT
             return true;
         }
 
+        /*[Obsolete]
         public void UpdateBoard()
         {
             foreach (var unit in UnitsGameObjects)
@@ -749,7 +810,7 @@ namespace ROOT
                 var mUnit = unit.Value.GetComponentInChildren<Unit>();
                 mUnit.UpdateNeighboringDataAndSideMesh();
             }
-        }
+        }*/
 
         public bool SwapUnit(Vector2Int posA,Vector2Int posB)
         {
@@ -767,10 +828,10 @@ namespace ROOT
                 UnitsGameObjects.TryGetValue(posB, out GameObject goB);
                 UnitsGameObjects.Remove(posA);
                 UnitsGameObjects.Remove(posB);
-                UpdateBoard();
+                //UpdateBoard();
                 var resA=DeliverUnitAssignedPlace(goA, posB);
                 var resB=DeliverUnitAssignedPlace(goB, posA);
-                UpdateBoard();
+                //UpdateBoard();
                 return resA && resB;
             }
             else
@@ -796,7 +857,7 @@ namespace ROOT
                 UnitsGameObjects.Remove(pos);
                 //想办法需要在这儿调双个计分函数。
 
-                UpdateBoard();
+                //UpdateBoard();
                 return true;
             }
             destoryedCore = null;
@@ -813,7 +874,7 @@ namespace ROOT
                     destoryedCore = go.GetComponentInChildren<Unit>().UnitSignal;
                     Destroy(go);
                     UnitsGameObjects.Remove(pos);
-                    UpdateBoard();
+                    //UpdateBoard();
                     return true;
                 }
             }
@@ -869,18 +930,19 @@ namespace ROOT
 
         private int lastUnitsHashCode = 0;
 
-        private int UnitsHashCode
-        {
-            get
-            {
-                int res = 0;
-                foreach (var result in Units.Select(u=>u.GetHashCode()))
-                {
-                    res ^= result;
-                }
+        private int UnitsHashCode => Units.Select(u => u.GetHashCode()).Aggregate(0, (current, result) => current ^ result);
 
-                return res;
-            }
+        private void FullyUpdateBoardData()
+        {
+            //现在要假设所有场景内容全是错的，准备更新。
+            Units.ForEach(u => u.UpdateNeighboringData());
+            //至此所有Unit边界数据设置完成。
+            SignalMasterMgr.Instance.RefreshBoardAllSignalStrength(this);
+            //至此所有信号路径设置完成。
+            Units.ForEach(u => u.UpdateSideMesh());
+            Units.ForEach(u => u.UpdateActivationLED());
+            //至此所有单元提示灯具设置完成。
+            BoardUpdatedEvent?.Invoke();//发送完成信号。
         }
         
         private void Update()
@@ -890,15 +952,19 @@ namespace ROOT
             if (lastUnitsHashCode != hashCode)
             {
                 lastUnitsHashCode = hashCode;
-                //Debug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode);
-                SignalMasterMgr.Instance.RefreshBoardAllSignalStrength(this);
-                BoardUpdatedEvent?.Invoke();
+                Debug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode);
+                BoardShouldUpdateEvent?.Invoke();
             }
         }
 
         public IEnumerable<Unit> FindEndingUnit(SignalType signalType)
         {
             return Units.Where(u => u.NotBeingSignallyReferenced(signalType));
+        }
+
+        private void OnDestroy()
+        {
+            BoardShouldUpdateEvent -= FullyUpdateBoardData;
         }
     }
 }
