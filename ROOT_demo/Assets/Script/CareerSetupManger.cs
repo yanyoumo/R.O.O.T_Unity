@@ -22,7 +22,7 @@ namespace ROOT
         {
             if (toggleQueue.Count == 2) 
             {
-                Debug.Log("update signal");
+                RootDebug.Log("update signal", NameID.SuYuxuan_Log);
                 PlayingSignalTypeA = toggleQueue.Dequeue();
                 PlayingSignalTypeB = toggleQueue.Dequeue();
             }
@@ -54,7 +54,7 @@ namespace ROOT
 
         public void triggerToggleOn(String name) 
         {
-            Debug.Log("clicked " + name +" on.");
+            RootDebug.Log("clicked " + name + " on.", NameID.SuYuxuan_Log);
             addToSignalTypeQueue(_dict[name], additionalGameSetup.toggleQueue);
         }
 
@@ -62,7 +62,8 @@ namespace ROOT
         {
             if (additionalGameSetup.toggleQueue.Count != 0)
             {
-                Debug.Log("clicked " + name + " off.");
+                RootDebug.Log("clicked " + name + " off.",  NameID.SuYuxuan_Log);
+
                 removeFromSignalTypeQueue(_dict[name], additionalGameSetup.toggleQueue);
             }
         }
@@ -73,14 +74,14 @@ namespace ROOT
             {
                 turnOffToggle(removeType);
                 toggleQueue.Dequeue();
-                Debug.Log("remove " + removeType + ", and the queue size is " + toggleQueue.Count);
+                RootDebug.Log("remove " + removeType + ", and the queue size is " + toggleQueue.Count, NameID.SuYuxuan_Log);
             }
             if (toggleQueue.Contains(removeType)) 
             {
                 SignalType remainType = toggleQueue.Dequeue();
                 turnOffToggle(toggleQueue.Dequeue());
                 toggleQueue.Enqueue(remainType);
-                Debug.Log("remove " + removeType + ", keep " + remainType + " and the queue size is " + toggleQueue.Count);
+                RootDebug.Log("remove " + removeType + ", keep " + remainType + " and the queue size is " + toggleQueue.Count, NameID.SuYuxuan_Log);
             }
         }
 
@@ -90,16 +91,16 @@ namespace ROOT
             if (toggleQueue.Count < 2)
             {
                 toggleQueue.Enqueue(type);
-                Debug.Log("add " + type +" into queue.");
+                RootDebug.Log("add " + type +" into queue.", NameID.SuYuxuan_Log);
             }
             else 
             {
                 SignalType removeType = toggleQueue.Dequeue();
-                Debug.Log("remove " + removeType + " out of queue.");
+                RootDebug.Log("remove " + removeType + " out of queue.", NameID.SuYuxuan_Log);
                 turnOffToggle(removeType);
                 toggleQueue.Enqueue(type);
-                Debug.Log("add " + type + " into queue.");
-                Debug.Log("toggle queue length is  " + toggleQueue.Count);
+                RootDebug.Log("add " + type + " into queue.", NameID.SuYuxuan_Log);
+                RootDebug.Log("toggle queue length is  " + toggleQueue.Count, NameID.SuYuxuan_Log);
             }
         }
 
@@ -138,7 +139,7 @@ namespace ROOT
         {
             var actionAsset = LevelLib.Instance.CareerActionAssetList[sceneId];
             additionalGameSetup.updateSignal();
-            Debug.Log("the PlayingSignalType is " + additionalGameSetup.PlayingSignalTypeA + ", and " + additionalGameSetup.PlayingSignalTypeB);
+            RootDebug.Log("the PlayingSignalType is " + additionalGameSetup.PlayingSignalTypeA + ", and " + additionalGameSetup.PlayingSignalTypeB, NameID.SuYuxuan_Log);
             if (!additionalGameSetup.PlayingSignalTypeA.Equals(additionalGameSetup.PlayingSignalTypeB))
             {
                 actionAsset.AdditionalGameSetup = additionalGameSetup;
@@ -147,7 +148,7 @@ namespace ROOT
             }
             else 
             {
-                Debug.LogWarning("additionalGameSetup is not properly setup, player hasn't selected two cores");
+                RootDebug.Log("additionalGameSetup is not properly setup, player hasn't selected two cores", NameID.SuYuxuan_Log);
                 //need to add an animation or pop up in the UI to tell the player to correctly select cores
                 //Otherwise, the game should not proceed
                 uiPopup = GameObject.Find("UIPopup").GetComponent<UIPopup>();
