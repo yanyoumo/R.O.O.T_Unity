@@ -178,7 +178,8 @@ namespace ROOT
                 WorldCycler.TelemetryPause = true;
                 StartTelemetryCost();
             }
-            LevelAsset.SignalPanel.TelemetryPaused = WorldCycler.TelemetryPause;
+            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {TelemetryPaused = WorldCycler.TelemetryPause},};
+            MessageDispatcher.SendMessage(signalInfo);
         }
         private void DealTelemetryPauseBreaking()
         {
@@ -208,14 +209,19 @@ namespace ROOT
             //这个数据还得传过去。
             var targetInfoCount =
                 Mathf.RoundToInt(LevelAsset.ActionAsset.InfoCount * LevelAsset.ActionAsset.InfoTargetRatio);
-            LevelAsset.SignalPanel.SignalTarget = targetInfoCount;
 
             SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, LevelAsset.ActionAsset.InfoCount,
                 LevelAsset.ActionAsset.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
-            LevelAsset.SignalPanel.IsTelemetryStage = true;
             WorldCycler.TelemetryStage = true;
+            
+            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData()
+            {
+                InfoTarget = targetInfoCount,
+                IsTelemetryStage=WorldCycler.TelemetryStage,//
+            },};
+            MessageDispatcher.SendMessage(signalInfo);
         }
 
         private void TelemetryPauseAction()
@@ -249,7 +255,6 @@ namespace ROOT
         {
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
             LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
-            LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
             LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
         }
 

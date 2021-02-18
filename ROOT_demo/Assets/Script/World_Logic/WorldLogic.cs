@@ -253,6 +253,13 @@ namespace ROOT
         public override string Type { get; set; }
     }
     
+    public class CurrencyUpdatedInfo : RootMessageBase
+    {
+        public int IncomesVal = Int32.MaxValue;
+        public int CurrencyVal = Int32.MaxValue;
+        public override string Type => WorldEvent.Visual_Event.CurrencyUpdatedEvent;
+    }
+    
     public static class WorldEvent
     {
         /// <summary>
@@ -1073,14 +1080,6 @@ namespace ROOT
     //现为：WorldExecutor，主要是执行具体的内部逻辑；想象为舰长和执行舰长的感觉吧。
     public static class WorldExecutor //WORLD-EXECUTOR
     {
-        private static void ResetSignalPanel(ref GameAssets levelAsset)
-        {
-            levelAsset.SignalPanel.TgtNormalSignal = 0;
-            levelAsset.SignalPanel.TgtNetworkSignal = 0;
-            levelAsset.SignalPanel.CrtNormalSignal = 0;
-            levelAsset.SignalPanel.CrtNetworkSignal = 0;
-        }
-
         private static void UpdateLevelAsset(ref GameAssets levelAsset,ref FSMLevelLogic lvlLogic)
         {
             var lastStage = lvlLogic.PreviousRoundGist?.Type ?? StageType.Shop;
@@ -1135,11 +1134,22 @@ namespace ROOT
                 }
                 else
                 {
-                    levelAsset.SignalPanel.TgtNormalSignal = normalRval;
-                    levelAsset.SignalPanel.TgtNetworkSignal = networkRval;
+                    var signalInfo = new BoardSignalUpdatedInfo
+                    {
+                        SignalData = new BoardSignalUpdatedData()
+                        {
+                            TgtTypeASignal=normalRval,
+                            TgtTypeBSignal=networkRval,
+                        },
+                    };
+                    MessageDispatcher.SendMessage(signalInfo);
+                    
                     if (levelAsset.TimeLine.RequirementSatisfied)
                     {
-                        levelAsset.ReqOkCount++;
+                        if (roundGist.Type == StageType.Require)    
+                        {
+                            levelAsset.ReqOkCount++;
+                        }
                     }
                 }
             }
@@ -1164,11 +1174,18 @@ namespace ROOT
             {
                 levelAsset.TimeLine.RequirementSatisfied = (TypeASignalCount >= roundGist.normalReq) && (TypeBSignalCount >= roundGist.networkReq);
             }
-
-            levelAsset.SignalPanel.CrtNormalSignal = TypeASignalCount;
-            levelAsset.SignalPanel.CrtNetworkSignal = TypeBSignalCount;
-            levelAsset.SignalPanel.NetworkTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(SignalType.Scan, HardwareType.Field);
-            levelAsset.SignalPanel.NormalTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(SignalType.Matrix, HardwareType.Field);
+            
+            var signalInfo = new BoardSignalUpdatedInfo
+            {
+                SignalData = new BoardSignalUpdatedData()
+                {
+                    CrtTypeASignal = TypeASignalCount,
+                    CrtTypeBSignal = TypeBSignalCount,
+                    TypeATier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
+                    TypeBTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                },
+            };
+            MessageDispatcher.SendMessage(signalInfo);
         }
 
         //这里哪敢随便改成基于事件的啊；这里都是很看重时序的东西。
@@ -1404,9 +1421,8 @@ namespace ROOT
 
         internal static void UpdateBoardData_Instantly(ref GameAssets currentLevelAsset)
         {
-            //TODO 这里还要把playing什么的连进来
-            TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, currentLevelAsset.GameBoard,out var hardwareACount,out TypeASignalCount);
-            TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Scan, currentLevelAsset.GameBoard,out var hardwareBCount,out TypeBSignalCount);
+            TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, currentLevelAsset.GameBoard,out var hardwareACount,out TypeASignalCount);
+            TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, currentLevelAsset.GameBoard,out var hardwareBCount,out TypeBSignalCount);
 
             var inCome = 0;
             var cost = 0;
@@ -1436,10 +1452,8 @@ namespace ROOT
             {
                 currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
             }
-            if (currentLevelAsset.SignalPanel != null)
-            {
-                currentLevelAsset.SignalPanel.CrtMission = currentLevelAsset.ReqOkCount;
-            }
+            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {CrtMission = currentLevelAsset.ReqOkCount},};
+            MessageDispatcher.SendMessage(signalInfo);
         }
         
         public static void LightUpBoard(ref GameAssets currentLevelAsset,ControllingPack _ctrlPack)

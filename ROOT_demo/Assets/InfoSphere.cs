@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using com.ootii.Messages;
 using UnityEngine;
 
 namespace ROOT
@@ -59,7 +60,8 @@ namespace ROOT
                     if (WithInUnitExtend(gird, transform.position))
                     {
                         GameAsset.SignalInfo++;
-                        GameAsset.SignalPanel.SignalCounter = GameAsset.SignalInfo;
+                        var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {InfoCounter = GameAsset.SignalInfo},};
+                        MessageDispatcher.SendMessage(signalInfo);
                         GameAsset.GameBoard.SomeGridHasCollectedInfo(gird);
                         Destroy(gameObject);
                     }

@@ -29,20 +29,7 @@ namespace ROOT
             MessageDispatcher.RemoveListener(WorldEvent.Timing_Event.InGameStatusChangedEvent, RoundTypeChangedHandler);
         }
     }
-    
-    public class CurrencyUpdatedInfo : RootMessageBase
-    {
-        public int IncomesVal = Int32.MaxValue;
-        public int CurrencyVal = Int32.MaxValue;
-        public override string Type => CurrencyUpdatedEvent;
-    }
 
-    public class CurrencyInquiryInfo : RootMessageBase
-    {
-        public Func<CurrencyUpdatedInfo, bool> CallBack;
-        public override string Type => WorldEvent.Visual_Inquiry_Event.CurrencyInquiryEvent;
-    }
-    
     public class CostChart : RoundRelatedUIBase
     {
         public TextMeshPro Currency;

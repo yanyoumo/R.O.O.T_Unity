@@ -40,8 +40,6 @@ namespace ROOT.Signal
         //这个偶尔会报个Excp、到时候要看看。
         [ShowInInspector]
         public bool IsActiveMatrixFieldUnit => (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field) && IsUnitActive;
-
-        [ShowInInspector] public int Test => FindCertainSignalDiv_FlatSignal(SignalType.Matrix);
         
         public int FindCertainSignalDiv_FlatSignal(SignalType signalType)
         {

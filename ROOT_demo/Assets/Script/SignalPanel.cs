@@ -1,40 +1,42 @@
-﻿using com.ootii.Messages;
+﻿using System;
+using com.ootii.Messages;
 using ROOT.Message;
 using TMPro;
 using UnityEngine;
 
 namespace ROOT
 {
-    public struct BoardSignalUpdatedData
+    public class BoardSignalUpdatedData
     {
-        public bool IsTelemetryStage;
-        public bool TelemetryPaused;
-        public int _crtNormalSignal;
-        public int _tgtNormalSignal;
-        public int _crtNetworkSignal;
-        public int _tgtNetworkSignal;
-        public int _crtMission;
-        public int _tgtMission;
-        public int _normalTier;
-        public int _networkTier;
-        public int _signalCounter;
-        public int _signalTarget;
+        public bool IsTelemetryStage = false;
+        public bool TelemetryPaused = false;
+
+        public int CrtTypeASignal = Int32.MaxValue;
+        public int TgtTypeASignal = Int32.MaxValue;
+        public int CrtTypeBSignal = Int32.MaxValue;
+        public int TgtTypeBSignal = Int32.MaxValue;
+        public int CrtMission = Int32.MaxValue;
+        public int TgtMission = Int32.MaxValue;
+        public int TypeATier = Int32.MaxValue;
+        public int TypeBTier = Int32.MaxValue;
+        public int InfoCounter = Int32.MaxValue;
+        public int InfoTarget = Int32.MaxValue;
     }
-    
+
     public class BoardSignalUpdatedInfo : RootMessageBase
     {
-        private BoardSignalUpdatedData data;
+        public BoardSignalUpdatedData SignalData;
         public override string Type => WorldEvent.Visual_Event.BoardSignalUpdatedEvent;
     }
     
     public class SignalPanel : RoundRelatedUIBase
     {
-
         private void BoardSignalUpdatedHandler(IMessage rmMessage)
         {
             if (rmMessage is BoardSignalUpdatedInfo info)
             {
-                
+                UpdateCachedData(info.SignalData);
+                UpdateNumbersCore();
             }
         }
         
@@ -42,8 +44,7 @@ namespace ROOT
         {
             base.Awake();
             MessageDispatcher.AddListener(WorldEvent.Visual_Event.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
-            IsTelemetryStage = false;
-            TelemetryPaused = false;
+            cachedData = new BoardSignalUpdatedData();
         }
 
         protected override void OnDestroy()
@@ -52,35 +53,33 @@ namespace ROOT
             MessageDispatcher.RemoveListener(WorldEvent.Visual_Event.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
         }
 
-        private bool _isTelemetryStage;
-
-        public bool IsTelemetryStage
+        private void UpdatePauseTag(bool _telemetryPaused,bool _istelemetryStage)
         {
-            set
+            PausedTag.enabled = _telemetryPaused && _istelemetryStage;
+        }
+
+        private void UpdateIsTelemetry(bool _istelemetryStage)
+        {
+            if (_istelemetryStage)
             {
-                _isTelemetryStage = value;
-                if (_isTelemetryStage)
-                {
-                    NormalSignal.enabled = false;
-                    NetworkSignal.enabled = false;
-                    MissionTarget.enabled = false;
-                    NormalTierText.enabled = false;
-                    NetworkTierText.enabled = false;
-                    MissionTarget_Big.enabled = true;
-                    SignalText.enabled = true;
-                }
-                else
-                {
-                    NormalSignal.enabled = true;
-                    NetworkSignal.enabled = true;
-                    MissionTarget.enabled = true;
-                    NormalTierText.enabled = true;
-                    NetworkTierText.enabled = true;
-                    MissionTarget_Big.enabled = false;
-                    SignalText.enabled = false;
-                }
+                NormalSignal.enabled = false;
+                NetworkSignal.enabled = false;
+                MissionTarget.enabled = false;
+                NormalTierText.enabled = false;
+                NetworkTierText.enabled = false;
+                MissionTarget_Big.enabled = true;
+                SignalText.enabled = true;
             }
-            get => _isTelemetryStage;
+            else
+            {
+                NormalSignal.enabled = true;
+                NetworkSignal.enabled = true;
+                MissionTarget.enabled = true;
+                NormalTierText.enabled = true;
+                NetworkTierText.enabled = true;
+                MissionTarget_Big.enabled = false;
+                SignalText.enabled = false;
+            }
         }
 
         public TextMeshPro NormalSignal;
@@ -93,145 +92,42 @@ namespace ROOT
         public TextMeshPro SignalText;
         public TextMeshPro PausedTag;
 
-        public bool TelemetryPaused
-        {
-            set => PausedTag.enabled = value&& _isTelemetryStage;
-        }
-
-        private int _crtNormalSignal;
-        public int CrtNormalSignal
-        {
-            set
-            {
-                _crtNormalSignal = value;
-                UpdateNumbers();
-            }
-            get => _crtNormalSignal;
-        }
-
-        private int _tgtNormalSignal;
-        public int TgtNormalSignal
-        {
-            set
-            {
-                _tgtNormalSignal = value;
-                UpdateNumbers();
-            }
-            get => _tgtNormalSignal;
-        }
-
-        private int _crtNetworkSignal;
-        public int CrtNetworkSignal
-        {
-            set
-            {
-                _crtNetworkSignal = value;
-                UpdateNumbers();
-            }
-            get => _crtNetworkSignal;
-        }
-
-        private int _tgtNetworkSignal;
-        public int TgtNetworkSignal
-        {
-            set
-            {
-                _tgtNetworkSignal = value;
-                UpdateNumbers();
-            }
-            get => _tgtNetworkSignal;
-        }
-        
-        private int _crtMission;
-        public int CrtMission
-        {
-            set
-            {
-                _crtMission = value;
-                UpdateNumbers();
-            }
-            get => _crtMission;
-        }
-
-        private int _tgtMission;
-        public int TgTtMission
-        {
-            set
-            {
-                _tgtMission = value;
-                UpdateNumbers();
-            }
-            get => _tgtMission;
-        }
-
-        private int _normalTier;
-        public int NormalTier
-        {
-            get => _normalTier;
-            set
-            {
-                _normalTier = value;
-                UpdateNumbers();
-            }
-        }
-
-        private int _networkTier;
-        public int NetworkTier
-        {
-            get => _networkTier;
-            set
-            {
-                _networkTier = value;
-                UpdateNumbers();
-            }
-        }
-
-        private int _signalCounter;
-        public int SignalCounter
-        {
-            get => _signalCounter;
-            set
-            {
-                _signalCounter = value;
-                UpdateNumbers();
-            }
-        }
-
-        private int _signalTarget;
-        public int SignalTarget
-        {
-            get => _signalTarget;
-            set
-            {
-                _signalTarget = value;
-                UpdateNumbers();
-            }
-        }
-
         private string Padding(int v)
         {
             return Utils.PaddingNum2Digit(v);
         }
 
-        private void UpdateNumbers()
+        private BoardSignalUpdatedData cachedData;//这种缓存机制还是得有。
+
+        private void UpdateCachedData(BoardSignalUpdatedData inComingData)
         {
-            UpdateNumbersCore(_crtNormalSignal,_tgtNormalSignal,_tgtNetworkSignal,
-                _crtNetworkSignal,_crtMission,_normalTier,_networkTier,_signalCounter,_signalTarget);
+            cachedData.TelemetryPaused = inComingData.TelemetryPaused;
+            cachedData.IsTelemetryStage = inComingData.IsTelemetryStage;
+
+            if (inComingData.CrtTypeASignal != Int32.MaxValue) cachedData.CrtTypeASignal = inComingData.CrtTypeASignal;
+            if (inComingData.TgtTypeASignal != Int32.MaxValue) cachedData.TgtTypeASignal = inComingData.TgtTypeASignal;
+            if (inComingData.CrtTypeBSignal != Int32.MaxValue) cachedData.CrtTypeBSignal = inComingData.CrtTypeBSignal;
+            if (inComingData.TgtTypeBSignal != Int32.MaxValue) cachedData.TgtTypeBSignal = inComingData.TgtTypeBSignal;
+            if (inComingData.CrtMission != Int32.MaxValue) cachedData.CrtMission = inComingData.CrtMission;
+            if (inComingData.TgtMission != Int32.MaxValue) cachedData.TgtMission = inComingData.TgtMission;
+            if (inComingData.TypeATier != Int32.MaxValue) cachedData.TypeATier = inComingData.TypeATier;
+            if (inComingData.TypeBTier != Int32.MaxValue) cachedData.TypeBTier = inComingData.TypeBTier;
+            if (inComingData.InfoCounter != Int32.MaxValue) cachedData.InfoCounter = inComingData.InfoCounter;
+            if (inComingData.InfoTarget != Int32.MaxValue) cachedData.InfoTarget = inComingData.InfoTarget;
         }
 
-        private void UpdateNumbersCore(
-            int crtNormalSignal, int tgtNormalSignal, int tgtNetworkSignal,
-            int crtNetworkSignal, int crtMission
-            , int normalTier, int networkTier, 
-            int signalCounter, int signalTarget)
+        private void UpdateNumbersCore()
         {
-            NormalSignal.text = Padding(crtNormalSignal) + "/" + Padding(tgtNormalSignal);
-            NetworkSignal.text = Padding(crtNetworkSignal) + "/" + Padding(tgtNetworkSignal);
-            MissionTarget.text = "[" + Padding(crtMission) + "]";
-            MissionTarget_Big.text = "[" + Padding(crtMission) + "]";
-            NormalTierText.text = "["+ Padding(normalTier) + "]";
-            NetworkTierText.text = "[" + Padding(networkTier) + "]";
-            SignalText.text = Utils.PaddingNum4Digit(signalCounter) + "/" + Utils.PaddingNum4Digit(signalTarget);
+            NormalSignal.text = Padding(cachedData.CrtTypeASignal) + "/" + Padding(cachedData.TgtTypeASignal);
+            NetworkSignal.text = Padding(cachedData.CrtTypeBSignal) + "/" + Padding(cachedData.TgtTypeBSignal);
+            MissionTarget.text = "[" + Padding(cachedData.CrtMission) + "]";
+            MissionTarget_Big.text = "[" + Padding(cachedData.CrtMission) + "]";
+            NormalTierText.text = "[" + Padding(cachedData.TypeATier) + "]";
+            NetworkTierText.text = "[" + Padding(cachedData.TypeBTier) + "]";
+            SignalText.text = Utils.PaddingNum4Digit(cachedData.InfoCounter) + "/" + Utils.PaddingNum4Digit(cachedData.InfoTarget);
+
+            UpdateIsTelemetry(cachedData.IsTelemetryStage);
+            UpdatePauseTag(cachedData.TelemetryPaused,cachedData.IsTelemetryStage);
         }
     }
 }

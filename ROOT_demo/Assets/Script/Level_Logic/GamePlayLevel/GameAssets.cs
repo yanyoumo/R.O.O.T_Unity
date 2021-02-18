@@ -47,7 +47,6 @@ namespace ROOT
         public HintMaster HintMaster;
         public TimeLine TimeLine;
         public SignalType? DestoryedCoreType;
-        public SignalPanel SignalPanel;
         public InfoAirdrop AirDrop;
         public int ReqOkCount;
         public int SignalInfo;
