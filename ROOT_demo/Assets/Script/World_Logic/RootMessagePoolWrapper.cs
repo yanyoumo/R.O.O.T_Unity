@@ -11,8 +11,16 @@ namespace ROOT.Message
 {
     public abstract class RootMessageBase : IMessage
     {
-        public abstract string Type { get; set; }
-        public abstract float Delay { get; set; }
+        public virtual string Type
+        {
+            get => "";
+            set{}
+        }
+        public virtual float Delay
+        {
+            get => 0.0f;
+            set{}
+        }
         
         
         protected object mSender = null;

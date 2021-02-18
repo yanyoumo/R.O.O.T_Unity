@@ -46,9 +46,6 @@ namespace ROOT
         public DataScreen DataScreen;
         public HintMaster HintMaster;
         public TimeLine TimeLine;
-        public CostLine CostLine;
-        [Obsolete]
-        public CostChart CostChart;
         public SignalType? DestoryedCoreType;
         public SignalPanel SignalPanel;
         public InfoAirdrop AirDrop;
@@ -90,8 +87,8 @@ namespace ROOT
         //CoreFunctionFlag
         public bool InputEnabled = true;
         public bool CurrencyEnabled = true;
-        public bool CurrencyIOEnabled = true;
-        public bool CurrencyIncomeEnabled = true;
+        public bool BoardCouldIOCurrency = true;
+        public bool UnitCouldGenerateIncome = true;
         
         //FeatureFunctionFlag
         public bool CursorEnabled = true;
@@ -126,8 +123,8 @@ namespace ROOT
         {
             InputEnabled = true;
             CursorEnabled = true;
-            CurrencyIOEnabled = true;
-            CurrencyIncomeEnabled = true;
+            BoardCouldIOCurrency = true;
+            UnitCouldGenerateIncome = true;
             RotateEnabled = true;
             ShopEnabled = true;
             SkillEnabled = true;
@@ -141,8 +138,8 @@ namespace ROOT
         {
             InputEnabled = false;
             CursorEnabled = false;
-            CurrencyIOEnabled = false;
-            CurrencyIncomeEnabled = false;
+            BoardCouldIOCurrency = false;
+            UnitCouldGenerateIncome = false;
             RotateEnabled = false;
             ShopEnabled = false;
             SkillEnabled = false;

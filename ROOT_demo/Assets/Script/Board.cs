@@ -39,8 +39,7 @@ namespace ROOT
     
     public partial class Unit
     {
-        //Board Only function
-        
+        //Board Only function(s)
         internal void UpdateNeighboringData()
         {
             WorldNeighboringData = new Dictionary<RotationDirection, ConnectionData>();
@@ -97,10 +96,6 @@ namespace ROOT
     
     public sealed class Board : MonoBehaviour
     {
-        /*public static WorldEvent.WorldTimingDelegate BoardShouldUpdateEvent;
-        public static WorldEvent.WorldTimingDelegate BoardUpdatedEvent;
-        public static WorldEvent.WorldTimingDelegate BoardReadyEvent;*/
-
         private BoardGirdDriver _boardGirdDriver;
         public Dictionary<Vector2Int, BoardGirdCell> BoardGirds { 
             get=>_boardGirdDriver.BoardGirds; 
@@ -934,6 +929,8 @@ namespace ROOT
 
         private int UnitsHashCode => Units.Select(u => u.GetHashCode()).Aggregate(0, (current, result) => current ^ result);
 
+        private int GridHashCode => BoardGirds.Aggregate(0, (current, val) => current ^ (val.Key.GetHashCode() ^ val.Value.CellStatus.GetHashCode()));
+
         private void FullyUpdateBoardData(IMessage rMessage)
         {
             //现在要假设所有场景内容全是错的，准备更新。
@@ -945,13 +942,13 @@ namespace ROOT
             Units.ForEach(u => u.UpdateActivationLED());
             //至此所有单元提示灯具设置完成。
             MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent);
-            MessageDispatcher.SendMessage(WorldEvent.Visual_Event.BoardGridHintUpdateEvent);
         }
         
         private void Update()
         {
+            //这里的实现现在有点儿“鲁”，但是这里只有一个目的，就是需要让让派生数据随着锚点数据更新而更新。
             //这里面需要搞一个BoardUnitsHash的那个东西、如果改了那么就触发RefreshSignalStrength
-            var hashCode = UnitsHashCode;
+            var hashCode = UnitsHashCode ^ GridHashCode;
             if (lastUnitsHashCode != hashCode)
             {
                 lastUnitsHashCode = hashCode;

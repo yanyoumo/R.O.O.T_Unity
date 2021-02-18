@@ -6,6 +6,7 @@ using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 using com.ootii.Messages;
+using ROOT.Message;
 using static ROOT.WorldEvent;
 
 namespace ROOT
@@ -176,36 +177,51 @@ namespace ROOT
         
         private void SetText(int number)
         {
-            //TODO 这里还需要现有流程的状态。
-            if (number == 0)
+            if (!_boardCouldIOCurrency)
             {
-                if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
-                {
-                    CashingText.color = NeutralCashColoring;
-                    CashingText.text = "+00";
-                    return;
-                }
-
-                if (_cellStatus == CellStatus.Warning)
-                {
-                    CashingText.color = NegativeCashColoring;
-                    CashingText.text = "+00";
-                }
-                else
-                {
-                    CashingText.color = PositiveCashColoring;
-                    CashingText.text = "+00";
-                }
-            }
-            else if (number > 0)
-            {
-                CashingText.color = PositiveCashColoring;
-                CashingText.text = "+" + Utils.PaddingNum2Digit(number);
+                CashingText.color = NeutralCashColoring;
+                CashingText.text = "---";
             }
             else
             {
-                CashingText.color = NegativeCashColoring;
-                CashingText.text = "-" + Utils.PaddingNum2Digit(Math.Abs(number));
+                if (_unitCouldGenerateIncome)
+                {
+                    if (number == 0)
+                    {
+                        if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
+                        {
+                            CashingText.color = NeutralCashColoring;
+                            CashingText.text = "+00";
+                            return;
+                        }
+    
+                        if (_cellStatus == CellStatus.Warning)
+                        {
+                            CashingText.color = NegativeCashColoring;
+                            CashingText.text = "+00";
+                        }
+                        else
+                        {
+                            CashingText.color = PositiveCashColoring;
+                            CashingText.text = "+00";
+                        }
+                    }
+                    else if (number > 0)
+                    {
+                        CashingText.color = PositiveCashColoring;
+                        CashingText.text = "+" + Utils.PaddingNum2Digit(number);
+                    }
+                    else
+                    {
+                        CashingText.color = NegativeCashColoring;
+                        CashingText.text = "-" + Utils.PaddingNum2Digit(Math.Abs(number));
+                    }
+                }
+                else
+                {
+                    CashingText.color = NegativeCashColoring;
+                    CashingText.text = "-" + Utils.PaddingNum2Digit(Math.Abs(number));
+                }
             }
         }
 
@@ -220,22 +236,25 @@ namespace ROOT
         private void TextToggle()
         {
             //RISK 如果真是Toggle的话、那么还针对随着单元移动而修改位置。到是姑且可以写在Update里面。
+            //现在认为_stageType状态是能够正常更新了。
             //就相当浪费、但是目前也没有很好的办法。
             CashingText.enabled = !CashingText.enabled;
             SetText(GetCashIO());
         }
 
-        private void BoardGridHintUpdate(IMessage rmessage)
+        private bool _boardCouldIOCurrency;
+        private bool _unitCouldGenerateIncome;
+
+        private void CurrencyIOStatusChangedEventHandler(IMessage rmessage)
         {
-            
+            if (rmessage is TimingEventInfo info)
+            {
+                _boardCouldIOCurrency = info.BoardCouldIOCurrencyData;
+                _unitCouldGenerateIncome = info.UnitCouldGenerateIncomeData;
+            }
         }
         
-        /*private void TestA(IMessage rmessage)
-        {
-            Debug.Log("TestA");
-        }*/
-        
-        void Awake()
+        protected void Awake()
         {
             BoardStrokeMesh.material.color = NormalStrokeColor;
             _cellStatus = CellStatus.Normal;
@@ -254,13 +273,13 @@ namespace ROOT
 
             CashingText.color = NeutralCashColoring;
             CashingText.enabled = false;
-
-            MessageDispatcher.AddListener(Visual_Event.BoardGridHintUpdateEvent, BoardGridHintUpdate);
+            
+            MessageDispatcher.AddListener(Timing_Event.CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
         }
 
-        private void OnDestroy()
+        protected void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(Visual_Event.BoardGridHintUpdateEvent, BoardGridHintUpdate);
+            MessageDispatcher.RemoveListener(Timing_Event.CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
         }
     }
 }

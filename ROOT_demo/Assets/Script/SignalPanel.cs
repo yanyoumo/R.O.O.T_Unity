@@ -1,17 +1,57 @@
-﻿using TMPro;
+﻿using com.ootii.Messages;
+using ROOT.Message;
+using TMPro;
 using UnityEngine;
 
 namespace ROOT
 {
-    public class SignalPanel : MonoBehaviour
+    public struct BoardSignalUpdatedData
     {
-        public void Awake()
+        public bool IsTelemetryStage;
+        public bool TelemetryPaused;
+        public int _crtNormalSignal;
+        public int _tgtNormalSignal;
+        public int _crtNetworkSignal;
+        public int _tgtNetworkSignal;
+        public int _crtMission;
+        public int _tgtMission;
+        public int _normalTier;
+        public int _networkTier;
+        public int _signalCounter;
+        public int _signalTarget;
+    }
+    
+    public class BoardSignalUpdatedInfo : RootMessageBase
+    {
+        private BoardSignalUpdatedData data;
+        public override string Type => WorldEvent.Visual_Event.BoardSignalUpdatedEvent;
+    }
+    
+    public class SignalPanel : RoundRelatedUIBase
+    {
+
+        private void BoardSignalUpdatedHandler(IMessage rmMessage)
         {
+            if (rmMessage is BoardSignalUpdatedInfo info)
+            {
+                
+            }
+        }
+        
+        protected override void Awake()
+        {
+            base.Awake();
+            MessageDispatcher.AddListener(WorldEvent.Visual_Event.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
             IsTelemetryStage = false;
             TelemetryPaused = false;
         }
 
-        [HideInInspector]
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            MessageDispatcher.RemoveListener(WorldEvent.Visual_Event.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
+        }
+
         private bool _isTelemetryStage;
 
         public bool IsTelemetryStage
@@ -175,13 +215,23 @@ namespace ROOT
 
         private void UpdateNumbers()
         {
-            NormalSignal.text = Padding(_crtNormalSignal) + "/" + Padding(_tgtNormalSignal);
-            NetworkSignal.text = Padding(_crtNetworkSignal) + "/" + Padding(_tgtNetworkSignal);
-            MissionTarget.text = "[" + Padding(_crtMission) + "]";
-            MissionTarget_Big.text = "[" + Padding(_crtMission) + "]";
-            NormalTierText.text = "["+ Padding(_normalTier) + "]";
-            NetworkTierText.text = "[" + Padding(_networkTier) + "]";
-            SignalText.text = Utils.PaddingNum4Digit(_signalCounter) + "/" + Utils.PaddingNum4Digit(_signalTarget);
+            UpdateNumbersCore(_crtNormalSignal,_tgtNormalSignal,_tgtNetworkSignal,
+                _crtNetworkSignal,_crtMission,_normalTier,_networkTier,_signalCounter,_signalTarget);
+        }
+
+        private void UpdateNumbersCore(
+            int crtNormalSignal, int tgtNormalSignal, int tgtNetworkSignal,
+            int crtNetworkSignal, int crtMission
+            , int normalTier, int networkTier, 
+            int signalCounter, int signalTarget)
+        {
+            NormalSignal.text = Padding(crtNormalSignal) + "/" + Padding(tgtNormalSignal);
+            NetworkSignal.text = Padding(crtNetworkSignal) + "/" + Padding(tgtNetworkSignal);
+            MissionTarget.text = "[" + Padding(crtMission) + "]";
+            MissionTarget_Big.text = "[" + Padding(crtMission) + "]";
+            NormalTierText.text = "["+ Padding(normalTier) + "]";
+            NetworkTierText.text = "[" + Padding(networkTier) + "]";
+            SignalText.text = Utils.PaddingNum4Digit(signalCounter) + "/" + Utils.PaddingNum4Digit(signalTarget);
         }
     }
 }

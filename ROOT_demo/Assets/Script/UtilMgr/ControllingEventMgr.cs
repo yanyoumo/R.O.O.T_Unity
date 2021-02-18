@@ -31,18 +31,8 @@ namespace ROOT
         {
             return actPack.ActionID == actionID;
         }
-
-        public override string Type
-        {
-            get => WorldEvent.ControllingEvent;
-            set{}
-        }
         
-        public override float Delay
-        {
-            get => 0.0f;
-            set{}
-        }
+        public override string Type => WorldEvent.ControllingEvent;
     }
 
     //这个类的实例化和相关初始化已经搞定。

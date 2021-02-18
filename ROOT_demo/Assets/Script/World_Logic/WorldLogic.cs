@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using com.ootii.Messages;
 using ROOT.Message;
 using ROOT.Signal;
 using Sirenix.Utilities;
@@ -243,14 +244,41 @@ namespace ROOT
         }
     }
 
+    //这个是一些对时事件的总Payload；
+    public class TimingEventInfo : RootMessageBase
+    {
+        public StageType CurrentStageType;
+        public bool BoardCouldIOCurrencyData;
+        public bool UnitCouldGenerateIncomeData;
+        public override string Type { get; set; }
+    }
+    
     public static class WorldEvent
     {
+        /// <summary>
+        /// 这里是一些干线对时事件、属于核心广播事件；调整和修改要比较注意。
+        /// </summary>
+        public static class Timing_Event
+        {
+            public static string InGameStatusChangedEvent = "InGameStatusChangedEvent";
+            public static string CurrencyIOStatusChangedEvent = "CurrencyIOStatusChangedEvent";
+        }
+        
         /// <summary>
         /// 这里主要是一些不需要回调的事件，主要是一些实时数据更新等等。
         /// </summary>
         public static class Visual_Event
         {
-            public static string BoardGridHintUpdateEvent = "BoardGridHintUpdateEvent";
+            public static string CurrencyUpdatedEvent = "CurrencyUpdatedEvent";
+            public static string BoardSignalUpdatedEvent = "BoardSignalUpdatedEvent";
+        }
+        
+        /// <summary>
+        /// 主要是UI方面的事件、主要是可以向核心逻辑调查一些数据；可以放一个回调函数。
+        /// </summary>
+        public static class Visual_Inquiry_Event
+        {
+            public static string CurrencyInquiryEvent = "CurrencyInquiryEvent";
         }
         
         public static string BoardShouldUpdateEvent = "BoardShouldUpdateEvent";
@@ -1089,12 +1117,13 @@ namespace ROOT
             {
                 levelAsset.GameBoard.UpdatePatternID();
             }
+
             UpdateLevelAsset(ref levelAsset, ref levelAsset.Owner);
-            
+
             levelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
-            levelAsset.CurrencyIncomeEnabled = lvlLogic.IsRequireRound;
-            levelAsset.CurrencyIOEnabled =lvlLogic.ShouldCurrencyIo;
-            
+            levelAsset.UnitCouldGenerateIncome = lvlLogic.IsRequireRound;
+            levelAsset.BoardCouldIOCurrency = lvlLogic.BoardCouldIOCurrency;
+
             if (lvlLogic.IsRequireRound || lvlLogic.IsShopRound)
             {
                 var normalRval = roundGist.normalReq;
@@ -1114,6 +1143,7 @@ namespace ROOT
                     }
                 }
             }
+
             var discount = 0;
 
             if (!levelAsset.Shop.ShopOpening && lvlLogic.IsShopRound)
@@ -1363,12 +1393,16 @@ namespace ROOT
         // ReSharper disable once InconsistentNaming
         public static void UpdateUICurrencyVal(GameAssets currentLevelAsset)
         {
-            if (currentLevelAsset.CostChart == null) return;
-            currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
+            var message = new CurrencyUpdatedInfo()
+            {
+                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency()),
+                IncomesVal = -1,
+            };
+            MessageDispatcher.SendMessage(message);
         }
 
 
-        internal static void UpdateBoardData_Instance(ref GameAssets currentLevelAsset)
+        internal static void UpdateBoardData_Instantly(ref GameAssets currentLevelAsset)
         {
             //TODO 这里还要把playing什么的连进来
             TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(SignalType.Matrix, currentLevelAsset.GameBoard,out var hardwareACount,out TypeASignalCount);
@@ -1378,28 +1412,22 @@ namespace ROOT
             var cost = 0;
 
             var tmpInComeM = TypeASignalScore + TypeBSignalScore;
-            if (currentLevelAsset.CurrencyIOEnabled)
+            if (currentLevelAsset.BoardCouldIOCurrency)
             {
                 inCome += Mathf.FloorToInt(tmpInComeM);
                 inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
-                //TEMP 现在只有热力消耗。
-                if (!currentLevelAsset.CurrencyIncomeEnabled)
-                {
-                    //现在在红色区间没有任何价格收入。靠谱吗？
-                    inCome = 0;
-                }
-
+                if (!currentLevelAsset.UnitCouldGenerateIncome) inCome = 0;
                 cost = currentLevelAsset.GameBoard.heatSinkCost;
             }
 
             currentLevelAsset.DeltaCurrency = inCome - cost;
 
-            if (currentLevelAsset.CostChart != null)
+            var message = new CurrencyUpdatedInfo()
             {
-                currentLevelAsset.CostChart.Active = currentLevelAsset.CurrencyIOEnabled;
-                currentLevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency());
-                currentLevelAsset.CostChart.IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency);
-            }
+                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency()),
+                IncomesVal =  Mathf.RoundToInt(currentLevelAsset.DeltaCurrency),
+            };
+            MessageDispatcher.SendMessage(message);
         }
 
         internal static void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)

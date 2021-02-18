@@ -227,10 +227,13 @@ namespace ROOT
 
         protected override void AdditionalInitLevel()
         {
-            if (LevelAsset.CostChart != null)
+            var message = new CurrencyUpdatedInfo()
             {
-                LevelAsset.CostChart.CurrencyVal = Mathf.RoundToInt(LevelAsset.GameStateMgr.GetCurrency());
-            }
+                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameStateMgr.GetCurrency()),
+                IncomesVal = 0,
+            };
+            MessageDispatcher.SendMessage(message);
+            
             if (LevelAsset.ActionAsset.RoundDatas.Length > 0)
             {
                 //这个东西放在这里还是怎么着？就先这样吧。
@@ -247,9 +250,7 @@ namespace ROOT
         protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
         {
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
-            LevelAsset.CostLine = FindObjectOfType<CostLine>();
             LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
-            LevelAsset.CostChart = FindObjectOfType<CostChart>();
             LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
             LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
         }
@@ -279,6 +280,19 @@ namespace ROOT
             if (RoundGist.HasValue)
             {
                 WorldExecutor.UpdateRoundData_Stepped(ref LevelAsset);
+                var timingEvent = new TimingEventInfo
+                {
+                    Type = WorldEvent.Timing_Event.InGameStatusChangedEvent,
+                    CurrentStageType=RoundGist.Value.Type,
+                };
+                var timingEvent2 = new TimingEventInfo
+                {
+                    Type = WorldEvent.Timing_Event.CurrencyIOStatusChangedEvent,
+                    BoardCouldIOCurrencyData = BoardCouldIOCurrency,
+                    UnitCouldGenerateIncomeData = IsRequireRound,
+                };
+                MessageDispatcher.SendMessage(timingEvent);
+                MessageDispatcher.SendMessage(timingEvent2);
             }
         }
 

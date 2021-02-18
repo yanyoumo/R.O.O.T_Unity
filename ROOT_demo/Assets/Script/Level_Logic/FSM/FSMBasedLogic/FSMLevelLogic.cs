@@ -5,6 +5,7 @@ using com.ootii.Messages;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static ROOT.WorldEvent;
 
 namespace ROOT
 {
@@ -64,7 +65,7 @@ namespace ROOT
         public bool IsRequireRound => Stage == StageType.Require;
         public bool IsDestoryerRound => Stage == StageType.Destoryer;
         public bool IsSkillAllowed => !IsShopRound;
-        public bool ShouldCurrencyIo => (IsRequireRound || IsDestoryerRound);
+        public bool BoardCouldIOCurrency => (IsRequireRound || IsDestoryerRound);
         private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
         public bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in movedTile, in movedCursor);
         private bool ShouldStartAnimate => ShouldCycle;
@@ -427,7 +428,22 @@ namespace ROOT
 
         protected virtual void BoardUpdatedHandler(IMessage rMessage)
         {
-            WorldExecutor.UpdateBoardData_Instance(ref LevelAsset);
+            //TODO 主要是这里、要不要再解耦。
+            WorldExecutor.UpdateBoardData_Instantly(ref LevelAsset);
+        }
+        
+        private void CurrencyInquiryHandler(IMessage rMessage)
+        {
+            if(rMessage is CurrencyInquiryInfo info)
+            {
+                WorldExecutor.UpdateBoardData_Instantly(ref LevelAsset);
+                var message = new CurrencyUpdatedInfo()
+                {
+                    CurrencyVal = Mathf.RoundToInt(LevelAsset.GameStateMgr.GetCurrency()),
+                    IncomesVal =  Mathf.RoundToInt(LevelAsset.DeltaCurrency),
+                };
+                info.CallBack(message);
+            }
         }
         
         private void Awake()
@@ -444,7 +460,8 @@ namespace ROOT
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
             _actionDriver = new CareerControlActionDriver(this, _mainFSM);
 
-            MessageDispatcher.AddListener(WorldEvent.BoardUpdatedEvent, BoardUpdatedHandler);
+            MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
+            MessageDispatcher.AddListener(Visual_Inquiry_Event.CurrencyInquiryEvent, CurrencyInquiryHandler);
         }
         private void Update()
         {
@@ -463,7 +480,8 @@ namespace ROOT
 
         private void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.BoardUpdatedEvent, BoardUpdatedHandler);
+            MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
+            MessageDispatcher.RemoveListener(Visual_Inquiry_Event.CurrencyInquiryEvent, CurrencyInquiryHandler);
             _actionDriver.unsubscribe();
             _actionDriver = null;
         }
