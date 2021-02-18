@@ -29,6 +29,36 @@ namespace ROOT
         CleanUp,//将所有FSM的类数据重置、并且是FSM流程等待一帧的充分条件。
         COUNT,//搁在最后、计数的。
     }
+
+    public sealed class FSMEventInquiryResponder
+    {
+        private FSMLevelLogic owner;
+        
+        private void CurrencyInquiryHandler(IMessage rMessage)
+        {
+            if(rMessage is CurrencyInquiryInfo info)
+            {
+                WorldExecutor.UpdateBoardData_Instantly(ref owner.LevelAsset);
+                var message = new CurrencyUpdatedInfo()
+                {
+                    CurrencyVal = Mathf.RoundToInt(owner.LevelAsset.GameStateMgr.GetCurrency()),
+                    IncomesVal =  Mathf.RoundToInt(owner.LevelAsset.DeltaCurrency),
+                };
+                info.CallBack(message);
+            }
+        }
+        
+        public FSMEventInquiryResponder(FSMLevelLogic _owner)
+        {
+            owner = _owner;
+            MessageDispatcher.AddListener(Visual_Inquiry_Event.CurrencyInquiryEvent, CurrencyInquiryHandler);
+        }
+        
+        ~FSMEventInquiryResponder()
+        {
+            MessageDispatcher.RemoveListener(Visual_Inquiry_Event.CurrencyInquiryEvent, CurrencyInquiryHandler);
+        }
+    }
     
     //里面不同的类型可以使用partial关键字拆开管理。
     public abstract class FSMLevelLogic:MonoBehaviour   //LEVEL-LOGIC/每一关都有一个这个类。
@@ -431,26 +461,15 @@ namespace ROOT
             //TODO 主要是这里、要不要再解耦。
             WorldExecutor.UpdateBoardData_Instantly(ref LevelAsset);
         }
-        
-        private void CurrencyInquiryHandler(IMessage rMessage)
-        {
-            if(rMessage is CurrencyInquiryInfo info)
-            {
-                WorldExecutor.UpdateBoardData_Instantly(ref LevelAsset);
-                var message = new CurrencyUpdatedInfo()
-                {
-                    CurrencyVal = Mathf.RoundToInt(LevelAsset.GameStateMgr.GetCurrency()),
-                    IncomesVal =  Mathf.RoundToInt(LevelAsset.DeltaCurrency),
-                };
-                info.CallBack(message);
-            }
-        }
+
+        private FSMEventInquiryResponder _inquiryResponder;
         
         private void Awake()
         {
             LevelAsset = new GameAssets();
             _mainFSM = new RootFSM {owner = this};
-
+            _inquiryResponder = new FSMEventInquiryResponder(this);
+            
             UpdateLogicLevelReference();
 
             _mainFSM.ReplaceActions(fsmActions);
@@ -461,7 +480,6 @@ namespace ROOT
             _actionDriver = new CareerControlActionDriver(this, _mainFSM);
 
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
-            MessageDispatcher.AddListener(Visual_Inquiry_Event.CurrencyInquiryEvent, CurrencyInquiryHandler);
         }
         private void Update()
         {
@@ -477,11 +495,9 @@ namespace ROOT
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
         }
-
         private void OnDestroy()
         {
             MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
-            MessageDispatcher.RemoveListener(Visual_Inquiry_Event.CurrencyInquiryEvent, CurrencyInquiryHandler);
             _actionDriver.unsubscribe();
             _actionDriver = null;
         }
