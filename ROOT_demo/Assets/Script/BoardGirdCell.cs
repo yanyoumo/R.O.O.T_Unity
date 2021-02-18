@@ -157,24 +157,43 @@ namespace ROOT
 
         private int GetCashIO()
         {
-            if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
+            if (!_boardCouldIOCurrency)
             {
                 return 0;
             }
-
-            var unit=owner.FindUnitUnderBoardPos(OnboardPos)?.GetComponentInChildren<Unit>();
-            if (unit != null)
-            {
-                //这么写的话、CalSingleUnitScore到是可以不考虑HeatSink了。
-                return Mathf.RoundToInt(unit.SignalCore.SingleUnitScore) - HeatSinkCost;
-            }
             else
             {
-                throw new ArgumentException();
+                if (_unitCouldGenerateIncome)
+                {
+                    if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
+                    {
+                        return 0;
+                    }
+
+                    var unit=owner.FindUnitUnderBoardPos(OnboardPos)?.GetComponentInChildren<Unit>();
+                    if (unit != null)
+                    {
+                        //这么写的话、CalSingleUnitScore到是可以不考虑HeatSink了。
+                        return Mathf.RoundToInt(unit.SignalCore.SingleUnitScore) - HeatSinkCost;
+                    }
+                    else
+                    {
+                        throw new ArgumentException();
+                    }
+                }
+                else
+                {
+                    if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
+                    {
+                        return 0;
+                    }
+                    
+                    return -HeatSinkCost;
+                }
             }
         }
-        
-        
+
+
         private void SetText(int number)
         {
             if (!_boardCouldIOCurrency)
@@ -194,7 +213,7 @@ namespace ROOT
                             CashingText.text = "+00";
                             return;
                         }
-    
+
                         if (_cellStatus == CellStatus.Warning)
                         {
                             CashingText.color = NegativeCashColoring;
@@ -219,8 +238,16 @@ namespace ROOT
                 }
                 else
                 {
-                    CashingText.color = NegativeCashColoring;
-                    CashingText.text = "-" + Utils.PaddingNum2Digit(Math.Abs(number));
+                    if (number == 0)
+                    {
+                        CashingText.color = NeutralCashColoring;
+                        CashingText.text = "+00";
+                    }
+                    else
+                    {
+                        CashingText.color = NegativeCashColoring;
+                        CashingText.text = "-" + Utils.PaddingNum2Digit(Math.Abs(number));
+                    }
                 }
             }
         }

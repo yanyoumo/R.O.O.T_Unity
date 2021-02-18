@@ -381,7 +381,7 @@ namespace ROOT
             animate_Co = null;
             LevelAsset.BoughtOnce = false;
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            LevelAsset.DeltaCurrency = 0.0f;
+            //LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.LevelProgress = LevelAsset.StepCount / (float)LevelAsset.ActionAsset.PlayableCount;
         }
 

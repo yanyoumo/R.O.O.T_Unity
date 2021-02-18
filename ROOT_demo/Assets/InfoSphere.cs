@@ -54,7 +54,7 @@ namespace ROOT
             }
             else if (_timer >= _delay)
             {
-                foreach (var gird in GameAsset.CollectorZone.Select(vec => GameAsset.GameBoard.BoardGirds[vec]))
+                foreach (var gird in GameAsset.CollectorZone.Select(vec => GameAsset.GameBoard.BoardGirdDriver.BoardGirds[vec]))
                 {
                     if (WithInUnitExtend(gird, transform.position))
                     {

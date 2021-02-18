@@ -169,7 +169,7 @@ namespace ROOT
         /// <returns>如果棋盘上没有压住HeatSink的单位，则返回null</returns>
         private Vector2Int? RandomHeatSinkUnitTarget()
         {
-            var oHunit = GameBoard.OverlapHeatSinkUnit;
+            var oHunit = GameBoard.BoardGirdDriver.OverlapHeatSinkUnit;
             if (oHunit != null && oHunit.Length != 0)
             {
                 return Utils.RandomItem(oHunit.Select(unit => unit.CurrentBoardPosition));

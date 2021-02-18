@@ -5,6 +5,7 @@ using System.Linq;
 using com.ootii.Messages;
 using JetBrains.Annotations;
 using ROOT.Signal;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using static ROOT.Utils;
@@ -30,11 +31,6 @@ namespace ROOT
     {
         public int HeatSinkID { get; internal set; }//Always Positive.
         public int HeatSinkCost { get; internal set; }//Always Positive.
-    }
-
-    public sealed class BoardGirdDriver
-    {
-        public Dictionary<Vector2Int, BoardGirdCell> BoardGirds;
     }
     
     public partial class Unit
@@ -94,14 +90,356 @@ namespace ROOT
         }
     }
     
-    public sealed class Board : MonoBehaviour
+    public sealed class BoardGirdDriver
     {
-        private BoardGirdDriver _boardGirdDriver;
-        public Dictionary<Vector2Int, BoardGirdCell> BoardGirds { 
-            get=>_boardGirdDriver.BoardGirds; 
-            private set=>_boardGirdDriver.BoardGirds=value; 
+        [ReadOnly]
+        public Board owner;
+        [ReadOnly]
+        public Dictionary<Vector2Int, BoardGirdCell> BoardGirds;
+
+        private HeatSinkPatternLib HeatSinkPatterns => owner.HeatSinkPatterns;
+        
+        public void UpdateInfoZone(GameAssets levelAssets)
+        {
+            levelAssets.CollectorZone = owner.GetInfoCollectorZone();
+            BoardGirds.Values.ForEach(grid => grid.ClearEdge());
+            BoardGirds.Values.ForEach(grid => grid.UpdateEdge(levelAssets.CollectorZone));
         }
 
+        private PatternPermutation _HeatSinkPermutation = PatternPermutation.None;
+        private int _currentHeatSinkPatternsID = 0;
+        private int _currentHeatSinkDiminishingID = 0;
+
+        public int MinHeatSinkCount => ActualHeatSinkPos.Length;
+        private Vector2Int[] RawHeatSinkPos => new Vector2Int[0]; //现在使初始pattern都是空的。
+
+        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward()
+            .ForEach(vec => PermutateV2I(vec, Board.BoardLength - 1, _HeatSinkPermutation)).ToArray();
+
+        public int DiminishingStep { get; private set; }
+        
+        public void DestoryHeatsinkOverlappedUnit()
+        {
+            foreach (var actualHeatSinkPo in ActualHeatSinkPos)
+            {
+                owner.TryDeleteIfFilledCertainUnit(actualHeatSinkPo);
+            }
+        }
+
+        private Vector2Int[] GetActualHeatSinkUpward()
+        {
+            //RISK 现在出来一个问题，就是基础图样加上这一轮添加后，有可能就堆满了。
+            //TODO 有办法，就是想办法在pattern里面储存“不能被填充”这种数据。
+            //现在Diminishing里面加了一个Maxout。hmmmm先这样，并没有解决上面的核心问题。
+            if (DiminishingStep == -1) return RawHeatSinkPos;
+
+            var res = RawHeatSinkPos.ToList();
+            var HeatSinkPattern = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID];
+            var dimList = HeatSinkPattern.DiminishingList;
+            //RISK 这个算法还是考虑写道HeatSinkPattern的算法里面。
+            var maxOut = HeatSinkPattern.CutOffCount;
+
+            var TaperedDiminishingStep = Mathf.Min(DiminishingStep, maxOut);
+
+            for (var i = 0; i < TaperedDiminishingStep; i++)
+            {
+                if (i < dimList.Count && !res.Contains(dimList[i]))
+                {
+                    res.Add(dimList[i]);
+                }
+            }
+
+            return res.ToArray();
+        }
+
+        /// <summary>
+        /// 这个函数时往下减少HeatSink数量。
+        /// </summary>
+        /// <returns>计算完毕后的HeatSinkPattern</returns>
+        [Obsolete]
+        private Vector2Int[] GetActualHeatSinkDownward()
+        {
+            if (DiminishingStep == -1) return RawHeatSinkPos;
+
+            var res = RawHeatSinkPos.ToList();
+            var dimList = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID].DiminishingList;
+            for (var i = 0; i < DiminishingStep; i++)
+            {
+                if (i < dimList.Count && res.Contains(dimList[i]))
+                {
+                    res.Remove(dimList[i]);
+                }
+            }
+
+            return res.ToArray();
+        }
+
+        public void UpdatePatternDiminishing()
+        {
+            DiminishingStep++;
+        }
+
+        public void UpdatePatternID()
+        {
+            _HeatSinkPermutation = (PatternPermutation) Random.Range(0, 6);
+            var oldID = _currentHeatSinkPatternsID;
+            var oldDimID = _currentHeatSinkDiminishingID;
+            const int max = 100;
+            var counter = 0;
+            do
+            {
+                counter++;
+                _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Lib.Count);
+                _currentHeatSinkDiminishingID = Random.Range(0, HeatSinkPatterns.DiminishingList.Count);
+            } while ((_currentHeatSinkDiminishingID == oldDimID || _currentHeatSinkPatternsID == oldID) &&
+                     counter <= max);
+
+            DiminishingStep = 0;
+        }
+
+        public void InitBoardGird()
+        {
+            var BoardLength = Board.BoardLength;
+            BoardGirds = new Dictionary<Vector2Int, BoardGirdCell>();
+            for (var i = 0; i < BoardLength; i++)
+            {
+                for (var j = 0; j < BoardLength; j++)
+                {
+                    var go = MonoBehaviour.Instantiate(owner.BoardGridTemplate, owner.BoardGridRoot);
+                    var gridLength = owner._boardPhysicalLength;
+                    var offset = new Vector3(i * gridLength, 0.0f, j * gridLength);
+                    go.transform.localPosition = owner.BoardGridZeroing.position + offset;
+                    var key = new Vector2Int(i, j);
+                    BoardGirds.Add(key, go.GetComponent<BoardGirdCell>());
+                    go.GetComponent<BoardGirdCell>().OnboardPos = key;
+                    go.GetComponent<BoardGirdCell>().owner = owner;
+                }
+            }
+
+            UpdatePatternID();
+        }
+
+        private Vector2Int? FindFurthestHeatSink(in Vector2Int[] existingHeatSink)
+        {
+            var BoardLength = Board.BoardLength;
+            Vector2 center = new Vector2((BoardLength - 1) / 2.0f, (BoardLength - 1) / 2.0f);
+            float distance = -1.0f;
+            Vector2Int? FurthestHeatSink = null;
+
+            for (int i = 0; i < BoardLength; i++)
+            {
+                for (int j = 0; j < BoardLength; j++)
+                {
+                    Vector2Int key = new Vector2Int(i, j);
+                    if (owner.CheckBoardPosValidAndEmpty(key))
+                    {
+                        if (!existingHeatSink.Contains(key))
+                        {
+                            float tmpDistance = Vector2.Distance(key, center);
+                            if (tmpDistance > distance)
+                            {
+                                distance = tmpDistance;
+                                FurthestHeatSink = key;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return FurthestHeatSink;
+        }
+
+        private Vector2Int? FindAHeatSink(in Vector2Int[] existingHeatSink)
+        {
+            for (var i = 0; i < Board.BoardLength; i++)
+            {
+                for (var j = 0; j < Board.BoardLength; j++)
+                {
+                    var key = new Vector2Int(i, j);
+                    if (owner.CheckBoardPosValidAndEmpty(key) && (!existingHeatSink.Contains(key)))
+                    {
+                        return key;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public void ResetHeatSink()
+        {
+            Debug.Log("HeatSink Reseted");
+            DiminishingStep = 0;
+        }
+
+        [CanBeNull]
+        public Unit[] OverlapHeatSinkUnit => CheckHeatSink(StageType.Shop) != 0
+            ? owner.Units.Where(unit => ActualHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray()
+            : null;
+
+        private CellStatus GettargetingStatus(StageType type)
+        {
+            CellStatus targetingStatus;
+            switch (type)
+            {
+                case StageType.Shop:
+                    targetingStatus = CellStatus.Normal;
+                    break;
+                case StageType.Require:
+                case StageType.Telemetry: //TODO Boss的Sink状态还要在这儿决定。
+                    targetingStatus = CellStatus.Warning;
+                    break;
+                case StageType.Destoryer:
+                case StageType.Ending:
+                    targetingStatus = CellStatus.Sink;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+
+            return targetingStatus;
+        }
+
+        private void ResetGridStatus()
+        {
+            BoardGirds.Values.ForEach(grid => grid.CellStatus = CellStatus.Normal);
+        }
+
+        private int CalcTotalHeatSinkCost(int totalCount)
+        {
+            const float pow = 1.25f;
+            return Mathf.CeilToInt(Mathf.Pow(pow, totalCount) - 1);
+        }
+
+        private int CalcPerHeatSinkCost(int index)
+        {
+            Debug.Assert(index >= 0);
+            int x1 = index + 1;
+            int x0 = index;
+            return (CalcTotalHeatSinkCost(x1) - CalcTotalHeatSinkCost(x0)) + 1;
+        }
+
+        [ReadOnly]
+        public int heatSinkCost = 0; //现在对他的调用是读取的、需要可能改成触发的。
+
+        public int CheckHeatSink(StageType type)
+        {
+            //在这里计算每个HeatSink的价值。
+            ResetGridStatus();
+            //这里需要把status接进来，然后判是什么阶段的。
+            if (type == StageType.Require)
+            {
+                var waringTile = new List<Vector2Int>();
+                foreach (var actualHeatSinkPo in ActualHeatSinkPos)
+                {
+                    ROTATION_LIST
+                        .Select(o => ConvertDirectionToBoardPosOffset(o) + actualHeatSinkPo)
+                        .Where(s => !waringTile.Contains(s))
+                        .ForEach(waringTile.Add);
+                }
+
+                BoardGirds.Where(val => waringTile.Contains(val.Key))
+                    .ForEach(val => val.Value.CellStatus = CellStatus.PreWarning);
+            }
+
+            heatSinkCost = 0;
+            var overlappedHeatSink = 0;
+            for (var i = 0; i < ActualHeatSinkPos.Length; i++)
+            {
+                var key = ActualHeatSinkPos[i];
+                BoardGirds[key].HeatSinkID = i;
+                BoardGirds[key].HeatSinkCost = CalcPerHeatSinkCost(i);
+                BoardGirds[key].CellStatus = GettargetingStatus(type);
+                if (owner.CheckBoardPosValidAndFilled(key))
+                {
+                    overlappedHeatSink++;
+                    heatSinkCost += CalcPerHeatSinkCost(i);
+                }
+            }
+
+            return overlappedHeatSink;
+        }
+
+        /// <summary>
+        /// 游戏板扫描格点查看是否有可服务的HeatSink格
+        /// </summary>
+        /// <returns>返回有多少个HeatSink格没有被满足，返回0即均满足。</returns>
+        public int ScanHeatSink()
+        {
+            //RISK 这个是O(n2)的函数，千万不能每帧调，就是Per-move才调。
+            //购买抵达的时候应该也要算一次？
+            Vector2Int[] heatSinkPos = new Vector2Int[MinHeatSinkCount];
+            for (var i = 0; i < heatSinkPos.Length; i++)
+            {
+                heatSinkPos[i] = new Vector2Int(-1, -1);
+            }
+
+            int noHeatSinkCount = 0;
+            BoardGirds.Values.ForEach(grid => grid.CellStatus = CellStatus.Normal);
+
+            for (var i = 0; i < heatSinkPos.Length; i++)
+            {
+                var val = FindFurthestHeatSink(in heatSinkPos);
+                if (val.HasValue)
+                {
+                    heatSinkPos[i] = val.Value;
+                    BoardGirds[val.Value].CellStatus = CellStatus.Sink;
+                }
+                else
+                {
+                    heatSinkPos[i] = new Vector2Int(-1, -1);
+                    noHeatSinkCount++;
+                }
+            }
+
+            return noHeatSinkCount;
+        }
+
+        public void LightUpBoardGird(
+            Vector2Int pos,
+            LightUpBoardGirdMode mode = LightUpBoardGirdMode.REPLACE,
+            LightUpBoardColor color = LightUpBoardColor.Hovered)
+        {
+            switch (mode)
+            {
+                case LightUpBoardGirdMode.REPLACE:
+                    BoardGirds.Values.ForEach(val => val.ChangeStrokeMode(LightUpBoardColor.Unhovered));
+                    BoardGirds.TryGetValue(pos, out var cell);
+                    if (cell != null)
+                    {
+                        cell.ChangeStrokeMode(color);
+                    }
+
+                    break;
+                case LightUpBoardGirdMode.ADD:
+                    BoardGirds.TryGetValue(pos, out var cell1);
+                    if (cell1 != null)
+                    {
+                        cell1.ChangeStrokeMode(color);
+                    }
+
+                    break;
+                case LightUpBoardGirdMode.CLEAR:
+                    BoardGirds.Values.ForEach(val => val.ChangeStrokeMode(LightUpBoardColor.Unhovered));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
+    }
+    
+    public sealed class Board : MonoBehaviour
+    {
+        public BoardGirdDriver BoardGirdDriver;
+        public HeatSinkPatternLib HeatSinkPatterns;
+        public void TryDeleteIfFilledCertainUnit(Vector2Int pos)
+        {
+            if (CheckBoardPosValidAndFilled(pos))
+            {
+                TryDeleteCertainUnit(pos);
+            }
+        }
+        
         public InfoAirdrop AirDrop;
         public Transform LFLocator;
         public Transform URLocator;
@@ -196,331 +534,6 @@ namespace ROOT
             return res.Where(CheckBoardPosValid).Distinct().ToList();
         }
 
-        public void UpdateInfoZone(GameAssets levelAssets)
-        {
-            levelAssets.CollectorZone = GetInfoCollectorZone();
-            BoardGirds.Values.ForEach(grid => grid.ClearEdge());
-            BoardGirds.Values.ForEach(grid => grid.UpdateEdge(levelAssets.CollectorZone));
-        }
-
-        #region 热力系统
-
-        public HeatSinkPatternLib HeatSinkPatterns;
-        private PatternPermutation _HeatSinkPermutation = PatternPermutation.None;
-        private int _currentHeatSinkPatternsID = 0;
-        private int _currentHeatSinkDiminishingID = 0;
-
-        public int MinHeatSinkCount=> ActualHeatSinkPos.Length;
-        private Vector2Int[] RawHeatSinkPos => new Vector2Int[0];//现在使初始pattern都是空的。
-        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward().ForEach(vec => PermutateV2I(vec, BoardLength-1, _HeatSinkPermutation)).ToArray();
-
-        public int DiminishingStep { get; private set; }
-
-        private void TryDeleteIfFilledCertainUnit(Vector2Int pos)
-        {
-            if (CheckBoardPosValidAndFilled(pos))
-            {
-                TryDeleteCertainUnit(pos);
-            }
-        }
-
-        public void DestoryHeatsinkOverlappedUnit()
-        {
-            ActualHeatSinkPos.ForEach(TryDeleteIfFilledCertainUnit);
-        }
-
-        private Vector2Int[] GetActualHeatSinkUpward()
-        {
-            //RISK 现在出来一个问题，就是基础图样加上这一轮添加后，有可能就堆满了。
-            //TODO 有办法，就是想办法在pattern里面储存“不能被填充”这种数据。
-            //现在Diminishing里面加了一个Maxout。hmmmm先这样，并没有解决上面的核心问题。
-            if (DiminishingStep == -1) return RawHeatSinkPos;
-
-            var res = RawHeatSinkPos.ToList();
-            var HeatSinkPattern = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID];
-            var dimList = HeatSinkPattern.DiminishingList;
-            //RISK 这个算法还是考虑写道HeatSinkPattern的算法里面。
-            var maxOut = HeatSinkPattern.CutOffCount;
-
-            var TaperedDiminishingStep = Mathf.Min(DiminishingStep, maxOut);
-
-            for (var i = 0; i < TaperedDiminishingStep; i++)
-            {
-                if (i < dimList.Count && !res.Contains(dimList[i]))
-                {
-                    res.Add(dimList[i]);
-                }
-            }
-
-            return res.ToArray();
-        }
-
-        /// <summary>
-        /// 这个函数时往下减少HeatSink数量。
-        /// </summary>
-        /// <returns>计算完毕后的HeatSinkPattern</returns>
-        [Obsolete]
-        private Vector2Int[] GetActualHeatSinkDownward()
-        {
-            if (DiminishingStep == -1) return RawHeatSinkPos;
-
-            var res = RawHeatSinkPos.ToList();
-            var dimList = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID].DiminishingList;
-            for (var i = 0; i < DiminishingStep; i++)
-            {
-                if (i < dimList.Count && res.Contains(dimList[i]))
-                {
-                    res.Remove(dimList[i]);
-                }
-            }
-
-            return res.ToArray();
-        }
-
-        public void UpdatePatternDiminishing()
-        {
-            DiminishingStep++;
-        }
-
-        public void UpdatePatternID()
-        {
-            _HeatSinkPermutation = (PatternPermutation) Random.Range(0, 6);
-            var oldID = _currentHeatSinkPatternsID;
-            var oldDimID = _currentHeatSinkDiminishingID;
-            const int max = 100;
-            var counter = 0;
-            do
-            {
-                counter++;
-                _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Lib.Count);
-                _currentHeatSinkDiminishingID = Random.Range(0, HeatSinkPatterns.DiminishingList.Count);
-            } while ((_currentHeatSinkDiminishingID == oldDimID || _currentHeatSinkPatternsID == oldID) && counter <= max);
-
-            DiminishingStep = 0;
-        }
-
-        private void InitBoardGird()
-        {
-            BoardGirds=new Dictionary<Vector2Int, BoardGirdCell>();
-            for (var i = 0; i < BoardLength; i++)
-            {
-                for (var j = 0; j < BoardLength; j++)
-                {
-                    var go = Instantiate(BoardGridTemplate, BoardGridRoot);
-                    var gridLength = _boardPhysicalLength;
-                    var offset = new Vector3(i * gridLength, 0.0f, j * gridLength);
-                    go.transform.localPosition = BoardGridZeroing.position + offset;
-                    var key = new Vector2Int(i, j);
-                    BoardGirds.Add(key, go.GetComponent<BoardGirdCell>());
-                    go.GetComponent<BoardGirdCell>().OnboardPos = key;
-                    go.GetComponent<BoardGirdCell>().owner = this;
-                }
-            }
-            UpdatePatternID();
-        }
-
-        private Vector2Int? FindFurthestHeatSink(in Vector2Int[] existingHeatSink)
-        {
-            Vector2 center = new Vector2((BoardLength - 1) / 2.0f, (BoardLength - 1) / 2.0f);
-            float distance = -1.0f;
-            Vector2Int? FurthestHeatSink=null;
-
-            for (int i = 0; i < BoardLength; i++)
-            {
-                for (int j = 0; j < BoardLength; j++)
-                {
-                    Vector2Int key = new Vector2Int(i, j);
-                    if (CheckBoardPosValidAndEmpty(key))
-                    {
-                        if (!existingHeatSink.Contains(key))
-                        {
-                            float tmpDistance = Vector2.Distance(key, center);
-                            if (tmpDistance>distance)
-                            {
-                                distance = tmpDistance;
-                                FurthestHeatSink = key;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return FurthestHeatSink;
-        }
-
-        private Vector2Int? FindAHeatSink(in Vector2Int[] existingHeatSink)
-        {
-            for (var i = 0; i < BoardLength; i++)
-            {
-                for (var j = 0; j < BoardLength; j++)
-                {
-                    var key = new Vector2Int(i, j);
-                    if (CheckBoardPosValidAndEmpty(key)&&(!existingHeatSink.Contains(key)))
-                    {
-                        return key;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public void ResetHeatSink()
-        {
-            Debug.Log("HeatSink Reseted");
-            DiminishingStep = 0;
-        }
-
-        [CanBeNull]
-        public Unit[] OverlapHeatSinkUnit => CheckHeatSink(StageType.Shop) != 0 ? Units.Where(unit => ActualHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray() : null;
-
-        private CellStatus GettargetingStatus(StageType type)
-        {
-            CellStatus targetingStatus;
-            switch (type)
-            {
-                case StageType.Shop:
-                    targetingStatus = CellStatus.Normal;
-                    break;
-                case StageType.Require:
-                case StageType.Telemetry: //TODO Boss的Sink状态还要在这儿决定。
-                    targetingStatus = CellStatus.Warning;
-                    break;
-                case StageType.Destoryer:
-                case StageType.Ending:
-                    targetingStatus = CellStatus.Sink;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
-
-            return targetingStatus;
-        }
-
-        private void ResetGridStatus()
-        {
-            BoardGirds.Values.ForEach(grid => grid.CellStatus = CellStatus.Normal);
-        }
-
-        private int CalcTotalHeatSinkCost(int totalCount)
-        {
-            const float pow = 1.25f;
-            return Mathf.CeilToInt(Mathf.Pow(pow, totalCount) - 1);
-        }
-        
-        private int CalcPerHeatSinkCost(int index)
-        {
-            Debug.Assert(index >= 0);
-            int x1 = index + 1;
-            int x0 = index;
-            return CalcTotalHeatSinkCost(x1) - CalcTotalHeatSinkCost(x0);
-        }
-
-        public int heatSinkCost=0;//现在对他的调用是读取的、需要可能改成触发的。
-        public int CheckHeatSink(StageType type)
-        {
-            //在这里计算每个HeatSink的价值。
-            ResetGridStatus();
-            //这里需要把status接进来，然后判是什么阶段的。
-            if (type == StageType.Require)
-            {
-                var waringTile = new List<Vector2Int>();
-                foreach (var actualHeatSinkPo in ActualHeatSinkPos)
-                {
-                    ROTATION_LIST
-                        .Select(o => ConvertDirectionToBoardPosOffset(o) + actualHeatSinkPo)
-                        .Where(s => !waringTile.Contains(s))
-                        .ForEach(waringTile.Add);
-                }
-
-                BoardGirds.Where(val => waringTile.Contains(val.Key))
-                    .ForEach(val => val.Value.CellStatus = CellStatus.PreWarning);
-            }
-
-            heatSinkCost = 0;
-            var overlappedHeatSink = 0;
-            for (var i = 0; i < ActualHeatSinkPos.Length; i++)
-            {
-                var key = ActualHeatSinkPos[i];
-                BoardGirds[key].HeatSinkID = i;
-                BoardGirds[key].HeatSinkCost = CalcPerHeatSinkCost(i);
-                BoardGirds[key].CellStatus = GettargetingStatus(type);
-                if (CheckBoardPosValidAndFilled(key))
-                {
-                    overlappedHeatSink++;
-                    heatSinkCost+=CalcPerHeatSinkCost(i);
-                }
-            }
-
-            return overlappedHeatSink;
-        }
-
-        /// <summary>
-        /// 游戏板扫描格点查看是否有可服务的HeatSink格
-        /// </summary>
-        /// <returns>返回有多少个HeatSink格没有被满足，返回0即均满足。</returns>
-        public int ScanHeatSink()
-        {
-            //RISK 这个是O(n2)的函数，千万不能每帧调，就是Per-move才调。
-            //购买抵达的时候应该也要算一次？
-            Vector2Int[] heatSinkPos = new Vector2Int[MinHeatSinkCount];
-            for (var i = 0; i < heatSinkPos.Length; i++)
-            {
-                heatSinkPos[i] = new Vector2Int(-1, -1);
-            }
-            int noHeatSinkCount = 0;
-            BoardGirds.Values.ForEach(grid => grid.CellStatus = CellStatus.Normal);
-
-            for (var i = 0; i < heatSinkPos.Length; i++)
-            {
-                var val = FindFurthestHeatSink(in heatSinkPos);
-                if (val.HasValue)
-                {
-                    heatSinkPos[i] = val.Value;
-                    BoardGirds[val.Value].CellStatus = CellStatus.Sink;
-                }
-                else
-                {
-                    heatSinkPos[i] = new Vector2Int(-1, -1);
-                    noHeatSinkCount++;
-                }
-            }
-
-            return noHeatSinkCount;
-        }
-        
-        public void LightUpBoardGird(
-            Vector2Int pos,
-            LightUpBoardGirdMode mode=LightUpBoardGirdMode.REPLACE, 
-            LightUpBoardColor color= LightUpBoardColor.Hovered)
-        {
-            switch (mode)
-            {
-                case LightUpBoardGirdMode.REPLACE:
-                    BoardGirds.Values.ForEach(val => val.ChangeStrokeMode(LightUpBoardColor.Unhovered));
-                    BoardGirds.TryGetValue(pos, out var cell);
-                    if (cell != null)
-                    {
-                        cell.ChangeStrokeMode(color);
-                    }
-                    break;
-                case LightUpBoardGirdMode.ADD:
-                    BoardGirds.TryGetValue(pos, out var cell1);
-                    if (cell1 != null)
-                    {
-                        cell1.ChangeStrokeMode(color);
-                    }
-                    break;
-                case LightUpBoardGirdMode.CLEAR:
-                    BoardGirds.Values.ForEach(val => val.ChangeStrokeMode(LightUpBoardColor.Unhovered));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
-        }
-
-        #endregion
-
         public static Vector2Int ClampPosInBoard(Vector2Int pos)
         {
             var newPos = pos;
@@ -531,7 +544,7 @@ namespace ROOT
 
         public const int BoardLength = 6;
         public int TotalBoardCount => BoardLength * BoardLength;
-        private readonly float _boardPhysicalLength = 1.2f;
+        public readonly float _boardPhysicalLength = 1.2f;
         private readonly float _boardPhysicalOriginX = -3.1f - 1.75f-2.0f;
         private readonly float _boardPhysicalOriginY = -3.1f;
 
@@ -719,9 +732,9 @@ namespace ROOT
         void Awake()
         {
             UnitsGameObjects = new Dictionary<Vector2Int, GameObject>();
-            _boardGirdDriver = new BoardGirdDriver();
-            InitBoardGird();
-            CheckHeatSink(StageType.Shop);
+            BoardGirdDriver = new BoardGirdDriver {owner = this};
+            BoardGirdDriver.InitBoardGird();
+            BoardGirdDriver.CheckHeatSink(StageType.Shop);
             LFLocatorStatic = LFLocator;
             URLocatorStatic = URLocator;
             MessageDispatcher.AddListener(WorldEvent.BoardShouldUpdateEvent,FullyUpdateBoardData);
@@ -798,17 +811,6 @@ namespace ROOT
             return true;
         }
 
-        /*[Obsolete]
-        public void UpdateBoard()
-        {
-            foreach (var unit in UnitsGameObjects)
-            {
-                if (unit.Value == null) continue;
-                var mUnit = unit.Value.GetComponentInChildren<Unit>();
-                mUnit.UpdateNeighboringDataAndSideMesh();
-            }
-        }*/
-
         public bool SwapUnit(Vector2Int posA,Vector2Int posB)
         {
             Debug.Assert(CheckBoardPosValid(posA));
@@ -825,10 +827,8 @@ namespace ROOT
                 UnitsGameObjects.TryGetValue(posB, out GameObject goB);
                 UnitsGameObjects.Remove(posA);
                 UnitsGameObjects.Remove(posB);
-                //UpdateBoard();
                 var resA=DeliverUnitAssignedPlace(goA, posB);
                 var resB=DeliverUnitAssignedPlace(goB, posA);
-                //UpdateBoard();
                 return resA && resB;
             }
             else
@@ -852,9 +852,6 @@ namespace ROOT
                 destoryedCore = go.GetComponentInChildren<Unit>().UnitSignal;
                 Destroy(go);
                 UnitsGameObjects.Remove(pos);
-                //想办法需要在这儿调双个计分函数。
-
-                //UpdateBoard();
                 return true;
             }
             destoryedCore = null;
@@ -871,7 +868,6 @@ namespace ROOT
                     destoryedCore = go.GetComponentInChildren<Unit>().UnitSignal;
                     Destroy(go);
                     UnitsGameObjects.Remove(pos);
-                    //UpdateBoard();
                     return true;
                 }
             }
@@ -929,7 +925,7 @@ namespace ROOT
 
         private int UnitsHashCode => Units.Select(u => u.GetHashCode()).Aggregate(0, (current, result) => current ^ result);
 
-        private int GridHashCode => BoardGirds.Aggregate(0, (current, val) => current ^ (val.Key.GetHashCode() ^ val.Value.CellStatus.GetHashCode()));
+        private int GridHashCode => BoardGirdDriver.BoardGirds.Aggregate(0, (current, val) => current ^ (val.Key.GetHashCode() ^ val.Value.CellStatus.GetHashCode()));
 
         private void FullyUpdateBoardData(IMessage rMessage)
         {

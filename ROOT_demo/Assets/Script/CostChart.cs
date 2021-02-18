@@ -32,8 +32,8 @@ namespace ROOT
     
     public class CurrencyUpdatedInfo : RootMessageBase
     {
-        public int IncomesVal = -1;
-        public int CurrencyVal = -1;
+        public int IncomesVal = Int32.MaxValue;
+        public int CurrencyVal = Int32.MaxValue;
         public override string Type => CurrencyUpdatedEvent;
     }
 
@@ -108,7 +108,7 @@ namespace ROOT
                     break;
                 case StageType.Require:
                 case StageType.Destoryer:
-                    if (incomesVal >= 0)
+                    if (incomesVal != Int32.MaxValue)
                     {
                         UpdateIncomeVal(incomesVal);
                     }

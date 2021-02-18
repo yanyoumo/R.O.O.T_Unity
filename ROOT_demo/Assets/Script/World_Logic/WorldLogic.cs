@@ -1088,12 +1088,12 @@ namespace ROOT
             
             if (lvlLogic.IsRequireRound && lvlLogic.IsForwardCycle)
             {
-                levelAsset.GameBoard.UpdatePatternDiminishing();
+                levelAsset.GameBoard.BoardGirdDriver.UpdatePatternDiminishing();
             }
 
             if ((lastDestoryBool && !lvlLogic.IsDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
             {
-                levelAsset.GameBoard.DestoryHeatsinkOverlappedUnit();
+                levelAsset.GameBoard.BoardGirdDriver.DestoryHeatsinkOverlappedUnit();
             }
 
             if ((levelAsset.DestroyerEnabled && !lvlLogic.IsDestoryerRound) && !WorldCycler.TelemetryStage)
@@ -1115,7 +1115,7 @@ namespace ROOT
             var tCount = levelAsset.ActionAsset.GetTruncatedCount(levelAsset.StepCount, out var count);
             if (roundGist.SwitchHeatsink(tCount))
             {
-                levelAsset.GameBoard.UpdatePatternID();
+                levelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
             }
 
             UpdateLevelAsset(ref levelAsset, ref levelAsset.Owner);
@@ -1417,7 +1417,7 @@ namespace ROOT
                 inCome += Mathf.FloorToInt(tmpInComeM);
                 inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
                 if (!currentLevelAsset.UnitCouldGenerateIncome) inCome = 0;
-                cost = currentLevelAsset.GameBoard.heatSinkCost;
+                cost = currentLevelAsset.GameBoard.BoardGirdDriver.heatSinkCost;
             }
 
             currentLevelAsset.DeltaCurrency = inCome - cost;
@@ -1450,19 +1450,19 @@ namespace ROOT
             {
                 if (_ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid))
                 {
-                    currentLevelAsset.GameBoard.LightUpBoardGird(_ctrlPack.CurrentPos);
+                    currentLevelAsset.GameBoard.BoardGirdDriver.LightUpBoardGird(_ctrlPack.CurrentPos);
                 }
 
                 if (_ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
                 {
-                    currentLevelAsset.GameBoard.LightUpBoardGird(_ctrlPack.CurrentPos,
+                    currentLevelAsset.GameBoard.BoardGirdDriver.LightUpBoardGird(_ctrlPack.CurrentPos,
                         LightUpBoardGirdMode.REPLACE,
                         LightUpBoardColor.Clicked);
                 }
             }
             else
             {
-                currentLevelAsset.GameBoard.LightUpBoardGird(Vector2Int.zero, LightUpBoardGirdMode.CLEAR);
+                currentLevelAsset.GameBoard.BoardGirdDriver.LightUpBoardGird(Vector2Int.zero, LightUpBoardGirdMode.CLEAR);
             }
         }
     }

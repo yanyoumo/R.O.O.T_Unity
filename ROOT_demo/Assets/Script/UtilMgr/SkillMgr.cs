@@ -122,7 +122,7 @@ namespace ROOT
                     moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
-                        currentLevelAsset.GameBoard.UpdatePatternID();
+                        currentLevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
                         WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;
@@ -130,7 +130,7 @@ namespace ROOT
                     moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
-                        currentLevelAsset.GameBoard.ResetHeatSink();
+                        currentLevelAsset.GameBoard.BoardGirdDriver.ResetHeatSink();
                         WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;

@@ -118,15 +118,15 @@ namespace ROOT
             }
             if (Stage == StageType.Telemetry && Animating)
             {
-                LevelAsset.GameBoard.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
+                LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
             }
             else
             {
                 WorldExecutor.CleanDestoryer(LevelAsset);
                 //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
                 //总之稳了后，这个不能这么每帧调用。
-                LevelAsset.occupiedHeatSink = LevelAsset.GameBoard.CheckHeatSink(Stage);
-                LevelAsset.GameBoard.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
+                LevelAsset.occupiedHeatSink = LevelAsset.GameBoard.BoardGirdDriver.CheckHeatSink(Stage);
+                LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
                 if (LevelAsset.SkillEnabled)
                 {
                     LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
@@ -215,8 +215,6 @@ namespace ROOT
 
             LevelAsset.DestroyerEnabled = true;
             LevelAsset.SignalPanel.IsTelemetryStage = true;
-            //FSM状态下，这个东西不用了。
-            //ManualListenBossPauseKeyCoroutine = StartCoroutine(ManualPollingBossPauseKey());
             WorldCycler.TelemetryStage = true;
         }
 

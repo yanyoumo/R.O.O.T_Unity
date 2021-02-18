@@ -1397,8 +1397,6 @@ MonoBehaviour:
     DataScreen: {fileID: 0}
     HintMaster: {fileID: 0}
     TimeLine: {fileID: 0}
-    CostLine: {fileID: 0}
-    CostChart: {fileID: 0}
     SignalPanel: {fileID: 0}
     AirDrop: {fileID: 0}
     ReqOkCount: 0
@@ -1408,8 +1406,8 @@ MonoBehaviour:
     occupiedHeatSink: 0
     InputEnabled: 1
     CurrencyEnabled: 1
-    CurrencyIOEnabled: 1
-    CurrencyIncomeEnabled: 1
+    BoardCouldIOCurrency: 1
+    UnitCouldGenerateIncome: 1
     CursorEnabled: 1
     RotateEnabled: 1
     ShopEnabled: 1
@@ -1502,11 +1500,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60548856bc1ef56499500cc6c61d9abf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HeatSinkPatterns: {fileID: 11400000, guid: 1d512935b48b42b45a51784e5466eb82, type: 2}
   AirDrop: {fileID: 1231284531}
   LFLocator: {fileID: 1476339}
   URLocator: {fileID: 952712529}
-  HeatSinkPatterns: {fileID: 11400000, guid: 1d512935b48b42b45a51784e5466eb82, type: 2}
-  heatSinkCost: 0
   UnitTemplate: {fileID: 4688034594746405584, guid: 44794b1f4e158b24791064bd426e575e,
     type: 3}
   BoardGridTemplate: {fileID: 8600621977452058256, guid: d34961eb3a92e45459f82159a24bde59,
