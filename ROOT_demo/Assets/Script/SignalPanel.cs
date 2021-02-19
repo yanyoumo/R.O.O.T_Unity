@@ -11,22 +11,90 @@ namespace ROOT
         public bool IsTelemetryStage = false;
         public bool TelemetryPaused = false;
 
-        public int CrtTypeASignal = Int32.MaxValue;
-        public int TgtTypeASignal = Int32.MaxValue;
-        public int CrtTypeBSignal = Int32.MaxValue;
-        public int TgtTypeBSignal = Int32.MaxValue;
-        public int CrtMission = Int32.MaxValue;
-        public int TgtMission = Int32.MaxValue;
-        public int TypeATier = Int32.MaxValue;
-        public int TypeBTier = Int32.MaxValue;
-        public int InfoCounter = Int32.MaxValue;
-        public int InfoTarget = Int32.MaxValue;
+        public int CrtTypeASignal = int.MaxValue;
+        public int TgtTypeASignal = int.MaxValue;
+        public int CrtTypeBSignal = int.MaxValue;
+        public int TgtTypeBSignal = int.MaxValue;
+        public int CrtMission = int.MaxValue;
+        public int TgtMission = int.MaxValue;
+        public int TypeATier = int.MaxValue;
+        public int TypeBTier = int.MaxValue;
+        public int InfoCounter = int.MaxValue;
+        public int InfoTarget = int.MaxValue;
+
+        public int this[int i]
+        {
+            get
+            {
+                switch (i)
+                {
+                    case 0:
+                        return CrtTypeASignal;
+                    case 1:
+                        return TgtTypeASignal;
+                    case 2:
+                        return CrtTypeBSignal;
+                    case 3:
+                        return TgtTypeBSignal;
+                    case 4:
+                        return CrtMission;
+                    case 5:
+                        return TgtMission;
+                    case 6:
+                        return TypeATier;
+                    case 7:
+                        return TypeBTier;
+                    case 8:
+                        return InfoCounter;
+                    case 9:
+                        return InfoTarget;
+                }
+                throw new IndexOutOfRangeException();
+            }
+            set
+            {
+                switch (i)
+                {
+                    case 0:
+                        CrtTypeASignal=value;
+                        return;
+                    case 1:
+                        TgtTypeASignal=value;
+                        return;
+                    case 2:
+                        CrtTypeBSignal=value;
+                        return;
+                    case 3:
+                        TgtTypeBSignal=value;
+                        return;
+                    case 4:
+                        CrtMission=value;
+                        return;
+                    case 5:
+                        TgtMission=value;
+                        return;
+                    case 6:
+                        TypeATier=value;
+                        return;
+                    case 7:
+                        TypeBTier=value;
+                        return;
+                    case 8:
+                        InfoCounter=value;
+                        return;
+                    case 9:
+                        InfoTarget=value;
+                        return;
+                }
+                throw new IndexOutOfRangeException();
+            }
+        }
     }
 
     public class BoardSignalUpdatedInfo : RootMessageBase
     {
         public BoardSignalUpdatedData SignalData;
-        public override string Type => WorldEvent.Visual_Event.BoardSignalUpdatedEvent;
+        public override string Type => WorldEvent.BoardSignalUpdatedEvent;
     }
     
     public class SignalPanel : RoundRelatedUIBase
@@ -43,14 +111,14 @@ namespace ROOT
         protected override void Awake()
         {
             base.Awake();
-            MessageDispatcher.AddListener(WorldEvent.Visual_Event.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
-            cachedData = new BoardSignalUpdatedData();
+            MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
+            _cachedData = new BoardSignalUpdatedData();
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            MessageDispatcher.RemoveListener(WorldEvent.Visual_Event.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
         }
 
         private void UpdatePauseTag(bool _telemetryPaused,bool _istelemetryStage)
@@ -92,42 +160,38 @@ namespace ROOT
         public TextMeshPro SignalText;
         public TextMeshPro PausedTag;
 
-        private string Padding(int v)
+        private readonly Func<int, string> _padding = Utils.PaddingNum2Digit;
+
+        private BoardSignalUpdatedData _cachedData;//这种缓存机制还是得有。
+
+        private void UpdateCachedData(BoardSignalUpdatedData inComingData, int index)
         {
-            return Utils.PaddingNum2Digit(v);
+            if (inComingData[index] != int.MaxValue) _cachedData[index] = inComingData[index];
         }
-
-        private BoardSignalUpdatedData cachedData;//这种缓存机制还是得有。
-
+        
         private void UpdateCachedData(BoardSignalUpdatedData inComingData)
         {
-            cachedData.TelemetryPaused = inComingData.TelemetryPaused;
-            cachedData.IsTelemetryStage = inComingData.IsTelemetryStage;
-
-            if (inComingData.CrtTypeASignal != Int32.MaxValue) cachedData.CrtTypeASignal = inComingData.CrtTypeASignal;
-            if (inComingData.TgtTypeASignal != Int32.MaxValue) cachedData.TgtTypeASignal = inComingData.TgtTypeASignal;
-            if (inComingData.CrtTypeBSignal != Int32.MaxValue) cachedData.CrtTypeBSignal = inComingData.CrtTypeBSignal;
-            if (inComingData.TgtTypeBSignal != Int32.MaxValue) cachedData.TgtTypeBSignal = inComingData.TgtTypeBSignal;
-            if (inComingData.CrtMission != Int32.MaxValue) cachedData.CrtMission = inComingData.CrtMission;
-            if (inComingData.TgtMission != Int32.MaxValue) cachedData.TgtMission = inComingData.TgtMission;
-            if (inComingData.TypeATier != Int32.MaxValue) cachedData.TypeATier = inComingData.TypeATier;
-            if (inComingData.TypeBTier != Int32.MaxValue) cachedData.TypeBTier = inComingData.TypeBTier;
-            if (inComingData.InfoCounter != Int32.MaxValue) cachedData.InfoCounter = inComingData.InfoCounter;
-            if (inComingData.InfoTarget != Int32.MaxValue) cachedData.InfoTarget = inComingData.InfoTarget;
+            _cachedData.TelemetryPaused = inComingData.TelemetryPaused;
+            _cachedData.IsTelemetryStage = inComingData.IsTelemetryStage;
+            
+            for (var i = 0; i < 10; i++)
+            {
+                UpdateCachedData(inComingData, i);
+            }
         }
 
         private void UpdateNumbersCore()
         {
-            NormalSignal.text = Padding(cachedData.CrtTypeASignal) + "/" + Padding(cachedData.TgtTypeASignal);
-            NetworkSignal.text = Padding(cachedData.CrtTypeBSignal) + "/" + Padding(cachedData.TgtTypeBSignal);
-            MissionTarget.text = "[" + Padding(cachedData.CrtMission) + "]";
-            MissionTarget_Big.text = "[" + Padding(cachedData.CrtMission) + "]";
-            NormalTierText.text = "[" + Padding(cachedData.TypeATier) + "]";
-            NetworkTierText.text = "[" + Padding(cachedData.TypeBTier) + "]";
-            SignalText.text = Utils.PaddingNum4Digit(cachedData.InfoCounter) + "/" + Utils.PaddingNum4Digit(cachedData.InfoTarget);
+            NormalSignal.text = _padding(_cachedData.CrtTypeASignal) + "/" + _padding(_cachedData.TgtTypeASignal);
+            NetworkSignal.text = _padding(_cachedData.CrtTypeBSignal) + "/" + _padding(_cachedData.TgtTypeBSignal);
+            MissionTarget.text = "[" + _padding(_cachedData.CrtMission) + "]";
+            MissionTarget_Big.text = "[" + _padding(_cachedData.CrtMission) + "]";
+            NormalTierText.text = "[" + _padding(_cachedData.TypeATier) + "]";
+            NetworkTierText.text = "[" + _padding(_cachedData.TypeBTier) + "]";
+            SignalText.text = Utils.PaddingNum4Digit(_cachedData.InfoCounter) + "/" + Utils.PaddingNum4Digit(_cachedData.InfoTarget);
 
-            UpdateIsTelemetry(cachedData.IsTelemetryStage);
-            UpdatePauseTag(cachedData.TelemetryPaused,cachedData.IsTelemetryStage);
+            UpdateIsTelemetry(_cachedData.IsTelemetryStage);
+            UpdatePauseTag(_cachedData.TelemetryPaused,_cachedData.IsTelemetryStage);
         }
     }
 }

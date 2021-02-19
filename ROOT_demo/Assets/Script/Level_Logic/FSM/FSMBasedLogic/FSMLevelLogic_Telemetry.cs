@@ -285,12 +285,12 @@ namespace ROOT
                 WorldExecutor.UpdateRoundData_Stepped(ref LevelAsset);
                 var timingEvent = new TimingEventInfo
                 {
-                    Type = WorldEvent.Timing_Event.InGameStatusChangedEvent,
+                    Type = WorldEvent.InGameStatusChangedEvent,
                     CurrentStageType=RoundGist.Value.Type,
                 };
                 var timingEvent2 = new TimingEventInfo
                 {
-                    Type = WorldEvent.Timing_Event.CurrencyIOStatusChangedEvent,
+                    Type = WorldEvent.CurrencyIOStatusChangedEvent,
                     BoardCouldIOCurrencyData = BoardCouldIOCurrency,
                     UnitCouldGenerateIncomeData = IsRequireRound,
                 };

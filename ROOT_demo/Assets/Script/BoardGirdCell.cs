@@ -301,12 +301,12 @@ namespace ROOT
             CashingText.color = NeutralCashColoring;
             CashingText.enabled = false;
             
-            MessageDispatcher.AddListener(Timing_Event.CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
+            MessageDispatcher.AddListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
         }
 
         protected void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(Timing_Event.CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
+            MessageDispatcher.RemoveListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
         }
     }
 }

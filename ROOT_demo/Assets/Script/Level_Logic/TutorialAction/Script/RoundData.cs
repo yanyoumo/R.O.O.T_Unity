@@ -75,7 +75,7 @@ namespace ROOT
         public StageType? CheckStage(int truncatedCount,bool isFinalRound)
         {
             //RISK 这里现在把最后一个Round的Destoryer部分变成Boss阶段。
-            //Hmmmm还是尽量稍改代码的狗皮膏药，先逻辑和相关东西弄明白后这里得重新搞。
+            //Hmmmm还是尽量少改代码的狗皮膏药，先逻辑和相关东西弄明白后这里得重新搞。
             var dic=new List<Tuple<StageType, int>>()
             {
                 new Tuple<StageType, int>(StageType.Shop,ShopLength),

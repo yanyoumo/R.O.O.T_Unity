@@ -3,7 +3,7 @@ using com.ootii.Messages;
 using ROOT.Message;
 using TMPro;
 using UnityEngine;
-using static ROOT.WorldEvent.Visual_Event;
+using static ROOT.WorldEvent;
 
 namespace ROOT
 {
@@ -21,12 +21,12 @@ namespace ROOT
         
         protected virtual void Awake()
         {
-            MessageDispatcher.AddListener(WorldEvent.Timing_Event.InGameStatusChangedEvent, RoundTypeChangedHandler);
+            MessageDispatcher.AddListener(InGameStatusChangedEvent, RoundTypeChangedHandler);
         }
 
         protected virtual void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.Timing_Event.InGameStatusChangedEvent, RoundTypeChangedHandler);
+            MessageDispatcher.RemoveListener(InGameStatusChangedEvent, RoundTypeChangedHandler);
         }
     }
 
@@ -35,10 +35,13 @@ namespace ROOT
         public TextMeshPro Currency;
         public TextMeshPro Incomes;
 
-        private bool RequestCostChartInfoCallBack(CurrencyUpdatedInfo info)
+        private int _cached_currencyVal;
+        private int _cached_incomesVal;
+            
+        private void UpdateCachedData(int currencyVal, int incomesVal)
         {
-            CostChartUpdateCore(info.CurrencyVal, info.IncomesVal);
-            return true;
+            if (currencyVal != int.MaxValue) _cached_currencyVal = currencyVal;
+            if (incomesVal != int.MaxValue) _cached_incomesVal = incomesVal;
         }
         
         private void UpdateCurrencyVal(int currencyVal)
@@ -81,11 +84,9 @@ namespace ROOT
 
         private void CostChartUpdateCore(int currencyVal, int incomesVal)
         {
-            if (currencyVal >= 0)
-            {
-                UpdateCurrencyVal(currencyVal);
-            }
-
+            UpdateCachedData(currencyVal, incomesVal);
+                
+            UpdateCurrencyVal(_cached_currencyVal);
             switch (StageType)
             {
                 case StageType.Shop:
@@ -95,31 +96,23 @@ namespace ROOT
                     break;
                 case StageType.Require:
                 case StageType.Destoryer:
-                    if (incomesVal != Int32.MaxValue)
-                    {
-                        UpdateIncomeVal(incomesVal);
-                    }
-
+                    UpdateIncomeVal(_cached_incomesVal);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        protected override void RoundTypeChangedHandler(IMessage rmessage)
-        {
-            base.RoundTypeChangedHandler(rmessage);
-            if (rmessage is TimingEventInfo info)
-            {
-                var message = new CurrencyInquiryInfo {CallBack = RequestCostChartInfoCallBack};
-                MessageDispatcher.SendMessage(message);
-            }
-        }
-        
         protected override void Awake()
         {
             base.Awake();
             MessageDispatcher.AddListener(CurrencyUpdatedEvent, CostChartUpdateHandler);
+        }
+
+        protected override void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(CurrencyUpdatedEvent, CostChartUpdateHandler);
+            base.OnDestroy();
         }
     }
 }

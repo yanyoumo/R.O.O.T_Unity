@@ -21,6 +21,7 @@ namespace ROOT
 
     /// <summary>
     /// 一个每个关卡都有这么一个类，在Lvl-WRD之间传来传去。这个类只有一个，做成最通用的样子。
+    /// 意外地、根据现有流程；这个类似乎也要去掉了；所有数据直接从FSM里面读取最新的。
     /// </summary>
     [Serializable]
     public sealed class GameAssets //ASSET 这里不应该有任何实际的逻辑（有些便于操作的除外
@@ -86,8 +87,8 @@ namespace ROOT
         //CoreFunctionFlag
         public bool InputEnabled = true;
         public bool CurrencyEnabled = true;
-        public bool BoardCouldIOCurrency = true;
-        public bool UnitCouldGenerateIncome = true;
+        /*public bool BoardCouldIOCurrency = true;
+        public bool UnitCouldGenerateIncome = true;*/
         
         //FeatureFunctionFlag
         public bool CursorEnabled = true;
@@ -122,8 +123,8 @@ namespace ROOT
         {
             InputEnabled = true;
             CursorEnabled = true;
-            BoardCouldIOCurrency = true;
-            UnitCouldGenerateIncome = true;
+            /*BoardCouldIOCurrency = true;
+            UnitCouldGenerateIncome = true;*/
             RotateEnabled = true;
             ShopEnabled = true;
             SkillEnabled = true;
@@ -137,8 +138,8 @@ namespace ROOT
         {
             InputEnabled = false;
             CursorEnabled = false;
-            BoardCouldIOCurrency = false;
-            UnitCouldGenerateIncome = false;
+            /*BoardCouldIOCurrency = false;
+            UnitCouldGenerateIncome = false;*/
             RotateEnabled = false;
             ShopEnabled = false;
             SkillEnabled = false;

@@ -555,20 +555,17 @@ namespace ROOT
         public Transform BoardGridZeroing;
 
         public Dictionary<Vector2Int, GameObject> UnitsGameObjects { get; private set; }
-
+        
         public int GetTotalTierCountByCoreType(SignalType signal,HardwareType genre)
         {
             return Units.Where(unit => unit.UnitSignal == signal&&unit.UnitHardware == genre).Sum(unit => unit.Tier);
         }
+        
         public int GetUnitCount => UnitsGameObjects.Count;
-        //public int GetNonPCBUnitCount => Units.Count(unit => unit.UnitCore != CoreType.PCB);
 
         public Unit[] Units => UnitsGameObjects.Values.Select(unitsValue => unitsValue.GetComponentInChildren<Unit>()).ToArray();
-        
-        public int GetBoardID(Vector2Int pos)
-        {
-            return pos.y * BoardLength + pos.x;
-        }
+
+        public readonly Func<Vector2Int, int> GetBoardID = pos => pos.y * BoardLength + pos.x;
 
         public Unit[] FindUnitWithCoreType(SignalType signal,HardwareType genre)
         {
@@ -593,14 +590,13 @@ namespace ROOT
         [Obsolete]
         public Vector3 GetFloatTransform(Vector2Int boardPos)
         {
-            return new Vector3(this._boardPhysicalOriginX + boardPos.x * this._boardPhysicalLength, 0,
+            return new Vector3(_boardPhysicalOriginX + boardPos.x * this._boardPhysicalLength, 0,
                 this._boardPhysicalOriginY + boardPos.y * this._boardPhysicalLength);
         }
-
+        
         public Vector3 GetFloatTransformAnimation(Vector2 boardPos)
         {
-            return new Vector3(this._boardPhysicalOriginX + boardPos.x * this._boardPhysicalLength, 0,
-                this._boardPhysicalOriginY + boardPos.y * this._boardPhysicalLength);
+            return new Vector3(_boardPhysicalOriginX + boardPos.x * _boardPhysicalLength, 0, _boardPhysicalOriginY + boardPos.y * _boardPhysicalLength);
         }
 
         public void UpdateUnitBoardPosAnimation(Vector2Int oldKey)

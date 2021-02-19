@@ -29,6 +29,7 @@ namespace ROOT
         Require,
         Destoryer,
         Telemetry,
+        Acquiring,
         Ending,
     }
     

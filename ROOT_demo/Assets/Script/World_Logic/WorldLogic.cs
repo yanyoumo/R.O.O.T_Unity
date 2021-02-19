@@ -255,37 +255,25 @@ namespace ROOT
     
     public class CurrencyUpdatedInfo : RootMessageBase
     {
-        public int IncomesVal = Int32.MaxValue;
-        public int CurrencyVal = Int32.MaxValue;
-        public override string Type => WorldEvent.Visual_Event.CurrencyUpdatedEvent;
+        public int IncomesVal = int.MaxValue;
+        public int CurrencyVal = int.MaxValue;
+        public override string Type => WorldEvent.CurrencyUpdatedEvent;
     }
     
     public static class WorldEvent
     {
-        /// <summary>
-        /// 这里是一些干线对时事件、属于核心广播事件；调整和修改要比较注意。
-        /// </summary>
-        public static class Timing_Event
-        {
-            public static string InGameStatusChangedEvent = "InGameStatusChangedEvent";
-            public static string CurrencyIOStatusChangedEvent = "CurrencyIOStatusChangedEvent";
-        }
-        
-        /// <summary>
-        /// 这里主要是一些不需要回调的事件，主要是一些实时数据更新等等。
-        /// </summary>
-        public static class Visual_Event
-        {
-            public static string CurrencyUpdatedEvent = "CurrencyUpdatedEvent";
-            public static string BoardSignalUpdatedEvent = "BoardSignalUpdatedEvent";
-        }
+        public static string InGameStatusChangedEvent = "InGameStatusChangedEvent";
+        public static string CurrencyIOStatusChangedEvent = "CurrencyIOStatusChangedEvent";
+        public static string CurrencyUpdatedEvent = "CurrencyUpdatedEvent";
+        public static string BoardSignalUpdatedEvent = "BoardSignalUpdatedEvent";
         
         /// <summary>
         /// 主要是UI方面的事件、主要是可以向核心逻辑调查一些数据；可以放一个回调函数。
         /// </summary>
         public static class Visual_Inquiry_Event
         {
-            public static string CurrencyInquiryEvent = "CurrencyInquiryEvent";
+            //还是优先使用Cache流程吧、Cache搞不定的情况再Inquiry。
+            //public static string CurrencyInquiryEvent = "CurrencyInquiryEvent";
         }
         
         public static string BoardShouldUpdateEvent = "BoardShouldUpdateEvent";
@@ -1120,8 +1108,8 @@ namespace ROOT
             UpdateLevelAsset(ref levelAsset, ref levelAsset.Owner);
 
             levelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
-            levelAsset.UnitCouldGenerateIncome = lvlLogic.IsRequireRound;
-            levelAsset.BoardCouldIOCurrency = lvlLogic.BoardCouldIOCurrency;
+            /*levelAsset.UnitCouldGenerateIncome = lvlLogic.IsRequireRound;
+            levelAsset.BoardCouldIOCurrency = lvlLogic.BoardCouldIOCurrency;*/
 
             if (lvlLogic.IsRequireRound || lvlLogic.IsShopRound)
             {
@@ -1421,27 +1409,31 @@ namespace ROOT
 
         internal static void UpdateBoardData_Instantly(ref GameAssets currentLevelAsset)
         {
-            TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, currentLevelAsset.GameBoard,out var hardwareACount,out TypeASignalCount);
-            TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, currentLevelAsset.GameBoard,out var hardwareBCount,out TypeBSignalCount);
+            TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, currentLevelAsset.GameBoard, out var hardwareACount, out TypeASignalCount);
+            TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, currentLevelAsset.GameBoard, out var hardwareBCount, out TypeBSignalCount);
 
             var inCome = 0;
             var cost = 0;
 
             var tmpInComeM = TypeASignalScore + TypeBSignalScore;
-            if (currentLevelAsset.BoardCouldIOCurrency)
+            if (currentLevelAsset.Owner.BoardCouldIOCurrency)
             {
                 inCome += Mathf.FloorToInt(tmpInComeM);
                 inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
-                if (!currentLevelAsset.UnitCouldGenerateIncome) inCome = 0;
+                if (!currentLevelAsset.Owner.IsRequireRound) inCome = 0;
                 cost = currentLevelAsset.GameBoard.BoardGirdDriver.heatSinkCost;
+                currentLevelAsset.DeltaCurrency = inCome - cost;
+            }
+            else
+            {
+                currentLevelAsset.DeltaCurrency = 0;
             }
 
-            currentLevelAsset.DeltaCurrency = inCome - cost;
 
             var message = new CurrencyUpdatedInfo()
             {
                 CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency()),
-                IncomesVal =  Mathf.RoundToInt(currentLevelAsset.DeltaCurrency),
+                IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency),
             };
             MessageDispatcher.SendMessage(message);
         }
