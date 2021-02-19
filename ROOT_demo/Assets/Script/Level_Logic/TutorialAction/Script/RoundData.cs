@@ -12,6 +12,11 @@ namespace ROOT
     {
         public int NormalRoundCount;
         public bool HasBossRound;
+        [ShowIf("HasBossRound")]
+        [ValueDropdown("BossStageFliter")]
+        public StageType BossStage;
+        //下面Boss的数量提出来放成一个好配置的。
+        private static IEnumerable<StageType> BossStageFliter = Enumerable.Range((int)StageType.Telemetry, 2).Cast<StageType>();
     }
     
     public struct RoundGist

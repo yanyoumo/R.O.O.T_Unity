@@ -8,7 +8,7 @@ namespace ROOT
     {
         Tutorial,
         Career,
-        Classic
+        //Classic
     }
 
     public enum TutorialActionType

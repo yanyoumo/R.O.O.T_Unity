@@ -215,15 +215,6 @@ namespace ROOT
             //roundGist.HSSwTruncatedIdx = new[] {round.ShopLength + round.RequireLength};
             //RISK 商店第一步切换的话，上一轮的摧毁和这个切换有个时序冲突。所以现在在第二步切换。
             roundGist.HSSwTruncatedIdx = new[] {1};
-
-            /*try
-            {
-                Utils.SpreadOutLaying(round.HeatSinkSwitchCount, round.TotalLength, out roundGist.HSSwTruncatedIdx);
-            }
-            catch (ArgumentException)
-            {
-                roundGist.HSSwTruncatedIdx = new[] {-1};
-            }*/
             return roundGist;
         }
 
