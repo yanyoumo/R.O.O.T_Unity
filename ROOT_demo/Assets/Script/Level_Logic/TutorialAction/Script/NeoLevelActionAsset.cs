@@ -2,13 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace ROOT
 {
-    [Serializable]
     public class RoundDatas:IList<NeoRoundData>
     {
+        [NonSerialized]
+        [OdinSerialize]
         private List<NeoRoundData> core;
 
         public StageType GetCurrentType(int step)
@@ -198,7 +200,7 @@ namespace ROOT
     
     [Serializable]
     [CreateAssetMenu(fileName = "NewNeoActionAsset", menuName = "Neo ActionAsset/New Neo ActionAsset")]
-    public class NeoLevelActionAsset : ScriptableObject
+    public class NeoLevelActionAsset :SerializedScriptableObject
     {
         [Header("Basic Data")]
         public string TitleTerm;
@@ -245,6 +247,7 @@ namespace ROOT
             }
         }
         
+        [OdinSerialize]
         [ShowIf("levelType", LevelType.Career)]
         public RoundDatas RoundDatas;
 
