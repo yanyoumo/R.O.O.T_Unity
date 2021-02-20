@@ -17,38 +17,10 @@ MonoBehaviour:
   LevelLogic: {fileID: 0}
   levelType: 1
   AdditionalGameSetup:
-    PlayingSignalTypeA: 0
+    PlayingSignalTypeA: 1
     PlayingSignalTypeB: 0
   RoundDatasGist:
     NormalRoundCount: 3
     HasBossRound: 1
+    Endless: 1
     BossStage: 3
-  RoundDatas:
-  - ID: 0
-    RoundType: 0
-    ShopLength: 0
-    RequireLength: 0
-    TypeARequirement: 0
-    TypeBRequirement: 0
-    HeatSinkLength: 0
-  - ID: 0
-    RoundType: 0
-    ShopLength: 0
-    RequireLength: 0
-    TypeARequirement: 0
-    TypeBRequirement: 0
-    HeatSinkLength: 0
-  - ID: 0
-    RoundType: 0
-    ShopLength: 0
-    RequireLength: 0
-    TypeARequirement: 0
-    TypeBRequirement: 0
-    HeatSinkLength: 0
-  - ID: 0
-    RoundType: 1
-    ShopLength: 0
-    RequireLength: 0
-    TypeARequirement: 0
-    TypeBRequirement: 0
-    HeatSinkLength: 0
