@@ -19,6 +19,14 @@ namespace ROOT
         [Obsolete]
         public static implicit operator RoundData[](RoundDatas datas) => null;
 
+        public RoundGist GetCurrentRoundGist(int step,out int truncatedStep)
+        {
+            var round = GetCurrentRound(step,out truncatedStep);
+            var stage = GetCurrentType(step,out truncatedStep);
+            return new RoundGist();
+            //return LevelActionAsset.ExtractGist(stage, round);
+        }
+        
         public NeoRoundData GetCurrentRound(int step,out int truncatedStep)
         {
             var tmpStep = step;
@@ -294,22 +302,20 @@ namespace ROOT
 
             return StepCount >= PlayableCount;
         }
-
-        [Obsolete]
-        public int GetTruncatedCount(int TotalCount, out int RoundCount)
+        
+        public int GetTruncatedCount(int TotalCount)
         {
             var round = RoundDatas.GetCurrentRound(TotalCount, out var res);
-            RoundCount = round.ID;
             return res;
         }
 
-        public StageType CheckStage(int step)
+        private StageType CheckStage(int step)
         {
             return RoundDatas.GetCurrentType(step);
         }
 
         [Obsolete]
-        public StageType? CheckStage(int truncatedCount, bool isFinalRound)
+        private StageType? CheckStage(int truncatedCount, bool isFinalRound)
         {
             return null;
         }
