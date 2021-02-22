@@ -18,8 +18,15 @@ MonoBehaviour:
     type: 3}
   levelType: 0
   GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
-  ExcludedShop: 0
-  ShopExcludedType: 
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1
+  InitalBoard: []
+  RoundDatasGist:
+    NormalRoundCount: 0
+    HasBossRound: 0
+    Endless: 0
+    BossStage: 0
   Actions:
   - ActionIdx: 0
     ActionType: 3
@@ -181,15 +188,4 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
-  RoundDatasGist:
-    NormalRoundCount: 0
-    HasBossRound: 0
-  RoundDatas: []
-  InitalBoard: []
-  InfoCount: 0
-  InfoVariantRatio: 0
-  InfoTargetRatio: 0
-  StationaryRateList: []
-  AdditionalGameSetup:
-    PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 1
+  ExcludedShop: 0

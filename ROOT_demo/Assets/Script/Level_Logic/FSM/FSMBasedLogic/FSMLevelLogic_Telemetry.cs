@@ -178,7 +178,8 @@ namespace ROOT
                 WorldCycler.TelemetryPause = true;
                 StartTelemetryCost();
             }
-            LevelAsset.SignalPanel.TelemetryPaused = WorldCycler.TelemetryPause;
+            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {TelemetryPaused = WorldCycler.TelemetryPause},};
+            MessageDispatcher.SendMessage(signalInfo);
         }
         private void DealTelemetryPauseBreaking()
         {
@@ -206,16 +207,19 @@ namespace ROOT
             var bossStageCount = LevelAsset.ActionAsset.TelemetryCount;
             var totalSprayCount = bossStageCount * SprayCountPerAnimateInterval;
             //这个数据还得传过去。
-            var targetInfoCount =
-                Mathf.RoundToInt(LevelAsset.ActionAsset.InfoCount * LevelAsset.ActionAsset.InfoTargetRatio);
-            LevelAsset.SignalPanel.SignalTarget = targetInfoCount;
+            var targetInfoCount = Mathf.RoundToInt(LevelAsset.ActionAsset.InfoCount * LevelAsset.ActionAsset.InfoTargetRatio);
 
-            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, LevelAsset.ActionAsset.InfoCount,
-                LevelAsset.ActionAsset.InfoVariantRatio);
+            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, LevelAsset.ActionAsset.InfoCount, LevelAsset.ActionAsset.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
-            LevelAsset.SignalPanel.IsTelemetryStage = true;
             WorldCycler.TelemetryStage = true;
+            
+            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData()
+            {
+                InfoTarget = targetInfoCount,
+                IsTelemetryStage=WorldCycler.TelemetryStage,//
+            },};
+            MessageDispatcher.SendMessage(signalInfo);
         }
 
         private void TelemetryPauseAction()
@@ -232,7 +236,7 @@ namespace ROOT
             };
             MessageDispatcher.SendMessage(message);
             
-            if (LevelAsset.ActionAsset.RoundDatas.Length > 0)
+            if (LevelAsset.ActionAsset.RoundLib.Count > 0)
             {
                 //这个东西放在这里还是怎么着？就先这样吧。
                 WorldCycler.InitCycler();
@@ -249,7 +253,6 @@ namespace ROOT
         {
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
             LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
-            LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
             LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
         }
 
@@ -280,12 +283,12 @@ namespace ROOT
                 WorldExecutor.UpdateRoundData_Stepped(ref LevelAsset);
                 var timingEvent = new TimingEventInfo
                 {
-                    Type = WorldEvent.Timing_Event.InGameStatusChangedEvent,
+                    Type = WorldEvent.InGameStatusChangedEvent,
                     CurrentStageType=RoundGist.Value.Type,
                 };
                 var timingEvent2 = new TimingEventInfo
                 {
-                    Type = WorldEvent.Timing_Event.CurrencyIOStatusChangedEvent,
+                    Type = WorldEvent.CurrencyIOStatusChangedEvent,
                     BoardCouldIOCurrencyData = BoardCouldIOCurrency,
                     UnitCouldGenerateIncomeData = IsRequireRound,
                 };

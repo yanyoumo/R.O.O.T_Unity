@@ -8,7 +8,7 @@ namespace ROOT
     {
         Tutorial,
         Career,
-        Classic
+        //Classic
     }
 
     public enum TutorialActionType
@@ -29,6 +29,7 @@ namespace ROOT
         Require,
         Destoryer,
         Telemetry,
+        Acquiring,
         Ending,
     }
     

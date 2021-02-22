@@ -29,36 +29,6 @@ namespace ROOT
         CleanUp,//将所有FSM的类数据重置、并且是FSM流程等待一帧的充分条件。
         COUNT,//搁在最后、计数的。
     }
-
-    public sealed class FSMEventInquiryResponder
-    {
-        private FSMLevelLogic owner;
-        
-        private void CurrencyInquiryHandler(IMessage rMessage)
-        {
-            if(rMessage is CurrencyInquiryInfo info)
-            {
-                WorldExecutor.UpdateBoardData_Instantly(ref owner.LevelAsset);
-                var message = new CurrencyUpdatedInfo()
-                {
-                    CurrencyVal = Mathf.RoundToInt(owner.LevelAsset.GameStateMgr.GetCurrency()),
-                    IncomesVal =  Mathf.RoundToInt(owner.LevelAsset.DeltaCurrency),
-                };
-                info.CallBack(message);
-            }
-        }
-        
-        public FSMEventInquiryResponder(FSMLevelLogic _owner)
-        {
-            owner = _owner;
-            MessageDispatcher.AddListener(Visual_Inquiry_Event.CurrencyInquiryEvent, CurrencyInquiryHandler);
-        }
-        
-        ~FSMEventInquiryResponder()
-        {
-            MessageDispatcher.RemoveListener(Visual_Inquiry_Event.CurrencyInquiryEvent, CurrencyInquiryHandler);
-        }
-    }
     
     //里面不同的类型可以使用partial关键字拆开管理。
     public abstract class FSMLevelLogic:MonoBehaviour   //LEVEL-LOGIC/每一关都有一个这个类。
@@ -147,50 +117,16 @@ namespace ROOT
         
         #region TransitionReq
 
-        protected bool CheckIsSkill()
-        {
-            return LevelAsset.SkillMgr.CurrentSkillType.HasValue && LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
-        }
+        protected bool CheckIsSkill() => LevelAsset.SkillMgr.CurrentSkillType.HasValue && LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
+        protected bool CheckInited() => (ReadyToGo) && (!PendingCleanUp);
+        protected bool CheckAutoF() => AutoDrive.HasValue && AutoDrive.Value;
+        protected bool CheckAutoR() => IsReverseCycle;
+        protected bool CheckFCycle() => IsForwardCycle;
+        protected bool CheckCtrlPackAny() => CtrlPack.AnyFlag();
+        protected bool CheckStartAnimate() => ShouldStartAnimate;
+        protected bool CheckLoopAnimate() => Animating;
+        protected bool CheckNotAnimating() => !Animating;
 
-        protected bool CheckInited()
-        {
-            return (ReadyToGo) && (!PendingCleanUp);
-        }
-
-        protected bool CheckAutoF()
-        {
-            return AutoDrive.HasValue && AutoDrive.Value;
-        }
-        protected bool CheckAutoR()
-        {
-            return IsReverseCycle;
-        }
-
-        protected bool CheckFCycle()
-        {
-            return IsForwardCycle;
-        }
-        
-        protected bool CheckCtrlPackAny()
-        {
-            return CtrlPack.AnyFlag();
-        }
-
-        protected bool CheckStartAnimate()
-        {
-            return ShouldStartAnimate;
-        }
-
-        protected bool CheckLoopAnimate()
-        {
-            return Animating;
-        }
-
-        protected bool CheckNotAnimating()
-        {
-            return !Animating;
-        }
-        
         protected void TriggerAnimation()
         {
             _mainFSM.currentStatus = RootFSMStatus.Animate;
@@ -242,7 +178,6 @@ namespace ROOT
             LevelAsset.Owner = this;
         }
 
-        
         protected virtual void AdditionalInitLevel()
         {
             //BaseVerison,DoNothing.
@@ -405,13 +340,11 @@ namespace ROOT
         
         protected void CleanUp()
         {
-            //shouldCycle = false;
             movedTile = false;
             movedCursor = false;
             animate_Co = null;
             LevelAsset.BoughtOnce = false;
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            //LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.LevelProgress = LevelAsset.StepCount / (float)LevelAsset.ActionAsset.PlayableCount;
         }
 
@@ -458,7 +391,6 @@ namespace ROOT
 
         protected virtual void BoardUpdatedHandler(IMessage rMessage)
         {
-            //TODO 主要是这里、要不要再解耦。
             WorldExecutor.UpdateBoardData_Instantly(ref LevelAsset);
         }
 
