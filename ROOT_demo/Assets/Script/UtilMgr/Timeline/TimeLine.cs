@@ -119,7 +119,7 @@ namespace ROOT
             }
         }
 
-        private RoundDatas RoundDatas;
+        private RoundLib _roundLib;
         private bool HasHeatsinkSwitch = false;
 
         void CheckToken(Transform MarkRoot, int j, int markerID)
@@ -217,7 +217,7 @@ namespace ROOT
         {
             _currentGameAsset = levelAsset;
             Debug.Assert(_currentGameAsset.StepCount == 0);
-            RoundDatas = levelAsset.ActionAsset.RoundDatas;
+            _roundLib = levelAsset.ActionAsset.RoundLib;
             UpdateTimeLine();
         }
 

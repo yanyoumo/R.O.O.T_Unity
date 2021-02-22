@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -69,49 +69,49 @@ namespace ROOT
         public UnitGist[] InitalBoard;
 
         [ShowIf("levelType", LevelType.Career)]
-        public RoundDatasGist RoundDatasGist;
+        public RoundLibGist roundLibGist;
 
         [ShowIf("levelType", LevelType.Career)]
         [Button("Create New RoundDatas From Gist")]
         public void CreateRoundDatasFromGist()
         {
-            if (RoundDatasGist.NormalRoundCount <= 0)
+            if (roundLibGist.NormalRoundCount <= 0)
             {
                 Debug.LogError("Can't create zero length Rounds");
             }
             else
             {
-                RoundDatas = new RoundDatas();
-                for (int i = 0; i < RoundDatasGist.NormalRoundCount; i++)
+                RoundLib = new RoundLib();
+                for (int i = 0; i < roundLibGist.NormalRoundCount; i++)
                 {
-                    RoundDatas.Add(new RoundData {ID = i});
+                    RoundLib.Add(new RoundData {ID = i});
                 }
 
-                if (RoundDatasGist.HasBossRound)
+                if (roundLibGist.HasBossRound)
                 {
-                    RoundDatas.Add(new RoundData
+                    RoundLib.Add(new RoundData
                     {
-                        ID = RoundDatas.Count,
+                        ID = RoundLib.Count,
                         RoundTypeData = RoundType.Boss,
-                        bossStageType = RoundDatasGist.BossStage
+                        bossStageType = roundLibGist.BossStage
                     });
                 }
             }
         }
 
         [OdinSerialize] [ShowIf("levelType", LevelType.Career)]
-        public RoundDatas RoundDatas;
+        public RoundLib RoundLib;
 
         [Header("Tutorial")] [ShowIf("levelType", LevelType.Tutorial)]
         public TutorialActionData[] Actions;
 
-        public StageType GetStageType(int step) => RoundDatas.GetCurrentType(step);
+        public StageType GetStageType(int step) => RoundLib.GetCurrentType(step);
 
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
 
-        private bool IsEndless => !RoundDatasGist.HasBossRound && RoundDatasGist.Endless;
+        private bool IsEndless => !roundLibGist.HasBossRound && roundLibGist.Endless;
 
-        public int PlayableCount => IsEndless ? int.MaxValue : RoundDatas.Sum(round => round.TotalLength);
+        public int PlayableCount => IsEndless ? int.MaxValue : RoundLib.Sum(round => round.TotalLength);
 
         public bool HasEnded(int StepCount)
         {
@@ -123,68 +123,17 @@ namespace ROOT
             return StepCount >= PlayableCount;
         }
         
-        public int GetTruncatedCount(int TotalCount)
-        {
-            var round = RoundDatas.GetCurrentRound(TotalCount, out var res);
-            return res;
-        }
+        public int GetTruncatedCount(int totalCount) => RoundLib.GetTruncatedStep(totalCount);
 
-        private StageType CheckStage(int step)
-        {
-            return RoundDatas.GetCurrentType(step);
-        }
+        public RoundGist GetRoundGistByStep(int stepCount) => RoundLib.GetCurrentRoundGist(stepCount);
 
-        [Obsolete]
-        private StageType? CheckStage(int truncatedCount, bool isFinalRound)
-        {
-            return null;
-        }
-
-        public RoundGist GetRoundGistByStep(int stepCount)
-        {
-            var round=RoundDatas.GetCurrentRound(stepCount,out var A);
-            var stage=RoundDatas.GetCurrentType(stepCount,out var B);
-            return ExtractGist(stage, round);
-        }
+        public RoundGist? PeekBossRoundGist() => RoundLib.PeekBossRoundGist();
         
-        public static RoundGist ExtractGist(StageType type, RoundData round)
-        {
-            var roundGist = new RoundGist {ID=round.ID,Type = type};
-            switch (type)
-            {
-                case StageType.Shop:
-                    roundGist.normalReq = round.TypeARequirement;
-                    roundGist.networkReq = round.TypeBRequirement;
-                    roundGist.shopLength = round.ShopLength;
-                    break;
-                case StageType.Require:
-                    roundGist.normalReq = round.TypeARequirement;
-                    roundGist.networkReq = round.TypeBRequirement;
-                    break;
-                case StageType.Destoryer:
-                    break;
-                case StageType.Telemetry:
-                    roundGist.TelemetryLength = round.bossStageLength;
-                    roundGist.DestoryerCount = round.DestoryerCount;
-                    roundGist.InfoCount = round.InfoCount;
-                    break;
-                case StageType.Ending:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
-
-            //roundGist.HSSwTruncatedIdx = new[] {round.ShopLength + round.RequireLength};
-            //RISK 商店第一步切换的话，上一轮的摧毁和这个切换有个时序冲突。所以现在在第二步切换。
-            roundGist.HSSwTruncatedIdx = new[] {1};
-            return roundGist;
-        }
-        
-        [Obsolete] private bool IsTelemetry => RoundDatasGist.HasBossRound && RoundDatasGist.BossStage == StageType.Telemetry;
-        [Obsolete] public int TelemetryCount => IsTelemetry ? RoundDatas.Last().bossStageLength : 0;
-        [Obsolete] public int InfoCount => IsTelemetry ? RoundDatas.Last().InfoCount : 0;
-        [Obsolete] public int InfoVariantRatio => IsTelemetry ? RoundDatas.Last().InfoVariantRatio : 0;
-        [Obsolete] public int InfoTargetRatio => IsTelemetry ? RoundDatas.Last().InfoTargetRatio : 0;
+        [Obsolete] private bool IsTelemetry => roundLibGist.HasBossRound && roundLibGist.BossStage == StageType.Telemetry;
+        [Obsolete] public int TelemetryCount => IsTelemetry ? RoundLib.Last().bossStageLength : 0;
+        [Obsolete] public int InfoCount => IsTelemetry ? RoundLib.Last().InfoCount : 0;
+        [Obsolete] public int InfoVariantRatio => IsTelemetry ? RoundLib.Last().InfoVariantRatio : 0;
+        [Obsolete] public int InfoTargetRatio => IsTelemetry ? RoundLib.Last().InfoTargetRatio : 0;
 
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;
 

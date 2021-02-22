@@ -207,11 +207,9 @@ namespace ROOT
             var bossStageCount = LevelAsset.ActionAsset.TelemetryCount;
             var totalSprayCount = bossStageCount * SprayCountPerAnimateInterval;
             //这个数据还得传过去。
-            var targetInfoCount =
-                Mathf.RoundToInt(LevelAsset.ActionAsset.InfoCount * LevelAsset.ActionAsset.InfoTargetRatio);
+            var targetInfoCount = Mathf.RoundToInt(LevelAsset.ActionAsset.InfoCount * LevelAsset.ActionAsset.InfoTargetRatio);
 
-            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, LevelAsset.ActionAsset.InfoCount,
-                LevelAsset.ActionAsset.InfoVariantRatio);
+            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, LevelAsset.ActionAsset.InfoCount, LevelAsset.ActionAsset.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
             WorldCycler.TelemetryStage = true;
@@ -238,7 +236,7 @@ namespace ROOT
             };
             MessageDispatcher.SendMessage(message);
             
-            if (LevelAsset.ActionAsset.RoundDatas.Length > 0)
+            if (LevelAsset.ActionAsset.RoundLib.Count > 0)
             {
                 //这个东西放在这里还是怎么着？就先这样吧。
                 WorldCycler.InitCycler();
