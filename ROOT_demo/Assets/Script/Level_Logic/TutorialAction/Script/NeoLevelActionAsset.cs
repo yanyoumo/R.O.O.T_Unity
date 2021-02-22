@@ -8,16 +8,16 @@ using UnityEngine;
 
 namespace ROOT
 {
-    public class RoundDatas:IList<NeoRoundData>
+    public class RoundDatas:IList<RoundData>
     {
         public int Length => core.Count;
         
         [NonSerialized]
         [OdinSerialize]
-        private List<NeoRoundData> core;
+        private List<RoundData> core;
 
-        [Obsolete]
-        public static implicit operator RoundData[](RoundDatas datas) => null;
+        //[Obsolete]
+        //public static implicit operator RoundData[](RoundDatas datas) => null;
 
         public RoundGist GetCurrentRoundGist(int step,out int truncatedStep)
         {
@@ -27,7 +27,7 @@ namespace ROOT
             //return LevelActionAsset.ExtractGist(stage, round);
         }
         
-        public NeoRoundData GetCurrentRound(int step,out int truncatedStep)
+        public RoundData GetCurrentRound(int step,out int truncatedStep)
         {
             var tmpStep = step;
             var currentRoundData = core[0];
@@ -58,12 +58,12 @@ namespace ROOT
         
         public RoundDatas()
         {
-            core = new List<NeoRoundData>();
+            core = new List<RoundData>();
         }
         
         #region INTERFACE
 
-        public IEnumerator<NeoRoundData> GetEnumerator()
+        public IEnumerator<RoundData> GetEnumerator()
         {
             return core.GetEnumerator();
         }
@@ -73,7 +73,7 @@ namespace ROOT
             return GetEnumerator();
         }
 
-        public void Add(NeoRoundData item)
+        public void Add(RoundData item)
         {
             core.Add(item);
         }
@@ -83,29 +83,29 @@ namespace ROOT
             core.Clear();
         }
 
-        public bool Contains(NeoRoundData item)
+        public bool Contains(RoundData item)
         {
             return core.Contains(item);
         }
 
-        public void CopyTo(NeoRoundData[] array, int arrayIndex)
+        public void CopyTo(RoundData[] array, int arrayIndex)
         {
             core.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(NeoRoundData item)
+        public bool Remove(RoundData item)
         {
             return core.Remove(item);
         }
 
         public int Count => core.Count;
         public bool IsReadOnly => false;
-        public int IndexOf(NeoRoundData item)
+        public int IndexOf(RoundData item)
         {
             return core.IndexOf(item);
         }
 
-        public void Insert(int index, NeoRoundData item)
+        public void Insert(int index, RoundData item)
         {
             core.Insert(index, item);
         }
@@ -115,7 +115,7 @@ namespace ROOT
             core.RemoveAt(index);
         }
 
-        public NeoRoundData this[int index]
+        public RoundData this[int index]
         {
             get => core[index];
             set => core[index] = value;
@@ -123,8 +123,8 @@ namespace ROOT
         #endregion
     }
     
-    [Serializable]
-    public struct NeoRoundData
+    //[Serializable]
+    /*public struct NeoRoundData
     {
         [ReadOnly]
         public int ID;
@@ -371,5 +371,5 @@ namespace ROOT
         [Obsolete("Why?")] public List<SignalType> ShopExcludedType => null;
 
         [Obsolete("Why?")] public bool ExcludedShop = false;
-    }
+    }*/
 }

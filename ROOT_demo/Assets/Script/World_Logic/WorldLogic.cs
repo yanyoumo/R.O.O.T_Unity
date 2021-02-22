@@ -1099,7 +1099,7 @@ namespace ROOT
         {
             var lvlLogic = levelAsset.Owner;
             var roundGist = lvlLogic.RoundGist.Value;
-            var tCount = levelAsset.ActionAsset.GetTruncatedCount(levelAsset.StepCount, out var count);
+            var tCount = levelAsset.ActionAsset.GetTruncatedCount(levelAsset.StepCount);
             if (roundGist.SwitchHeatsink(tCount))
             {
                 levelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();

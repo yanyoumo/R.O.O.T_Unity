@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace ROOT
@@ -46,163 +47,124 @@ namespace ROOT
 
     [Serializable]
     [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
-    public class LevelActionAsset : ScriptableObject
+    public class LevelActionAsset : SerializedScriptableObject
     {
-        [Header("Basic Data")]
-        public string TitleTerm;
-        [AssetSelector(Filter = "t:Sprite",Paths= "Assets/Resources/UIThumbnail/TutorialThumbnail")]
+        [Header("Basic Data")] public string TitleTerm;
+
+        [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail")]
         public Sprite Thumbnail;
-        [Required]
-        [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab")]
+
+        [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab")]
         public GameObject LevelLogic;
-        [EnumToggleButtons]
-        public LevelType levelType;
-        [Required]
-        [AssetSelector(Paths = "Assets/Resources/GameMode")]
+
+        [EnumToggleButtons] public LevelType levelType;
+
+        [Required] [AssetSelector(Paths = "Assets/Resources/GameMode")]
         public GameModeAsset GameModeAsset;
 
-        public bool ExcludedShop=false;
-        [ShowIf("@this.ExcludedShop==true")]
-        public List<SignalType> ShopExcludedType;
+        [Header("Career")] [ShowIf("levelType", LevelType.Career)]
+        public AdditionalGameSetup AdditionalGameSetup;
 
-        [Header("Tutorial")]
-        [ShowIf("levelType", LevelType.Tutorial)]
-        public TutorialActionData[] Actions;
+        [ShowIf("levelType", LevelType.Career)]
+        public UnitGist[] InitalBoard;
 
-        [Header("Career")] 
         [ShowIf("levelType", LevelType.Career)]
         public RoundDatasGist RoundDatasGist;
-        
-        [ShowIf("levelType", LevelType.Career)]
-        public RoundData[] RoundDatas;
-        
+
         [ShowIf("levelType", LevelType.Career)]
         [Button("Create New RoundDatas From Gist")]
         public void CreateRoundDatasFromGist()
         {
-            if (RoundDatasGist.NormalRoundCount<=0)
+            if (RoundDatasGist.NormalRoundCount <= 0)
             {
                 Debug.LogError("Can't create zero length Rounds");
             }
             else
             {
+                RoundDatas = new RoundDatas();
+                for (int i = 0; i < RoundDatasGist.NormalRoundCount; i++)
+                {
+                    RoundDatas.Add(new RoundData {ID = i});
+                }
+
                 if (RoundDatasGist.HasBossRound)
                 {
-                    RoundDatas = new RoundData[RoundDatasGist.NormalRoundCount+1];
-                    RoundDatas[RoundDatas.Length - 1].RoundType = RoundType.Boss;
-                }
-                else
-                {
-                    RoundDatas = new RoundData[RoundDatasGist.NormalRoundCount];
+                    RoundDatas.Add(new RoundData
+                    {
+                        ID = RoundDatas.Count,
+                        RoundTypeData = RoundType.Boss,
+                        bossStageType = RoundDatasGist.BossStage
+                    });
                 }
             }
         }
-        
-        [ShowIf("levelType", LevelType.Career)]
-        [Button("Extract RoundData Gist")]
-        public void ExtractRoundDatasToGist()
-        {
-            var normalCount = RoundDatas.Count(round => round.RoundType == RoundType.Normal);
-            var bossCount = RoundDatas.Count(round => round.RoundType == RoundType.Boss);
-            RoundDatasGist = new RoundDatasGist
-            {
-                NormalRoundCount = normalCount,
-                HasBossRound = (bossCount > 0),
-            };
-        }
-        
-        [Space]
-        [ShowIf("levelType", LevelType.Career)]
-        public UnitGist[] InitalBoard;
-        [ShowIf("levelType", LevelType.Career)]
-        [Range(0, 10000)]
-        public int InfoCount;
-        [Range(0, 1.0f)]
-        public float InfoVariantRatio;
-        [Range(0, 1.0f)]
-        public float InfoTargetRatio;
-        [ShowIf("levelType", LevelType.Career)]
-        [ShowInInspector]
-        [SerializeField]
-        public Vector2Int[] StationaryRateList;
+
+        [OdinSerialize] [ShowIf("levelType", LevelType.Career)]
+        public RoundDatas RoundDatas;
+
+        [Header("Tutorial")] [ShowIf("levelType", LevelType.Tutorial)]
+        public TutorialActionData[] Actions;
+
+        public StageType GetStageType(int step) => RoundDatas.GetCurrentType(step);
 
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
 
+        private bool IsEndless => !RoundDatasGist.HasBossRound && RoundDatasGist.Endless;
+
+        public int PlayableCount => IsEndless ? int.MaxValue : RoundDatas.Sum(round => round.TotalLength);
+
         public bool HasEnded(int StepCount)
         {
+            if (IsEndless)
+            {
+                return false;
+            }
+
             return StepCount >= PlayableCount;
         }
-
-        public int TelemetryCount => RoundDatas[RoundDatas.Length - 1].DestoryerLength;
-
-        /// <summary>
-        /// 获得改时间线上End前玩家可以玩的步长。
-        /// </summary>
-        public int PlayableCount => RoundDatas.Sum(round => round.TotalLength);
-
-        public int GetTruncatedCount(int TotalCount, out int RoundCount)
+        
+        public int GetTruncatedCount(int TotalCount)
         {
-            if (RoundDatas.Length <= 0)
-            {
-                RoundCount = -1;
-                return -1;
-            }
-
-            var res = TotalCount;
-
-            for (var i = 0; i < RoundDatas.Length; i++)
-            {
-                if (res < RoundDatas[i].TotalLength)
-                {
-                    RoundCount = i;
-                    return res;
-                }
-                res -= RoundDatas[i].TotalLength;
-
-            }
-
-            RoundCount = -1;
-            return -1;
+            var round = RoundDatas.GetCurrentRound(TotalCount, out var res);
+            return res;
         }
 
-        [CanBeNull]
-        public RoundGist? GetRoundGistByStep(int stepCount)
+        private StageType CheckStage(int step)
         {
-            var tCount = GetTruncatedCount(stepCount, out var _round);
-            if (tCount==-1) return null;
+            return RoundDatas.GetCurrentType(step);
+        }
 
-            var round = RoundDatas[_round];
-            var type = round.CheckStage(tCount, _round == RoundDatas.Length - 1);
+        [Obsolete]
+        private StageType? CheckStage(int truncatedCount, bool isFinalRound)
+        {
+            return null;
+        }
 
-            if (!type.HasValue) return null;
-
-            var stage = type.Value;
-            if (_round == RoundDatas.Length - 1 && stage == StageType.Destoryer)
-            {
-                stage = StageType.Telemetry;
-            }
-
+        public RoundGist GetRoundGistByStep(int stepCount)
+        {
+            var round=RoundDatas.GetCurrentRound(stepCount,out var A);
+            var stage=RoundDatas.GetCurrentType(stepCount,out var B);
             return ExtractGist(stage, round);
         }
-
+        
         public static RoundGist ExtractGist(StageType type, RoundData round)
         {
             var roundGist = new RoundGist {ID=round.ID,Type = type};
             switch (type)
             {
                 case StageType.Shop:
-                    roundGist.normalReq = round.NormalRequirement;
-                    roundGist.networkReq = round.NetworkRequirement;
+                    roundGist.normalReq = round.TypeARequirement;
+                    roundGist.networkReq = round.TypeBRequirement;
                     roundGist.shopLength = round.ShopLength;
                     break;
                 case StageType.Require:
-                    roundGist.normalReq = round.NormalRequirement;
-                    roundGist.networkReq = round.NetworkRequirement;
+                    roundGist.normalReq = round.TypeARequirement;
+                    roundGist.networkReq = round.TypeBRequirement;
                     break;
                 case StageType.Destoryer:
                     break;
                 case StageType.Telemetry:
-                    roundGist.TelemetryLength = round.DestoryerLength;
+                    roundGist.TelemetryLength = round.bossStageLength;
                     roundGist.DestoryerCount = round.DestoryerCount;
                     roundGist.InfoCount = round.InfoCount;
                     break;
@@ -217,8 +179,17 @@ namespace ROOT
             roundGist.HSSwTruncatedIdx = new[] {1};
             return roundGist;
         }
+        
+        [Obsolete] private bool IsTelemetry => RoundDatasGist.HasBossRound && RoundDatasGist.BossStage == StageType.Telemetry;
+        [Obsolete] public int TelemetryCount => IsTelemetry ? RoundDatas.Last().bossStageLength : 0;
+        [Obsolete] public int InfoCount => IsTelemetry ? RoundDatas.Last().InfoCount : 0;
+        [Obsolete] public int InfoVariantRatio => IsTelemetry ? RoundDatas.Last().InfoVariantRatio : 0;
+        [Obsolete] public int InfoTargetRatio => IsTelemetry ? RoundDatas.Last().InfoTargetRatio : 0;
 
-        //[ReadOnly]
-        public AdditionalGameSetup AdditionalGameSetup;
+        [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;
+
+        [Obsolete("Why?")] public List<SignalType> ShopExcludedType => null;
+
+        [Obsolete("Why?")] public bool ExcludedShop = false;
     }
 }

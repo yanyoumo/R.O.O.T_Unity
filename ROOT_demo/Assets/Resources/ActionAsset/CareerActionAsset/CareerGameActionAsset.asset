@@ -18,40 +18,9 @@ MonoBehaviour:
     type: 3}
   levelType: 1
   GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
-  ExcludedShop: 0
-  ShopExcludedType: 
-  Actions: []
-  RoundDatasGist:
-    NormalRoundCount: 3
-    HasBossRound: 0
-  RoundDatas:
-  - ID: 0
-    RoundType: 0
-    ShopLength: 8
-    RequireLength: 12
-    NormalRequirement: 3
-    NetworkRequirement: 2
-    DestoryerLength: 12
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 1
-    RoundType: 0
-    ShopLength: 12
-    RequireLength: 14
-    NormalRequirement: 5
-    NetworkRequirement: 4
-    DestoryerLength: 12
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 2
-    RoundType: 0
-    ShopLength: 14
-    RequireLength: 14
-    NormalRequirement: 8
-    NetworkRequirement: 6
-    DestoryerLength: 20
-    DestoryerCount: 0
-    InfoCount: 0
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 2
+    PlayingSignalTypeB: 1
   InitalBoard:
   - PlayingSignalSelector: 1
     CoreGenre: 0
@@ -65,10 +34,10 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 1, y: 1}
     IsStation: 0
-  InfoCount: 1200
-  InfoVariantRatio: 0.1
-  InfoTargetRatio: 0.3
-  StationaryRateList: []
-  AdditionalGameSetup:
-    PlayingSignalTypeA: 2
-    PlayingSignalTypeB: 1
+  RoundDatasGist:
+    NormalRoundCount: 3
+    HasBossRound: 0
+    Endless: 0
+    BossStage: 0
+  Actions: []
+  ExcludedShop: 0
