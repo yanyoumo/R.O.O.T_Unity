@@ -38,19 +38,19 @@ MonoBehaviour:
       Data: 0
     - Name: ShopLength
       Entry: 3
-      Data: 6
+      Data: 10
     - Name: RequireLength
       Entry: 3
-      Data: 2
+      Data: 6
     - Name: TypeARequirement
       Entry: 3
-      Data: 4
+      Data: 6
     - Name: TypeBRequirement
       Entry: 3
-      Data: 6
+      Data: 4
     - Name: HeatSinkLength
       Entry: 3
-      Data: 8
+      Data: 17
     - Name: bossStageType
       Entry: 3
       Data: 0
@@ -89,64 +89,64 @@ MonoBehaviour:
       Data: 10
     - Name: RequireLength
       Entry: 3
-      Data: 4
-    - Name: TypeARequirement
-      Entry: 3
-      Data: 8
-    - Name: TypeBRequirement
-      Entry: 3
       Data: 6
-    - Name: HeatSinkLength
-      Entry: 3
-      Data: 10
-    - Name: bossStageType
-      Entry: 3
-      Data: 0
-    - Name: bossStageLength
-      Entry: 3
-      Data: 0
-    - Name: DestoryerCount
-      Entry: 3
-      Data: 0
-    - Name: InfoCount
-      Entry: 3
-      Data: 0
-    - Name: InfoVariantRatio
-      Entry: 3
-      Data: 0
-    - Name: InfoTargetRatio
-      Entry: 3
-      Data: 0
-    - Name: AcquiringTarget
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: ROOT.RoundData, Root_Assemble
-    - Name: ID
-      Entry: 3
-      Data: 2
-    - Name: RoundTypeData
-      Entry: 3
-      Data: 0
-    - Name: ShopLength
-      Entry: 3
-      Data: 9
-    - Name: RequireLength
-      Entry: 3
-      Data: 5
     - Name: TypeARequirement
       Entry: 3
       Data: 14
     - Name: TypeBRequirement
       Entry: 3
-      Data: 12
+      Data: 165
     - Name: HeatSinkLength
       Entry: 3
-      Data: 8
+      Data: 10
+    - Name: bossStageType
+      Entry: 3
+      Data: 0
+    - Name: bossStageLength
+      Entry: 3
+      Data: 0
+    - Name: DestoryerCount
+      Entry: 3
+      Data: 0
+    - Name: InfoCount
+      Entry: 3
+      Data: 0
+    - Name: InfoVariantRatio
+      Entry: 3
+      Data: 0
+    - Name: InfoTargetRatio
+      Entry: 3
+      Data: 0
+    - Name: AcquiringTarget
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: ROOT.RoundData, Root_Assemble
+    - Name: ID
+      Entry: 3
+      Data: 2
+    - Name: RoundTypeData
+      Entry: 3
+      Data: 0
+    - Name: ShopLength
+      Entry: 3
+      Data: 14
+    - Name: RequireLength
+      Entry: 3
+      Data: 7
+    - Name: TypeARequirement
+      Entry: 3
+      Data: 17
+    - Name: TypeBRequirement
+      Entry: 3
+      Data: 14
+    - Name: HeatSinkLength
+      Entry: 3
+      Data: 15
     - Name: bossStageType
       Entry: 3
       Data: 0
@@ -200,10 +200,10 @@ MonoBehaviour:
       Data: 3
     - Name: bossStageLength
       Entry: 3
-      Data: 15
+      Data: 28
     - Name: DestoryerCount
       Entry: 3
-      Data: 100
+      Data: 15
     - Name: InfoCount
       Entry: 3
       Data: 1000
@@ -283,10 +283,9 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 2, y: 4}
     IsStation: 0
-  roundLibGist:
-    NormalRoundCount: 3
-    HasBossRound: 1
-    Endless: 0
-    BossStage: 3
+  NormalRoundCount: 3
+  HasBossRound: 1
+  Endless: 0
+  BossStage: 3
   Actions: []
   ExcludedShop: 0

@@ -69,31 +69,42 @@ namespace ROOT
         public UnitGist[] InitalBoard;
 
         [ShowIf("levelType", LevelType.Career)]
-        public RoundLibGist roundLibGist;
-
+        public int NormalRoundCount;
         [ShowIf("levelType", LevelType.Career)]
-        [Button("Create New RoundDatas From Gist")]
+        public bool HasBossRound;
+        [ShowIf("levelType", LevelType.Career)]
+        [HideIf("HasBossRound")] 
+        public bool Endless;
+        [ShowIf("levelType", LevelType.Career)]
+        [ShowIf("HasBossRound")]
+        [ValueDropdown("BossStageFilter")]
+        public StageType BossStage;
+        //下面Boss的数量提出来放成一个好配置的。
+        private static IEnumerable<StageType> BossStageFilter = Enumerable.Range((int)StageType.Telemetry, 2).Cast<StageType>();
+        
+        [ShowIf("levelType", LevelType.Career)]
+        [Button("Create New RoundDatas")]
         public void CreateRoundDatasFromGist()
         {
-            if (roundLibGist.NormalRoundCount <= 0)
+            if (NormalRoundCount <= 0)
             {
                 Debug.LogError("Can't create zero length Rounds");
             }
             else
             {
-                RoundLib = new RoundLib();
-                for (int i = 0; i < roundLibGist.NormalRoundCount; i++)
+                RoundLib = new RoundLib(Endless);
+                for (int i = 0; i < NormalRoundCount; i++)
                 {
                     RoundLib.Add(new RoundData {ID = i});
                 }
 
-                if (roundLibGist.HasBossRound)
+                if (HasBossRound)
                 {
                     RoundLib.Add(new RoundData
                     {
                         ID = RoundLib.Count,
                         RoundTypeData = RoundType.Boss,
-                        bossStageType = roundLibGist.BossStage
+                        bossStageType = BossStage
                     });
                 }
             }
@@ -109,7 +120,7 @@ namespace ROOT
 
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
 
-        private bool IsEndless => !roundLibGist.HasBossRound && roundLibGist.Endless;
+        private bool IsEndless => !RoundLib.HasBossRound && RoundLib.Endless;
 
         public int PlayableCount => IsEndless ? int.MaxValue : RoundLib.Sum(round => round.TotalLength);
 
@@ -129,7 +140,7 @@ namespace ROOT
 
         public RoundGist? PeekBossRoundGist() => RoundLib.PeekBossRoundGist();
         
-        [Obsolete] private bool IsTelemetry => roundLibGist.HasBossRound && roundLibGist.BossStage == StageType.Telemetry;
+        [Obsolete] private bool IsTelemetry => RoundLib.HasBossRound && RoundLib.BossStage == StageType.Telemetry;
         [Obsolete] public int TelemetryCount => IsTelemetry ? RoundLib.Last().bossStageLength : 0;
         [Obsolete] public int InfoCount => IsTelemetry ? RoundLib.Last().InfoCount : 0;
         [Obsolete] public int InfoVariantRatio => IsTelemetry ? RoundLib.Last().InfoVariantRatio : 0;

@@ -10,19 +10,21 @@ namespace ROOT
 {
     public struct RoundGist
     {
-        //这个Struct里面的数据千万不能随便删、Rider虽然显示没有引用、但是！
-        //这个可以通过scriptableObject存东西的！！！
-        //删了之后可能就炸了。
-        public int ID;
+        public RoundData owner;
         public StageType Type;
-        public int normalReq;
-        public int networkReq;
-        public int shopLength;
-        public int[] HSSwTruncatedIdx;
 
-        public int TelemetryLength;
-        public int DestoryerCount;
-        public int InfoCount;
+        public int ID => owner.ID;
+        public int normalReq=> owner.TypeARequirement;
+        public int networkReq=> owner.TypeBRequirement;
+        public int shopLength => owner.ShopLength;
+        public int[] HSSwTruncatedIdx=> new[] {1};
+
+        [Obsolete]
+        public int TelemetryLength=> owner.bossStageLength;
+        [Obsolete]
+        public int DestoryerCount=> owner.DestoryerCount;
+        [Obsolete]
+        public int InfoCount=> owner.InfoCount;
 
         public bool SwitchHeatsink(int tCount)
         {
@@ -36,73 +38,66 @@ namespace ROOT
     [Serializable]
     public struct RoundData
     {
-        [ReadOnly]
-        public int ID;
-        
-        [ReadOnly]
-        public RoundType RoundTypeData;
-        
-        [Range(0,60)]
-        [HideIf("@RoundTypeData == RoundType.Boss")]
+        [ReadOnly] public int ID;
+
+        [ReadOnly] public RoundType RoundTypeData;
+
+        [Range(0, 60)] [HideIf("@RoundTypeData == RoundType.Boss")]
         public int ShopLength;
 
-        [Space]
-        [Range(0, 30)]
-        [HideIf("@RoundTypeData == RoundType.Boss")]
+        [Space] [Range(0, 30)] [HideIf("@RoundTypeData == RoundType.Boss")]
         public int RequireLength;
-        [HorizontalGroup("Split")]
-        [VerticalGroup("Split/Left")]
-        [HideIf("@RoundTypeData == RoundType.Boss")]
+
+        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [HideIf("@RoundTypeData == RoundType.Boss")]
         public int TypeARequirement;
-        [VerticalGroup("Split/Right")]
-        [HideIf("@RoundTypeData == RoundType.Boss")]
+
+        [VerticalGroup("Split/Right")] [HideIf("@RoundTypeData == RoundType.Boss")]
         public int TypeBRequirement;
 
-        [Space]
-        [Range(0, 60)]
-        [HideIf("@RoundTypeData == RoundType.Boss")]
+        [Space] [Range(0, 60)] [HideIf("@RoundTypeData == RoundType.Boss")]
         public int HeatSinkLength;
-        
-        [ReadOnly]
-        [ShowIf("@RoundTypeData == RoundType.Boss")]
-        public StageType bossStageType;//这里还要做一个Filter但是现在先不用。
-        
-        [Range(0, 100)]
-        [ShowIf("@RoundTypeData == RoundType.Boss")]
+
+        [ReadOnly] [ShowIf("@RoundTypeData == RoundType.Boss")]
+        public StageType bossStageType; //这里还要做一个Filter但是现在先不用。
+
+        [Range(0, 100)] [ShowIf("@RoundTypeData == RoundType.Boss")]
         public int bossStageLength;
-        
+
         [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Telemetry")]
         public int DestoryerCount;
+
         [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Telemetry")]
         public int InfoCount;
+
         [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Telemetry")]
         public int InfoVariantRatio;
+
         [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Telemetry")]
         public int InfoTargetRatio;
-        
-        
+
+
         [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Acquiring")]
         public int AcquiringTarget;
 
         [ShowInInspector]
         public int TotalLength => RoundTypeData == RoundType.Normal
-                ? ShopLength + RequireLength + HeatSinkLength
-                : bossStageLength;
+            ? ShopLength + RequireLength + HeatSinkLength
+            : bossStageLength;
 
-        public (StageType,int) this[int index]
+        public (StageType, int) this[int index]
         {
             get
             {
                 switch (index)
                 {
                     case 0:
-                        return (StageType.Shop,ShopLength);
+                        return (StageType.Shop, ShopLength);
                     case 1:
-                        return (StageType.Require,RequireLength);
+                        return (StageType.Require, RequireLength);
                     case 2:
-                        return (StageType.Destoryer,HeatSinkLength);
+                        return (StageType.Destoryer, HeatSinkLength);
                     case 3:
-                        return (bossStageType,bossStageLength);
+                        return (bossStageType, bossStageLength);
                     default:
                         throw new IndexOutOfRangeException();
                 }
@@ -111,7 +106,7 @@ namespace ROOT
 
         public StageType GetCurrentType(int truncatedStep)
         {
-            if (truncatedStep<=TotalLength)
+            if (truncatedStep <= TotalLength)
             {
                 if (RoundTypeData == RoundType.Normal)
                 {
@@ -119,11 +114,12 @@ namespace ROOT
                     for (int i = 0; i < 3; i++)
                     {
                         tmpTStep -= this[i].Item2;
-                        if (tmpTStep<0)
+                        if (tmpTStep < 0)
                         {
                             return this[i].Item1;
                         }
                     }
+
                     throw new ArgumentException();
                 }
                 else
@@ -131,62 +127,47 @@ namespace ROOT
                     return bossStageType;
                 }
             }
+
             throw new ArgumentException();
         }
-        
-        public RoundGist ExtractGist(StageType type)
-        {
-            var round = this;
-            var roundGist = new RoundGist {ID=round.ID,Type = type};
-            switch (type)
-            {
-                case StageType.Shop:
-                    roundGist.normalReq = round.TypeARequirement;
-                    roundGist.networkReq = round.TypeBRequirement;
-                    roundGist.shopLength = round.ShopLength;
-                    break;
-                case StageType.Require:
-                    roundGist.normalReq = round.TypeARequirement;
-                    roundGist.networkReq = round.TypeBRequirement;
-                    break;
-                case StageType.Destoryer:
-                    break;
-                case StageType.Telemetry:
-                    roundGist.TelemetryLength = round.bossStageLength;
-                    roundGist.DestoryerCount = round.DestoryerCount;
-                    roundGist.InfoCount = round.InfoCount;
-                    break;
-                case StageType.Ending:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
-            roundGist.HSSwTruncatedIdx = new[] {1};
-            return roundGist;
-        }
+
+        public RoundGist ExtractGist(StageType type) => new RoundGist {owner = this, Type = type};
     }
 
-    [Serializable]
-    public struct RoundLibGist//严格来说，这个就是RoundLib的Meta数据。
-    {
-        public int NormalRoundCount;
-        public bool HasBossRound;
-        [HideIf("HasBossRound")] 
-        public bool Endless;
-        [ShowIf("HasBossRound")]
-        [ValueDropdown("BossStageFilter")]
-        public StageType BossStage;
-        //下面Boss的数量提出来放成一个好配置的。
-        private static IEnumerable<StageType> BossStageFilter = Enumerable.Range((int)StageType.Telemetry, 2).Cast<StageType>();
-    }
-    
-    
     public class RoundLib:IList<RoundData>
     {
         [NonSerialized]
         [OdinSerialize]
         private List<RoundData> core;
 
+        private bool _endless;
+        
+        public bool HasBossRound => core.Last().RoundTypeData == RoundType.Boss;
+        public StageType? BossStage => HasBossRound ? core.Last().bossStageType : (StageType?) null;
+        public StageType BossStageVal
+        {
+            get
+            {
+                if (BossStage.HasValue)
+                {
+                    return BossStage.Value;
+                }
+                throw new ArgumentException("this lib has no bossStage.");
+            }
+        }
+        public int NormalRoundCount => HasBossRound ? core.Count - 1 : core.Count;
+        public bool Endless
+        {
+            get
+            {
+                if (HasBossRound&&_endless)
+                {
+                    throw new Exception("a round lib couldn't has boss and being endless");
+                }
+                return _endless;
+            }
+        }
+        
         public RoundGist? PeekBossRoundGist()
         {
             //TODO
@@ -227,12 +208,19 @@ namespace ROOT
             GetCurrentRound(step, out var res);
             return res;
         }
-        
-        public RoundLib()
+
+        public RoundLib()//这个玩意儿必须要一个无参构造器
         {
+            _endless = false;
             core = new List<RoundData>();
         }
         
+        public RoundLib(bool endless)
+        {
+            _endless = endless;
+            core = new List<RoundData>();
+        }
+
         #region INTERFACE
 
         public IEnumerator<RoundData> GetEnumerator()
