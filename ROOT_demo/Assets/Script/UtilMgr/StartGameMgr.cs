@@ -52,8 +52,6 @@ namespace ROOT
         public LevelActionAssetLib TutorialActionAssetLib;
         public LevelActionAssetLib ClassicGameActionAssetLib;
         public LevelActionAssetLib CareerGameActionAssetLib;
-
-        public BossAssetLib BossLib;
         
         public SupportedScreenRatio PCSimulateDevice;
         public InputScheme EditorInputScheme;

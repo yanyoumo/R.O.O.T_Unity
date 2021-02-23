@@ -14,30 +14,7 @@ namespace ROOT
     using FSMTransitions = HashSet<RootFSMTransition>;
     using Trans = RootFSMTransition;
     using Status = RootFSMStatus;
-    
-    public abstract class AdditionalBossSetupBase:SerializedUnityObject
-    {
-        [NonSerialized] 
-        [OdinSerialize] 
-        public int BossLength;
-    }
-    
-    public class TelemetryAdditionalData:AdditionalBossSetupBase
-    {
-        [NonSerialized] 
-        [OdinSerialize] 
-        public int DestoryerCount;
-        [NonSerialized] 
-        [OdinSerialize] 
-        public int InfoCount;
-        [NonSerialized] 
-        [OdinSerialize] 
-        public int InfoVariantRatio;
-        [NonSerialized] 
-        [OdinSerialize] 
-        public int InfoTargetRatio;
-    }
-    
+
     public class FSMLevelLogic_Telemetry : FSMLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         #region TelemetryStage

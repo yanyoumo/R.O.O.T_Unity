@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c08d603febb4d4c0c93ca3eee39fc897, type: 3}
-  m_Name: BossLib
+  m_Script: {fileID: 11500000, guid: 161035131b99ffd4c82a1758e2aba914, type: 3}
+  m_Name: TelemetryAdditionalData
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,4 +21,8 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  BossLib: []
+  BossLength: 0
+  DestoryerCount: 0
+  InfoCount: 0
+  InfoVariantRatio: 0
+  InfoTargetRatio: 0

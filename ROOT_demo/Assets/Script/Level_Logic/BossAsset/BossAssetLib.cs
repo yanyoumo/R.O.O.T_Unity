@@ -7,12 +7,16 @@ using UnityEngine;
 
 namespace ROOT.SetupAsset
 {
+    public abstract class BossCodeAssetBase
+    {
+        
+    }
+    
     [Serializable]
     public class BossAsset
     {
         public StageType BossStageType;
-        [OdinSerialize]
-        public AdditionalBossSetupBase BossSetup=new TelemetryAdditionalData();
+        public AdditionalBossSetupBase BossSetup;
     }
 
     [Serializable]
