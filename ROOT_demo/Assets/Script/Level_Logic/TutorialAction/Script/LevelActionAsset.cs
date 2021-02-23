@@ -120,12 +120,14 @@ namespace ROOT.SetupAsset
                     return int.MaxValue;
                 else
                 {
+                    Debug.Log("RoundLibVal.HasBossRound:" + RoundLibVal.HasBossRound);
                     if (!RoundLibVal.HasBossRound)
                     {
                         return RoundLibVal.Sum(round => round.TotalLength);
                     }
                     else
                     {
+                        Debug.Log("BossSetup.BossLength:" + BossSetup.BossLength);
                         return RoundLibVal.Sum(round => round.TotalLength) + BossSetup.BossLength;
                     }
                 }
@@ -142,7 +144,7 @@ namespace ROOT.SetupAsset
         }
         
         [ShowInInspector] 
-        [ShowIf("@RoundLibVal.HasBossRound")]
+        //[ShowIf("@RoundLibVal.HasBossRound")]//这句话有问题、但是问题不大（不要就完了w）
         public BossAdditionalSetupAsset BossSetup;
         
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;

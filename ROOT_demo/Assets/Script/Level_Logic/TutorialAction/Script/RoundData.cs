@@ -96,17 +96,17 @@ namespace ROOT.SetupAsset
         [OdinSerialize]
         private List<RoundData> core;
         
-        [NonSerialized]
-        [OdinSerialize]
-        private bool _hasBossStage;
+        //[NonSerialized]
+        //[OdinSerialize]
+        public bool _hasBossStage;
         
         [NonSerialized]
         [OdinSerialize]
-        private BossStageType _bossStageType;
+        public BossStageType _bossStageType;
         
         [NonSerialized]
         [OdinSerialize]
-        private bool _endless;
+        public bool _endless;
         
         public bool HasBossRound => _hasBossStage;
         public BossStageType? BossStage => HasBossRound ? _bossStageType : (BossStageType?) null;
