@@ -9,23 +9,23 @@ using UnityEngine;
 
 namespace ROOT.SetupAsset
 {
-    [Serializable]
+    /*[Serializable]
     public abstract class AdditionalBossSetupBase
     {
         public int BossLength;
-    }
+    }*/
     
     public class BossMasterMgr : MonoBehaviour
     {
         public BossAssetLib BossLib;
 
         //TODO 这个东西先这样、就反正能用。
-        public readonly Dictionary<StageType, AdditionalBossSetupBase> BossLibDic =
-            new Dictionary<StageType, AdditionalBossSetupBase>
+       /*public readonly Dictionary<BossStageType, AdditionalBossSetupBase> BossLibDic =
+            new Dictionary<BossStageType, AdditionalBossSetupBase>
             {
-                {StageType.Telemetry,new TelemetryAdditionalData()},
-                {StageType.Acquiring,new AcquiringAdditionalData()},
-            };
+                {BossStageType.Telemetry,new TelemetryAdditionalData()},
+                {BossStageType.Acquiring,new AcquiringAdditionalData()},
+            };*/
         
         [NotNull] private static BossMasterMgr _instance;
         public static BossMasterMgr Instance => _instance;

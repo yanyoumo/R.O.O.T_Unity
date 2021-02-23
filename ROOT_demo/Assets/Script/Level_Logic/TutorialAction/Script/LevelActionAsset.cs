@@ -78,11 +78,9 @@ namespace ROOT.SetupAsset
         [ShowIf("levelType", LevelType.Career)] [HideIf("HasBossRound")]
         public bool Endless;
 
-        [ShowIf("levelType", LevelType.Career)] [ShowIf("HasBossRound")] [ValueDropdown("BossStageFilter")]
-        public StageType BossStage;
+        [ShowIf("levelType", LevelType.Career)] [ShowIf("HasBossRound")]
+        public BossStageType BossStage;
         
-        private static IEnumerable<StageType> BossStageFilter = Enumerable.Range((int)StageType.Telemetry, 2).Cast<StageType>();
-
         [ShowIf("levelType", LevelType.Career)]
         [Button("Create New RoundDatas")]
         public void CreateRoundDatasFromGist()
@@ -93,56 +91,59 @@ namespace ROOT.SetupAsset
             }
             else
             {
-                RoundLib = new RoundLib(Endless);
+                RoundLibVal = new RoundLib(Endless, HasBossRound, BossStage);
                 for (int i = 0; i < NormalRoundCount; i++)
                 {
-                    RoundLib.Add(new RoundData {ID = i});
+                    RoundLibVal.Add(new RoundData {ID = i});
                 }
 
                 if (HasBossRound)
                 {
-                    RoundLib.Add(new RoundData
-                    {
-                        ID = RoundLib.Count,
-                        RoundTypeData = RoundType.Boss,
-                        bossStageType = BossStage
-                    });
-                    BossSetup = new BossAdditionalSetupAsset {BossStageType = BossStage};
+                    BossSetup = new BossAdditionalSetupAsset {BossStageTypeVal = BossStage};
                 }
             }
         }
 
         [OdinSerialize] [ShowIf("levelType", LevelType.Career)]
-        public RoundLib RoundLib;
+        public RoundLib RoundLibVal;
 
         [Header("Tutorial")] [ShowIf("levelType", LevelType.Tutorial)]
         public TutorialActionData[] Actions;
-
-        public StageType GetStageType(int step) => RoundLib.GetCurrentType(step);
-
+        
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
-
-        private bool IsEndless => !RoundLib.HasBossRound && RoundLib.Endless;
-
-        public int PlayableCount => IsEndless ? int.MaxValue : RoundLib.Sum(round => round.TotalLength);
+        
+        public int PlayableCount
+        {
+            get
+            {
+                if (RoundLibVal.Endless)
+                    return int.MaxValue;
+                else
+                {
+                    if (!RoundLibVal.HasBossRound)
+                    {
+                        return RoundLibVal.Sum(round => round.TotalLength);
+                    }
+                    else
+                    {
+                        return RoundLibVal.Sum(round => round.TotalLength) + BossSetup.BossLength;
+                    }
+                }
+            }
+        }
 
         public bool HasEnded(int StepCount)
         {
-            if (IsEndless)
+            if (RoundLibVal.Endless)
             {
                 return false;
             }
-
             return StepCount >= PlayableCount;
         }
-
-        public int GetTruncatedCount(int totalCount) => RoundLib.GetTruncatedStep(totalCount);
-
-        public RoundGist GetRoundGistByStep(int stepCount) => RoundLib.GetCurrentRoundGist(stepCount);
-
-        public AdditionalBossSetupBase PeekBossRoundGistVal => RoundLib.PeekBossRoundGist;
-
-        [ShowInInspector] public BossAdditionalSetupAsset BossSetup;
+        
+        [ShowInInspector] 
+        [ShowIf("@RoundLibVal.HasBossRound")]
+        public BossAdditionalSetupAsset BossSetup;
         
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;
 

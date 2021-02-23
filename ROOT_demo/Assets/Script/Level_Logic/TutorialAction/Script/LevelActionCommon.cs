@@ -24,12 +24,17 @@ namespace ROOT
         HideCheckList,
     }
 
+    public enum BossStageType
+    {
+        Telemetry,
+        Acquiring,
+    }
+
     public enum StageType{
         Shop,
         Require,
         Destoryer,
-        Telemetry,
-        Acquiring,
+        Boss,
         Ending,
     }
     

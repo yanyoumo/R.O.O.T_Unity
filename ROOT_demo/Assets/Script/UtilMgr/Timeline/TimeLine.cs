@@ -18,7 +18,7 @@ namespace ROOT
         Ending = 3,//Black
         HeatSinkSwitch = 4,//ICON
         ShopOpened = 5,//
-        TelemetryStage = 6,//Purple
+        BossStage = 6,//Purple
     }
 
     [Serializable]
@@ -145,8 +145,8 @@ namespace ROOT
                 var stage = round.CheckStage(truncatedCount, RoundCount == RoundDatas.Length - 1);
                 if (!stage.HasValue) return;*/
 
-                roundGist =_currentGameAsset.ActionAsset.GetRoundGistByStep(markerID);
-                var truncatedCount=_currentGameAsset.ActionAsset.GetTruncatedCount(markerID);
+                roundGist =_currentGameAsset.ActionAsset.RoundLibVal.GetCurrentRoundGist(markerID);
+                var truncatedCount=_currentGameAsset.ActionAsset.RoundLibVal.GetTruncatedStep(markerID);
                 HasHeatsinkSwitch = roundGist.SwitchHeatsink(truncatedCount);
             }
 
@@ -218,7 +218,7 @@ namespace ROOT
         {
             _currentGameAsset = levelAsset;
             Debug.Assert(_currentGameAsset.StepCount == 0);
-            _roundLib = levelAsset.ActionAsset.RoundLib;
+            _roundLib = levelAsset.ActionAsset.RoundLibVal;
             UpdateTimeLine();
         }
 

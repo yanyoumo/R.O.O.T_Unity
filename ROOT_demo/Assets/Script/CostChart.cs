@@ -82,6 +82,9 @@ namespace ROOT
             }
         }
 
+        //TODO
+        private BossStageType bossType = BossStageType.Telemetry;
+        
         private void CostChartUpdateCore(int currencyVal, int incomesVal)
         {
             UpdateCachedData(currencyVal, incomesVal);
@@ -89,8 +92,17 @@ namespace ROOT
             UpdateCurrencyVal(_cached_currencyVal);
             switch (StageType)
             {
+                case StageType.Boss:
+                    if (bossType == BossStageType.Telemetry)
+                    {
+                        UpdateIncomeValAsNotActive();
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                    break;
                 case StageType.Shop:
-                case StageType.Telemetry:
                 case StageType.Ending:
                     UpdateIncomeValAsNotActive();
                     break;

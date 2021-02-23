@@ -21,19 +21,16 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: RoundLib
+    - Name: RoundLibVal
       Entry: 7
       Data: 0|ROOT.SetupAsset.RoundLib, Root_Assemble
     - Name: 
       Entry: 12
-      Data: 4
+      Data: 3
     - Name: 
       Entry: 7
       Data: ROOT.SetupAsset.RoundData, Root_Assemble
     - Name: ID
-      Entry: 3
-      Data: 0
-    - Name: RoundTypeData
       Entry: 3
       Data: 0
     - Name: ShopLength
@@ -49,27 +46,6 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: HeatSinkLength
-      Entry: 3
-      Data: 0
-    - Name: bossStageType
-      Entry: 3
-      Data: 0
-    - Name: bossStageLength
-      Entry: 3
-      Data: 0
-    - Name: DestoryerCount
-      Entry: 3
-      Data: 0
-    - Name: InfoCount
-      Entry: 3
-      Data: 0
-    - Name: InfoVariantRatio
-      Entry: 3
-      Data: 0
-    - Name: InfoTargetRatio
-      Entry: 3
-      Data: 0
-    - Name: AcquiringTarget
       Entry: 3
       Data: 0
     - Name: 
@@ -80,10 +56,7 @@ MonoBehaviour:
       Data: ROOT.SetupAsset.RoundData, Root_Assemble
     - Name: ID
       Entry: 3
-      Data: 0
-    - Name: RoundTypeData
-      Entry: 3
-      Data: 0
+      Data: 1
     - Name: ShopLength
       Entry: 3
       Data: 0
@@ -97,27 +70,6 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: HeatSinkLength
-      Entry: 3
-      Data: 0
-    - Name: bossStageType
-      Entry: 3
-      Data: 0
-    - Name: bossStageLength
-      Entry: 3
-      Data: 0
-    - Name: DestoryerCount
-      Entry: 3
-      Data: 0
-    - Name: InfoCount
-      Entry: 3
-      Data: 0
-    - Name: InfoVariantRatio
-      Entry: 3
-      Data: 0
-    - Name: InfoTargetRatio
-      Entry: 3
-      Data: 0
-    - Name: AcquiringTarget
       Entry: 3
       Data: 0
     - Name: 
@@ -128,10 +80,7 @@ MonoBehaviour:
       Data: ROOT.SetupAsset.RoundData, Root_Assemble
     - Name: ID
       Entry: 3
-      Data: 0
-    - Name: RoundTypeData
-      Entry: 3
-      Data: 0
+      Data: 2
     - Name: ShopLength
       Entry: 3
       Data: 0
@@ -145,75 +94,6 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: HeatSinkLength
-      Entry: 3
-      Data: 0
-    - Name: bossStageType
-      Entry: 3
-      Data: 0
-    - Name: bossStageLength
-      Entry: 3
-      Data: 0
-    - Name: DestoryerCount
-      Entry: 3
-      Data: 0
-    - Name: InfoCount
-      Entry: 3
-      Data: 0
-    - Name: InfoVariantRatio
-      Entry: 3
-      Data: 0
-    - Name: InfoTargetRatio
-      Entry: 3
-      Data: 0
-    - Name: AcquiringTarget
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: ROOT.SetupAsset.RoundData, Root_Assemble
-    - Name: ID
-      Entry: 3
-      Data: 0
-    - Name: RoundTypeData
-      Entry: 3
-      Data: 0
-    - Name: ShopLength
-      Entry: 3
-      Data: 0
-    - Name: RequireLength
-      Entry: 3
-      Data: 0
-    - Name: TypeARequirement
-      Entry: 3
-      Data: 0
-    - Name: TypeBRequirement
-      Entry: 3
-      Data: 0
-    - Name: HeatSinkLength
-      Entry: 3
-      Data: 0
-    - Name: bossStageType
-      Entry: 3
-      Data: 0
-    - Name: bossStageLength
-      Entry: 3
-      Data: 0
-    - Name: DestoryerCount
-      Entry: 3
-      Data: 0
-    - Name: InfoCount
-      Entry: 3
-      Data: 0
-    - Name: InfoVariantRatio
-      Entry: 3
-      Data: 0
-    - Name: InfoTargetRatio
-      Entry: 3
-      Data: 0
-    - Name: AcquiringTarget
       Entry: 3
       Data: 0
     - Name: 
@@ -225,27 +105,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: BossSetup
-      Entry: 7
-      Data: 1|ROOT.TelemetryAdditionalData, Root_Assemble
-    - Name: BossLength
-      Entry: 3
-      Data: 7
-    - Name: DestoryerCount
-      Entry: 3
-      Data: 3
-    - Name: InfoCount
-      Entry: 3
-      Data: 3
-    - Name: InfoVariantRatio
-      Entry: 3
-      Data: 1
-    - Name: InfoTargetRatio
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
   BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
   TitleTerm: Level_Test
   Thumbnail: {fileID: 21300000, guid: ebad0ac1de2ad1f4dbf300bfb7a41d70, type: 3}
@@ -254,8 +113,8 @@ MonoBehaviour:
   levelType: 1
   GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
   AdditionalGameSetup:
-    PlayingSignalTypeA: 1
-    PlayingSignalTypeB: 0
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1
   InitalBoard:
   - PlayingSignalSelector: 1
     CoreGenre: 0
@@ -308,6 +167,14 @@ MonoBehaviour:
   NormalRoundCount: 3
   HasBossRound: 1
   Endless: 0
-  BossStage: 3
+  BossStage: 0
   Actions: []
+  BossSetup:
+    BossStageTypeVal: 0
+    BossLength: 10
+    DestoryerCount: 10
+    InfoCount: 10
+    InfoVariantRatio: 10
+    InfoTargetRatio: 10
+    AcquiringTarget: 0
   ExcludedShop: 0

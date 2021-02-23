@@ -59,8 +59,8 @@ namespace ROOT
         
         #region 类属性
 
-        public RoundGist? RoundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
-        public RoundGist? PreviousRoundGist => (LevelAsset.StepCount - 1)>=0 ? LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount - 1) : RoundGist;
+        public RoundGist? RoundGist=> LevelAsset.ActionAsset.RoundLibVal.GetCurrentRoundGist(LevelAsset.StepCount);
+        public RoundGist? PreviousRoundGist => (LevelAsset.StepCount - 1)>=0 ? LevelAsset.ActionAsset.RoundLibVal.GetCurrentRoundGist(LevelAsset.StepCount - 1) : RoundGist;
         protected StageType Stage => RoundGist?.Type ?? StageType.Shop;
         public bool IsShopRound => Stage == StageType.Shop;
         public bool IsRequireRound => Stage == StageType.Require;

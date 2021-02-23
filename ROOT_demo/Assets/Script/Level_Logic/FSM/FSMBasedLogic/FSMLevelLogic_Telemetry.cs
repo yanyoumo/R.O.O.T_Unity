@@ -65,14 +65,17 @@ namespace ROOT
 
         #region TelemetryTransit
 
+        //TODO
+        private BossStageType bossType = BossStageType.Telemetry;
+        
         private bool CheckTelemetryStageInit()
         {
-            return (Stage == StageType.Telemetry)&&(!WorldCycler.TelemetryStage);
+            return (Stage == StageType.Boss)&&(bossType == BossStageType.Telemetry)&&(!WorldCycler.TelemetryStage);
         }
 
         private bool CheckTelemetryStage()
         {
-            return (Stage == StageType.Telemetry);
+            return (Stage == StageType.Boss)&&(bossType == BossStageType.Telemetry);
         }
 
         private bool CheckTelemetryAndPaused()
@@ -120,7 +123,8 @@ namespace ROOT
             {
                 TelemetryInit();
             }
-            if (Stage == StageType.Telemetry && Animating)
+
+            if (Stage == StageType.Boss && (bossType == BossStageType.Telemetry) && Animating)
             {
                 LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
             }
@@ -208,13 +212,12 @@ namespace ROOT
 
         private void TelemetryInit()
         {
-            TelemetryAdditionalData bossRoundGist = LevelAsset.ActionAsset.PeekBossRoundGistVal as TelemetryAdditionalData;
-            //var bossStageCount = LevelAsset.ActionAsset.TelemetryCount;
-            var totalSprayCount = bossRoundGist.BossLength * SprayCountPerAnimateInterval;
+            var bossRoundData = LevelAsset.ActionAsset.BossSetup;
+            var totalSprayCount = bossRoundData.BossLength * SprayCountPerAnimateInterval;
             //这个数据还得传过去。
-            var targetInfoCount = Mathf.RoundToInt(bossRoundGist.InfoCount * bossRoundGist.InfoTargetRatio);
+            var targetInfoCount = Mathf.RoundToInt(bossRoundData.InfoCount * bossRoundData.InfoTargetRatio);
 
-            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, bossRoundGist.InfoCount, bossRoundGist.InfoVariantRatio);
+            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, bossRoundData.InfoCount, bossRoundData.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
             WorldCycler.TelemetryStage = true;
@@ -241,7 +244,7 @@ namespace ROOT
             };
             MessageDispatcher.SendMessage(message);
             
-            if (LevelAsset.ActionAsset.RoundLib.Count > 0)
+            if (LevelAsset.ActionAsset.RoundLibVal.Count > 0)
             {
                 //这个东西放在这里还是怎么着？就先这样吧。
                 WorldCycler.InitCycler();

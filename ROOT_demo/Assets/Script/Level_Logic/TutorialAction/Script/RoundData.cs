@@ -19,12 +19,6 @@ namespace ROOT.SetupAsset
         public int shopLength => owner.ShopLength;
         public int[] HSSwTruncatedIdx=> new[] {1};
 
-        /*[Obsolete] public int TelemetryLength=> owner.bossStageLength;
-        [Obsolete] public int DestoryerCount=> owner.DestoryerCount;
-        [Obsolete] public int InfoCount=> owner.InfoCount;
-        [Obsolete] public int InfoTargetRatio => owner.InfoTargetRatio;
-        [Obsolete] public int InfoVariantRatio => owner.InfoVariantRatio;*/
-        
         public bool SwitchHeatsink(int tCount)
         {
             return HSSwTruncatedIdx != null && (HSSwTruncatedIdx[0] != -1 && (HSSwTruncatedIdx).Contains(tCount));
@@ -39,48 +33,24 @@ namespace ROOT.SetupAsset
     {
         [ReadOnly] public int ID;
 
-        [ReadOnly] public RoundType RoundTypeData;
+        //[ReadOnly] public RoundType RoundTypeData;
 
-        [Range(0, 60)] [HideIf("@RoundTypeData == RoundType.Boss")]
+        [Range(0, 60)]
         public int ShopLength;
 
-        [Space] [Range(0, 30)] [HideIf("@RoundTypeData == RoundType.Boss")]
+        [Space] [Range(0, 30)]
         public int RequireLength;
 
-        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [HideIf("@RoundTypeData == RoundType.Boss")]
+        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")]
         public int TypeARequirement;
 
-        [VerticalGroup("Split/Right")] [HideIf("@RoundTypeData == RoundType.Boss")]
+        [VerticalGroup("Split/Right")]
         public int TypeBRequirement;
 
-        [Space] [Range(0, 60)] [HideIf("@RoundTypeData == RoundType.Boss")]
+        [Space] [Range(0, 60)]
         public int HeatSinkLength;
 
-        [ReadOnly] [ShowIf("@RoundTypeData == RoundType.Boss")]
-        public StageType bossStageType; //这里还要做一个Filter但是现在先不用。
-
-        [Range(0, 100)] [ShowIf("@RoundTypeData == RoundType.Boss")]
-        public int bossStageLength;
-
-        [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Telemetry")]
-        public int DestoryerCount;
-
-        [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Telemetry")]
-        public int InfoCount;
-
-        [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Telemetry")]
-        public int InfoVariantRatio;
-
-        [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Telemetry")]
-        public int InfoTargetRatio;
-        
-        [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Acquiring")]
-        public int AcquiringTarget;
-
-        [ShowInInspector]
-        public int TotalLength => RoundTypeData == RoundType.Normal
-            ? ShopLength + RequireLength + HeatSinkLength
-            : bossStageLength;
+        [ShowInInspector] public int TotalLength => ShopLength + RequireLength + HeatSinkLength;
 
         public (StageType, int) this[int index]
         {
@@ -94,8 +64,6 @@ namespace ROOT.SetupAsset
                         return (StageType.Require, RequireLength);
                     case 2:
                         return (StageType.Destoryer, HeatSinkLength);
-                    case 3:
-                        return (bossStageType, bossStageLength);
                     default:
                         throw new IndexOutOfRangeException();
                 }
@@ -106,26 +74,16 @@ namespace ROOT.SetupAsset
         {
             if (truncatedStep <= TotalLength)
             {
-                if (RoundTypeData == RoundType.Normal)
+                var tmpTStep = truncatedStep;
+                for (int i = 0; i < 3; i++)
                 {
-                    var tmpTStep = truncatedStep;
-                    for (int i = 0; i < 3; i++)
+                    tmpTStep -= this[i].Item2;
+                    if (tmpTStep < 0)
                     {
-                        tmpTStep -= this[i].Item2;
-                        if (tmpTStep < 0)
-                        {
-                            return this[i].Item1;
-                        }
+                        return this[i].Item1;
                     }
-
-                    throw new ArgumentException();
-                }
-                else
-                {
-                    return bossStageType;
                 }
             }
-
             throw new ArgumentException();
         }
 
@@ -137,12 +95,22 @@ namespace ROOT.SetupAsset
         [NonSerialized]
         [OdinSerialize]
         private List<RoundData> core;
-
+        
+        [NonSerialized]
+        [OdinSerialize]
+        private bool _hasBossStage;
+        
+        [NonSerialized]
+        [OdinSerialize]
+        private BossStageType _bossStageType;
+        
+        [NonSerialized]
+        [OdinSerialize]
         private bool _endless;
         
-        public bool HasBossRound => core.Last().RoundTypeData == RoundType.Boss;
-        public StageType? BossStage => HasBossRound ? core.Last().bossStageType : (StageType?) null;
-        public StageType BossStageVal
+        public bool HasBossRound => _hasBossStage;
+        public BossStageType? BossStage => HasBossRound ? _bossStageType : (BossStageType?) null;
+        public BossStageType BossStageVal
         {
             get
             {
@@ -153,7 +121,6 @@ namespace ROOT.SetupAsset
                 throw new ArgumentException("this lib has no bossStage.");
             }
         }
-        public int NormalRoundCount => HasBossRound ? core.Count - 1 : core.Count;
         public bool Endless
         {
             get
@@ -165,49 +132,48 @@ namespace ROOT.SetupAsset
                 return _endless;
             }
         }
-        
-        public AdditionalBossSetupBase PeekBossRoundGist
-        {
-            get
-            {
-                return null;
-                /*var test = BossMasterMgr.Instance.BossLibDic[BossStageVal];
-                var type = test.GetType();*/
-            }
-        }
 
-        private RoundData GetCurrentRound(int step,out int truncatedStep)
+        private RoundData GetCurrentRound(int step, out int truncatedStep,out bool normalRoundEnded)
         {
             var tmpStep = step;
             var currentRoundData = core[0];
             truncatedStep = 0;
+            normalRoundEnded = true;
             foreach (var neoRoundData in core)
             {
                 tmpStep -= neoRoundData.TotalLength;
-                if (tmpStep >= 0) continue;
-                currentRoundData = neoRoundData;
-                truncatedStep = tmpStep + currentRoundData.TotalLength;
-                break;
+                if (tmpStep < 0)
+                {
+                    currentRoundData = neoRoundData;
+                    truncatedStep = tmpStep + currentRoundData.TotalLength;
+                    normalRoundEnded = false;
+                    break;
+                }
             }
             return currentRoundData;
         }
-        
+
         public RoundGist GetCurrentRoundGist(int step)
         {
-            var round = GetCurrentRound(step,out var truncatedStep);
-            var stage = GetCurrentType(step);
-            return round.ExtractGist(stage);
+            var round = GetCurrentRound(step,out var truncatedStep,out var normalRoundEnded);
+            if (!normalRoundEnded)
+            {
+                var stage = GetCurrentType(step);
+                return round.ExtractGist(stage);
+            }
+
+            return new RoundGist {owner = core[0], Type = StageType.Boss};
         }
         
         public StageType GetCurrentType(int step)
         {
-            var currentRound=GetCurrentRound(step, out int truncatedStep);
-            return currentRound.GetCurrentType(truncatedStep);
+            var currentRound=GetCurrentRound(step, out int truncatedStep,out var normalRoundEnded);
+            return !normalRoundEnded ? currentRound.GetCurrentType(truncatedStep) : StageType.Boss;
         }
 
         public int GetTruncatedStep(int step)
         {
-            GetCurrentRound(step, out var res);
+            GetCurrentRound(step, out var res, out var B);
             return res;
         }
 
@@ -217,9 +183,11 @@ namespace ROOT.SetupAsset
             core = new List<RoundData>();
         }
         
-        public RoundLib(bool endless)
+        public RoundLib(bool endless,bool hasBossStage,BossStageType bossStageType)
         {
             _endless = endless;
+            _hasBossStage = hasBossStage;
+            _bossStageType = bossStageType;
             core = new List<RoundData>();
         }
 
