@@ -48,7 +48,7 @@ namespace ROOT.SetupAsset
     [Serializable] [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : SerializedScriptableObject
     {
-        public BossAssetLib BossLib;
+       [HideInInspector]public BossAssetLib BossLib;
         
         [Header("Basic Data")] public string TitleTerm;
 

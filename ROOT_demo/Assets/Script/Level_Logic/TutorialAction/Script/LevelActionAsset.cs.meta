@@ -3,7 +3,11 @@ guid: 1aed29c8465fad741915b17b2c88112d
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
+  - Thumbnail: {instanceID: 0}
+  - LevelLogic: {instanceID: 0}
+  - GameModeAsset: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
