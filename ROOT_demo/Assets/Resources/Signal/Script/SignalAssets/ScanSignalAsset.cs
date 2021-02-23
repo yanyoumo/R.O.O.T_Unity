@@ -21,13 +21,12 @@ namespace ROOT.Signal
         //这个函数名不得不改、要不然调它的时候引用会飘到基类上-youmo
         private List<Unit> CalAllScore_Scan(Board gameBoard)
         {
-            int maxCount = Board.BoardLength * Board.BoardLength;
             var maxScore = Int32.MinValue;
-            var maxLength = maxCount;
+            var minLength = Board.BoardLength * Board.BoardLength;
             var res = new List<Unit>();
             foreach (var signalCore in gameBoard.FindUnitWithCoreType(SignalType, HardwareType.Core).Select(unit => unit.SignalCore as ScanUnitSignalCore))
             {
-                var tmp = signalCore.CalScore(ref maxCount, ref maxScore, ref maxLength);
+                var tmp = signalCore.CalScore(ref minLength, ref maxScore);
                 if (tmp.Count != 0)
                     res = tmp;
             }
