@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using JetBrains.Annotations;
+using ROOT.SetupAsset;
 using ROOT.Signal;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;

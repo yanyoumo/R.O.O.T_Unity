@@ -3,15 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
+using Sirenix.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace ROOT
 {
     using FSMActions = Dictionary<RootFSMStatus, Action>;
-    using Trans = RootFSMTransition;
     using FSMTransitions = HashSet<RootFSMTransition>;
+    using Trans = RootFSMTransition;
     using Status = RootFSMStatus;
+    
+    public abstract class AdditionalBossSetupBase
+    {
+        [NonSerialized] 
+        [OdinSerialize] 
+        public int BossLength;
+    }
+    
+    public class TelemetryAdditionalData:AdditionalBossSetupBase
+    {
+        [NonSerialized] 
+        [OdinSerialize] 
+        public int DestoryerCount;
+        [NonSerialized] 
+        [OdinSerialize] 
+        public int InfoCount;
+        [NonSerialized] 
+        [OdinSerialize] 
+        public int InfoVariantRatio;
+        [NonSerialized] 
+        [OdinSerialize] 
+        public int InfoTargetRatio;
+    }
+    
     public class FSMLevelLogic_Telemetry : FSMLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         #region TelemetryStage
@@ -204,12 +229,14 @@ namespace ROOT
 
         private void TelemetryInit()
         {
-            var bossStageCount = LevelAsset.ActionAsset.TelemetryCount;
-            var totalSprayCount = bossStageCount * SprayCountPerAnimateInterval;
+            var bossRoundGist = LevelAsset.ActionAsset.PeekBossRoundGistVal;
+            
+            //var bossStageCount = LevelAsset.ActionAsset.TelemetryCount;
+            var totalSprayCount = bossRoundGist.TelemetryLength * SprayCountPerAnimateInterval;
             //这个数据还得传过去。
-            var targetInfoCount = Mathf.RoundToInt(LevelAsset.ActionAsset.InfoCount * LevelAsset.ActionAsset.InfoTargetRatio);
+            var targetInfoCount = Mathf.RoundToInt(bossRoundGist.InfoCount * bossRoundGist.InfoTargetRatio);
 
-            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, LevelAsset.ActionAsset.InfoCount, LevelAsset.ActionAsset.InfoVariantRatio);
+            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, bossRoundGist.InfoCount, bossRoundGist.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
             WorldCycler.TelemetryStage = true;

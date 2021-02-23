@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.SetupAsset
 {
     [Serializable]
     public struct TutorialActionData
@@ -45,8 +45,7 @@ namespace ROOT
         public int Tier;
     }
 
-    [Serializable]
-    [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
+    [Serializable] [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : SerializedScriptableObject
     {
         [Header("Basic Data")] public string TitleTerm;
@@ -106,6 +105,8 @@ namespace ROOT
                         RoundTypeData = RoundType.Boss,
                         bossStageType = BossStage
                     });
+                    //TODO
+                    BossSetup = new TelemetryAdditionalData();
                 }
             }
         }
@@ -138,14 +139,10 @@ namespace ROOT
 
         public RoundGist GetRoundGistByStep(int stepCount) => RoundLib.GetCurrentRoundGist(stepCount);
 
-        public RoundGist? PeekBossRoundGist() => RoundLib.PeekBossRoundGist();
-        
-        [Obsolete] private bool IsTelemetry => RoundLib.HasBossRound && RoundLib.BossStage == StageType.Telemetry;
-        [Obsolete] public int TelemetryCount => IsTelemetry ? RoundLib.Last().bossStageLength : 0;
-        [Obsolete] public int InfoCount => IsTelemetry ? RoundLib.Last().InfoCount : 0;
-        [Obsolete] public int InfoVariantRatio => IsTelemetry ? RoundLib.Last().InfoVariantRatio : 0;
-        [Obsolete] public int InfoTargetRatio => IsTelemetry ? RoundLib.Last().InfoTargetRatio : 0;
+        public RoundGist PeekBossRoundGistVal => RoundLib.PeekBossRoundGistVal;
 
+        [OdinSerialize] public AdditionalBossSetupBase BossSetup;
+        
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;
 
         [Obsolete("Why?")] public List<SignalType> ShopExcludedType => null;

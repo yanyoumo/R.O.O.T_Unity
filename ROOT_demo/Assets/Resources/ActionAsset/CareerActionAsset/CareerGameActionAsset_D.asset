@@ -225,6 +225,27 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: BossSetup
+      Entry: 7
+      Data: 1|ROOT.TelemetryAdditionalData, Root_Assemble
+    - Name: BossLength
+      Entry: 3
+      Data: 7
+    - Name: DestoryerCount
+      Entry: 3
+      Data: 3
+    - Name: InfoCount
+      Entry: 3
+      Data: 3
+    - Name: InfoVariantRatio
+      Entry: 3
+      Data: 1
+    - Name: InfoTargetRatio
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
   TitleTerm: Level_Test
   Thumbnail: {fileID: 21300000, guid: ebad0ac1de2ad1f4dbf300bfb7a41d70, type: 3}
   LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,

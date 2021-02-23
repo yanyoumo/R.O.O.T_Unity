@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using ROOT.SetupAsset;
 using UnityEngine;
 
 namespace ROOT

@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Linq;
 using Sirenix.Serialization;
 
-namespace ROOT
+namespace ROOT.SetupAsset
 {
     public struct RoundGist
     {
@@ -19,13 +19,12 @@ namespace ROOT
         public int shopLength => owner.ShopLength;
         public int[] HSSwTruncatedIdx=> new[] {1};
 
-        [Obsolete]
-        public int TelemetryLength=> owner.bossStageLength;
-        [Obsolete]
-        public int DestoryerCount=> owner.DestoryerCount;
-        [Obsolete]
-        public int InfoCount=> owner.InfoCount;
-
+        [Obsolete] public int TelemetryLength=> owner.bossStageLength;
+        [Obsolete] public int DestoryerCount=> owner.DestoryerCount;
+        [Obsolete] public int InfoCount=> owner.InfoCount;
+        [Obsolete] public int InfoTargetRatio => owner.InfoTargetRatio;
+        [Obsolete] public int InfoVariantRatio => owner.InfoVariantRatio;
+        
         public bool SwitchHeatsink(int tCount)
         {
             return HSSwTruncatedIdx != null && (HSSwTruncatedIdx[0] != -1 && (HSSwTruncatedIdx).Contains(tCount));
@@ -168,10 +167,26 @@ namespace ROOT
             }
         }
         
-        public RoundGist? PeekBossRoundGist()
+        public RoundGist? PeekBossRoundGist
         {
-            //TODO
-            throw new NotImplementedException();
+            get
+            {
+                if (!HasBossRound) return null;
+                var bossStage = core.Last().bossStageType;
+                return core.Last().ExtractGist(bossStage);
+            }
+        }
+
+        public RoundGist PeekBossRoundGistVal
+        {
+            get
+            {
+                if (PeekBossRoundGist.HasValue)
+                {
+                    return PeekBossRoundGist.Value;
+                }
+                throw new ArgumentException("this lib has no bossStage.");
+            }
         }
         
         private RoundData GetCurrentRound(int step,out int truncatedStep)

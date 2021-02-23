@@ -1,11 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+
+namespace ROOT.SetupAsset
+{
+    public partial class LevelLib : MonoBehaviour
+    {
+        internal LevelActionAssetLib TutorialLevelActionAssetLib;
+        public LevelActionAsset[] CareerActionAssetList { internal set; get; }
+    }
+}
 
 namespace ROOT
 {
@@ -21,12 +31,6 @@ namespace ROOT
         Keyboard,
         Mouse,
         TouchScreen,
-    }
-
-    public partial class LevelLib : MonoBehaviour
-    {
-        internal LevelActionAssetLib TutorialLevelActionAssetLib;
-        public LevelActionAsset[] CareerActionAssetList { internal set;get; }
     }
 
     public class StartGameMgr : MonoBehaviour
@@ -49,6 +53,8 @@ namespace ROOT
         public LevelActionAssetLib ClassicGameActionAssetLib;
         public LevelActionAssetLib CareerGameActionAssetLib;
 
+        public BossAssetLib BossLib;
+        
         public SupportedScreenRatio PCSimulateDevice;
         public InputScheme EditorInputScheme;
 

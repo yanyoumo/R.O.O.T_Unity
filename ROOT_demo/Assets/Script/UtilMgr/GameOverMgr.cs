@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using I2.Loc;
+using ROOT.SetupAsset;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
