@@ -91,7 +91,7 @@ namespace ROOT.SetupAsset
             }
             else
             {
-                RoundLibVal = new RoundLib(Endless, HasBossRound, BossStage);
+                RoundLibVal = new RoundLib();
                 for (int i = 0; i < NormalRoundCount; i++)
                 {
                     RoundLibVal.Add(new RoundData {ID = i});
@@ -112,16 +112,41 @@ namespace ROOT.SetupAsset
         
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
         
+        public BossStageType? GetBossStage => HasBossRound ? BossStage : (BossStageType?) null;
+        public BossStageType BossStageVal
+        {
+            get
+            {
+                if (GetBossStage.HasValue)
+                {
+                    return GetBossStage.Value;
+                }
+                throw new ArgumentException("this lib has no bossStage.");
+            }
+        }
+
+        public bool GetEndless
+        {
+            get
+            {
+                if (HasBossRound && Endless)
+                {
+                    throw new Exception("a round lib couldn't has boss and being endless");
+                }
+
+                return Endless;
+            }
+        }
+
         public int PlayableCount
         {
             get
             {
-                if (RoundLibVal.Endless)
+                if (GetEndless)
                     return int.MaxValue;
                 else
                 {
-                    Debug.Log("RoundLibVal.HasBossRound:" + RoundLibVal.HasBossRound);
-                    if (!RoundLibVal.HasBossRound)
+                    if (!HasBossRound)
                     {
                         return RoundLibVal.Sum(round => round.TotalLength);
                     }
@@ -136,15 +161,14 @@ namespace ROOT.SetupAsset
 
         public bool HasEnded(int StepCount)
         {
-            if (RoundLibVal.Endless)
+            if (GetEndless)
             {
                 return false;
             }
             return StepCount >= PlayableCount;
         }
         
-        [ShowInInspector] 
-        //[ShowIf("@RoundLibVal.HasBossRound")]//这句话有问题、但是问题不大（不要就完了w）
+        [ShowInInspector] [ShowIf("HasBossRound")]
         public BossAdditionalSetupAsset BossSetup;
         
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;

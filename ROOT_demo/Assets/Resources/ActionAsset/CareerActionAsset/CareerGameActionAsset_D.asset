@@ -175,6 +175,6 @@ MonoBehaviour:
     DestoryerCount: 100
     InfoCount: 1000
     InfoVariantRatio: 30
-    InfoTargetRatio: 10
+    InfoTargetRatio: 80
     AcquiringTarget: 0
   ExcludedShop: 0

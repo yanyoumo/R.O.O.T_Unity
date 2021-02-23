@@ -95,43 +95,6 @@ namespace ROOT.SetupAsset
         [NonSerialized]
         [OdinSerialize]
         private List<RoundData> core;
-        
-        //[NonSerialized]
-        //[OdinSerialize]
-        public bool _hasBossStage;
-        
-        [NonSerialized]
-        [OdinSerialize]
-        public BossStageType _bossStageType;
-        
-        [NonSerialized]
-        [OdinSerialize]
-        public bool _endless;
-        
-        public bool HasBossRound => _hasBossStage;
-        public BossStageType? BossStage => HasBossRound ? _bossStageType : (BossStageType?) null;
-        public BossStageType BossStageVal
-        {
-            get
-            {
-                if (BossStage.HasValue)
-                {
-                    return BossStage.Value;
-                }
-                throw new ArgumentException("this lib has no bossStage.");
-            }
-        }
-        public bool Endless
-        {
-            get
-            {
-                if (HasBossRound&&_endless)
-                {
-                    throw new Exception("a round lib couldn't has boss and being endless");
-                }
-                return _endless;
-            }
-        }
 
         private RoundData GetCurrentRound(int step, out int truncatedStep,out bool normalRoundEnded)
         {
@@ -171,26 +134,16 @@ namespace ROOT.SetupAsset
             return !normalRoundEnded ? currentRound.GetCurrentType(truncatedStep) : StageType.Boss;
         }
 
+        public RoundLib()
+        {
+            core = new List<RoundData>();
+        }
+        
         public int GetTruncatedStep(int step)
         {
             GetCurrentRound(step, out var res, out var B);
             return res;
         }
-
-        public RoundLib()//这个玩意儿必须要一个无参构造器
-        {
-            _endless = false;
-            core = new List<RoundData>();
-        }
-        
-        public RoundLib(bool endless,bool hasBossStage,BossStageType bossStageType)
-        {
-            _endless = endless;
-            _hasBossStage = hasBossStage;
-            _bossStageType = bossStageType;
-            core = new List<RoundData>();
-        }
-
         #region INTERFACE
 
         public IEnumerator<RoundData> GetEnumerator()
