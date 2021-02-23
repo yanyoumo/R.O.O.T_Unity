@@ -48,6 +48,8 @@ namespace ROOT.SetupAsset
     [Serializable] [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : SerializedScriptableObject
     {
+        public BossAssetLib BossLib;
+        
         [Header("Basic Data")] public string TitleTerm;
 
         [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail")]

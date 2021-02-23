@@ -12,14 +12,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: TutorialTimeLineAdv_Neo
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: RoundLib
+      Entry: 6
+      Data: 
+    - Name: BossSetup
+      Entry: 6
+      Data: 
+  BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
   TitleTerm: TutorialTimeAdv
   Thumbnail: {fileID: 21300000, guid: f4a3ac2ff8727094da630da0583fdf08, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: 4a692e6ba6a0a3141b8d88fdded1085a,
     type: 3}
   levelType: 0
   GameModeAsset: {fileID: 11400000, guid: b32e8c0e297860f41bd07f944a545ea4, type: 2}
-  ExcludedShop: 1
-  ShopExcludedType: 000000000100000002000000
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 0
+  InitalBoard:
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 0
+    Pos: {x: 2, y: 3}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 0
+    Pos: {x: 3, y: 2}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 01000000000000000000000001000000
+    Tier: 0
+    Pos: {x: 3, y: 3}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000010000000100000000000000
+    Tier: 0
+    Pos: {x: 2, y: 2}
+    IsStation: 1
+  NormalRoundCount: 0
+  HasBossRound: 0
+  Endless: 0
+  BossStage: 0
   Actions:
   - ActionIdx: 0
     ActionType: 3
@@ -28,7 +74,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 0
     ActionType: 7
     Text: 
@@ -36,7 +84,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 0
     ActionType: 0
     Text: "\u4E4B\u524D\u5DF2\u7ECF\u4E86\u89E3\u7684\u65F6\u95F4\u7EBF,\u9664\u4E86\u63D0\u793A\u65F6\u95F4,\u8FD8\u6709\u4E00\u4E2A\u5176\u4ED6\u7684\u529F\u80FD."
@@ -44,7 +94,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 1
     ActionType: 0
     Text: "\u65F6\u95F4\u7EBF\u4F1A\u901A\u8FC7\u65F6\u523B\u4E0A\u7684\u989C\u8272\u6765\u63D0\u793A\u4F60\u9700\u8981\u7EC4\u6210\u51FA\u5982\u4F55\u7684\u4FE1\u53F7,\u4E0D\u540C\u7684\u989C\u8272\u6709\u4E0D\u540C\u7684\u542B\u4E49."
@@ -52,7 +104,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 2
     ActionType: 0
     Text: "\u5982\u679C\u65F6\u95F4\u7EBF\u4E0A\u51FA\u73B0\u7EFF\u8272,\u90A3\u4E48\u8BF4\u660E\u6B64\u65F6\u9700\u8981\u4E00\u822C\u4FE1\u53F7,\u5E76\u4E14\u4E0A\u9762\u4F1A\u663E\u793A\u9700\u8981\u7684\u6570\u91CF."
@@ -60,7 +114,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 3
     ActionType: 0
     Text: "\u5E76\u4E14\u6307\u4EE3\u5F53\u524D\u65F6\u523B\u7684\u7BAD\u5934\u4F1A\u7528\u989C\u8272\u6765\u63D0\u793A\u76EE\u524D\u7684\u8981\u6C42\u662F\u5426\u6EE1\u8DB3\u4E86."
@@ -68,7 +124,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 4
     ActionType: 0
     Text: "\u987A\u5E26\u8BF4\u4E00\u53E5,\u5982\u679C\u6CA1\u6709\u5355\u5143\u4E0A\u6709\u4E00\u4E2A\u6DF1\u7D2B\u8272\u7684\u6846,\u90A3\u4E48\u4F60\u65E0\u6CD5\u79FB\u52A8\u5B83"
@@ -76,7 +134,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 5
     ActionType: 0
     Text: "\u6BCF\u6EE1\u8DB3\u4E00\u4E2A\u65F6\u523B,\u90A3\u4E48\u65F6\u95F4\u7EBF\u53F3\u4E0A\u89D2\u5C31\u4F1A\u8BA1\u6570;\u4F60\u7684\u76EE\u6807\u5C31\u662F\u81EA\u5DF1\u8D2D\u4E70\u548C\u5EFA\u7ACB\u7F51\u7EDC\u6765\u8BA9\u8FD9\u4E2A\u8BA1\u6570\u9AD8\u8FC7\u53F3\u8FB9\u7684\u8981\u6C42."
@@ -84,7 +144,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 6
     ActionType: 4
     Text: 
@@ -92,7 +154,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 6
     ActionType: 6
     Text: 
@@ -100,7 +164,9 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 6
     ActionType: 5
     Text: 
@@ -108,39 +174,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
-  TimeLineTokens:
-  - TokenID: 0
-    type: 0
-    RequireAmount: 4
-    Range: {x: 10, y: 20}
-  - TokenID: 1
-    type: 0
-    RequireAmount: 6
-    Range: {x: 20, y: 30}
-  - TokenID: 2
-    type: 0
-    RequireAmount: 8
-    Range: {x: 30, y: 40}
-  - TokenID: 3
-    type: 3
-    RequireAmount: 0
-    Range: {x: 40, y: -1}
-  InitalBoard:
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Pos: {x: 2, y: 3}
-    IsStation: 1
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Pos: {x: 3, y: 2}
-    IsStation: 1
-  - Core: 5
-    Sides: 01000000000000000000000001000000
-    Pos: {x: 3, y: 3}
-    IsStation: 1
-  - Core: 5
-    Sides: 00000000010000000100000000000000
-    Pos: {x: 2, y: 2}
-    IsStation: 1
-  TargetCount: 15
+    Tier: 0
+  ExcludedShop: 1

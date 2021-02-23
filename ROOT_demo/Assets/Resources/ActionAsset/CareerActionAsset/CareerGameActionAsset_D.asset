@@ -23,13 +23,13 @@ MonoBehaviour:
     SerializationNodes:
     - Name: RoundLib
       Entry: 7
-      Data: 0|ROOT.RoundLib, Root_Assemble
+      Data: 0|ROOT.SetupAsset.RoundLib, Root_Assemble
     - Name: 
       Entry: 12
       Data: 4
     - Name: 
       Entry: 7
-      Data: ROOT.RoundData, Root_Assemble
+      Data: ROOT.SetupAsset.RoundData, Root_Assemble
     - Name: ID
       Entry: 3
       Data: 0
@@ -38,19 +38,19 @@ MonoBehaviour:
       Data: 0
     - Name: ShopLength
       Entry: 3
-      Data: 10
+      Data: 0
     - Name: RequireLength
       Entry: 3
-      Data: 6
+      Data: 0
     - Name: TypeARequirement
       Entry: 3
-      Data: 6
+      Data: 0
     - Name: TypeBRequirement
       Entry: 3
-      Data: 4
+      Data: 0
     - Name: HeatSinkLength
       Entry: 3
-      Data: 17
+      Data: 0
     - Name: bossStageType
       Entry: 3
       Data: 0
@@ -77,28 +77,28 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: ROOT.RoundData, Root_Assemble
+      Data: ROOT.SetupAsset.RoundData, Root_Assemble
     - Name: ID
       Entry: 3
-      Data: 1
+      Data: 0
     - Name: RoundTypeData
       Entry: 3
       Data: 0
     - Name: ShopLength
       Entry: 3
-      Data: 10
+      Data: 0
     - Name: RequireLength
       Entry: 3
-      Data: 6
+      Data: 0
     - Name: TypeARequirement
       Entry: 3
-      Data: 14
+      Data: 0
     - Name: TypeBRequirement
       Entry: 3
-      Data: 165
+      Data: 0
     - Name: HeatSinkLength
       Entry: 3
-      Data: 10
+      Data: 0
     - Name: bossStageType
       Entry: 3
       Data: 0
@@ -125,28 +125,28 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: ROOT.RoundData, Root_Assemble
+      Data: ROOT.SetupAsset.RoundData, Root_Assemble
     - Name: ID
       Entry: 3
-      Data: 2
+      Data: 0
     - Name: RoundTypeData
       Entry: 3
       Data: 0
     - Name: ShopLength
       Entry: 3
-      Data: 14
+      Data: 0
     - Name: RequireLength
       Entry: 3
-      Data: 7
+      Data: 0
     - Name: TypeARequirement
       Entry: 3
-      Data: 17
+      Data: 0
     - Name: TypeBRequirement
       Entry: 3
-      Data: 14
+      Data: 0
     - Name: HeatSinkLength
       Entry: 3
-      Data: 15
+      Data: 0
     - Name: bossStageType
       Entry: 3
       Data: 0
@@ -173,13 +173,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: ROOT.RoundData, Root_Assemble
+      Data: ROOT.SetupAsset.RoundData, Root_Assemble
     - Name: ID
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: RoundTypeData
       Entry: 3
-      Data: 1
+      Data: 0
     - Name: ShopLength
       Entry: 3
       Data: 0
@@ -197,22 +197,22 @@ MonoBehaviour:
       Data: 0
     - Name: bossStageType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: bossStageLength
       Entry: 3
-      Data: 28
+      Data: 0
     - Name: DestoryerCount
       Entry: 3
-      Data: 15
+      Data: 0
     - Name: InfoCount
       Entry: 3
-      Data: 1000
+      Data: 0
     - Name: InfoVariantRatio
       Entry: 3
-      Data: 30
+      Data: 0
     - Name: InfoTargetRatio
       Entry: 3
-      Data: 80
+      Data: 0
     - Name: AcquiringTarget
       Entry: 3
       Data: 0
@@ -246,6 +246,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
   TitleTerm: Level_Test
   Thumbnail: {fileID: 21300000, guid: ebad0ac1de2ad1f4dbf300bfb7a41d70, type: 3}
   LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,

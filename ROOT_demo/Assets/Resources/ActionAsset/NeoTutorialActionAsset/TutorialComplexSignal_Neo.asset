@@ -12,125 +12,199 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: TutorialComplexSignal_Neo
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: RoundLib
+      Entry: 6
+      Data: 
+    - Name: BossSetup
+      Entry: 6
+      Data: 
+  BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
   TitleTerm: TutorialComplexSignal
   Thumbnail: {fileID: 21300000, guid: ca60355f735f90d46a4bb437515201c0, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: ee4f32428bb1c8842a8744aac83a8e89,
     type: 3}
   levelType: 0
   GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
-  ExcludedShop: 0
-  ShopExcludedType: 0400000005000000
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 0
+  InitalBoard:
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000100000000000000
+    Tier: 0
+    Pos: {x: 5, y: 3}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000100000001000000
+    Tier: 0
+    Pos: {x: 4, y: 3}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 01000000010000000100000000000000
+    Tier: 0
+    Pos: {x: 3, y: 2}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000100000001000000
+    Tier: 0
+    Pos: {x: 2, y: 2}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000000000001000000
+    Tier: 0
+    Pos: {x: 1, y: 2}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 01000000010000000000000001000000
+    Tier: 0
+    Pos: {x: 3, y: 3}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000100000000000000
+    Tier: 0
+    Pos: {x: 5, y: 4}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 01000000000000000100000000000000
+    Tier: 0
+    Pos: {x: 4, y: 1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000010000000100000000000000
+    Tier: 0
+    Pos: {x: 2, y: 4}
+    IsStation: 0
+  NormalRoundCount: 0
+  HasBossRound: 0
+  Endless: 0
+  BossStage: 0
   Actions:
   - ActionIdx: 0
     ActionType: 3
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 0
     ActionType: 7
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 0
     ActionType: 0
     Text: "\u8BDD\u8BF4,\u73B0\u5728\u6709\u4E24\u79CD\u6570\u636E\u4E86,\u4F46\u662F\u8FD9\u4E24\u79CD\u6570\u636E\u4E0D\u5B8C\u5168\u662F\u72EC\u7ACB\u7684."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 1
     ActionType: 0
     Text: "\u867D\u8BF4\u4E0D\u540C\u7684\u6570\u636E\u53EA\u9700\u8981\u72EC\u7ACB\u5904\u7406,\u4F46\u662F\u4ECE\u786C\u4EF6\u4E0A\u8003\u8651,\u4FE1\u53F7\u662F\u5728\u6240\u6709\u5355\u5143\u95F4\u4F20\u8F93\u7684."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 2
     ActionType: 0
     Text: "\u4ECE\u5B9E\u9645\u60C5\u51B5\u770B\u770B,\u4E2D\u95F4\u6709\u4E00\u6761\u5DF2\u7ECF\u5E03\u7F6E\u597D\u7684\u7F51\u7EDC\u8FDE\u63A5.\u4F46\u662F\u5904\u7406\u5668\u548C\u786C\u76D8\u5374\u88AB\u5206\u7ACB\u4E24\u4FA7."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 3
     ActionType: 0
     Text: "\u6709\u4E00\u79CD\u65B9\u5F0F\u662F\u5C06\u5904\u7406\u5668\u7ED5\u8FC7\u5DF2\u6709\u7684\u7F51\u7EDC\u94FE,\u4F46\u662F\u53E6\u4E00\u4E2A\u65B9\u5F0F\u5C31\u662F\u53EF\u4EE5\u76F4\u63A5\u8BA9\u4FE1\u53F7\u8DE8\u8D8A\u5DF2\u6709\u94FE\u8DEF"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 4
     ActionType: 0
     Text: "\u4E00\u4E2A\u4FE1\u53F7\u7AEF\u53E3\u4E0A\u540C\u65F6\u4F1A\u663E\u793A\u84DD\u8272\u6216\u8005\u7EA2\u8272\u7684LED,\u4ECE\u90A3\u91CC\u53EF\u4EE5\u76F4\u89C2\u7684\u770B\u5230\u4E0A\u9762\u5177\u4F53\u6D41\u8FC7\u4E86\u54EA\u4E9B\u4FE1\u53F7."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 5
     ActionType: 0
     Text: "\u603B\u4E4B,\u8003\u8651\u5230\u8FD9\u79CD\u60C5\u51B5,\u867D\u7136\u6709\u4E24\u79CD\u4FE1\u53F7,\u4F46\u662F\u53EF\u4EE5\u7EC4\u5408\u8D77\u6765\u6210\u4E3A\u4E00\u4E2A\u590D\u6742\u7684\u7F51\u7EDC."
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 6
     ActionType: 4
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 6
     ActionType: 6
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
+    Tier: 0
   - ActionIdx: 6
     ActionType: 5
     Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
-  TimeLineTokens:
-  - TokenID: 0
-    type: 0
-    RequireAmount: 2
-    Range: {x: 5, y: -1}
-  - TokenID: 1
-    type: 3
-    RequireAmount: 0
-    Range: {x: 10, y: -1}
-  InitalBoard:
-  - Core: 2
-    Sides: 00000000000000000100000000000000
-    Pos: {x: 5, y: 3}
-    IsStation: 1
-  - Core: 1
-    Sides: 00000000000000000100000001000000
-    Pos: {x: 4, y: 3}
-    IsStation: 1
-  - Core: 1
-    Sides: 01000000010000000100000000000000
-    Pos: {x: 3, y: 2}
-    IsStation: 1
-  - Core: 1
-    Sides: 00000000000000000100000001000000
-    Pos: {x: 2, y: 2}
-    IsStation: 1
-  - Core: 1
-    Sides: 00000000000000000000000001000000
-    Pos: {x: 1, y: 2}
-    IsStation: 1
-  - Core: 1
-    Sides: 01000000010000000000000001000000
-    Pos: {x: 3, y: 3}
-    IsStation: 1
-  - Core: 4
-    Sides: 00000000000000000100000000000000
-    Pos: {x: 5, y: 4}
-    IsStation: 0
-  - Core: 5
-    Sides: 01000000000000000100000000000000
-    Pos: {x: 4, y: 1}
-    IsStation: 0
-  - Core: 4
-    Sides: 00000000010000000100000000000000
-    Pos: {x: 2, y: 4}
-    IsStation: 0
-  TargetCount: 4
+    Tier: 0
+  ExcludedShop: 0

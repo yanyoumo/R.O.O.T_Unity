@@ -12,6 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: TutorialBasicControl_Neo
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: RoundLib
+      Entry: 6
+      Data: 
+    - Name: BossSetup
+      Entry: 6
+      Data: 
+  BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
   TitleTerm: TutorialBasicControl
   Thumbnail: {fileID: 21300000, guid: f8294d4198f323b4cbd32bb90215b4fb, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: 7adc5e295115e85488339a30c9a13691,
@@ -22,11 +38,10 @@ MonoBehaviour:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
   InitalBoard: []
-  RoundDatasGist:
-    NormalRoundCount: 0
-    HasBossRound: 0
-    Endless: 0
-    BossStage: 0
+  NormalRoundCount: 0
+  HasBossRound: 0
+  Endless: 0
+  BossStage: 0
   Actions:
   - ActionIdx: 0
     ActionType: 3

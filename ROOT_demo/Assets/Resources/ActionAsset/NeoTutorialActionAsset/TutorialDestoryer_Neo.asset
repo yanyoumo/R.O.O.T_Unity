@@ -12,14 +12,72 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: TutorialDestoryer_Neo
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: RoundLib
+      Entry: 6
+      Data: 
+    - Name: BossSetup
+      Entry: 6
+      Data: 
+  BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
   TitleTerm: TutorialDestroyer
   Thumbnail: {fileID: 21300000, guid: f6a8f0c8d3c9cfa46b57cf90ef50a9cb, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: e273602a673f96547a47a284186616f4,
     type: 3}
   levelType: 0
   GameModeAsset: {fileID: 11400000, guid: b32e8c0e297860f41bd07f944a545ea4, type: 2}
-  ExcludedShop: 0
-  ShopExcludedType: 000000000100000002000000
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 0
+  InitalBoard:
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 0
+    Pos: {x: 3, y: 4}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 0
+    Pos: {x: 3, y: 2}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 0
+    Pos: {x: 5, y: 1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 0
+    Pos: {x: 2, y: 0}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 0
+    Pos: {x: 0, y: 1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000000000000000000
+    Tier: 0
+    Pos: {x: 3, y: 0}
+    IsStation: 0
+  NormalRoundCount: 0
+  HasBossRound: 0
+  Endless: 0
+  BossStage: 0
   Actions:
   - ActionIdx: 0
     ActionType: 3
@@ -28,6 +86,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 0
@@ -37,6 +96,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 0
@@ -46,6 +106,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 1
@@ -55,6 +116,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 2
@@ -64,6 +126,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 3
@@ -73,6 +136,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 4
@@ -82,6 +146,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 5
@@ -91,6 +156,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 6
@@ -100,6 +166,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 7
@@ -109,6 +176,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 7
@@ -118,6 +186,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 1
+    HardwareType: 0
     Sides: 00000000000000000100000000000000
     Tier: 1
   - ActionIdx: 7
@@ -127,6 +196,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 4, y: 1}
     Core: 4
+    HardwareType: 0
     Sides: 00000000000000000100000000000000
     Tier: 1
   - ActionIdx: 7
@@ -136,6 +206,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 1
+    HardwareType: 0
     Sides: 00000000000000000100000000000000
     Tier: 1
   - ActionIdx: 7
@@ -145,6 +216,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 4
+    HardwareType: 0
     Sides: 01000000010000000000000000000000
     Tier: 1
   - ActionIdx: 8
@@ -154,6 +226,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 9
@@ -164,6 +237,7 @@ MonoBehaviour:
     DoppelgangerText: "\u65E0\u8BBA\u662F\u60F3\u8DF3\u8FC7\u4ECA\u5929\u7684\u7A7A\u4F59\u65F6\u95F4\u8FD8\u662F\u4E4B\u540E\u611F\u89C9\u6CA1\u5FC5\u8981\u8C03\u6574\u68CB\u76D8\u7684\u65F6\u5019,\u90FD\u53EF\u4EE5\u957F\u6309\u5C4F\u5E55\u6765\u5F3A\u5236\u8FDB\u884C\u4E00\u6B65"
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 10
@@ -173,6 +247,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 10
@@ -182,6 +257,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 10
@@ -191,39 +267,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
-  TimeLineTokens: []
-  InitalBoard:
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 0
-    Pos: {x: 3, y: 4}
-    IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 0
-    Pos: {x: 3, y: 2}
-    IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 0
-    Pos: {x: 5, y: 1}
-    IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 0
-    Pos: {x: 2, y: 0}
-    IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 0
-    Pos: {x: 0, y: 1}
-    IsStation: 0
-  - Core: 0
-    Sides: 00000000000000000000000000000000
-    Tier: 0
-    Pos: {x: 3, y: 0}
-    IsStation: 0
-  TargetCount: 0
-  StationaryRateList: []
+  ExcludedShop: 0
