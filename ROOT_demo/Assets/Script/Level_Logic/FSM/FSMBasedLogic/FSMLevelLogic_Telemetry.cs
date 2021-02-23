@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
+using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -14,7 +15,7 @@ namespace ROOT
     using Trans = RootFSMTransition;
     using Status = RootFSMStatus;
     
-    public abstract class AdditionalBossSetupBase
+    public abstract class AdditionalBossSetupBase:SerializedUnityObject
     {
         [NonSerialized] 
         [OdinSerialize] 

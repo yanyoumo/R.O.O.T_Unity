@@ -11,9 +11,8 @@ namespace ROOT.SetupAsset
     public class BossAsset
     {
         public StageType BossStageType;
-        [OdinSerialize] 
-        [ShowInInspector]
-        public Type SetupBaseType;
+        [OdinSerialize]
+        public AdditionalBossSetupBase BossSetup=new TelemetryAdditionalData();
     }
 
     [Serializable]
