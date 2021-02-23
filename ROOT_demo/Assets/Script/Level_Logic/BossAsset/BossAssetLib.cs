@@ -11,12 +11,14 @@ namespace ROOT.SetupAsset
     public class BossAsset
     {
         public StageType BossStageType;
-        [OdinSerialize][ShowInInspector]
+        [OdinSerialize] 
+        [ShowInInspector]
         public Type SetupBaseType;
     }
 
-    [Serializable] [CreateAssetMenu(fileName = "NewAssetLib", menuName = "BossAsset/New BossAsset")]
-    public class BossAssetLib:ScriptableObject
+    [Serializable]
+    [CreateAssetMenu(fileName = "NewAssetLib", menuName = "BossAsset/New BossAsset")]
+    public class BossAssetLib : SerializedScriptableObject
     {
         public BossAsset[] BossLib;
     }

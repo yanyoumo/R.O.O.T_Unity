@@ -12,6 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c08d603febb4d4c0c93ca3eee39fc897, type: 3}
   m_Name: BossLib
   m_EditorClassIdentifier: 
-  BossLib:
-  - BossStageType: 3
-  - BossStageType: 4
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  BossLib: []
