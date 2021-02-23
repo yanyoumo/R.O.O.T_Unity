@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
@@ -9,7 +10,7 @@ using UnityEngine;
 namespace ROOT.SetupAsset
 {
     [Serializable]
-    public class AdditionalBossSetupBase:ScriptableObject
+    public abstract class AdditionalBossSetupBase
     {
         public int BossLength;
     }
@@ -17,6 +18,14 @@ namespace ROOT.SetupAsset
     public class BossMasterMgr : MonoBehaviour
     {
         public BossAssetLib BossLib;
+
+        //TODO 这个东西先这样、就反正能用。
+        public readonly Dictionary<StageType, AdditionalBossSetupBase> BossLibDic =
+            new Dictionary<StageType, AdditionalBossSetupBase>
+            {
+                {StageType.Telemetry,new TelemetryAdditionalData()},
+                {StageType.Acquiring,new AcquiringAdditionalData()},
+            };
         
         [NotNull] private static BossMasterMgr _instance;
         public static BossMasterMgr Instance => _instance;

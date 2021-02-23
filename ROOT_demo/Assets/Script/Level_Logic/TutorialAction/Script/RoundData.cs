@@ -19,11 +19,11 @@ namespace ROOT.SetupAsset
         public int shopLength => owner.ShopLength;
         public int[] HSSwTruncatedIdx=> new[] {1};
 
-        [Obsolete] public int TelemetryLength=> owner.bossStageLength;
+        /*[Obsolete] public int TelemetryLength=> owner.bossStageLength;
         [Obsolete] public int DestoryerCount=> owner.DestoryerCount;
         [Obsolete] public int InfoCount=> owner.InfoCount;
         [Obsolete] public int InfoTargetRatio => owner.InfoTargetRatio;
-        [Obsolete] public int InfoVariantRatio => owner.InfoVariantRatio;
+        [Obsolete] public int InfoVariantRatio => owner.InfoVariantRatio;*/
         
         public bool SwitchHeatsink(int tCount)
         {
@@ -73,8 +73,7 @@ namespace ROOT.SetupAsset
 
         [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Telemetry")]
         public int InfoTargetRatio;
-
-
+        
         [ShowIf("@RoundTypeData == RoundType.Boss&&bossStageType==StageType.Acquiring")]
         public int AcquiringTarget;
 
@@ -167,28 +166,16 @@ namespace ROOT.SetupAsset
             }
         }
         
-        public RoundGist? PeekBossRoundGist
+        public AdditionalBossSetupBase PeekBossRoundGist
         {
             get
             {
-                if (!HasBossRound) return null;
-                var bossStage = core.Last().bossStageType;
-                return core.Last().ExtractGist(bossStage);
+                return null;
+                /*var test = BossMasterMgr.Instance.BossLibDic[BossStageVal];
+                var type = test.GetType();*/
             }
         }
 
-        public RoundGist PeekBossRoundGistVal
-        {
-            get
-            {
-                if (PeekBossRoundGist.HasValue)
-                {
-                    return PeekBossRoundGist.Value;
-                }
-                throw new ArgumentException("this lib has no bossStage.");
-            }
-        }
-        
         private RoundData GetCurrentRound(int step,out int truncatedStep)
         {
             var tmpStep = step;

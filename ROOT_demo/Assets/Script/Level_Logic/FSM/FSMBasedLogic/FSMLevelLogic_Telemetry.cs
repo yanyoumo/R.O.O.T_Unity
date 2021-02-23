@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
+using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -207,10 +208,9 @@ namespace ROOT
 
         private void TelemetryInit()
         {
-            var bossRoundGist = LevelAsset.ActionAsset.PeekBossRoundGistVal;
-            
+            TelemetryAdditionalData bossRoundGist = LevelAsset.ActionAsset.PeekBossRoundGistVal as TelemetryAdditionalData;
             //var bossStageCount = LevelAsset.ActionAsset.TelemetryCount;
-            var totalSprayCount = bossRoundGist.TelemetryLength * SprayCountPerAnimateInterval;
+            var totalSprayCount = bossRoundGist.BossLength * SprayCountPerAnimateInterval;
             //这个数据还得传过去。
             var targetInfoCount = Mathf.RoundToInt(bossRoundGist.InfoCount * bossRoundGist.InfoTargetRatio);
 

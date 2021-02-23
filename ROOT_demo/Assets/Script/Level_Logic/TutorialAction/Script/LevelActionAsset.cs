@@ -11,45 +11,45 @@ namespace ROOT.SetupAsset
     [Serializable]
     public struct TutorialActionData
     {
-        [HorizontalGroup("Split")]
-        [VerticalGroup("Split/Left")]
-        [LabelWidth(80)]
+        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [LabelWidth(80)]
         public int ActionIdx;
-        [EnumPaging]
-        [VerticalGroup("Split/Right")]
+
+        [EnumPaging] [VerticalGroup("Split/Right")]
         public TutorialActionType ActionType;
-        [ShowIf("ActionType", TutorialActionType.Text)]
-        [LabelWidth(30)]
+
+        [ShowIf("ActionType", TutorialActionType.Text)] [LabelWidth(30)]
         public string Text;
-        [ShowIf("ActionType", TutorialActionType.Text)]
-        [HorizontalGroup("Doppelganger")]
-        [LabelWidth(135)]
+
+        [ShowIf("ActionType", TutorialActionType.Text)] [HorizontalGroup("Doppelganger")] [LabelWidth(135)]
         public bool DoppelgangerToggle;
+
         [ShowIf("@this.ActionType==TutorialActionType.Text&&this.DoppelgangerToggle")]
         [HorizontalGroup("Doppelganger")]
         [LabelWidth(135)]
         public string DoppelgangerText;
+
         [ShowIf("@this.ActionType==TutorialActionType.CreateUnit||this.ActionType==TutorialActionType.CreateCursor")]
         public Vector2Int Pos;
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
-        [VerticalGroup("Split/Left")]
+
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)] [VerticalGroup("Split/Left")]
         public SignalType Core;
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
-        [VerticalGroup("Split/Left")]
+
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)] [VerticalGroup("Split/Left")]
         public HardwareType HardwareType;
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
-        [VerticalGroup("Split/Right")]
+
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)] [VerticalGroup("Split/Right")]
         public SideType[] Sides;
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
-        [Range(1,5)]
+
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)] [Range(1, 5)]
         public int Tier;
     }
 
-    [Serializable] [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
+    [Serializable]
+    [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : SerializedScriptableObject
     {
-       [HideInInspector]public BossAssetLib BossLib;
-        
+        [HideInInspector] public BossAssetLib BossLib;
+
         [Header("Basic Data")] public string TitleTerm;
 
         [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail")]
@@ -71,18 +71,18 @@ namespace ROOT.SetupAsset
 
         [ShowIf("levelType", LevelType.Career)]
         public int NormalRoundCount;
+
         [ShowIf("levelType", LevelType.Career)]
         public bool HasBossRound;
-        [ShowIf("levelType", LevelType.Career)]
-        [HideIf("HasBossRound")] 
+
+        [ShowIf("levelType", LevelType.Career)] [HideIf("HasBossRound")]
         public bool Endless;
-        [ShowIf("levelType", LevelType.Career)]
-        [ShowIf("HasBossRound")]
-        [ValueDropdown("BossStageFilter")]
+
+        [ShowIf("levelType", LevelType.Career)] [ShowIf("HasBossRound")] [ValueDropdown("BossStageFilter")]
         public StageType BossStage;
-        //下面Boss的数量提出来放成一个好配置的。
-        private static IEnumerable<StageType> BossStageFilter = Enumerable.Range((int)StageType.Telemetry, 2).Cast<StageType>();
         
+        private static IEnumerable<StageType> BossStageFilter = Enumerable.Range((int)StageType.Telemetry, 2).Cast<StageType>();
+
         [ShowIf("levelType", LevelType.Career)]
         [Button("Create New RoundDatas")]
         public void CreateRoundDatasFromGist()
@@ -107,8 +107,7 @@ namespace ROOT.SetupAsset
                         RoundTypeData = RoundType.Boss,
                         bossStageType = BossStage
                     });
-                    //TODO
-                    BossSetup = new TelemetryAdditionalData();
+                    BossSetup = new BossAdditionalSetupAsset {BossStageType = BossStage};
                 }
             }
         }
@@ -136,14 +135,14 @@ namespace ROOT.SetupAsset
 
             return StepCount >= PlayableCount;
         }
-        
+
         public int GetTruncatedCount(int totalCount) => RoundLib.GetTruncatedStep(totalCount);
 
         public RoundGist GetRoundGistByStep(int stepCount) => RoundLib.GetCurrentRoundGist(stepCount);
 
-        public RoundGist PeekBossRoundGistVal => RoundLib.PeekBossRoundGistVal;
+        public AdditionalBossSetupBase PeekBossRoundGistVal => RoundLib.PeekBossRoundGist;
 
-        [OdinSerialize] public AdditionalBossSetupBase BossSetup;
+        [ShowInInspector] public BossAdditionalSetupAsset BossSetup;
         
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;
 

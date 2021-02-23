@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace ROOT.SetupAsset
 {
-    [CreateAssetMenu(fileName = "TelemetryAdditionalData", menuName = "BossAdditionalData/New TelemetryAdditionalData")]
     public class TelemetryAdditionalData : AdditionalBossSetupBase
     {
         public int DestoryerCount;

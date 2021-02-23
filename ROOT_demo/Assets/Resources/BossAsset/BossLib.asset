@@ -21,4 +21,8 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  BossLib: []
+  BossLib:
+  - BossStageType: 3
+    BossSetup: {fileID: 11400000, guid: edb4789e80875694c8ea9d00a1b53fcb, type: 2}
+  - BossStageType: 4
+    BossSetup: {fileID: 11400000, guid: df768dadd9f3a7c44a581dd5f2875611, type: 2}
