@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3346643620606466459}
   - component: {fileID: -6135370549404183783}
   m_Layer: 0
-  m_Name: FSMLevelLogicPrefab
+  m_Name: FSMLevelLogic_TelemetryPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,8 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da3b2ac75ec4a943a7560f85bfb35c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsTutorialLevel: 0
   Animating: 0
   ReadyToGo: 0
   ReferenceOk: 0
   PendingCleanUp: 0
+  IsTutorialLevel: 0
+  movedTile: 0

@@ -151,9 +151,6 @@ MonoBehaviour:
     DataScreen: {fileID: 0}
     HintMaster: {fileID: 0}
     TimeLine: {fileID: 0}
-    CostLine: {fileID: 0}
-    CostChart: {fileID: 0}
-    SignalPanel: {fileID: 0}
     AirDrop: {fileID: 0}
     ReqOkCount: 0
     SignalInfo: 0
@@ -162,18 +159,10 @@ MonoBehaviour:
     occupiedHeatSink: 0
     InputEnabled: 1
     CurrencyEnabled: 1
-    CurrencyIOEnabled: 1
-    CurrencyIncomeEnabled: 1
-    CycleEnabled: 1
     CursorEnabled: 1
     RotateEnabled: 1
     ShopEnabled: 1
     SkillEnabled: 1
     DestroyerEnabled: 1
     GameOverEnabled: 1
-    LCDCurrencyEnabled: 1
-    LCDDeltaCurrencyEnabled: 1
-    LCDTimeEnabled: 1
     HintEnabled: 1
-    ForceHddConnectionHint: 0
-    ForceServerConnectionHint: 0

@@ -1376,10 +1376,6 @@ MonoBehaviour:
   SignalCore: {fileID: 0}
   BillBoardText: {fileID: 8761583895662260726}
   UnitActivationLEDMat: {fileID: 3993381946835525045}
-  UnitActivationLEDMat_Colors:
-  - {r: 0.8235294, g: 0.029849496, b: 0, a: 1}
-  - {r: 1, g: 0.86275464, b: 0.25157225, a: 1}
-  - {r: 0.43255687, g: 0.84199995, b: 0.34010196, a: 1}
   TierLEDs: {fileID: 814975058593057325}
   TierTag: {fileID: 1445302186819268858}
   CostTag: {fileID: 5671821018749382508}
