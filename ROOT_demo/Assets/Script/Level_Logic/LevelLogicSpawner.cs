@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using ROOT.SetupAsset;
 using UnityEngine;
 
 namespace ROOT
@@ -12,15 +13,7 @@ namespace ROOT
             yield return 0;
             Destroy(transform.gameObject);
         }
-
-        public FSMLevelLogic SpawnLevelLogic<T>() where T : FSMLevelLogic
-        {
-            var o = new GameObject("LevelLogic");
-            var gameMgr = o.AddComponent<T>(); //加哪个Level就是玩哪关。
-            StartCoroutine(KillNextFrame());
-            return gameMgr;
-        }
-
+        
         public FSMLevelLogic SpawnLevelLogic(GameObject levelLogicPrefab)
         {
             var go=Instantiate(levelLogicPrefab);
