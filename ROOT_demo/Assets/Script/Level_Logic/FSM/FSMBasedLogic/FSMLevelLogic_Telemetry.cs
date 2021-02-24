@@ -244,7 +244,7 @@ namespace ROOT
             };
             MessageDispatcher.SendMessage(message);
             
-            if (LevelAsset.ActionAsset.RoundLibVal.Count > 0)
+            if (LevelAsset.ActionAsset.RoundLib.Count > 0)
             {
                 //这个东西放在这里还是怎么着？就先这样吧。
                 WorldCycler.InitCycler();

@@ -16,6 +16,6 @@ namespace ROOT
 
         public bool ShopCost = true;
         public bool UnitCost = true;
-        public bool InfiniteTime = false;
+        //public bool InfiniteTime = false;
     }
 }

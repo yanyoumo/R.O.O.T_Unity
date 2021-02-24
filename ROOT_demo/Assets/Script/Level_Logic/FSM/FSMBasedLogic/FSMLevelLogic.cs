@@ -34,11 +34,11 @@ namespace ROOT
     public sealed class RoundLibDriver
     {
         public FSMLevelLogic owner;
-        private RoundLib _roundLibVal => owner.LevelAsset.ActionAsset.RoundLibVal;
-        private RoundGist? GetRoundGistByStep(int step) => _roundLibVal?.GetCurrentRoundGist(step);
-        private StageType? Stage(int step) => _roundLibVal?.GetCurrentType(step);
+        private LevelActionAsset _ActionAsset => owner.LevelAsset.ActionAsset;
+        private RoundGist? GetRoundGistByStep(int step) => _ActionAsset?.GetCurrentRoundGist(step);
+        private StageType? Stage(int step) => _ActionAsset?.GetCurrentType(step);
         public RoundGist? CurrentRoundGist => GetRoundGistByStep(owner.LevelAsset.StepCount);
-        public RoundGist? PreviousRoundGist => (owner.LevelAsset.StepCount - 1)>=0 ? _roundLibVal.GetCurrentRoundGist(owner.LevelAsset.StepCount - 1) : CurrentRoundGist;
+        public RoundGist? PreviousRoundGist => (owner.LevelAsset.StepCount - 1)>=0 ? _ActionAsset.GetCurrentRoundGist(owner.LevelAsset.StepCount - 1) : CurrentRoundGist;
         public StageType? CurrentStage => Stage(owner.LevelAsset.StepCount);
 
         public bool IsShopRound => CurrentStage == StageType.Shop;

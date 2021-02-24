@@ -120,7 +120,7 @@ namespace ROOT
             }
         }
 
-        private RoundLib _roundLib;
+        //private RoundLib _roundLib;
         private bool HasHeatsinkSwitch = false;
 
         void CheckToken(Transform MarkRoot, int j, int markerID)
@@ -145,8 +145,8 @@ namespace ROOT
                 var stage = round.CheckStage(truncatedCount, RoundCount == RoundDatas.Length - 1);
                 if (!stage.HasValue) return;*/
 
-                roundGist =_currentGameAsset.ActionAsset.RoundLibVal.GetCurrentRoundGist(markerID);
-                var truncatedCount=_currentGameAsset.ActionAsset.RoundLibVal.GetTruncatedStep(markerID);
+                roundGist =_currentGameAsset.ActionAsset.GetCurrentRoundGist(markerID);
+                var truncatedCount=_currentGameAsset.ActionAsset.GetTruncatedStep(markerID);
                 HasHeatsinkSwitch = roundGist.SwitchHeatsink(truncatedCount);
             }
 
@@ -218,7 +218,7 @@ namespace ROOT
         {
             _currentGameAsset = levelAsset;
             Debug.Assert(_currentGameAsset.StepCount == 0);
-            _roundLib = levelAsset.ActionAsset.RoundLibVal;
+            //_roundLib = levelAsset.ActionAsset.RoundLibVal;
             UpdateTimeLine();
         }
 

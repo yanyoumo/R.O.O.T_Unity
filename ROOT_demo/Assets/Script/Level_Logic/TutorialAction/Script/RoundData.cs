@@ -31,10 +31,8 @@ namespace ROOT.SetupAsset
     [Serializable]
     public struct RoundData
     {
-        [ReadOnly] public int ID;
-
-        //[ReadOnly] public RoundType RoundTypeData;
-
+        public int ID;
+        
         [Range(0, 60)]
         public int ShopLength;
 
@@ -88,121 +86,5 @@ namespace ROOT.SetupAsset
         }
 
         public RoundGist ExtractGist(StageType type) => new RoundGist {owner = this, Type = type};
-    }
-
-    public class RoundLib:IList<RoundData>
-    {
-        [NonSerialized]
-        [OdinSerialize]
-        private List<RoundData> core;
-
-        private RoundData GetCurrentRound(int step, out int truncatedStep,out bool normalRoundEnded)
-        {
-            var tmpStep = step;
-            var currentRoundData = core[0];
-            truncatedStep = 0;
-            normalRoundEnded = true;
-            foreach (var neoRoundData in core)
-            {
-                tmpStep -= neoRoundData.TotalLength;
-                if (tmpStep < 0)
-                {
-                    currentRoundData = neoRoundData;
-                    truncatedStep = tmpStep + currentRoundData.TotalLength;
-                    normalRoundEnded = false;
-                    break;
-                }
-            }
-            return currentRoundData;
-        }
-
-        public RoundGist GetCurrentRoundGist(int step)
-        {
-            var round = GetCurrentRound(step,out var truncatedStep,out var normalRoundEnded);
-            if (!normalRoundEnded)
-            {
-                var stage = GetCurrentType(step);
-                return round.ExtractGist(stage);
-            }
-
-            return new RoundGist {owner = core[0], Type = StageType.Boss};
-        }
-        
-        public StageType GetCurrentType(int step)
-        {
-            var currentRound=GetCurrentRound(step, out int truncatedStep,out var normalRoundEnded);
-            return !normalRoundEnded ? currentRound.GetCurrentType(truncatedStep) : StageType.Boss;
-        }
-
-        public RoundLib()
-        {
-            core = new List<RoundData>();
-        }
-        
-        public int GetTruncatedStep(int step)
-        {
-            GetCurrentRound(step, out var res, out var B);
-            return res;
-        }
-        #region INTERFACE
-
-        public IEnumerator<RoundData> GetEnumerator()
-        {
-            return core.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public void Add(RoundData item)
-        {
-            core.Add(item);
-        }
-
-        public void Clear()
-        {
-            core.Clear();
-        }
-
-        public bool Contains(RoundData item)
-        {
-            return core.Contains(item);
-        }
-
-        public void CopyTo(RoundData[] array, int arrayIndex)
-        {
-            core.CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove(RoundData item)
-        {
-            return core.Remove(item);
-        }
-
-        public int Count => core.Count;
-        public bool IsReadOnly => false;
-        public int IndexOf(RoundData item)
-        {
-            return core.IndexOf(item);
-        }
-
-        public void Insert(int index, RoundData item)
-        {
-            core.Insert(index, item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            core.RemoveAt(index);
-        }
-
-        public RoundData this[int index]
-        {
-            get => core[index];
-            set => core[index] = value;
-        }
-        #endregion
     }
 }

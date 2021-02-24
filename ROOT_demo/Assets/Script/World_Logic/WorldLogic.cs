@@ -1329,7 +1329,7 @@ namespace ROOT
         {
             var lvlLogic = levelAsset.Owner;
             var roundGist = lvlLogic.RoundLibDriver.CurrentRoundGist.Value;
-            var tCount = levelAsset.ActionAsset.RoundLibVal.GetTruncatedStep(levelAsset.StepCount);
+            var tCount = levelAsset.ActionAsset.GetTruncatedStep(levelAsset.StepCount);
             if (roundGist.SwitchHeatsink(tCount))
             {
                 levelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
