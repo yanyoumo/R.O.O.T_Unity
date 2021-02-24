@@ -90,7 +90,7 @@ MonoBehaviour:
     RequireLength: 3
     TypeARequirement: 6
     TypeBRequirement: 4
-    HeatSinkLength: 0
+    HeatSinkLength: 8
   - ID: 1
     ShopLength: 6
     RequireLength: 3
