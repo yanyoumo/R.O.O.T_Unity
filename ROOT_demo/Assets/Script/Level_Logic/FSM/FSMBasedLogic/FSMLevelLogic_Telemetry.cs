@@ -320,7 +320,19 @@ namespace ROOT
             _mainFSM.currentStatus = RootFSMStatus.MajorUpKeep;
             _mainFSM.waitForNextFrame = false;
         }
-        
+
+        protected override void Awake()
+        {
+            base.Awake();
+            MessageDispatcher.AddListener(WorldEvent.BoardUpdatedEvent, BoardUpdatedHandler);
+        }
+
+        protected override void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.BoardUpdatedEvent, BoardUpdatedHandler);
+            base.OnDestroy();
+        }
+
         protected override FSMTransitions RootFSMTransitions
         {
             get

@@ -397,23 +397,6 @@ namespace ROOT
 
         private FSMEventInquiryResponder _inquiryResponder;
         
-        private void Awake()
-        {
-            LevelAsset = new GameAssets();
-            _mainFSM = new RootFSM {owner = this};
-            _inquiryResponder = new FSMEventInquiryResponder(this);
-            
-            UpdateLogicLevelReference();
-
-            _mainFSM.ReplaceActions(fsmActions);
-            _mainFSM.ReplaceTransition(RootFSMTransitions);
-            _mainFSM.ReplaceBreaking(RootFSMBreakings);
-
-            LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            _actionDriver = new CareerControlActionDriver(this, _mainFSM);
-
-            MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
-        }
         private void Update()
         {
             do
@@ -428,9 +411,24 @@ namespace ROOT
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
         }
-        private void OnDestroy()
+        
+        protected virtual void Awake()
         {
-            MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
+            LevelAsset = new GameAssets();
+            _mainFSM = new RootFSM {owner = this};
+            _inquiryResponder = new FSMEventInquiryResponder(this);
+            
+            UpdateLogicLevelReference();
+
+            _mainFSM.ReplaceActions(fsmActions);
+            _mainFSM.ReplaceTransition(RootFSMTransitions);
+            _mainFSM.ReplaceBreaking(RootFSMBreakings);
+
+            LevelAsset.AnimationPendingObj = new List<MoveableBase>();
+            _actionDriver = new CareerControlActionDriver(this, _mainFSM);
+        }
+        protected virtual void OnDestroy()
+        {
             _actionDriver.unsubscribe();
             _actionDriver = null;
         }
