@@ -28,8 +28,12 @@ namespace ROOT.Signal
             {
                 var tmp = signalCore.CalScore(ref minLength, ref maxScore);
                 if (tmp.Count != 0)
+                {
                     res = tmp;
+                }
             }
+            if (maxScore!=Int32.MinValue)
+                SignalMasterMgr.MaxNetworkDepth = maxScore;
             return res;
         }
 
