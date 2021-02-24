@@ -1318,7 +1318,7 @@ namespace ROOT
         {
             var message = new CurrencyUpdatedInfo()
             {
-                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency()),
+                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.Currency),
                 IncomesVal = -1,
             };
             MessageDispatcher.SendMessage(message);
@@ -1431,7 +1431,7 @@ namespace ROOT
 
             var message = new CurrencyUpdatedInfo()
             {
-                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.GetCurrency()),
+                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.Currency),
                 IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency),
             };
             MessageDispatcher.SendMessage(message);

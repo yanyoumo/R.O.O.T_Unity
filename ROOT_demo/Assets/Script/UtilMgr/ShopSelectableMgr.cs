@@ -310,7 +310,7 @@ namespace ROOT
             if (!_items[itemID]) return false;
 
             var totalPrice = UnitRetailPrice(itemID, _itemUnit[itemID].Tier);
-            if (CurrentGameStateMgr.GetCurrency() >= totalPrice)
+            if (CurrentGameStateMgr.Currency >= totalPrice)
             {
                 _items[itemID].GetComponentInChildren<Unit>().SetPendingBuying = true;
                 return true;

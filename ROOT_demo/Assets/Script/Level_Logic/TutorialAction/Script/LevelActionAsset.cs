@@ -18,12 +18,20 @@ namespace ROOT.SetupAsset
 
         [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab")]
         public GameObject LevelLogic;
+        
+        [Range(0, 100)]
+        public int InitialCurrency = 36;
 
-        [EnumToggleButtons] public LevelType levelType;
-
-        [Required] [AssetSelector(Paths = "Assets/Resources/GameMode")]
-        public GameModeAsset GameModeAsset;
-
+        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")]
+        [LabelText("Shop has cost")]
+        public bool ShopCost = true;
+        
+        [VerticalGroup("Split/Right")]
+        [LabelText("Unit could cost")]
+        public bool UnitCost = true;
+        
+        [Space] [EnumToggleButtons] public LevelType levelType;
+        
         [Header("Career")] [ShowIf("levelType", LevelType.Career)]
         public AdditionalGameSetup AdditionalGameSetup;
 
@@ -177,6 +185,8 @@ namespace ROOT.SetupAsset
             BossSetup.BossStageTypeVal = BossStageVal;
         }
         
+        public (int, bool, bool) GameStartingData => (InitialCurrency, ShopCost, UnitCost);
+
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;
 
         [Obsolete("Why?")] public List<SignalType> ShopExcludedType => null;

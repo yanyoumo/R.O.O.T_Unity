@@ -5,22 +5,20 @@ using UnityEngine;
 
 namespace ROOT
 {
-    internal sealed class ScoreSet
+    internal sealed class Currency
     {
-        public float Currency;
-        public int GameTime;
+        private float _currency;
 
-        public ScoreSet(float initCurrency = 1000.0f, int initTime = 60)
+        public Currency(float initCurrency)
         {
-            Currency = initCurrency;
-            GameTime = initTime;
+            _currency = initCurrency;
         }
 
         public bool ChangeCurrency(float delta)
         {
             if (delta >= 0)
             {
-                Currency += delta;
+                _currency += delta;
                 return true;
             }
             else
@@ -32,108 +30,71 @@ namespace ROOT
         //price应该是个正数
         public bool SpendCurrency(float price)
         {
-            if (price > Currency)
+            if (price > _currency)
             {
                 return false;
             }
             else
             {
-                Currency -= price;
-                Debug.Assert(Currency >= 0);
+                _currency -= price;
+                Debug.Assert(_currency >= 0);
                 return true;
             }
         }
 
-        public bool ForceSpendCurrency(float price)
+        private bool ForceSpendCurrency(float price)
         {
-            Currency -= price;
-            return (Currency >= 0);
+            _currency -= price;
+            return (_currency >= 0);
         }
 
-        public void AddCurrency(float income)
+        public static implicit operator float(Currency c) => c._currency;
+
+        public static Currency operator +(Currency b, double c)
         {
-            Currency += income;
+            return new Currency(b._currency + (float)c);
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (obj is decimal dec)
+            {
+                return dec == (decimal) _currency;
+            }
+            return false;
         }
 
-        public void TimePass()
+        public override int GetHashCode()
         {
-            GameTime--;
+            return _currency.GetHashCode();
         }
     }
 
     public sealed class GameStateMgr
     {
         public float StartingMoney { private set; get; }
-        public int StartingTime { private set; get; }
-        private ScoreSet _gameScoreSet;
-        private GameModeAsset _startingGameMode;
-
-        public bool SpendSkillCurrency(float price)
+        private Currency _currency;
+        private bool _shopCost;
+        private bool _unitCost;
+        
+        public void InitGameMode((int, bool, bool) GameStartingData)
         {
-            return _gameScoreSet.SpendCurrency(price);
+            StartingMoney = GameStartingData.Item1;
+            _shopCost = GameStartingData.Item2;
+            _unitCost = GameStartingData.Item3;
+            _currency = new Currency(StartingMoney);
         }
 
-        public bool SpendShopCurrency(float price)
-        {
-            if (_startingGameMode.ShopCost)
-            {
-                return _gameScoreSet.SpendCurrency(price);
-            }
-            else
-            {
-                return true;
-            }
-        }
+        public float Currency => _currency;
+        public void AddCurrency(float income) => _currency += income;
+        public bool SpendSkillCurrency(float price) => _currency.SpendCurrency(price);
+        public bool SpendShopCurrency(float price) => !_shopCost || _currency.SpendCurrency(price);
+        public bool PerMove(float deltaCurrency) => !_unitCost || _currency.ChangeCurrency(deltaCurrency);
 
-        public void AddCurrency(float income)
-        {
-            _gameScoreSet.AddCurrency(income);
-        }
-
-        public float GetCurrency()
-        {
-            return _gameScoreSet.Currency;
-        }
-
-        public int GetGameTime()
-        {
-            return _gameScoreSet.GameTime;
-        }
-
-        public float GetCurrencyRatio()
-        {
-            return _gameScoreSet.Currency / StartingMoney;
-        }
-
-        public float GetTimeRatio()
-        {
-            return _gameScoreSet.GameTime / (float) StartingTime;
-        }
-
-        public void InitGameMode(GameModeAsset startingGameMode)
-        {
-            StartingMoney = startingGameMode.InitialCurrency;
-            StartingTime = startingGameMode.InitialTime;
-            _startingGameMode = startingGameMode;
-            _gameScoreSet = new ScoreSet(StartingMoney, StartingTime);
-        }
-
-        public bool PerMove(float deltaCurrency)
-        {
-            _gameScoreSet.TimePass();
-            if (_startingGameMode.UnitCost)
-            {
-                return _gameScoreSet.ChangeCurrency(deltaCurrency);
-            }
-            else
-            {
-                return true;
-            }
-        }
-
+        [Obsolete]
         public bool EndGameCheck()
         {
-            return (GetCurrency() < 0) || (GetGameTime() <= 0);
+            return _currency < 0; //|| (GetGameTime() <= 0);
         }
     }
 }

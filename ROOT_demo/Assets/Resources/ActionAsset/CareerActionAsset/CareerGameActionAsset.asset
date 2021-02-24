@@ -25,8 +25,10 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: 57d26bcf687e24a41b96ffb61343fabc, type: 3}
   LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,
     type: 3}
+  InitialCurrency: 36
+  ShopCost: 1
+  UnitCost: 1
   levelType: 1
-  GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1

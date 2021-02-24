@@ -72,10 +72,11 @@ namespace ROOT
                 OtherButton.onClick.AddListener(GameRestart);
                 OtherButtonLocalize.Term = ScriptTerms.Restart;
                 EndingTitleLocalize.Term = ScriptTerms.GameOver;
-                float endingIncome = _lastGameAssets.GameStateMgr.GetCurrency() - _lastGameAssets.GameStateMgr.StartingMoney;
+                float endingIncome = _lastGameAssets.GameStateMgr.Currency - _lastGameAssets.GameStateMgr.StartingMoney;
 
-                if (_lastGameAssets.GameStateMgr.GetGameTime() <= 0)
+                if (false)
                 {
+                    //TODO GameStateMgr打算重做、Time相关的流程已经放到Round上面去了；这里先关掉。
                     int deltaMoney = Mathf.FloorToInt(Mathf.Abs(endingIncome));
                     EndingMessageParam.SetParameterValue("VALUE", deltaMoney.ToString());
                     EndingMessageLocalize.Term = endingIncome >= 0 ? ScriptTerms.EndingMessageNormal_EarnedMoney : ScriptTerms.EndingMessageNormal_NoEarnedMoney;

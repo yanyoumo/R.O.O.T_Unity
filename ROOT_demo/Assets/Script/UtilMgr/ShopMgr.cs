@@ -583,7 +583,7 @@ namespace ROOT
             {
                 var totalPrice = UnitRetailPrice(shopID);
                 CalculatePostalPrice(totalPrice, currentLevelAsset.LevelProgress, out postalPrice);
-                if (CurrentGameStateMgr.GetCurrency() >= totalPrice)
+                if (CurrentGameStateMgr.Currency >= totalPrice)
                 {
                     _items[shopID].GetComponentInChildren<Unit>().SetPendingBuying = true;
                     return true;

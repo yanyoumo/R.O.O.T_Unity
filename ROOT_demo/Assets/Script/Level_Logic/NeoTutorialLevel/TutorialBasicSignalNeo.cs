@@ -20,7 +20,7 @@ namespace ROOT
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
             LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.GameStateMgr = new GameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
+            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
             LevelAsset.GameBoard.UpdateBoardAnimation();
             WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
             

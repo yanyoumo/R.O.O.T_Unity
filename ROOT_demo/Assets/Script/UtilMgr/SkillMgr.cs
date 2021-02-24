@@ -152,7 +152,7 @@ namespace ROOT
         {
             //是在这儿，把Discount的enable数据清掉了。Discount的SkillCost还真是大于0.
             //蛋疼，那个实例化Skill里面再加一个coolDown
-            InstancedSkillData.Where(skill=>skill.Cost>0).ForEach(skill => skill.SkillEnabled = (skill.Cost <= currentLevelAsset.GameStateMgr.GetCurrency()));
+            InstancedSkillData.Where(skill=>skill.Cost>0).ForEach(skill => skill.SkillEnabled = (skill.Cost <= currentLevelAsset.GameStateMgr.Currency));
             UpdateSkillPalettes();
         }
 

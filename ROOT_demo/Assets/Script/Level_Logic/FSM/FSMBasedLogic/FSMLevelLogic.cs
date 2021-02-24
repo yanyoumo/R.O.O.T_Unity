@@ -208,7 +208,7 @@ namespace ROOT
 
             LevelAsset.DeltaCurrency = 0.0f;
             LevelAsset.GameStateMgr = new GameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
+            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
 
             WorldExecutor.InitShop(ref LevelAsset);
             WorldExecutor.InitDestoryer(ref LevelAsset);
