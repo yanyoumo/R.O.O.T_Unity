@@ -20,97 +20,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: RoundLibVal
-      Entry: 7
-      Data: 0|ROOT.SetupAsset.RoundLib, Root_Assemble
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: ROOT.SetupAsset.RoundData, Root_Assemble
-    - Name: ID
-      Entry: 3
-      Data: 0
-    - Name: ShopLength
-      Entry: 3
-      Data: 2
-    - Name: RequireLength
-      Entry: 3
-      Data: 1
-    - Name: TypeARequirement
-      Entry: 3
-      Data: 6
-    - Name: TypeBRequirement
-      Entry: 3
-      Data: 4
-    - Name: HeatSinkLength
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: ROOT.SetupAsset.RoundData, Root_Assemble
-    - Name: ID
-      Entry: 3
-      Data: 1
-    - Name: ShopLength
-      Entry: 3
-      Data: 1
-    - Name: RequireLength
-      Entry: 3
-      Data: 1
-    - Name: TypeARequirement
-      Entry: 3
-      Data: 12
-    - Name: TypeBRequirement
-      Entry: 3
-      Data: 8
-    - Name: HeatSinkLength
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: ROOT.SetupAsset.RoundData, Root_Assemble
-    - Name: ID
-      Entry: 3
-      Data: 2
-    - Name: ShopLength
-      Entry: 3
-      Data: 1
-    - Name: RequireLength
-      Entry: 3
-      Data: 1
-    - Name: TypeARequirement
-      Entry: 3
-      Data: 24
-    - Name: TypeBRequirement
-      Entry: 3
-      Data: 16
-    - Name: HeatSinkLength
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   TitleTerm: Level_Test
   Thumbnail: {fileID: 21300000, guid: ebad0ac1de2ad1f4dbf300bfb7a41d70, type: 3}
   LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,
     type: 3}
+  InitialCurrency: 36
+  ShopCost: 1
+  UnitCost: 1
   levelType: 1
-  GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
@@ -166,6 +84,25 @@ MonoBehaviour:
   HasBossRound: 1
   Endless: 0
   BossStage: 0
+  RoundLib:
+  - ID: 0
+    ShopLength: 6
+    RequireLength: 3
+    TypeARequirement: 6
+    TypeBRequirement: 4
+    HeatSinkLength: 0
+  - ID: 1
+    ShopLength: 6
+    RequireLength: 3
+    TypeARequirement: 12
+    TypeBRequirement: 8
+    HeatSinkLength: 6
+  - ID: 2
+    ShopLength: 6
+    RequireLength: 3
+    TypeARequirement: 24
+    TypeBRequirement: 16
+    HeatSinkLength: 6
   Actions: []
   BossSetup:
     BossStageTypeVal: 0
