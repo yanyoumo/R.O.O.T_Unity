@@ -21,13 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: RoundLib
+    - Name: RoundLibVal
       Entry: 6
       Data: 
-    - Name: BossSetup
-      Entry: 6
-      Data: 
-  BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
   TitleTerm: Level_FSM_Test
   Thumbnail: {fileID: 21300000, guid: ca60355f735f90d46a4bb437515201c0, type: 3}
   LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,
@@ -86,9 +82,16 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 2, y: 4}
     IsStation: 0
-  NormalRoundCount: 0
-  HasBossRound: 0
+  HasBossRound: 1
   Endless: 0
   BossStage: 0
   Actions: []
+  BossSetup:
+    BossStageTypeVal: 0
+    BossLength: 0
+    DestoryerCount: 0
+    InfoCount: 0
+    InfoVariantRatio: 0
+    InfoTargetRatio: 0
+    AcquiringTarget: 0
   ExcludedShop: 0
