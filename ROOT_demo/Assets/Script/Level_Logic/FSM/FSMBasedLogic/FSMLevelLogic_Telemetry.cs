@@ -67,15 +67,15 @@ namespace ROOT
 
         //TODO
         private BossStageType bossType = BossStageType.Telemetry;
-        
+
         private bool CheckTelemetryStageInit()
         {
-            return (Stage == StageType.Boss)&&(bossType == BossStageType.Telemetry)&&(!WorldCycler.TelemetryStage);
+            return RoundLibDriver.IsBossRound && (bossType == BossStageType.Telemetry) && (!WorldCycler.TelemetryStage);
         }
 
         private bool CheckTelemetryStage()
         {
-            return (Stage == StageType.Boss)&&(bossType == BossStageType.Telemetry);
+            return RoundLibDriver.IsBossRound&&(bossType == BossStageType.Telemetry);
         }
 
         private bool CheckTelemetryAndPaused()
@@ -124,7 +124,7 @@ namespace ROOT
                 TelemetryInit();
             }
 
-            if (Stage == StageType.Boss && (bossType == BossStageType.Telemetry) && Animating)
+            if (RoundLibDriver.IsBossRound && (bossType == BossStageType.Telemetry) && Animating)
             {
                 LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
             }
@@ -133,7 +133,7 @@ namespace ROOT
                 WorldExecutor.CleanDestoryer(LevelAsset);
                 //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
                 //总之稳了后，这个不能这么每帧调用。
-                LevelAsset.occupiedHeatSink = LevelAsset.GameBoard.BoardGirdDriver.CheckHeatSink(Stage);
+                LevelAsset.occupiedHeatSink = LevelAsset.GameBoard.BoardGirdDriver.CheckHeatSink(RoundLibDriver.CurrentStage.Value);
                 LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
                 if (LevelAsset.SkillEnabled)
                 {
@@ -286,19 +286,19 @@ namespace ROOT
                 }
             }
             
-            if (RoundGist.HasValue)
+            if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
                 WorldExecutor.UpdateRoundData_Stepped(ref LevelAsset);
                 var timingEvent = new TimingEventInfo
                 {
                     Type = WorldEvent.InGameStatusChangedEvent,
-                    CurrentStageType=RoundGist.Value.Type,
+                    CurrentStageType=RoundLibDriver.CurrentRoundGist.Value.Type,
                 };
                 var timingEvent2 = new TimingEventInfo
                 {
                     Type = WorldEvent.CurrencyIOStatusChangedEvent,
                     BoardCouldIOCurrencyData = BoardCouldIOCurrency,
-                    UnitCouldGenerateIncomeData = IsRequireRound,
+                    UnitCouldGenerateIncomeData = RoundLibDriver.IsRequireRound,
                 };
                 MessageDispatcher.SendMessage(timingEvent);
                 MessageDispatcher.SendMessage(timingEvent2);
@@ -308,9 +308,9 @@ namespace ROOT
         protected override void BoardUpdatedHandler(IMessage rMessage)
         {
             base.BoardUpdatedHandler(rMessage);
-            if (RoundGist.HasValue)
+            if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
-                WorldExecutor.UpdateRoundData_Instant(ref LevelAsset);
+                WorldExecutor.UpdateRoundData_Instantly_Telemetry(ref LevelAsset);
             }
         }
 
@@ -319,18 +319,6 @@ namespace ROOT
             CareerCycle();
             _mainFSM.currentStatus = RootFSMStatus.MajorUpKeep;
             _mainFSM.waitForNextFrame = false;
-        }
-
-        protected override void Awake()
-        {
-            base.Awake();
-            MessageDispatcher.AddListener(WorldEvent.BoardUpdatedEvent, BoardUpdatedHandler);
-        }
-
-        protected override void OnDestroy()
-        {
-            MessageDispatcher.RemoveListener(WorldEvent.BoardUpdatedEvent, BoardUpdatedHandler);
-            base.OnDestroy();
         }
 
         protected override FSMTransitions RootFSMTransitions

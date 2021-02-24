@@ -101,6 +101,8 @@ namespace ROOT.SetupAsset
         [ShowInInspector] [ShowIf("HasBossRound")]
         public BossAdditionalSetupAsset BossSetup;
 
+        public List<RoundData> RoundLists;
+
         private void HasBossChanged()
         {
             if (HasBossRound)
