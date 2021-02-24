@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using ROOT.SetupAsset;
 using UnityEngine;
 
 namespace ROOT
@@ -59,7 +60,7 @@ namespace ROOT
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
 
         //internal BoardDataCollector BoardDataCollector;
-        internal GameStateMgr GameStateMgr;
+        internal GameCurrencyMgr GameCurrencyMgr;
         internal float CurrencyRebate = 1.0f;
         internal ShopBase Shop;
         internal SkillMgr SkillMgr;

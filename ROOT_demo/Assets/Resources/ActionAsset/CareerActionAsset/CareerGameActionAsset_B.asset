@@ -12,64 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: CareerGameActionAsset_B
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: RoundLib
+      Entry: 6
+      Data: 
+    - Name: BossSetup
+      Entry: 6
+      Data: 
+  BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
   TitleTerm: Level_3
   Thumbnail: {fileID: 21300000, guid: 53e27874c263fec468d86516331a6776, type: 3}
   LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,
     type: 3}
   levelType: 1
   GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
-  ExcludedShop: 0
-  ShopExcludedType: 
-  Actions: []
-  RoundDatasGist:
-    NormalRoundCount: 5
-    HasBossRound: 0
-  RoundDatas:
-  - ID: 0
-    RoundType: 0
-    ShopLength: 12
-    RequireLength: 16
-    NormalRequirement: 3
-    NetworkRequirement: 2
-    DestoryerLength: 12
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 1
-    RoundType: 0
-    ShopLength: 12
-    RequireLength: 18
-    NormalRequirement: 5
-    NetworkRequirement: 6
-    DestoryerLength: 9
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 2
-    RoundType: 0
-    ShopLength: 9
-    RequireLength: 14
-    NormalRequirement: 10
-    NetworkRequirement: 8
-    DestoryerLength: 14
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 3
-    RoundType: 0
-    ShopLength: 12
-    RequireLength: 20
-    NormalRequirement: 12
-    NetworkRequirement: 8
-    DestoryerLength: 12
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 4
-    RoundType: 0
-    ShopLength: 10
-    RequireLength: 24
-    NormalRequirement: 18
-    NetworkRequirement: 13
-    DestoryerLength: 40
-    DestoryerCount: 0
-    InfoCount: 0
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 2
+    PlayingSignalTypeB: 1
   InitalBoard:
   - PlayingSignalSelector: 1
     CoreGenre: 0
@@ -95,10 +62,9 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 1, y: 1}
     IsStation: 0
-  InfoCount: 1500
-  InfoVariantRatio: 0.35
-  InfoTargetRatio: 0.6
-  StationaryRateList: []
-  AdditionalGameSetup:
-    PlayingSignalTypeA: 2
-    PlayingSignalTypeB: 1
+  NormalRoundCount: 0
+  HasBossRound: 0
+  Endless: 0
+  BossStage: 0
+  Actions: []
+  ExcludedShop: 0

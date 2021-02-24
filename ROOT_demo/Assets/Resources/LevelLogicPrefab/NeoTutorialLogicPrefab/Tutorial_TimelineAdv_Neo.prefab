@@ -43,8 +43,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f2c812b2ec58944186f0651d44b84d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsTutorialLevel: 1
-  Animating: 0
-  ReadyToGo: 0
-  ReferenceOk: 0
-  PendingCleanUp: 0

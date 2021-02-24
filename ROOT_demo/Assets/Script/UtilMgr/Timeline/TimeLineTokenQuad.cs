@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
@@ -84,8 +85,8 @@ namespace ROOT
                 case StageType.Ending:
                     gistList.Add((int)TimeLineTokenType.Ending);
                     break;
-                case StageType.Telemetry:
-                    gistList.Add((int) TimeLineTokenType.TelemetryStage);
+                case StageType.Boss:
+                    gistList.Add((int) TimeLineTokenType.BossStage);//这个也要改个名。
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

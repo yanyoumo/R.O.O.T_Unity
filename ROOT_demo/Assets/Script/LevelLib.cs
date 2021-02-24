@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace ROOT
+namespace ROOT.SetupAsset
 {
     public partial class LevelLib : MonoBehaviour
     {

@@ -12,75 +12,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: CareerGameActionAsset_A
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: RoundLib
+      Entry: 6
+      Data: 
+    - Name: BossSetup
+      Entry: 6
+      Data: 
+  BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
   TitleTerm: Level_2
   Thumbnail: {fileID: 21300000, guid: 8be6a9632861bba40945e3a566c4546d, type: 3}
   LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,
     type: 3}
   levelType: 1
   GameModeAsset: {fileID: 11400000, guid: a9c8e946bd0ff994ebfa35d6021224ec, type: 2}
-  ExcludedShop: 0
-  ShopExcludedType: 020000000800000005000000
-  Actions: []
-  RoundDatasGist:
-    NormalRoundCount: 4
-    HasBossRound: 0
-  RoundDatas:
-  - ID: 0
-    RoundType: 0
-    ShopLength: 6
-    RequireLength: 10
-    NormalRequirement: 4
-    NetworkRequirement: 2
-    DestoryerLength: 12
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 1
-    RoundType: 0
-    ShopLength: 8
-    RequireLength: 12
-    NormalRequirement: 6
-    NetworkRequirement: 5
-    DestoryerLength: 12
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 2
-    RoundType: 0
-    ShopLength: 12
-    RequireLength: 10
-    NormalRequirement: 8
-    NetworkRequirement: 8
-    DestoryerLength: 20
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 3
-    RoundType: 0
-    ShopLength: 12
-    RequireLength: 12
-    NormalRequirement: 10
-    NetworkRequirement: 8
-    DestoryerLength: 35
-    DestoryerCount: 0
-    InfoCount: 0
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1
   InitalBoard:
   - PlayingSignalSelector: 1
-    SignalType: 1
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 2, y: 2}
     IsStation: 0
   - PlayingSignalSelector: 0
-    SignalType: 0
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 3, y: 3}
     IsStation: 0
-  InfoCount: 1000
-  InfoVariantRatio: 0.25
-  InfoTargetRatio: 0.4
-  StationaryRateList: []
-  AdditionalGameSetup:
-    GameID: 0
-    PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 1
+  NormalRoundCount: 0
+  HasBossRound: 0
+  Endless: 0
+  BossStage: 0
+  Actions: []
+  ExcludedShop: 0

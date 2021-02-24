@@ -1,50 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.SetupAsset
 {
-    [Serializable]
-    public struct TutorialActionData
-    {
-        [HorizontalGroup("Split")]
-        [VerticalGroup("Split/Left")]
-        [LabelWidth(80)]
-        public int ActionIdx;
-        [EnumPaging]
-        [VerticalGroup("Split/Right")]
-        public TutorialActionType ActionType;
-        [ShowIf("ActionType", TutorialActionType.Text)]
-        [LabelWidth(30)]
-        public string Text;
-        [ShowIf("ActionType", TutorialActionType.Text)]
-        [HorizontalGroup("Doppelganger")]
-        [LabelWidth(135)]
-        public bool DoppelgangerToggle;
-        [ShowIf("@this.ActionType==TutorialActionType.Text&&this.DoppelgangerToggle")]
-        [HorizontalGroup("Doppelganger")]
-        [LabelWidth(135)]
-        public string DoppelgangerText;
-        [ShowIf("@this.ActionType==TutorialActionType.CreateUnit||this.ActionType==TutorialActionType.CreateCursor")]
-        public Vector2Int Pos;
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
-        [VerticalGroup("Split/Left")]
-        public SignalType Core;
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
-        [VerticalGroup("Split/Left")]
-        public HardwareType HardwareType;
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
-        [VerticalGroup("Split/Right")]
-        public SideType[] Sides;
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
-        [Range(1,5)]
-        public int Tier;
-    }
-
     [Serializable]
     [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : SerializedScriptableObject
@@ -56,100 +18,179 @@ namespace ROOT
 
         [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab")]
         public GameObject LevelLogic;
+        
+        [Range(0, 100)]
+        public int InitialCurrency = 36;
 
-        [EnumToggleButtons] public LevelType levelType;
-
-        [Required] [AssetSelector(Paths = "Assets/Resources/GameMode")]
-        public GameModeAsset GameModeAsset;
-
+        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")]
+        [LabelText("Shop has cost")]
+        public bool ShopCost = true;
+        
+        [VerticalGroup("Split/Right")]
+        [LabelText("Unit could cost")]
+        public bool UnitCost = true;
+        
+        [Space] [EnumToggleButtons] public LevelType levelType;
+        
         [Header("Career")] [ShowIf("levelType", LevelType.Career)]
         public AdditionalGameSetup AdditionalGameSetup;
 
         [ShowIf("levelType", LevelType.Career)]
         public UnitGist[] InitalBoard;
 
-        [ShowIf("levelType", LevelType.Career)]
-        public int NormalRoundCount;
-        [ShowIf("levelType", LevelType.Career)]
+        [ShowIf("levelType", LevelType.Career)] [OnValueChanged("HasBossChanged")]
         public bool HasBossRound;
-        [ShowIf("levelType", LevelType.Career)]
-        [HideIf("HasBossRound")] 
+
+        [ShowIf("levelType", LevelType.Career)] [HideIf("HasBossRound")]
         public bool Endless;
-        [ShowIf("levelType", LevelType.Career)]
-        [ShowIf("HasBossRound")]
-        [ValueDropdown("BossStageFilter")]
-        public StageType BossStage;
-        //下面Boss的数量提出来放成一个好配置的。
-        private static IEnumerable<StageType> BossStageFilter = Enumerable.Range((int)StageType.Telemetry, 2).Cast<StageType>();
+
+        [ShowIf("levelType", LevelType.Career)] [ShowIf("HasBossRound")]
+        [OnValueChanged("BossTypeChanged")]
+        public BossStageType BossStage;
         
         [ShowIf("levelType", LevelType.Career)]
-        [Button("Create New RoundDatas")]
-        public void CreateRoundDatasFromGist()
-        {
-            if (NormalRoundCount <= 0)
-            {
-                Debug.LogError("Can't create zero length Rounds");
-            }
-            else
-            {
-                RoundLib = new RoundLib(Endless);
-                for (int i = 0; i < NormalRoundCount; i++)
-                {
-                    RoundLib.Add(new RoundData {ID = i});
-                }
-
-                if (HasBossRound)
-                {
-                    RoundLib.Add(new RoundData
-                    {
-                        ID = RoundLib.Count,
-                        RoundTypeData = RoundType.Boss,
-                        bossStageType = BossStage
-                    });
-                }
-            }
-        }
-
-        [OdinSerialize] [ShowIf("levelType", LevelType.Career)]
-        public RoundLib RoundLib;
+        public List<RoundData> RoundLib;
 
         [Header("Tutorial")] [ShowIf("levelType", LevelType.Tutorial)]
         public TutorialActionData[] Actions;
-
-        public StageType GetStageType(int step) => RoundLib.GetCurrentType(step);
-
+        
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
+        
+        public BossStageType? GetBossStage => HasBossRound ? BossStage : (BossStageType?) null;
+        public BossStageType BossStageVal
+        {
+            get
+            {
+                if (GetBossStage.HasValue)
+                {
+                    return GetBossStage.Value;
+                }
+                throw new ArgumentException("this lib has no bossStage.");
+            }
+        }
 
-        private bool IsEndless => !RoundLib.HasBossRound && RoundLib.Endless;
+        public bool GetEndless
+        {
+            get
+            {
+                if (HasBossRound && Endless)
+                {
+#if UNITY_EDITOR
+                    return false;
+#else
+                    throw new Exception("a round lib couldn't has boss and being endless");
+#endif
+                }
+                return Endless;
+            }
+        }
 
-        public int PlayableCount => IsEndless ? int.MaxValue : RoundLib.Sum(round => round.TotalLength);
+        [ShowInInspector]
+        public int PlayableCount
+        {
+            get
+            {
+                if (GetEndless) return int.MaxValue;
+                if (RoundLib == null) return 0;
+                if (!HasBossRound) return RoundLib.Sum(round => round.TotalLength);
+                return RoundLib.Sum(round => round.TotalLength) + BossSetup.BossLength;
+            }
+        }
 
         public bool HasEnded(int StepCount)
         {
-            if (IsEndless)
+            if (GetEndless)
             {
                 return false;
             }
-
             return StepCount >= PlayableCount;
         }
         
-        public int GetTruncatedCount(int totalCount) => RoundLib.GetTruncatedStep(totalCount);
+        [ShowInInspector] [ShowIf("HasBossRound")]
+        public BossAdditionalSetupAsset BossSetup;
 
-        public RoundGist GetRoundGistByStep(int stepCount) => RoundLib.GetCurrentRoundGist(stepCount);
+        private RoundData GetCurrentRound(int step, out int truncatedStep, out bool normalRoundEnded)
+        {
+            var loopedCount = 0;
+            return GetCurrentRound(step, out truncatedStep, out normalRoundEnded, ref loopedCount);
+        }
 
-        public RoundGist? PeekBossRoundGist() => RoundLib.PeekBossRoundGist();
+        private RoundData GetCurrentRound(int step, out int truncatedStep,out bool normalRoundEnded,ref int loopedCount)
+        {
+            var tmpStep = step;
+            normalRoundEnded = false;
+            foreach (var roundData in RoundLib)
+            {
+                tmpStep -= roundData.TotalLength;
+                if (tmpStep<0)
+                {
+                    truncatedStep = tmpStep + roundData.TotalLength;
+                    loopedCount = 0;
+                    return roundData;
+                }
+            }
+
+            if (HasBossRound)
+            {
+                normalRoundEnded = true;
+                truncatedStep = step - RoundLib.Sum(r => r.TotalLength);
+                loopedCount = 0;
+                return new RoundData();
+            }
+
+            if (Endless)
+            {
+                var extraStep = step - RoundLib.Sum(r => r.TotalLength);
+                var res = GetCurrentRound(extraStep, out truncatedStep, out normalRoundEnded, ref loopedCount);
+                loopedCount++;
+                return res;
+            }
+
+            throw new ArgumentException("Round should have Ended");
+        }
+
+        public RoundGist GetCurrentRoundGist(int step)
+        {
+            var round = GetCurrentRound(step,out var truncatedStep,out var normalRoundEnded);
+            if (!normalRoundEnded)
+            {
+                var stage = GetCurrentType(step);
+                return round.ExtractGist(stage);
+            }
+            return new RoundGist {owner = RoundLib[0], Type = StageType.Boss};
+        }
         
-        [Obsolete] private bool IsTelemetry => RoundLib.HasBossRound && RoundLib.BossStage == StageType.Telemetry;
-        [Obsolete] public int TelemetryCount => IsTelemetry ? RoundLib.Last().bossStageLength : 0;
-        [Obsolete] public int InfoCount => IsTelemetry ? RoundLib.Last().InfoCount : 0;
-        [Obsolete] public int InfoVariantRatio => IsTelemetry ? RoundLib.Last().InfoVariantRatio : 0;
-        [Obsolete] public int InfoTargetRatio => IsTelemetry ? RoundLib.Last().InfoTargetRatio : 0;
+        public StageType GetCurrentType(int step)
+        {
+            var currentRound=GetCurrentRound(step, out int truncatedStep,out var normalRoundEnded);
+            return !normalRoundEnded ? currentRound.GetCurrentType(truncatedStep) : StageType.Boss;
+        }
+
+        public int GetTruncatedStep(int step)
+        {
+            GetCurrentRound(step, out var res, out var B);
+            return res;
+        }
+        
+        private void HasBossChanged()
+        {
+            if (HasBossRound)
+            {
+                Endless = false;
+            }
+        }
+        
+        private void BossTypeChanged()
+        {
+            BossSetup.BossStageTypeVal = BossStageVal;
+        }
+        
+        public (int, bool, bool) GameStartingData => (InitialCurrency, ShopCost, UnitCost);
 
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;
 
         [Obsolete("Why?")] public List<SignalType> ShopExcludedType => null;
 
-        [Obsolete("Why?")] public bool ExcludedShop = false;
+        [Obsolete("Why?")] [HideInInspector] public bool ExcludedShop = false;
     }
 }

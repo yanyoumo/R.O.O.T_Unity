@@ -3,6 +3,7 @@ using Doozy.Engine.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using ROOT.SetupAsset;
 
 namespace ROOT
 {

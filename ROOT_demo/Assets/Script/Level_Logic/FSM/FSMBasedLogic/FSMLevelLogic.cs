@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using com.ootii.Messages;
+using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -29,7 +30,23 @@ namespace ROOT
         CleanUp,//将所有FSM的类数据重置、并且是FSM流程等待一帧的充分条件。
         COUNT,//搁在最后、计数的。
     }
-    
+
+    public sealed class RoundLibDriver
+    {
+        public FSMLevelLogic owner;
+        private LevelActionAsset _ActionAsset => owner.LevelAsset.ActionAsset;
+        private RoundGist? GetRoundGistByStep(int step) => _ActionAsset?.GetCurrentRoundGist(step);
+        private StageType? Stage(int step) => _ActionAsset?.GetCurrentType(step);
+        public RoundGist? CurrentRoundGist => GetRoundGistByStep(owner.LevelAsset.StepCount);
+        public RoundGist? PreviousRoundGist => (owner.LevelAsset.StepCount - 1)>=0 ? _ActionAsset.GetCurrentRoundGist(owner.LevelAsset.StepCount - 1) : CurrentRoundGist;
+        public StageType? CurrentStage => Stage(owner.LevelAsset.StepCount);
+
+        public bool IsShopRound => CurrentStage == StageType.Shop;
+        public bool IsRequireRound => CurrentStage == StageType.Require;
+        public bool IsDestoryerRound => CurrentStage == StageType.Destoryer;
+        public bool IsBossRound => CurrentStage == StageType.Boss;
+    }
+
     //里面不同的类型可以使用partial关键字拆开管理。
     public abstract class FSMLevelLogic:MonoBehaviour   //LEVEL-LOGIC/每一关都有一个这个类。
     {
@@ -57,15 +74,11 @@ namespace ROOT
         public static readonly float AutoAnimationDuration = 1.5f; //都是秒
         
         #region 类属性
-
-        public RoundGist? RoundGist=> LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount);
-        public RoundGist? PreviousRoundGist => (LevelAsset.StepCount - 1)>=0 ? LevelAsset.ActionAsset.GetRoundGistByStep(LevelAsset.StepCount - 1) : RoundGist;
-        protected StageType Stage => RoundGist?.Type ?? StageType.Shop;
-        public bool IsShopRound => Stage == StageType.Shop;
-        public bool IsRequireRound => Stage == StageType.Require;
-        public bool IsDestoryerRound => Stage == StageType.Destoryer;
-        public bool IsSkillAllowed => !IsShopRound;
-        public bool BoardCouldIOCurrency => (IsRequireRound || IsDestoryerRound);
+        
+        public RoundLibDriver RoundLibDriver;
+        public bool IsSkillAllowed => !RoundLibDriver.IsShopRound;
+        public bool BoardCouldIOCurrency => (RoundLibDriver.IsRequireRound || RoundLibDriver.IsDestoryerRound);
+        
         private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
         public bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in movedTile, in movedCursor);
         private bool ShouldStartAnimate => ShouldCycle;
@@ -73,6 +86,8 @@ namespace ROOT
         public bool IsForwardCycle => AutoForward || movedTile;
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
         #endregion
+
+        #region 元初始化相关函数
 
         public bool CheckReference()
         {
@@ -106,6 +121,8 @@ namespace ROOT
             LevelAsset.HintMaster.HideTutorialFrame = false;
             PopulateArtLevelReference();
         }
+
+        #endregion
 
         #region FSM参数
         protected RootFSM _mainFSM;
@@ -190,8 +207,8 @@ namespace ROOT
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
             LevelAsset.DeltaCurrency = 0.0f;
-            LevelAsset.GameStateMgr = new GameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameModeAsset);
+            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
+            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
 
             WorldExecutor.InitShop(ref LevelAsset);
             WorldExecutor.InitDestoryer(ref LevelAsset);
@@ -329,7 +346,7 @@ namespace ROOT
                 LevelAsset.TimeLine.Step();
             }
 
-            LevelAsset.GameStateMgr.PerMove(LevelAsset.DeltaCurrency);
+            LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
         }
 
         protected void ReverseCycle()
@@ -379,7 +396,7 @@ namespace ROOT
 
         private void ClassicGameOverStatus()
         {
-            if (!LevelAsset.GameStateMgr.EndGameCheck()) return;
+            if (!LevelAsset.GameCurrencyMgr.EndGameCheck()) return;
             PendingCleanUp = true;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
         }
@@ -396,23 +413,6 @@ namespace ROOT
 
         private FSMEventInquiryResponder _inquiryResponder;
         
-        private void Awake()
-        {
-            LevelAsset = new GameAssets();
-            _mainFSM = new RootFSM {owner = this};
-            _inquiryResponder = new FSMEventInquiryResponder(this);
-            
-            UpdateLogicLevelReference();
-
-            _mainFSM.ReplaceActions(fsmActions);
-            _mainFSM.ReplaceTransition(RootFSMTransitions);
-            _mainFSM.ReplaceBreaking(RootFSMBreakings);
-
-            LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            _actionDriver = new CareerControlActionDriver(this, _mainFSM);
-
-            MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
-        }
         private void Update()
         {
             do
@@ -427,9 +427,29 @@ namespace ROOT
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
         }
-        private void OnDestroy()
+        
+        protected virtual void Awake()
+        {
+            LevelAsset = new GameAssets();
+            _mainFSM = new RootFSM {owner = this};
+            _inquiryResponder = new FSMEventInquiryResponder(this);
+            
+            UpdateLogicLevelReference();
+
+            _mainFSM.ReplaceActions(fsmActions);
+            _mainFSM.ReplaceTransition(RootFSMTransitions);
+            _mainFSM.ReplaceBreaking(RootFSMBreakings);
+
+            LevelAsset.AnimationPendingObj = new List<MoveableBase>();
+            _actionDriver = new CareerControlActionDriver(this, _mainFSM);
+            RoundLibDriver = new RoundLibDriver {owner = this};
+            
+            MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
+        }
+        protected virtual void OnDestroy()
         {
             MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
+
             _actionDriver.unsubscribe();
             _actionDriver = null;
         }
