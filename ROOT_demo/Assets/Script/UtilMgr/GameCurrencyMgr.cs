@@ -70,7 +70,7 @@ namespace ROOT
         }
     }
 
-    public sealed class GameStateMgr
+    public sealed class GameCurrencyMgr
     {
         public float StartingMoney { private set; get; }
         private Currency _currency;

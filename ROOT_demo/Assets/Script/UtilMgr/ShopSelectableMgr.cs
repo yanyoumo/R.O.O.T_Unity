@@ -280,7 +280,7 @@ namespace ROOT
             var itemID = ItemIDFromShopID(shopID);
             if (!_items[itemID]) return false;
 
-            if (!CurrentGameStateMgr.SpendShopCurrency(UnitRetailPrice(itemID, _itemUnit[itemID].Tier))) return false;
+            if (!CurrentGameCurrencyMgr.SpendShopCurrency(UnitRetailPrice(itemID, _itemUnit[itemID].Tier))) return false;
 
             if (_itemUnit != null)
             {
@@ -310,7 +310,7 @@ namespace ROOT
             if (!_items[itemID]) return false;
 
             var totalPrice = UnitRetailPrice(itemID, _itemUnit[itemID].Tier);
-            if (CurrentGameStateMgr.Currency >= totalPrice)
+            if (CurrentGameCurrencyMgr.Currency >= totalPrice)
             {
                 _items[itemID].GetComponentInChildren<Unit>().SetPendingBuying = true;
                 return true;

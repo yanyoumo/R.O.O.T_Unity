@@ -239,7 +239,7 @@ namespace ROOT
         {
             var message = new CurrencyUpdatedInfo()
             {
-                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameStateMgr.Currency),
+                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
                 IncomesVal = 0,
             };
             MessageDispatcher.SendMessage(message);

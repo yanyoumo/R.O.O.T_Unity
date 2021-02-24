@@ -207,8 +207,8 @@ namespace ROOT
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
             LevelAsset.DeltaCurrency = 0.0f;
-            LevelAsset.GameStateMgr = new GameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
+            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
+            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
 
             WorldExecutor.InitShop(ref LevelAsset);
             WorldExecutor.InitDestoryer(ref LevelAsset);
@@ -346,7 +346,7 @@ namespace ROOT
                 LevelAsset.TimeLine.Step();
             }
 
-            LevelAsset.GameStateMgr.PerMove(LevelAsset.DeltaCurrency);
+            LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
         }
 
         protected void ReverseCycle()
@@ -396,7 +396,7 @@ namespace ROOT
 
         private void ClassicGameOverStatus()
         {
-            if (!LevelAsset.GameStateMgr.EndGameCheck()) return;
+            if (!LevelAsset.GameCurrencyMgr.EndGameCheck()) return;
             PendingCleanUp = true;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
         }

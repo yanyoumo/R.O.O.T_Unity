@@ -72,7 +72,7 @@ namespace ROOT
                 OtherButton.onClick.AddListener(GameRestart);
                 OtherButtonLocalize.Term = ScriptTerms.Restart;
                 EndingTitleLocalize.Term = ScriptTerms.GameOver;
-                float endingIncome = _lastGameAssets.GameStateMgr.Currency - _lastGameAssets.GameStateMgr.StartingMoney;
+                float endingIncome = _lastGameAssets.GameCurrencyMgr.Currency - _lastGameAssets.GameCurrencyMgr.StartingMoney;
 
                 if (false)
                 {

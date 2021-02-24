@@ -79,7 +79,7 @@ namespace ROOT
         public GameObject UnitTemplate;
         protected GameAssets currentLevelAsset;
         public Board GameBoard;
-        public GameStateMgr CurrentGameStateMgr;
+        public GameCurrencyMgr CurrentGameCurrencyMgr;
         public List<SignalType> excludedTypes = new List<SignalType>();
 
         public abstract void ShopInit(GameAssets _currentLevelAsset);
@@ -583,7 +583,7 @@ namespace ROOT
             {
                 var totalPrice = UnitRetailPrice(shopID);
                 CalculatePostalPrice(totalPrice, currentLevelAsset.LevelProgress, out postalPrice);
-                if (CurrentGameStateMgr.Currency >= totalPrice)
+                if (CurrentGameCurrencyMgr.Currency >= totalPrice)
                 {
                     _items[shopID].GetComponentInChildren<Unit>().SetPendingBuying = true;
                     return true;
@@ -600,7 +600,7 @@ namespace ROOT
                 var unitPrice = UnitRetailPrice(idx);
                 var totalPrice = CalculatePostalPrice(unitPrice, currentLevelAsset.LevelProgress, out int postalPrice);
 
-                if (CurrentGameStateMgr.SpendShopCurrency(totalPrice))
+                if (CurrentGameCurrencyMgr.SpendShopCurrency(totalPrice))
                 {
                     _items[idx].gameObject.GetComponentInChildren<Unit>().UnsetShop();
                     if (crash)
@@ -624,7 +624,7 @@ namespace ROOT
         {
             if (_items[idx])
             {
-                if (CurrentGameStateMgr.SpendShopCurrency(_hardwarePrices[idx] * _priceShopDiscount[idx]))
+                if (CurrentGameCurrencyMgr.SpendShopCurrency(_hardwarePrices[idx] * _priceShopDiscount[idx]))
                 {
                     _items[idx].gameObject.GetComponentInChildren<Unit>().UnsetShop();
                     GameBoard.DeliverUnitRandomPlace(_items[idx]);

@@ -66,8 +66,8 @@ namespace ROOT
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
             LevelAsset.DeltaCurrency = 0.0f;
-            LevelAsset.GameStateMgr = new GameStateMgr();
-            LevelAsset.GameStateMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
+            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
+            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();

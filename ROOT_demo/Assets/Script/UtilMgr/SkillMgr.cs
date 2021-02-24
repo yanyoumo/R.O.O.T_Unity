@@ -67,7 +67,7 @@ namespace ROOT
             {
                 case SkillType.TimeFromMoney:
                     //持续技能
-                    moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
+                    moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
                         skillActived = true;
@@ -86,7 +86,7 @@ namespace ROOT
                 case SkillType.Swap:
                     //瞬时技能
                     //RISK 日了，这里使用键盘和鼠标流程得变，但是还是有问题。
-                    moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
+                    moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
                         skillActived = true; //这里的计数还可以取消。
@@ -109,7 +109,7 @@ namespace ROOT
                     break;
                 case SkillType.Discount:
                     //延迟技能
-                    moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
+                    moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
                         skillActived = true;
@@ -119,7 +119,7 @@ namespace ROOT
                     }
                     break;
                 case SkillType.RefreshHeatSink:
-                    moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
+                    moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
                         currentLevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
@@ -127,7 +127,7 @@ namespace ROOT
                     }
                     break;
                 case SkillType.ResetHeatSink:
-                    moneySpent = currentLevelAsset.GameStateMgr.SpendSkillCurrency(skill.Cost);
+                    moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
                         currentLevelAsset.GameBoard.BoardGirdDriver.ResetHeatSink();
@@ -152,7 +152,7 @@ namespace ROOT
         {
             //是在这儿，把Discount的enable数据清掉了。Discount的SkillCost还真是大于0.
             //蛋疼，那个实例化Skill里面再加一个coolDown
-            InstancedSkillData.Where(skill=>skill.Cost>0).ForEach(skill => skill.SkillEnabled = (skill.Cost <= currentLevelAsset.GameStateMgr.Currency));
+            InstancedSkillData.Where(skill=>skill.Cost>0).ForEach(skill => skill.SkillEnabled = (skill.Cost <= currentLevelAsset.GameCurrencyMgr.Currency));
             UpdateSkillPalettes();
         }
 
@@ -313,7 +313,7 @@ namespace ROOT
                 }
                 else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
                 {
-                    currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
+                    currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
                     swapAlipay = 0;
                     WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
                 }
@@ -371,7 +371,7 @@ namespace ROOT
                     }
                     else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
                     {
-                        currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
+                        currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
                         swapAlipay = 0;
                         WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
                     }
@@ -395,7 +395,7 @@ namespace ROOT
                     }
                     else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
                     {
-                        currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
+                        currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
                         swapAlipay = 0;
                         WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
                         _mouseWaitingUnitA = false;
@@ -441,7 +441,7 @@ namespace ROOT
                     }
                     else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
                     {
-                        currentLevelAsset.GameStateMgr.AddCurrency(swapAlipay);
+                        currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
                         swapAlipay = 0;
                         WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
 

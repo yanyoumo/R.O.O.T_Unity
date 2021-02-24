@@ -1113,7 +1113,7 @@ namespace ROOT
         public static void InitShop(ref GameAssets LevelAsset)
         {
             LevelAsset.Shop.ShopInit(LevelAsset);
-            LevelAsset.Shop.CurrentGameStateMgr = LevelAsset.GameStateMgr;
+            LevelAsset.Shop.CurrentGameCurrencyMgr = LevelAsset.GameCurrencyMgr;
             LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
             if (LevelAsset.ActionAsset.ExcludedShop)
             {
@@ -1318,7 +1318,7 @@ namespace ROOT
         {
             var message = new CurrencyUpdatedInfo()
             {
-                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.Currency),
+                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameCurrencyMgr.Currency),
                 IncomesVal = -1,
             };
             MessageDispatcher.SendMessage(message);
@@ -1431,7 +1431,7 @@ namespace ROOT
 
             var message = new CurrencyUpdatedInfo()
             {
-                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameStateMgr.Currency),
+                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameCurrencyMgr.Currency),
                 IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency),
             };
             MessageDispatcher.SendMessage(message);
