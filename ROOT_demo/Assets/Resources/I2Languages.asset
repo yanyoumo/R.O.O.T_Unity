@@ -447,6 +447,70 @@ MonoBehaviour:
       - Continue
       Flags: 0000
       Languages_Touch: []
+    - Term: Thermal Core
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u70ED\u529B\u5355\u5143"
+      - Thermal Core
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Matrix Core
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u77E9\u9635\u5355\u5143"
+      - Matrix Core
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Scan Core
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u626B\u63CF\u5355\u5143"
+      - Scan Core
+      Flags: 0000
+      Languages_Touch: []
+    - Term: GameCareerSetup
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6E38\u620F\u8BBE\u7F6E"
+      - Game Setup
+      Flags: 0000
+      Languages_Touch: []
+    - Term: CoreSelection
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u9009\u62E9\u4E24\u4E2A\u5355\u5143\u79CD\u7C7B"
+      - Select two kinds of Core
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Notice
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6CE8\u610F"
+      - Notice
+      Flags: 0000
+      Languages_Touch: []
+    - Term: SelectTwoCore
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u8BF7\u6CE8\u610F\uFF0C\u8BF7\u9009\u62E9\u4E24\u4E2A\u5355\u5143\u79CD\u7C7B"
+      - Please only select two kinds of Unit Core to start the game
+      Flags: 0000
+      Languages_Touch: []
+    - Term: OK
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u597D\u7684"
+      - OK
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 

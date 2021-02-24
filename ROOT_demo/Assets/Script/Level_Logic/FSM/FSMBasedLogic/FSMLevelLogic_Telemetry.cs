@@ -3,15 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
+using ROOT.SetupAsset;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace ROOT
 {
     using FSMActions = Dictionary<RootFSMStatus, Action>;
-    using Trans = RootFSMTransition;
     using FSMTransitions = HashSet<RootFSMTransition>;
+    using Trans = RootFSMTransition;
     using Status = RootFSMStatus;
+
     public class FSMLevelLogic_Telemetry : FSMLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
     {
         #region TelemetryStage
@@ -61,14 +65,17 @@ namespace ROOT
 
         #region TelemetryTransit
 
+        //TODO
+        private BossStageType bossType = BossStageType.Telemetry;
+
         private bool CheckTelemetryStageInit()
         {
-            return (Stage == StageType.Telemetry)&&(!WorldCycler.TelemetryStage);
+            return RoundLibDriver.IsBossRound && (bossType == BossStageType.Telemetry) && (!WorldCycler.TelemetryStage);
         }
 
         private bool CheckTelemetryStage()
         {
-            return (Stage == StageType.Telemetry);
+            return RoundLibDriver.IsBossRound&&(bossType == BossStageType.Telemetry);
         }
 
         private bool CheckTelemetryAndPaused()
@@ -116,7 +123,8 @@ namespace ROOT
             {
                 TelemetryInit();
             }
-            if (Stage == StageType.Telemetry && Animating)
+
+            if (RoundLibDriver.IsBossRound && (bossType == BossStageType.Telemetry) && Animating)
             {
                 LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
             }
@@ -125,7 +133,7 @@ namespace ROOT
                 WorldExecutor.CleanDestoryer(LevelAsset);
                 //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
                 //总之稳了后，这个不能这么每帧调用。
-                LevelAsset.occupiedHeatSink = LevelAsset.GameBoard.BoardGirdDriver.CheckHeatSink(Stage);
+                LevelAsset.occupiedHeatSink = LevelAsset.GameBoard.BoardGirdDriver.CheckHeatSink(RoundLibDriver.CurrentStage.Value);
                 LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
                 if (LevelAsset.SkillEnabled)
                 {
@@ -178,7 +186,8 @@ namespace ROOT
                 WorldCycler.TelemetryPause = true;
                 StartTelemetryCost();
             }
-            LevelAsset.SignalPanel.TelemetryPaused = WorldCycler.TelemetryPause;
+            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {TelemetryPaused = WorldCycler.TelemetryPause},};
+            MessageDispatcher.SendMessage(signalInfo);
         }
         private void DealTelemetryPauseBreaking()
         {
@@ -203,19 +212,22 @@ namespace ROOT
 
         private void TelemetryInit()
         {
-            var bossStageCount = LevelAsset.ActionAsset.TelemetryCount;
-            var totalSprayCount = bossStageCount * SprayCountPerAnimateInterval;
+            var bossRoundData = LevelAsset.ActionAsset.BossSetup;
+            var totalSprayCount = bossRoundData.BossLength * SprayCountPerAnimateInterval;
             //这个数据还得传过去。
-            var targetInfoCount =
-                Mathf.RoundToInt(LevelAsset.ActionAsset.InfoCount * LevelAsset.ActionAsset.InfoTargetRatio);
-            LevelAsset.SignalPanel.SignalTarget = targetInfoCount;
+            var targetInfoCount = Mathf.RoundToInt(bossRoundData.InfoCount * bossRoundData.InfoTargetRatio);
 
-            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, LevelAsset.ActionAsset.InfoCount,
-                LevelAsset.ActionAsset.InfoVariantRatio);
+            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, bossRoundData.InfoCount, bossRoundData.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
-            LevelAsset.SignalPanel.IsTelemetryStage = true;
             WorldCycler.TelemetryStage = true;
+            
+            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData()
+            {
+                InfoTarget = targetInfoCount,
+                IsTelemetryStage=WorldCycler.TelemetryStage,//
+            },};
+            MessageDispatcher.SendMessage(signalInfo);
         }
 
         private void TelemetryPauseAction()
@@ -227,12 +239,12 @@ namespace ROOT
         {
             var message = new CurrencyUpdatedInfo()
             {
-                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameStateMgr.GetCurrency()),
+                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
                 IncomesVal = 0,
             };
             MessageDispatcher.SendMessage(message);
             
-            if (LevelAsset.ActionAsset.RoundDatas.Length > 0)
+            if (LevelAsset.ActionAsset.RoundLib.Count > 0)
             {
                 //这个东西放在这里还是怎么着？就先这样吧。
                 WorldCycler.InitCycler();
@@ -249,7 +261,6 @@ namespace ROOT
         {
             LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
             LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
-            LevelAsset.SignalPanel = FindObjectOfType<SignalPanel>();
             LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
         }
 
@@ -275,19 +286,19 @@ namespace ROOT
                 }
             }
             
-            if (RoundGist.HasValue)
+            if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
                 WorldExecutor.UpdateRoundData_Stepped(ref LevelAsset);
                 var timingEvent = new TimingEventInfo
                 {
-                    Type = WorldEvent.Timing_Event.InGameStatusChangedEvent,
-                    CurrentStageType=RoundGist.Value.Type,
+                    Type = WorldEvent.InGameStatusChangedEvent,
+                    CurrentStageType=RoundLibDriver.CurrentRoundGist.Value.Type,
                 };
                 var timingEvent2 = new TimingEventInfo
                 {
-                    Type = WorldEvent.Timing_Event.CurrencyIOStatusChangedEvent,
+                    Type = WorldEvent.CurrencyIOStatusChangedEvent,
                     BoardCouldIOCurrencyData = BoardCouldIOCurrency,
-                    UnitCouldGenerateIncomeData = IsRequireRound,
+                    UnitCouldGenerateIncomeData = RoundLibDriver.IsRequireRound,
                 };
                 MessageDispatcher.SendMessage(timingEvent);
                 MessageDispatcher.SendMessage(timingEvent2);
@@ -297,9 +308,9 @@ namespace ROOT
         protected override void BoardUpdatedHandler(IMessage rMessage)
         {
             base.BoardUpdatedHandler(rMessage);
-            if (RoundGist.HasValue)
+            if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
-                WorldExecutor.UpdateRoundData_Instant(ref LevelAsset);
+                WorldExecutor.UpdateRoundData_Instantly_Telemetry(ref LevelAsset);
             }
         }
 
@@ -309,7 +320,7 @@ namespace ROOT
             _mainFSM.currentStatus = RootFSMStatus.MajorUpKeep;
             _mainFSM.waitForNextFrame = false;
         }
-        
+
         protected override FSMTransitions RootFSMTransitions
         {
             get

@@ -12,14 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: TutorialSignalAdv_Neo
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: RoundLib
+      Entry: 6
+      Data: 
+    - Name: BossSetup
+      Entry: 6
+      Data: 
+  BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
   TitleTerm: TutorialSignalBasic_Adv
   Thumbnail: {fileID: 21300000, guid: 201fbe027c752474f9e7720fc923af1b, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: 2715c231ab3cae147b8b3e8a1a2428ed,
     type: 3}
   levelType: 0
   GameModeAsset: {fileID: 11400000, guid: b32e8c0e297860f41bd07f944a545ea4, type: 2}
-  ExcludedShop: 0
-  ShopExcludedType: 0400000005000000
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 0
+  InitalBoard: []
+  NormalRoundCount: 0
+  HasBossRound: 0
+  Endless: 0
+  BossStage: 0
   Actions:
   - ActionIdx: 0
     ActionType: 3
@@ -28,6 +50,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 0
@@ -37,6 +60,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 0
@@ -46,6 +70,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 1
@@ -55,6 +80,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 2
@@ -64,6 +90,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 3
@@ -73,6 +100,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 4
@@ -82,6 +110,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 5
@@ -91,6 +120,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 6
@@ -100,6 +130,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 7
@@ -109,6 +140,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 3, y: 2}
     Core: 2
+    HardwareType: 0
     Sides: 01000000010000000000000001000000
     Tier: 1
   - ActionIdx: 7
@@ -118,6 +150,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 1
+    HardwareType: 0
     Sides: 01000000000000000100000000000000
     Tier: 1
   - ActionIdx: 7
@@ -127,6 +160,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 1
+    HardwareType: 0
     Sides: 00000000010000000000000001000000
     Tier: 1
   - ActionIdx: 7
@@ -136,6 +170,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 1
+    HardwareType: 0
     Sides: 00000000000000000100000000000000
     Tier: 1
   - ActionIdx: 7
@@ -145,6 +180,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
     Core: 1
+    HardwareType: 0
     Sides: 00000000000000000100000001000000
     Tier: 1
   - ActionIdx: 7
@@ -154,6 +190,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 7
@@ -163,6 +200,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
   - ActionIdx: 7
@@ -172,17 +210,7 @@ MonoBehaviour:
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
+    HardwareType: 0
     Sides: 
     Tier: 0
-  TimeLineTokens:
-  - TokenID: 0
-    type: 1
-    RequireAmount: 4
-    Range: {x: 15, y: -1}
-  - TokenID: 1
-    type: 3
-    RequireAmount: 0
-    Range: {x: 25, y: -1}
-  InitalBoard: []
-  TargetCount: 5
-  StationaryRateList: []
+  ExcludedShop: 0

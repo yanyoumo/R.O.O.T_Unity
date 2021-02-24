@@ -1397,7 +1397,6 @@ MonoBehaviour:
     DataScreen: {fileID: 0}
     HintMaster: {fileID: 0}
     TimeLine: {fileID: 0}
-    SignalPanel: {fileID: 0}
     AirDrop: {fileID: 0}
     ReqOkCount: 0
     SignalInfo: 0
@@ -1406,8 +1405,6 @@ MonoBehaviour:
     occupiedHeatSink: 0
     InputEnabled: 1
     CurrencyEnabled: 1
-    BoardCouldIOCurrency: 1
-    UnitCouldGenerateIncome: 1
     CursorEnabled: 1
     RotateEnabled: 1
     ShopEnabled: 1
@@ -1458,6 +1455,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 472400a958861534e813ba6c03ae6cb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelLogicPrefabs:
+  - {fileID: 3818130472288149215, guid: cbc7c1bca06f5854b99931611c0cec14, type: 3}
+  - {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7, type: 3}
 --- !u!1 &1676338715
 GameObject:
   m_ObjectHideFlags: 0

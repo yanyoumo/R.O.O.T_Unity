@@ -12,113 +12,86 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: FSMGameActionAsset_A
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: RoundLibVal
+      Entry: 6
+      Data: 
   TitleTerm: Level_FSM_Test
   Thumbnail: {fileID: 21300000, guid: ca60355f735f90d46a4bb437515201c0, type: 3}
   LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,
     type: 3}
   levelType: 1
   GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
-  ExcludedShop: 0
-  ShopExcludedType: 
-  Actions: []
-  RoundDatasGist:
-    NormalRoundCount: 3
-    HasBossRound: 0
-  RoundDatas:
-  - ID: 0
-    RoundType: 0
-    ShopLength: 13
-    RequireLength: 10
-    NormalRequirement: 3
-    NetworkRequirement: 4
-    DestoryerLength: 23
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 1
-    RoundType: 0
-    ShopLength: 15
-    RequireLength: 8
-    NormalRequirement: 7
-    NetworkRequirement: 8
-    DestoryerLength: 29
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 0
-    RoundType: 0
-    ShopLength: 15
-    RequireLength: 9
-    NormalRequirement: 9
-    NetworkRequirement: 9
-    DestoryerLength: 40
-    DestoryerCount: 0
-    InfoCount: 0
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1
   InitalBoard:
   - PlayingSignalSelector: 1
-    SignalType: 1
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 0, y: 2}
     IsStation: 0
   - PlayingSignalSelector: 1
-    SignalType: 1
     CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 2, y: 5}
     IsStation: 0
   - PlayingSignalSelector: 1
-    SignalType: 1
     CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 2
     Pos: {x: 0, y: 3}
     IsStation: 0
   - PlayingSignalSelector: 1
-    SignalType: 1
     CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 3
     Pos: {x: 3, y: 3}
     IsStation: 0
   - PlayingSignalSelector: 0
-    SignalType: 0
     CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 4
     Pos: {x: 4, y: 3}
     IsStation: 0
   - PlayingSignalSelector: 1
-    SignalType: 1
     CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 5, y: 3}
     IsStation: 0
   - PlayingSignalSelector: 0
-    SignalType: 0
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 1, y: 2}
     IsStation: 0
   - PlayingSignalSelector: 0
-    SignalType: 0
     CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 2, y: 4}
     IsStation: 0
-  InfoCount: 1000
-  InfoVariantRatio: 0
-  InfoTargetRatio: 0.6
-  StationaryRateList:
-  - {x: 12, y: 8}
-  - {x: 10, y: 5}
-  - {x: 8, y: 2}
-  - {x: 7, y: 1}
-  - {x: 0, y: 0}
-  AdditionalGameSetup:
-    GameID: 0
-    PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 1
+  HasBossRound: 1
+  Endless: 0
+  BossStage: 0
+  Actions: []
+  BossSetup:
+    BossStageTypeVal: 0
+    BossLength: 0
+    DestoryerCount: 0
+    InfoCount: 0
+    InfoVariantRatio: 0
+    InfoTargetRatio: 0
+    AcquiringTarget: 0
+  ExcludedShop: 0

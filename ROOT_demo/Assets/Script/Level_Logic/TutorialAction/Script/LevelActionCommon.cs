@@ -8,7 +8,7 @@ namespace ROOT
     {
         Tutorial,
         Career,
-        Classic
+        //Classic
     }
 
     public enum TutorialActionType
@@ -24,11 +24,17 @@ namespace ROOT
         HideCheckList,
     }
 
+    public enum BossStageType
+    {
+        Telemetry,
+        Acquiring,
+    }
+
     public enum StageType{
         Shop,
         Require,
         Destoryer,
-        Telemetry,
+        Boss,
         Ending,
     }
     

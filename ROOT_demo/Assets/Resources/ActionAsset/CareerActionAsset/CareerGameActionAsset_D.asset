@@ -12,37 +12,108 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
   m_Name: CareerGameActionAsset_D
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: RoundLibVal
+      Entry: 7
+      Data: 0|ROOT.SetupAsset.RoundLib, Root_Assemble
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: ROOT.SetupAsset.RoundData, Root_Assemble
+    - Name: ID
+      Entry: 3
+      Data: 0
+    - Name: ShopLength
+      Entry: 3
+      Data: 2
+    - Name: RequireLength
+      Entry: 3
+      Data: 1
+    - Name: TypeARequirement
+      Entry: 3
+      Data: 6
+    - Name: TypeBRequirement
+      Entry: 3
+      Data: 4
+    - Name: HeatSinkLength
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: ROOT.SetupAsset.RoundData, Root_Assemble
+    - Name: ID
+      Entry: 3
+      Data: 1
+    - Name: ShopLength
+      Entry: 3
+      Data: 1
+    - Name: RequireLength
+      Entry: 3
+      Data: 1
+    - Name: TypeARequirement
+      Entry: 3
+      Data: 12
+    - Name: TypeBRequirement
+      Entry: 3
+      Data: 8
+    - Name: HeatSinkLength
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: ROOT.SetupAsset.RoundData, Root_Assemble
+    - Name: ID
+      Entry: 3
+      Data: 2
+    - Name: ShopLength
+      Entry: 3
+      Data: 1
+    - Name: RequireLength
+      Entry: 3
+      Data: 1
+    - Name: TypeARequirement
+      Entry: 3
+      Data: 24
+    - Name: TypeBRequirement
+      Entry: 3
+      Data: 16
+    - Name: HeatSinkLength
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   TitleTerm: Level_Test
   Thumbnail: {fileID: 21300000, guid: ebad0ac1de2ad1f4dbf300bfb7a41d70, type: 3}
   LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,
     type: 3}
   levelType: 1
   GameModeAsset: {fileID: 11400000, guid: dc9dbf41a4b2def40b692d6b318a841e, type: 2}
-  ExcludedShop: 0
-  ShopExcludedType: 
-  Actions: []
-  RoundDatasGist:
-    NormalRoundCount: 2
-    HasBossRound: 0
-  RoundDatas:
-  - ID: 0
-    RoundType: 0
-    ShopLength: 10
-    RequireLength: 10
-    NormalRequirement: 3
-    NetworkRequirement: 4
-    DestoryerLength: 10
-    DestoryerCount: 0
-    InfoCount: 0
-  - ID: 1
-    RoundType: 0
-    ShopLength: 4
-    RequireLength: 2
-    NormalRequirement: 7
-    NetworkRequirement: 8
-    DestoryerLength: 8
-    DestoryerCount: 0
-    InfoCount: 0
+  AdditionalGameSetup:
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1
   InitalBoard:
   - PlayingSignalSelector: 1
     CoreGenre: 0
@@ -92,15 +163,16 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 2, y: 4}
     IsStation: 0
-  InfoCount: 1000
-  InfoVariantRatio: 0
-  InfoTargetRatio: 0.6
-  StationaryRateList:
-  - {x: 12, y: 8}
-  - {x: 10, y: 5}
-  - {x: 8, y: 2}
-  - {x: 7, y: 1}
-  - {x: 0, y: 0}
-  AdditionalGameSetup:
-    PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 1
+  HasBossRound: 1
+  Endless: 0
+  BossStage: 0
+  Actions: []
+  BossSetup:
+    BossStageTypeVal: 0
+    BossLength: 10
+    DestoryerCount: 100
+    InfoCount: 1000
+    InfoVariantRatio: 30
+    InfoTargetRatio: 80
+    AcquiringTarget: 0
+  ExcludedShop: 0
