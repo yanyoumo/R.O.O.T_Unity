@@ -199,12 +199,10 @@ namespace ROOT.Signal
             {
                 const float networkA = 1.45f;
                 const float networkB = 1.74f;
-                var circleTier =
-                    Math.Max(Mathf.RoundToInt(Mathf.Pow(SignalMasterMgr.MaxNetworkDepth / networkB, networkA)), 0);
+                var circleTier = Math.Max(Mathf.RoundToInt(Mathf.Pow(SignalMasterMgr.MaxNetworkDepth / networkB, networkA)), 0);
                 var zone = Utils.GetPixelateCircle_Tier(circleTier);
                 var res = new List<Vector2Int>();
-                zone.PatternList.ForEach(vec =>
-                    res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
+                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
                 return res;
             }
         }
