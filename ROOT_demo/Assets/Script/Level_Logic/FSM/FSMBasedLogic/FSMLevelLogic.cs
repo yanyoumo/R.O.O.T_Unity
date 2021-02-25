@@ -413,8 +413,8 @@ namespace ROOT
                 //进行标记后、就会强制等待新的一帧。
                 _mainFSM.Execute();
                 _mainFSM.Transit();
-                //RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
-                RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
+                RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
+                //RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
         }
@@ -436,6 +436,11 @@ namespace ROOT
             RoundLibDriver = new RoundLibDriver {owner = this};
             
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
+            
+            foreach (var rootFsmTransition in RootFSMTransitions)
+            {
+                Debug.LogError(rootFsmTransition.GetHashCode());
+            }
         }
         protected virtual void OnDestroy()
         {

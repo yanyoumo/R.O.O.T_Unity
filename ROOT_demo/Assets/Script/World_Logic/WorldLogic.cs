@@ -1188,6 +1188,8 @@ namespace ROOT
                 UpdateCursorPos(currentLevelAsset);
                 movedCursor = true;
             }
+
+            Debug.Log("movedTile = true;" + movedTile);
         }
 
         public static bool UpdateShopBuy(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack)
@@ -1356,17 +1358,20 @@ namespace ROOT
                     {
                         SignalData = new BoardSignalUpdatedData()
                         {
-                            TgtTypeASignal=normalRval,
-                            TgtTypeBSignal=networkRval,
+                            TgtTypeASignal = normalRval,
+                            TgtTypeBSignal = networkRval,
                         },
                     };
                     MessageDispatcher.SendMessage(signalInfo);
-                    
-                    if (levelAsset.TimeLine.RequirementSatisfied)
+
+                    if (levelAsset.TimeLine != null)
                     {
-                        if (roundGist.Type == StageType.Require)    
+                        if (levelAsset.TimeLine.RequirementSatisfied)
                         {
-                            levelAsset.ReqOkCount++;
+                            if (roundGist.Type == StageType.Require)
+                            {
+                                levelAsset.ReqOkCount++;
+                            }
                         }
                     }
                 }
@@ -1376,11 +1381,17 @@ namespace ROOT
 
             if (!levelAsset.Shop.ShopOpening && lvlLogic.RoundLibDriver.IsShopRound)
             {
-                discount = levelAsset.SkillMgr.CheckDiscount();
+                if (levelAsset.SkillMgr != null)
+                {
+                    discount = levelAsset.SkillMgr.CheckDiscount();
+                }
             }
 
             levelAsset.Shop.OpenShop(lvlLogic.RoundLibDriver.IsShopRound, discount);
-            levelAsset.SkillMgr.SkillEnabled = levelAsset.SkillEnabled = lvlLogic.IsSkillAllowed;
+            if (levelAsset.SkillMgr != null)
+            {
+                levelAsset.SkillMgr.SkillEnabled = levelAsset.SkillEnabled = lvlLogic.IsSkillAllowed;
+            }
         }
 
         public static void UpdateRoundData_Instantly_Telemetry(ref GameAssets levelAsset)

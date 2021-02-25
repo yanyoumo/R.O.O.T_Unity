@@ -119,9 +119,14 @@ namespace ROOT
             return false;
         }
 
+        public int GetOtherHashCode()
+        {
+            //傻逼了，自己异或自己都是0.
+            return (StartingStatus.GetHashCode() << 2) ^ (TargetingStatus.GetHashCode() << 1) ^ priority.GetHashCode();
+        }
+
         public override int GetHashCode()
         {
-            //return StartingStatus.GetHashCode() ^ TargetingStatus.GetHashCode() ^ priority.GetHashCode();
             return (int) StartingStatus * ((int) RootFSMStatus.COUNT ^ 2) + (int) TargetingStatus * ((int) RootFSMStatus.COUNT) + priority;
         }
 

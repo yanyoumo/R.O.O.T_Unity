@@ -9,7 +9,7 @@ namespace ROOT
     //TODO 从Barebone里面尽量挪东西下来。
     public class FSMLevelLogic_Career : FSMLevelLogic_Barebone
     {
-        private bool CheckIsSkill() => LevelAsset.SkillMgr.CurrentSkillType.HasValue && LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
+        private bool CheckIsSkill() => LevelAsset.SkillMgr != null && LevelAsset.SkillMgr.CurrentSkillType.HasValue && LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
         private bool CheckAutoF() => AutoDrive.HasValue && AutoDrive.Value;
         private bool CheckAutoR() => IsReverseCycle;
 
@@ -17,7 +17,10 @@ namespace ROOT
         {
             if (LevelAsset.SkillEnabled)
             {
-                LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
+                if (LevelAsset.SkillMgr != null)
+                {
+                    LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
+                }
             }
         }
 
@@ -89,10 +92,10 @@ namespace ROOT
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.F_Cycle, RootFSMStatus.Career_Cycle));
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.R_IO, RootFSMStatus.Skill, 3, CheckIsSkill));
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.Career_Cycle, RootFSMStatus.Animate, 1, CheckStartAnimate, TriggerAnimation));
-            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.MajorUpKeep, RootFSMStatus.R_Cycle, 3, CheckAutoR));
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.Career_Cycle, RootFSMStatus.MinorUpKeep));
-            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.R_Cycle, RootFSMStatus.Career_Cycle));
+            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.MajorUpKeep, RootFSMStatus.R_Cycle, 3, CheckAutoR));
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.MajorUpKeep, RootFSMStatus.F_Cycle, 2, CheckAutoF));
+            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.R_Cycle, RootFSMStatus.Career_Cycle));
         }
     }
 }
