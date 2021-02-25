@@ -31,8 +31,7 @@ namespace ROOT
         
         public void Transit()
         {
-            var satisfiedTransition = _transitions.Where(a => a.StartingStatus == currentStatus)
-                .Where(msmTransition => msmTransition.AdditionalReq()).ToList();
+            var satisfiedTransition = _transitions.Where(a => a.StartingStatus == currentStatus).Where(msmTransition => msmTransition.AdditionalReq()).ToList();
             if (satisfiedTransition.Count > 0)
             {
                 satisfiedTransition.Sort(); //这个是升序还是降序？现在是降序

@@ -152,18 +152,10 @@ namespace ROOT
 
         protected override void AddtionalRecatIO()
         {
-            AddtionalRecatIO_Skill();
+            base.AddtionalRecatIO();
             AddtionalRecatIO_Telemetry();
         }
 
-        private void AddtionalRecatIO_Skill()
-        {
-            if (LevelAsset.SkillEnabled)
-            {
-                LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
-            }
-        }
-        
         #region TelemetryRelated
         private void AddtionalRecatIO_Telemetry()
         {
@@ -273,37 +265,6 @@ namespace ROOT
             //_actionDriver = null;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
         }
-        
-        private void CareerCycle()
-        {
-            if (LevelAsset.DestroyerEnabled)
-            {
-                WorldExecutor.UpdateDestoryer(LevelAsset);
-                if (LevelAsset.WarningDestoryer != null)
-                {
-                    LevelAsset.WarningDestoryer.Step(out var outCore);
-                    LevelAsset.DestoryedCoreType = outCore;
-                }
-            }
-            
-            if (RoundLibDriver.CurrentRoundGist.HasValue)
-            {
-                WorldExecutor.UpdateRoundData_Stepped(ref LevelAsset);
-                var timingEvent = new TimingEventInfo
-                {
-                    Type = WorldEvent.InGameStatusChangedEvent,
-                    CurrentStageType=RoundLibDriver.CurrentRoundGist.Value.Type,
-                };
-                var timingEvent2 = new TimingEventInfo
-                {
-                    Type = WorldEvent.CurrencyIOStatusChangedEvent,
-                    BoardCouldIOCurrencyData = BoardCouldIOCurrency,
-                    UnitCouldGenerateIncomeData = RoundLibDriver.IsRequireRound,
-                };
-                MessageDispatcher.SendMessage(timingEvent);
-                MessageDispatcher.SendMessage(timingEvent2);
-            }
-        }
 
         protected override void BoardUpdatedHandler(IMessage rMessage)
         {
@@ -311,46 +272,6 @@ namespace ROOT
             if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
                 WorldExecutor.UpdateRoundData_Instantly_Telemetry(ref LevelAsset);
-            }
-        }
-
-        private void InitCareer()
-        {
-            CareerCycle();
-            _mainFSM.currentStatus = RootFSMStatus.MajorUpKeep;
-            _mainFSM.waitForNextFrame = false;
-        }
-
-        protected override FSMTransitions RootFSMTransitions
-        {
-            get
-            {
-                var transitions = new FSMTransitions
-                {
-                    new Trans(Status.PreInit, Status.MajorUpKeep, 1, CheckInited, InitCareer),
-                    new Trans(Status.PreInit),
-                    new Trans(Status.MajorUpKeep, Status.F_Cycle, 4, CheckTelemetryAndNotPaused),
-                    new Trans(Status.MajorUpKeep, Status.R_Cycle, 3, CheckAutoR),
-                    new Trans(Status.MajorUpKeep, Status.F_Cycle, 2, CheckAutoF),
-                    new Trans(Status.MajorUpKeep, Status.R_IO, 1, CheckCtrlPackAny),
-                    new Trans(Status.MajorUpKeep),
-                    new Trans(Status.R_IO, Status.TelemetryPause, 4, CheckTelemetryAndPaused),
-                    new Trans(Status.R_IO, Status.Skill, 3, CheckIsSkill),
-                    new Trans(Status.R_IO, Status.F_Cycle, 2, CheckFCycle),
-                    new Trans(Status.R_IO, Status.Animate, 1, CheckStartAnimate, TriggerAnimation),
-                    new Trans(Status.R_IO, Status.MajorUpKeep, 0, true),
-                    new Trans(Status.TelemetryPause, Status.Career_Cycle),
-                    new Trans(Status.F_Cycle, Status.Career_Cycle),
-                    new Trans(Status.R_Cycle, Status.Career_Cycle),
-                    new Trans(Status.Skill, Status.Career_Cycle),
-                    new Trans(Status.Career_Cycle, Status.Animate, 1, CheckStartAnimate, TriggerAnimation),
-                    new Trans(Status.Career_Cycle, Status.MinorUpKeep),
-                    new Trans(Status.MinorUpKeep, Status.Animate, 1, true, CheckLoopAnimate),
-                    new Trans(Status.MinorUpKeep, Status.CleanUp),
-                    new Trans(Status.Animate, Status.MinorUpKeep),
-                    new Trans(Status.CleanUp, Status.MajorUpKeep, 0, true),
-                };
-                return transitions;
             }
         }
 
@@ -366,27 +287,18 @@ namespace ROOT
             }
         }
         
-        protected override FSMActions fsmActions
+        protected override void ModifiyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
-            get
-            {
-                //可能需要一个“整理节点（空节点）”这种概念的东西。
-                var _fsmActions = new FSMActions
-                {
-                    {Status.PreInit, PreInit},
-                    {Status.MajorUpKeep, MajorUpkeepAction},
-                    {Status.MinorUpKeep, MinorUpKeepAction},
-                    {Status.F_Cycle, ForwardCycle},
-                    {Status.R_Cycle, ReverseCycle},
-                    {Status.Career_Cycle, CareerCycle},
-                    {Status.CleanUp, CleanUp},
-                    {Status.TelemetryPause, TelemetryPauseAction},
-                    {Status.Animate, AnimateAction},
-                    {Status.R_IO, ReactIO},
-                    {Status.Skill, SkillMajorUpkeep},
-                };
-                return _fsmActions;
-            }
+            base.ModifiyRootFSMTransitions(ref RootFSMTransitions);
+            RootFSMTransitions.Add(new Trans(Status.MajorUpKeep, Status.F_Cycle, 4, CheckTelemetryAndNotPaused));
+            RootFSMTransitions.Add(new Trans(Status.R_IO, Status.TelemetryPause, 4, CheckTelemetryAndPaused));
+            RootFSMTransitions.Add(new Trans(Status.TelemetryPause, Status.Career_Cycle));
+        }
+        
+        protected override void ModifyFSMActions(ref Dictionary<RootFSMStatus, Action> actions)
+        {
+            base.ModifyFSMActions(ref actions);
+            actions.Add(Status.TelemetryPause, TelemetryPauseAction);
         }
     }
 }

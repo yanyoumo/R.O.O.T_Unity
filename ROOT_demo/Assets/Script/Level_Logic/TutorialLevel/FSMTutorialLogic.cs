@@ -254,28 +254,13 @@ namespace ROOT
         protected abstract void AdditionalFSMActionsOperating(ref FSMActions actions);
         protected abstract void AdditionalFSMTransitionOperating(ref FSMTransitions transitions);
 
-        protected sealed override FSMActions fsmActions
+        protected override void ModifyFSMActions(ref Dictionary<RootFSMStatus, Action> actions)
         {
-            get
-            {
-                //可能需要一个“整理节点（空节点）”这种概念的东西。
-                var _fsmActions = new FSMActions
-                {
-                    {RootFSMStatus.PreInit, PreInit},
-                    {RootFSMStatus.MajorUpKeep, MajorUpkeepAction},
-                    {RootFSMStatus.MinorUpKeep, MinorUpKeepAction},
-                    {RootFSMStatus.F_Cycle, ForwardCycle},
-                    {RootFSMStatus.CleanUp, CleanUp},
-                    {RootFSMStatus.Animate, AnimateAction},
-                    {RootFSMStatus.R_IO, ReactIO},
-                    {RootFSMStatus.Tutorial_Cycle, TutorialCycle},
-                };
-                AdditionalFSMActionsOperating(ref _fsmActions);
-                return _fsmActions;
-            }
+            base.ModifyFSMActions(ref actions);
+            actions.Add(RootFSMStatus.Tutorial_Cycle, TutorialCycle);
         }
 
-        protected sealed override HashSet<RootFSMTransition> RootFSMTransitions
+        /*protected sealed override HashSet<RootFSMTransition> RootFSMTransitions
         {
             get
             {
@@ -302,6 +287,6 @@ namespace ROOT
                 AdditionalFSMTransitionOperating(ref transitions);
                 return transitions;
             }
-        }
+        }*/
     }
 }

@@ -79,12 +79,12 @@ namespace ROOT
         public bool IsSkillAllowed => !RoundLibDriver.IsShopRound;
         public bool BoardCouldIOCurrency => (RoundLibDriver.IsRequireRound || RoundLibDriver.IsDestoryerRound);
         
-        private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
+        protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
         public bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in movedTile, in movedCursor);
         private bool ShouldStartAnimate => ShouldCycle;
         public bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
         public bool IsForwardCycle => AutoForward || movedTile;
-        private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
+        protected bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
         #endregion
 
         #region 元初始化相关函数
@@ -134,10 +134,7 @@ namespace ROOT
         
         #region TransitionReq
 
-        protected bool CheckIsSkill() => LevelAsset.SkillMgr.CurrentSkillType.HasValue && LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
         protected bool CheckInited() => (ReadyToGo) && (!PendingCleanUp);
-        protected bool CheckAutoF() => AutoDrive.HasValue && AutoDrive.Value;
-        protected bool CheckAutoR() => IsReverseCycle;
         protected bool CheckFCycle() => IsForwardCycle;
         protected bool CheckCtrlPackAny() => CtrlPack.AnyFlag();
         protected bool CheckStartAnimate() => ShouldStartAnimate;
@@ -349,12 +346,6 @@ namespace ROOT
             LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
         }
 
-        protected void ReverseCycle()
-        {
-            WorldCycler.StepDown();
-            LevelAsset.TimeLine.Reverse();
-        }
-        
         protected void CleanUp()
         {
             movedTile = false;

@@ -11,7 +11,17 @@ namespace ROOT
     using Status = RootFSMStatus;
     public class FSMLevelLogic_Barebone : FSMLevelLogic
     {
-        protected override FSMActions fsmActions
+        protected virtual void ModifyFSMActions(ref FSMActions actions)
+        {
+            //Base version, DoNothing.
+        }
+        
+        protected virtual void ModifiyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
+        {
+            //Base version, DoNothing.
+        }
+        //TODO 需要Sealed
+        protected sealed override FSMActions fsmActions
         {
             get
             {
@@ -26,10 +36,12 @@ namespace ROOT
                     {Status.Animate, AnimateAction},
                     {Status.R_IO, ReactIO},
                 };
+                ModifyFSMActions(ref _fsmActions);
                 return _fsmActions;
             }
         }
-        protected override HashSet<RootFSMTransition> RootFSMTransitions {
+        //TODO 需要Sealed
+        protected sealed override HashSet<RootFSMTransition> RootFSMTransitions {
             get
             {
                 var transitions = new FSMTransitions
@@ -48,6 +60,7 @@ namespace ROOT
                     new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, 0, true),
                     new Trans(RootFSMStatus.CleanUp, RootFSMStatus.MajorUpKeep, 0, true),
                 };
+                ModifiyRootFSMTransitions(ref transitions);
                 return transitions;
             }
         }
