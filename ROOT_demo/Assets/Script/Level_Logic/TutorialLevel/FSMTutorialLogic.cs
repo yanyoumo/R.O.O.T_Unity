@@ -12,7 +12,7 @@ namespace ROOT
     using Trans = RootFSMTransition;
     using FSMTransitions = HashSet<RootFSMTransition>;
 
-    public abstract partial class FSMTutorialLogic : FSMLevelLogic
+    public abstract class FSMTutorialLogic : FSMLevelLogic_Barebone
     {
         protected bool AllUnitConnected()
         {

@@ -20,7 +20,9 @@ namespace ROOT.Signal
         //在LED屏幕上是否显示本信号的的逻辑。
         public bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
         {
-            return SignalMasterMgr.Instance.WithinCertainSignalSamePath(unit, otherUnit, SignalType);
+            var A = SignalMasterMgr.Instance.WithinCertainSignalSamePath(unit, otherUnit, SignalType);
+            var B = (unit.SignalCore.SignalDataPackList[SignalType].SignalDepth - otherUnit.SignalCore.SignalDataPackList[SignalType].SignalDepth) <= 1;
+            return A && B;
         }
 
         public int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)

@@ -16,7 +16,7 @@ namespace ROOT
     using Trans = RootFSMTransition;
     using Status = RootFSMStatus;
 
-    public class FSMLevelLogic_Telemetry : FSMLevelLogic //LEVEL-LOGIC/每一关都有一个这个类。
+    public class FSMLevelLogic_Telemetry : FSMLevelLogic_Career //LEVEL-LOGIC/每一关都有一个这个类。
     {
         #region TelemetryStage
 
