@@ -133,7 +133,6 @@ namespace ROOT.Signal
                 res.Add(dest);
                 dest = pathTable[dest];
             }
-            //remove source scan field unit 
             res.Reverse();
             return res;
         }
@@ -185,6 +184,11 @@ namespace ROOT.Signal
             if (connectedUnit.Count == 0)
             {
                 var localSignalScore = GetScore(path);
+                if (localSignalLength == minLength && localSignalScore == maxScore && path.Count < ans.Count)
+                {
+                    ans = new List<Unit>(path);
+                }
+
                 if (localSignalLength == minLength && localSignalScore > maxScore)
                 {
                     maxScore = localSignalScore;
