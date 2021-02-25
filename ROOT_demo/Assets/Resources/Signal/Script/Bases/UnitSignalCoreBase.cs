@@ -66,7 +66,7 @@ namespace ROOT.Signal
         }
         
         //TODO 这里的流程要用新的SignalDataPackList系统，以前那些什么的SignalDepth不要用了。
-        public bool IsEndingScanFieldUnit => InServerGrid && (Owner.UnitSignal == SignalType.Scan && Owner.UnitHardware == HardwareType.Field) && ScanSignalPathDepth == 1;
+        public bool IsEndingScanFieldUnit => Owner.SignalCore is ScanUnitSignalCore {IsUnitVeryActive: true};
 
 
         //标记扫描信号的路径的参数。
