@@ -29,8 +29,14 @@ namespace ROOT
         public override bool CouldHandleBoss => false;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
-        public override void InitLevel()
+        protected override void AdditionalInitLevel()
         {
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
+        }
+        
+        public sealed override void InitLevel()
+        {
+            //就先这么Sealed、急了的话、所有需要"关掉"的可以在AdditionalInit里面再关掉。
             Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
@@ -38,7 +44,6 @@ namespace ROOT
             LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
             LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
             
-            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();

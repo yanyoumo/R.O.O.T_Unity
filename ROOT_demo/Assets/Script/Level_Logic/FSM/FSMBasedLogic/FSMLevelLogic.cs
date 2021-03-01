@@ -176,6 +176,8 @@ namespace ROOT
 
         #region Init
 
+        protected abstract void AdditionalInitLevel();
+        
         private void UpdateLogicLevelReference()
         {
             LevelAsset.CursorTemplate = Resources.Load<GameObject>("Cursor/Prefab/Cursor");
@@ -183,11 +185,6 @@ namespace ROOT
             LevelAsset.AirDrop = LevelAsset.GameBoard.AirDrop;
             LevelAsset.AirDrop.GameAsset = LevelAsset;
             LevelAsset.Owner = this;
-        }
-
-        protected virtual void AdditionalInitLevel()
-        {
-            //BaseVerison,DoNothing.
         }
 
         #endregion

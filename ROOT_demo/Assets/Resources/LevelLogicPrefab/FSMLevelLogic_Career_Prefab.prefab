@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3570565215639393928}
   - component: {fileID: 3570565215639393929}
   m_Layer: 0
-  m_Name: FSMLevelLogic_Barebone_Prefab
+  m_Name: FSMLevelLogic_Career_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

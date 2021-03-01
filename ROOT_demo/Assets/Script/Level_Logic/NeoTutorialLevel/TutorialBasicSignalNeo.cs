@@ -14,7 +14,7 @@ namespace ROOT
 
         protected override string MainGoalEntryContent => "将所有接收端单元都链接至发送端";
 
-        public override void InitLevel()
+        /*public override void InitLevel()
         {
             Debug.Assert(ReferenceOk);//意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
@@ -25,7 +25,7 @@ namespace ROOT
             WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
             
             ReadyToGo = true;
-        }
+        }*/
         
         /*protected override void TutorialMinorUpkeep()
         {

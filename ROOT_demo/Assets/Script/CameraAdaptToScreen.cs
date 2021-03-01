@@ -17,6 +17,7 @@ namespace ROOT
 
         IEnumerator DelayedDelegate()
         {
+            //这个现在不要搞这个、用广播对时事件去弄。
             yield return 0;
             yield return 0;
             yield return 0;

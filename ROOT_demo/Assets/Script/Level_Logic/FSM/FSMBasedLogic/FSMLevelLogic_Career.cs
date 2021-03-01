@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
-    //TODO 从Barebone里面尽量挪东西下来。
     public class FSMLevelLogic_Career : FSMLevelLogic_Barebone
     {
         public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_CAREER;
@@ -62,11 +61,17 @@ namespace ROOT
         
         protected override void AdditionalInitLevel()
         {
+            base.AdditionalInitLevel();
+            WorldExecutor.InitDestoryer(ref LevelAsset);
+            WorldExecutor.InitShop(ref LevelAsset);
+            WorldExecutor.StartShop(ref LevelAsset);
+            
             var message = new CurrencyUpdatedInfo()
             {
                 CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
                 IncomesVal = 0,
             };
+            
             MessageDispatcher.SendMessage(message);
             
             if (LevelAsset.ActionAsset.RoundLib.Count > 0)
@@ -260,8 +265,7 @@ namespace ROOT
         protected override void ModifiyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
             base.ModifiyRootFSMTransitions(ref RootFSMTransitions);
-            RootFSMTransitions.Remove(new RootFSMTransition(RootFSMStatus.F_Cycle, RootFSMStatus.Animate, 1,
-                CheckStartAnimate, TriggerAnimation));
+            RootFSMTransitions.Remove(new RootFSMTransition(RootFSMStatus.F_Cycle, RootFSMStatus.Animate, 1, CheckStartAnimate, TriggerAnimation));
             RootFSMTransitions.Remove(new RootFSMTransition(RootFSMStatus.F_Cycle, RootFSMStatus.MinorUpKeep));
 
             #region ADD Consequence
@@ -276,39 +280,13 @@ namespace ROOT
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.Skill, RootFSMStatus.Career_Cycle));
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.F_Cycle, RootFSMStatus.Career_Cycle));
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.R_IO, RootFSMStatus.Skill, 3, CheckIsSkill));
-            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.Career_Cycle, RootFSMStatus.Animate, 1,
-                CheckStartAnimate, TriggerAnimation));
+            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.Career_Cycle, RootFSMStatus.Animate, 1, CheckStartAnimate, TriggerAnimation));
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.Career_Cycle, RootFSMStatus.MinorUpKeep));
-            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.MajorUpKeep, RootFSMStatus.R_Cycle, 3,
-                CheckAutoR));
-            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.MajorUpKeep, RootFSMStatus.F_Cycle, 2,
-                CheckAutoF));
+            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.MajorUpKeep, RootFSMStatus.R_Cycle, 3, CheckAutoR));
+            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.MajorUpKeep, RootFSMStatus.F_Cycle, 2, CheckAutoF));
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.R_Cycle, RootFSMStatus.Career_Cycle));
         }
 
-        public override void InitLevel()
-        {
-            //TODO 额外的逻辑放在AdditionalInitLevel里面。InitLevel最好还是封死。
-            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
-
-            LevelAsset.DeltaCurrency = 0.0f;
-            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
-            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
-
-            WorldExecutor.InitShop(ref LevelAsset);
-            WorldExecutor.InitDestoryer(ref LevelAsset);
-            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
-            LevelAsset.EnableAllCoreFunctionAndFeature();
-            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
-            LevelAsset.GameBoard.UpdateBoardAnimation();
-            WorldExecutor.StartShop(ref LevelAsset);
-            AdditionalInitLevel();
-            
-            ReadyToGo = true;
-            LevelAsset.HintMaster.ShouldShowCheckList = false;
-        }
-        
         protected override void Awake()
         {
             base.Awake();
