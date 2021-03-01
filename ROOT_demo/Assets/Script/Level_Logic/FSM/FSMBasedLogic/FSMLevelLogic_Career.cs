@@ -11,6 +11,8 @@ namespace ROOT
     //TODO 从Barebone里面尽量挪东西下来。
     public class FSMLevelLogic_Career : FSMLevelLogic_Barebone
     {
+        public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_CAREER;
+
         protected RoundLibDriver RoundLibDriver;
 
         public override bool IsTutorial => false;

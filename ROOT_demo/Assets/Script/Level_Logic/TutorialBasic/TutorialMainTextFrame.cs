@@ -12,7 +12,7 @@ namespace ROOT
     {
         public TutorialMainTextFrame TutorialMainTextFrame;
     }
-
+    
     public class TutorialMainTextFrame : MonoBehaviour
     {
         public TextMeshPro ContentText;

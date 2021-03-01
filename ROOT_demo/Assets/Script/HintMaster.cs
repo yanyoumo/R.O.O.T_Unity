@@ -1,12 +1,30 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using ROOT.Message;
 using UnityEngine;
 
 namespace ROOT
 {
+
+    public enum HintEventType
+    {
+        ShowGoalCheckList,
+        ShowTutorialTextFrame,
+        ShowHelpScreen,
+    }
+    
+    public class HintEventInfo : RootMessageBase
+    {
+        public HintEventType HintEventType;
+        public bool BoolData;
+        public String StringData;
+        public override string Type => WorldEvent.HintRelatedEvent;
+    }
+
     public partial class HintMaster : MonoBehaviour
     {
-        public int ShopHintPostalPrice
+        /*public int ShopHintPostalPrice
         {
             set => shopPostalHint.PostalPrice = value;
         }
@@ -14,7 +32,7 @@ namespace ROOT
         public bool ShouldShowShopHint
         {
             set => shopPostalHint.gameObject.SetActive(value);
-        }
+        }*/
 
         public bool ShouldShowCheckList
         {

@@ -266,6 +266,7 @@ namespace ROOT
         public static string CurrencyIOStatusChangedEvent = "CurrencyIOStatusChangedEvent";
         public static string CurrencyUpdatedEvent = "CurrencyUpdatedEvent";
         public static string BoardSignalUpdatedEvent = "BoardSignalUpdatedEvent";
+        public static string HintRelatedEvent = "HintRelatedEvent";
         
         /// <summary>
         /// 主要是UI方面的事件、主要是可以向核心逻辑调查一些数据；可以放一个回调函数。
