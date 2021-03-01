@@ -11,6 +11,8 @@ namespace ROOT
     using Status = RootFSMStatus;
     public class FSMLevelLogic_Barebone : FSMLevelLogic
     {
+        public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDTIVEVISUAL;
+        
         protected virtual void ModifyFSMActions(ref FSMActions actions)
         {
             //Base version, DoNothing.
