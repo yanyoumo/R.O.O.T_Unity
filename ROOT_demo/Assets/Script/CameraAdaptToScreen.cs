@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace ROOT
 {
+    [Obsolete]//TODO 这个玩意儿也要处理掉
     public class CameraAdaptToScreen : MonoBehaviour
     {
         public delegate void CameraDelegate();

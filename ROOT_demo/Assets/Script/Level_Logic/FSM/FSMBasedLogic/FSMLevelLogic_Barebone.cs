@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
@@ -28,6 +29,37 @@ namespace ROOT
         public override bool CouldHandleBoss => false;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
+        public override void InitLevel()
+        {
+            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+
+            LevelAsset.DeltaCurrency = 0.0f;
+            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
+            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
+            
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
+            LevelAsset.EnableAllCoreFunctionAndFeature();
+            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
+            LevelAsset.GameBoard.UpdateBoardAnimation();
+            AdditionalInitLevel();
+            
+            ReadyToGo = true;
+            LevelAsset.HintMaster.ShouldShowCheckList = false;
+        }
+        
+        public override IEnumerator UpdateArtLevelReference(AsyncOperation aOP,AsyncOperation aOP2)
+        {
+            while (!aOP.isDone)
+            {
+                yield return 0;
+            }
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
+            AdditionalArtLevelReference(ref LevelAsset);
+            LevelAsset.HintMaster.HideTutorialFrame = false;
+            PopulateArtLevelReference();
+        }
+        
         protected sealed override FSMActions fsmActions
         {
             get

@@ -5,6 +5,7 @@ using Cinemachine;
 using com.ootii.Messages;
 using ROOT.Signal;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
@@ -239,6 +240,23 @@ namespace ROOT
             actions.Add(RootFSMStatus.Skill, SkillMajorUpkeep);
         }
 
+        public override IEnumerator UpdateArtLevelReference(AsyncOperation aOP,AsyncOperation aOP2)
+        {
+            while (!aOP.isDone||!aOP2.isDone)
+            {
+                yield return 0;
+            }
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
+            LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(LEVEL_ART_SCENE_ID));
+            LevelAsset.Shop = FindObjectOfType<ShopBase>();
+            LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
+            LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
+            AdditionalArtLevelReference(ref LevelAsset);
+            LevelAsset.HintMaster.HideTutorialFrame = false;
+            PopulateArtLevelReference();
+        }
+        
         protected override void ModifiyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
             base.ModifiyRootFSMTransitions(ref RootFSMTransitions);
@@ -268,6 +286,29 @@ namespace ROOT
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.R_Cycle, RootFSMStatus.Career_Cycle));
         }
 
+        public override void InitLevel()
+        {
+            //TODO 额外的逻辑放在AdditionalInitLevel里面。InitLevel最好还是封死。
+            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+
+            LevelAsset.DeltaCurrency = 0.0f;
+            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
+            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
+
+            WorldExecutor.InitShop(ref LevelAsset);
+            WorldExecutor.InitDestoryer(ref LevelAsset);
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
+            LevelAsset.EnableAllCoreFunctionAndFeature();
+            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
+            LevelAsset.GameBoard.UpdateBoardAnimation();
+            WorldExecutor.StartShop(ref LevelAsset);
+            AdditionalInitLevel();
+            
+            ReadyToGo = true;
+            LevelAsset.HintMaster.ShouldShowCheckList = false;
+        }
+        
         protected override void Awake()
         {
             base.Awake();

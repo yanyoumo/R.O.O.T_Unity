@@ -97,7 +97,7 @@ namespace ROOT
             return res;
         }
 
-        private void PopulateArtLevelReference()
+        protected void PopulateArtLevelReference()
         {
             ReferenceOk = CheckReference();
         }
@@ -107,21 +107,8 @@ namespace ROOT
             //BaseVerison,DoNothing.
         }
 
-        public IEnumerator UpdateArtLevelReference(AsyncOperation aOP)
-        {
-            while (!aOP.isDone)
-            {
-                yield return 0;
-            }
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
-            LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
-            LevelAsset.Shop = FindObjectOfType<ShopBase>();
-            LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
-            LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
-            AdditionalArtLevelReference(ref LevelAsset);
-            LevelAsset.HintMaster.HideTutorialFrame = false;
-            PopulateArtLevelReference();
-        }
+        //这个肯定也要改成Virtual的、并且要听两个的aOP。
+        public abstract IEnumerator UpdateArtLevelReference(AsyncOperation aOP,AsyncOperation aOP2);
 
         #endregion
 
@@ -201,29 +188,6 @@ namespace ROOT
         protected virtual void AdditionalInitLevel()
         {
             //BaseVerison,DoNothing.
-        }
-
-        public virtual void InitLevel()
-        {
-            //TODO 这个也要将Career和Boss尽量拆干净。
-            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
-
-            LevelAsset.DeltaCurrency = 0.0f;
-            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
-            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
-
-            WorldExecutor.InitShop(ref LevelAsset);
-            WorldExecutor.InitDestoryer(ref LevelAsset);
-            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
-            LevelAsset.EnableAllCoreFunctionAndFeature();
-            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
-            LevelAsset.GameBoard.UpdateBoardAnimation();
-            WorldExecutor.StartShop(ref LevelAsset);
-            AdditionalInitLevel();
-            
-            ReadyToGo = true;
-            LevelAsset.HintMaster.ShouldShowCheckList = false;
         }
 
         #endregion
@@ -426,6 +390,8 @@ namespace ROOT
         }
 
         private FSMEventInquiryResponder _inquiryResponder;
+
+        public abstract void InitLevel();
         
         private void Update()
         {
