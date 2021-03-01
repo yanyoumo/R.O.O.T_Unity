@@ -18,6 +18,11 @@ namespace ROOT
 
     public class FSMLevelLogic_Telemetry : FSMLevelLogic_Career //LEVEL-LOGIC/每一关都有一个这个类。
     {
+        public override bool IsTutorial => false;
+        public override bool CouldHandleSkill => true;
+        public override bool CouldHandleBoss => true;
+        public override BossStageType HandleBossType => BossStageType.Telemetry;
+        
         #region TelemetryStage
 
         private static float _TelemetryPauseCostTimer = 0.0f;
@@ -224,46 +229,36 @@ namespace ROOT
 
         private void TelemetryPauseAction()
         {
-            WorldExecutor.UpdateBoardData_Stepped(ref LevelAsset);
-        }
-
-        protected override void AdditionalInitLevel()
-        {
-            var message = new CurrencyUpdatedInfo()
-            {
-                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
-                IncomesVal = 0,
-            };
-            MessageDispatcher.SendMessage(message);
-            
-            if (LevelAsset.ActionAsset.RoundLib.Count > 0)
-            {
-                //这个东西放在这里还是怎么着？就先这样吧。
-                WorldCycler.InitCycler();
-                if (LevelAsset.TimeLine != null)
-                {
-                    LevelAsset.TimeLine.InitWithAssets(LevelAsset);
-                }
-            }
+            UpdateBoardData_Stepped(ref LevelAsset);
         }
 
         #endregion
         
-        protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
+        private void UpdateRoundData_Instantly_Telemetry()
         {
-            LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
-            LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
-            LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
-        }
+            var levelAsset = LevelAsset;
+            var lvlLogic = this;
+            var roundGist = lvlLogic.RoundLibDriver.CurrentRoundGist.Value;
 
-        protected override void UpdateGameOverStatus()
-        {
-            //这个函数就很接近裁判要做的事儿了。
-            if (!LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount)) return;
-            PendingCleanUp = true;
-            WorldCycler.Reset();
-            //_actionDriver = null;
-            LevelMasterManager.Instance.LevelFinished(LevelAsset);
+            if (lvlLogic.RoundLibDriver.IsRequireRound || lvlLogic.RoundLibDriver.IsShopRound)
+            {
+                levelAsset.TimeLine.RequirementSatisfied = (TypeASignalCount >= roundGist.normalReq) &&
+                                                           (TypeBSignalCount >= roundGist.networkReq);
+            }
+
+            var signalInfo = new BoardSignalUpdatedInfo
+            {
+                SignalData = new BoardSignalUpdatedData()
+                {
+                    CrtTypeASignal = TypeASignalCount,
+                    CrtTypeBSignal = TypeBSignalCount,
+                    TypeATier = levelAsset.GameBoard.GetTotalTierCountByCoreType(
+                        levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
+                    TypeBTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(
+                        levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                },
+            };
+            MessageDispatcher.SendMessage(signalInfo);
         }
 
         protected override void BoardUpdatedHandler(IMessage rMessage)
@@ -271,7 +266,7 @@ namespace ROOT
             base.BoardUpdatedHandler(rMessage);
             if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
-                WorldExecutor.UpdateRoundData_Instantly_Telemetry(ref LevelAsset);
+                UpdateRoundData_Instantly_Telemetry();
             }
         }
 

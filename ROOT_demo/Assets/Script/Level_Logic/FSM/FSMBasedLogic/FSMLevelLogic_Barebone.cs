@@ -20,7 +20,12 @@ namespace ROOT
         {
             //Base version, DoNothing.
         }
-        //TODO 需要Sealed
+
+        public override bool IsTutorial => false;
+        public override bool CouldHandleSkill => false;
+        public override bool CouldHandleBoss => false;
+        public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
+
         protected sealed override FSMActions fsmActions
         {
             get
@@ -40,7 +45,6 @@ namespace ROOT
                 return _fsmActions;
             }
         }
-        //TODO 需要Sealed
         protected sealed override HashSet<RootFSMTransition> RootFSMTransitions {
             get
             {

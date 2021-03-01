@@ -14,6 +14,11 @@ namespace ROOT
 
     public abstract class FSMTutorialLogic : FSMLevelLogic_Barebone
     {
+        public override bool IsTutorial => true;
+        public override bool CouldHandleSkill => true;
+        public override bool CouldHandleBoss => false;
+        public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
+        
         protected bool AllUnitConnected()
         {
             return LevelAsset.GameBoard.Units.All(u => u.AnyConnection);
@@ -48,23 +53,26 @@ namespace ROOT
             set => LevelAsset.HintMaster.ShouldShowCheckList = value;
         }
 
-        protected sealed override void UpdateGameOverStatus()
+        protected sealed override bool CheckGameOver
         {
-            if (LevelCompleted && PlayerRequestedEnd)
+            get
             {
-                PendingCleanUp = true;
-                LevelAsset.TutorialCompleted = true;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
-            }
+                if (LevelCompleted && PlayerRequestedEnd)
+                {
+                    LevelAsset.TutorialCompleted = true;
+                    return true;
+                }
 
-            if (LevelFailed && PlayerRequestedQuit)
-            {
-                PendingCleanUp = true;
-                LevelAsset.TutorialCompleted = false;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
+                if (LevelFailed && PlayerRequestedQuit)
+                {
+                    LevelAsset.TutorialCompleted = false;
+                    return true;
+                }
+
+                return false;
             }
         }
-
+        
         private void CreateUnitOnBoard(TutorialActionData data)
         {
             GameObject go = LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core, data.HardwareType,

@@ -119,15 +119,12 @@ namespace ROOT
             return false;
         }
 
-        public int GetOtherHashCode()
-        {
-            //傻逼了，自己异或自己都是0.
-            return (StartingStatus.GetHashCode() << 2) ^ (TargetingStatus.GetHashCode() << 1) ^ priority.GetHashCode();
-        }
-
         public override int GetHashCode()
         {
-            return (int) StartingStatus * ((int) RootFSMStatus.COUNT ^ 2) + (int) TargetingStatus * ((int) RootFSMStatus.COUNT) + priority;
+            const int count = (int)RootFSMStatus.COUNT;
+            var sInt = (int) StartingStatus;
+            var tInt = (int) TargetingStatus;
+            return count * count * priority + count * sInt + tInt;
         }
 
         public bool Equals(RootFSMTransition other)

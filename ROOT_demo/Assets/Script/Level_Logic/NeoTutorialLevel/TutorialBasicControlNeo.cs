@@ -46,7 +46,7 @@ namespace ROOT
         void MajorUpkeepAction_TutorialBasicControlNeo()
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
-            WorldExecutor.UpdateBoardData_Stepped(ref LevelAsset);
+            UpdateBoardData_Stepped(ref LevelAsset);
             base.AddtionalMajorUpkeep();
         }
         
