@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
+using ROOT.SetupAsset;
 using ROOT.Signal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,7 +24,7 @@ namespace ROOT
         protected override bool IsForwardCycle => AutoForward || movedTile;
         private bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
-        private bool IsSkillAllowed => !RoundLibDriver.IsShopRound;
+        protected bool IsSkillAllowed => !RoundLibDriver.IsShopRound;
         private bool BoardCouldIOCurrency => (RoundLibDriver.IsRequireRound || RoundLibDriver.IsDestoryerRound);
         
         private bool CheckIsSkill() => LevelAsset.SkillMgr != null && LevelAsset.SkillMgr.CurrentSkillType.HasValue &&
@@ -32,7 +33,7 @@ namespace ROOT
         private bool CheckAutoF() => AutoDrive.HasValue && AutoDrive.Value;
         private bool CheckAutoR() => IsReverseCycle;
 
-        private void UpdateLevelAsset()
+        protected virtual void UpdateLevelAsset()
         {
             var lastStage = RoundLibDriver.PreviousRoundGist?.Type ?? StageType.Shop;
             var lastDestoryBool = lastStage == StageType.Destoryer;
@@ -42,16 +43,9 @@ namespace ROOT
                 LevelAsset.GameBoard.BoardGirdDriver.UpdatePatternDiminishing();
             }
 
-            if ((lastDestoryBool && !RoundLibDriver.IsDestoryerRound) &&
-                !WorldCycler.NeedAutoDriveStep.HasValue)
+            if ((lastDestoryBool && !RoundLibDriver.IsDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
             {
                 LevelAsset.GameBoard.BoardGirdDriver.DestoryHeatsinkOverlappedUnit();
-            }
-
-            if ((LevelAsset.DestroyerEnabled && !RoundLibDriver.IsDestoryerRound) &&
-                !WorldCycler.TelemetryStage)
-            {
-                LevelAsset.WarningDestoryer.ForceReset();
             }
         }
 
@@ -88,7 +82,7 @@ namespace ROOT
             }
         }
 
-        private void UpdateRoundData_Stepped()
+        protected virtual void UpdateRoundData_Stepped()
         {
             var roundGist = RoundLibDriver.CurrentRoundGist.Value;
             var tCount = LevelAsset.ActionAsset.GetTruncatedStep(LevelAsset.StepCount);
@@ -98,40 +92,6 @@ namespace ROOT
             }
 
             UpdateLevelAsset();
-
-            LevelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
-
-            if (RoundLibDriver.IsRequireRound || RoundLibDriver.IsShopRound)
-            {
-                var normalRval = roundGist.normalReq;
-                var networkRval = roundGist.networkReq;
-                var noRequirement = (normalRval == 0 && networkRval == 0);
-                if (noRequirement)
-                {
-                   LevelAsset.TimeLine.RequirementSatisfied = true;
-                }
-                else
-                {
-                    var signalInfo = new BoardSignalUpdatedInfo
-                    {
-                        SignalData = new BoardSignalUpdatedData()
-                        {
-                            TgtTypeASignal = normalRval,
-                            TgtTypeBSignal = networkRval,
-                        },
-                    };
-                    MessageDispatcher.SendMessage(signalInfo);
-
-                    if (LevelAsset.TimeLine.RequirementSatisfied)
-                    {
-                        if (roundGist.Type == StageType.Require)
-                        {
-                            LevelAsset.ReqOkCount++;
-                        }
-                    }
-
-                }
-            }
 
             var discount = 0;
 

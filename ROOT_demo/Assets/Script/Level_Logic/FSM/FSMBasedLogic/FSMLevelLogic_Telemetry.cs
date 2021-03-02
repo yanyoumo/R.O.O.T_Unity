@@ -95,6 +95,55 @@ namespace ROOT
 
         #endregion
         
+        private void UpdateSignalReq(RoundGist roundGist)
+        {
+            var normalRval = roundGist.normalReq;
+            var networkRval = roundGist.networkReq;
+            var noRequirement = (normalRval == 0 && networkRval == 0);
+            if (noRequirement)
+            {
+                LevelAsset.TimeLine.RequirementSatisfied = true;
+            }
+            else
+            {
+                var signalInfo = new BoardSignalUpdatedInfo
+                {
+                    SignalData = new BoardSignalUpdatedData()
+                    {
+                        TgtTypeASignal = normalRval,
+                        TgtTypeBSignal = networkRval,
+                    },
+                };
+                MessageDispatcher.SendMessage(signalInfo);
+
+                if (LevelAsset.TimeLine.RequirementSatisfied && roundGist.Type == StageType.Require)
+                {
+                    LevelAsset.ReqOkCount++;
+                }
+            }
+        }
+
+        
+        protected override void UpdateLevelAsset()
+        {
+            base.UpdateLevelAsset();
+            if ((LevelAsset.DestroyerEnabled && !RoundLibDriver.IsDestoryerRound) && !WorldCycler.TelemetryStage)
+            {
+                LevelAsset.WarningDestoryer.ForceReset();
+            }
+        }
+
+        protected override void UpdateRoundData_Stepped()
+        {
+            base.UpdateRoundData_Stepped();
+            LevelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
+            var roundGist = RoundLibDriver.CurrentRoundGist.Value;
+            if (RoundLibDriver.IsRequireRound || RoundLibDriver.IsShopRound)
+            {
+                UpdateSignalReq(roundGist);
+            }
+        }
+
         private void TelemetryMinorUpdate()
         {
             if (WorldCycler.TelemetryPause) return;
@@ -252,10 +301,8 @@ namespace ROOT
                 {
                     CrtTypeASignal = TypeASignalCount,
                     CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = levelAsset.GameBoard.GetTotalTierCountByCoreType(
-                        levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
-                    TypeBTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(
-                        levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                    TypeATier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
+                    TypeBTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
                 },
             };
             MessageDispatcher.SendMessage(signalInfo);
