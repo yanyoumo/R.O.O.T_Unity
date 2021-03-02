@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ROOT.SetupAsset
 {
@@ -18,7 +20,7 @@ namespace ROOT.SetupAsset
 
         [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab")]
         public GameObject LevelLogic;
-        
+
         [Range(0, 100)]
         public int InitialCurrency = 36;
 
@@ -55,7 +57,7 @@ namespace ROOT.SetupAsset
         public TutorialActionData[] Actions;
         
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
-        
+
         public BossStageType? GetBossStage => HasBossRound ? BossStage : (BossStageType?) null;
         public BossStageType BossStageVal
         {

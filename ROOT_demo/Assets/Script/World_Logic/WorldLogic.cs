@@ -1192,7 +1192,7 @@ namespace ROOT
                 movedCursor = true;
             }
 
-            Debug.Log("movedTile = true;" + movedTile);
+            //Debug.Log("movedTile = true;" + movedTile);
         }
 
         public static bool UpdateShopBuy(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack)
