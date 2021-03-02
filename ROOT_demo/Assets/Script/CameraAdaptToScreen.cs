@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using com.ootii.Messages;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ namespace ROOT
             yield return 0;
             yield return 0;
             yield return 0;
-            CameraUpdated();
+            CameraUpdated?.Invoke();
             Destroy(this);
         }
 
@@ -40,7 +41,7 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException();
             }
 
-            StartCoroutine(DelayedDelegate());
+            MessageDispatcher.SendMessage(WorldEvent.MainCameraReadyEvent);
         }
     }
 }

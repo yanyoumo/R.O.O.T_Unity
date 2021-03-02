@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using com.ootii.Messages;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,10 +30,12 @@ namespace ROOT
         public override bool CouldHandleBoss => false;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
-        protected override void AdditionalInitLevel()
+        protected virtual void AdditionalInitLevel()
         {
             WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
         }
+
+        
         
         public sealed override void InitLevel()
         {
@@ -50,18 +53,18 @@ namespace ROOT
             AdditionalInitLevel();
             
             ReadyToGo = true;
-            LevelAsset.HintMaster.ShouldShowCheckList = false;
+
+            SendHintData(HintEventType.ShowGoalCheckList, false);
         }
         
-        public override IEnumerator UpdateArtLevelReference(AsyncOperation aOP,AsyncOperation aOP2)
+        public override IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene)
         {
-            while (!aOP.isDone)
+            while (!baseVisualScene.isDone)
             {
                 yield return 0;
             }
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
             AdditionalArtLevelReference(ref LevelAsset);
-            LevelAsset.HintMaster.HideTutorialFrame = false;
+            SendHintData(HintEventType.ShowTutorialTextFrame, false);
             PopulateArtLevelReference();
         }
         

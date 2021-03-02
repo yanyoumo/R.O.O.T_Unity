@@ -33,6 +33,9 @@ namespace ROOT.UI
         {
             if (rMessge is HintEventInfo info)
             {
+                //TODO
+                Debug.LogWarning("Not yet implemented");
+                return;
                 switch (info.HintEventType)
                 {
                     case HintEventType.ShowGoalCheckList:
@@ -60,8 +63,8 @@ namespace ROOT.UI
                     default:
                         return;
                 }
+                return;
             }
-
             throw new ArgumentException("info type miss match");
         }
 

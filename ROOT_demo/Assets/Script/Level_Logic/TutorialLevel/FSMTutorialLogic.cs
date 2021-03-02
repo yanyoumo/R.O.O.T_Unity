@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using com.ootii.Messages;
 using ROOT.SetupAsset;
 using UnityEngine;
 using static ROOT.TextProcessHelper;
@@ -43,14 +44,14 @@ namespace ROOT
 
         private LevelActionAsset LevelActionAsset => LevelAsset.ActionAsset;
 
-        private bool ShowText
+        private bool ShowText 
         {
-            set => LevelAsset.HintMaster.RequestedShowTutorialContent = value;
+            set => SendHintData(HintEventType.ShowTutorialTextFrame, value);
         }
 
         private bool ShowCheckList
         {
-            set => LevelAsset.HintMaster.ShouldShowCheckList = value;
+            set => SendHintData(HintEventType.ShowGoalCheckList, value);
         }
 
         protected sealed override bool CheckGameOver
@@ -114,8 +115,12 @@ namespace ROOT
 
         private void DisplayText(string text)
         {
-            //Debug.Log(text);
-            LevelAsset.HintMaster.TutorialContent = ProcessText(text);
+            var hintData = new HintEventInfo
+            {
+                HintEventType = HintEventType.ShowTutorialTextFrame,
+                StringData = text
+            };
+            MessageDispatcher.SendMessage(hintData);
         }
 
         protected override void AddtionalRecatIO()
@@ -243,8 +248,9 @@ namespace ROOT
         {
             if (!shouldInitTutorial) return;
             shouldInitTutorial = false;
-            LevelAsset.HintMaster.HideTutorialFrame = true;
-            LevelAsset.HintMaster.TutorialCheckList.SetupEntryContent(MainGoalEntryContent, SecondaryGoalEntryContent);
+            SendHintData(HintEventType.ShowTutorialTextFrame, false);
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ShowMainGoalContent, StringData = MainGoalEntryContent});
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ShowSecondaryGoalContent, StringData = SecondaryGoalEntryContent});
             StepForward();
             DealStepMgr();
         }

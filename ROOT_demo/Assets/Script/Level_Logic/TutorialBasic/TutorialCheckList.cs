@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace ROOT
 {
-    public partial class HintMaster : MonoBehaviour
+    /*public partial class HintMaster : MonoBehaviour
     {
         public TutorialCheckList TutorialCheckList;
-    }
+    }*/
 
     //TODO 还没有处理触摸屏适配。
     public class TutorialCheckList : MonoBehaviour

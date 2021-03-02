@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace ROOT
 {
-    public partial class HintMaster : MonoBehaviour
+    /*public partial class HintMaster : MonoBehaviour
     {
         public HelpScreen HelpScreen;
-    }
+    }*/
 
     public class HelpScreen : MonoBehaviour
     {

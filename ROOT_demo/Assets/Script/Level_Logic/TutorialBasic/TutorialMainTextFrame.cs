@@ -8,10 +8,10 @@ using UnityEngine;
 
 namespace ROOT
 {
-    public partial class HintMaster : MonoBehaviour
+    /*public partial class HintMaster : MonoBehaviour
     {
         public TutorialMainTextFrame TutorialMainTextFrame;
-    }
+    }*/
     
     public class TutorialMainTextFrame : MonoBehaviour
     {

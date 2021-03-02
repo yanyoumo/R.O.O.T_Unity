@@ -22,13 +22,14 @@ namespace ROOT
             LevelFailed = !LevelCompleted;
             if (ActionEnded)
             {
-                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = LevelCompleted = AllUnitConnected();
+                LevelCompleted = AllUnitConnected();
+                SendHintData(HintEventType.ShowMainGoalComplete, LevelCompleted);
             }
         }
 
         protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
         {
-            LevelAsset.HintMaster.HideTutorialFrame = false;
+            SendHintData(HintEventType.ShowTutorialTextFrame, false);
         }
 
         protected override void AddtionalDealStep(TutorialActionData data)

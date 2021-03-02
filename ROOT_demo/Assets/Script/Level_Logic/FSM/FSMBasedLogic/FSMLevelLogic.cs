@@ -47,8 +47,7 @@ namespace ROOT
         public bool IsDestoryerRound => CurrentStage == StageType.Destoryer;
         public bool IsBossRound => CurrentStage == StageType.Boss;
     }
-
-    //里面不同的类型可以使用partial关键字拆开管理。
+    
     public abstract class FSMLevelLogic:MonoBehaviour   //LEVEL-LOGIC/每一关都有一个这个类。
     {
         [ReadOnly] public bool Playing { get; set; }
@@ -57,16 +56,15 @@ namespace ROOT
         [ReadOnly] public bool ReferenceOk = false;
         [ReadOnly] public bool PendingCleanUp;
         [ReadOnly] public bool IsTutorialLevel = false;
-
-        public abstract int LEVEL_ART_SCENE_ID { get; }
-
-        [ReadOnly]public bool movedTile = false;
-        private bool movedCursor = false;
+        [ReadOnly] public bool movedTile = false;
 
         public abstract bool IsTutorial { get; }
         public abstract bool CouldHandleSkill { get; }
         public abstract bool CouldHandleBoss { get; }
         public abstract BossStageType HandleBossType { get; }
+        
+        public abstract int LEVEL_ART_SCENE_ID { get; }
+        private bool movedCursor = false;
         
         protected internal GameAssets LevelAsset;
         private Cursor Cursor => LevelAsset.Cursor;
@@ -83,19 +81,15 @@ namespace ROOT
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
         private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in movedTile, in movedCursor);
         private bool ShouldStartAnimate => ShouldCycle;
-        private bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
-        protected bool IsForwardCycle => AutoForward || movedTile;
-        protected bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
+        protected virtual bool IsForwardCycle => movedTile;
         #endregion
 
         #region 元初始化相关函数
 
-        public bool CheckReference()
-        {
-            bool res = true;
-            res &= (LevelAsset.DataScreen != null);
-            return res;
-        }
+        protected void SendHintData(HintEventType type, bool boolData) => MessageDispatcher.SendMessage(new HintEventInfo {BoolData = boolData, HintEventType = type});
+
+        [Obsolete]
+        public bool CheckReference() => true;
 
         protected void PopulateArtLevelReference()
         {
@@ -108,7 +102,7 @@ namespace ROOT
         }
 
         //这个肯定也要改成Virtual的、并且要听两个的aOP。
-        public abstract IEnumerator UpdateArtLevelReference(AsyncOperation aOP,AsyncOperation aOP2);
+        public abstract IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene);
 
         #endregion
 
@@ -176,7 +170,7 @@ namespace ROOT
 
         #region Init
 
-        protected abstract void AdditionalInitLevel();
+        public abstract void InitLevel();
         
         private void UpdateLogicLevelReference()
         {
@@ -371,7 +365,7 @@ namespace ROOT
                 out var hardwareBCount, out TypeBSignalCount);
         }
         
-        protected virtual void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)
+        protected void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)
         {
             if (currentLevelAsset.TimeLine != null)
             {
@@ -387,8 +381,6 @@ namespace ROOT
         }
 
         private FSMEventInquiryResponder _inquiryResponder;
-
-        public abstract void InitLevel();
         
         private void Update()
         {
@@ -404,7 +396,6 @@ namespace ROOT
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
         }
-        
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();

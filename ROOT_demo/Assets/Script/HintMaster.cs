@@ -10,7 +10,12 @@ namespace ROOT
     public enum HintEventType
     {
         ShowGoalCheckList,
+        ShowMainGoalComplete,
+        ShowSecondaryGoalComplete,
+        ShowMainGoalContent,
+        ShowSecondaryGoalContent,
         ShowTutorialTextFrame,
+        ShowTutorialFailed,
         ShowHelpScreen,
     }
     
@@ -22,9 +27,13 @@ namespace ROOT
         public override string Type => WorldEvent.HintRelatedEvent;
     }
 
-    public partial class HintMaster : MonoBehaviour
+    /*public partial class HintMaster : MonoBehaviour
     {
-        /*public int ShopHintPostalPrice
+    }*/
+
+    /*public partial class HintMaster : MonoBehaviour
+    {
+        public int ShopHintPostalPrice
         {
             set => shopPostalHint.PostalPrice = value;
         }
@@ -32,7 +41,7 @@ namespace ROOT
         public bool ShouldShowShopHint
         {
             set => shopPostalHint.gameObject.SetActive(value);
-        }*/
+        }
 
         private bool nil = false;
         private string nils = "false";
@@ -72,7 +81,7 @@ namespace ROOT
         public bool RequestedShowHelpScreen
         {
             set => nil=value;
-            /*set
+            set
             {
                 HelpScreen.ShouldShow = value;
                 if (value)
@@ -91,12 +100,12 @@ namespace ROOT
                         _tutorialMainTextFrameSuppressed = false;
                     }
                 }
-            }*/
+            }
         }
 
         public void UpdateHintMaster(ControllingPack ctrlPack)
         {
             RequestedShowHelpScreen = ctrlPack.HasFlag(ControllingCommand.PlayHint);
         }
-    }
+    }*/
 }

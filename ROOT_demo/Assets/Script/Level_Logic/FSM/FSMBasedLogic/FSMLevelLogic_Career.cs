@@ -19,7 +19,10 @@ namespace ROOT
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
-        
+
+        protected override bool IsForwardCycle => AutoForward || movedTile;
+        private bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
+        private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
         private bool IsSkillAllowed => !RoundLibDriver.IsShopRound;
         private bool BoardCouldIOCurrency => (RoundLibDriver.IsRequireRound || RoundLibDriver.IsDestoryerRound);
         
@@ -245,20 +248,15 @@ namespace ROOT
             actions.Add(RootFSMStatus.Skill, SkillMajorUpkeep);
         }
 
-        public override IEnumerator UpdateArtLevelReference(AsyncOperation aOP,AsyncOperation aOP2)
+        public override IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene)
         {
-            while (!aOP.isDone||!aOP2.isDone)
+            while (!baseVisualScene.isDone||!addtionalVisualScene.isDone)
             {
                 yield return 0;
             }
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
-            LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(LEVEL_ART_SCENE_ID));
             LevelAsset.Shop = FindObjectOfType<ShopBase>();
-            LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
-            LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
             AdditionalArtLevelReference(ref LevelAsset);
-            LevelAsset.HintMaster.HideTutorialFrame = false;
+            SendHintData(HintEventType.ShowTutorialTextFrame, false);
             PopulateArtLevelReference();
         }
         
@@ -270,10 +268,8 @@ namespace ROOT
 
             #region ADD Consequence
 
-            RootFSMTransitions.Remove(new RootFSMTransition(RootFSMStatus.PreInit, RootFSMStatus.MajorUpKeep, 1,
-                CheckInited));
-            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.PreInit, RootFSMStatus.MajorUpKeep, 1,
-                CheckInited, InitCareer));
+            RootFSMTransitions.Remove(new RootFSMTransition(RootFSMStatus.PreInit, RootFSMStatus.MajorUpKeep, 1, CheckInited));
+            RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.PreInit, RootFSMStatus.MajorUpKeep, 1, CheckInited, InitCareer));
 
             #endregion
 

@@ -30,20 +30,56 @@ MonoBehaviour:
   UnitCost: 1
   levelType: 1
   AdditionalGameSetup:
-    PlayingSignalTypeA: 1
-    PlayingSignalTypeB: 2
+    PlayingSignalTypeA: 0
+    PlayingSignalTypeB: 1
   InitalBoard:
   - PlayingSignalSelector: 1
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 4, y: 4}
+    Pos: {x: 4, y: 2}
+    IsStation: 0
+  - PlayingSignalSelector: 1
+    CoreGenre: 1
+    Sides: 01000000010000000100000001000000
+    Tier: 1
+    Pos: {x: 2, y: 3}
+    IsStation: 0
+  - PlayingSignalSelector: 1
+    CoreGenre: 1
+    Sides: 01000000010000000100000001000000
+    Tier: 2
+    Pos: {x: 1, y: 3}
+    IsStation: 0
+  - PlayingSignalSelector: 1
+    CoreGenre: 1
+    Sides: 01000000010000000100000001000000
+    Tier: 3
+    Pos: {x: 3, y: 3}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 01000000010000000100000001000000
+    Tier: 4
+    Pos: {x: 4, y: 3}
+    IsStation: 0
+  - PlayingSignalSelector: 1
+    CoreGenre: 1
+    Sides: 01000000010000000100000001000000
+    Tier: 1
+    Pos: {x: 5, y: 3}
     IsStation: 0
   - PlayingSignalSelector: 0
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 1, y: 1}
+    Pos: {x: 1, y: 2}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 01000000010000000100000001000000
+    Tier: 1
+    Pos: {x: 2, y: 4}
     IsStation: 0
   HasBossRound: 0
   Endless: 1
