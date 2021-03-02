@@ -48,7 +48,6 @@ namespace ROOT.Signal
                     cnt -= unit.Tier;
                 }
             }
-
             return unitPathList;
         }
 
@@ -124,6 +123,114 @@ namespace ROOT.Signal
             }
 
             return Mathf.Floor(income);
+        }
+
+        public List<Unit> GetPath(Unit dest, Dictionary<Unit, Unit> pathTable, Unit source)
+        {
+            var res = new List<Unit>();
+            while (dest != source)
+            {
+                res.Add(dest);
+                dest = pathTable[dest];
+            }
+            res.Reverse();
+            return res;
+        }
+
+        public List<List<Unit>> GetConnectUnit(Unit now)
+        {
+            //Looking for the next scan field unit that is one signal distance away
+            var res = new List<List<Unit>>();
+            Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.Visiting = false);
+            var pre = new Dictionary<Unit, Unit>();
+            var queue = new Queue<Unit>();
+            now.SignalCore.Visiting = true;
+            queue.Enqueue(now);
+            while (queue.Count > 0)
+            {
+                var tmp = queue.Dequeue();
+                foreach (var otherUnit in tmp.GetConnectedOtherUnit.Where(unit =>
+                    unit.SignalCore.Visiting == false && unit.SignalCore.Visited == false))
+                {
+                    otherUnit.SignalCore.Visiting = true;
+                    if (otherUnit.UnitSignal == SignalType.Scan && otherUnit.UnitHardware == HardwareType.Core)
+                    {
+                        continue;
+                    }
+                    pre[otherUnit] = tmp;
+                    if (otherUnit.UnitSignal == SignalType.Scan && otherUnit.UnitHardware == HardwareType.Field)
+                    {
+                        res.Add(GetPath(otherUnit, pre, now));
+                    }
+                    else
+                    {
+                        queue.Enqueue(otherUnit);
+                    }
+                }
+            }
+            return res;
+        }
+
+        public int GetScore(List<Unit> path)
+        {
+            return path.Where(unit => unit.UnitSignal == SignalType.Scan && unit.UnitHardware == HardwareType.Field).Sum(unit => unit.Tier);
+        }
+
+        public void dfs(ref List<Unit> path, ref List<Unit> ans, int localSignalLength, ref int minLength, ref int maxScore)
+        {
+            if (localSignalLength > minLength)
+                return;
+            var connectedUnit = GetConnectUnit(path.Last());
+            if (connectedUnit.Count == 0)
+            {
+                var localSignalScore = GetScore(path);
+                if (localSignalLength == minLength && localSignalScore == maxScore && path.Count < ans.Count)
+                {
+                    ans = new List<Unit>(path);
+                }
+
+                if (localSignalLength == minLength && localSignalScore > maxScore)
+                {
+                    maxScore = localSignalScore;
+                    ans = new List<Unit>(path);
+                }
+
+                if (localSignalLength!=0 && localSignalLength < minLength)
+                {
+                    minLength = localSignalLength;
+                    maxScore = localSignalScore;
+                    ans = new List<Unit>(path);
+                }
+
+                return;
+            }
+
+            foreach (var subPath in connectedUnit)
+            {
+                foreach (var unit in subPath)
+                {
+                    unit.SignalCore.Visited = true;
+                    path.Add(unit);
+                }
+                dfs(ref path, ref ans, localSignalLength + 1, ref minLength, ref maxScore);
+                for (var i = subPath.Count - 1; i >= 0; --i)
+                {
+                    var unit = subPath[i];
+                    unit.SignalCore.Visited = false;
+                    path.RemoveAt(path.Count - 1);
+                }
+            }
+        }
+
+        public List<Unit> CalScore(ref int minLength, ref int maxScore)
+        {
+            var ans = new List<Unit>();
+            var path = new List<Unit>();
+            Owner.GameBoard.Units.ForEach(unit => unit.SignalCore.Visited = false);
+            Owner.SignalCore.Visited = true;
+            path.Add(Owner);
+            dfs(ref path, ref ans, 0, ref minLength, ref maxScore);
+            return ans;
         }
 
         public List<Unit> CalScore(ref int maxCount, ref int maxScore, ref int maxLength)
@@ -221,7 +328,7 @@ namespace ROOT.Signal
             get
             {
                 if (!SignalMasterMgr.Instance.HasAnyPath(SignalType)) return false;
-                var normalActive=SignalMasterMgr.Instance.WithinCertainSignalPath(Owner, SignalType);
+                var normalActive = SignalMasterMgr.Instance.WithinCertainSignalPath(Owner, SignalType);
                 return normalActive || IsUnitVeryActive;
             }
         }
