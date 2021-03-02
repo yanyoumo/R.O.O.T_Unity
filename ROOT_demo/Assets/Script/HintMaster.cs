@@ -1,10 +1,37 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using ROOT.Message;
 using UnityEngine;
 
 namespace ROOT
 {
-    public partial class HintMaster : MonoBehaviour
+
+    public enum HintEventType
+    {
+        ShowGoalCheckList,
+        ShowMainGoalComplete,
+        ShowSecondaryGoalComplete,
+        ShowMainGoalContent,
+        ShowSecondaryGoalContent,
+        ShowTutorialTextFrame,
+        ShowTutorialFailed,
+        ShowHelpScreen,
+    }
+    
+    public class HintEventInfo : RootMessageBase
+    {
+        public HintEventType HintEventType;
+        public bool BoolData;
+        public String StringData;
+        public override string Type => WorldEvent.HintRelatedEvent;
+    }
+
+    /*public partial class HintMaster : MonoBehaviour
+    {
+    }*/
+
+    /*public partial class HintMaster : MonoBehaviour
     {
         public int ShopHintPostalPrice
         {
@@ -16,35 +43,44 @@ namespace ROOT
             set => shopPostalHint.gameObject.SetActive(value);
         }
 
+        private bool nil = false;
+        private string nils = "false";
+        
         public bool ShouldShowCheckList
         {
-            set => TutorialCheckList.gameObject.SetActive(value);
+            //set => TutorialCheckList.gameObject.SetActive(value);
+            set => nil=value;
         }
 
         private bool _tutorialMainTextFrameSuppressed = false;
 
         public bool HideTutorialFrame
         {
-            set => TutorialMainTextFrame.gameObject.SetActive(value);
+            //set => TutorialMainTextFrame.gameObject.SetActive(value);
+            set => nil=value;
         }
 
         public bool RequestedShowTutorialContent
         {
-            set => ShowTutorialContent = value;
+            //set => ShowTutorialContent = value;
+            set => nil=value;
         }
 
         public bool ShowTutorialContent
         {
-            set => TutorialMainTextFrame.ShouldShow = value;
+            //set => TutorialMainTextFrame.ShouldShow = value;
+            set => nil=value;
         }
 
         public string TutorialContent
         {
-            set => TutorialMainTextFrame.ContentText.text = value;
+            //set => TutorialMainTextFrame.ContentText.text = value;
+            set => nils=value;
         }
 
         public bool RequestedShowHelpScreen
         {
+            set => nil=value;
             set
             {
                 HelpScreen.ShouldShow = value;
@@ -71,5 +107,5 @@ namespace ROOT
         {
             RequestedShowHelpScreen = ctrlPack.HasFlag(ControllingCommand.PlayHint);
         }
-    }
+    }*/
 }

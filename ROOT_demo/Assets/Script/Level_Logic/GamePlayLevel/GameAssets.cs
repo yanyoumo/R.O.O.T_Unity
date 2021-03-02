@@ -31,22 +31,14 @@ namespace ROOT
         public float LevelProgress = 0.0f;
         public bool BuyingCursor = false;
         public int BuyingID = -1;
-
-        /// <summary>
-        /// 裁判同时要担任神使，神要通过这里影响世界。
-        /// </summary>
+        
         public FSMLevelLogic Owner;
-
         public bool? TutorialCompleted = null;
-
         public LevelActionAsset ActionAsset;
 
         //这些引用在Asset外面要设好，在WRD-LOGIC里面也要处理。
         public GameObject CursorTemplate;
-        public GameObject ItemPriceRoot;
         public Board GameBoard;
-        public DataScreen DataScreen;
-        public HintMaster HintMaster;
         public TimeLine TimeLine;
         public SignalType? DestoryedCoreType;
         public InfoAirdrop AirDrop;
@@ -59,7 +51,6 @@ namespace ROOT
         internal GameObject GameCursor;
         internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
 
-        //internal BoardDataCollector BoardDataCollector;
         internal GameCurrencyMgr GameCurrencyMgr;
         internal float CurrencyRebate = 1.0f;
         internal ShopBase Shop;

@@ -1,14 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using I2.Loc;
 using UnityEngine;
 
 namespace ROOT
 {
-    public partial class HintMaster : MonoBehaviour
+    /*public partial class HintMaster : MonoBehaviour
     {
+        [Obsolete]
         public ShopPostalHint shopPostalHint;
-    }
+    }*/
     public class ShopPostalHint : MonoBehaviour
     {
         public Localize AdvShopTextLocalizer;

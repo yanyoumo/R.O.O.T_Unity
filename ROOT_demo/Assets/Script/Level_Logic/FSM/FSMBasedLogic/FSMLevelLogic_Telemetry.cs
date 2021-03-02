@@ -18,6 +18,11 @@ namespace ROOT
 
     public class FSMLevelLogic_Telemetry : FSMLevelLogic_Career //LEVEL-LOGIC/每一关都有一个这个类。
     {
+        public override bool IsTutorial => false;
+        public override bool CouldHandleSkill => true;
+        public override bool CouldHandleBoss => true;
+        public override BossStageType HandleBossType => BossStageType.Telemetry;
+        
         #region TelemetryStage
 
         private static float _TelemetryPauseCostTimer = 0.0f;
@@ -152,18 +157,10 @@ namespace ROOT
 
         protected override void AddtionalRecatIO()
         {
-            AddtionalRecatIO_Skill();
+            base.AddtionalRecatIO();
             AddtionalRecatIO_Telemetry();
         }
 
-        private void AddtionalRecatIO_Skill()
-        {
-            if (LevelAsset.SkillEnabled)
-            {
-                LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
-            }
-        }
-        
         #region TelemetryRelated
         private void AddtionalRecatIO_Telemetry()
         {
@@ -232,77 +229,36 @@ namespace ROOT
 
         private void TelemetryPauseAction()
         {
-            WorldExecutor.UpdateBoardData_Stepped(ref LevelAsset);
-        }
-
-        protected override void AdditionalInitLevel()
-        {
-            var message = new CurrencyUpdatedInfo()
-            {
-                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
-                IncomesVal = 0,
-            };
-            MessageDispatcher.SendMessage(message);
-            
-            if (LevelAsset.ActionAsset.RoundLib.Count > 0)
-            {
-                //这个东西放在这里还是怎么着？就先这样吧。
-                WorldCycler.InitCycler();
-                if (LevelAsset.TimeLine != null)
-                {
-                    LevelAsset.TimeLine.InitWithAssets(LevelAsset);
-                }
-            }
+            UpdateBoardData_Stepped(ref LevelAsset);
         }
 
         #endregion
         
-        protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
+        private void UpdateRoundData_Instantly_Telemetry()
         {
-            LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
-            LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
-            LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
-        }
+            var levelAsset = LevelAsset;
+            var lvlLogic = this;
+            var roundGist = lvlLogic.RoundLibDriver.CurrentRoundGist.Value;
 
-        protected override void UpdateGameOverStatus()
-        {
-            //这个函数就很接近裁判要做的事儿了。
-            if (!LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount)) return;
-            PendingCleanUp = true;
-            WorldCycler.Reset();
-            //_actionDriver = null;
-            LevelMasterManager.Instance.LevelFinished(LevelAsset);
-        }
-        
-        private void CareerCycle()
-        {
-            if (LevelAsset.DestroyerEnabled)
+            if (lvlLogic.RoundLibDriver.IsRequireRound || lvlLogic.RoundLibDriver.IsShopRound)
             {
-                WorldExecutor.UpdateDestoryer(LevelAsset);
-                if (LevelAsset.WarningDestoryer != null)
-                {
-                    LevelAsset.WarningDestoryer.Step(out var outCore);
-                    LevelAsset.DestoryedCoreType = outCore;
-                }
+                levelAsset.TimeLine.RequirementSatisfied = (TypeASignalCount >= roundGist.normalReq) &&
+                                                           (TypeBSignalCount >= roundGist.networkReq);
             }
-            
-            if (RoundLibDriver.CurrentRoundGist.HasValue)
+
+            var signalInfo = new BoardSignalUpdatedInfo
             {
-                WorldExecutor.UpdateRoundData_Stepped(ref LevelAsset);
-                var timingEvent = new TimingEventInfo
+                SignalData = new BoardSignalUpdatedData()
                 {
-                    Type = WorldEvent.InGameStatusChangedEvent,
-                    CurrentStageType=RoundLibDriver.CurrentRoundGist.Value.Type,
-                };
-                var timingEvent2 = new TimingEventInfo
-                {
-                    Type = WorldEvent.CurrencyIOStatusChangedEvent,
-                    BoardCouldIOCurrencyData = BoardCouldIOCurrency,
-                    UnitCouldGenerateIncomeData = RoundLibDriver.IsRequireRound,
-                };
-                MessageDispatcher.SendMessage(timingEvent);
-                MessageDispatcher.SendMessage(timingEvent2);
-            }
+                    CrtTypeASignal = TypeASignalCount,
+                    CrtTypeBSignal = TypeBSignalCount,
+                    TypeATier = levelAsset.GameBoard.GetTotalTierCountByCoreType(
+                        levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
+                    TypeBTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(
+                        levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                },
+            };
+            MessageDispatcher.SendMessage(signalInfo);
         }
 
         protected override void BoardUpdatedHandler(IMessage rMessage)
@@ -310,47 +266,7 @@ namespace ROOT
             base.BoardUpdatedHandler(rMessage);
             if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
-                WorldExecutor.UpdateRoundData_Instantly_Telemetry(ref LevelAsset);
-            }
-        }
-
-        private void InitCareer()
-        {
-            CareerCycle();
-            _mainFSM.currentStatus = RootFSMStatus.MajorUpKeep;
-            _mainFSM.waitForNextFrame = false;
-        }
-
-        protected override FSMTransitions RootFSMTransitions
-        {
-            get
-            {
-                var transitions = new FSMTransitions
-                {
-                    new Trans(Status.PreInit, Status.MajorUpKeep, 1, CheckInited, InitCareer),
-                    new Trans(Status.PreInit),
-                    new Trans(Status.MajorUpKeep, Status.F_Cycle, 4, CheckTelemetryAndNotPaused),
-                    new Trans(Status.MajorUpKeep, Status.R_Cycle, 3, CheckAutoR),
-                    new Trans(Status.MajorUpKeep, Status.F_Cycle, 2, CheckAutoF),
-                    new Trans(Status.MajorUpKeep, Status.R_IO, 1, CheckCtrlPackAny),
-                    new Trans(Status.MajorUpKeep),
-                    new Trans(Status.R_IO, Status.TelemetryPause, 4, CheckTelemetryAndPaused),
-                    new Trans(Status.R_IO, Status.Skill, 3, CheckIsSkill),
-                    new Trans(Status.R_IO, Status.F_Cycle, 2, CheckFCycle),
-                    new Trans(Status.R_IO, Status.Animate, 1, CheckStartAnimate, TriggerAnimation),
-                    new Trans(Status.R_IO, Status.MajorUpKeep, 0, true),
-                    new Trans(Status.TelemetryPause, Status.Career_Cycle),
-                    new Trans(Status.F_Cycle, Status.Career_Cycle),
-                    new Trans(Status.R_Cycle, Status.Career_Cycle),
-                    new Trans(Status.Skill, Status.Career_Cycle),
-                    new Trans(Status.Career_Cycle, Status.Animate, 1, CheckStartAnimate, TriggerAnimation),
-                    new Trans(Status.Career_Cycle, Status.MinorUpKeep),
-                    new Trans(Status.MinorUpKeep, Status.Animate, 1, true, CheckLoopAnimate),
-                    new Trans(Status.MinorUpKeep, Status.CleanUp),
-                    new Trans(Status.Animate, Status.MinorUpKeep),
-                    new Trans(Status.CleanUp, Status.MajorUpKeep, 0, true),
-                };
-                return transitions;
+                UpdateRoundData_Instantly_Telemetry();
             }
         }
 
@@ -366,27 +282,18 @@ namespace ROOT
             }
         }
         
-        protected override FSMActions fsmActions
+        protected override void ModifiyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
-            get
-            {
-                //可能需要一个“整理节点（空节点）”这种概念的东西。
-                var _fsmActions = new FSMActions
-                {
-                    {Status.PreInit, PreInit},
-                    {Status.MajorUpKeep, MajorUpkeepAction},
-                    {Status.MinorUpKeep, MinorUpKeepAction},
-                    {Status.F_Cycle, ForwardCycle},
-                    {Status.R_Cycle, ReverseCycle},
-                    {Status.Career_Cycle, CareerCycle},
-                    {Status.CleanUp, CleanUp},
-                    {Status.TelemetryPause, TelemetryPauseAction},
-                    {Status.Animate, AnimateAction},
-                    {Status.R_IO, ReactIO},
-                    {Status.Skill, SkillMajorUpkeep},
-                };
-                return _fsmActions;
-            }
+            base.ModifiyRootFSMTransitions(ref RootFSMTransitions);
+            RootFSMTransitions.Add(new Trans(Status.MajorUpKeep, Status.F_Cycle, 4, CheckTelemetryAndNotPaused));
+            RootFSMTransitions.Add(new Trans(Status.R_IO, Status.TelemetryPause, 4, CheckTelemetryAndPaused));
+            RootFSMTransitions.Add(new Trans(Status.TelemetryPause, Status.Career_Cycle));
+        }
+        
+        protected override void ModifyFSMActions(ref Dictionary<RootFSMStatus, Action> actions)
+        {
+            base.ModifyFSMActions(ref actions);
+            actions.Add(Status.TelemetryPause, TelemetryPauseAction);
         }
     }
 }

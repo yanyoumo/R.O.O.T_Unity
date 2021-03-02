@@ -7,6 +7,9 @@ namespace ROOT
     //每个状态将会有结束逻辑和转移逻辑、结束后才进行转移逻辑的判断。
     public sealed class RootFSMTransition : IComparable<RootFSMTransition>, IEquatable<RootFSMTransition>
     {
+        //TODO 这个东西的比较和相等要弄一下;要不然删除状态和排序会有问题。
+        //RISK 这个东西的比较和相等要好好弄、要不然会出问题。（死循环什么的）
+        
         public RootFSM owner;
         public readonly int priority; //这个值越高优先级越高。
         public readonly RootFSMStatus StartingStatus; //Transit的高优先级要求，如果FSM不是这个状态则不考虑。
@@ -118,9 +121,10 @@ namespace ROOT
 
         public override int GetHashCode()
         {
-            return (int) StartingStatus * ((int) RootFSMStatus.COUNT ^ 2) +
-                   (int) TargetingStatus * ((int) RootFSMStatus.COUNT) +
-                   priority;
+            const int count = (int)RootFSMStatus.COUNT;
+            var sInt = (int) StartingStatus;
+            var tInt = (int) TargetingStatus;
+            return count * count * priority + count * sInt + tInt;
         }
 
         public bool Equals(RootFSMTransition other)

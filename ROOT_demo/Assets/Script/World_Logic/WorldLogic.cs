@@ -266,6 +266,9 @@ namespace ROOT
         public static string CurrencyIOStatusChangedEvent = "CurrencyIOStatusChangedEvent";
         public static string CurrencyUpdatedEvent = "CurrencyUpdatedEvent";
         public static string BoardSignalUpdatedEvent = "BoardSignalUpdatedEvent";
+        public static string HintRelatedEvent = "HintRelatedEvent";
+
+        public static string MainCameraReadyEvent = "MainCameraReadyEvent";
         
         /// <summary>
         /// 主要是UI方面的事件、主要是可以向核心逻辑调查一些数据；可以放一个回调函数。
@@ -1068,7 +1071,7 @@ namespace ROOT
     //现为：WorldExecutor，主要是执行具体的内部逻辑；想象为舰长和执行舰长的感觉吧。
     public static class WorldExecutor //WORLD-EXECUTOR
     {
-        private static void UpdateLevelAsset(ref GameAssets levelAsset,ref FSMLevelLogic lvlLogic)
+        /*private static void UpdateLevelAsset(ref GameAssets levelAsset,ref FSMLevelLogic lvlLogic)
         {
             var lastStage = lvlLogic.RoundLibDriver.PreviousRoundGist?.Type ?? StageType.Shop;
             var lastDestoryBool = lastStage == StageType.Destoryer;
@@ -1087,7 +1090,7 @@ namespace ROOT
             {
                 levelAsset.WarningDestoryer.ForceReset();
             }
-        }
+        }*/
 
         private static float TypeASignalScore = 0;//Instance写
         private static float TypeBSignalScore = 0;//Stepped读
@@ -1188,6 +1191,8 @@ namespace ROOT
                 UpdateCursorPos(currentLevelAsset);
                 movedCursor = true;
             }
+
+            //Debug.Log("movedTile = true;" + movedTile);
         }
 
         public static bool UpdateShopBuy(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack)
@@ -1313,140 +1318,6 @@ namespace ROOT
             currentLevelAsset.WarningGo = null;
         }
 
-        // ReSharper disable once InconsistentNaming
-        public static void UpdateUICurrencyVal(GameAssets currentLevelAsset)
-        {
-            var message = new CurrencyUpdatedInfo()
-            {
-                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameCurrencyMgr.Currency),
-                IncomesVal = -1,
-            };
-            MessageDispatcher.SendMessage(message);
-        }
-
-        //即将拆分、步进的拆一半；基于事件的拆另一半。
-        public static void UpdateRoundData_Stepped(ref GameAssets levelAsset)
-        {
-            var lvlLogic = levelAsset.Owner;
-            var roundGist = lvlLogic.RoundLibDriver.CurrentRoundGist.Value;
-            var tCount = levelAsset.ActionAsset.GetTruncatedStep(levelAsset.StepCount);
-            if (roundGist.SwitchHeatsink(tCount))
-            {
-                levelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
-            }
-
-            UpdateLevelAsset(ref levelAsset, ref levelAsset.Owner);
-
-            levelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
-            /*levelAsset.UnitCouldGenerateIncome = lvlLogic.IsRequireRound;
-            levelAsset.BoardCouldIOCurrency = lvlLogic.BoardCouldIOCurrency;*/
-
-            if (lvlLogic.RoundLibDriver.IsRequireRound || lvlLogic.RoundLibDriver.IsShopRound)
-            {
-                var normalRval = roundGist.normalReq;
-                var networkRval = roundGist.networkReq;
-                var noRequirement = (normalRval == 0 && networkRval == 0);
-                if (noRequirement)
-                {
-                    levelAsset.TimeLine.RequirementSatisfied = true;
-                }
-                else
-                {
-                    var signalInfo = new BoardSignalUpdatedInfo
-                    {
-                        SignalData = new BoardSignalUpdatedData()
-                        {
-                            TgtTypeASignal=normalRval,
-                            TgtTypeBSignal=networkRval,
-                        },
-                    };
-                    MessageDispatcher.SendMessage(signalInfo);
-                    
-                    if (levelAsset.TimeLine.RequirementSatisfied)
-                    {
-                        if (roundGist.Type == StageType.Require)    
-                        {
-                            levelAsset.ReqOkCount++;
-                        }
-                    }
-                }
-            }
-
-            var discount = 0;
-
-            if (!levelAsset.Shop.ShopOpening && lvlLogic.RoundLibDriver.IsShopRound)
-            {
-                discount = levelAsset.SkillMgr.CheckDiscount();
-            }
-
-            levelAsset.Shop.OpenShop(lvlLogic.RoundLibDriver.IsShopRound, discount);
-            levelAsset.SkillMgr.SkillEnabled = levelAsset.SkillEnabled = lvlLogic.IsSkillAllowed;
-        }
-
-        public static void UpdateRoundData_Instantly_Telemetry(ref GameAssets levelAsset)
-        {
-            var lvlLogic = levelAsset.Owner;
-            var roundGist = lvlLogic.RoundLibDriver.CurrentRoundGist.Value;
-            
-            if (lvlLogic.RoundLibDriver.IsRequireRound || lvlLogic.RoundLibDriver.IsShopRound)
-            {
-                levelAsset.TimeLine.RequirementSatisfied = (TypeASignalCount >= roundGist.normalReq) && (TypeBSignalCount >= roundGist.networkReq);
-            }
-            
-            var signalInfo = new BoardSignalUpdatedInfo
-            {
-                SignalData = new BoardSignalUpdatedData()
-                {
-                    CrtTypeASignal = TypeASignalCount,
-                    CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
-                    TypeBTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
-                },
-            };
-            MessageDispatcher.SendMessage(signalInfo);
-        }
-        
-        internal static void UpdateBoardData_Instantly(ref GameAssets currentLevelAsset)
-        {
-            TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, currentLevelAsset.GameBoard, out var hardwareACount, out TypeASignalCount);
-            TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, currentLevelAsset.GameBoard, out var hardwareBCount, out TypeBSignalCount);
-
-            var inCome = 0;
-            var cost = 0;
-
-            var tmpInComeM = TypeASignalScore + TypeBSignalScore;
-            if (currentLevelAsset.Owner.BoardCouldIOCurrency)//这个现在和Round完全绑定了。
-            {
-                inCome += Mathf.FloorToInt(tmpInComeM);
-                inCome = Mathf.RoundToInt(inCome * currentLevelAsset.CurrencyRebate);
-                if (!currentLevelAsset.Owner.RoundLibDriver.IsRequireRound) inCome = 0;
-                cost = currentLevelAsset.GameBoard.BoardGirdDriver.heatSinkCost;
-                currentLevelAsset.DeltaCurrency = inCome - cost;
-            }
-            else
-            {
-                currentLevelAsset.DeltaCurrency = 0;
-            }
-
-
-            var message = new CurrencyUpdatedInfo()
-            {
-                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameCurrencyMgr.Currency),
-                IncomesVal = Mathf.RoundToInt(currentLevelAsset.DeltaCurrency),
-            };
-            MessageDispatcher.SendMessage(message);
-        }
-
-        internal static void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)
-        {
-            if (currentLevelAsset.TimeLine != null)
-            {
-                currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
-            }
-            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {CrtMission = currentLevelAsset.ReqOkCount},};
-            MessageDispatcher.SendMessage(signalInfo);
-        }
-        
         public static void LightUpBoard(ref GameAssets currentLevelAsset,ControllingPack _ctrlPack)
         {
             //TODO 这里的代码未来要自己去取鼠标的值。

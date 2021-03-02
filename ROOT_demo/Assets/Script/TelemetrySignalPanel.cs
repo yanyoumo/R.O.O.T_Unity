@@ -97,7 +97,7 @@ namespace ROOT
         public override string Type => WorldEvent.BoardSignalUpdatedEvent;
     }
     
-    public class SignalPanel : RoundRelatedUIBase
+    public sealed class TelemetrySignalPanel : RoundRelatedUIBase
     {
         private void BoardSignalUpdatedHandler(IMessage rmMessage)
         {

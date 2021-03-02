@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using com.ootii.Messages;
 using UnityEditor;
 using UnityEngine;
 
 namespace ROOT
 {
+    [Obsolete]//TODO 这个玩意儿也要处理掉
     public class CameraAdaptToScreen : MonoBehaviour
     {
         public delegate void CameraDelegate();
@@ -16,10 +18,11 @@ namespace ROOT
 
         IEnumerator DelayedDelegate()
         {
+            //这个现在不要搞这个、用广播对时事件去弄。
             yield return 0;
             yield return 0;
             yield return 0;
-            CameraUpdated();
+            CameraUpdated?.Invoke();
             Destroy(this);
         }
 
@@ -38,7 +41,7 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException();
             }
 
-            StartCoroutine(DelayedDelegate());
+            MessageDispatcher.SendMessage(WorldEvent.MainCameraReadyEvent);
         }
     }
 }

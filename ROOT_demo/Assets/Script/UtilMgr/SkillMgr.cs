@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using com.ootii.Messages;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
@@ -55,6 +56,16 @@ namespace ROOT
         
         #region SkillTemporalFramework
 
+        private void UpdateUICurrencyVal(GameAssets currentLevelAsset)
+        {
+            var message = new CurrencyUpdatedInfo()
+            {
+                CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameCurrencyMgr.Currency),
+                IncomesVal = -1,
+            };
+            MessageDispatcher.SendMessage(message);
+        }
+        
         //就是整个技能框架还是要弄一套配置框架………………🤣
         private void ActiveSkill(GameAssets currentLevelAsset, int skillIndex)
         {
@@ -73,7 +84,7 @@ namespace ROOT
                         skillActived = true;
                         CurrentSkillType = SkillType.TimeFromMoney;
                         WorldCycler.ExpectedStepDecrement(skill.TimeGain);
-                        WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);//因为这个时间点后就AutoDrive了，所以就没机会调UpdateBoard了，所以先在这里调一下。
+                        UpdateUICurrencyVal(currentLevelAsset);//因为这个时间点后就AutoDrive了，所以就没机会调UpdateBoard了，所以先在这里调一下。
                     }
                     break;
                 case SkillType.FastForward:
@@ -97,7 +108,7 @@ namespace ROOT
                         {
                             unitAPosition = currentLevelAsset.Cursor.CurrentBoardPosition;
                             UpdateAIndicator(currentLevelAsset, unitAPosition);
-                            WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                            UpdateUICurrencyVal(currentLevelAsset);
                         }
                         else if (StartGameMgr.UseMouse)
                         {
@@ -115,7 +126,7 @@ namespace ROOT
                         skillActived = true;
                         discount = skill.Discount;
                         skill.SkillCoolDown = true;
-                        WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                        UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;
                 case SkillType.RefreshHeatSink:
@@ -123,7 +134,7 @@ namespace ROOT
                     if (moneySpent)
                     {
                         currentLevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
-                        WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                        UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;
                 case SkillType.ResetHeatSink:
@@ -131,7 +142,7 @@ namespace ROOT
                     if (moneySpent)
                     {
                         currentLevelAsset.GameBoard.BoardGirdDriver.ResetHeatSink();
-                        WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                        UpdateUICurrencyVal(currentLevelAsset);
                     }
                     break;
                 default:
@@ -179,7 +190,7 @@ namespace ROOT
                         CurrentSkillType = null;
                         //RISK 本质上是在乱搞flow，这个还是得想辙。而且这个函数也不能这么搞。
                         //flow结构这个时候不要那么八股，还是先用上，需求多了，这个可能要改成基于监听的。
-                        WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                        UpdateUICurrencyVal(currentLevelAsset);
                     }
 
                     if (_fastForwardRebate > 0.0f)
@@ -315,7 +326,7 @@ namespace ROOT
                 {
                     currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
                     swapAlipay = 0;
-                    WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                    UpdateUICurrencyVal(currentLevelAsset);
                 }
 
                 CleanIndicator(currentLevelAsset);
@@ -373,7 +384,7 @@ namespace ROOT
                     {
                         currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
                         swapAlipay = 0;
-                        WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                        UpdateUICurrencyVal(currentLevelAsset);
                     }
 
                     CleanIndicator(currentLevelAsset);
@@ -389,7 +400,7 @@ namespace ROOT
                     {
                         unitAPosition = ctrlPack.CurrentPos;
                         UpdateAIndicator(currentLevelAsset, unitAPosition);
-                        WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                        UpdateUICurrencyVal(currentLevelAsset);
                         _mouseWaitingUnitA = false;
                         StartCoroutine(DelayedCheckMouseUnitB()); //这里可能需要一个AntiSpam，可以加个协程延迟。
                     }
@@ -397,7 +408,7 @@ namespace ROOT
                     {
                         currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
                         swapAlipay = 0;
-                        WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                        UpdateUICurrencyVal(currentLevelAsset);
                         _mouseWaitingUnitA = false;
                         _mouseWaitingUnitB = false;
                     }
@@ -443,7 +454,7 @@ namespace ROOT
                     {
                         currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
                         swapAlipay = 0;
-                        WorldExecutor.UpdateUICurrencyVal(currentLevelAsset);
+                        UpdateUICurrencyVal(currentLevelAsset);
 
                         _mouseWaitingUnitA = false;
                         _mouseWaitingUnitB = false;

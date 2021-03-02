@@ -22,13 +22,14 @@ namespace ROOT
             LevelFailed = !LevelCompleted;
             if (ActionEnded)
             {
-                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = LevelCompleted = AllUnitConnected();
+                LevelCompleted = AllUnitConnected();
+                SendHintData(HintEventType.ShowMainGoalComplete, LevelCompleted);
             }
         }
 
         protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
         {
-            LevelAsset.HintMaster.HideTutorialFrame = false;
+            SendHintData(HintEventType.ShowTutorialTextFrame, false);
         }
 
         protected override void AddtionalDealStep(TutorialActionData data)
@@ -46,7 +47,7 @@ namespace ROOT
         void MajorUpkeepAction_TutorialBasicControlNeo()
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
-            WorldExecutor.UpdateBoardData_Stepped(ref LevelAsset);
+            UpdateBoardData_Stepped(ref LevelAsset);
             base.AddtionalMajorUpkeep();
         }
         
@@ -59,21 +60,9 @@ namespace ROOT
             }
         }
 
-        public override void InitLevel()
+        protected override void AdditionalInitLevel()
         {
-            //TODO 这个也要将Career和Boss尽量拆干净。
-            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
-
-            LevelAsset.DeltaCurrency = 0.0f;
-            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
-            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
-            LevelAsset.EnableAllCoreFunctionAndFeature();
-            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
-            LevelAsset.GameBoard.UpdateBoardAnimation();
-            
-            ReadyToGo = true;
-            LevelAsset.HintMaster.ShouldShowCheckList = false;
+            //WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
         }
         
         protected override void AdditionalFSMTransitionOperating(ref FSMTransitions transitions)

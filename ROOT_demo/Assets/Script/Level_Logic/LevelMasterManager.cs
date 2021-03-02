@@ -50,17 +50,24 @@ namespace ROOT
             //目前这个框架下，所有的Logic Scene只能是一个，但是基于LLS就没有问题。
             AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDTIVELOGIC, LoadSceneMode.Additive);
             yield return StartCoroutine(FindLlsAfterLoad(loadSceneAsync));
-            _gameLogic = _lls.SpawnLevelLogic(actionAsset.LevelLogic);//这里Level-logic的Awake就进行初始化了。主要是LevelLogic的实例去拿CoreLogic场景里面的东西。
+            _gameLogic = _lls.SpawnLevelLogic(actionAsset.LevelLogic); //这里Level-logic的Awake就进行初始化了。主要是LevelLogic的实例去拿CoreLogic场景里面的东西。
             Debug.Log(_gameLogic.LevelAsset);
             _gameLogic.LevelAsset.ActionAsset = actionAsset;
             _lls = null;
-            loadSceneAsync = SceneManager.LoadSceneAsync(_gameLogic.LEVEL_ART_SCENE_ID, LoadSceneMode.Additive);
-            yield return _gameLogic.UpdateArtLevelReference(loadSceneAsync);//这里是第二次的LinkLevel。匹配ArtScene里面的引用//和第三次的Init里面的UpdateReference。通过根引用去查找其他引用。
+            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDITIONAL_GAMEPLAY_UI, LoadSceneMode.Additive);
+            loadSceneAsync = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDTIVEVISUAL, LoadSceneMode.Additive);
+            AsyncOperation loadSceneAsync2 = new AsyncOperation();
+            if (_gameLogic.LEVEL_ART_SCENE_ID != -1)
+            {
+                loadSceneAsync2 = SceneManager.LoadSceneAsync(_gameLogic.LEVEL_ART_SCENE_ID, LoadSceneMode.Additive);
+            }
+
+            yield return _gameLogic.UpdateArtLevelReference(loadSceneAsync, loadSceneAsync2); //这里是第二次的LinkLevel。匹配ArtScene里面的引用//和第三次的Init里面的UpdateReference。通过根引用去查找其他引用。
 #if DEBUG
             Debug.Assert(_gameLogic.CheckReference());
             Debug.Assert(!_gameLogic.Playing);
 #endif
-            _gameLogic.InitLevel();//最后的初始化和启动游戏，运行此之前，需要的引用必须齐整。
+            _gameLogic.InitLevel(); //最后的初始化和启动游戏，运行此之前，需要的引用必须齐整。
         }
 
         public void LoadLevelThenPlay(LevelActionAsset actionAsset,AdditionalGameSetup _additionalGameSetup=null)

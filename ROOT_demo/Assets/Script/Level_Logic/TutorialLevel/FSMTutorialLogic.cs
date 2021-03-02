@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using com.ootii.Messages;
 using ROOT.SetupAsset;
 using UnityEngine;
 using static ROOT.TextProcessHelper;
@@ -14,6 +15,11 @@ namespace ROOT
 
     public abstract class FSMTutorialLogic : FSMLevelLogic_Barebone
     {
+        public override bool IsTutorial => true;
+        public override bool CouldHandleSkill => true;
+        public override bool CouldHandleBoss => false;
+        public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
+        
         protected bool AllUnitConnected()
         {
             return LevelAsset.GameBoard.Units.All(u => u.AnyConnection);
@@ -38,33 +44,36 @@ namespace ROOT
 
         private LevelActionAsset LevelActionAsset => LevelAsset.ActionAsset;
 
-        private bool ShowText
+        private bool ShowText 
         {
-            set => LevelAsset.HintMaster.RequestedShowTutorialContent = value;
+            set => SendHintData(HintEventType.ShowTutorialTextFrame, value);
         }
 
         private bool ShowCheckList
         {
-            set => LevelAsset.HintMaster.ShouldShowCheckList = value;
+            set => SendHintData(HintEventType.ShowGoalCheckList, value);
         }
 
-        protected sealed override void UpdateGameOverStatus()
+        protected sealed override bool CheckGameOver
         {
-            if (LevelCompleted && PlayerRequestedEnd)
+            get
             {
-                PendingCleanUp = true;
-                LevelAsset.TutorialCompleted = true;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
-            }
+                if (LevelCompleted && PlayerRequestedEnd)
+                {
+                    LevelAsset.TutorialCompleted = true;
+                    return true;
+                }
 
-            if (LevelFailed && PlayerRequestedQuit)
-            {
-                PendingCleanUp = true;
-                LevelAsset.TutorialCompleted = false;
-                LevelMasterManager.Instance.LevelFinished(LevelAsset);
+                if (LevelFailed && PlayerRequestedQuit)
+                {
+                    LevelAsset.TutorialCompleted = false;
+                    return true;
+                }
+
+                return false;
             }
         }
-
+        
         private void CreateUnitOnBoard(TutorialActionData data)
         {
             GameObject go = LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core, data.HardwareType,
@@ -106,8 +115,12 @@ namespace ROOT
 
         private void DisplayText(string text)
         {
-            //Debug.Log(text);
-            LevelAsset.HintMaster.TutorialContent = ProcessText(text);
+            var hintData = new HintEventInfo
+            {
+                HintEventType = HintEventType.ShowTutorialTextFrame,
+                StringData = text
+            };
+            MessageDispatcher.SendMessage(hintData);
         }
 
         protected override void AddtionalRecatIO()
@@ -235,8 +248,9 @@ namespace ROOT
         {
             if (!shouldInitTutorial) return;
             shouldInitTutorial = false;
-            LevelAsset.HintMaster.HideTutorialFrame = true;
-            LevelAsset.HintMaster.TutorialCheckList.SetupEntryContent(MainGoalEntryContent, SecondaryGoalEntryContent);
+            SendHintData(HintEventType.ShowTutorialTextFrame, false);
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ShowMainGoalContent, StringData = MainGoalEntryContent});
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ShowSecondaryGoalContent, StringData = SecondaryGoalEntryContent});
             StepForward();
             DealStepMgr();
         }
@@ -254,28 +268,13 @@ namespace ROOT
         protected abstract void AdditionalFSMActionsOperating(ref FSMActions actions);
         protected abstract void AdditionalFSMTransitionOperating(ref FSMTransitions transitions);
 
-        protected sealed override FSMActions fsmActions
+        protected override void ModifyFSMActions(ref Dictionary<RootFSMStatus, Action> actions)
         {
-            get
-            {
-                //可能需要一个“整理节点（空节点）”这种概念的东西。
-                var _fsmActions = new FSMActions
-                {
-                    {RootFSMStatus.PreInit, PreInit},
-                    {RootFSMStatus.MajorUpKeep, MajorUpkeepAction},
-                    {RootFSMStatus.MinorUpKeep, MinorUpKeepAction},
-                    {RootFSMStatus.F_Cycle, ForwardCycle},
-                    {RootFSMStatus.CleanUp, CleanUp},
-                    {RootFSMStatus.Animate, AnimateAction},
-                    {RootFSMStatus.R_IO, ReactIO},
-                    {RootFSMStatus.Tutorial_Cycle, TutorialCycle},
-                };
-                AdditionalFSMActionsOperating(ref _fsmActions);
-                return _fsmActions;
-            }
+            base.ModifyFSMActions(ref actions);
+            actions.Add(RootFSMStatus.Tutorial_Cycle, TutorialCycle);
         }
 
-        protected sealed override HashSet<RootFSMTransition> RootFSMTransitions
+        /*protected sealed override HashSet<RootFSMTransition> RootFSMTransitions
         {
             get
             {
@@ -302,6 +301,6 @@ namespace ROOT
                 AdditionalFSMTransitionOperating(ref transitions);
                 return transitions;
             }
-        }
+        }*/
     }
 }

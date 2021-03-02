@@ -44,8 +44,8 @@ namespace ROOT
 
             if (ActionEnded)
             {
-                LevelAsset.HintMaster.TutorialCheckList.MainGoalCompleted = AllUnitConnected();
-                LevelAsset.HintMaster.TutorialCheckList.SecondaryGoalCompleted = !OnceFlagB;
+                SendHintData(HintEventType.ShowMainGoalComplete,AllUnitConnected());
+                SendHintData(HintEventType.ShowSecondaryGoalComplete,!OnceFlagB);
                 LevelCompleted = (!OnceFlagB) && AllUnitConnected();
             }
 
@@ -63,7 +63,7 @@ namespace ROOT
             if (LevelFailed)
             {
                 PlayerRequestedQuit = CtrlPack.HasFlag(ControllingCommand.Confirm);
-                LevelAsset.HintMaster.TutorialCheckList.TutorialFailed = true;
+                SendHintData(HintEventType.ShowTutorialFailed,true);
             }
             
         }

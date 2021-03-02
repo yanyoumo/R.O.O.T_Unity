@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using com.ootii.Messages;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ROOT
 {
@@ -11,7 +13,62 @@ namespace ROOT
     using Status = RootFSMStatus;
     public class FSMLevelLogic_Barebone : FSMLevelLogic
     {
-        protected override FSMActions fsmActions
+        public override int LEVEL_ART_SCENE_ID => -1;
+        
+        protected virtual void ModifyFSMActions(ref FSMActions actions)
+        {
+            //Base version, DoNothing.
+        }
+        
+        protected virtual void ModifiyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
+        {
+            //Base version, DoNothing.
+        }
+
+        public override bool IsTutorial => false;
+        public override bool CouldHandleSkill => false;
+        public override bool CouldHandleBoss => false;
+        public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
+
+        protected virtual void AdditionalInitLevel()
+        {
+            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
+        }
+
+        
+        
+        public sealed override void InitLevel()
+        {
+            //就先这么Sealed、急了的话、所有需要"关掉"的可以在AdditionalInit里面再关掉。
+            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+
+            LevelAsset.DeltaCurrency = 0.0f;
+            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
+            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
+            
+            LevelAsset.EnableAllCoreFunctionAndFeature();
+            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
+            LevelAsset.GameBoard.UpdateBoardAnimation();
+            AdditionalInitLevel();
+            
+            ReadyToGo = true;
+
+            SendHintData(HintEventType.ShowGoalCheckList, false);
+        }
+        
+        public override IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene)
+        {
+            while (!baseVisualScene.isDone)
+            {
+                yield return 0;
+            }
+            AdditionalArtLevelReference(ref LevelAsset);
+            SendHintData(HintEventType.ShowTutorialTextFrame, false);
+            PopulateArtLevelReference();
+        }
+        
+        protected sealed override FSMActions fsmActions
         {
             get
             {
@@ -26,10 +83,11 @@ namespace ROOT
                     {Status.Animate, AnimateAction},
                     {Status.R_IO, ReactIO},
                 };
+                ModifyFSMActions(ref _fsmActions);
                 return _fsmActions;
             }
         }
-        protected override HashSet<RootFSMTransition> RootFSMTransitions {
+        protected sealed override HashSet<RootFSMTransition> RootFSMTransitions {
             get
             {
                 var transitions = new FSMTransitions
@@ -48,6 +106,7 @@ namespace ROOT
                     new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, 0, true),
                     new Trans(RootFSMStatus.CleanUp, RootFSMStatus.MajorUpKeep, 0, true),
                 };
+                ModifiyRootFSMTransitions(ref transitions);
                 return transitions;
             }
         }

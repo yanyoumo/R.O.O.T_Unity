@@ -29,4 +29,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CareerSetupScene.unity
     guid: b8bfc8f7773524044b53e9a6cb134c2f
+  - enabled: 1
+    path: Assets/Scenes/GamePlayAdditionalVisualScene_Career.unity
+    guid: daef8f184cadf7242b8963e3f93891fa
+  - enabled: 1
+    path: Assets/Scenes/GamePlayAdditionalVisualScene_Tutorial.unity
+    guid: ec0636e97a2a5d14db15413f1b613038
+  - enabled: 1
+    path: Assets/Scenes/GamePlayUIAdditive.unity
+    guid: 8dc986c8383cdad44a91ca11991208a0
+  - enabled: 1
+    path: Assets/Scenes/GamePlayAdditionalVisualScene_Acquiring.unity
+    guid: 79983f24049030a4992c67d7eebd904c
   m_configObjects: {}

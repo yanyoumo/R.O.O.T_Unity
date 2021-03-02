@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using com.ootii.Messages;
 using ROOT.SetupAsset;
+using ROOT.Signal;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -46,8 +47,7 @@ namespace ROOT
         public bool IsDestoryerRound => CurrentStage == StageType.Destoryer;
         public bool IsBossRound => CurrentStage == StageType.Boss;
     }
-
-    //里面不同的类型可以使用partial关键字拆开管理。
+    
     public abstract class FSMLevelLogic:MonoBehaviour   //LEVEL-LOGIC/每一关都有一个这个类。
     {
         [ReadOnly] public bool Playing { get; set; }
@@ -56,47 +56,42 @@ namespace ROOT
         [ReadOnly] public bool ReferenceOk = false;
         [ReadOnly] public bool PendingCleanUp;
         [ReadOnly] public bool IsTutorialLevel = false;
+        [ReadOnly] public bool movedTile = false;
 
-        [ReadOnly] public readonly int LEVEL_LOGIC_SCENE_ID = StaticName.SCENE_ID_ADDTIVELOGIC; //这个游戏的这两个参数是写死的
-        [ReadOnly] public readonly int LEVEL_ART_SCENE_ID = StaticName.SCENE_ID_ADDTIVEVISUAL; //但是别的游戏的这个值多少是需要重写的。
+        public abstract bool IsTutorial { get; }
+        public abstract bool CouldHandleSkill { get; }
+        public abstract bool CouldHandleBoss { get; }
+        public abstract BossStageType HandleBossType { get; }
         
-        [ReadOnly]public bool movedTile = false;
+        public abstract int LEVEL_ART_SCENE_ID { get; }
         private bool movedCursor = false;
         
         protected internal GameAssets LevelAsset;
         private Cursor Cursor => LevelAsset.Cursor;
         protected ControllingPack _ctrlPack;
-        public ControllingPack CtrlPack => _ctrlPack;
+        protected ControllingPack CtrlPack => _ctrlPack;
 
-        protected float AnimationTimerOrigin = 0.0f; //都是秒
+        private float AnimationTimerOrigin = 0.0f; //都是秒
         public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? AutoAnimationDuration : DefaultAnimationDuration;
-        public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
-        public static readonly float AutoAnimationDuration = 1.5f; //都是秒
+        private static readonly float DefaultAnimationDuration = 0.15f; //都是秒
+        private static readonly float AutoAnimationDuration = 1.5f; //都是秒
         
         #region 类属性
-        
-        public RoundLibDriver RoundLibDriver;
-        public bool IsSkillAllowed => !RoundLibDriver.IsShopRound;
-        public bool BoardCouldIOCurrency => (RoundLibDriver.IsRequireRound || RoundLibDriver.IsDestoryerRound);
-        
-        private bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
-        public bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in movedTile, in movedCursor);
+
+        protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
+        private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in movedTile, in movedCursor);
         private bool ShouldStartAnimate => ShouldCycle;
-        public bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
-        public bool IsForwardCycle => AutoForward || movedTile;
-        private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
+        protected virtual bool IsForwardCycle => movedTile;
         #endregion
 
         #region 元初始化相关函数
 
-        public bool CheckReference()
-        {
-            bool res = true;
-            res &= (LevelAsset.DataScreen != null);
-            return res;
-        }
+        protected void SendHintData(HintEventType type, bool boolData) => MessageDispatcher.SendMessage(new HintEventInfo {BoolData = boolData, HintEventType = type});
 
-        private void PopulateArtLevelReference()
+        [Obsolete]
+        public bool CheckReference() => true;
+
+        protected void PopulateArtLevelReference()
         {
             ReferenceOk = CheckReference();
         }
@@ -106,21 +101,8 @@ namespace ROOT
             //BaseVerison,DoNothing.
         }
 
-        public IEnumerator UpdateArtLevelReference(AsyncOperation aOP)
-        {
-            while (!aOP.isDone)
-            {
-                yield return 0;
-            }
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVEVISUAL));
-            LevelAsset.ItemPriceRoot = GameObject.Find("PlayUI");
-            LevelAsset.Shop = FindObjectOfType<ShopBase>();
-            LevelAsset.DataScreen = FindObjectOfType<DataScreen>();
-            LevelAsset.HintMaster = FindObjectOfType<HintMaster>();
-            AdditionalArtLevelReference(ref LevelAsset);
-            LevelAsset.HintMaster.HideTutorialFrame = false;
-            PopulateArtLevelReference();
-        }
+        //这个肯定也要改成Virtual的、并且要听两个的aOP。
+        public abstract IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene);
 
         #endregion
 
@@ -130,14 +112,16 @@ namespace ROOT
         protected abstract FSMActions fsmActions { get; }
         protected abstract FSMTransitions RootFSMTransitions { get; }
         protected virtual Dictionary<BreakingCommand, Action> RootFSMBreakings => new Dictionary<BreakingCommand, Action>();
+        
+        protected float TypeASignalScore = 0;
+        protected float TypeBSignalScore = 0;
+        protected int TypeASignalCount = 0;
+        protected int TypeBSignalCount = 0;
         #endregion
         
         #region TransitionReq
 
-        protected bool CheckIsSkill() => LevelAsset.SkillMgr.CurrentSkillType.HasValue && LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
         protected bool CheckInited() => (ReadyToGo) && (!PendingCleanUp);
-        protected bool CheckAutoF() => AutoDrive.HasValue && AutoDrive.Value;
-        protected bool CheckAutoR() => IsReverseCycle;
         protected bool CheckFCycle() => IsForwardCycle;
         protected bool CheckCtrlPackAny() => CtrlPack.AnyFlag();
         protected bool CheckStartAnimate() => ShouldStartAnimate;
@@ -186,6 +170,8 @@ namespace ROOT
 
         #region Init
 
+        public abstract void InitLevel();
+        
         private void UpdateLogicLevelReference()
         {
             LevelAsset.CursorTemplate = Resources.Load<GameObject>("Cursor/Prefab/Cursor");
@@ -193,34 +179,6 @@ namespace ROOT
             LevelAsset.AirDrop = LevelAsset.GameBoard.AirDrop;
             LevelAsset.AirDrop.GameAsset = LevelAsset;
             LevelAsset.Owner = this;
-        }
-
-        protected virtual void AdditionalInitLevel()
-        {
-            //BaseVerison,DoNothing.
-        }
-
-        public virtual void InitLevel()
-        {
-            //TODO 这个也要将Career和Boss尽量拆干净。
-            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
-
-            LevelAsset.DeltaCurrency = 0.0f;
-            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
-            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
-
-            WorldExecutor.InitShop(ref LevelAsset);
-            WorldExecutor.InitDestoryer(ref LevelAsset);
-            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
-            LevelAsset.EnableAllCoreFunctionAndFeature();
-            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
-            LevelAsset.GameBoard.UpdateBoardAnimation();
-            WorldExecutor.StartShop(ref LevelAsset);
-            AdditionalInitLevel();
-            
-            ReadyToGo = true;
-            LevelAsset.HintMaster.ShouldShowCheckList = false;
         }
 
         #endregion
@@ -320,7 +278,7 @@ namespace ROOT
         protected void MajorUpkeepAction()
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
-            WorldExecutor.UpdateBoardData_Stepped(ref LevelAsset);//RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
+            UpdateBoardData_Stepped(ref LevelAsset);//RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
             AddtionalMajorUpkeep();
             WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
@@ -334,7 +292,7 @@ namespace ROOT
                 //这个东西也要改成可配置的。 DONE
                 _mainFSM.Breaking(_actionDriver.RequestedBreakType);
             }
-            UpdateGameOverStatus();
+            if (CheckGameOver) GameEnding();
         }
 
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
@@ -349,12 +307,6 @@ namespace ROOT
             LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
         }
 
-        protected void ReverseCycle()
-        {
-            WorldCycler.StepDown();
-            LevelAsset.TimeLine.Reverse();
-        }
-        
         protected void CleanUp()
         {
             movedTile = false;
@@ -369,7 +321,7 @@ namespace ROOT
         {
             //目前这里基本空的，到时候可能把Animate的CoRoutine里面的东西弄出来。
             Debug.Assert(animate_Co != null);
-            WorldExecutor.UpdateBoardData_Stepped(ref LevelAsset);
+            UpdateBoardData_Stepped(ref LevelAsset);
         }
         
         protected void ReactIO()
@@ -394,21 +346,38 @@ namespace ROOT
 
         #endregion
 
-        private void ClassicGameOverStatus()
+        private void GameEnding()
         {
-            if (!LevelAsset.GameCurrencyMgr.EndGameCheck()) return;
             PendingCleanUp = true;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
         }
         
-        protected virtual void UpdateGameOverStatus()
-        {
-            ClassicGameOverStatus();
-        }
+        protected virtual bool CheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
 
+        protected virtual void UpdateBoardData_Instantly()
+        {
+            var currentLevelAsset = LevelAsset;
+            TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(
+                currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, currentLevelAsset.GameBoard,
+                out var hardwareACount, out TypeASignalCount);
+            TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(
+                currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, currentLevelAsset.GameBoard,
+                out var hardwareBCount, out TypeBSignalCount);
+        }
+        
+        protected void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)
+        {
+            if (currentLevelAsset.TimeLine != null)
+            {
+                currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
+            }
+            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {CrtMission = currentLevelAsset.ReqOkCount},};
+            MessageDispatcher.SendMessage(signalInfo);
+        }
+        
         protected virtual void BoardUpdatedHandler(IMessage rMessage)
         {
-            WorldExecutor.UpdateBoardData_Instantly(ref LevelAsset);
+            UpdateBoardData_Instantly();
         }
 
         private FSMEventInquiryResponder _inquiryResponder;
@@ -427,7 +396,6 @@ namespace ROOT
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
         }
-        
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
@@ -442,7 +410,6 @@ namespace ROOT
 
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
             _actionDriver = new CareerControlActionDriver(this, _mainFSM);
-            RoundLibDriver = new RoundLibDriver {owner = this};
             
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
         }

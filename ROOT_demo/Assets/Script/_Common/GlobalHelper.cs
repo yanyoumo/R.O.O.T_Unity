@@ -110,6 +110,10 @@ namespace ROOT
         public static readonly int SCENE_ID_TUTORIAL = 5;
         public static readonly int SCENE_ID_CAREER = 6;
         public static readonly int SCENE_ID_CAREERSETUP = 7;
+        public static readonly int SCENE_ID_ADDITIONAL_VISUAL_CAREER = 8;
+        public static readonly int SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL = 9;
+        public static readonly int SCENE_ID_ADDITIONAL_GAMEPLAY_UI = 10;
+        public static readonly int SCENE_ID_ADDITIONAL_VISUAL_ACQUIRING = 11;
 
 
         public static readonly string SOURCE_CORE_NODE_NAME = "SourceCore";
