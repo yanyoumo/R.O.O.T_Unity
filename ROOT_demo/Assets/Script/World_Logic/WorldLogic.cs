@@ -262,11 +262,13 @@ namespace ROOT
     
     public static class WorldEvent
     {
-        public static string InGameStatusChangedEvent = "InGameStatusChangedEvent";
+        public static string InGameStageChangedEvent = "InGameStageChangedEvent";
         public static string CurrencyIOStatusChangedEvent = "CurrencyIOStatusChangedEvent";
         public static string CurrencyUpdatedEvent = "CurrencyUpdatedEvent";
         public static string BoardSignalUpdatedEvent = "BoardSignalUpdatedEvent";
         public static string HintRelatedEvent = "HintRelatedEvent";
+
+        public static string BalancingSignalSetupInquiry = "BalancingSignalSetupInquiry";
 
         public static string MainCameraReadyEvent = "MainCameraReadyEvent";
         

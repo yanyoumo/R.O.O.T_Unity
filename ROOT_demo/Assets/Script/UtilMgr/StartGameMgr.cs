@@ -98,11 +98,16 @@ namespace ROOT
             public int startingMoney;
         }
 
-        void AddListeners()
+        /*[Button]
+        void Test()
         {
-
-        }
-
+            float A = 1234.5678f;
+            Debug.Log(A.ToString("f2"));
+            int B = 1234;
+            Debug.Log(B.ToString("D3"));
+        }*/
+        
+        
         void Awake()
         {
             //这里不能用Time.time，因为Awake和游戏运行时间差距一般很小且固定。所以这里要去调系统时间

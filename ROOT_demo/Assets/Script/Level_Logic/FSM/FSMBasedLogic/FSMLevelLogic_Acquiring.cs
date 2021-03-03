@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using com.ootii.Messages;
+using ROOT.Message;
+using UnityEngine;
 
 namespace ROOT
 {
+   
     public class FSMLevelLogic_Acquiring : FSMLevelLogic_Career
     {
         public override bool IsTutorial => false;
@@ -12,30 +15,52 @@ namespace ROOT
         public override BossStageType HandleBossType => BossStageType.Acquiring;
         public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_ACQUIRING;
 
-        private void BalancingSignal()
+        private readonly float[] _balancingChart = {2.0f, 1.75f, 1.5f, 1.25f, 1.0f, 0.75f};
+        private Func<int, int, int> DelSignalFunc => (a, b) => Math.Abs(a - b);
+
+        private float BalancingSignal(int ASignalCount, int BSignalCount)
         {
-            //TODO 因为Boss逻辑比较简单、这里尝试添加一些复杂的玩法。
-            //throw new NotImplementedException();
+            var del = DelSignalFunc(ASignalCount, BSignalCount);
+            del = Math.Min(del, _balancingChart.Length - 1);
+            return _balancingChart[del];
         }
+
+        private float _multiplier = 1.0f;
+
+        protected override int GetInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore) * LevelAsset.CurrencyRebate * _multiplier);
 
         private void UpdateRoundData_Instantly_Acquiring()
         {
             var levelAsset = LevelAsset;
             var lvlLogic = this;
-            
+
+            var aSignalCount = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field);
+            var bSignalCount = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field);
+
+            if (RoundLibDriver.IsRequireRound)
+            {
+                _multiplier = BalancingSignal(aSignalCount, bSignalCount);
+            }
+
             var signalInfo = new BoardSignalUpdatedInfo
             {
                 SignalData = new BoardSignalUpdatedData()
                 {
                     CrtTypeASignal = TypeASignalCount,
                     CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
-                    TypeBTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                    TypeATier = aSignalCount,
+                    TypeBTier = bSignalCount,
                 },
             };
             MessageDispatcher.SendMessage(signalInfo);
         }
 
+        protected override void AdditionalInitLevel()
+        {
+            base.AdditionalInitLevel();
+            LevelAsset.DestroyerEnabled = false;
+        }
+        
         protected override void BoardUpdatedHandler(IMessage rMessage)
         {
             base.BoardUpdatedHandler(rMessage);
@@ -44,11 +69,25 @@ namespace ROOT
                 UpdateRoundData_Instantly_Acquiring();
             }
         }
-        
-        protected override void UpdateRoundData_Stepped()
+
+        private void BalancingSignalSetupInquiryHandler(IMessage rMessage)
         {
-            base.UpdateRoundData_Stepped();
-            if (RoundLibDriver.IsRequireRound || RoundLibDriver.IsShopRound) BalancingSignal();
+            if (rMessage is BalancingSignalSetupInquiry inquiry)
+            {
+                inquiry.BalancingSignalFuncCallBack(BalancingSignal);
+            }
+        }
+        
+        protected override void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.BalancingSignalSetupInquiry,BalancingSignalSetupInquiryHandler);
+            base.OnDestroy();
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            MessageDispatcher.AddListener(WorldEvent.BalancingSignalSetupInquiry,BalancingSignalSetupInquiryHandler);
         }
     }
 }

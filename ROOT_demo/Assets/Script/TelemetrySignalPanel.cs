@@ -8,6 +8,7 @@ namespace ROOT
 {
     public class BoardSignalUpdatedData
     {
+        //这里面只放原生数据、派生数据不要用这个传；按需传函数过去。
         public bool IsTelemetryStage = false;
         public bool TelemetryPaused = false;
 

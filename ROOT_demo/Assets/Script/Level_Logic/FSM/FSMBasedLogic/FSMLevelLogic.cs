@@ -375,12 +375,11 @@ namespace ROOT
             MessageDispatcher.SendMessage(signalInfo);
         }
         
-        protected virtual void BoardUpdatedHandler(IMessage rMessage)
-        {
-            UpdateBoardData_Instantly();
-        }
+        //这个函数只有在Board被更新的时候才会走、但是里面有和轮次相关的数据。
+        //现在的解决方法是变轮次的的时候，发一个"Board已更新"的事件.
+        protected virtual void BoardUpdatedHandler(IMessage rMessage) => UpdateBoardData_Instantly();
 
-        private FSMEventInquiryResponder _inquiryResponder;
+        //private FSMEventInquiryResponder _inquiryResponder;
         
         private void Update()
         {
@@ -400,7 +399,7 @@ namespace ROOT
         {
             LevelAsset = new GameAssets();
             _mainFSM = new RootFSM {owner = this};
-            _inquiryResponder = new FSMEventInquiryResponder(this);
+            //_inquiryResponder = new FSMEventInquiryResponder(this);
             
             UpdateLogicLevelReference();
 

@@ -25,7 +25,7 @@ namespace ROOT
         private bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
         protected bool IsSkillAllowed => !RoundLibDriver.IsShopRound;
-        private bool BoardCouldIOCurrency => (RoundLibDriver.IsRequireRound || RoundLibDriver.IsDestoryerRound);
+        protected bool BoardCouldIOCurrency => (RoundLibDriver.IsRequireRound || RoundLibDriver.IsDestoryerRound);
         
         private bool CheckIsSkill() => LevelAsset.SkillMgr != null && LevelAsset.SkillMgr.CurrentSkillType.HasValue &&
                                        LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
@@ -117,6 +117,8 @@ namespace ROOT
 
         protected override void AddtionalRecatIO() => AddtionalRecatIO_Skill();
 
+        private StageType? lastStageType = null;
+
         private void CareerCycle()
         {
             if (LevelAsset.DestroyerEnabled)
@@ -131,20 +133,26 @@ namespace ROOT
 
             if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
-                UpdateRoundData_Stepped();
-                var timingEvent = new TimingEventInfo
+                if (lastStageType == null || lastStageType.Value != RoundLibDriver.CurrentRoundGist.Value.Type)
                 {
-                    Type = WorldEvent.InGameStatusChangedEvent,
-                    CurrentStageType = RoundLibDriver.CurrentRoundGist.Value.Type,
-                };
-                var timingEvent2 = new TimingEventInfo
-                {
-                    Type = WorldEvent.CurrencyIOStatusChangedEvent,
-                    BoardCouldIOCurrencyData = BoardCouldIOCurrency,
-                    UnitCouldGenerateIncomeData = RoundLibDriver.IsRequireRound,
-                };
-                MessageDispatcher.SendMessage(timingEvent);
-                MessageDispatcher.SendMessage(timingEvent2);
+                    //RISK 这个变成每个时刻都改了、想着加一个Guard
+                    UpdateRoundData_Stepped();
+                    MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent); //为了令使和Round相关的数据强制更新。
+                    var timingEvent = new TimingEventInfo
+                    {
+                        Type = WorldEvent.InGameStageChangedEvent,
+                        CurrentStageType = RoundLibDriver.CurrentRoundGist.Value.Type,
+                    };
+                    var timingEvent2 = new TimingEventInfo
+                    {
+                        Type = WorldEvent.CurrencyIOStatusChangedEvent,
+                        BoardCouldIOCurrencyData = BoardCouldIOCurrency,
+                        UnitCouldGenerateIncomeData = RoundLibDriver.IsRequireRound,
+                    };
+                    MessageDispatcher.SendMessage(timingEvent);
+                    MessageDispatcher.SendMessage(timingEvent2);
+                    lastStageType = RoundLibDriver.CurrentRoundGist.Value.Type;
+                }
             }
         }
 
@@ -158,29 +166,22 @@ namespace ROOT
             }
         }
 
+        protected virtual int GetInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore) * LevelAsset.CurrencyRebate);
+
+        private int Cost=>LevelAsset.GameBoard.BoardGirdDriver.heatSinkCost;
+        
         protected override void UpdateBoardData_Instantly()
         {
             base.UpdateBoardData_Instantly();
-            var inCome = 0;
-            var cost = 0;
+            //在这里更新DeltaCurrency并没有错、严格来说是更新DeltaCurrency的Cache；
+            //这个DeltaCurrency只有在Stepped的时刻才会计算到Currency里面。
+            LevelAsset.DeltaCurrency = BoardCouldIOCurrency ? (RoundLibDriver.IsRequireRound ? GetInCome() : 0 - Cost) : 0;
+            SendCurrencyMessage();
+        }
 
-            var tmpInComeM = TypeASignalScore + TypeBSignalScore;
-            if (BoardCouldIOCurrency) //这个现在和Round完全绑定了。
-            {
-                inCome += Mathf.FloorToInt(tmpInComeM);
-                inCome = Mathf.RoundToInt(inCome * LevelAsset.CurrencyRebate);
-                if (!RoundLibDriver.IsRequireRound) inCome = 0;
-                cost = LevelAsset.GameBoard.BoardGirdDriver.heatSinkCost;
-                LevelAsset.DeltaCurrency = inCome - cost;
-            }
-            else
-            {
-                LevelAsset.DeltaCurrency = 0;
-            }
-
-
-            var message = new CurrencyUpdatedInfo()
-            {
+        private void SendCurrencyMessage()
+        {
+            var message = new CurrencyUpdatedInfo() {
                 CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
                 IncomesVal = Mathf.RoundToInt(LevelAsset.DeltaCurrency),
             };

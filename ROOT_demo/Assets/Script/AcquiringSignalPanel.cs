@@ -1,11 +1,26 @@
 using System;
 using com.ootii.Messages;
+using ROOT.Message;
 using TMPro;
 
 namespace ROOT
 {
+    public class BalancingSignalSetupInquiry : RootMessageBase
+    {
+        public Func<Func<int, int, float>,bool> BalancingSignalFuncCallBack;
+        public override string Type => WorldEvent.BalancingSignalSetupInquiry;
+    }
+    
     public class AcquiringSignalPanel : RoundRelatedUIBase
     {
+        private Func<int, int, float> _balancingSignalFunc = (a,b)=>0.0f;
+
+        private bool BalancingSignalFuncCallBack(Func<int, int, float> balancingSignalFunc)
+        {
+            _balancingSignalFunc = balancingSignalFunc;
+            return true;
+        }
+
         private void BoardSignalUpdatedHandler(IMessage rmMessage)
         {
             if (rmMessage is BoardSignalUpdatedInfo info)
@@ -19,7 +34,7 @@ namespace ROOT
         {
             base.Awake();
             MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
-            _cachedData = new BoardSignalUpdatedData();
+            MessageDispatcher.SendMessage(new BalancingSignalSetupInquiry{BalancingSignalFuncCallBack=this.BalancingSignalFuncCallBack});
         }
 
         protected override void OnDestroy()
@@ -28,77 +43,50 @@ namespace ROOT
             MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
         }
 
-        private void UpdatePauseTag(bool _telemetryPaused,bool _istelemetryStage)
-        {
-            PausedTag.enabled = _telemetryPaused && _istelemetryStage;
-        }
-
-        private void UpdateIsTelemetry(bool _istelemetryStage)
-        {
-            if (_istelemetryStage)
-            {
-                NormalSignal.enabled = false;
-                NetworkSignal.enabled = false;
-                MissionTarget.enabled = false;
-                NormalTierText.enabled = false;
-                NetworkTierText.enabled = false;
-                MissionTarget_Big.enabled = true;
-                SignalText.enabled = true;
-            }
-            else
-            {
-                NormalSignal.enabled = true;
-                NetworkSignal.enabled = true;
-                MissionTarget.enabled = true;
-                NormalTierText.enabled = true;
-                NetworkTierText.enabled = true;
-                MissionTarget_Big.enabled = false;
-                SignalText.enabled = false;
-            }
-        }
-
         public TextMeshPro NormalSignal;
         public TextMeshPro NetworkSignal;
-        public TextMeshPro MissionTarget;
-        public TextMeshPro NormalTierText;
-        public TextMeshPro NetworkTierText;
+        public TextMeshPro SignalDelta;
+        public TextMeshPro IncomeMultiplier;
 
-        public TextMeshPro MissionTarget_Big;
-        public TextMeshPro SignalText;
-        public TextMeshPro PausedTag;
+        private static string _padding(int a) => Utils.PaddingNum2Digit(a);
 
-        private readonly Func<int, string> _padding = Utils.PaddingNum2Digit;
+        private int cachedTypeAVal = -1;
+        private int cachedTypeBVal = -1;
+        private float cachedIncomeMultiplierVal = float.NaN;
 
-        private BoardSignalUpdatedData _cachedData;//这种缓存机制还是得有。
 
-        private void UpdateCachedData(BoardSignalUpdatedData inComingData, int index)
-        {
-            if (inComingData[index] != int.MaxValue) _cachedData[index] = inComingData[index];
-        }
-        
         private void UpdateCachedData(BoardSignalUpdatedData inComingData)
         {
-            _cachedData.TelemetryPaused = inComingData.TelemetryPaused;
-            _cachedData.IsTelemetryStage = inComingData.IsTelemetryStage;
-            
-            for (var i = 0; i < 10; i++)
-            {
-                UpdateCachedData(inComingData, i);
-            }
+            if (inComingData.CrtTypeASignal != int.MaxValue) cachedTypeAVal = inComingData.CrtTypeASignal;
+            if (inComingData.CrtTypeBSignal != int.MaxValue) cachedTypeBVal = inComingData.CrtTypeBSignal;
         }
 
         private void UpdateNumbersCore()
         {
-            NormalSignal.text = _padding(_cachedData.CrtTypeASignal) + "/" + _padding(_cachedData.TgtTypeASignal);
-            NetworkSignal.text = _padding(_cachedData.CrtTypeBSignal) + "/" + _padding(_cachedData.TgtTypeBSignal);
-            MissionTarget.text = "[" + _padding(_cachedData.CrtMission) + "]";
-            MissionTarget_Big.text = "[" + _padding(_cachedData.CrtMission) + "]";
-            NormalTierText.text = "[" + _padding(_cachedData.TypeATier) + "]";
-            NetworkTierText.text = "[" + _padding(_cachedData.TypeBTier) + "]";
-            SignalText.text = Utils.PaddingNum4Digit(_cachedData.InfoCounter) + "/" + Utils.PaddingNum4Digit(_cachedData.InfoTarget);
+            NormalSignal.text = _padding(cachedTypeAVal);
+            NetworkSignal.text = _padding(cachedTypeBVal);
 
-            UpdateIsTelemetry(_cachedData.IsTelemetryStage);
-            UpdatePauseTag(_cachedData.TelemetryPaused,_cachedData.IsTelemetryStage);
+            var del = cachedTypeAVal - cachedTypeBVal;
+            var resString = _padding(Math.Abs(del));
+
+            if (del > 0)
+            {
+                resString = "+" + resString;
+            }
+            else if (del == 0)
+            {
+                resString = "=" + resString;
+            }
+            else
+            {
+                resString = "-" + resString;
+            }
+
+            SignalDelta.text = resString;
+
+            var multiplier = _balancingSignalFunc(cachedTypeAVal, cachedTypeBVal);
+
+            IncomeMultiplier.text = "x" + multiplier.ToString("F");
         }
     }
 }

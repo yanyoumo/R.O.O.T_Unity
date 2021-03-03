@@ -955,7 +955,8 @@ namespace ROOT
             {
                 lastUnitsHashCode = hashCode;
                 Debug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode);
-                MessageDispatcher.SendMessage(WorldEvent.BoardShouldUpdateEvent);
+                //MessageDispatcher.SendMessage(WorldEvent.BoardShouldUpdateEvent);
+                FullyUpdateBoardData(new com.ootii.Messages.Message());
             }
         }
 
