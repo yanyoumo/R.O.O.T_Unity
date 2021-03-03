@@ -269,6 +269,7 @@ namespace ROOT
         public static string HintRelatedEvent = "HintRelatedEvent";
 
         public static string BalancingSignalSetupInquiry = "BalancingSignalSetupInquiry";
+        public static string AcquiringCostTargetInquiry = "AcquiringCostTargetInquiry";
 
         public static string MainCameraReadyEvent = "MainCameraReadyEvent";
         

@@ -78,8 +78,20 @@ namespace ROOT
             }
         }
         
+        //TODO 这个还要正经接入。
+        private int TargetCurrency = 10000;
+        
+        private void AcquiringCostTargetHandler(IMessage rMessage)
+        {
+            if (rMessage is AcquiringCostTargetInquiry inquiry)
+            {
+                inquiry.AcquiringCostTargetCallBack(TargetCurrency);
+            }
+        }
+        
         protected override void OnDestroy()
         {
+            MessageDispatcher.RemoveListener(WorldEvent.AcquiringCostTargetInquiry,AcquiringCostTargetHandler);
             MessageDispatcher.RemoveListener(WorldEvent.BalancingSignalSetupInquiry,BalancingSignalSetupInquiryHandler);
             base.OnDestroy();
         }
@@ -88,6 +100,7 @@ namespace ROOT
         {
             base.Awake();
             MessageDispatcher.AddListener(WorldEvent.BalancingSignalSetupInquiry,BalancingSignalSetupInquiryHandler);
+            MessageDispatcher.AddListener(WorldEvent.AcquiringCostTargetInquiry,AcquiringCostTargetHandler);
         }
     }
 }
