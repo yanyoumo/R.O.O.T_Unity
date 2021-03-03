@@ -52,7 +52,7 @@ namespace ROOT
 
         private static Vector2 MouseScreenPos;
 
-        private const float minHoldShift = 1e-6f;
+        private const float minHoldShift = 1e-4f;
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -183,20 +183,27 @@ namespace ROOT
                 MouseScreenPosB = player.controllers.Mouse.screenPosition,
                 Sender = this,
             };
+            bool hasAction = false;
             RootDebug.Log("Mouse Single Click Up",NameID.JiangDigong_Log);
-            if (Utils.GetCustomizedDistance(actionPack.MouseScreenPosA, actionPack.MouseScreenPosB) < minHoldShift)
+            if (!MouseScreenPos.Equals(new Vector2(Single.NaN, Single.NaN)))
             {
-                actionPack.ActionID = Passthough.MouseLeft;
-                actionPack.eventType = InputActionEventType.ButtonSinglePressed;
-                RootDebug.Log("Mouse Single Click",NameID.JiangDigong_Log);
+                if (Utils.GetCustomizedDistance(actionPack.MouseScreenPosA, actionPack.MouseScreenPosB) < minHoldShift)
+                {
+                    actionPack.ActionID = Passthough.MouseLeft;
+                    actionPack.eventType = InputActionEventType.ButtonSinglePressed;
+                    RootDebug.Log("Mouse Single Click", NameID.JiangDigong_Log);
+                }
+                else
+                {
+                    actionPack.ActionID = Composite.Drag;
+                    actionPack.eventType = InputActionEventType.AxisActive;
+                    RootDebug.Log("Mouse Drag", NameID.JiangDigong_Log);
+                }
+                hasAction = true;
             }
-            else
-            {
-                actionPack.ActionID = Composite.Drag;
-                actionPack.eventType = InputActionEventType.AxisActive;
-                RootDebug.Log("Mouse Drag",NameID.JiangDigong_Log);
-            }
-            MessageDispatcher.SendMessage(actionPack);
+            MouseScreenPos=new Vector2(Single.NaN, Single.NaN);
+            if (hasAction)
+                MessageDispatcher.SendMessage(actionPack);
         }
 
         private void OnInputUpdateMouseDoubleClick(InputActionEventData obj)
