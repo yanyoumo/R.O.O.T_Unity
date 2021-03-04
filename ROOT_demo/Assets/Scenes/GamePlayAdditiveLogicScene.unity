@@ -833,6 +833,42 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 1
+    - _id: 35
+      _name: MouseRight
+      _type: 1
+      _descriptiveName: Action0
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 4
+    - _id: 36
+      _name: MouseMiddle
+      _type: 1
+      _descriptiveName: Action0
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 4
+    - _id: 37
+      _name: MouseWheelUp
+      _type: 1
+      _descriptiveName: Action0
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 4
+    - _id: 38
+      _name: MouseWheelDown
+      _type: 1
+      _descriptiveName: Action1
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 4
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -873,7 +909,7 @@ MonoBehaviour:
       - categoryId: 3
         actionIds: 06000000070000001e00000020000000
       - categoryId: 4
-        actionIds: 160000001c0000001d00000021000000
+        actionIds: 160000001c0000001d0000002100000023000000240000002500000026000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -1302,12 +1338,56 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 35
+        _elementType: 1
+        _elementIdentifierId: 4
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 36
+        _elementType: 1
+        _elementIdentifierId: 5
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 37
+        _elementType: 0
+        _elementIdentifierId: 2
+        _axisRange: 1
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 38
+        _elementType: 0
+        _elementIdentifierId: 2
+        _axisRange: 2
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     customControllerMaps: []
     customControllers: []
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 35
+    actionIdCounter: 39
     actionCategoryIdCounter: 5
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 2
@@ -1392,10 +1472,7 @@ MonoBehaviour:
     Owner: {fileID: 0}
     ActionAsset: {fileID: 0}
     CursorTemplate: {fileID: 0}
-    ItemPriceRoot: {fileID: 0}
     GameBoard: {fileID: 0}
-    DataScreen: {fileID: 0}
-    HintMaster: {fileID: 0}
     TimeLine: {fileID: 0}
     AirDrop: {fileID: 0}
     ReqOkCount: 0
@@ -1455,9 +1532,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 472400a958861534e813ba6c03ae6cb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelLogicPrefabs:
-  - {fileID: 3818130472288149215, guid: cbc7c1bca06f5854b99931611c0cec14, type: 3}
-  - {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7, type: 3}
 --- !u!1 &1676338715
 GameObject:
   m_ObjectHideFlags: 0
