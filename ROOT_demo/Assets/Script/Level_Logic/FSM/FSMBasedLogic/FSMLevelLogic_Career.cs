@@ -12,6 +12,7 @@ namespace ROOT
 {
     public class FSMLevelLogic_Career : FSMLevelLogic_Barebone
     {
+        
         public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_CAREER;
 
         protected RoundLibDriver RoundLibDriver;
@@ -178,16 +179,7 @@ namespace ROOT
             LevelAsset.DeltaCurrency = BoardCouldIOCurrency ? (RoundLibDriver.IsRequireRound ? GetInCome() : 0 - Cost) : 0;
             SendCurrencyMessage();
         }
-
-        private void SendCurrencyMessage()
-        {
-            var message = new CurrencyUpdatedInfo() {
-                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
-                IncomesVal = Mathf.RoundToInt(LevelAsset.DeltaCurrency),
-            };
-            MessageDispatcher.SendMessage(message);
-        }
-
+        
         private void ReverseCycle()
         {
             WorldCycler.StepDown();

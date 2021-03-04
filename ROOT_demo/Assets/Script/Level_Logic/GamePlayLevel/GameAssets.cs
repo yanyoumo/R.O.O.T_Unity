@@ -61,6 +61,8 @@ namespace ROOT
         internal GameObject[] SkillIndGoB;
         public int occupiedHeatSink=0;
 
+        public GameOverAsset GameOverAsset;
+        
         public float DeltaCurrency { get; internal set; }
 
         //internal flag 

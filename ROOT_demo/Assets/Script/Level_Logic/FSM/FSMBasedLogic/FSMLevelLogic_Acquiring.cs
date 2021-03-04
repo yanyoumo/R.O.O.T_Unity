@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using com.ootii.Messages;
+using I2.Loc;
 using ROOT.Message;
 using ROOT.SetupAsset;
 using UnityEngine;
@@ -10,6 +11,9 @@ namespace ROOT
    
     public class FSMLevelLogic_Acquiring : FSMLevelLogic_Career
     {
+        protected override string SucceedEndingTerm => ScriptTerms.EndingMessageAcquiring_Successed;
+        protected override string FailedEndingTerm => ScriptTerms.EndingMessageAcquiring_Failed;
+        
         public override bool IsTutorial => false;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => true;

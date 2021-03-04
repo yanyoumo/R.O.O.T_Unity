@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
+using I2.Loc;
 using ROOT.SetupAsset;
 using UnityEngine;
 using static ROOT.TextProcessHelper;
@@ -15,6 +16,8 @@ namespace ROOT
 
     public abstract class FSMTutorialLogic : FSMLevelLogic_Barebone
     {
+        protected sealed override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
+        protected sealed override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
         public override bool IsTutorial => true;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;

@@ -1,4 +1,10 @@
 ﻿Key,Type,Desc,Chinese (Simplified),English
+AdvShop_2_KM,Text,,左Alt取消购买,Pending
+AdvShop_2_Touch,Text,,按这里取消购买,Pending
+AdvShop_KM,Text,,"右Shift:随机位置——（+0元)
+回车键:光标位置 ——（+{[VALUE]}元）",Pending
+AdvShop_Touch,Text,,"按这里:随机位置——（+0元)
+点击棋盘位置:棋盘位置 ——（+{[VALUE]}元）",Pending
 Back,Text,返回主菜单的按钮名称,返回,Back
 BasicControl_KM,Text,游戏内容显示的操作提示（键盘版）,"【方向键】：移动光标
 【方向键】+【空格】：拖动单元
@@ -17,51 +23,57 @@ BasicControl_Touch,Text,游戏内容显示的操作提示（触屏版）,"【滑
 <b>[DoubleFinger Hold]:</b>Visualize Signal
 <b>[Hold on Empty spot]:</b>Force to move to next round"
 CareerButton,Text,开始生涯模式按钮名称,生涯模式,Career
-EndingMessageNormal_EarnedMoney,Text,游戏结束时，显示的内容,时间到了，你赚了{[VALUE]}块钱[i2p_Zero]时间到了，但你没赚钱,"Time Up, and you earned {[VALUE]} money[i2p_Zero]Time Up, and you earned no money"
-EndingMessageNormal_NoEarnedMoney,Text,游戏结束时，显示的内容,时间到了，你赔了{[VALUE]}块钱[i2p_Zero]时间到了，但你也没赔钱,"Time Up, and you lost {[VALUE]} money[i2p_Zero]Time Up, but you haven't lost money"
-EndingMessageNormal_NoMoney,Text,游戏结束时，显示的内容,你没钱了！,You've run out of money.
+Continue,Text,,继续,Continue
+CoreSelection,Text,,选择两个单元种类,Select two kinds of Core
+EndingMessageAcquiring_Failed,Text,,融资失败、还差{[VALUE]}元,Pending
+EndingMessageAcquiring_Successed,Text,,融资成功！,Pending
+EndingMessageNoBoss_EarnedMoney,Text,游戏结束时，显示的内容,时间到了，你赚了{[VALUE]}块钱[i2p_Zero]时间到了，但你没赚钱,"Time Up, and you earned {[VALUE]} money[i2p_Zero]Time Up, and you earned no money"
+EndingMessageNoBoss_NoEarnedMoney,Text,游戏结束时，显示的内容,时间到了，你赔了{[VALUE]}块钱[i2p_Zero]时间到了，但你也没赔钱,"Time Up, and you lost {[VALUE]} money[i2p_Zero]Time Up, but you haven't lost money"
+EndingMessageTelemetry_Failed,Text,,未接收到足够的信息、还差{[VALUE]}单位的信息,Pending
+EndingMessageTelemetry_Successed,Text,,接收够了足量的信息,Pending
 EndingMessageTutorial,Text,,本节教程结束~,This section of tutorial has concluded
 EndingMessageTutorialFailed,Text,,本节教程未完成,This section of tutorial is not finished
+GameCareerSetup,Text,,游戏设置,Game Setup
 GameOver,Text,,游戏结束,GAME OVER
 HForHint_KM,Text,,按住<b>[H]</b>键查看操作说明,Hold <b>[H]</b> for controlling
 HForHint_Touch,Text,,按住这里查看操作说明,Hold Here for Hint
+KMEnterToComplete,Text,,"按""回车""以完成任务","Press ""Enter"" to Complete"
+KMEnterToReturn,Text,,"按""回车""以返回","Press ""Enter"" to Return"
 KMHintCollapsed,Text,,按<b>回车</b>继续,按<b>回车</b>继续
 KMHintExtend,Text,,按<b>[回车]</b>继续,按<b>[回车]</b>继续
-NextTutorialFailed,Text,,再试一下,Retry
-NextTutorial,Text,,下一教程,Next
-PlayLevel,Text,,游玩关卡,Play
-ReleaseToReturn_KM,Text,,松开以返回,Release to Hide
-Restart,Text,,重新开始,Restart
-StartGame,Text,,<b>开始游戏</b>,<b>Start Game</b>
-TouchHintCollapsed,Text,,点<b>这里</b>继续,点<b>这里</b>继续
-TouchHintExtend,Text,,点<b>[这里]</b>继续,点<b>[这里]</b>继续
-Tutorial,Text,,<b>新手指南</b>,<b>Tutorial</b>
-TutorialBasicControl,Text,,第一天上班,First Day to Work
-TutorialSignalBasic,Text,,用点儿脑子,Use your Brain
-TutorialGoalAndCycle,Text,,时间不等人,Time awaits
-TutorialTimeAdv,Text,,该干活了,Time to work
-TutorialShop,Text,,买买买,Shut up and TMM
-TutorialShop_Currency,Text,,别瞎花钱,Watch your wallet
-TutorialSignalBasic_Adv,Text,,来点儿别的,Some new trick
-TutorialComplexSignal,Text,,搁一起呢？,Put it all together
-TutorialDestroyer,Text,,别太放松,Heads Up!
-TutorialSectionOver,Text,,此段教程结束,Section Over
 Level_1,Text,,第一关,Level 1
 Level_2,Text,,第二关,Level 2
 Level_3,Text,,第三关,Level 3
 Level_4,Text,,第四关,Level 4
 Level_5,Text,,第五关,Level 5
-Level_Test,Text,,测试用,For Test
-Level_FSM_Test,Text,,FSM测试,For FSM Test
 Level_FSM_Barebone,Text,,FSM骨干,FSM barebone
-TutorialGoal,Text,,任务目标:,Need to do:
-KMEnterToReturn,Text,,"按""回车""以返回","Press ""Enter"" to Return"
-KMEnterToComplete,Text,,"按""回车""以完成任务","Press ""Enter"" to Complete"
-TouchToReturn,Text,,按这里以返回,Touch HERE to Return
+Level_FSM_Test,Text,,FSM测试,For FSM Test
+Level_Test,Text,,测试用,For Test
+Matrix Core,Text,,矩阵单元,Matrix Core
+NextTutorial,Text,,下一教程,Next
+NextTutorialFailed,Text,,再试一下,Retry
+Notice,Text,,注意,Notice
+OK,Text,,好的,OK
+PlayLevel,Text,,游玩关卡,Play
+ReleaseToReturn_KM,Text,,松开以返回,Release to Hide
+Restart,Text,,重新开始,Restart
+Scan Core,Text,,扫描单元,Scan Core
+SelectTwoCore,Text,,请注意，请选择两个单元种类,Please only select two kinds of Unit Core to start the game
+StartGame,Text,,<b>开始游戏</b>,<b>Start Game</b>
+Thermal Core,Text,,热力单元,Thermal Core
+TouchHintCollapsed,Text,,点<b>这里</b>继续,点<b>这里</b>继续
+TouchHintExtend,Text,,点<b>[这里]</b>继续,点<b>[这里]</b>继续
 TouchToComplete,Text,,按这里以完成任务,Touch HERE to Complete
-AdvShop_KM,Text,,"右Shift:随机位置——（+0元)
-回车键:光标位置 ——（+{[VALUE]}元）",Pending
-AdvShop_Touch,Text,,"按这里:随机位置——（+0元)
-点击棋盘位置:棋盘位置 ——（+{[VALUE]}元）",Pending
-AdvShop_2_KM,Text,,左Alt取消购买,Pending
-AdvShop_2_Touch,Text,,按这里取消购买,Pending
+TouchToReturn,Text,,按这里以返回,Touch HERE to Return
+Tutorial,Text,,<b>新手指南</b>,<b>Tutorial</b>
+TutorialBasicControl,Text,,第一天上班,First Day to Work
+TutorialComplexSignal,Text,,搁一起呢？,Put it all together
+TutorialDestroyer,Text,,别太放松,Heads Up!
+TutorialGoal,Text,,任务目标:,Need to do:
+TutorialGoalAndCycle,Text,,时间不等人,Time awaits
+TutorialSectionOver,Text,,此段教程结束,Section Over
+TutorialShop,Text,,买买买,Shut up and TMM
+TutorialShop_Currency,Text,,别瞎花钱,Watch your wallet
+TutorialSignalBasic,Text,,用点儿脑子,Use your Brain
+TutorialSignalBasic_Adv,Text,,来点儿别的,Some new trick
+TutorialTimeAdv,Text,,该干活了,Time to work

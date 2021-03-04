@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
+using I2.Loc;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -18,6 +19,8 @@ namespace ROOT
 
     public class FSMLevelLogic_Telemetry : FSMLevelLogic_Career //LEVEL-LOGIC/每一关都有一个这个类。
     {
+        protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTelemetry_Successed;
+        protected override string FailedEndingTerm => ScriptTerms.EndingMessageTelemetry_Failed;
         public override bool IsTutorial => false;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => true;

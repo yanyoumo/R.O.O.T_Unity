@@ -10,6 +10,14 @@ using UnityEngine.UI;
 
 namespace ROOT
 {
+    public class GameOverAsset
+    {
+        public bool Succeed = false;
+        public string SuccessTerm = "";
+        public string FailedTerm = "";
+        public int ValueInt = 0;
+    }
+    
     public class GameOverMgr : MonoBehaviour
     {
         //可以把LevelAsset整建制传进来。
@@ -41,12 +49,11 @@ namespace ROOT
 
         void UpdateUIContent()
         {
+            BackButton.onClick.AddListener(Back);
             //这里控制游戏结束部分的代码。
             if (_lastGameAssets.Owner.IsTutorialLevel)
             {
-                System.Diagnostics.Debug.Assert(_lastGameAssets.TutorialCompleted != null, "_lastGameAssets.TutorialCompleted != null");
                 bool tutorialCompleted = _lastGameAssets.TutorialCompleted.Value;
-                BackButton.onClick.AddListener(Back);
                 EndingTitleLocalize.Term = ScriptTerms.TutorialSectionOver;
                 if (tutorialCompleted)
                 {
@@ -67,24 +74,13 @@ namespace ROOT
             }
             else
             {
-                BackButton.onClick.AddListener(Back);
-                OtherButton.interactable = false;//HACK 先关了
-                OtherButton.onClick.AddListener(GameRestart);
-                OtherButtonLocalize.Term = ScriptTerms.Restart;
                 EndingTitleLocalize.Term = ScriptTerms.GameOver;
-                float endingIncome = _lastGameAssets.GameCurrencyMgr.Currency - _lastGameAssets.GameCurrencyMgr.StartingMoney;
+                OtherButtonLocalize.Term = ScriptTerms.Restart;
+                OtherButton.onClick.AddListener(GameRestart);
+                OtherButton.interactable = _lastGameAssets.GameOverAsset.Succeed;
+                EndingMessageParam.SetParameterValue("VALUE", _lastGameAssets.GameOverAsset.ValueInt.ToString());
 
-                if (false)
-                {
-                    //TODO GameStateMgr打算重做、Time相关的流程已经放到Round上面去了；这里先关掉。
-                    int deltaMoney = Mathf.FloorToInt(Mathf.Abs(endingIncome));
-                    EndingMessageParam.SetParameterValue("VALUE", deltaMoney.ToString());
-                    EndingMessageLocalize.Term = endingIncome >= 0 ? ScriptTerms.EndingMessageNormal_EarnedMoney : ScriptTerms.EndingMessageNormal_NoEarnedMoney;
-                }
-                else
-                {
-                    EndingMessageLocalize.Term = ScriptTerms.EndingMessageNormal_NoMoney;
-                }
+                EndingMessageLocalize.Term = _lastGameAssets.GameOverAsset.Succeed?_lastGameAssets.GameOverAsset.SuccessTerm:_lastGameAssets.GameOverAsset.FailedTerm;
             }
         }
 

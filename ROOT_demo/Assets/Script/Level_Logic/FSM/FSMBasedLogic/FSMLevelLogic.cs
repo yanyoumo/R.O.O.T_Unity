@@ -75,7 +75,10 @@ namespace ROOT
         public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? AutoAnimationDuration : DefaultAnimationDuration;
         private static readonly float DefaultAnimationDuration = 0.15f; //都是秒
         private static readonly float AutoAnimationDuration = 1.5f; //都是秒
-        
+
+        protected abstract string SucceedEndingTerm { get; }
+        protected abstract string FailedEndingTerm { get; }
+
         #region 类属性
 
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
@@ -295,6 +298,16 @@ namespace ROOT
             if (CheckGameOver) GameEnding();
         }
 
+        protected void SendCurrencyMessage()
+        {
+            var message = new CurrencyUpdatedInfo() {
+                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
+                IncomesVal = Mathf.RoundToInt(LevelAsset.DeltaCurrency),
+            };
+            MessageDispatcher.SendMessage(message);
+        }
+
+        
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
         protected void ForwardCycle()
         {
@@ -305,6 +318,7 @@ namespace ROOT
             }
 
             LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
+            SendCurrencyMessage();
         }
 
         protected void CleanUp()
@@ -350,6 +364,8 @@ namespace ROOT
         {
             PendingCleanUp = true;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
+            LevelAsset.GameOverAsset.SuccessTerm = SucceedEndingTerm;
+            LevelAsset.GameOverAsset.FailedTerm = FailedEndingTerm;
         }
         
         protected virtual bool CheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
