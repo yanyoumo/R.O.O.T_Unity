@@ -75,5 +75,5 @@ MonoBehaviour:
     InfoCount: 0
     InfoVariantRatio: 0
     InfoTargetRatio: 0
-    AcquiringTarget: 10000
+    AcquiringTarget: 8700
   ExcludedShop: 0

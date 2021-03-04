@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using com.ootii.Messages;
 using ROOT.Message;
+using ROOT.SetupAsset;
 using UnityEngine;
 
 namespace ROOT
@@ -78,8 +79,7 @@ namespace ROOT
             }
         }
         
-        //TODO 这个还要正经接入。
-        private int TargetCurrency = 10000;
+        private int TargetCurrency => LevelAsset.ActionAsset.BossSetup.AcquiringTarget;
         
         private void AcquiringCostTargetHandler(IMessage rMessage)
         {
