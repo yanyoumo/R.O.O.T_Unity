@@ -174,8 +174,9 @@ namespace ROOT
             }
         }
 
-        protected override void AddtionalMajorUpkeep()
+        protected override void AdditionalMajorUpkeep()
         {
+            //base.AdditionalMajorUpkeep();
             if (CheckTelemetryStageInit())
             {
                 TelemetryInit();
@@ -190,7 +191,8 @@ namespace ROOT
                 WorldExecutor.CleanDestoryer(LevelAsset);
                 //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
                 //总之稳了后，这个不能这么每帧调用。
-                LevelAsset.occupiedHeatSink = LevelAsset.GameBoard.BoardGirdDriver.CheckHeatSink(RoundLibDriver.CurrentStage.Value);
+                LevelAsset.GameBoard.BoardGirdDriver.UpkeepHeatSink(RoundLibDriver.CurrentStage.Value);
+                LevelAsset.GameBoard.BoardGirdDriver.CheckOverlappedHeatSinkCount(out LevelAsset.occupiedHeatSinkCount);
                 LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
                 if (LevelAsset.SkillEnabled)
                 {

@@ -1,7 +1,9 @@
 using System;
 using com.ootii.Messages;
 using ROOT.Message;
+using Sirenix.OdinInspector;
 using TMPro;
+using UnityEngine;
 
 namespace ROOT
 {
@@ -14,6 +16,21 @@ namespace ROOT
     public class AcquiringSignalPanel : RoundRelatedUIBase
     {
         private Func<int, int, float> _balancingSignalFunc = (a,b)=>0.0f;
+        public TextMeshPro NormalSignal;
+        public TextMeshPro NetworkSignal;
+        public TextMeshPro SignalDelta;
+        public TextMeshPro IncomeMultiplier;
+
+        public Transform SeesawTickTotalX;
+        public Transform SeesawTick;
+        private float seeSawTickUnit => SeesawTickTotalX.localPosition.x / 4.0f;
+
+        private void SetSeesawTick(int del)
+        {
+            var pos = SeesawTick.localPosition;
+            pos.x = del * seeSawTickUnit;
+            SeesawTick.localPosition = pos;
+        }
 
         private bool BalancingSignalFuncCallBack(Func<int, int, float> balancingSignalFunc)
         {
@@ -43,10 +60,6 @@ namespace ROOT
             MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
         }
 
-        public TextMeshPro NormalSignal;
-        public TextMeshPro NetworkSignal;
-        public TextMeshPro SignalDelta;
-        public TextMeshPro IncomeMultiplier;
 
         private static string _padding(int a) => Utils.PaddingNum2Digit(a);
 
@@ -87,6 +100,8 @@ namespace ROOT
             var multiplier = _balancingSignalFunc(cachedTypeAVal, cachedTypeBVal);
 
             IncomeMultiplier.text = "x" + multiplier.ToString("F");
+
+            SetSeesawTick(del);
         }
     }
 }

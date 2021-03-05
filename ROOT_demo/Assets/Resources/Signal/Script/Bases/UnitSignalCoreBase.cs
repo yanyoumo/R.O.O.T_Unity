@@ -137,7 +137,8 @@ namespace ROOT.Signal
             }
         }
 
-        public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
+        //不白送了
+        public virtual bool IsUnitActive => HasCertainSignal(SignalType);// || Owner.UnitHardware == HardwareType.Core;
 
         public abstract float SingleUnitScore { get; }
     }

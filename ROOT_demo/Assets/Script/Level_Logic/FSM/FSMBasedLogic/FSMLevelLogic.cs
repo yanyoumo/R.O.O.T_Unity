@@ -259,7 +259,7 @@ namespace ROOT
             //BaseVerison Do-nothing.
         }
 
-        protected virtual void AddtionalMajorUpkeep()
+        protected virtual void AdditionalMajorUpkeep()
         {
             //BaseVerison Do-nothing.
         }
@@ -282,7 +282,7 @@ namespace ROOT
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
             UpdateBoardData_Stepped(ref LevelAsset);//RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
-            AddtionalMajorUpkeep();
+            AdditionalMajorUpkeep();
             WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
         

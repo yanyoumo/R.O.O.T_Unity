@@ -64,12 +64,6 @@ namespace ROOT
             MessageDispatcher.SendMessage(signalInfo);
         }
 
-        protected override void AdditionalInitLevel()
-        {
-            base.AdditionalInitLevel();
-            LevelAsset.DestroyerEnabled = false;
-        }
-        
         protected override void BoardUpdatedHandler(IMessage rMessage)
         {
             base.BoardUpdatedHandler(rMessage);

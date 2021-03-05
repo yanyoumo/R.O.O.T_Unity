@@ -48,7 +48,7 @@ namespace ROOT
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
             UpdateBoardData_Stepped(ref LevelAsset);
-            base.AddtionalMajorUpkeep();
+            base.AdditionalMajorUpkeep();
         }
         
         protected override void AdditionalFSMActionsOperating(ref FSMActions actions)

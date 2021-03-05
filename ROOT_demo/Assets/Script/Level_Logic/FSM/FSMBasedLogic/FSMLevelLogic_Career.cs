@@ -57,10 +57,22 @@ namespace ROOT
             LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
         }
         
+        protected override void AdditionalMajorUpkeep()
+        {
+            base.AdditionalMajorUpkeep();
+            LevelAsset.GameBoard.BoardGirdDriver.UpkeepHeatSink(RoundLibDriver.CurrentStage.Value);
+            LevelAsset.GameBoard.BoardGirdDriver.CheckOverlappedHeatSinkCount(out LevelAsset.occupiedHeatSinkCount);
+            if (LevelAsset.SkillEnabled)
+            {
+                LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
+            }
+        }
+        
         protected override void AdditionalInitLevel()
         {
             base.AdditionalInitLevel();
             WorldExecutor.InitDestoryer(ref LevelAsset);
+            LevelAsset.DestroyerEnabled = false;
             WorldExecutor.InitShop(ref LevelAsset);
             WorldExecutor.StartShop(ref LevelAsset);
             
@@ -134,10 +146,10 @@ namespace ROOT
 
             if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
+                UpdateRoundData_Stepped();
                 if (lastStageType == null || lastStageType.Value != RoundLibDriver.CurrentRoundGist.Value.Type)
                 {
                     //RISK 这个变成每个时刻都改了、想着加一个Guard
-                    UpdateRoundData_Stepped();
                     MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent); //为了令使和Round相关的数据强制更新。
                     var timingEvent = new TimingEventInfo
                     {
@@ -169,14 +181,17 @@ namespace ROOT
 
         protected virtual int GetInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore) * LevelAsset.CurrencyRebate);
 
-        private int Cost=>LevelAsset.GameBoard.BoardGirdDriver.heatSinkCost;
+        private int Cost=>LevelAsset.GameBoard.BoardGirdDriver.HeatSinkCost;
         
         protected override void UpdateBoardData_Instantly()
         {
             base.UpdateBoardData_Instantly();
             //在这里更新DeltaCurrency并没有错、严格来说是更新DeltaCurrency的Cache；
             //这个DeltaCurrency只有在Stepped的时刻才会计算到Currency里面。
-            LevelAsset.DeltaCurrency = BoardCouldIOCurrency ? (RoundLibDriver.IsRequireRound ? GetInCome() : 0 - Cost) : 0;
+            LevelAsset.DeltaCurrency = BoardCouldIOCurrency ? (RoundLibDriver.IsRequireRound ? GetInCome() : 0)- Cost : 0;
+            /*Debug.Log("BoardCouldIOCurrency=" + BoardCouldIOCurrency);
+            Debug.Log("RoundLibDriver.IsRequireRound=" + RoundLibDriver.IsRequireRound);
+            Debug.Log("LevelAsset.DeltaCurrency=" + LevelAsset.DeltaCurrency);*/
             SendCurrencyMessage();
         }
         

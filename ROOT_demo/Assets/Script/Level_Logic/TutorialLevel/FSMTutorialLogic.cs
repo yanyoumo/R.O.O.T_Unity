@@ -258,7 +258,7 @@ namespace ROOT
             DealStepMgr();
         }
 
-        protected override void AddtionalMajorUpkeep()
+        protected override void AdditionalMajorUpkeep()
         {
             TutorialInit();
         }

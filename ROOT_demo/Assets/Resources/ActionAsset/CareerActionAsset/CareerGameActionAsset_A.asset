@@ -51,7 +51,7 @@ MonoBehaviour:
   RoundLib:
   - ID: 0
     ShopLength: 4
-    RequireLength: 3
+    RequireLength: 11
     TypeARequirement: 4
     TypeBRequirement: 6
     HeatSinkLength: 5

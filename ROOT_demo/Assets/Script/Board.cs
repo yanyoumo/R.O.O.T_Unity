@@ -132,6 +132,7 @@ namespace ROOT
             //RISK 现在出来一个问题，就是基础图样加上这一轮添加后，有可能就堆满了。
             //TODO 有办法，就是想办法在pattern里面储存“不能被填充”这种数据。
             //现在Diminishing里面加了一个Maxout。hmmmm先这样，并没有解决上面的核心问题。
+            //Debug.Log("DiminishingStep="+DiminishingStep);
             if (DiminishingStep == -1) return RawHeatSinkPos;
 
             var res = RawHeatSinkPos.ToList();
@@ -274,9 +275,14 @@ namespace ROOT
         }
 
         [CanBeNull]
-        public Unit[] OverlapHeatSinkUnit => CheckHeatSink(StageType.Shop) != 0
-            ? owner.Units.Where(unit => ActualHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray()
-            : null;
+        public Unit[] OverlapHeatSinkUnit
+        {
+            get
+            {
+                CheckOverlappedHeatSinkCount(out var lappedHeatSinkCount);
+                return lappedHeatSinkCount != 0 ? owner.Units.Where(unit => ActualHeatSinkPos.Contains(unit.CurrentBoardPosition)).ToArray() : null;
+            }
+        }
 
         private CellStatus GettargetingStatus(StageType type,BossStageType bossType=BossStageType.Telemetry)
         {
@@ -328,10 +334,24 @@ namespace ROOT
             return (CalcTotalHeatSinkCost(x1) - CalcTotalHeatSinkCost(x0)) + 1;
         }
 
-        [ReadOnly]
-        public int heatSinkCost = 0; //现在对他的调用是读取的、需要可能改成触发的。
+        public int CheckOverlappedHeatSinkCount(out int heatSinkCost)
+        {
+            var overlappedHeatSink = 0;
+            heatSinkCost = 0;
+            foreach (var pos in ActualHeatSinkPos)
+            {
+                if (owner.CheckBoardPosValidAndFilled(pos))
+                {
+                    heatSinkCost += CalcPerHeatSinkCost(overlappedHeatSink);
+                    overlappedHeatSink++;
+                }
+            }
+            return overlappedHeatSink;
+        }
 
-        public int CheckHeatSink(StageType type)
+        public int HeatSinkCost => CheckOverlappedHeatSinkCount(out var A); //现在对他的调用是读取的、需要可能改成触发的。
+
+        public void UpkeepHeatSink(StageType type)
         {
             //在这里计算每个HeatSink的价值。
             ResetGridStatus();
@@ -350,23 +370,14 @@ namespace ROOT
                 BoardGirds.Where(val => waringTile.Contains(val.Key))
                     .ForEach(val => val.Value.CellStatus = CellStatus.PreWarning);
             }
-
-            heatSinkCost = 0;
-            var overlappedHeatSink = 0;
+            
             for (var i = 0; i < ActualHeatSinkPos.Length; i++)
             {
                 var key = ActualHeatSinkPos[i];
                 BoardGirds[key].HeatSinkID = i;
                 BoardGirds[key].HeatSinkCost = CalcPerHeatSinkCost(i);
                 BoardGirds[key].CellStatus = GettargetingStatus(type);
-                if (owner.CheckBoardPosValidAndFilled(key))
-                {
-                    overlappedHeatSink++;
-                    heatSinkCost += CalcPerHeatSinkCost(i);
-                }
             }
-
-            return overlappedHeatSink;
         }
 
         /// <summary>
@@ -740,7 +751,7 @@ namespace ROOT
             UnitsGameObjects = new Dictionary<Vector2Int, GameObject>();
             BoardGirdDriver = new BoardGirdDriver {owner = this};
             BoardGirdDriver.InitBoardGird();
-            BoardGirdDriver.CheckHeatSink(StageType.Shop);
+            BoardGirdDriver.UpkeepHeatSink(StageType.Shop);
             LFLocatorStatic = LFLocator;
             URLocatorStatic = URLocator;
             MessageDispatcher.AddListener(WorldEvent.BoardShouldUpdateEvent,FullyUpdateBoardData);
@@ -954,8 +965,7 @@ namespace ROOT
             if (lastUnitsHashCode != hashCode)
             {
                 lastUnitsHashCode = hashCode;
-                Debug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode);
-                //MessageDispatcher.SendMessage(WorldEvent.BoardShouldUpdateEvent);
+                RootDebug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode, NameID.YanYoumo_Log);
                 FullyUpdateBoardData(new com.ootii.Messages.Message());
             }
         }
