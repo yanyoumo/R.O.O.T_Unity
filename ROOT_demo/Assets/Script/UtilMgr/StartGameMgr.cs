@@ -10,10 +10,12 @@ using Random = UnityEngine.Random;
 
 namespace ROOT.SetupAsset
 {
-    public partial class LevelLib : MonoBehaviour
+    public partial class LevelLib
     {
         internal LevelActionAssetLib TutorialLevelActionAssetLib;
-        public LevelActionAsset[] CareerActionAssetList { internal set; get; }
+        internal LevelActionAssetLib CareerLevelActionAssetLib;
+        internal LevelActionAssetLib TestingLevelActionAssetLib;
+        //public LevelActionAsset[] CareerActionAssetList { internal set; get; }
     }
 }
 
@@ -50,7 +52,7 @@ namespace ROOT
 
         public GameObject SignalMasterRoot;
         public LevelActionAssetLib TutorialActionAssetLib;
-        public LevelActionAssetLib ClassicGameActionAssetLib;
+        //public LevelActionAssetLib ClassicGameActionAssetLib;
         public LevelActionAssetLib CareerGameActionAssetLib;
         public LevelActionAssetLib TestingGameActionAssetLib;
         
@@ -178,6 +180,10 @@ namespace ROOT
             Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
             StartCoroutine(LoadLevelMasterSceneAndSetActive());
             LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
+            LevelLib.Instance.CareerLevelActionAssetLib = CareerGameActionAssetLib;
+            LevelLib.Instance.TestingLevelActionAssetLib = TestingGameActionAssetLib;
+            /*LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
+            
             LevelActionAsset[] tutorialArray= TutorialActionAssetLib.ActionAssetList;
             int levelLengthCount = tutorialArray.Length + CareerGameActionAssetLib.ActionAssetList.Length;
             LevelLib.Instance.CareerActionAssetList = new LevelActionAsset[levelLengthCount];
@@ -185,9 +191,8 @@ namespace ROOT
             {
                 var tmp = i<tutorialArray.Length ? tutorialArray[i] : CareerGameActionAssetLib.ActionAssetList[i- tutorialArray.Length];
                 LevelLib.Instance.CareerActionAssetList[i] = tmp;
-            }
+            }*/
             LevelLib.Instance.LockInLib();
-
 
 
 #if !UNITY_EDITOR
@@ -202,8 +207,9 @@ namespace ROOT
 
         public void GameStart()
         {
-            LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib.ActionAssetList[0]);
-            SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
+            throw new NotImplementedException();
+            /*LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib.ActionAssetList[0]);
+            SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));*/
         }
 
         public void TutorialStart()

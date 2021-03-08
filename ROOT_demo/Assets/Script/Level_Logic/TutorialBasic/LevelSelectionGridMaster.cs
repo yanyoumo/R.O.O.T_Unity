@@ -23,14 +23,17 @@ namespace ROOT.UI
             ConstructionGrid.LevelQuadTemplate = LevelQuadTemplate;
         }
 
-        public Button[] InitTutorialLevelSelectionMainMenu(TutorialQuadDataPack[] data)
+        public Button[] InitLevelSelectionMainMenu(
+            TutorialQuadDataPack[] TutorialData,
+            TutorialQuadDataPack[] CareerData,
+            TutorialQuadDataPack[] TestingData)
         {
-            //var bA=TutorialGrid.InitTutorialLevelSelectionMainMenu(data);
-            var bB=MainPlayGrid.InitTutorialLevelSelectionMainMenu(data);
-            //var bC=ConstructionGrid.InitTutorialLevelSelectionMainMenu(data);
-            return bB;
+            var bA = TutorialGrid.InitTutorialLevelSelectionMainMenu(TutorialData);
+            var bB = MainPlayGrid.InitTutorialLevelSelectionMainMenu(CareerData);
+            var bC = ConstructionGrid.InitTutorialLevelSelectionMainMenu(TestingData);
+            return bA.Concat(bB).Concat(bC).ToArray();
         }
-        
+
         public void BackToMenu()
         {
             SceneManager.LoadSceneAsync(StaticName.SCENE_ID_START, LoadSceneMode.Single);

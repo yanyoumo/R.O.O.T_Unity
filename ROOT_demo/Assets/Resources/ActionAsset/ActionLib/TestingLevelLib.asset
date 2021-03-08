@@ -10,10 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38d73b3f86fb8a344a648e6d4532b625, type: 3}
-  m_Name: CareerLevelLib
+  m_Name: TestingLevelLib 1
   m_EditorClassIdentifier: 
   ActionAssetList:
-  - {fileID: 11400000, guid: dad89a38092ca7d4796ebd3a6d640922, type: 2}
-  - {fileID: 11400000, guid: 6613fa0c3ed6ca3439f6cd00b1d14943, type: 2}
-  - {fileID: 11400000, guid: cf38d592ca9502a49b0d386ba2aedee8, type: 2}
-  - {fileID: 11400000, guid: 89172602d7319e34bb1be01e01ca32ae, type: 2}
+  - {fileID: 11400000, guid: ca4500c84563b3047b2e3c5dd2c20250, type: 2}
+  - {fileID: 11400000, guid: 3d5f44cedf81aa341a5a0c78e8bbfe6b, type: 2}

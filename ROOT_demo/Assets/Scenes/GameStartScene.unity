@@ -6600,6 +6600,12 @@ PrefabInstance:
       propertyPath: SignalMasterRoot
       value: 
       objectReference: {fileID: 326358482}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: TestingGameActionAssetLib
+      value: 
+      objectReference: {fileID: 11400000, guid: 1e7b5c2fd97026e49887fd67ad0a553e,
+        type: 2}
     - target: {fileID: 2835144725562628124, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}
       propertyPath: m_RootOrder
