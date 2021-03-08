@@ -11,6 +11,9 @@ namespace ROOT
     public sealed partial class LevelSelectorMgr : MonoBehaviour
     {
         public GameObject TutorialCanvas;
+        public GameObject TutorialGridRoot;
+        public GameObject GameLevelGridRoot;
+        public GameObject TestingGridRoot;
         TutorialQuadDataPack[] _dataS;
         private TextMeshProUGUI content;
         private bool Loading = false;
