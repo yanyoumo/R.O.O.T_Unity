@@ -15,6 +15,7 @@ MonoBehaviour:
   CategoryName: MajorUI
   DatabaseType: 2
   Names:
-  - GameStartView
-  - GamePlayUI
   - CareerSetupView
+  - GamePlayUI
+  - GameStartView
+  - LevelSelectView

@@ -650,73 +650,9 @@ namespace ROOT
             throw new ArgumentException();
         }
 
-        public static string PaddingNum4Digit(int input)
-        {
-            int inputInt = input;
-            if (inputInt >= 10000)
-            {
-                return "????";
-            }
-            else if (inputInt >= 1000)
-            {
-                return inputInt.ToString();
-            }
-            else if (inputInt >= 100)
-            {
-                return "0" + inputInt;
-            }
-            else if (inputInt >= 10)
-            {
-                return "00" + inputInt;
-            }
-            else
-            {
-                return "000" + inputInt;
-            }
-        }
-
-        public static string PaddingNum3Digit(float input)
-        {
-            return PaddingNum3Digit(Mathf.FloorToInt(input));
-        }
-
-        public static string PaddingNum3Digit(int input)
-        {
-            int inputInt = input;
-            if (inputInt >= 1000)
-            {
-                return "???";
-            }
-            else if (inputInt >= 100)
-            {
-                return inputInt.ToString();
-            }
-            else if (inputInt >= 10)
-            {
-                return "0" + inputInt;
-            }
-            else
-            {
-                return "00" + inputInt;
-            }
-        }
-
-        public static string PaddingNum2Digit(int input)
-        {
-            int inputInt = input;
-            if (inputInt >= 100)
-            {
-                return "???";
-            }
-            else if (inputInt >= 10)
-            {
-                return "" + inputInt;
-            }
-            else
-            {
-                return "0" + inputInt;
-            }
-        }
+        public static string PaddingNum4Digit(int input) => input >= 10000 ? "????" : input.ToString("D4");
+        public static string PaddingNum3Digit(int input) => input >= 1000 ? "???" : input.ToString("D3");
+        public static string PaddingNum2Digit(int input) => input >= 100 ? "??" : input.ToString("D2");
 
         public static ConnectionMeshType GetRelationNoConnection(HardwareType SrcGenre)
         {

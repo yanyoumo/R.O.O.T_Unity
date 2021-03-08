@@ -70,10 +70,10 @@ MonoBehaviour:
   Actions: []
   BossSetup:
     BossStageTypeVal: 1
-    BossLength: 0
+    BossLength: 1
     DestoryerCount: 0
     InfoCount: 0
     InfoVariantRatio: 0
     InfoTargetRatio: 0
-    AcquiringTarget: 0
+    AcquiringTarget: 8700
   ExcludedShop: 0

@@ -70,7 +70,7 @@ namespace ROOT.SetupAsset
 
         public StageType GetCurrentType(int truncatedStep)
         {
-            if (truncatedStep <= TotalLength)
+            if (truncatedStep < TotalLength)
             {
                 var tmpTStep = truncatedStep;
                 for (int i = 0; i < 3; i++)

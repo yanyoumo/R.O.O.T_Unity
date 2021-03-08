@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ROOT.SetupAsset;
+using ROOT.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,28 +12,42 @@ namespace ROOT
     public sealed partial class LevelSelectorMgr : MonoBehaviour
     {
         public GameObject TutorialCanvas;
-        TutorialQuadDataPack[] _dataS;
+        public GameObject DozzyLevelSelectionCanvas;
+        //TutorialQuadDataPack[] _tutorial_dataS;
         private TextMeshProUGUI content;
         private bool Loading = false;
-        public bool IsCareer = false;
+        //public bool IsCareer = false;
 
-        private LevelActionAsset[] ActionAssetList => IsCareer ? LevelLib.Instance.CareerActionAssetList : LevelLib.Instance.TutorialActionAssetList;
-        private int ActionAssetCount => ActionAssetList.Length;
+        //这三个List就先以这个次序弄吧。
+        private LevelActionAsset[] TutorialActionAssetList => LevelLib.Instance.TutorialActionAssetList;
+        private LevelActionAsset[] CareerActionAssetList => LevelLib.Instance.CareerActionAssetList;
+        private LevelActionAsset[] TestingActionAssetList => LevelLib.Instance.TestingActionAssetList;
 
+        private bool ActionAssetIsTutorial(int i) => i < TutorialActionAssetList.Length;
+        
+        private TutorialQuadDataPack[] QuadDataPacksFromActionAssetList(LevelActionAsset[] list)
+        {
+            var res = new TutorialQuadDataPack[list.Length];
+            for (var i = 0; i < list.Length; i++)
+            {
+                res[i] = list[i].TutorialQuadDataPack;
+            }
+            return res;
+        }
+        
         void Start()
         {
-            _dataS = new TutorialQuadDataPack[ActionAssetCount];
-            for (var i = 0; i < ActionAssetCount; i++)
-            {
-                _dataS[i] = ActionAssetList[i].TutorialQuadDataPack;
-            }
-
-            var buttons = TutorialCanvas.GetComponentInChildren<TutorialLevelSelectionMainMenu>().InitTutorialLevelSelectionMainMenu(_dataS);
+            var _tutorial_dataS = QuadDataPacksFromActionAssetList(TutorialActionAssetList);
+            var _career_dataS = QuadDataPacksFromActionAssetList(CareerActionAssetList);
+            var _testing_dataS = QuadDataPacksFromActionAssetList(TestingActionAssetList);
+            
+            var buttons = DozzyLevelSelectionCanvas
+                .GetComponentInChildren<LevelSelectionGridMaster>()
+                .InitLevelSelectionMainMenu(_tutorial_dataS,_career_dataS,_testing_dataS);
 
             for (var i = 0; i < buttons.Length; i++)
             {
-                var buttonId = i;
-                TextMeshProUGUI tmp = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
+                var buttonId = i; var tmp = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
                 buttons[i].onClick.AddListener(() => { ButtonsListener(buttonId, tmp); });
             }
         }
@@ -41,7 +56,7 @@ namespace ROOT
         {
             LevelMasterManager.Instance.LoadCareerSetup(buttonId);
             yield return 0;
-            SceneManager.UnloadSceneAsync(IsCareer ? StaticName.SCENE_ID_CAREER : StaticName.SCENE_ID_TUTORIAL);
+            SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREER);
         }
 
         public void ButtonsListener(int buttonId, TextMeshProUGUI _content)

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
+using I2.Loc;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -18,6 +19,8 @@ namespace ROOT
 
     public class FSMLevelLogic_Telemetry : FSMLevelLogic_Career //LEVEL-LOGIC/每一关都有一个这个类。
     {
+        protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTelemetry_Successed;
+        protected override string FailedEndingTerm => ScriptTerms.EndingMessageTelemetry_Failed;
         public override bool IsTutorial => false;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => true;
@@ -95,6 +98,55 @@ namespace ROOT
 
         #endregion
         
+        private void UpdateSignalReq(RoundGist roundGist)
+        {
+            var normalRval = roundGist.normalReq;
+            var networkRval = roundGist.networkReq;
+            var noRequirement = (normalRval == 0 && networkRval == 0);
+            if (noRequirement)
+            {
+                LevelAsset.TimeLine.RequirementSatisfied = true;
+            }
+            else
+            {
+                var signalInfo = new BoardSignalUpdatedInfo
+                {
+                    SignalData = new BoardSignalUpdatedData()
+                    {
+                        TgtTypeASignal = normalRval,
+                        TgtTypeBSignal = networkRval,
+                    },
+                };
+                MessageDispatcher.SendMessage(signalInfo);
+
+                if (LevelAsset.TimeLine.RequirementSatisfied && roundGist.Type == StageType.Require)
+                {
+                    LevelAsset.ReqOkCount++;
+                }
+            }
+        }
+
+        
+        protected override void UpdateLevelAsset()
+        {
+            base.UpdateLevelAsset();
+            if ((LevelAsset.DestroyerEnabled && !RoundLibDriver.IsDestoryerRound) && !WorldCycler.TelemetryStage)
+            {
+                LevelAsset.WarningDestoryer.ForceReset();
+            }
+        }
+
+        protected override void UpdateRoundData_Stepped()
+        {
+            base.UpdateRoundData_Stepped();
+            LevelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
+            var roundGist = RoundLibDriver.CurrentRoundGist.Value;
+            if (RoundLibDriver.IsRequireRound || RoundLibDriver.IsShopRound)
+            {
+                UpdateSignalReq(roundGist);
+            }
+        }
+
         private void TelemetryMinorUpdate()
         {
             if (WorldCycler.TelemetryPause) return;
@@ -122,8 +174,9 @@ namespace ROOT
             }
         }
 
-        protected override void AddtionalMajorUpkeep()
+        protected override void AdditionalMajorUpkeep()
         {
+            //base.AdditionalMajorUpkeep();
             if (CheckTelemetryStageInit())
             {
                 TelemetryInit();
@@ -138,7 +191,8 @@ namespace ROOT
                 WorldExecutor.CleanDestoryer(LevelAsset);
                 //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
                 //总之稳了后，这个不能这么每帧调用。
-                LevelAsset.occupiedHeatSink = LevelAsset.GameBoard.BoardGirdDriver.CheckHeatSink(RoundLibDriver.CurrentStage.Value);
+                LevelAsset.GameBoard.BoardGirdDriver.UpkeepHeatSink(RoundLibDriver.CurrentStage.Value);
+                LevelAsset.GameBoard.BoardGirdDriver.CheckOverlappedHeatSinkCount(out LevelAsset.occupiedHeatSinkCount);
                 LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
                 if (LevelAsset.SkillEnabled)
                 {
@@ -252,10 +306,8 @@ namespace ROOT
                 {
                     CrtTypeASignal = TypeASignalCount,
                     CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = levelAsset.GameBoard.GetTotalTierCountByCoreType(
-                        levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
-                    TypeBTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(
-                        levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                    TypeATier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
+                    TypeBTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
                 },
             };
             MessageDispatcher.SendMessage(signalInfo);

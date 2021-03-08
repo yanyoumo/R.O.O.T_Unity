@@ -41,4 +41,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GamePlayAdditionalVisualScene_Acquiring.unity
     guid: 79983f24049030a4992c67d7eebd904c
+  - enabled: 1
+    path: Assets/Scenes/GamePlayAdditionalVisualScene_Telemetry.unity
+    guid: 94c0f81d6ac88894894e8d8b6f452986
   m_configObjects: {}

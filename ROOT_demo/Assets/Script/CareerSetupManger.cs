@@ -139,7 +139,7 @@ namespace ROOT
 
         public void Continue()
         {
-            var actionAsset = LevelLib.Instance.CareerActionAssetList[sceneId];
+            var actionAsset = LevelLib.Instance.ActionAsset(sceneId);
             additionalGameSetup.updateSignal();
             RootDebug.Log("the PlayingSignalType is " + additionalGameSetup.PlayingSignalTypeA + ", and " + additionalGameSetup.PlayingSignalTypeB, NameID.SuYuxuan_Log);
             if (!additionalGameSetup.PlayingSignalTypeA.Equals(additionalGameSetup.PlayingSignalTypeB))

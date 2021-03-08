@@ -75,7 +75,10 @@ namespace ROOT
         public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? AutoAnimationDuration : DefaultAnimationDuration;
         private static readonly float DefaultAnimationDuration = 0.15f; //都是秒
         private static readonly float AutoAnimationDuration = 1.5f; //都是秒
-        
+
+        protected abstract string SucceedEndingTerm { get; }
+        protected abstract string FailedEndingTerm { get; }
+
         #region 类属性
 
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
@@ -256,7 +259,7 @@ namespace ROOT
             //BaseVerison Do-nothing.
         }
 
-        protected virtual void AddtionalMajorUpkeep()
+        protected virtual void AdditionalMajorUpkeep()
         {
             //BaseVerison Do-nothing.
         }
@@ -279,7 +282,7 @@ namespace ROOT
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
             UpdateBoardData_Stepped(ref LevelAsset);//RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
-            AddtionalMajorUpkeep();
+            AdditionalMajorUpkeep();
             WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
         
@@ -295,6 +298,16 @@ namespace ROOT
             if (CheckGameOver) GameEnding();
         }
 
+        protected void SendCurrencyMessage()
+        {
+            var message = new CurrencyUpdatedInfo() {
+                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
+                IncomesVal = Mathf.RoundToInt(LevelAsset.DeltaCurrency),
+            };
+            MessageDispatcher.SendMessage(message);
+        }
+
+        
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
         protected void ForwardCycle()
         {
@@ -305,6 +318,7 @@ namespace ROOT
             }
 
             LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
+            SendCurrencyMessage();
         }
 
         protected void CleanUp()
@@ -350,6 +364,8 @@ namespace ROOT
         {
             PendingCleanUp = true;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
+            LevelAsset.GameOverAsset.SuccessTerm = SucceedEndingTerm;
+            LevelAsset.GameOverAsset.FailedTerm = FailedEndingTerm;
         }
         
         protected virtual bool CheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
@@ -375,12 +391,11 @@ namespace ROOT
             MessageDispatcher.SendMessage(signalInfo);
         }
         
-        protected virtual void BoardUpdatedHandler(IMessage rMessage)
-        {
-            UpdateBoardData_Instantly();
-        }
+        //这个函数只有在Board被更新的时候才会走、但是里面有和轮次相关的数据。
+        //现在的解决方法是变轮次的的时候，发一个"Board已更新"的事件.
+        protected virtual void BoardUpdatedHandler(IMessage rMessage) => UpdateBoardData_Instantly();
 
-        private FSMEventInquiryResponder _inquiryResponder;
+        //private FSMEventInquiryResponder _inquiryResponder;
         
         private void Update()
         {
@@ -400,7 +415,7 @@ namespace ROOT
         {
             LevelAsset = new GameAssets();
             _mainFSM = new RootFSM {owner = this};
-            _inquiryResponder = new FSMEventInquiryResponder(this);
+            //_inquiryResponder = new FSMEventInquiryResponder(this);
             
             UpdateLogicLevelReference();
 

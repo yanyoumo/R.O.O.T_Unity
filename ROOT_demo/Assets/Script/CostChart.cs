@@ -21,12 +21,12 @@ namespace ROOT
         
         protected virtual void Awake()
         {
-            MessageDispatcher.AddListener(InGameStatusChangedEvent, RoundTypeChangedHandler);
+            MessageDispatcher.AddListener(InGameStageChangedEvent, RoundTypeChangedHandler);
         }
 
         protected virtual void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(InGameStatusChangedEvent, RoundTypeChangedHandler);
+            MessageDispatcher.RemoveListener(InGameStageChangedEvent, RoundTypeChangedHandler);
         }
     }
 
@@ -37,7 +37,16 @@ namespace ROOT
 
         private int _cached_currencyVal;
         private int _cached_incomesVal;
-            
+
+        protected override void RoundTypeChangedHandler(IMessage rmessage)
+        {
+            base.RoundTypeChangedHandler(rmessage);
+            if (rmessage is TimingEventInfo info)
+            {
+                CostChartUpdateCore(int.MaxValue,int.MaxValue);
+            }
+        }
+
         private void UpdateCachedData(int currencyVal, int incomesVal)
         {
             if (currencyVal != int.MaxValue) _cached_currencyVal = currencyVal;
@@ -87,9 +96,10 @@ namespace ROOT
         
         private void CostChartUpdateCore(int currencyVal, int incomesVal)
         {
+            //Debug.Log("CostChartUpdateCore");
             UpdateCachedData(currencyVal, incomesVal);
-                
             UpdateCurrencyVal(_cached_currencyVal);
+            
             switch (StageType)
             {
                 case StageType.Boss:
@@ -99,11 +109,14 @@ namespace ROOT
                     }
                     else
                     {
-                        throw new NotImplementedException();
+                        UpdateIncomeValAsNotActive();
+                        //throw new NotImplementedException();
                     }
                     break;
                 case StageType.Shop:
                 case StageType.Ending:
+                    //到这里有个问题、就是它是显示出来了，但是Cache的数据还是原来的。
+                    //本来没问题、但是Cache的这个数据、是之前“没有收入”的时候拿到的；所以是0。
                     UpdateIncomeValAsNotActive();
                     break;
                 case StageType.Require:

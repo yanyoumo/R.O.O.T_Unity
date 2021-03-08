@@ -11,13 +11,26 @@ namespace ROOT.SetupAsset
         private static LevelLib _instance;
         public static LevelLib Instance => _instance;
 
-        [Obsolete]
         public LevelActionAsset[] TutorialActionAssetList => TutorialLevelActionAssetLib.ActionAssetList;
-        [Obsolete]
-        public int TutorialActionAssetCount => TutorialLevelActionAssetLib.ActionAssetList.Length;
-        public int CareerActionAssetCount => CareerActionAssetList.Length;
+        public LevelActionAsset[] CareerActionAssetList => CareerLevelActionAssetLib.ActionAssetList;
+        public LevelActionAsset[] TestingActionAssetList => TestingLevelActionAssetLib.ActionAssetList;
 
-        public LevelActionAsset GetNextActionAsset(LevelActionAsset[] lib, in LevelActionAsset asset)
+        public LevelActionAsset ActionAsset(int i)
+        {
+            if (i<TutorialActionAssetList.Length)
+            {
+                return TutorialActionAssetList[i];
+            }
+            i -= TutorialActionAssetList.Length;
+            if (i<CareerActionAssetList.Length)
+            {
+                return CareerActionAssetList[i];
+            }
+            i -= CareerActionAssetList.Length;
+            return TestingActionAssetList[i];
+        }
+        
+        private LevelActionAsset GetNextActionAsset(LevelActionAsset[] lib, in LevelActionAsset asset)
         {
             for (var i = 0; i < lib.Length; i++)
             {
@@ -58,7 +71,7 @@ namespace ROOT.SetupAsset
 
         public void LockInLib()
         {
-            Object.DontDestroyOnLoad(this);
+            DontDestroyOnLoad(this);
         }
     }
 }
