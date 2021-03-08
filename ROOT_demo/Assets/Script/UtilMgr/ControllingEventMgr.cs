@@ -52,7 +52,7 @@ namespace ROOT
 
         private static Vector2 MouseScreenPos;
 
-        private const float minHoldShift = 1e-4f;
+        private const float minHoldShift = 1e-3f;
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
