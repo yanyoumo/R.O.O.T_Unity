@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ROOT.SetupAsset;
+using ROOT.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,9 +12,7 @@ namespace ROOT
     public sealed partial class LevelSelectorMgr : MonoBehaviour
     {
         public GameObject TutorialCanvas;
-        public GameObject TutorialGridRoot;
-        public GameObject GameLevelGridRoot;
-        public GameObject TestingGridRoot;
+        public GameObject DozzyLevelSelectionCanvas;
         TutorialQuadDataPack[] _dataS;
         private TextMeshProUGUI content;
         private bool Loading = false;
@@ -30,7 +29,8 @@ namespace ROOT
                 _dataS[i] = ActionAssetList[i].TutorialQuadDataPack;
             }
 
-            var buttons = TutorialCanvas.GetComponentInChildren<TutorialLevelSelectionMainMenu>().InitTutorialLevelSelectionMainMenu(_dataS);
+            //var buttons = TutorialCanvas.GetComponentInChildren<TutorialLevelSelectionMainMenu>().InitTutorialLevelSelectionMainMenu(_dataS);
+            var buttons = DozzyLevelSelectionCanvas.GetComponentInChildren<LevelSelectionGridMaster>().InitTutorialLevelSelectionMainMenu(_dataS);
 
             for (var i = 0; i < buttons.Length; i++)
             {

@@ -17,7 +17,7 @@ namespace ROOT.SetupAsset
         public int TutorialActionAssetCount => TutorialLevelActionAssetLib.ActionAssetList.Length;
         public int CareerActionAssetCount => CareerActionAssetList.Length;
 
-        public LevelActionAsset GetNextActionAsset(LevelActionAsset[] lib, in LevelActionAsset asset)
+        private LevelActionAsset GetNextActionAsset(LevelActionAsset[] lib, in LevelActionAsset asset)
         {
             for (var i = 0; i < lib.Length; i++)
             {
