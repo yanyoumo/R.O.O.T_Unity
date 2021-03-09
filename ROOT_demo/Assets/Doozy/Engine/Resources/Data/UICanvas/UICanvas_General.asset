@@ -19,3 +19,4 @@ MonoBehaviour:
   - MainPlaying
   - GameStart
   - LevelSelection
+  - OptionPage

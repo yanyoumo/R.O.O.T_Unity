@@ -52,7 +52,6 @@ namespace ROOT
 
         public GameObject SignalMasterRoot;
         public LevelActionAssetLib TutorialActionAssetLib;
-        //public LevelActionAssetLib ClassicGameActionAssetLib;
         public LevelActionAssetLib CareerGameActionAssetLib;
         public LevelActionAssetLib TestingGameActionAssetLib;
         
@@ -95,24 +94,25 @@ namespace ROOT
             }
         }
 
-        [Serializable]
-        struct GameSettingJSON
+        [Button]
+        void ClearPlayerPrefs()
         {
-            public int startingMoney;
+            PlayerPrefs.DeleteAll();
         }
-
-        /*[Button]
-        void Test()
-        {
-            float A = 1234.5678f;
-            Debug.Log(A.ToString("f2"));
-            int B = 1234;
-            Debug.Log(B.ToString("D3"));
-        }*/
-        
         
         void Awake()
         {
+            //这个玩意儿利用起来、用这个来保存玩家现有教程进度。
+            if (PlayerPrefs.HasKey("PlayerID"))
+            {
+                Debug.Log("Player ID is:" + PlayerPrefs.GetInt("PlayerID"));
+            }
+            else
+            {
+                PlayerPrefs.SetInt("PlayerID", DateTime.UtcNow.Millisecond);
+                PlayerPrefs.Save();
+                Debug.Log("New Player ID is:" + PlayerPrefs.GetInt("PlayerID"));
+            }
             //这里不能用Time.time，因为Awake和游戏运行时间差距一般很小且固定。所以这里要去调系统时间
             //RISK 这里可能需要去测试iOS的系统，目前没有测，测了后删掉。
             Random.InitState(DateTime.UtcNow.Millisecond);
@@ -182,40 +182,7 @@ namespace ROOT
             LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
             LevelLib.Instance.CareerLevelActionAssetLib = CareerGameActionAssetLib;
             LevelLib.Instance.TestingLevelActionAssetLib = TestingGameActionAssetLib;
-            /*LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
-            
-            LevelActionAsset[] tutorialArray= TutorialActionAssetLib.ActionAssetList;
-            int levelLengthCount = tutorialArray.Length + CareerGameActionAssetLib.ActionAssetList.Length;
-            LevelLib.Instance.CareerActionAssetList = new LevelActionAsset[levelLengthCount];
-            for (var i = 0; i < levelLengthCount; i++)
-            {
-                var tmp = i<tutorialArray.Length ? tutorialArray[i] : CareerGameActionAssetLib.ActionAssetList[i- tutorialArray.Length];
-                LevelLib.Instance.CareerActionAssetList[i] = tmp;
-            }*/
             LevelLib.Instance.LockInLib();
-
-
-#if !UNITY_EDITOR
-            var gameSetting = new GameSettingJSON {startingMoney = Mathf.RoundToInt(Random.value*100)};
-            FileIOUtility.WriteString(JsonUtility.ToJson(gameSetting), "GameSetting.json");
-
-            var GameSettingString = FileIOUtility.ReadString("GameSetting.json");
-            var gameSettingB = JsonUtility.FromJson<GameSettingJSON>(GameSettingString);
-            Debug.Log(gameSettingB + "::" + gameSettingB.startingMoney);
-#endif
-        }
-
-        public void GameStart()
-        {
-            throw new NotImplementedException();
-            /*LevelMasterManager.Instance.LoadLevelThenPlay(ClassicGameActionAssetLib.ActionAssetList[0]);
-            SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));*/
-        }
-
-        public void TutorialStart()
-        {
-            /*SceneManager.LoadSceneAsync(StaticName.SCENE_ID_TUTORIAL, LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));*/
         }
 
         private bool OnceGuard = false;
