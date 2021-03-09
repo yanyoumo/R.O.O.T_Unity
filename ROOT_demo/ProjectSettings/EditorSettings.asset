@@ -32,7 +32,7 @@ EditorSettings:
   m_DisableCookiesInLightmapper: 1
   m_AssetPipelineMode: 1
   m_CacheServerMode: 1
-  m_CacheServerEndpoint: 123.118.96.15:10080
+  m_CacheServerEndpoint: theArchitectYan.Asuscomm.com:10080
   m_CacheServerNamespacePrefix: default
   m_CacheServerEnableDownload: 1
   m_CacheServerEnableUpload: 1
