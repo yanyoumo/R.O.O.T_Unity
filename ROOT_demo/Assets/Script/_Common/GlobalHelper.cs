@@ -848,23 +848,6 @@ namespace ROOT
             return V2toV2Int(normalizedIn * rhs + center);
         }
     }
-    public class FileIOUtility
-    {
-        public static void WriteString(string Content,string path)
-        {
-            StreamWriter writer = new StreamWriter(path);
-            writer.WriteLine(Content);
-            writer.Close();
-        }
-
-        public static string ReadString(string path)
-        {
-            StreamReader reader = new StreamReader(path);
-            var content = reader.ReadToEnd();
-            reader.Close();
-            return content;
-        }
-    }
     public static class TextProcessHelper
     {
         public static string TmpColorBlueXml(string content)
