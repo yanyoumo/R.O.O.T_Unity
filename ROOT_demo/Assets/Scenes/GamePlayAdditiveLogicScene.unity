@@ -852,20 +852,11 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 4
     - _id: 37
-      _name: MouseWheelUp
-      _type: 1
+      _name: MouseWheel
+      _type: 0
       _descriptiveName: Action0
-      _positiveDescriptiveName: 
-      _negativeDescriptiveName: 
-      _behaviorId: 0
-      _userAssignable: 1
-      _categoryId: 4
-    - _id: 38
-      _name: MouseWheelDown
-      _type: 1
-      _descriptiveName: Action1
-      _positiveDescriptiveName: 
-      _negativeDescriptiveName: 
+      _positiveDescriptiveName: MouseWheelUp
+      _negativeDescriptiveName: MouseWheelDown
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 4
@@ -909,7 +900,7 @@ MonoBehaviour:
       - categoryId: 3
         actionIds: 06000000070000001e00000020000000
       - categoryId: 4
-        actionIds: 160000001c0000001d0000002100000023000000240000002500000026000000
+        actionIds: 160000001c0000001d00000021000000230000002400000025000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -925,7 +916,7 @@ MonoBehaviour:
       _mouseXYAxisDeltaCalc: 0
       _mouseOtherAxisSensitivity: 1
       _customControllerAxisSensitivity: 1
-      _buttonDoublePressSpeed: 0.3
+      _buttonDoublePressSpeed: 0.01
       _buttonShortPressTime: 0.75
       _buttonShortPressExpiresIn: 0
       _buttonLongPressTime: 1
@@ -1364,18 +1355,7 @@ MonoBehaviour:
         _actionId: 37
         _elementType: 0
         _elementIdentifierId: 2
-        _axisRange: 1
-        _invert: 0
-        _axisContribution: 0
-        _keyboardKeyCode: 0
-        _modifierKey1: 0
-        _modifierKey2: 0
-        _modifierKey3: 0
-      - _actionCategoryId: 0
-        _actionId: 38
-        _elementType: 0
-        _elementIdentifierId: 2
-        _axisRange: 2
+        _axisRange: 0
         _invert: 0
         _axisContribution: 0
         _keyboardKeyCode: 0
@@ -1479,7 +1459,7 @@ MonoBehaviour:
     SignalInfo: 0
     CollectorZone: []
     CineCam: {fileID: 0}
-    occupiedHeatSink: 0
+    occupiedHeatSinkCount: 0
     InputEnabled: 1
     CurrencyEnabled: 1
     CursorEnabled: 1

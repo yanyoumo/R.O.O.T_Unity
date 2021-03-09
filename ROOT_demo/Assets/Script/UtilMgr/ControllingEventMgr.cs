@@ -21,6 +21,7 @@ namespace ROOT
         public Vector2 MouseScreenPosB;
         public int FuncID;
         public bool HoldForDrag;
+        public float MouseWheelDelta;
 
         public bool IsAction(int actionID)
         {
@@ -52,7 +53,7 @@ namespace ROOT
 
         private static Vector2 MouseScreenPos;
 
-        private const float minHoldShift = 1e-3f;
+        private const float minHoldShift = 1e-2f;
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -98,8 +99,7 @@ namespace ROOT
             //player.AddInputEventDelegate(OnInputUpdateMouseHold, UpdateLoopType.Update, InputActionEventType.ButtonJustPressedForTime, Passthough.MouseLeft, new object[] { 1.5f });
             player.AddInputEventDelegate(OnInputUpdateMouseSingleClickRight, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseRight);
             player.AddInputEventDelegate(OnInputUpdateMouseSingleClickMiddle, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseMiddle);
-            player.AddInputEventDelegate(OnInputUpdateMouseWheelUp, UpdateLoopType.Update, InputActionEventType.AxisActiveOrJustInactive, Passthough.MouseWheelUp);
-            player.AddInputEventDelegate(OnInputUpdateMouseWheelDown, UpdateLoopType.Update, InputActionEventType.AxisActiveOrJustInactive, Passthough.MouseWheelDown);
+            player.AddInputEventDelegate(OnInputUpdateMouseWheel, UpdateLoopType.Update, InputActionEventType.AxisActive, Passthough.MouseWheel);
         }
 
         private void OnInputUpdateCurser(InputActionEventData obj)
@@ -259,27 +259,17 @@ namespace ROOT
             MessageDispatcher.SendMessage(actionPack);
             RootDebug.Log("Mouse Single Click Middle", NameID.JiangDigong_Log);
         }
-        private void OnInputUpdateMouseWheelUp(InputActionEventData obj)
+        private void OnInputUpdateMouseWheel(InputActionEventData obj)
         {
             var actionPack = new ActionPack
             {
                 ActionID = obj.actionId,
                 eventType = obj.eventType,
                 Sender = this,
+                MouseWheelDelta = player.GetAxisDelta(obj.actionId),
             };
             MessageDispatcher.SendMessage(actionPack);
-            RootDebug.Log("Mouse Wheel Up", NameID.JiangDigong_Log);
-        }
-        private void OnInputUpdateMouseWheelDown(InputActionEventData obj)
-        {
-            var actionPack = new ActionPack
-            {
-                ActionID = obj.actionId,
-                eventType = obj.eventType,
-                Sender = this,
-            };
-            MessageDispatcher.SendMessage(actionPack);
-            RootDebug.Log("Mouse Wheel Down", NameID.JiangDigong_Log);
+            RootDebug.Log("Mouse Wheel Delta "+ player.GetAxisDelta(obj.actionId), NameID.JiangDigong_Log);
         }
     }
 }
