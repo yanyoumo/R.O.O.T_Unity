@@ -64,6 +64,21 @@ namespace ROOT
 
         protected bool CoreDrivingFunction(ActionPack actionPack)
         {
+
+            if (actionPack.IsAction(MouseLeft))
+            {
+                Debug.Log("actionPack.IsAction(MouseLeft)");
+                if (Camera.current == null)
+                {
+                    //BUG 尼玛，获取不了。估计还得发个事件拿一下？到时候查查。
+                    Debug.Log("Camera.current == null");
+                }
+                //var ray = Camera.current.ScreenPointToRay(new Vector3(actionPack.MouseScreenPosA.x, actionPack.MouseScreenPosA.y, 0.0f));
+                /*Physics.Raycast(ray, out var hit);
+                Debug.Log(hit.transform.name);*/
+                return false;
+            }
+
             FilterDir(actionPack, out var dir);
             if (dir.HasValue)
             {

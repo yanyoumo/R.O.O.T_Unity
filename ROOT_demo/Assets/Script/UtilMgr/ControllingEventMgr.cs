@@ -191,6 +191,7 @@ namespace ROOT
             RootDebug.Log("Mouse Single Click Up",NameID.JiangDigong_Log);
             if (!MouseScreenPos.Equals(new Vector2(Single.NaN, Single.NaN)))
             {
+                Debug.Log(Screen.width + "==" + Screen.height);
                 if (Utils.GetCustomizedDistance(actionPack.MouseScreenPosA, actionPack.MouseScreenPosB) < minHoldShift)
                 {
                     actionPack.ActionID = Passthough.MouseLeft;
@@ -198,7 +199,7 @@ namespace ROOT
                     RootDebug.Log("Mouse Single Click", NameID.JiangDigong_Log);
                 }
                 else
-                {
+                { 
                     actionPack.ActionID = Composite.Drag;
                     actionPack.eventType = InputActionEventType.AxisActive;
                     RootDebug.Log("Mouse Drag", NameID.JiangDigong_Log);
@@ -206,6 +207,10 @@ namespace ROOT
                 hasAction = true;
             }
             MouseScreenPos=new Vector2(Single.NaN, Single.NaN);
+            //在这里把这个数据归一化了。-youmo
+            actionPack.MouseScreenPosA /= new Vector2(Screen.width, Screen.height);
+            actionPack.MouseScreenPosB /= new Vector2(Screen.width, Screen.height);
+            RootDebug.Log("From "+actionPack.MouseScreenPosA+" to "+actionPack.MouseScreenPosB, NameID.JiangDigong_Log);
             if (hasAction)
                 MessageDispatcher.SendMessage(actionPack);
         }

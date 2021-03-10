@@ -201,7 +201,7 @@ MonoBehaviour:
   DeselectButtonAfterClick: 0
   InputData:
     EnableAlternateInputs: 0
-    InputMode: 2
+    InputMode: 0
     KeyCode: 13
     KeyCodeAlt: 32
     VirtualButtonName: Submit
@@ -11896,7 +11896,7 @@ MonoBehaviour:
   DeselectButtonAfterClick: 0
   InputData:
     EnableAlternateInputs: 0
-    InputMode: 2
+    InputMode: 0
     KeyCode: 13
     KeyCodeAlt: 32
     VirtualButtonName: Submit
@@ -14814,7 +14814,7 @@ MonoBehaviour:
   DeselectButtonAfterClick: 0
   InputData:
     EnableAlternateInputs: 0
-    InputMode: 2
+    InputMode: 0
     KeyCode: 13
     KeyCodeAlt: 32
     VirtualButtonName: Submit
