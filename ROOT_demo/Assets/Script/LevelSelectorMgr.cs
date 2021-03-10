@@ -65,19 +65,5 @@ namespace ROOT
             content = _content;
             StartCoroutine(DoLoading(buttonId));
         }
-
-        public void Update()
-        {
-            if (Loading)
-            {
-                int count = Mathf.FloorToInt((Time.time*50) % 5);
-                string res= "加载中";
-                for (int i = 0; i < count; i++)
-                {
-                    res += ".";
-                }
-                content.text = res;
-            }
-        }
     }
 }
