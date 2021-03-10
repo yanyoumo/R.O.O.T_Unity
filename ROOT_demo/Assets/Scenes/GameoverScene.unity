@@ -3598,7 +3598,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &1305285251
 AudioListener:
   m_ObjectHideFlags: 0
@@ -6114,7 +6114,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1482604121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7706,7 +7706,7 @@ PrefabInstance:
         type: 3}
       propertyPath: BackButton
       value: 
-      objectReference: {fileID: 1846397254}
+      objectReference: {fileID: 1425095155}
     - target: {fileID: 8773220541541022648, guid: 2118800c8e027aa45ab2986373c6d821,
         type: 3}
       propertyPath: EndingTitle
@@ -7716,7 +7716,7 @@ PrefabInstance:
         type: 3}
       propertyPath: OtherButton
       value: 
-      objectReference: {fileID: 1718594435}
+      objectReference: {fileID: 741319488}
     - target: {fileID: 8773220541541022648, guid: 2118800c8e027aa45ab2986373c6d821,
         type: 3}
       propertyPath: EndingMessage
@@ -7736,22 +7736,22 @@ PrefabInstance:
         type: 3}
       propertyPath: EndingMessageParam
       value: 
-      objectReference: {fileID: 1082008896}
+      objectReference: {fileID: 2047503593}
     - target: {fileID: 8773220541541022648, guid: 2118800c8e027aa45ab2986373c6d821,
         type: 3}
       propertyPath: EndingTitleLocalize
       value: 
-      objectReference: {fileID: 336301959}
+      objectReference: {fileID: 968856973}
     - target: {fileID: 8773220541541022648, guid: 2118800c8e027aa45ab2986373c6d821,
         type: 3}
       propertyPath: OtherButtonLocalize
       value: 
-      objectReference: {fileID: 1497828479}
+      objectReference: {fileID: 685866293}
     - target: {fileID: 8773220541541022648, guid: 2118800c8e027aa45ab2986373c6d821,
         type: 3}
       propertyPath: EndingMessageLocalize
       value: 
-      objectReference: {fileID: 1082008897}
+      objectReference: {fileID: 2047503592}
     - target: {fileID: 8773220541541022649, guid: 2118800c8e027aa45ab2986373c6d821,
         type: 3}
       propertyPath: m_RootOrder
