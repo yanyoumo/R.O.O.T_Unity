@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: TestingLevelLib
   m_EditorClassIdentifier: 
   ActionAssetList:
-  - {fileID: 11400000, guid: ca4500c84563b3047b2e3c5dd2c20250, type: 2}
   - {fileID: 11400000, guid: 3d5f44cedf81aa341a5a0c78e8bbfe6b, type: 2}
+  - {fileID: 11400000, guid: ca4500c84563b3047b2e3c5dd2c20250, type: 2}

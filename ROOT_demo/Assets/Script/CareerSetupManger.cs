@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Doozy.Engine.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -41,6 +42,7 @@ namespace ROOT.UI
         AdditionalGameSetup additionalGameSetup = new AdditionalGameSetup();
 
         public Progressor LoadingProgressor;
+        public GameObject LoadingLabel;
         
         static Dictionary<string, SignalType> _dict = new Dictionary<string, SignalType>
         {
@@ -149,22 +151,19 @@ namespace ROOT.UI
             GameObject.Find("UIPopup").GetComponent<UIPopup>().Hide();
         }
 
+        private IEnumerator Pendingkill()
+        {
+            yield return new WaitForSeconds(Mathf.Lerp(0.025f, 0.15f, Random.value));
+            SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
+        }
+        
         private bool loadingProgressorCallBack(float val, bool completed = false)
         {
-            Debug.Log("loadingProgressorCallBack=" + val);
             LoadingProgressor.SetProgress(val);
-            if (completed)
-            {
-                SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
-            }
-
+            if (!completed) return true;
+            StartCoroutine(Pendingkill());
             return true;
         }
-
-        /*private void Update()
-        {
-            loadingProgressorCallBack(Random.value);
-        }*/
 
         public void Continue()
         {
@@ -173,9 +172,11 @@ namespace ROOT.UI
             RootDebug.Log("the PlayingSignalType is " + additionalGameSetup.PlayingSignalTypeA + ", and " + additionalGameSetup.PlayingSignalTypeB, NameID.SuYuxuan_Log);
             if (!additionalGameSetup.PlayingSignalTypeA.Equals(additionalGameSetup.PlayingSignalTypeB))
             {
+                //LoadingLabel.SetActive(true);
                 loadingProgressorCallBack(0.1f);
                 actionAsset.AdditionalGameSetup = additionalGameSetup;
                 LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset, null, loadingProgressorCallBack);
+                //这个写在函数现在放到哪个回调函数里面去了。-youmo
                 //SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
             }
             else
