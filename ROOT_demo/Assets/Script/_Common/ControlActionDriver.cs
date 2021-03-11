@@ -62,22 +62,38 @@ namespace ROOT
         private bool CtrlQueueNonEmpty => _ctrlPackQueue.Count != 0;
         public bool PendingRequestedBreak => _breakingCMDQueue.Count != 0;
 
+        private Ray MouseScreenPosToRay(Vector2 screenpos) => Camera.main.ScreenPointToRay(new Vector3(screenpos.x, screenpos.y, 0.0f));
+        
+        private bool MouseDrivingFunction(ActionPack actionPack)
+        {
+            if (Camera.main == null)
+            {
+                throw new ApplicationException("无法获得主相机");
+            }
+
+            switch (actionPack.ActionID)
+            {
+                case MouseLeft:
+                    var ray = MouseScreenPosToRay(actionPack.MouseScreenPosA);
+                    if (Physics.Raycast(ray, out var hit))
+                    {
+                        //现在姑且规定、和Collider同一Transform才会调用IClickable
+                        var clickablelist = hit.transform.gameObject.GetComponents<MonoBehaviour>().OfType<IClickable>();
+                        foreach (var clickable in clickablelist) clickable.Clicked();
+                    }
+                    return true;
+                case Drag:
+                    RootDebug.Log("From " + actionPack.MouseScreenPosA + " to " + actionPack.MouseScreenPosB, NameID.YanYoumo_Log);
+                    Debug.LogError("NotImplementedException");
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         protected bool CoreDrivingFunction(ActionPack actionPack)
         {
-
-            if (actionPack.IsAction(MouseLeft))
-            {
-                Debug.Log("actionPack.IsAction(MouseLeft)");
-                if (Camera.current == null)
-                {
-                    //BUG 尼玛，获取不了。估计还得发个事件拿一下？到时候查查。
-                    Debug.Log("Camera.current == null");
-                }
-                //var ray = Camera.current.ScreenPointToRay(new Vector3(actionPack.MouseScreenPosA.x, actionPack.MouseScreenPosA.y, 0.0f));
-                /*Physics.Raycast(ray, out var hit);
-                Debug.Log(hit.transform.name);*/
-                return false;
-            }
+            if (MouseDrivingFunction(actionPack)) return false;
 
             FilterDir(actionPack, out var dir);
             if (dir.HasValue)

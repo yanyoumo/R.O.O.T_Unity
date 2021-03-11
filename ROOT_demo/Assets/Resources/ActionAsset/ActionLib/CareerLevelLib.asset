@@ -13,7 +13,4 @@ MonoBehaviour:
   m_Name: CareerLevelLib
   m_EditorClassIdentifier: 
   ActionAssetList:
-  - {fileID: 11400000, guid: dad89a38092ca7d4796ebd3a6d640922, type: 2}
-  - {fileID: 11400000, guid: 6613fa0c3ed6ca3439f6cd00b1d14943, type: 2}
   - {fileID: 11400000, guid: cf38d592ca9502a49b0d386ba2aedee8, type: 2}
-  - {fileID: 11400000, guid: 89172602d7319e34bb1be01e01ca32ae, type: 2}

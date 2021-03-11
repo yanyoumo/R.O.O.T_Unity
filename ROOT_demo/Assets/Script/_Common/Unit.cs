@@ -149,7 +149,7 @@ namespace ROOT
         }
     }
 
-    public partial class Unit : MoveableBase
+    public partial class Unit : MoveableBase,IClickable
     {
         public UnitSignalCoreBase SignalCore;
         public TextMeshPro BillBoardText;
@@ -759,6 +759,12 @@ namespace ROOT
             var E = UnitSides.GetHashCode();
             var F = _tier.GetHashCode();
             return A ^ B ^ C ^ D ^ E ^ F;
+        }
+
+        public void Clicked()
+        {
+            Debug.Log("I'm clicked");
+            //throw new NotImplementedException();
         }
 
         public SignalPath FindSignalPath_Iter(SignalType targetSignalType)
