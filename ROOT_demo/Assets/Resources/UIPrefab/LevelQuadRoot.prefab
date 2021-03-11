@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6553303017679534345}
   - component: {fileID: 6553303017679534347}
-  - component: {fileID: 6553303017679534346}
   m_Layer: 5
   m_Name: TMP SubMeshUI [FZHTJW SDF_static Material + FZHTJW Atlas]
   m_TagString: Untagged
@@ -45,34 +44,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6553303017679534344}
   m_CullTransparentMesh: 0
---- !u!114 &6553303017679534346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6553303017679534344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 058cba836c1846c3aa1c5fd2e28aea77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_fontAsset: {fileID: 11400000, guid: 1f3c29221d075994594ddb655e013525, type: 2}
-  m_spriteAsset: {fileID: 0}
-  m_material: {fileID: 0}
-  m_sharedMaterial: {fileID: 0}
-  m_isDefaultMaterial: 0
-  m_padding: 1.25
-  m_TextComponent: {fileID: 6553303017814372032}
-  m_materialReferenceIndex: 1
 --- !u!1 &6553303017795550249
 GameObject:
   m_ObjectHideFlags: 0
@@ -83,7 +54,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6553303017795550250}
   - component: {fileID: 6553303017795550252}
-  - component: {fileID: 6553303017795550251}
   m_Layer: 5
   m_Name: TMP SubMeshUI [FZHTJW SDF_static Material + FZHTJW Atlas]
   m_TagString: Untagged
@@ -118,34 +88,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6553303017795550249}
   m_CullTransparentMesh: 0
---- !u!114 &6553303017795550251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6553303017795550249}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 058cba836c1846c3aa1c5fd2e28aea77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_fontAsset: {fileID: 11400000, guid: 1f3c29221d075994594ddb655e013525, type: 2}
-  m_spriteAsset: {fileID: 0}
-  m_material: {fileID: 0}
-  m_sharedMaterial: {fileID: 0}
-  m_isDefaultMaterial: 0
-  m_padding: 1.25
-  m_TextComponent: {fileID: 6553303018805662387}
-  m_materialReferenceIndex: 1
 --- !u!1 &6553303017814372094
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,7 +101,7 @@ GameObject:
   - component: {fileID: 6553303017814372032}
   - component: {fileID: 3315755744154712382}
   m_Layer: 5
-  m_Name: TutorialTitle
+  m_Name: LevelTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -236,7 +178,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -248,9 +190,9 @@ MonoBehaviour:
   m_fontSizeMin: 1
   m_fontSizeMax: 99
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 514
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -334,7 +276,7 @@ GameObject:
   - component: {fileID: 6553303017856328278}
   - component: {fileID: 6553303017856328277}
   m_Layer: 5
-  m_Name: StartTutorialButton
+  m_Name: StartLevelButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,7 +397,7 @@ GameObject:
   - component: {fileID: 6553303017857089957}
   - component: {fileID: 1028432673756000295}
   m_Layer: 5
-  m_Name: TutorialLevelQuadRoot
+  m_Name: LevelQuadRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -627,7 +569,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -640,8 +582,8 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 513
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -724,7 +666,7 @@ GameObject:
   - component: {fileID: 6553303018811257598}
   - component: {fileID: 6553303018811257597}
   m_Layer: 5
-  m_Name: TutorialThumbnail
+  m_Name: LevelThumbnail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

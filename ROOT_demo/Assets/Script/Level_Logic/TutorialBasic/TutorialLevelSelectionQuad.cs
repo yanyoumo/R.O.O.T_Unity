@@ -10,8 +10,6 @@ namespace ROOT
 {
     public class TutorialLevelSelectionQuad : MonoBehaviour
     {
-        //public TextMeshProUGUI Title;
-        //public TextMeshProUGUI StartTutorialButtonText;
         public Button StartTutorialButton;
         public Image TutorialThumbnail;
         public Localize ButtonLocalize;
@@ -19,7 +17,6 @@ namespace ROOT
 
         public Button InitTutorialLevelSelectionQuad(TutorialQuadDataPack data)
         {
-            //StartTutorialButtonText.text = data.ButtonTerm;
             TutorialThumbnail.sprite = data.Thumbnail;
             TitleLocalize.SetTerm(data.TitleTerm);
             ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
