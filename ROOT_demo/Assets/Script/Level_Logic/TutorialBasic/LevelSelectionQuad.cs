@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace ROOT
 {
-    public class TutorialLevelSelectionQuad : MonoBehaviour
+    public class LevelSelectionQuad : MonoBehaviour
     {
         public Button StartTutorialButton;
         public Image TutorialThumbnail;

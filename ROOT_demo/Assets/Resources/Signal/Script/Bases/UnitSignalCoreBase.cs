@@ -97,7 +97,7 @@ namespace ROOT.Signal
             }
             catch (NullReferenceException)
             {
-                Debug.Log("This is template Core, no need to set SignalStrength Dic.");
+                RootDebug.Log("This is template Core, no need to set SignalStrength Dic.", NameID.YanYoumo_Log);
             }
         }
 

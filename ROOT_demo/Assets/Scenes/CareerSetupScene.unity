@@ -10471,7 +10471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d434a5ea618166e46a16791046345ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugMode: 1
+  DebugMode: 0
   StartPosition: {x: 0, y: 0, z: 0}
   StartRotation: {x: -0, y: 0, z: 0}
   StartScale: {x: 1, y: 1, z: 1}

@@ -53,7 +53,10 @@ namespace ROOT
 
         private static Vector2 MouseScreenPos;
 
-        private const float minHoldShift = 1e-2f;
+        private float minHoldShift => Mathf.Pow(1, Mathf.Lerp(-3.0f, -1.0f, MouseDragSensitivity / 100f));
+
+        private int MouseDragSensitivity = 50;
+        
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -62,8 +65,19 @@ namespace ROOT
                 Destroy(gameObject);
                 return;
             }
-
+            
             _instance = this;
+            
+            if (PlayerPrefs.HasKey("MouseDragSensitivity"))
+            {
+                MouseDragSensitivity = PlayerPrefs.GetInt("MouseDragSensitivity");
+            }
+            else
+            {
+                PlayerPrefs.SetInt("MouseDragSensitivity", 50);
+            }
+            
+            
             player = ReInput.players.GetPlayer(playerId);
 
             player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorUp);

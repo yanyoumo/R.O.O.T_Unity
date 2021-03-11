@@ -102,7 +102,7 @@ namespace ROOT.UI
 
         private void addToSignalTypeQueue(SignalType type, Queue<SignalType> toggleQueue)
         {
-            Debug.Log("toggleQueue size is " + toggleQueue.Count);
+            RootDebug.Log("toggleQueue size is " + toggleQueue.Count, NameID.SuYuxuan_Log);
             if (toggleQueue.Count < 2)
             {
                 toggleQueue.Enqueue(type);

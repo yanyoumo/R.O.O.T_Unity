@@ -25,7 +25,7 @@ namespace ROOT
     
     public interface IClickable
     {
-        public void Clicked();
+        void Clicked();
     }
     
     public abstract class MoveableBase : MonoBehaviour//, IPlaceable
