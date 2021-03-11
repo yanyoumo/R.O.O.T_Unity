@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
-  m_Name: CareerGameActionAsset
+  m_Name: TestingActionAsset_F
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: Level_FSM_Barebone
-  Thumbnail: {fileID: 21300000, guid: 57d26bcf687e24a41b96ffb61343fabc, type: 3}
+  Thumbnail: {fileID: 21300000, guid: 8d879c0911826e84f8e6ddb6e4b95db5, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: cbc7c1bca06f5854b99931611c0cec14,
     type: 3}
   InitialCurrency: 36
@@ -37,19 +37,19 @@ MonoBehaviour:
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 4, y: 2}
+    Pos: {x: 0, y: 2}
     IsStation: 0
   - PlayingSignalSelector: 1
     CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 2, y: 3}
+    Pos: {x: 2, y: 5}
     IsStation: 0
   - PlayingSignalSelector: 1
     CoreGenre: 1
     Sides: 01000000010000000100000001000000
     Tier: 2
-    Pos: {x: 1, y: 3}
+    Pos: {x: 0, y: 3}
     IsStation: 0
   - PlayingSignalSelector: 1
     CoreGenre: 1
@@ -81,16 +81,10 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: 2, y: 4}
     IsStation: 0
-  HasBossRound: 0
-  Endless: 1
+  HasBossRound: 1
+  Endless: 0
   BossStage: 0
-  RoundLib:
-  - ID: 0
-    ShopLength: 5
-    RequireLength: 12
-    TypeARequirement: 12
-    TypeBRequirement: 8
-    HeatSinkLength: 6
+  RoundLib: []
   Actions: []
   BossSetup:
     BossStageTypeVal: 0

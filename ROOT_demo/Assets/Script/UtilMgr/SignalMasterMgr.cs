@@ -328,10 +328,24 @@ namespace ROOT.Signal
         
         public bool WithinCertainSignalSamePath(Unit unitA,Unit unitB,SignalType signalType)
         {
-            return HasAnyPath(signalType) && _paths[signalType].Any(s => (s.Contains(unitA) && s.Contains(unitB)));
+            return HasAnyPath(signalType) && _paths[signalType].Any(s => s.Contains(unitA) && s.Contains(unitB));
         }
-        
-        
+
+        public bool WithinCertainSignalSamePathAndNeighboring(Unit unitA, Unit unitB, SignalType signalType)
+        {
+            if (!WithinCertainSignalSamePath(unitA,unitB,signalType)) return false;
+            var _pathes=_paths[signalType].Where(s => s.Contains(unitA) && s.Contains(unitB));
+            foreach (var tmpPath in _pathes)
+            {
+                var unitAIndex = tmpPath.IndexOf(unitA);
+                var unitBIndexA = Mathf.Clamp(unitAIndex - 1, 0, tmpPath.Count - 1);
+                var unitBIndexB = Mathf.Clamp(unitAIndex + 1, 0, tmpPath.Count - 1);
+                if (unitBIndexA!=unitAIndex && tmpPath[unitBIndexA] == unitB) return true;
+                if (unitBIndexB!=unitAIndex && tmpPath[unitBIndexB] == unitB) return true;
+            }
+            return false;
+        }
+
         private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
         {
             _paths = new Dictionary<SignalType, List<SignalPath>>();
