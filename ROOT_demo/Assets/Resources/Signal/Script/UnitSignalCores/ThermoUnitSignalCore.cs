@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
+// ReSharper disable PossibleMultipleEnumeration
 
 namespace ROOT.Signal
 {
@@ -9,23 +11,23 @@ namespace ROOT.Signal
     {
         public override SignalType SignalType => SignalType.Thermo;
 
-        private bool isValidPos(Vector2Int pos)
-        {
-            return pos.x >= 0 && pos.x < Board.BoardLength && pos.y >= 0 && pos.y < Board.BoardLength;
-        }
-        public override List<Vector2Int> SingleInfoCollectorZone
+        public List<Vector2Int> ExpellingPatternList
         {
             get
             {
-                //TODO
+                var zone = Utils.GetPixelateCircle_Tier(Owner.Tier - 1);
                 var res = new List<Vector2Int>();
+                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
                 return res;
             }
         }
 
+
+        public override List<Vector2Int> SingleInfoCollectorZone => ExpellingPatternList;
+
         private float getScoreFromPercentage(float x)
         {
-            float k = 1, b = 1;
+            float k = 1f, b = 1f;
             return k * x + b;
         }
 
@@ -35,21 +37,9 @@ namespace ROOT.Signal
         {
             get
             {
-                var sum = 0;
-                var counting = 0;
-                foreach (var pattern in Utils.GetPixelateCircle_Tier(Owner.Tier).PatternList)
-                {
-                    var currentPos = Owner.CurrentBoardPosition + pattern;
-                    if (isValidPos(currentPos))
-                    {
-                        ++sum;
-                        if (Owner.GameBoard.CheckBoardPosValidAndEmpty(currentPos))
-                            ++counting;
-                    }
-                }
-
-                Debug.Log("Sum:"+sum+" counting:"+counting);
-                return getScoreFromPercentage(1f*counting/sum);
+                var validPattern = ExpellingPatternList.Where(Board.CheckBoardPosValidStatic);
+                var emptyPos = validPattern.Where(p => Owner.GameBoard.CheckBoardPosValidAndEmpty(p + Owner.CurrentBoardPosition));
+                return getScoreFromPercentage((float) emptyPos.Count() / validPattern.Count());
             }
         }
     }

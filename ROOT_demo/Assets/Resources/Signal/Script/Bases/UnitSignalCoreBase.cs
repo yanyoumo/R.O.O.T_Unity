@@ -38,8 +38,9 @@ namespace ROOT.Signal
         [ReadOnly] public bool Visiting;//enqueue
 
         //这个偶尔会报个Excp、到时候要看看。
-        [ShowInInspector]
-        public bool IsActiveMatrixFieldUnit => (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field) && IsUnitActive;
+        /*public bool IsActiveMatrixFieldUnit => (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field) && IsUnitActive;
+        
+        public bool IsEndingScanFieldUnit => Owner.SignalCore is ScanUnitSignalCore core && core.IsUnitVeryActive;*/
         
         public int FindCertainSignalDiv_FlatSignal(SignalType signalType)
         {
@@ -64,10 +65,6 @@ namespace ROOT.Signal
         {
             return SignalDataPackList[signalType];
         }
-        
-        //TODO 这里的流程要用新的SignalDataPackList系统，以前那些什么的SignalDepth不要用了。
-        public bool IsEndingScanFieldUnit => Owner.SignalCore is ScanUnitSignalCore core && core.IsUnitVeryActive;
-
 
         //标记扫描信号的路径的参数。
         [ReadOnly] public int ScanSignalPathDepth; //for scoring purpose
@@ -97,7 +94,7 @@ namespace ROOT.Signal
             }
             catch (NullReferenceException)
             {
-                Debug.Log("This is template Core, no need to set SignalStrength Dic.");
+                RootDebug.Log("This is template Core, no need to set SignalStrength Dic.", NameID.YanYoumo_Log);
             }
         }
 

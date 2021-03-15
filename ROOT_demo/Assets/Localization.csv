@@ -47,8 +47,10 @@ Level_3,Text,,第三关,Level 3
 Level_4,Text,,第四关,Level 4
 Level_5,Text,,第五关,Level 5
 Level_FSM_Barebone,Text,,FSM骨干,FSM barebone
+Level_FSM_Career,Text,,FSM生涯,FSM career
 Level_FSM_Test,Text,,FSM测试,For FSM Test
-Level_Test,Text,,测试用,For Test
+Level_FSM _Telemetry_Test,Text,,遥测测试,For Test
+Level_FSM _Acquiring_Test,Text,,融资测试,For Test
 Matrix Core,Text,,矩阵单元,Matrix Core
 NextTutorial,Text,,下一教程,Next
 NextTutorialFailed,Text,,再试一下,Retry

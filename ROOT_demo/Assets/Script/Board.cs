@@ -102,6 +102,7 @@ namespace ROOT
         
         public void UpdateInfoZone(GameAssets levelAssets)
         {
+            Debug.Log("UpdateInfoZone");
             levelAssets.CollectorZone = owner.GetInfoCollectorZone();
             BoardGirds.Values.ForEach(grid => grid.ClearEdge());
             BoardGirds.Values.ForEach(grid => grid.UpdateEdge(levelAssets.CollectorZone));
@@ -551,7 +552,7 @@ namespace ROOT
         {
             //这里保证前面调过一次计分函数，实在不行在这儿再调一遍。
             var res = new List<Vector2Int>();
-            Units.Select(u=>u.SignalCore).Where(s => s.IsActiveMatrixFieldUnit || s.IsEndingScanFieldUnit).ForEach(s => res.AddRange(s.SingleInfoCollectorZone));
+            Units.Select(u=>u.SignalCore).Where(s=>s.IsUnitActive).ForEach(s => res.AddRange(s.SingleInfoCollectorZone));
             return res.Where(CheckBoardPosValid).Distinct().ToList();
         }
 

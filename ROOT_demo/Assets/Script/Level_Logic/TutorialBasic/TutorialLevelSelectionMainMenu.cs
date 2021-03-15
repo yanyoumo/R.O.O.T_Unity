@@ -39,7 +39,7 @@ namespace ROOT
         public RectTransform TutorialQuadRoot;
 
         private RectTransform[] TutorialQuadPosS;
-        private TutorialLevelSelectionQuad[] TutorialQuadS;
+        private LevelSelectionQuad[] TutorialQuadS;
 
         private int QuadCount = 18;
 
@@ -62,10 +62,10 @@ namespace ROOT
         {
             //Debug.Assert(data.Length < 19);
             Button[] res = new Button[data.Length];
-            TutorialQuadS = new TutorialLevelSelectionQuad[data.Length];
+            TutorialQuadS = new LevelSelectionQuad[data.Length];
             for (var i = 0; i < data.Length; i++)
             {
-                TutorialQuadS[i]=Instantiate(TutorialQuadTemplate, TutorialQuadPosS[i]).GetComponentInChildren<TutorialLevelSelectionQuad>();
+                TutorialQuadS[i]=Instantiate(TutorialQuadTemplate, TutorialQuadPosS[i]).GetComponentInChildren<LevelSelectionQuad>();
                 res[i] = TutorialQuadS[i].InitTutorialLevelSelectionQuad(data[i]);
             }
             return res;

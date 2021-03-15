@@ -23,6 +23,11 @@ namespace ROOT
         CounterClockwise,
     }
     
+    public interface IClickable
+    {
+        void Clicked();
+    }
+    
     public abstract class MoveableBase : MonoBehaviour//, IPlaceable
     {
         protected bool _immovable = false;

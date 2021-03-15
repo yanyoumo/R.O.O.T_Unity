@@ -149,7 +149,7 @@ namespace ROOT
         }
     }
 
-    public partial class Unit : MoveableBase
+    public partial class Unit : MoveableBase,IClickable
     {
         public UnitSignalCoreBase SignalCore;
         public TextMeshPro BillBoardText;
@@ -617,8 +617,7 @@ namespace ROOT
         private void SetConnector(RotationDirection crtDir, bool ignoreVal = false)
         {
             WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
-            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation),
-                out var Connector);
+            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation), out var Connector);
             Connector.Connected = data.Connected;
 
             var otherUnit = data.OtherUnit;
@@ -759,6 +758,12 @@ namespace ROOT
             var E = UnitSides.GetHashCode();
             var F = _tier.GetHashCode();
             return A ^ B ^ C ^ D ^ E ^ F;
+        }
+
+        public void Clicked()
+        {
+            Debug.Log("I'm clicked");
+            //throw new NotImplementedException();
         }
 
         public SignalPath FindSignalPath_Iter(SignalType targetSignalType)

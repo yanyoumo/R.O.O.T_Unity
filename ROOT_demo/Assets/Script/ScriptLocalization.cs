@@ -36,9 +36,11 @@ namespace I2.Loc
 		public static string Level_3 		{ get{ return LocalizationManager.GetTranslation ("Level_3"); } }
 		public static string Level_4 		{ get{ return LocalizationManager.GetTranslation ("Level_4"); } }
 		public static string Level_5 		{ get{ return LocalizationManager.GetTranslation ("Level_5"); } }
+		public static string Level_FSM__Acquiring_Test 		{ get{ return LocalizationManager.GetTranslation ("Level_FSM _Acquiring_Test"); } }
+		public static string Level_FSM__Telemetry_Test 		{ get{ return LocalizationManager.GetTranslation ("Level_FSM _Telemetry_Test"); } }
 		public static string Level_FSM_Barebone 		{ get{ return LocalizationManager.GetTranslation ("Level_FSM_Barebone"); } }
+		public static string Level_FSM_Career 		{ get{ return LocalizationManager.GetTranslation ("Level_FSM_Career"); } }
 		public static string Level_FSM_Test 		{ get{ return LocalizationManager.GetTranslation ("Level_FSM_Test"); } }
-		public static string Level_Test 		{ get{ return LocalizationManager.GetTranslation ("Level_Test"); } }
 		public static string Matrix_Core 		{ get{ return LocalizationManager.GetTranslation ("Matrix Core"); } }
 		public static string NextTutorial 		{ get{ return LocalizationManager.GetTranslation ("NextTutorial"); } }
 		public static string NextTutorialFailed 		{ get{ return LocalizationManager.GetTranslation ("NextTutorialFailed"); } }
@@ -103,9 +105,11 @@ namespace I2.Loc
 		public const string Level_3 = "Level_3";
 		public const string Level_4 = "Level_4";
 		public const string Level_5 = "Level_5";
+		public const string Level_FSM__Acquiring_Test = "Level_FSM _Acquiring_Test";
+		public const string Level_FSM__Telemetry_Test = "Level_FSM _Telemetry_Test";
 		public const string Level_FSM_Barebone = "Level_FSM_Barebone";
+		public const string Level_FSM_Career = "Level_FSM_Career";
 		public const string Level_FSM_Test = "Level_FSM_Test";
-		public const string Level_Test = "Level_Test";
 		public const string Matrix_Core = "Matrix Core";
 		public const string NextTutorial = "NextTutorial";
 		public const string NextTutorialFailed = "NextTutorialFailed";

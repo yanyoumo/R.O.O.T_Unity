@@ -20,3 +20,4 @@ MonoBehaviour:
   - GameStartView
   - LevelSelectView
   - OptionView
+  - GameOvert

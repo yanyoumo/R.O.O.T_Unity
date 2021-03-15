@@ -13,7 +13,7 @@ namespace ROOT.UI
         [HideInInspector] public GameObject LevelQuadTemplate;
 
         private RectTransform[] TutorialQuadPosS;
-        private TutorialLevelSelectionQuad[] TutorialQuadS;
+        private LevelSelectionQuad[] TutorialQuadS;
 
         private int QuadCount = 20;
 
@@ -32,10 +32,10 @@ namespace ROOT.UI
         public Button[] InitTutorialLevelSelectionMainMenu(TutorialQuadDataPack[] data)
         {
             Button[] res = new Button[data.Length];
-            TutorialQuadS = new TutorialLevelSelectionQuad[data.Length];
+            TutorialQuadS = new LevelSelectionQuad[data.Length];
             for (var i = 0; i < data.Length; i++)
             {
-                TutorialQuadS[i]=Instantiate(LevelQuadTemplate, TutorialQuadPosS[i]).GetComponentInChildren<TutorialLevelSelectionQuad>();
+                TutorialQuadS[i]=Instantiate(LevelQuadTemplate, TutorialQuadPosS[i]).GetComponentInChildren<LevelSelectionQuad>();
                 res[i] = TutorialQuadS[i].InitTutorialLevelSelectionQuad(data[i]);
             }
             return res;

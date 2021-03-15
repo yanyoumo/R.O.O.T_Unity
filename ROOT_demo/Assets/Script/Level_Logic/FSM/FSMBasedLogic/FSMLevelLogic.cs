@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using com.ootii.Messages;
 using ROOT.SetupAsset;
 using ROOT.Signal;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static ROOT.WorldEvent;
@@ -307,7 +309,6 @@ namespace ROOT
             MessageDispatcher.SendMessage(message);
         }
 
-        
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
         protected void ForwardCycle()
         {
@@ -379,18 +380,21 @@ namespace ROOT
             TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(
                 currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, currentLevelAsset.GameBoard,
                 out var hardwareBCount, out TypeBSignalCount);
-        }
-        
-        protected void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)
-        {
-            if (currentLevelAsset.TimeLine != null)
+            if (LevelAsset.ActionAsset.AdditionalGameSetup.IsPlayingCertainSignal(SignalType.Thermo))
             {
-                currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
+                var thermoFieldUnits=LevelAsset.GameBoard.FindUnitWithCoreType(SignalType.Thermo, HardwareType.Field);
+                var res = new List<Vector2Int>();
+                thermoFieldUnits.Select(u => u.SignalCore as ThermoUnitSignalCore).Where(s => s.IsUnitActive).ForEach(s => res.AddRange(s.ExpellingPatternList));
+                currentLevelAsset.ThermoZone = res.Where(LevelAsset.GameBoard.CheckBoardPosValid).Distinct().ToList();
             }
-            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {CrtMission = currentLevelAsset.ReqOkCount},};
-            MessageDispatcher.SendMessage(signalInfo);
         }
-        
+
+        protected virtual void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)
+        {
+            //BaseVerison Do-nothing.
+        }
+
+
         //这个函数只有在Board被更新的时候才会走、但是里面有和轮次相关的数据。
         //现在的解决方法是变轮次的的时候，发一个"Board已更新"的事件.
         protected virtual void BoardUpdatedHandler(IMessage rMessage) => UpdateBoardData_Instantly();

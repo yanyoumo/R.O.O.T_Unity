@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 
 namespace ROOT
-{
+{ 
     //using CoreWeight = Dictionary<CoreType, float>;
     using UnitTypeCombo=Tuple<SignalType,HardwareType>;
 

@@ -18,12 +18,7 @@ namespace ROOT.Signal
         public UnitAsset FieldUnitAsset;
 
         //在LED屏幕上是否显示本信号的的逻辑。
-        public bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit)
-        {
-            var A = SignalMasterMgr.Instance.WithinCertainSignalSamePath(unit, otherUnit, SignalType);
-            var B = (unit.SignalCore.SignalDataPackList[SignalType].SignalDepth - otherUnit.SignalCore.SignalDataPackList[SignalType].SignalDepth) <= 1;
-            return A && B;
-        }
+        public bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit) => SignalMasterMgr.Instance.WithinCertainSignalSamePathAndNeighboring(unit, otherUnit, SignalType);
 
         public int SignalVal(RotationDirection dir, Unit unit, Unit otherUnit)
         {

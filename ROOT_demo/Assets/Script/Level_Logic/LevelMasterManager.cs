@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using ROOT.SetupAsset;
+using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -45,41 +46,49 @@ namespace ROOT
             _lls = FindObjectOfType<LevelLogicSpawner>();
         }
 
-        IEnumerator LoadGamePlay_Coroutine(LevelActionAsset actionAsset)
+        private Func<float, bool, bool> defaultloadingProgressorCallBack = (a, b) => true;
+        
+        IEnumerator LoadGamePlay_Coroutine(LevelActionAsset actionAsset,Func<float,bool,bool> loadingProgressorCallBack=null)
         {
+            if (loadingProgressorCallBack == null)
+            {
+                loadingProgressorCallBack = defaultloadingProgressorCallBack;
+            }
             //目前这个框架下，所有的Logic Scene只能是一个，但是基于LLS就没有问题。
             AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDTIVELOGIC, LoadSceneMode.Additive);
             yield return StartCoroutine(FindLlsAfterLoad(loadSceneAsync));
+            loadingProgressorCallBack(0.25f, false);
             _gameLogic = _lls.SpawnLevelLogic(actionAsset.LevelLogic); //这里Level-logic的Awake就进行初始化了。主要是LevelLogic的实例去拿CoreLogic场景里面的东西。
             Debug.Log(_gameLogic.LevelAsset);
             _gameLogic.LevelAsset.ActionAsset = actionAsset;
             _lls = null;
             SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDITIONAL_GAMEPLAY_UI, LoadSceneMode.Additive);
             loadSceneAsync = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDTIVEVISUAL, LoadSceneMode.Additive);
+            loadingProgressorCallBack(0.85f, false);
             AsyncOperation loadSceneAsync2 = new AsyncOperation();
             if (_gameLogic.LEVEL_ART_SCENE_ID != -1)
             {
                 loadSceneAsync2 = SceneManager.LoadSceneAsync(_gameLogic.LEVEL_ART_SCENE_ID, LoadSceneMode.Additive);
             }
-
+            loadingProgressorCallBack(1.0f, false);
             yield return _gameLogic.UpdateArtLevelReference(loadSceneAsync, loadSceneAsync2); //这里是第二次的LinkLevel。匹配ArtScene里面的引用//和第三次的Init里面的UpdateReference。通过根引用去查找其他引用。
 #if DEBUG
             Debug.Assert(_gameLogic.CheckReference());
             Debug.Assert(!_gameLogic.Playing);
 #endif
             _gameLogic.InitLevel(); //最后的初始化和启动游戏，运行此之前，需要的引用必须齐整。
+            loadingProgressorCallBack(1.0f, true);
         }
 
-        public void LoadLevelThenPlay(LevelActionAsset actionAsset,AdditionalGameSetup _additionalGameSetup=null)
+        public void LoadLevelThenPlay(LevelActionAsset actionAsset,AdditionalGameSetup _additionalGameSetup=null,Func<float,bool,bool> loadingProgressorCallBack=null)
         {
-            //TODO additionalGameSetup还没有实际地接进去、主要是方便UI那边先接着。
             if (_gameGlobalStatus.CurrentGameStatus == GameStatus.Playing) return;
             _gameGlobalStatus.CurrentGameStatus = GameStatus.Playing;
             if (_additionalGameSetup != null)
             {
                 actionAsset.AdditionalGameSetup = _additionalGameSetup;
             }
-            StartCoroutine(LoadGamePlay_Coroutine(actionAsset));
+            StartCoroutine(LoadGamePlay_Coroutine(actionAsset, loadingProgressorCallBack));
         }
 
         public void LoadCareerSetup(int buttonId)

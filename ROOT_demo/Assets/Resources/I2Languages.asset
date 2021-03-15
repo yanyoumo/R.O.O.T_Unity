@@ -295,6 +295,14 @@ MonoBehaviour:
       - FSM barebone
       Flags: 0000
       Languages_Touch: []
+    - Term: Level_FSM_Career
+      TermType: 0
+      Description: 
+      Languages:
+      - "FSM\u751F\u6DAF"
+      - FSM career
+      Flags: 0000
+      Languages_Touch: []
     - Term: Level_FSM_Test
       TermType: 0
       Description: 
@@ -303,11 +311,19 @@ MonoBehaviour:
       - For FSM Test
       Flags: 0000
       Languages_Touch: []
-    - Term: Level_Test
+    - Term: Level_FSM _Telemetry_Test
       TermType: 0
       Description: 
       Languages:
-      - "\u6D4B\u8BD5\u7528"
+      - "\u9065\u6D4B\u6D4B\u8BD5"
+      - For Test
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Level_FSM _Acquiring_Test
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u878D\u8D44\u6D4B\u8BD5"
       - For Test
       Flags: 0000
       Languages_Touch: []
