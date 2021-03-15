@@ -176,6 +176,7 @@ namespace ROOT
 
         protected override void AdditionalMajorUpkeep()
         {
+            //Debug.Log("AdditionalMajorUpkeep_Telem");
             //base.AdditionalMajorUpkeep();
             if (CheckTelemetryStageInit())
             {
@@ -278,6 +279,19 @@ namespace ROOT
                 InfoTarget = targetInfoCount,
                 IsTelemetryStage=WorldCycler.TelemetryStage,//
             },};
+            MessageDispatcher.SendMessage(signalInfo);
+        }
+
+        protected override void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)
+        {
+            base.UpdateBoardData_Stepped(ref currentLevelAsset);
+            if (currentLevelAsset.TimeLine != null)
+            {
+                currentLevelAsset.TimeLine.SetCurrentCount = currentLevelAsset.ReqOkCount;
+            }
+
+            var signalInfo = new BoardSignalUpdatedInfo
+                {SignalData = new BoardSignalUpdatedData {CrtMission = currentLevelAsset.ReqOkCount},};
             MessageDispatcher.SendMessage(signalInfo);
         }
 

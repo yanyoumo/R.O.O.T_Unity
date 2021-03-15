@@ -84,9 +84,8 @@ namespace ROOT
 
         private void UpdateEdgeSingleSide(RotationDirection side, List<Vector2Int> zone)
         {
-            var res = false;
             var otherPos = OnboardPos + Utils.ConvertDirectionToBoardPosOffset(side);
-            var inZone=zone.Contains(OnboardPos);
+            var inZone = zone.Contains(OnboardPos);
             var otherInZone = zone.Contains(otherPos) && owner.CheckBoardPosValid(otherPos);
             _edgeDic[side].enabled = inZone && !otherInZone;
         }

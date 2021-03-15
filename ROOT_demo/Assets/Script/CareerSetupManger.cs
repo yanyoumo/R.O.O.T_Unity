@@ -31,6 +31,11 @@ namespace ROOT.SetupAsset
                 PlayingSignalTypeB = toggleQueue.Dequeue();
             }
         }
+
+        public bool IsPlayingCertainSignal(SignalType signal)
+        {
+            return PlayingSignalTypeA == signal || PlayingSignalTypeB == signal;
+        }
     }
 }
 

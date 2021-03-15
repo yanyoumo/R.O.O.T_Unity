@@ -45,6 +45,7 @@ namespace ROOT
         public int ReqOkCount;
         public int SignalInfo;
         public List<Vector2Int> CollectorZone;
+        public List<Vector2Int> ThermoZone;
 
         public CinemachineFreeLook CineCam;
 
