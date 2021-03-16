@@ -14,7 +14,7 @@ namespace ROOT
     using RespToCtrlEvent= Func<ActionPack,bool>;
     public abstract class ControlActionDriver
     {
-        public static UI.UIEvent.InGameOverlayToggle InGameOverlayToggleEvent;
+        //public static UI.UIEvent.InGameOverlayToggle InGameOverlayToggleEvent;
         
         private readonly FSMLevelLogic _owner;
         private RootFSM _mainFsm;
@@ -127,7 +127,7 @@ namespace ROOT
             
             if (actionPack.IsAction(InGameOverLayToggle))
             {
-                InGameOverlayToggleEvent.Invoke();
+                MessageDispatcher.SendMessage(WorldEvent.InGameOverlayToggleEvent);
             }
             //TODO 下面两套的流程应该能有更好的管理方法。
             ShopBuyID(ref CtrlPack, in actionPack);

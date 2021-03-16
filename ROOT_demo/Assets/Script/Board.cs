@@ -102,11 +102,12 @@ namespace ROOT
         
         public void UpdateInfoZone(GameAssets levelAssets)
         {
-            Debug.Log("UpdateInfoZone");
             levelAssets.CollectorZone = owner.GetInfoCollectorZone();
-            BoardGirds.Values.ForEach(grid => grid.ClearEdge());
-            BoardGirds.Values.ForEach(grid => grid.UpdateEdge(levelAssets.CollectorZone));
+            BoardGirds.Values.ForEach(grid => grid.ClearEdge(EdgeStatus.InfoZone));
+            BoardGirds.Values.ForEach(grid => grid.SetEdge(levelAssets.CollectorZone, EdgeStatus.InfoZone));
         }
+
+        public List<Vector2Int> ExtractCachedZone(EdgeStatus edgeStatus) => BoardGirds.Keys.Where(keys => BoardGirds[keys].LayeringEdgeStatus[edgeStatus]).ToList();
 
         private PatternPermutation _HeatSinkPermutation = PatternPermutation.None;
         private int _currentHeatSinkPatternsID = 0;
