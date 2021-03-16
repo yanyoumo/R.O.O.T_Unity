@@ -189,9 +189,6 @@ namespace ROOT
             //在这里更新DeltaCurrency并没有错、严格来说是更新DeltaCurrency的Cache；
             //这个DeltaCurrency只有在Stepped的时刻才会计算到Currency里面。
             LevelAsset.DeltaCurrency = BoardCouldIOCurrency ? (RoundLibDriver.IsRequireRound ? GetInCome() : 0)- Cost : 0;
-            /*Debug.Log("BoardCouldIOCurrency=" + BoardCouldIOCurrency);
-            Debug.Log("RoundLibDriver.IsRequireRound=" + RoundLibDriver.IsRequireRound);
-            Debug.Log("LevelAsset.DeltaCurrency=" + LevelAsset.DeltaCurrency);*/
             SendCurrencyMessage();
         }
         

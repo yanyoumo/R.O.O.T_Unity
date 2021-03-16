@@ -327,6 +327,11 @@ namespace ROOT
 
         private bool BoardGridThermoZoneInquiry(List<Vector2Int> ThermoZone)
         {
+            if (ThermoZone == null)
+            {
+                Debug.LogWarning("ThermoZone is null");
+                return false;
+            }
             SetEdge(ThermoZone, EdgeStatus.ThermoZone);
             return true;
         }
@@ -362,6 +367,13 @@ namespace ROOT
             }
         }
         
+        private void BoardUpdatedHandler(IMessage rmessage)
+        {
+            //BUGS 这个果然有竞争冒险效应、有时候好使有时候不好使。
+            var data = new BoardGridThermoZoneInquiry { BoardGridThermoZoneInquiryCallBack = BoardGridThermoZoneInquiry};
+            MessageDispatcher.SendMessage(data);
+        }
+        
         protected void Awake()
         {
             BoardStrokeMesh.material.color = NormalStrokeColor;
@@ -387,11 +399,14 @@ namespace ROOT
             
             MessageDispatcher.AddListener(InGameOverlayToggleEvent, HintToggle);
             MessageDispatcher.AddListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
+            MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
         }
 
         protected void OnDestroy()
         {
+            MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
             MessageDispatcher.RemoveListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
+            MessageDispatcher.RemoveListener(InGameOverlayToggleEvent, HintToggle);
         }
     }
 }
