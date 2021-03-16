@@ -27,8 +27,13 @@ namespace ROOT
         //目前这个顺序干脆就设计成这个enum从下往上的逻辑、或者得弄一个数列。
         InfoZone,
         ThermoZone,
-        [Obsolete]
         Off,
+    }
+    
+    public class BoardGridThermoZoneInquiry : RootMessageBase
+    {
+        public Func<List<Vector2Int>,bool> BoardGridThermoZoneInquiryCallBack;
+        public override string Type => WorldEvent.BoardGridThermoZoneInquiry;
     }
     
     public partial class BoardGirdCell : MonoBehaviour
@@ -318,13 +323,31 @@ namespace ROOT
             }
         }
 
-        private void TextToggle(IMessage rMessage)
+        private bool showingThremoBoarder = false;
+
+        private bool BoardGridThermoZoneInquiry(List<Vector2Int> ThermoZone)
+        {
+            SetEdge(ThermoZone, EdgeStatus.ThermoZone);
+            return true;
+        }
+        
+        private void HintToggle(IMessage rMessage)
         {
             //RISK 如果真是Toggle的话、那么还针对随着单元移动而修改位置。到是姑且可以写在Update里面。
             //现在认为_stageType状态是能够正常更新了。
             //就相当浪费、但是目前也没有很好的办法。
             CashingText.enabled = !CashingText.enabled;
             SetText(GetCashIO());
+            showingThremoBoarder = !showingThremoBoarder;
+            if (showingThremoBoarder)
+            {
+                var data = new BoardGridThermoZoneInquiry { BoardGridThermoZoneInquiryCallBack = BoardGridThermoZoneInquiry};
+                MessageDispatcher.SendMessage(data);
+            }
+            else
+            {
+                ClearEdge(EdgeStatus.ThermoZone);
+            }
         }
 
         private bool _boardCouldIOCurrency;
@@ -358,14 +381,11 @@ namespace ROOT
                 {EdgeStatus.ThermoZone,false},
             };
             UpdateEdge(new List<Vector2Int>(), false);
-
-            //ControlActionDriver.InGameOverlayToggleEvent += TextToggle;
-
-            MessageDispatcher.AddListener(InGameOverlayToggleEvent, TextToggle);
             
             CashingText.color = NeutralCashColoring;
             CashingText.enabled = false;
             
+            MessageDispatcher.AddListener(InGameOverlayToggleEvent, HintToggle);
             MessageDispatcher.AddListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
         }
 

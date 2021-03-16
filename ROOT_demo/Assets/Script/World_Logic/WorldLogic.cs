@@ -270,6 +270,7 @@ namespace ROOT
 
         public static string BalancingSignalSetupInquiry = "BalancingSignalSetupInquiry";
         public static string AcquiringCostTargetInquiry = "AcquiringCostTargetInquiry";
+        public static string BoardGridThermoZoneInquiry = "BoardGridThermoZoneInquiry";
 
         public static string MainCameraReadyEvent = "MainCameraReadyEvent";
         public static string InGameOverlayToggleEvent = "InGameOverlayToggleEvent";

@@ -400,6 +400,14 @@ namespace ROOT
         protected virtual void BoardUpdatedHandler(IMessage rMessage) => UpdateBoardData_Instantly();
 
         //private FSMEventInquiryResponder _inquiryResponder;
+
+        private void BoardGridThermoZoneInquiryHandler(IMessage rMessage)
+        {
+            if (rMessage is BoardGridThermoZoneInquiry info)
+            {
+                info.BoardGridThermoZoneInquiryCallBack(LevelAsset.ThermoZone);
+            }
+        }
         
         private void Update()
         {
@@ -415,6 +423,7 @@ namespace ROOT
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
         }
+        
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
@@ -431,9 +440,11 @@ namespace ROOT
             _actionDriver = new CareerControlActionDriver(this, _mainFSM);
             
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
+            MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry,BoardGridThermoZoneInquiryHandler);
         }
         protected virtual void OnDestroy()
         {
+            MessageDispatcher.RemoveListener(WorldEvent.BoardGridThermoZoneInquiry,BoardGridThermoZoneInquiryHandler);
             MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
 
             _actionDriver.unsubscribe();
