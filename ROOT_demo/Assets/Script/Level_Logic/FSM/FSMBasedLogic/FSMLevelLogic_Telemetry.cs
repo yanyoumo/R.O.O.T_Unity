@@ -313,18 +313,6 @@ namespace ROOT
                 levelAsset.TimeLine.RequirementSatisfied = (TypeASignalCount >= roundGist.normalReq) &&
                                                            (TypeBSignalCount >= roundGist.networkReq);
             }
-
-            var signalInfo = new BoardSignalUpdatedInfo
-            {
-                SignalData = new BoardSignalUpdatedData()
-                {
-                    CrtTypeASignal = TypeASignalCount,
-                    CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
-                    TypeBTier = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
-                },
-            };
-            MessageDispatcher.SendMessage(signalInfo);
         }
 
         protected override void BoardUpdatedHandler(IMessage rMessage)

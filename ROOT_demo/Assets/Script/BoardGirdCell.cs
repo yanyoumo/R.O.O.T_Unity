@@ -367,11 +367,15 @@ namespace ROOT
             }
         }
         
-        private void BoardUpdatedHandler(IMessage rmessage)
+        private void BoardSignalUpdatedHandler(IMessage rmessage)
         {
-            //BUGS 这个果然有竞争冒险效应、有时候好使有时候不好使。
-            var data = new BoardGridThermoZoneInquiry { BoardGridThermoZoneInquiryCallBack = BoardGridThermoZoneInquiry};
-            MessageDispatcher.SendMessage(data);
+            //这个果然有竞争冒险效应、有时候好使有时候不好使。
+            //把事件的时序调整了一下、现在可以用了。
+            if (showingThremoBoarder)
+            {
+                var data = new BoardGridThermoZoneInquiry { BoardGridThermoZoneInquiryCallBack = BoardGridThermoZoneInquiry};
+                MessageDispatcher.SendMessage(data);
+            }
         }
         
         protected void Awake()
@@ -399,12 +403,12 @@ namespace ROOT
             
             MessageDispatcher.AddListener(InGameOverlayToggleEvent, HintToggle);
             MessageDispatcher.AddListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
-            MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
+            MessageDispatcher.AddListener(BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
         }
 
         protected void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
+            MessageDispatcher.RemoveListener(BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
             MessageDispatcher.RemoveListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
             MessageDispatcher.RemoveListener(InGameOverlayToggleEvent, HintToggle);
         }
