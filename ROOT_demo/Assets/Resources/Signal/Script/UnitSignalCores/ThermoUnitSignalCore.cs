@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,35 +12,44 @@ namespace ROOT.Signal
     {
         public override SignalType SignalType => SignalType.Thermo;
 
+        //12、8、8、4、4
+        private static readonly int[] ExpellingPatternListTierMapping = {3, 2, 2, 1, 1};
+        private static readonly float[] PerGridScoreByTier = {1, 3, 4.5f, 12, 16};
+        //12、24、36、48、60
+        private static readonly float ThermoScoreMultiplier = 1/3.0f;
+        //4、8、12、16、20
+
+
+        //热力单元有若干不相关参量：
+        //1、所需范围的关系——等级越高范围越小、但是系数要比较浅。
+            //还是问题是被遮挡后的数据怎么配置？
+        //2、分数和被占领的面积的关系——负相关关系，这样的话，等级越高分数per占领格点会是指数上升。
+        //3、分数极限和等级的关系——等级越高总数越高，同样比较浅。
         public List<Vector2Int> ExpellingPatternList
         {
             get
             {
-                var zone = Utils.GetPixelateCircle_Tier(Owner.Tier - 1);
-                var res = new List<Vector2Int>();
-                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
-                return res;
+                var circleTier = ExpellingPatternListTierMapping[Owner.Tier - 1];//Tier是Base1的；这里转成Base0的。
+                var zone = Utils.GetPixelateCircle_Tier(circleTier);
+                return zone.CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
             }
         }
 
-
         public override List<Vector2Int> SingleInfoCollectorZone => ExpellingPatternList;
-
-        private float getScoreFromPercentage(float x)
-        {
-            float k = 1f, b = 1f;
-            return k * x + b;
-        }
-
+        
         public override bool IsUnitActive => HasCertainSignal(SignalType);
-
+        
         public override float SingleUnitScore
         {
             get
             {
-                var validPattern = ExpellingPatternList.Where(Board.CheckBoardPosValidStatic);
-                var emptyPos = validPattern.Where(p => Owner.GameBoard.CheckBoardPosValidAndEmpty(p + Owner.CurrentBoardPosition));
-                return getScoreFromPercentage((float) emptyPos.Count() / validPattern.Count());
+                if (IsUnitActive && Owner.UnitHardware == HardwareType.Field)
+                {
+                    var validPattern = ExpellingPatternList.Where(Board.CheckBoardPosValidStatic);
+                    var emptyPos = validPattern.Where(Owner.GameBoard.CheckBoardPosValidAndEmpty);
+                    return Mathf.Round(emptyPos.Count() * PerGridScoreByTier[Owner.Tier - 1] * ThermoScoreMultiplier);
+                }
+                return 0.0f;
             }
         }
     }

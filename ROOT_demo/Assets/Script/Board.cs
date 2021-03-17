@@ -116,8 +116,7 @@ namespace ROOT
         public int MinHeatSinkCount => ActualHeatSinkPos.Length;
         private Vector2Int[] RawHeatSinkPos => new Vector2Int[0]; //现在使初始pattern都是空的。
 
-        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward()
-            .ForEach(vec => PermutateV2I(vec, Board.BoardLength - 1, _HeatSinkPermutation)).ToArray();
+        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward().ForEach(vec => PermutateV2I(vec, Board.BoardLength - 1, _HeatSinkPermutation)).ToArray();
 
         public int DiminishingStep { get; private set; }
         
