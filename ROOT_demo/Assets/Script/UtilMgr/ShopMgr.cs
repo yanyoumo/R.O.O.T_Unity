@@ -235,7 +235,7 @@ namespace ROOT
             dict.Add(fieldUnit, fieldUnitAsset.BaseRate);
         }*/
 
-        protected UnitTypeCombo GenerateRandomCore()
+        protected virtual UnitTypeCombo GenerateRandomCore()
         {
             //TODO 如果真这么写，随即生成流程还真得大改；但是早晚要改。
             return new UnitTypeCombo(SignalType.Scan, HardwareType.Field);
