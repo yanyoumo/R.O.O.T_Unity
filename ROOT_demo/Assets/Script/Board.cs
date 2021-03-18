@@ -343,14 +343,23 @@ namespace ROOT
             {
                 if (owner.CheckBoardPosValidAndFilled(pos))
                 {
-                    heatSinkCost += CalcPerHeatSinkCost(overlappedHeatSink);
+                    //有很大问题！这个PreHeatSink的顺序和Grid本身存进去的数据不匹配。
+                    //是个比较急转弯的事情、主要是本应该是捡Gird上面的数据、而不是从头开始算。
+                    heatSinkCost += BoardGirds[pos].HeatSinkCost;
                     overlappedHeatSink++;
                 }
             }
             return overlappedHeatSink;
         }
 
-        public int HeatSinkCost => CheckOverlappedHeatSinkCount(out var A); //现在对他的调用是读取的、需要可能改成触发的。
+        public int HeatSinkCost
+        {
+            get
+            {
+                CheckOverlappedHeatSinkCount(out var res);
+                return res;
+            }
+        }
 
         public void UpkeepHeatSink(StageType type)
         {

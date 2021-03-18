@@ -12,11 +12,11 @@ namespace ROOT.Signal
     {
         public override SignalType SignalType => SignalType.Thermo;
 
-        //12、8、8、4、4
-        private static readonly int[] ExpellingPatternListTierMapping = {3, 2, 2, 1, 1};
-        private static readonly float[] PerGridScoreByTier = {1, 3, 4.5f, 12, 16};
-        //12、24、36、48、60
-        private static readonly float ThermoScoreMultiplier = 1/3.0f;
+        private static readonly int[] ExpellingPatternListTierMapping = {2, 2, 2, 2, 2};
+        //8、8、8、8、8
+        private static readonly float[] PerGridScoreByTier = {1, 2, 3, 4, 5};
+        //8、16、24、32、40
+        private static readonly float ThermoScoreMultiplier = 1/2.0f;
         //4、8、12、16、20
 
 
