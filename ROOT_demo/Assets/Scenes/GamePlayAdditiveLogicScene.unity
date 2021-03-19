@@ -860,6 +860,24 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 4
+    - _id: 40
+      _name: ShopTierUp
+      _type: 1
+      _descriptiveName: request shop raise one tier
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 3
+    - _id: 41
+      _name: ShopTierDown
+      _type: 1
+      _descriptiveName: request shop lower one tier
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 3
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -898,7 +916,7 @@ MonoBehaviour:
       - categoryId: 2
         actionIds: 170000001a000000190000001b000000
       - categoryId: 3
-        actionIds: 06000000070000001e00000020000000
+        actionIds: 06000000070000001e000000200000002800000029000000
       - categoryId: 4
         actionIds: 160000001c0000001d00000021000000230000002400000025000000
     inputBehaviors:
@@ -1354,6 +1372,50 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 40
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 61
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 40
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 61
+        _modifierKey1: 3
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 41
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 45
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 41
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 45
+        _modifierKey1: 3
+        _modifierKey2: 0
+        _modifierKey3: 0
     mouseMaps:
     - id: 1
       categoryId: 0
@@ -1411,7 +1473,7 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 39
+    actionIdCounter: 42
     actionCategoryIdCounter: 5
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 2
@@ -1502,6 +1564,7 @@ MonoBehaviour:
     ReqOkCount: 0
     SignalInfo: 0
     CollectorZone: []
+    ThermoZone: []
     CineCam: {fileID: 0}
     occupiedHeatSinkCount: 0
     InputEnabled: 1

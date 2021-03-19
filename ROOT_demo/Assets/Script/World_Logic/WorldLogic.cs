@@ -289,6 +289,7 @@ namespace ROOT
         public static string BoardReadyEvent = "BoardReadyEvent";
 
         public static string ControllingEvent = "ControllingEvent";
+        public static string ShopTierOffsetChangedEvent = "ShopTierOffsetChangedEvent";
     }
 
     //要把Asset和Logic，把Controller也要彻底拆开。

@@ -8,6 +8,7 @@ using UnityEngine;
 using static RewiredConsts.Action.Button;
 using static RewiredConsts.Action.Composite;
 using static RewiredConsts.Action.Passthough;
+using Action = RewiredConsts.Action;
 
 namespace ROOT
 {
@@ -128,7 +129,21 @@ namespace ROOT
             if (actionPack.IsAction(InGameOverLayToggle))
             {
                 MessageDispatcher.SendMessage(WorldEvent.InGameOverlayToggleEvent);
+                return false;
             }
+            
+            if (actionPack.IsAction(ShopTierUp))
+            {
+                MessageDispatcher.SendMessage(new ShopTierOffsetChangedData {UpwardOrDownward = true});
+                return false;
+            }
+            
+            if (actionPack.IsAction(ShopTierDown))
+            {
+                MessageDispatcher.SendMessage(new ShopTierOffsetChangedData {UpwardOrDownward = false});
+                return false;
+            }
+            
             //TODO 下面两套的流程应该能有更好的管理方法。
             ShopBuyID(ref CtrlPack, in actionPack);
             SkillID(ref CtrlPack, in actionPack);
