@@ -181,6 +181,11 @@ namespace ROOT
         private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(SignalTypeB,HardwareType.Core) > 0;
         private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(SignalTypeA,HardwareType.Core) > 0;
 
+        protected override UnitTypeCombo GenerateRandomCore()
+        {
+            return Random.value > 0.5f ? UnitType.Item1.Item2 : UnitType.Item2.Item2;
+        }
+
         private void CreatePremiumUnit(int i, int j, int discount)
         {
             var ID = IJtoID(i, j);
@@ -215,13 +220,7 @@ namespace ROOT
             }
             else
             {
-                do
-                {
-                    //PB的Unit接口数至少是3。
-                    //TODO 现在随机生成的流程要重做、先搁在这儿。
-                    sides = new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.NoConnection};
-                    //sides = GenerateRandomSideArray(core);
-                } while (sides.Count(side => side == SideType.Connection) < 3);
+                sides = Utils.Shuffle(new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.NoConnection});
             }
 
             var go = InitUnitShop(core.Item1, core.Item2, sides, out var hardwarePrice, ID, 0, tier, discount);

@@ -10,8 +10,8 @@ namespace ROOT
     public enum SignalType
     {
         Matrix,
-        Scan,
         Thermo,
+        Scan,
         //Firewall,
     }
 

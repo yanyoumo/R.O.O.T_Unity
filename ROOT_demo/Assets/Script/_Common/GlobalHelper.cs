@@ -701,7 +701,7 @@ namespace ROOT
         {
             if (PixelateCirclePatternLibCache == null)
             {
-                GetPixelateCircle();
+                PixelateCirclePatternLibCache = Resources.Load<PixelateCirclePatternLib>("PixelateCircleLib/DefaultPixelateCirclePatternLib");
             }
             if (tier >= PixelateCirclePatternLibCache.Lib.Count)
             {
@@ -709,15 +709,6 @@ namespace ROOT
                 tier = PixelateCirclePatternLibCache.Lib.Count - 1;
             }
             return PixelateCirclePatternLibCache.Lib[tier];
-        }
-
-        public static List<PixelateCirclePattern> GetPixelateCircle()
-        {
-            if (PixelateCirclePatternLibCache == null)
-            {
-                PixelateCirclePatternLibCache = Resources.Load<PixelateCirclePatternLib>("PixelateCircleLib/DefaultPixelateCirclePatternLib");
-            }
-            return PixelateCirclePatternLibCache.Lib;
         }
 
         public struct Matrix2x2

@@ -102,11 +102,12 @@ namespace ROOT
         
         public void UpdateInfoZone(GameAssets levelAssets)
         {
-            Debug.Log("UpdateInfoZone");
             levelAssets.CollectorZone = owner.GetInfoCollectorZone();
-            BoardGirds.Values.ForEach(grid => grid.ClearEdge());
-            BoardGirds.Values.ForEach(grid => grid.UpdateEdge(levelAssets.CollectorZone));
+            BoardGirds.Values.ForEach(grid => grid.ClearEdge(EdgeStatus.InfoZone));
+            BoardGirds.Values.ForEach(grid => grid.SetEdge(levelAssets.CollectorZone, EdgeStatus.InfoZone));
         }
+
+        public List<Vector2Int> ExtractCachedZone(EdgeStatus edgeStatus) => BoardGirds.Keys.Where(keys => BoardGirds[keys].LayeringEdgeStatus[edgeStatus]).ToList();
 
         private PatternPermutation _HeatSinkPermutation = PatternPermutation.None;
         private int _currentHeatSinkPatternsID = 0;
@@ -115,8 +116,7 @@ namespace ROOT
         public int MinHeatSinkCount => ActualHeatSinkPos.Length;
         private Vector2Int[] RawHeatSinkPos => new Vector2Int[0]; //现在使初始pattern都是空的。
 
-        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward()
-            .ForEach(vec => PermutateV2I(vec, Board.BoardLength - 1, _HeatSinkPermutation)).ToArray();
+        private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward().ForEach(vec => PermutateV2I(vec, Board.BoardLength - 1, _HeatSinkPermutation)).ToArray();
 
         public int DiminishingStep { get; private set; }
         
@@ -343,14 +343,23 @@ namespace ROOT
             {
                 if (owner.CheckBoardPosValidAndFilled(pos))
                 {
-                    heatSinkCost += CalcPerHeatSinkCost(overlappedHeatSink);
+                    //有很大问题！这个PreHeatSink的顺序和Grid本身存进去的数据不匹配。
+                    //是个比较急转弯的事情、主要是本应该是捡Gird上面的数据、而不是从头开始算。
+                    heatSinkCost += BoardGirds[pos].HeatSinkCost;
                     overlappedHeatSink++;
                 }
             }
             return overlappedHeatSink;
         }
 
-        public int HeatSinkCost => CheckOverlappedHeatSinkCount(out var A); //现在对他的调用是读取的、需要可能改成触发的。
+        public int HeatSinkCost
+        {
+            get
+            {
+                CheckOverlappedHeatSinkCount(out var res);
+                return res;
+            }
+        }
 
         public void UpkeepHeatSink(StageType type)
         {

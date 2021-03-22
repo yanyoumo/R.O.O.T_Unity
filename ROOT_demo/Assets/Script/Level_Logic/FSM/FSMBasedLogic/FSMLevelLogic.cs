@@ -285,7 +285,7 @@ namespace ROOT
             _ctrlPack = _actionDriver.CtrlQueueHeader;
             UpdateBoardData_Stepped(ref LevelAsset);//RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
             AdditionalMajorUpkeep();
-            WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
+            //WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
         
         //现在在MinorUpkeep流程中、会将队列的break命令一口气全处理完。
@@ -371,7 +371,7 @@ namespace ROOT
         
         protected virtual bool CheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
 
-        protected virtual void UpdateBoardData_Instantly()
+        private void UpdateBoardData_Instantly()
         {
             var currentLevelAsset = LevelAsset;
             TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(
@@ -397,9 +397,29 @@ namespace ROOT
 
         //这个函数只有在Board被更新的时候才会走、但是里面有和轮次相关的数据。
         //现在的解决方法是变轮次的的时候，发一个"Board已更新"的事件.
-        protected virtual void BoardUpdatedHandler(IMessage rMessage) => UpdateBoardData_Instantly();
-
-        //private FSMEventInquiryResponder _inquiryResponder;
+        protected virtual void BoardUpdatedHandler(IMessage rMessage)
+        {
+            UpdateBoardData_Instantly();
+            var signalInfo = new BoardSignalUpdatedInfo
+            {
+                SignalData = new BoardSignalUpdatedData()
+                {
+                    CrtTypeASignal = TypeASignalCount,
+                    CrtTypeBSignal = TypeBSignalCount,
+                    TypeATier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
+                    TypeBTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                },
+            };
+            MessageDispatcher.SendMessage(signalInfo);
+        }
+        
+        private void BoardGridThermoZoneInquiryHandler(IMessage rMessage)
+        {
+            if (rMessage is BoardGridThermoZoneInquiry info)
+            {
+                info.BoardGridThermoZoneInquiryCallBack(LevelAsset.ThermoZone);
+            }
+        }
         
         private void Update()
         {
@@ -415,6 +435,7 @@ namespace ROOT
             } while (!_mainFSM.waitForNextFrame);
             _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
         }
+        
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
@@ -431,9 +452,11 @@ namespace ROOT
             _actionDriver = new CareerControlActionDriver(this, _mainFSM);
             
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
+            MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry,BoardGridThermoZoneInquiryHandler);
         }
         protected virtual void OnDestroy()
         {
+            MessageDispatcher.RemoveListener(WorldEvent.BoardGridThermoZoneInquiry,BoardGridThermoZoneInquiryHandler);
             MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
 
             _actionDriver.unsubscribe();

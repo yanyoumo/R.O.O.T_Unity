@@ -270,8 +270,10 @@ namespace ROOT
 
         public static string BalancingSignalSetupInquiry = "BalancingSignalSetupInquiry";
         public static string AcquiringCostTargetInquiry = "AcquiringCostTargetInquiry";
+        public static string BoardGridThermoZoneInquiry = "BoardGridThermoZoneInquiry";
 
         public static string MainCameraReadyEvent = "MainCameraReadyEvent";
+        public static string InGameOverlayToggleEvent = "InGameOverlayToggleEvent";
         
         /// <summary>
         /// 主要是UI方面的事件、主要是可以向核心逻辑调查一些数据；可以放一个回调函数。

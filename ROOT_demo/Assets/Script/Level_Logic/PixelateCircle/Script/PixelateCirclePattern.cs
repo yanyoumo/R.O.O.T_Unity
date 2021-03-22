@@ -13,7 +13,8 @@ namespace ROOT
     {
         [ReadOnly]
         public List<Vector2Int> PatternList;
-
+        public List<Vector2Int> CenteredPatternList => PatternList.Select(s => s - new Vector2Int(CircleRadius, CircleRadius)).ToList();
+        
         public int CircleRadius=1;
         public int TierLevel=0;
 

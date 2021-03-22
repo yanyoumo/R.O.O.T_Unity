@@ -36,6 +36,16 @@ namespace ROOT.SetupAsset
         {
             return PlayingSignalTypeA == signal || PlayingSignalTypeB == signal;
         }
+
+        public void OrderingSignal()
+        {
+            if (PlayingSignalTypeA > PlayingSignalTypeB)
+            {
+                var tmp = PlayingSignalTypeB;
+                PlayingSignalTypeB = PlayingSignalTypeA;
+                PlayingSignalTypeA = tmp;
+            }
+        }
     }
 }
 
@@ -177,12 +187,11 @@ namespace ROOT.UI
             RootDebug.Log("the PlayingSignalType is " + additionalGameSetup.PlayingSignalTypeA + ", and " + additionalGameSetup.PlayingSignalTypeB, NameID.SuYuxuan_Log);
             if (!additionalGameSetup.PlayingSignalTypeA.Equals(additionalGameSetup.PlayingSignalTypeB))
             {
-                //LoadingLabel.SetActive(true);
                 loadingProgressorCallBack(0.1f);
+                additionalGameSetup.OrderingSignal();
                 actionAsset.AdditionalGameSetup = additionalGameSetup;
                 LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset, null, loadingProgressorCallBack);
-                //这个写在函数现在放到哪个回调函数里面去了。-youmo
-                //SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
+                //这个卸载函数现在放到那个回调函数里面去了。-youmo
             }
             else
             {
