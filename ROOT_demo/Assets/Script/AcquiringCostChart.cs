@@ -13,6 +13,8 @@ namespace ROOT
     
     public class AcquiringCostChart : CostChart
     {
+        //这里现在需要调整一下显示；需要显示出基础收入和额外输入。
+        
         public TextMeshPro TgtCurrency;//这个数据一局中不会变，所以原则上应该不用cache
 
         private bool UpdateTgtCurrencyText(int TgtCurrencyVal)

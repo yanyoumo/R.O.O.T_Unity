@@ -119,10 +119,10 @@ namespace ROOT
 
         private int UnitRetailPrice(int idx, int tier)
         {
-            var (item1, priceMutilpier, item3) = TierMultiplier(tier);
-            var val = Mathf.FloorToInt(_hardwarePrices[idx] * priceMutilpier);
-            val = Mathf.FloorToInt(val * (1.0f - discountRate * 0.01f));
-            return Math.Max(val, 1);
+            var val = _hardwarePrices[idx] * TierMultiplier(tier).Item2;
+            val = tier <= 2 ? Mathf.Round(val) : Mathf.Round(val / 5.0f) * 5.0f;//在这里对数据进行一个规范化。
+            val *= 1.0f - discountRate * 0.01f;
+            return Mathf.RoundToInt(Math.Max(val, 1));
         }
 
         //TEMP 这个还是要统一管理起来。
@@ -352,6 +352,12 @@ namespace ROOT
             //但是除了收益这个东西、还有一个需要进行提供价值加成的还有高Tier本身的灵活性，但是也有对于Heatsink摧毁的敏感性。
             //将这个价格需要引导玩家进行选择，进行这种选择的前提是让玩家可以有一个围绕此思考的抓手、也就是让玩家明确的意识到这件事儿。
             //说白了、可能需要价格对Tier的增长在合理的范围下越快越好。
+            
+            //现在的价格有一定的不确定性、人类对数据的体验是十分微妙的、指数谬误、倍率谬误这些都要考虑。
+            //现在解决方案就是较高价格round到5这个思路、这样让玩家可以更清楚地思考价格倍率。
+
+            if (!ShopOpening) return;
+
             if (rMessage is ShopTierOffsetChangedData data)
             {
                 var tmpOffset = _ShopTierMultiplierOffset + (data.UpwardOrDownward ? 1 : -1);
