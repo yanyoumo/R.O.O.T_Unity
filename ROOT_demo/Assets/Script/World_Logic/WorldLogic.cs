@@ -255,7 +255,9 @@ namespace ROOT
     
     public class CurrencyUpdatedInfo : RootMessageBase
     {
-        public int IncomesVal = int.MaxValue;
+        public int TotalIncomesVal = int.MaxValue;
+        public int BaseIncomesVal = int.MaxValue;
+        public int BonusIncomesVal = int.MaxValue;
         public int CurrencyVal = int.MaxValue;
         public override string Type => WorldEvent.CurrencyUpdatedEvent;
     }

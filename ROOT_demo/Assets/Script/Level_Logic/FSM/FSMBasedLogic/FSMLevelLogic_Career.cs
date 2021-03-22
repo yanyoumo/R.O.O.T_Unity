@@ -79,7 +79,7 @@ namespace ROOT
             var message = new CurrencyUpdatedInfo()
             {
                 CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
-                IncomesVal = 0,
+                TotalIncomesVal = 0,
             };
             
             MessageDispatcher.SendMessage(message);
@@ -179,8 +179,9 @@ namespace ROOT
             }
         }
 
-        protected virtual int GetInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore) * LevelAsset.CurrencyRebate);
-
+        protected int GetBaseInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore));
+        protected virtual int GetBonusInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore) * (LevelAsset.CurrencyRebate - 1.0f));//BUG 这个数据有问题？没有实质的加上去？
+        
         private int Cost=>LevelAsset.GameBoard.BoardGirdDriver.HeatSinkCost;
 
         protected override void BoardUpdatedHandler(IMessage rMessage)
@@ -188,15 +189,16 @@ namespace ROOT
             base.BoardUpdatedHandler(rMessage);
             UpdateBoardData_Instantly_Career();
         }
-        
+
         private void UpdateBoardData_Instantly_Career()
         {
             //在这里更新DeltaCurrency并没有错、严格来说是更新DeltaCurrency的Cache；
             //这个DeltaCurrency只有在Stepped的时刻才会计算到Currency里面。
-            LevelAsset.DeltaCurrency = BoardCouldIOCurrency ? (RoundLibDriver.IsRequireRound ? GetInCome() : 0)- Cost : 0;
+            LevelAsset.BaseDeltaCurrency = BoardCouldIOCurrency ? (RoundLibDriver.IsRequireRound ? GetBaseInCome() : 0) - Cost : 0;
+            LevelAsset.BonusDeltaCurrency = BoardCouldIOCurrency && RoundLibDriver.IsRequireRound ? GetBonusInCome() : 0;
             SendCurrencyMessage();
         }
-        
+
         private void ReverseCycle()
         {
             WorldCycler.StepDown();

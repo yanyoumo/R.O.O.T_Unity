@@ -302,9 +302,12 @@ namespace ROOT
 
         protected void SendCurrencyMessage()
         {
-            var message = new CurrencyUpdatedInfo() {
+            var message = new CurrencyUpdatedInfo()
+            {
                 CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
-                IncomesVal = Mathf.RoundToInt(LevelAsset.DeltaCurrency),
+                TotalIncomesVal = Mathf.RoundToInt(LevelAsset.DeltaCurrency),
+                BaseIncomesVal = Mathf.RoundToInt(LevelAsset.BaseDeltaCurrency),
+                BonusIncomesVal = Mathf.RoundToInt(LevelAsset.BonusDeltaCurrency),
             };
             MessageDispatcher.SendMessage(message);
         }

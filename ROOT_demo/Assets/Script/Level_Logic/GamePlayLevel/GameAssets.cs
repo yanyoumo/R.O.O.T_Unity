@@ -63,8 +63,10 @@ namespace ROOT
         public int occupiedHeatSinkCount=0;
 
         public GameOverAsset GameOverAsset;
-        
-        public float DeltaCurrency { get; internal set; }
+
+        public float DeltaCurrency => BaseDeltaCurrency + BonusDeltaCurrency;
+        public float BaseDeltaCurrency;
+        public float BonusDeltaCurrency;
 
         //internal flag 
         internal bool _boughtOnce = false;

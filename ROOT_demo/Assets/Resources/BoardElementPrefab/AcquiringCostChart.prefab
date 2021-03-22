@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1662655770780494916}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0.267}
+  m_LocalPosition: {x: 0, y: 0, z: 0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1813293451839880237}
@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3.103, y: 0.005}
+  m_AnchoredPosition: {x: 3.07, y: 0.005}
   m_SizeDelta: {x: 0.6623, y: 0.417}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &1110473652297699714
@@ -224,6 +224,7 @@ MonoBehaviour:
   Currency: {fileID: 1813293452112716319}
   Incomes: {fileID: 1813293452273680572}
   TgtCurrency: {fileID: 6984219888837743786}
+  BonusCurrency: {fileID: 4953858122536487250}
 --- !u!1 &1813293452075146809
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,7 +660,7 @@ GameObject:
   - component: {fileID: 1085154373472292441}
   - component: {fileID: 4953858122536487250}
   m_Layer: 0
-  m_Name: IncomeSurplus
+  m_Name: BonusIncome
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -673,7 +674,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2582607167364590548}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0.267}
+  m_LocalPosition: {x: 0, y: 0, z: 0.29999998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1813293451839880237}
@@ -681,8 +682,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3.8069997, y: 0.005}
-  m_SizeDelta: {x: 0.8631, y: 0.417}
+  m_AnchoredPosition: {x: 3.6709, y: 0.005}
+  m_SizeDelta: {x: 0.5909, y: 0.417}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &1085154373472292441
 MeshRenderer:
@@ -745,7 +746,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: +00%
+  m_text: +00
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,

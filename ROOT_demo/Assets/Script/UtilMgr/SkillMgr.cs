@@ -61,7 +61,7 @@ namespace ROOT
             var message = new CurrencyUpdatedInfo()
             {
                 CurrencyVal = Mathf.RoundToInt(currentLevelAsset.GameCurrencyMgr.Currency),
-                IncomesVal = -1,
+                TotalIncomesVal = -1,
             };
             MessageDispatcher.SendMessage(message);
         }

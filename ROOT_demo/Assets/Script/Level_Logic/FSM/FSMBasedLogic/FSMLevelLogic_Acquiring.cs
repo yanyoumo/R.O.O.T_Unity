@@ -36,7 +36,7 @@ namespace ROOT
 
         private float _multiplier = 1.0f;
 
-        protected override int GetInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore) * LevelAsset.CurrencyRebate * _multiplier);
+        protected override int GetBonusInCome() => Mathf.RoundToInt((GetBaseInCome() + base.GetBonusInCome()) * (_multiplier - 1.0f));
 
         private void UpdateRoundData_Instantly_Acquiring()
         {
