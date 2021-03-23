@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
@@ -125,6 +126,43 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        private Dictionary<Vector2Int, RotationDirection[]> thermoPosOffsetEdge = new Dictionary<Vector2Int, RotationDirection[]>
+            {
+                {new Vector2Int(0, 1), new[] {RotationDirection.South}},
+                {new Vector2Int(1, 1), new[] {RotationDirection.South, RotationDirection.West}},
+                {new Vector2Int(1, 0), new[] {RotationDirection.West}},
+                {new Vector2Int(1, -1), new[] {RotationDirection.West, RotationDirection.North}},
+                {new Vector2Int(0, -1), new[] {RotationDirection.North}},
+                {new Vector2Int(-1, -1), new[] {RotationDirection.North, RotationDirection.East}},
+                {new Vector2Int(-1, 0), new[] {RotationDirection.East}},
+                {new Vector2Int(-1, 1), new[] {RotationDirection.East, RotationDirection.South}},
+            };
+
+        //TODO 在准备接进去前一定要注意、这个zone是Thermo单元的位置、而且这个范围是和T2的面积匹配（写死）的。
+        //这个表现应该还是好使的、但是可能需要一个方法标记处这一个个圈的"内部"、就是可能有的技能圈为了标记范围、可能有个向内的渐变什么的。
+        //这个东西技术上做完了、稍微多一点儿就太乱了。
+        private void UpdateThermoEdge(List<Vector2Int> zone)
+        {
+            var lightingEdge = new List<RotationDirection>();
+            foreach (var edgeDicValue in _edgeDic.Values)
+            {
+                edgeDicValue.enabled = false;
+            }
+            foreach (var vector2Int in thermoPosOffsetEdge.Keys)
+            {
+                if (zone.Contains(vector2Int + OnboardPos))
+                {
+                    lightingEdge.AddRange(thermoPosOffsetEdge[vector2Int]);
+                }
+            }
+            lightingEdge = lightingEdge.Distinct().ToList();
+            foreach (var rotationDirection in lightingEdge)
+            {
+                _edgeDic[rotationDirection].enabled = true;
+                _edgeDic[rotationDirection].color = GetColorFromEdgeStatus(EdgeStatus.ThermoZone);
+            }
+        }   
         
         private void UpdateEdgeSingleSide(RotationDirection side, List<Vector2Int> zone,EdgeStatus edgeStatus)
         {
@@ -144,8 +182,19 @@ namespace ROOT
                 _edgeDic.Values.ForEach(renderer => renderer.enabled = false);
                 return;
             }
+
             if (!set) zone = owner.BoardGirdDriver.ExtractCachedZone(edgeStatus);
-            Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, edgeStatus));
+            //想让Thermo的每个圈圈都显示出来的话、这个需求真滴不好弄。
+            //至少是要换一个思路、可能要每个grid查每个ThermoUnit具体的位置、然后再看。
+            //理论上这个框架还算是可以能用、主要是这个zone实际在Thermo时传递的是热力单元的坐标。
+            if (edgeStatus == EdgeStatus.InfoZone)
+            {
+                Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, edgeStatus));
+            }
+            else if (edgeStatus == EdgeStatus.ThermoZone)
+            {
+                UpdateThermoEdge(zone);
+            }
         }
 
         public void SetEdge(List<Vector2Int> zone, EdgeStatus edgeStatus)

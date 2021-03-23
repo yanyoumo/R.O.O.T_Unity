@@ -302,9 +302,12 @@ namespace ROOT
 
         protected void SendCurrencyMessage()
         {
-            var message = new CurrencyUpdatedInfo() {
+            var message = new CurrencyUpdatedInfo()
+            {
                 CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
-                IncomesVal = Mathf.RoundToInt(LevelAsset.DeltaCurrency),
+                TotalIncomesVal = Mathf.RoundToInt(LevelAsset.DeltaCurrency),
+                BaseIncomesVal = Mathf.RoundToInt(LevelAsset.BaseDeltaCurrency),
+                BonusIncomesVal = Mathf.RoundToInt(LevelAsset.BonusDeltaCurrency),
             };
             MessageDispatcher.SendMessage(message);
         }
@@ -383,8 +386,9 @@ namespace ROOT
             if (LevelAsset.ActionAsset.AdditionalGameSetup.IsPlayingCertainSignal(SignalType.Thermo))
             {
                 var thermoFieldUnits=LevelAsset.GameBoard.FindUnitWithCoreType(SignalType.Thermo, HardwareType.Field);
-                var res = new List<Vector2Int>();
-                thermoFieldUnits.Select(u => u.SignalCore as ThermoUnitSignalCore).Where(s => s.IsUnitActive).ForEach(s => res.AddRange(s.ExpellingPatternList));
+                //var res = new List<Vector2Int>();
+                //thermoFieldUnits.Select(u => u.SignalCore as ThermoUnitSignalCore).Where(s => s.IsUnitActive).ForEach(s => res.AddRange(s.ExpellingPatternList));
+                var res = thermoFieldUnits.Where(u=>u.SignalCore.IsUnitActive).Select(u => u.CurrentBoardPosition);
                 currentLevelAsset.ThermoZone = res.Where(LevelAsset.GameBoard.CheckBoardPosValid).Distinct().ToList();
             }
         }

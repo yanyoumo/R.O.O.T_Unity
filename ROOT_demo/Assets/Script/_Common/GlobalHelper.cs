@@ -131,6 +131,7 @@ namespace ROOT
     }
     public static class Utils
     {
+        public static int RoundToFive(decimal val) => Mathf.RoundToInt((float) val / 5.0f) * 5;
         public static float GetCustomizedDistance(Vector2 from, Vector2 to)
         {
             var width = Screen.width;

@@ -23,7 +23,7 @@ namespace ROOT
             //Base version, DoNothing.
         }
         
-        protected virtual void ModifiyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
+        protected virtual void ModifyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
             //Base version, DoNothing.
         }
@@ -46,7 +46,7 @@ namespace ROOT
             Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
 
-            LevelAsset.DeltaCurrency = 0.0f;
+            LevelAsset.BaseDeltaCurrency = 0.0f;
             LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
             LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
             
@@ -109,7 +109,7 @@ namespace ROOT
                     new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, 0, true),
                     new Trans(RootFSMStatus.CleanUp, RootFSMStatus.MajorUpKeep, 0, true),
                 };
-                ModifiyRootFSMTransitions(ref transitions);
+                ModifyRootFSMTransitions(ref transitions);
                 return transitions;
             }
         }

@@ -1,6 +1,7 @@
 using System;
 using com.ootii.Messages;
 using Doozy.Engine.UI;
+using TMPro;
 using UnityEngine;
 
 namespace ROOT.UI
@@ -17,6 +18,10 @@ namespace ROOT.UI
         public UIView TutorialCheckList;
         public UIView TutorialMainTextFrame;
 
+        public TextMeshProUGUI TutorialTextMainContent;
+
+        public TutorialCheckList_Doozy TutorialCheckListCore;
+        
         /*public bool ShouldShowCheckList
         {
             set => TutorialCheckList.Show();
@@ -33,9 +38,8 @@ namespace ROOT.UI
         {
             if (rMessge is HintEventInfo info)
             {
-                //TODO
-                Debug.LogWarning("Not yet implemented");
-                return;
+                //基于事件的包有一个问题、就是显示教程内容的时间是一个————ShowTutorialTextFrame；又是开关显示的内容和实际内容。
+                //之前这个有bug的问题就是之前相关EventInfo的内容每天对。
                 switch (info.HintEventType)
                 {
                     case HintEventType.ShowGoalCheckList:
@@ -52,16 +56,36 @@ namespace ROOT.UI
                         if (info.BoolData)
                         {
                             TutorialMainTextFrame.Show();
+                            if (info.StringData!="")
+                            {
+                                TutorialTextMainContent.text = info.StringData;
+                            }
                         }
                         else
                         {
                             TutorialMainTextFrame.Hide();
                         }
                         break;
-                    case HintEventType.ShowHelpScreen:
-                        break;
-                    default:
+                    case HintEventType.ShowMainGoalContent:
+                        TutorialCheckListCore.SetupMainGoalContent(info.StringData);
                         return;
+                    case HintEventType.ShowSecondaryGoalContent:
+                        TutorialCheckListCore.SetupSecondaryGoalContent(info.StringData);
+                        return;
+                    case HintEventType.ShowMainGoalComplete:
+                        TutorialCheckListCore.MainGoalCompleted = info.BoolData;
+                        return;
+                    case HintEventType.ShowSecondaryGoalComplete:
+                        TutorialCheckListCore.SecondaryGoalCompleted = info.BoolData;
+                        return;
+                    case HintEventType.ShowTutorialFailed:
+                        TutorialCheckListCore.TutorialFailed = info.BoolData;
+                        return;
+                    case HintEventType.ShowHelpScreen:
+                        Debug.LogWarning("ShowHelpScreen Not yet implemented");
+                        return;
+                    default:
+                        throw new NotImplementedException();
                 }
                 return;
             }

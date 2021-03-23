@@ -130,8 +130,8 @@ namespace ROOT
 
         private Vector2Int[] GetActualHeatSinkUpward()
         {
-            //RISK 现在出来一个问题，就是基础图样加上这一轮添加后，有可能就堆满了。
-            //TODO 有办法，就是想办法在pattern里面储存“不能被填充”这种数据。
+            //现在出来一个问题，就是基础图样加上这一轮添加后，有可能就堆满了。
+            //有办法，就是想办法在pattern里面储存“不能被填充”这种数据。
             //现在Diminishing里面加了一个Maxout。hmmmm先这样，并没有解决上面的核心问题。
             //Debug.Log("DiminishingStep="+DiminishingStep);
             if (DiminishingStep == -1) return RawHeatSinkPos;
@@ -194,10 +194,16 @@ namespace ROOT
                 counter++;
                 _currentHeatSinkPatternsID = Random.Range(0, HeatSinkPatterns.Lib.Count);
                 _currentHeatSinkDiminishingID = Random.Range(0, HeatSinkPatterns.DiminishingList.Count);
-            } while ((_currentHeatSinkDiminishingID == oldDimID || _currentHeatSinkPatternsID == oldID) &&
-                     counter <= max);
+            } while ((_currentHeatSinkDiminishingID == oldDimID || _currentHeatSinkPatternsID == oldID) && counter <= max);
 
+            //ActualHeatSinkPos = new Vector2Int[];
             DiminishingStep = 0;
+            foreach (var boardGirdsValue in BoardGirds.Values)
+            {
+                //刷一下格子的消耗。
+                boardGirdsValue.HeatSinkCost = 0;
+                boardGirdsValue.CellStatus = CellStatus.Normal;
+            }
         }
 
         public void InitBoardGird()

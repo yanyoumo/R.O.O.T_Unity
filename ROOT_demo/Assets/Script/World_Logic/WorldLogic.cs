@@ -255,7 +255,9 @@ namespace ROOT
     
     public class CurrencyUpdatedInfo : RootMessageBase
     {
-        public int IncomesVal = int.MaxValue;
+        public int TotalIncomesVal = int.MaxValue;
+        public int BaseIncomesVal = int.MaxValue;
+        public int BonusIncomesVal = int.MaxValue;
         public int CurrencyVal = int.MaxValue;
         public override string Type => WorldEvent.CurrencyUpdatedEvent;
     }
@@ -289,6 +291,7 @@ namespace ROOT
         public static string BoardReadyEvent = "BoardReadyEvent";
 
         public static string ControllingEvent = "ControllingEvent";
+        public static string ShopTierOffsetChangedEvent = "ShopTierOffsetChangedEvent";
     }
 
     //要把Asset和Logic，把Controller也要彻底拆开。

@@ -36,21 +36,25 @@ namespace ROOT
         public TextMeshPro Incomes;
 
         private int _cached_currencyVal;
-        private int _cached_incomesVal;
+        protected int _cached_incomesVal;
+        protected int _cached_baseincomesVal;
+        protected int _cached_bonusincomesVal;
 
         protected override void RoundTypeChangedHandler(IMessage rmessage)
         {
             base.RoundTypeChangedHandler(rmessage);
             if (rmessage is TimingEventInfo info)
             {
-                CostChartUpdateCore(int.MaxValue,int.MaxValue);
+                CostChartUpdateCore(int.MaxValue,int.MaxValue,int.MaxValue,int.MaxValue);
             }
         }
 
-        private void UpdateCachedData(int currencyVal, int incomesVal)
+        private void UpdateCachedData(int currencyVal, int incomesVal, int baseincomesVal, int bonusincomesVal)
         {
             if (currencyVal != int.MaxValue) _cached_currencyVal = currencyVal;
             if (incomesVal != int.MaxValue) _cached_incomesVal = incomesVal;
+            if (baseincomesVal != int.MaxValue) _cached_baseincomesVal = baseincomesVal;
+            if (bonusincomesVal != int.MaxValue) _cached_bonusincomesVal = bonusincomesVal;
         }
         
         private void UpdateCurrencyVal(int currencyVal)
@@ -58,13 +62,13 @@ namespace ROOT
             Currency.text = Utils.PaddingNum(currencyVal, 4);
         }
 
-        private void UpdateIncomeValAsNotActive()
+        protected virtual void UpdateIncomeValAsNotActive()
         {
             Incomes.text = "---";
             Incomes.color = Color.black;
         }
         
-        private void UpdateIncomeVal(int incomesVal)
+        protected void UpdateIncomeVal(int incomesVal)
         {
             if (incomesVal > 0)
             {
@@ -87,17 +91,19 @@ namespace ROOT
         {
             if (rMessage is CurrencyUpdatedInfo info)
             {
-                CostChartUpdateCore(info.CurrencyVal, info.IncomesVal);
+                CostChartUpdateCore(info.CurrencyVal, info.TotalIncomesVal, info.BaseIncomesVal, info.BonusIncomesVal);
             }
         }
 
         //TODO
         private BossStageType bossType = BossStageType.Telemetry;
+
+        protected virtual void UpdateIncomeUI() => UpdateIncomeVal(_cached_incomesVal);
         
-        private void CostChartUpdateCore(int currencyVal, int incomesVal)
+        private void CostChartUpdateCore(int currencyVal, int incomesVal, int baseincomesVal, int bonusincomesVal)
         {
             //Debug.Log("CostChartUpdateCore");
-            UpdateCachedData(currencyVal, incomesVal);
+            UpdateCachedData(currencyVal, incomesVal, baseincomesVal, bonusincomesVal);
             UpdateCurrencyVal(_cached_currencyVal);
             
             switch (StageType)
@@ -121,7 +127,7 @@ namespace ROOT
                     break;
                 case StageType.Require:
                 case StageType.Destoryer:
-                    UpdateIncomeVal(_cached_incomesVal);
+                    UpdateIncomeUI();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
