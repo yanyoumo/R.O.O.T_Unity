@@ -232,9 +232,9 @@ namespace ROOT
             PopulateArtLevelReference();
         }
         
-        protected override void ModifiyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
+        protected override void ModifyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
-            base.ModifiyRootFSMTransitions(ref RootFSMTransitions);
+            base.ModifyRootFSMTransitions(ref RootFSMTransitions);
             RootFSMTransitions.Remove(new RootFSMTransition(RootFSMStatus.F_Cycle, RootFSMStatus.Animate, 1, CheckStartAnimate, TriggerAnimation));
             RootFSMTransitions.Remove(new RootFSMTransition(RootFSMStatus.F_Cycle, RootFSMStatus.MinorUpKeep));
 

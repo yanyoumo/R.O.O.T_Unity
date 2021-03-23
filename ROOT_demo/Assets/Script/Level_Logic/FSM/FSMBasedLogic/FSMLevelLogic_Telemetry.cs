@@ -336,9 +336,9 @@ namespace ROOT
             }
         }
         
-        protected override void ModifiyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
+        protected override void ModifyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
-            base.ModifiyRootFSMTransitions(ref RootFSMTransitions);
+            base.ModifyRootFSMTransitions(ref RootFSMTransitions);
             RootFSMTransitions.Add(new Trans(Status.MajorUpKeep, Status.F_Cycle, 4, CheckTelemetryAndNotPaused));
             RootFSMTransitions.Add(new Trans(Status.R_IO, Status.TelemetryPause, 4, CheckTelemetryAndPaused));
             RootFSMTransitions.Add(new Trans(Status.TelemetryPause, Status.Career_Cycle));

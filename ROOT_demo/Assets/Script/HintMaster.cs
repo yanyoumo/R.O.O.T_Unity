@@ -23,7 +23,7 @@ namespace ROOT
     {
         public HintEventType HintEventType;
         public bool BoolData;
-        public String StringData;
+        public String StringData = "";
         public override string Type => WorldEvent.HintRelatedEvent;
     }
 

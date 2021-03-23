@@ -18,7 +18,7 @@ namespace ROOT
             //throw new NotImplementedException();
         }
 
-        protected override void AdditionalFSMActionsOperating(ref Dictionary<RootFSMStatus, Action> actions)
+        /*protected override void AdditionalFSMActionsOperating(ref Dictionary<RootFSMStatus, Action> actions)
         {
             //throw new NotImplementedException();
         }
@@ -26,7 +26,7 @@ namespace ROOT
         protected override void AdditionalFSMTransitionOperating(ref HashSet<RootFSMTransition> transitions)
         {
             //throw new NotImplementedException();
-        }
+        }*/
 
         protected override void TutorialMinorUpkeep()
         {

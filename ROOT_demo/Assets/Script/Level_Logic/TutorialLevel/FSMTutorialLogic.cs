@@ -121,7 +121,8 @@ namespace ROOT
             var hintData = new HintEventInfo
             {
                 HintEventType = HintEventType.ShowTutorialTextFrame,
-                StringData = text
+                StringData = text,
+                BoolData = true,
             };
             MessageDispatcher.SendMessage(hintData);
         }
@@ -192,6 +193,7 @@ namespace ROOT
                     break;
                 }
 
+                //Debug.Log("LevelActionAsset.Actions[i].ActionIdx:"+LevelActionAsset.Actions[i].ActionIdx);
                 DealStep(LevelActionAsset.Actions[i]);
             }
         }
@@ -235,6 +237,7 @@ namespace ROOT
 
         private void TutorialCycle()
         {
+            //Debug.Log("TutorialCycle");
             if (!ActionEnded)
             {
                 StepForward();
@@ -251,6 +254,7 @@ namespace ROOT
         {
             if (!shouldInitTutorial) return;
             shouldInitTutorial = false;
+            //Debug.Log("TutorialInit");
             SendHintData(HintEventType.ShowTutorialTextFrame, false);
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ShowMainGoalContent, StringData = MainGoalEntryContent});
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ShowSecondaryGoalContent, StringData = SecondaryGoalEntryContent});
@@ -268,8 +272,8 @@ namespace ROOT
             TutorialMinorUpkeep();
         }
 
-        protected abstract void AdditionalFSMActionsOperating(ref FSMActions actions);
-        protected abstract void AdditionalFSMTransitionOperating(ref FSMTransitions transitions);
+        //protected abstract void AdditionalFSMActionsOperating(ref FSMActions actions);
+        //protected abstract void AdditionalFSMTransitionOperating(ref FSMTransitions transitions);
 
         protected override void ModifyFSMActions(ref Dictionary<RootFSMStatus, Action> actions)
         {
@@ -277,33 +281,13 @@ namespace ROOT
             actions.Add(RootFSMStatus.Tutorial_Cycle, TutorialCycle);
         }
 
-        /*protected sealed override HashSet<RootFSMTransition> RootFSMTransitions
+        protected override void ModifyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
-            get
-            {
-                var transitions = new FSMTransitions
-                {
-                    new Trans(RootFSMStatus.PreInit, RootFSMStatus.MajorUpKeep, 1, CheckInited),
-                    new Trans(RootFSMStatus.PreInit),
-                    new Trans(RootFSMStatus.F_Cycle, RootFSMStatus.Animate, 1, CheckStartAnimate, TriggerAnimation),
-                    new Trans(RootFSMStatus.F_Cycle, RootFSMStatus.MinorUpKeep),
-                    new Trans(RootFSMStatus.Tutorial_Cycle, RootFSMStatus.MajorUpKeep, 0, true),
-                    new Trans(RootFSMStatus.Animate, RootFSMStatus.MinorUpKeep),
-                    new Trans(RootFSMStatus.MajorUpKeep, RootFSMStatus.R_IO, 1, CheckCtrlPackAny),
-                    new Trans(RootFSMStatus.MajorUpKeep),
-                    new Trans(RootFSMStatus.MinorUpKeep, RootFSMStatus.Animate, 1, true, CheckLoopAnimate),
-                    new Trans(RootFSMStatus.MinorUpKeep, RootFSMStatus.CleanUp),
-                    new Trans(RootFSMStatus.R_IO, RootFSMStatus.F_Cycle, 5, CompletedAndRequestedEnd),
-                    new Trans(RootFSMStatus.R_IO, RootFSMStatus.Tutorial_Cycle, 4, CheckTutorialCycle),
-                    new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, 3, CheckNotOnHand),
-                    new Trans(RootFSMStatus.R_IO, RootFSMStatus.F_Cycle, 2, CheckFCycle),
-                    new Trans(RootFSMStatus.R_IO, RootFSMStatus.Animate, 1, CheckStartAnimate, TriggerAnimation),
-                    new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, 0, true),
-                    new Trans(RootFSMStatus.CleanUp, RootFSMStatus.MajorUpKeep, 0, true),
-                };
-                AdditionalFSMTransitionOperating(ref transitions);
-                return transitions;
-            }
-        }*/
+            base.ModifyRootFSMTransitions(ref RootFSMTransitions);
+            RootFSMTransitions.Add(new Trans(RootFSMStatus.Tutorial_Cycle, RootFSMStatus.MajorUpKeep, 0, true));
+            RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.F_Cycle, 5, CompletedAndRequestedEnd));
+            RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.Tutorial_Cycle, 4, CheckTutorialCycle));
+            RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, 3, CheckNotOnHand));
+        }
     }
 }

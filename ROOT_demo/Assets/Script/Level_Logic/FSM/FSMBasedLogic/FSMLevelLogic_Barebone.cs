@@ -23,7 +23,7 @@ namespace ROOT
             //Base version, DoNothing.
         }
         
-        protected virtual void ModifiyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
+        protected virtual void ModifyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
             //Base version, DoNothing.
         }
@@ -109,7 +109,7 @@ namespace ROOT
                     new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, 0, true),
                     new Trans(RootFSMStatus.CleanUp, RootFSMStatus.MajorUpKeep, 0, true),
                 };
-                ModifiyRootFSMTransitions(ref transitions);
+                ModifyRootFSMTransitions(ref transitions);
                 return transitions;
             }
         }
