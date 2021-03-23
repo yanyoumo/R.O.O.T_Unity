@@ -31,43 +31,27 @@ namespace ROOT
             set
             {
                 _tutorialFailed = value;
-                if (_tutorialFailed)
-                {
-                    PressESCToReturn.gameObject.SetActive(true);
-                }
+                if (_tutorialFailed) PressESCToReturn.gameObject.SetActive(true);
             }
         }
 
-        private void CheckCompleted()
-        {
-            if (_hasSecondaryEntry)
-            {
-                PressReturnToComplete.gameObject.SetActive(_mainEntryCompleted && _secondaryEntryEntryCompleted);
-            }
-            else
-            {
-                PressReturnToComplete.gameObject.SetActive(_mainEntryCompleted);
-            }
-        }
+        private void CheckCompleted() => PressReturnToComplete.gameObject.SetActive(_mainEntryCompleted && (!_hasSecondaryEntry || _secondaryEntryCompleted));
 
         private bool _mainEntryCompleted = false;
-        private bool _secondaryEntryEntryCompleted = false;
+        private bool _secondaryEntryCompleted = false;
+
+        private void UpdateTickSprite(bool TickOrCross, ref Image renderer)
+        {
+            renderer.color = TickOrCross ? Color.green : Color.red;
+            renderer.sprite = TickOrCross ? TickSprite : CrossSprite;
+        }
         
         public bool MainGoalCompleted
         {
             set
             {
-                _mainEntryCompleted = value; 
-                if (_mainEntryCompleted)
-                {
-                    MainEntryTickSprite.color=Color.green;
-                    MainEntryTickSprite.sprite = TickSprite;
-                }
-                else
-                {
-                    MainEntryTickSprite.color=Color.red;
-                    MainEntryTickSprite.sprite = CrossSprite;
-                }
+                _mainEntryCompleted = value;
+                UpdateTickSprite(_mainEntryCompleted, ref MainEntryTickSprite);
                 CheckCompleted();
             }
         }
@@ -76,30 +60,12 @@ namespace ROOT
         {
             set
             {
-                _secondaryEntryEntryCompleted = value;
-                if (_secondaryEntryEntryCompleted)
-                {
-                    MainEntryTickSprite.color=Color.green;
-                    MainEntryTickSprite.sprite = TickSprite;
-                }
-                else
-                {
-                    MainEntryTickSprite.color=Color.red;
-                    MainEntryTickSprite.sprite = CrossSprite;
-                }
+                _secondaryEntryCompleted = value;
+                UpdateTickSprite(_secondaryEntryCompleted, ref SecondaryEntryTickSprite);
                 CheckCompleted();
             }
         }
-
-        private readonly float DistanceFromCamera = 20.0f;
-
-        void UpdatePosition()
-        {
-            CameraAdaptToScreen.CameraUpdated -= UpdatePosition;
-            Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, DistanceFromCamera));
-            transform.localPosition = pos;
-        }
-
+        
         void Awake()
         {
             PressESCToReturn.gameObject.SetActive(false);
@@ -113,16 +79,9 @@ namespace ROOT
 
         public void SetupSecondaryGoalContent(string secondaryEntryContent)
         {
-            if (secondaryEntryContent != "")
-            {
-                _hasSecondaryEntry = true;
-                SecondaryEntryContent.text = secondaryEntryContent;
-            }
-            else
-            {
-                _hasSecondaryEntry = false;
-                SecondaryEntryPanel.gameObject.SetActive(false);
-            }
+            _hasSecondaryEntry = (secondaryEntryContent != "");
+            SecondaryEntryPanel.gameObject.SetActive(_hasSecondaryEntry);
+            SecondaryEntryContent.text = secondaryEntryContent;
         }
     }
 }

@@ -90,7 +90,7 @@ namespace ROOT
                 LevelAsset.GameBoard.DeliverUnitAssignedPlace(go, data.Pos);
             }
 
-            LevelAsset.GameBoard.UpdateBoardInit();
+            LevelAsset.GameBoard.UpdateBoardUnit();
         }
 
         private void StepForward()

@@ -652,7 +652,7 @@ namespace ROOT
             UnitsGameObjects.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit.gameObject);
         }
 
-        public void UpdateBoardInit()
+        public void UpdateBoardUnit()
         {
             foreach (var unit in Units)
             {
@@ -807,7 +807,7 @@ namespace ROOT
                 unit.GetComponentInChildren<Unit>().InitPosWithAnimation(AssignedPos);
                 unit.GetComponentInChildren<Unit>().GameBoard = this;
                 UnitsGameObjects.Add(AssignedPos, unit);
-                UpdateBoardInit();
+                UpdateBoardUnit();
                 return true;
             }
             return false;
@@ -839,7 +839,7 @@ namespace ROOT
             unit.GetComponentInChildren<Unit>().InitPosWithAnimation(randomPlace);
             unit.GetComponentInChildren<Unit>().GameBoard = this;
             UnitsGameObjects.Add(randomPlace, unit);          
-            UpdateBoardInit();
+            UpdateBoardUnit();
             deliveringPos = randomPlace;
             return true;
         }

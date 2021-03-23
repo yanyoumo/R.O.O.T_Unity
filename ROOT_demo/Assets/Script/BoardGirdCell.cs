@@ -33,7 +33,7 @@ namespace ROOT
     
     public class BoardGridThermoZoneInquiry : RootMessageBase
     {
-        public Func<List<Vector2Int>,bool> BoardGridThermoZoneInquiryCallBack;
+        public Action<List<Vector2Int>> BoardGridThermoZoneInquiryCallBack;
         public override string Type => WorldEvent.BoardGridThermoZoneInquiry;
     }
     
@@ -269,99 +269,50 @@ namespace ROOT
 
         private int GetCashIO()
         {
-            if (!_boardCouldIOCurrency)
-            {
-                return 0;
-            }
-            else
-            {
-                if (_unitCouldGenerateIncome)
-                {
-                    if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
-                    {
-                        return 0;
-                    }
+            if (!_boardCouldIOCurrency) return 0;
 
-                    var unit=owner.FindUnitUnderBoardPos(OnboardPos)?.GetComponentInChildren<Unit>();
-                    if (unit != null)
-                    {
-                        //这么写的话、CalSingleUnitScore到是可以不考虑HeatSink了。
-                        return Mathf.RoundToInt(unit.SignalCore.SingleUnitScore) - HeatSinkCost;
-                    }
-                    else
-                    {
-                        throw new ArgumentException();
-                    }
-                }
-                else
-                {
-                    if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
-                    {
-                        return 0;
-                    }
-                    
-                    return -HeatSinkCost;
-                }
+            if (_unitCouldGenerateIncome)
+            {
+                if (owner.CheckBoardPosValidAndEmpty(OnboardPos)) return 0;
+
+                var unit=owner.FindUnitUnderBoardPos(OnboardPos)?.GetComponentInChildren<Unit>();
+                if (unit == null) throw new ArgumentException();
+                return Mathf.RoundToInt(unit.SignalCore.SingleUnitScore) - HeatSinkCost;
             }
+
+            if (owner.CheckBoardPosValidAndEmpty(OnboardPos)) return 0;
+            
+            return -HeatSinkCost;
         }
 
 
         private void SetText(int number)
         {
+            var numberAsString = (number >= 0 ? "+" : "-") + Utils.PaddingNum2Digit(Math.Abs(number));
+            
             if (!_boardCouldIOCurrency)
             {
                 CashingText.color = NeutralCashColoring;
                 CashingText.text = "---";
+                return;
             }
-            else
-            {
-                if (_unitCouldGenerateIncome)
-                {
-                    if (number == 0)
-                    {
-                        if (owner.CheckBoardPosValidAndEmpty(OnboardPos))
-                        {
-                            CashingText.color = NeutralCashColoring;
-                            CashingText.text = "+00";
-                            return;
-                        }
 
-                        if (_cellStatus == CellStatus.Warning)
-                        {
-                            CashingText.color = NegativeCashColoring;
-                            CashingText.text = "+00";
-                        }
-                        else
-                        {
-                            CashingText.color = PositiveCashColoring;
-                            CashingText.text = "+00";
-                        }
-                    }
-                    else if (number > 0)
-                    {
-                        CashingText.color = PositiveCashColoring;
-                        CashingText.text = "+" + Utils.PaddingNum2Digit(number);
-                    }
-                    else
-                    {
-                        CashingText.color = NegativeCashColoring;
-                        CashingText.text = "-" + Utils.PaddingNum2Digit(Math.Abs(number));
-                    }
-                }
-                else
-                {
-                    if (number == 0)
-                    {
-                        CashingText.color = NeutralCashColoring;
-                        CashingText.text = "+00";
-                    }
-                    else
-                    {
-                        CashingText.color = NegativeCashColoring;
-                        CashingText.text = "-" + Utils.PaddingNum2Digit(Math.Abs(number));
-                    }
-                }
+            CashingText.text = numberAsString;
+
+            if (!_unitCouldGenerateIncome)
+            {
+                CashingText.color = number == 0 ? NeutralCashColoring : NegativeCashColoring;
+                return;
             }
+
+            if (number != 0)
+            {
+                CashingText.color = number > 0 ? PositiveCashColoring : NegativeCashColoring;
+                return;
+            }
+
+            var nonEmptyColoring = _cellStatus == CellStatus.Warning ? NegativeCashColoring : PositiveCashColoring;
+            CashingText.color = owner.CheckBoardPosValidAndEmpty(OnboardPos) ? NeutralCashColoring : nonEmptyColoring;
         }
 
         private void Update()
@@ -374,15 +325,14 @@ namespace ROOT
 
         private bool showingThremoBoarder = false;
 
-        private bool BoardGridThermoZoneInquiry(List<Vector2Int> ThermoZone)
+        private void BoardGridThermoZoneInquiry(List<Vector2Int> ThermoZone)
         {
             if (ThermoZone == null)
             {
                 Debug.LogWarning("ThermoZone is null");
-                return false;
+                return;
             }
             SetEdge(ThermoZone, EdgeStatus.ThermoZone);
-            return true;
         }
         
         private void HintToggle(IMessage rMessage)
