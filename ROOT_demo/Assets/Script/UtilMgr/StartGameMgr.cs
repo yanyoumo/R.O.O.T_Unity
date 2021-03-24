@@ -107,6 +107,7 @@ namespace ROOT
         {
             var newVal = !DevMode;
             PlayerPrefs.SetInt(DEV_MODE, newVal ? 1 : 0);
+            PlayerPrefs.Save(); 
         } 
         
         private void CheckPlayerPrefs()
