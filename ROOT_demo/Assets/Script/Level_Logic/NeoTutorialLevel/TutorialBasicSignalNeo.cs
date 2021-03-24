@@ -10,7 +10,7 @@ namespace ROOT
 {
     public class TutorialBasicSignalNeo : TutorialBasicControlNeo
     {
-        protected override void AddtionalDealStep(TutorialActionData data) { }
+        protected override void AdditionalDealStep(TutorialActionData data) { }
 
         protected override string MainGoalEntryContent => "将所有接收端单元都链接至发送端";
 

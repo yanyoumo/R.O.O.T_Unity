@@ -247,6 +247,14 @@ MonoBehaviour:
       - "\u6309<b>[\u56DE\u8F66]</b>\u7EE7\u7EED"
       Flags: 0000
       Languages_Touch: []
+    - Term: Locked
+      TermType: 0
+      Description: 
+      Languages:
+      - ????
+      - ????
+      Flags: 0000
+      Languages_Touch: []
     - Term: Level_1
       TermType: 0
       Description: 

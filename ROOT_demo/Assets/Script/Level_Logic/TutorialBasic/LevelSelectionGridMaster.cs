@@ -16,11 +16,20 @@ namespace ROOT.UI
         
         public GameObject LevelQuadTemplate;
 
+        public GameObject TestingTitle;
+        public GameObject TestingGridRoot;
+        
         private void Awake()
         {
             TutorialGrid.LevelQuadTemplate = LevelQuadTemplate;
             MainPlayGrid.LevelQuadTemplate = LevelQuadTemplate;
             ConstructionGrid.LevelQuadTemplate = LevelQuadTemplate;
+            
+            if (!StartGameMgr.DevMode)
+            {
+                TestingTitle.SetActive(false);
+                TestingGridRoot.SetActive(false);
+            }
         }
 
         public Button[] InitLevelSelectionMainMenu(

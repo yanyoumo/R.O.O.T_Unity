@@ -41,6 +41,7 @@ namespace I2.Loc
 		public static string Level_FSM_Barebone 		{ get{ return LocalizationManager.GetTranslation ("Level_FSM_Barebone"); } }
 		public static string Level_FSM_Career 		{ get{ return LocalizationManager.GetTranslation ("Level_FSM_Career"); } }
 		public static string Level_FSM_Test 		{ get{ return LocalizationManager.GetTranslation ("Level_FSM_Test"); } }
+		public static string Locked 		{ get{ return LocalizationManager.GetTranslation ("Locked"); } }
 		public static string Matrix_Core 		{ get{ return LocalizationManager.GetTranslation ("Matrix Core"); } }
 		public static string NextTutorial 		{ get{ return LocalizationManager.GetTranslation ("NextTutorial"); } }
 		public static string NextTutorialFailed 		{ get{ return LocalizationManager.GetTranslation ("NextTutorialFailed"); } }
@@ -110,6 +111,7 @@ namespace I2.Loc
 		public const string Level_FSM_Barebone = "Level_FSM_Barebone";
 		public const string Level_FSM_Career = "Level_FSM_Career";
 		public const string Level_FSM_Test = "Level_FSM_Test";
+		public const string Locked = "Locked";
 		public const string Matrix_Core = "Matrix Core";
 		public const string NextTutorial = "NextTutorial";
 		public const string NextTutorialFailed = "NextTutorialFailed";

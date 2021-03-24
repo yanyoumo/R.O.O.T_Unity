@@ -32,7 +32,7 @@ namespace ROOT
 
         protected bool ActionEnded { get; private set; } = false;
         protected int ActionIndex { get; private set; } = -1;
-        protected int LastActionCount { get; private set; } = 0;
+        private int LastActionCount { get; set; } = 0;
 
         protected bool LevelCompleted = false;
         protected bool LevelFailed = false;
@@ -127,7 +127,7 @@ namespace ROOT
             MessageDispatcher.SendMessage(hintData);
         }
 
-        protected override void AddtionalRecatIO()
+        protected override void AdditionalReactIO()
         {
             if (LevelCompleted)
             {
@@ -136,7 +136,7 @@ namespace ROOT
             }
         }
         
-        protected abstract void AddtionalDealStep(TutorialActionData data);
+        protected abstract void AdditionalDealStep(TutorialActionData data);
 
         /// <summary>
         /// Tutorial父类里面会为通用的动作做一个处理。如果没有会throw
@@ -177,12 +177,12 @@ namespace ROOT
                     ShowCheckList = false;
                     break;
                 default:
-                    AddtionalDealStep(data);
+                    AdditionalDealStep(data);
                     break;
             }
         }
 
-        protected void DealStepMgr()
+        private void DealStepMgr()
         {
             int actionLength = LevelActionAsset.Actions.Length;
             for (int i = LastActionCount; i < actionLength; i++)
@@ -198,23 +198,6 @@ namespace ROOT
             }
         }
 
-        /*protected void InitShop()
-        {
-            LevelAsset.Shop.ShopInit(LevelAsset);
-            LevelAsset.Shop.CurrentGameStateMgr = LevelAsset.GameStateMgr;
-            LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
-            if (LevelActionAsset.ExcludedShop)
-            {
-                LevelAsset.Shop.excludedTypes = LevelActionAsset.ShopExcludedType;
-            }
-        }
-
-        protected void ForceSetWarningDestoryer(Vector2Int nextIncome)
-        {
-            MeteoriteBomber obj = LevelAsset.WarningDestoryer as MeteoriteBomber;
-            obj?.ForceSetDestoryer(nextIncome);
-        }*/
-        
         #endregion
 
         private bool shouldInitTutorial = true;
@@ -267,13 +250,10 @@ namespace ROOT
             TutorialInit();
         }
 
-        protected sealed override void AddtionalMinorUpkeep()
+        protected sealed override void AdditionalMinorUpkeep()
         {
             TutorialMinorUpkeep();
         }
-
-        //protected abstract void AdditionalFSMActionsOperating(ref FSMActions actions);
-        //protected abstract void AdditionalFSMTransitionOperating(ref FSMTransitions transitions);
 
         protected override void ModifyFSMActions(ref Dictionary<RootFSMStatus, Action> actions)
         {

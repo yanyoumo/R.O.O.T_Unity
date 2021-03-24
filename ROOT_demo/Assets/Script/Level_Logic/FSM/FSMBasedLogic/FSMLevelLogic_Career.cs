@@ -128,7 +128,7 @@ namespace ROOT
             }
         }
 
-        protected override void AddtionalRecatIO() => AddtionalRecatIO_Skill();
+        protected override void AdditionalReactIO() => AddtionalRecatIO_Skill();
 
         private StageType? lastStageType = null;
 

@@ -22,6 +22,14 @@ namespace ROOT
         public static readonly string TAG_NAME_TUTORIAL_FRAME = "TutorialTextFrame";
         public static readonly string TAG_NAME_ADV_SHOP_PANEL = "AdvShopPanel";
     }
+
+    public static class StaticPlayerPrefName
+    {
+        public static readonly string PLAYER_ID = "PlayerID";
+        public static readonly string MOUSE_DRAG_SENSITIVITY = "MouseDragSensitivity";
+        public static readonly string DEV_MODE = "Devmode";
+    }
+    
     public static class StaticName
     {
         public static readonly string INPUT_BUTTON_TELEMETRY_PAUSE = "TelemetryPause";

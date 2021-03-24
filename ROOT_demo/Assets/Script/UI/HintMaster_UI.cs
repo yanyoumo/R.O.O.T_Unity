@@ -19,21 +19,8 @@ namespace ROOT.UI
         public UIView TutorialMainTextFrame;
 
         public TextMeshProUGUI TutorialTextMainContent;
-
         public TutorialCheckList_Doozy TutorialCheckListCore;
         
-        /*public bool ShouldShowCheckList
-        {
-            set => TutorialCheckList.Show();
-        }
-
-        private bool _tutorialMainTextFrameSuppressed = false;
-
-        public bool ShowTutorialContent
-        {
-            set => TutorialMainTextFrame.Show();
-        }*/
-
         private void HintEventHandler(IMessage rMessge)
         {
             if (rMessge is HintEventInfo info)
@@ -56,15 +43,10 @@ namespace ROOT.UI
                         if (info.BoolData)
                         {
                             TutorialMainTextFrame.Show();
-                            if (info.StringData!="")
-                            {
-                                TutorialTextMainContent.text = info.StringData;
-                            }
+                            if (info.StringData!="") TutorialTextMainContent.text = info.StringData;
+                            break;
                         }
-                        else
-                        {
-                            TutorialMainTextFrame.Hide();
-                        }
+                        TutorialMainTextFrame.Hide();
                         break;
                     case HintEventType.ShowMainGoalContent:
                         TutorialCheckListCore.SetupMainGoalContent(info.StringData);
@@ -101,34 +83,5 @@ namespace ROOT.UI
         {
             MessageDispatcher.RemoveListener(WorldEvent.HintRelatedEvent,HintEventHandler);
         }
-
-        /*public string TutorialContent
-        {
-            set => TutorialMainTextFrame.ContentText.text = value;
-        }*/
-
-        /*public bool RequestedShowHelpScreen
-        {
-            set
-            {
-                HelpScreen.ShouldShow = value;
-                if (value)
-                {
-                    if (TutorialMainTextFrame._showed)
-                    {
-                        TutorialMainTextFrame.ShouldShow = false;
-                        _tutorialMainTextFrameSuppressed = true;
-                    }
-                }
-                else
-                {
-                    if (_tutorialMainTextFrameSuppressed)
-                    {
-                        TutorialMainTextFrame.ShouldShow = true;
-                        _tutorialMainTextFrameSuppressed = false;
-                    }
-                }
-            }
-        }*/
     }
 }

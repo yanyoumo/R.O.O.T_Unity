@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static ROOT.StaticPlayerPrefName;
 using Random = UnityEngine.Random;
 
 namespace ROOT.SetupAsset
@@ -99,20 +98,40 @@ namespace ROOT
         {
             PlayerPrefs.DeleteAll();
         }
+
+        [ShowInInspector]
+        public static bool DevMode => PlayerPrefs.GetInt(DEV_MODE) != 0;
+
+        [Button]
+        public void ToggleDevMode()
+        {
+            var newVal = !DevMode;
+            PlayerPrefs.SetInt(DEV_MODE, newVal ? 1 : 0);
+        } 
+        
+        private void CheckPlayerPrefs()
+        {
+            if (!PlayerPrefs.HasKey(PLAYER_ID))
+            {
+                PlayerPrefs.SetInt(PLAYER_ID, DateTime.UtcNow.Millisecond);
+            }
+
+            if (!PlayerPrefs.HasKey(DEV_MODE))
+            {
+                PlayerPrefs.SetInt(DEV_MODE, 0);
+            }
+            
+            if (!PlayerPrefs.HasKey(MOUSE_DRAG_SENSITIVITY))
+            {
+                PlayerPrefs.SetInt(MOUSE_DRAG_SENSITIVITY, 50);
+            }
+
+            PlayerPrefs.Save();
+        }
         
         void Awake()
         {
-            //这个玩意儿利用起来、用这个来保存玩家现有教程进度。
-            if (PlayerPrefs.HasKey("PlayerID"))
-            {
-                //Debug.Log("Player ID is:" + PlayerPrefs.GetInt("PlayerID"));
-            }
-            else
-            {
-                PlayerPrefs.SetInt("PlayerID", DateTime.UtcNow.Millisecond);
-                PlayerPrefs.Save();
-                //Debug.Log("New Player ID is:" + PlayerPrefs.GetInt("PlayerID"));
-            }
+            CheckPlayerPrefs();
             //这里不能用Time.time，因为Awake和游戏运行时间差距一般很小且固定。所以这里要去调系统时间
             //RISK 这里可能需要去测试iOS的系统，目前没有测，测了后删掉。
             Random.InitState(DateTime.UtcNow.Millisecond);

@@ -256,7 +256,7 @@ namespace ROOT
 
         #region AdditionalActionInjection
 
-        protected virtual void AddtionalRecatIO()
+        protected virtual void AdditionalReactIO()
         {
             //BaseVerison Do-nothing.
         }
@@ -266,7 +266,7 @@ namespace ROOT
             //BaseVerison Do-nothing.
         }
 
-        protected virtual void AddtionalMinorUpkeep()
+        protected virtual void AdditionalMinorUpkeep()
         {
             //BaseVerison Do-nothing.
         }
@@ -291,7 +291,7 @@ namespace ROOT
         //现在在MinorUpkeep流程中、会将队列的break命令一口气全处理完。
         protected void MinorUpKeepAction()
         {
-            AddtionalMinorUpkeep();
+            AdditionalMinorUpkeep();
             while (_actionDriver.PendingRequestedBreak)
             {
                 //这个东西也要改成可配置的。 DONE
@@ -353,7 +353,7 @@ namespace ROOT
             movedTile |= Res;
             movedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
 
-            AddtionalRecatIO();
+            AdditionalReactIO();
         }
 
         protected void SkillMajorUpkeep()

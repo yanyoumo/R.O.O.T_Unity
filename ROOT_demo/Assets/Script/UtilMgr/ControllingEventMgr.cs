@@ -68,13 +68,13 @@ namespace ROOT
             
             _instance = this;
             
-            if (PlayerPrefs.HasKey("MouseDragSensitivity"))
+            if (PlayerPrefs.HasKey(StaticPlayerPrefName.MOUSE_DRAG_SENSITIVITY))
             {
-                MouseDragSensitivity = PlayerPrefs.GetInt("MouseDragSensitivity");
+                MouseDragSensitivity = PlayerPrefs.GetInt(StaticPlayerPrefName.MOUSE_DRAG_SENSITIVITY);
             }
             else
             {
-                PlayerPrefs.SetInt("MouseDragSensitivity", 50);
+                PlayerPrefs.SetInt(StaticPlayerPrefName.MOUSE_DRAG_SENSITIVITY, 50);
             }
             
             

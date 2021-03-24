@@ -71,6 +71,10 @@ namespace ROOT.UI
         // Start is called before the first frame update
         void Awake()
         {
+             //TODO 需要在这里判断；如果是Tutorial的话、就不显示已有的框架了。
+             //顺带说、尽量把sceneId这个名字改了，容易引起歧义、叫类似LevelID什么的。
+             var actionAsset = LevelLib.Instance.ActionAsset(sceneId);
+             var isTutorial = (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
         }
 
         private void OnGUI()
@@ -136,6 +140,7 @@ namespace ROOT.UI
 
         private void turnOffToggle(SignalType removeType)
         {
+            //RISK TODO GameObject.Find是一个很费的函数、要么把引用存一下、要么静态引用UIToggle。类里面的所有Find都要改。
             switch (removeType)
             {
                 case SignalType.Matrix:
