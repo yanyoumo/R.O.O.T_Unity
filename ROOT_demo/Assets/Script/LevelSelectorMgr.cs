@@ -34,21 +34,28 @@ namespace ROOT
             }
             return res;
         }
+
+        private LevelSelectionGridMaster GridMaster;
         
         void Start()
         {
             var _tutorial_dataS = QuadDataPacksFromActionAssetList(TutorialActionAssetList);
             var _career_dataS = QuadDataPacksFromActionAssetList(CareerActionAssetList);
             var _testing_dataS = QuadDataPacksFromActionAssetList(TestingActionAssetList);
-            
-            var buttons = DozzyLevelSelectionCanvas
-                .GetComponentInChildren<LevelSelectionGridMaster>()
-                .InitLevelSelectionMainMenu(_tutorial_dataS,_career_dataS,_testing_dataS);
+
+            GridMaster = DozzyLevelSelectionCanvas.GetComponentInChildren<LevelSelectionGridMaster>();
+            var buttons = GridMaster.InitLevelSelectionMainMenu(_tutorial_dataS,_career_dataS,_testing_dataS);
 
             for (var i = 0; i < buttons.Length; i++)
             {
                 var buttonId = i; var tmp = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
                 buttons[i].onClick.AddListener(() => { ButtonsListener(buttonId, tmp); });
+            }
+            
+            if (!StartGameMgr.DevMode)
+            {
+                GridMaster.TutorialGrid.SetSelectableLevels(PlayerPrefs.GetInt(StaticPlayerPrefName.TUTORIAL_PROGRESS));
+                GridMaster.MainPlayGrid.SetSelectableLevels(PlayerPrefs.GetInt(StaticPlayerPrefName.GAMEPLAY_PROGRESS));
             }
         }
 

@@ -28,6 +28,8 @@ namespace ROOT
         public static readonly string PLAYER_ID = "PlayerID";
         public static readonly string MOUSE_DRAG_SENSITIVITY = "MouseDragSensitivity";
         public static readonly string DEV_MODE = "Devmode";
+        public static readonly string TUTORIAL_PROGRESS = "TutorialProgress";
+        public static readonly string GAMEPLAY_PROGRESS = "GameplayProgress";
     }
     
     public static class StaticName

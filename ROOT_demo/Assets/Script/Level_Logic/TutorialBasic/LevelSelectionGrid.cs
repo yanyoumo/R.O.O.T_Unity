@@ -17,6 +17,14 @@ namespace ROOT.UI
 
         private int QuadCount = 20;
 
+        public void SetSelectableLevels(int idx)
+        {
+            for (var i = 0; i < TutorialQuadS.Length; i++)
+            {
+                TutorialQuadS[i].LevelSelectable = (i <= idx);
+            }
+        }
+        
         void Awake()
         {
             TutorialQuadPosS = new RectTransform[QuadCount];
@@ -35,9 +43,10 @@ namespace ROOT.UI
             TutorialQuadS = new LevelSelectionQuad[data.Length];
             for (var i = 0; i < data.Length; i++)
             {
-                TutorialQuadS[i]=Instantiate(LevelQuadTemplate, TutorialQuadPosS[i]).GetComponentInChildren<LevelSelectionQuad>();
+                TutorialQuadS[i] = Instantiate(LevelQuadTemplate, TutorialQuadPosS[i]).GetComponentInChildren<LevelSelectionQuad>();
                 res[i] = TutorialQuadS[i].InitTutorialLevelSelectionQuad(data[i]);
             }
+
             return res;
         }
     }

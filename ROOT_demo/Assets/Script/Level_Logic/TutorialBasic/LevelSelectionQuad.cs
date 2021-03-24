@@ -28,7 +28,7 @@ namespace ROOT
             }
         }
 
-        [Sirenix.OdinInspector.Button]
+        /*[Sirenix.OdinInspector.Button]
         public void TestEnable()
         {
             LevelSelectable = true;
@@ -38,7 +38,7 @@ namespace ROOT
         public void TestDisable()
         {
             LevelSelectable = false;
-        }
+        }*/
 
         private void UpdateSelectable()
         {

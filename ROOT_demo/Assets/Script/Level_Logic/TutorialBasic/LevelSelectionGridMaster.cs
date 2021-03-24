@@ -39,8 +39,12 @@ namespace ROOT.UI
         {
             var bA = TutorialGrid.InitTutorialLevelSelectionMainMenu(TutorialData);
             var bB = MainPlayGrid.InitTutorialLevelSelectionMainMenu(CareerData);
-            var bC = ConstructionGrid.InitTutorialLevelSelectionMainMenu(TestingData);
-            return bA.Concat(bB).Concat(bC).ToArray();
+            if (StartGameMgr.DevMode)
+            {
+                var bC = ConstructionGrid.InitTutorialLevelSelectionMainMenu(TestingData);
+                return bA.Concat(bB).Concat(bC).ToArray();
+            }
+            return bA.Concat(bB).ToArray();
         }
 
         public void BackToMenu()
