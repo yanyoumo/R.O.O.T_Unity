@@ -18,7 +18,10 @@ namespace ROOT.UI
 
         public Progressor LoadingProgressor;
         public GameObject LoadingLabel;
-        
+        private UIToggle matrixToggle;
+        private UIToggle scanToggle;
+        private UIToggle ThermalToggle;
+
         static Dictionary<string, SignalType> _dict = new Dictionary<string, SignalType>
         {
             {"MatrixCoreUIToggle", SignalType.Matrix},
@@ -31,10 +34,18 @@ namespace ROOT.UI
         // Start is called before the first frame update
         void Awake()
         {
-             //TODO 需要在这里判断；如果是Tutorial的话、就不显示已有的框架了。
-             //顺带说、尽量把sceneId这个名字改了，容易引起歧义、叫类似LevelID什么的。
-             var actionAsset = LevelLib.Instance.ActionAsset(sceneId);
-             var isTutorial = (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
+            //TODO 需要在这里判断；如果是Tutorial的话、就不显示已有的框架了。
+            //顺带说、尽量把sceneId这个名字改了，容易引起歧义、叫类似LevelID什么的。
+            matrixToggle = GameObject.Find("MatrixCoreUIToggle").GetComponent<UIToggle>();
+            scanToggle = GameObject.Find("ScanCoreUIToggle").GetComponent<UIToggle>();
+            ThermalToggle = GameObject.Find("ThermalCoreUIToggle").GetComponent<UIToggle>();
+            uiPopup = GameObject.Find("UIPopup").GetComponent<UIPopup>();
+            var actionAsset = LevelLib.Instance.ActionAsset(sceneId);
+            var isTutorial = (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
+            if (isTutorial) 
+            {
+                GameObject.Find("View - CareerSetup_CoreSelection").GetComponent<UIView>().Hide();
+            }
         }
 
         private void OnGUI()
@@ -100,19 +111,15 @@ namespace ROOT.UI
 
         private void turnOffToggle(SignalType removeType)
         {
-            //RISK TODO GameObject.Find是一个很费的函数、要么把引用存一下、要么静态引用UIToggle。类里面的所有Find都要改。
             switch (removeType)
             {
                 case SignalType.Matrix:
-                    UIToggle matrixToggle = GameObject.Find("MatrixCoreUIToggle").GetComponent<UIToggle>();
                     matrixToggle.IsOn = false;
                     break;
                 case SignalType.Scan:
-                    UIToggle scanToggle = GameObject.Find("ScanCoreUIToggle").GetComponent<UIToggle>();
                     scanToggle.IsOn = false;
                     break;
                 case SignalType.Thermo:
-                    UIToggle ThermalToggle = GameObject.Find("ThermalCoreUIToggle").GetComponent<UIToggle>();
                     ThermalToggle.IsOn = false;
                     break;
                 default:
@@ -128,7 +135,7 @@ namespace ROOT.UI
 
         public void uiPopUpDisappear()
         {
-            GameObject.Find("UIPopup").GetComponent<UIPopup>().Hide();
+            uiPopup.Hide();
         }
 
         private IEnumerator Pendingkill()
@@ -163,7 +170,6 @@ namespace ROOT.UI
                 RootDebug.Log("additionalGameSetup is not properly setup, player hasn't selected two cores", NameID.SuYuxuan_Log);
                 //need to add an animation or pop up in the UI to tell the player to correctly select cores
                 //Otherwise, the game should not proceed
-                uiPopup = GameObject.Find("UIPopup").GetComponent<UIPopup>();
                 uiPopup.Show();
             }
         }
