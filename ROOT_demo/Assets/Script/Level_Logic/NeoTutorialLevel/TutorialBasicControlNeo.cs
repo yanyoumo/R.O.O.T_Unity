@@ -32,7 +32,7 @@ namespace ROOT
             SendHintData(HintEventType.ShowTutorialTextFrame, false);
         }
 
-        protected override void AddtionalDealStep(TutorialActionData data)
+        protected override void AdditionalDealStep(TutorialActionData data)
         {
             switch (data.ActionType)
             {

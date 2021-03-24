@@ -6184,6 +6184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a98ad1065fbc040a8dba30450ab136, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OptionView: {fileID: 569823344}
   MouseDragSensitivitySlider: {fileID: 844853641}
 --- !u!1 &774372687
 GameObject:
@@ -7223,10 +7224,10 @@ MonoBehaviour:
       Event:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 569823344}
-            m_TargetAssemblyTypeName: Doozy.Engine.UI.UIView, Root_Assemble
-            m_MethodName: Hide
-            m_Mode: 6
+          - m_Target: {fileID: 569823348}
+            m_TargetAssemblyTypeName: ROOT.UI.GamePrefOptionMgr, Root_Assemble
+            m_MethodName: OptionMgrClosed
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

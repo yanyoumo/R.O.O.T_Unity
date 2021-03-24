@@ -13,7 +13,7 @@ namespace ROOT
     {
         protected override string MainGoalEntryContent => "将接收端单元都链至发送端";
         protected override string SecondaryGoalEntryContent => "在时间线结束之前完成任务";
-        protected override void AddtionalDealStep(TutorialActionData data)
+        protected override void AdditionalDealStep(TutorialActionData data)
         {
             //throw new NotImplementedException();
         }

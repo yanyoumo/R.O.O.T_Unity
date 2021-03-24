@@ -16,11 +16,20 @@ namespace ROOT.UI
         
         public GameObject LevelQuadTemplate;
 
+        public GameObject TestingTitle;
+        public GameObject TestingGridRoot;
+        
         private void Awake()
         {
             TutorialGrid.LevelQuadTemplate = LevelQuadTemplate;
             MainPlayGrid.LevelQuadTemplate = LevelQuadTemplate;
             ConstructionGrid.LevelQuadTemplate = LevelQuadTemplate;
+            
+            if (!StartGameMgr.DevMode)
+            {
+                TestingTitle.SetActive(false);
+                TestingGridRoot.SetActive(false);
+            }
         }
 
         public Button[] InitLevelSelectionMainMenu(
@@ -30,8 +39,12 @@ namespace ROOT.UI
         {
             var bA = TutorialGrid.InitTutorialLevelSelectionMainMenu(TutorialData);
             var bB = MainPlayGrid.InitTutorialLevelSelectionMainMenu(CareerData);
-            var bC = ConstructionGrid.InitTutorialLevelSelectionMainMenu(TestingData);
-            return bA.Concat(bB).Concat(bC).ToArray();
+            if (StartGameMgr.DevMode)
+            {
+                var bC = ConstructionGrid.InitTutorialLevelSelectionMainMenu(TestingData);
+                return bA.Concat(bB).Concat(bC).ToArray();
+            }
+            return bA.Concat(bB).ToArray();
         }
 
         public void BackToMenu()

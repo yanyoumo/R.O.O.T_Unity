@@ -8,7 +8,7 @@ namespace ROOT
 {
     public class AcquiringCostTargetInquiry : RootMessageBase
     {
-        public Func<int,bool> AcquiringCostTargetCallBack;
+        public Action<int> AcquiringCostTargetCallBack;
         public override string Type => WorldEvent.AcquiringCostTargetInquiry;
     }
     
@@ -47,18 +47,14 @@ namespace ROOT
             BonusCurrency.text = "---";
             BonusCurrency.color = Color.black;
         }
-        
-        private bool UpdateTgtCurrencyText(int TgtCurrencyVal)
-        {
-            //TODO 怎么和数值位数和面积匹配是个问题。
-            TgtCurrency.text = TgtCurrencyVal.ToString("D4");
-            return true;
-        }
 
         protected override void Awake()
         {
             base.Awake();
-            MessageDispatcher.SendMessage(new AcquiringCostTargetInquiry {AcquiringCostTargetCallBack = UpdateTgtCurrencyText});
+            MessageDispatcher.SendMessage(new AcquiringCostTargetInquiry
+            {
+                AcquiringCostTargetCallBack = (tgt) => TgtCurrency.text = tgt.ToString("D4")//TODO 怎么和数值位数和面积匹配是个问题。
+            });
         }
     }
 }

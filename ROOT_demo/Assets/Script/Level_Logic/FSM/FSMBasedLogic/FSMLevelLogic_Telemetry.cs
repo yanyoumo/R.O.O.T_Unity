@@ -202,7 +202,7 @@ namespace ROOT
             }
         }
 
-        protected override void AddtionalMinorUpkeep()
+        protected override void AdditionalMinorUpkeep()
         {
             if (CheckTelemetryStage())
             {
@@ -210,9 +210,9 @@ namespace ROOT
             }
         }
 
-        protected override void AddtionalRecatIO()
+        protected override void AdditionalReactIO()
         {
-            base.AddtionalRecatIO();
+            base.AdditionalReactIO();
             AddtionalRecatIO_Telemetry();
         }
 

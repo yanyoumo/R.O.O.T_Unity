@@ -9,7 +9,7 @@ namespace ROOT
 {
     public class BalancingSignalSetupInquiry : RootMessageBase
     {
-        public Func<Func<int, int, float>,bool> BalancingSignalFuncCallBack;
+        public Action<Func<int, int, float>> BalancingSignalFuncCallBack;
         public override string Type => WorldEvent.BalancingSignalSetupInquiry;
     }
     
@@ -32,12 +32,6 @@ namespace ROOT
             SeesawTick.localPosition = pos;
         }
 
-        private bool BalancingSignalFuncCallBack(Func<int, int, float> balancingSignalFunc)
-        {
-            _balancingSignalFunc = balancingSignalFunc;
-            return true;
-        }
-
         private void BoardSignalUpdatedHandler(IMessage rmMessage)
         {
             if (rmMessage is BoardSignalUpdatedInfo info)
@@ -51,7 +45,9 @@ namespace ROOT
         {
             base.Awake();
             MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
-            MessageDispatcher.SendMessage(new BalancingSignalSetupInquiry{BalancingSignalFuncCallBack=this.BalancingSignalFuncCallBack});
+            MessageDispatcher.SendMessage(new BalancingSignalSetupInquiry {
+                BalancingSignalFuncCallBack= func=>_balancingSignalFunc=func
+            });
         }
 
         protected override void OnDestroy()
