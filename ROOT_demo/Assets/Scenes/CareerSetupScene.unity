@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1486,7 +1486,7 @@ MonoBehaviour:
   DoubleClickRegisterInterval: 0.2
   InputData:
     EnableAlternateInputs: 0
-    InputMode: 2
+    InputMode: 0
     KeyCode: 13
     KeyCodeAlt: 32
     VirtualButtonName: Submit
@@ -4934,7 +4934,7 @@ MonoBehaviour:
   DoubleClickRegisterInterval: 0.2
   InputData:
     EnableAlternateInputs: 0
-    InputMode: 2
+    InputMode: 0
     KeyCode: 13
     KeyCodeAlt: 32
     VirtualButtonName: Submit
@@ -7361,7 +7361,7 @@ MonoBehaviour:
   DoubleClickRegisterInterval: 0.2
   InputData:
     EnableAlternateInputs: 0
-    InputMode: 2
+    InputMode: 0
     KeyCode: 13
     KeyCodeAlt: 32
     VirtualButtonName: Submit
@@ -13287,7 +13287,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0

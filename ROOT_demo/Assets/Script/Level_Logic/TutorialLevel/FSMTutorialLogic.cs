@@ -31,7 +31,7 @@ namespace ROOT
     {
         public static bool CheckA(FSMLevelLogic fsm,Board board)
         {
-            return true;
+            return false;
         }
     }
 
@@ -169,6 +169,8 @@ namespace ROOT
         
         protected abstract void AdditionalDealStep(TutorialActionData data);
 
+        protected Func<FSMLevelLogic, Board, bool> PendingHandOnChecking = (a, b) => false;
+        
         /// <summary>
         /// Tutorial父类里面会为通用的动作做一个处理。如果没有会throw
         /// </summary>
@@ -194,11 +196,11 @@ namespace ROOT
                     ActionEnded = true;
                     break;
                 case TutorialActionType.ShowText:
-                    TutorialOnHand = false;
+                    //TutorialOnHand = false;
                     ShowText = true;
                     break;
                 case TutorialActionType.HideText:
-                    TutorialOnHand = true;
+                    //TutorialOnHand = true;
                     ShowText = false;
                     break;
                 case TutorialActionType.ShowCheckList:
@@ -206,6 +208,10 @@ namespace ROOT
                     break;
                 case TutorialActionType.HideCheckList:
                     ShowCheckList = false;
+                    break;
+                case TutorialActionType.HandOn:
+                    TutorialOnHand = true;
+                    PendingHandOnChecking = CheckLib[data.HandOnCheckType];
                     break;
                 default:
                     AdditionalDealStep(data);
@@ -261,7 +267,14 @@ namespace ROOT
 
         protected virtual void TutorialMinorUpkeep()
         {
-
+            if (TutorialOnHand)
+            {
+                if (PendingHandOnChecking(this, LevelAsset.GameBoard))
+                {
+                    //TODO 如果这么实现、就是要求满足后直接就跳出去；但是可能还要加个确认什么的？
+                    TutorialOnHand = false;
+                }
+            }
         }
 
         private void TutorialInit()

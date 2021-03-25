@@ -31,7 +31,7 @@ MonoBehaviour:
   levelType: 0
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 1
+    PlayingSignalTypeB: 2
   InitalBoard: []
   HasBossRound: 0
   Endless: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     HandOnCheckType: 0
   - ActionIdx: 1
     ActionType: 0
@@ -90,7 +90,7 @@ MonoBehaviour:
     Pos: {x: 2, y: 1}
     Core: 0
     HardwareType: 1
-    Sides: 01000000000000000100000001000000
+    Sides: 00000000010000000100000001000000
     Tier: 1
     HandOnCheckType: 0
   - ActionIdx: 2
@@ -167,7 +167,7 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 0
     HardwareType: 1
-    Sides: 01000000010000000000000001000000
+    Sides: 01000000000000000100000001000000
     Tier: 1
     HandOnCheckType: 0
   - ActionIdx: 6
@@ -189,7 +189,7 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 0
     HardwareType: 1
-    Sides: 01000000010000000000000001000000
+    Sides: 01000000000000000100000001000000
     Tier: 1
     HandOnCheckType: 0
   - ActionIdx: 6
@@ -200,10 +200,21 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 0
     HardwareType: 1
-    Sides: 01000000010000000000000001000000
+    Sides: 01000000010000000100000000000000
     Tier: 1
     HandOnCheckType: 0
   - ActionIdx: 6
+    ActionType: 8
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+  - ActionIdx: 7
     ActionType: 5
     Text: 
     DoppelgangerToggle: 0

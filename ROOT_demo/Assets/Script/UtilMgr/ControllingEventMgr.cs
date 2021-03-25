@@ -96,8 +96,8 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func8);
             player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func9);
 
-            player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Confirm0);
-            player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Button.Confirm0);
+            player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HoldForDrag);
+            player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Button.HoldForDrag);
 
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.TelemetryPause);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.RotateUnit);
@@ -106,6 +106,7 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintControl);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CycleNext);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.InGameOverLayToggle);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Confirm0);
             
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.ShopTierUp);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.ShopTierDown);

@@ -30,6 +30,7 @@ namespace ROOT
 
         protected override void TutorialMinorUpkeep()
         {
+            base.TutorialMinorUpkeep();
             if (ReadyToGo)
             {
                 if (ActionIndex == 2)

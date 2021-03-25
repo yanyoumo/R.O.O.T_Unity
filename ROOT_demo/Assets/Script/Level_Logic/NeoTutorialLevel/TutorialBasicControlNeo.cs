@@ -18,6 +18,7 @@ namespace ROOT
 
         protected override void TutorialMinorUpkeep()
         {
+            base.TutorialMinorUpkeep();
             LevelCompleted = AllUnitConnected();
             LevelFailed = !LevelCompleted;
             if (ActionEnded)
@@ -44,30 +45,9 @@ namespace ROOT
             }
         }
 
-        void MajorUpkeepAction_TutorialBasicControlNeo()
-        {
-            _ctrlPack = _actionDriver.CtrlQueueHeader;
-            UpdateBoardData_Stepped(ref LevelAsset);
-            base.AdditionalMajorUpkeep();
-        }
-        
-        /*protected override void AdditionalFSMActionsOperating(ref FSMActions actions)
-        {
-            if (actions.ContainsKey(RootFSMStatus.MajorUpKeep))
-            {
-                actions.Remove(RootFSMStatus.MajorUpKeep);
-                actions.Add(RootFSMStatus.MajorUpKeep, MajorUpkeepAction_TutorialBasicControlNeo);
-            }
-        }*/
-
         protected override void AdditionalInitLevel()
         {
             //WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
         }
-        
-        /*protected override void AdditionalFSMTransitionOperating(ref FSMTransitions transitions)
-        {
-            //throw new NotImplementedException();
-        }*/
     }
 }

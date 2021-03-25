@@ -117,7 +117,6 @@ namespace ROOT
 
             if (actionPack.IsAction(Confirm0))
             {
-                //Debug.Log("CtrlPack.SetFlag(ControllingCommand.Confirm);");
                 CtrlPack.SetFlag(ControllingCommand.Confirm);
             }
 
