@@ -22,6 +22,7 @@ namespace ROOT
         End,
         ShowCheckList,
         HideCheckList,
+        HandOn,
     }
 
     public enum BossStageType

@@ -13,6 +13,7 @@ namespace ROOT
     using FSMActions = Dictionary<RootFSMStatus, Action>;
     using Trans = RootFSMTransition;
     using FSMTransitions = HashSet<RootFSMTransition>;
+    using CheckingLib = Dictionary<TutorialCheckType, Func<FSMLevelLogic, Board, bool>>;
 
     //迪公说的想把Tutorial里面判断的逻辑从基于FSM变成这样基于函数代理的。
     //从技术上讲可以、使用Dict存储一个enum-Func对儿；这样在Action里面就可以通过enum配置实际的逻辑。
@@ -25,17 +26,26 @@ namespace ROOT
         //2、判断函数的参数定死了。（FSMLogic和Board可以提供数据源
             //但是一个重要的问题，是具体可配置的参数怎么办？例如判断已有的某个数据是否高于某个阈值、这个阈值怎么传进去？
             //理论上可以传一个Object、但是也有不少问题。
+   
     public static class TutorialCheckFunctionList
     {
         public static bool CheckA(FSMLevelLogic fsm,Board board)
         {
             return true;
         }
-    } 
-    
+    }
+
+    public enum TutorialCheckType
+    {
+        TestA,
+    }
+
     public abstract class FSMTutorialLogic : FSMLevelLogic_Barebone
     {
-        private Func<FSMLevelLogic,Board, bool> testFunc = TutorialCheckFunctionList.CheckA;
+        protected readonly CheckingLib CheckLib = new CheckingLib
+        {
+            {TutorialCheckType.TestA, TutorialCheckFunctionList.CheckA},
+        };
         
         protected sealed override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
         protected sealed override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;

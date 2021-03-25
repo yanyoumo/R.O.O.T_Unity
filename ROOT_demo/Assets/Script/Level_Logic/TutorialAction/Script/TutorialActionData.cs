@@ -38,5 +38,8 @@ namespace ROOT.SetupAsset
 
         [ShowIf("ActionType", TutorialActionType.CreateUnit)] [Range(1, 5)]
         public int Tier;
+
+        [ShowIf("ActionType", TutorialActionType.HandOn)]
+        public TutorialCheckType HandOnCheckType;
     }
 }
