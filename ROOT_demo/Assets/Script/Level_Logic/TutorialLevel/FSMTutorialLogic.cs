@@ -14,8 +14,29 @@ namespace ROOT
     using Trans = RootFSMTransition;
     using FSMTransitions = HashSet<RootFSMTransition>;
 
+    //迪公说的想把Tutorial里面判断的逻辑从基于FSM变成这样基于函数代理的。
+    //从技术上讲可以、使用Dict存储一个enum-Func对儿；这样在Action里面就可以通过enum配置实际的逻辑。
+    //这么搞的确有很多优势、但是也有一些问题。
+    //先说优势：
+        //1、极端情况下、就都不用每个教程关卡都需要一个新的FSM了。
+        //2、判断函数是可以对立拎出来了。
+    //再说劣势：
+        //1、实现框架需要仔细想；可能会十分复杂。
+        //2、判断函数的参数定死了。（FSMLogic和Board可以提供数据源
+            //但是一个重要的问题，是具体可配置的参数怎么办？例如判断已有的某个数据是否高于某个阈值、这个阈值怎么传进去？
+            //理论上可以传一个Object、但是也有不少问题。
+    public static class TutorialCheckFunctionList
+    {
+        public static bool CheckA(FSMLevelLogic fsm,Board board)
+        {
+            return true;
+        }
+    } 
+    
     public abstract class FSMTutorialLogic : FSMLevelLogic_Barebone
     {
+        private Func<FSMLevelLogic,Board, bool> testFunc = TutorialCheckFunctionList.CheckA;
+        
         protected sealed override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
         protected sealed override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
         public override bool IsTutorial => true;

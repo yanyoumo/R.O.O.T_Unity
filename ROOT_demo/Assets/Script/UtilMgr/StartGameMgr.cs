@@ -93,6 +93,9 @@ namespace ROOT
             }
         }
 
+        /*[ShowInInspector]
+        public Func<int, bool> testAction = a => a > 0;*/
+
         [Button]
         void ClearPlayerPrefs()
         {

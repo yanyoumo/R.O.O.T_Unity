@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 164.62585, y: -65.509186}
+  m_AnchoredPosition: {x: 164.62598, y: -65.50928}
   m_SizeDelta: {x: 277.2516, y: 101.0184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &44110758
@@ -2787,7 +2787,7 @@ MonoBehaviour:
     PresetName: 
   TargetLabel: 2
   TextLabel: {fileID: 0}
-  TextMeshProLabel: {fileID: 1712382427}
+  TextMeshProLabel: {fileID: 0}
 --- !u!114 &324662205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8648,7 +8648,7 @@ MonoBehaviour:
     PresetName: 
   TargetLabel: 2
   TextLabel: {fileID: 0}
-  TextMeshProLabel: {fileID: 1475265742}
+  TextMeshProLabel: {fileID: 0}
 --- !u!114 &835564405
 MonoBehaviour:
   m_ObjectHideFlags: 0
