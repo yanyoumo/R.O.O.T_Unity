@@ -50,7 +50,7 @@ namespace ROOT
         
         protected sealed override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
         protected sealed override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
-        public override bool IsTutorial => true;
+        public sealed override bool IsTutorial => true;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");

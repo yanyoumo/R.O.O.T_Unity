@@ -37,13 +37,13 @@ namespace ROOT
 
     public abstract class FSMLevelLogic:MonoBehaviour   //LEVEL-LOGIC/每一关都有一个这个类。
     {
-        [ReadOnly] public bool Playing { get; set; }
-        [ReadOnly] public bool Animating = false;
-        [ReadOnly] public bool ReadyToGo = false;
-        [ReadOnly] public bool ReferenceOk = false;
-        [ReadOnly] public bool PendingCleanUp;
-        [ReadOnly] public bool IsTutorialLevel = false;
-        [ReadOnly] public bool movedTile = false;
+        public bool Playing { get; set; }
+        [HideInInspector] public bool Animating = false;
+        [HideInInspector] public bool ReadyToGo = false;
+        [HideInInspector] public bool ReferenceOk = false;
+        [HideInInspector] public bool PendingCleanUp;
+        [ShowInInspector] public bool IsTutorialLevel => IsTutorial;
+        [HideInInspector] public bool movedTile = false;
 
         public abstract bool IsTutorial { get; }
         public abstract bool CouldHandleSkill { get; }
