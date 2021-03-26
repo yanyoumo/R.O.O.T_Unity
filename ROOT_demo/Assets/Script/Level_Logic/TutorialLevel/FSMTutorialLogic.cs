@@ -263,6 +263,7 @@ namespace ROOT
         
         private bool CheckTutorialCycle()
         {
+            //TODO 这里不行、需要和R_IO的代码整合。
             return CtrlPack.HasFlag(ControllingCommand.Confirm);
         }
 
@@ -274,7 +275,7 @@ namespace ROOT
         private void TutorialCycle()
         {
             //Debug.Log("TutorialCycle");
-            if (!CompletedAndRequestedEnd())
+            if (!CompletedAndRequestedEnd() && !TutorialOnHand)
             {
                 StepForward();
                 DealStepMgr();
