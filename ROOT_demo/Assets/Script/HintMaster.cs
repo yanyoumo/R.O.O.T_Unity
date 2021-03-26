@@ -6,27 +6,6 @@ using UnityEngine;
 
 namespace ROOT
 {
-
-    public enum HintEventType
-    {
-        ShowGoalCheckList,
-        ShowMainGoalComplete,
-        ShowSecondaryGoalComplete,
-        ShowMainGoalContent,
-        ShowSecondaryGoalContent,
-        ShowTutorialTextFrame,
-        ShowTutorialFailed,
-        ShowHelpScreen,
-    }
-    
-    public class HintEventInfo : RootMessageBase
-    {
-        public HintEventType HintEventType;
-        public bool BoolData;
-        public String StringData = "";
-        public override string Type => WorldEvent.HintRelatedEvent;
-    }
-
     /*public partial class HintMaster : MonoBehaviour
     {
     }*/

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ROOT.SetupAsset;
+using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -46,8 +47,8 @@ namespace ROOT
 
             if (ActionEnded)
             {
-                SendHintData(HintEventType.ShowMainGoalComplete,AllUnitConnected());
-                SendHintData(HintEventType.ShowSecondaryGoalComplete,!OnceFlagB);
+                SendHintData(HintEventType.MainGoalComplete,AllUnitConnected());
+                SendHintData(HintEventType.SecondaryGoalComplete,!OnceFlagB);
                 LevelCompleted = (!OnceFlagB) && AllUnitConnected();
             }
 
@@ -65,7 +66,7 @@ namespace ROOT
             if (LevelFailed)
             {
                 PlayerRequestedQuit = CtrlPack.HasFlag(ControllingCommand.Confirm);
-                SendHintData(HintEventType.ShowTutorialFailed,true);
+                SendHintData(HintEventType.TutorialFailed,true);
             }
             
         }

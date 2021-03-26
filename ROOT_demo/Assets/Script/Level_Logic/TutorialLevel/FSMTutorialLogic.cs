@@ -4,6 +4,7 @@ using System.Linq;
 using com.ootii.Messages;
 using I2.Loc;
 using ROOT.SetupAsset;
+using ROOT.UI;
 using UnityEngine;
 using static ROOT.TextProcessHelper;
 
@@ -31,7 +32,7 @@ namespace ROOT
     {
         public static bool CheckA(FSMLevelLogic fsm,Board board)
         {
-            return false;
+            return board.FindUnitUnderBoardPos(Vector2Int.zero) != null;
         }
     }
 
@@ -169,7 +170,7 @@ namespace ROOT
         
         protected abstract void AdditionalDealStep(TutorialActionData data);
 
-        protected Func<FSMLevelLogic, Board, bool> PendingHandOnChecking = (a, b) => false;
+        private Func<FSMLevelLogic, Board, bool> PendingHandOnChecking = (a, b) => false;
         
         /// <summary>
         /// Tutorial父类里面会为通用的动作做一个处理。如果没有会throw
@@ -210,15 +211,14 @@ namespace ROOT
                     ShowCheckList = false;
                     break;
                 case TutorialActionType.HandOn:
-                    TutorialOnHand = true;
-                    PendingHandOnChecking = CheckLib[data.HandOnCheckType];
+                    SetHandOn(data);
                     break;
                 default:
                     AdditionalDealStep(data);
                     break;
             }
         }
-
+        
         private void DealStepMgr()
         {
             int actionLength = LevelActionAsset.Actions.Length;
@@ -240,6 +240,16 @@ namespace ROOT
         private bool shouldInitTutorial = true;
         private bool TutorialOnHand = false;
 
+        private void SetHandOn(TutorialActionData data)
+        {
+            TutorialOnHand = true;
+            PendingHandOnChecking = CheckLib[data.HandOnCheckType];
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetMainGoalContent, StringData = data.HandOnMission});
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ShowGoalCheckList});
+            ShowCheckList = true;
+            CompleteCurrentHandOn = false;
+        }
+        
         private bool CompletedAndRequestedEnd()
         {
             return LevelCompleted && PlayerRequestedEnd;
@@ -265,15 +275,15 @@ namespace ROOT
             }
         }
 
+        private bool CompleteCurrentHandOn = false;
+        
         protected virtual void TutorialMinorUpkeep()
         {
             if (TutorialOnHand)
             {
-                if (PendingHandOnChecking(this, LevelAsset.GameBoard))
-                {
-                    //TODO 如果这么实现、就是要求满足后直接就跳出去；但是可能还要加个确认什么的？
-                    TutorialOnHand = false;
-                }
+                var currentHandOn=PendingHandOnChecking(this, LevelAsset.GameBoard);
+                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.MainGoalComplete,BoolData = currentHandOn});
+                CompleteCurrentHandOn = currentHandOn;
             }
         }
 
@@ -283,8 +293,7 @@ namespace ROOT
             shouldInitTutorial = false;
             //Debug.Log("TutorialInit");
             SendHintData(HintEventType.ShowTutorialTextFrame, false);
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ShowMainGoalContent, StringData = MainGoalEntryContent});
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ShowSecondaryGoalContent, StringData = SecondaryGoalEntryContent});
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetSecondaryGoalContent, StringData = ""});
             StepForward();
             DealStepMgr();
         }

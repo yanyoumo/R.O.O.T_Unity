@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ROOT.SetupAsset;
+using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -24,7 +25,7 @@ namespace ROOT
             if (ActionEnded)
             {
                 LevelCompleted = AllUnitConnected();
-                SendHintData(HintEventType.ShowMainGoalComplete, LevelCompleted);
+                SendHintData(HintEventType.MainGoalComplete, LevelCompleted);
             }
         }
 

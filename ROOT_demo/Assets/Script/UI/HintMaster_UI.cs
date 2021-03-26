@@ -1,6 +1,7 @@
 using System;
 using com.ootii.Messages;
 using Doozy.Engine.UI;
+using ROOT.Message;
 using TMPro;
 using UnityEngine;
 
@@ -11,6 +12,27 @@ namespace ROOT.UI
         public delegate void InGameManualFootterUpdate(int TotalPageCount, int CurrentPageCount);
 
         public delegate void InGameOverlayToggle();
+    }
+    
+    public enum HintEventType
+    {
+        //这里估计还是要有大改。
+        ShowGoalCheckList,
+        MainGoalComplete,
+        SecondaryGoalComplete,
+        SetMainGoalContent,
+        SetSecondaryGoalContent,
+        ShowTutorialTextFrame,
+        TutorialFailed,
+        ShowHelpScreen,
+    }
+    
+    public class HintEventInfo : RootMessageBase
+    {
+        public HintEventType HintEventType;
+        public bool BoolData;
+        public String StringData = "";
+        public override string Type => WorldEvent.HintRelatedEvent;
     }
     
     public class HintMaster_UI : MonoBehaviour
@@ -48,19 +70,19 @@ namespace ROOT.UI
                         }
                         TutorialMainTextFrame.Hide();
                         break;
-                    case HintEventType.ShowMainGoalContent:
+                    case HintEventType.SetMainGoalContent:
                         TutorialCheckListCore.SetupMainGoalContent(info.StringData);
                         return;
-                    case HintEventType.ShowSecondaryGoalContent:
+                    case HintEventType.SetSecondaryGoalContent:
                         TutorialCheckListCore.SetupSecondaryGoalContent(info.StringData);
                         return;
-                    case HintEventType.ShowMainGoalComplete:
+                    case HintEventType.MainGoalComplete:
                         TutorialCheckListCore.MainGoalCompleted = info.BoolData;
                         return;
-                    case HintEventType.ShowSecondaryGoalComplete:
+                    case HintEventType.SecondaryGoalComplete:
                         TutorialCheckListCore.SecondaryGoalCompleted = info.BoolData;
                         return;
-                    case HintEventType.ShowTutorialFailed:
+                    case HintEventType.TutorialFailed:
                         TutorialCheckListCore.TutorialFailed = info.BoolData;
                         return;
                     case HintEventType.ShowHelpScreen:

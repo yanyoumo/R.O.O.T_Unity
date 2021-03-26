@@ -5,6 +5,7 @@ using Cinemachine;
 using com.ootii.Messages;
 using ROOT.SetupAsset;
 using ROOT.Signal;
+using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
