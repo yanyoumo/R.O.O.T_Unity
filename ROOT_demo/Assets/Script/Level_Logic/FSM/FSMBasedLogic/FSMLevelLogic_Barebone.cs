@@ -58,7 +58,7 @@ namespace ROOT
             
             ReadyToGo = true;
 
-            SendHintData(HintEventType.ShowGoalCheckList, false);
+            SendHintData(HintEventType.SetGoalCheckListShow, false);
         }
         
         public override IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene)
@@ -68,7 +68,7 @@ namespace ROOT
                 yield return 0;
             }
             AdditionalArtLevelReference(ref LevelAsset);
-            SendHintData(HintEventType.ShowTutorialTextFrame, false);
+            SendHintData(HintEventType.SetTutorialTextShow, false);
             PopulateArtLevelReference();
         }
         

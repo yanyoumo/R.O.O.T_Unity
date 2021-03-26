@@ -29,7 +29,7 @@ namespace ROOT
             //throw new NotImplementedException();
         }*/
 
-        protected override void TutorialMinorUpkeep()
+        /*protected override void TutorialMinorUpkeep()
         {
             base.TutorialMinorUpkeep();
             if (ReadyToGo)
@@ -79,6 +79,6 @@ namespace ROOT
         protected override void AdditionalInitLevel()
         {
             LevelAsset.TimeLine.SetNoCount();
-        }
+        }*/
     }
 }

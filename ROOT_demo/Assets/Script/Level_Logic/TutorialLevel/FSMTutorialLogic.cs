@@ -43,7 +43,7 @@ namespace ROOT
 
     public abstract class FSMTutorialLogic : FSMLevelLogic_Barebone
     {
-        protected readonly CheckingLib CheckLib = new CheckingLib
+        private readonly CheckingLib CheckLib = new CheckingLib
         {
             {TutorialCheckType.TestA, TutorialCheckFunctionList.CheckA},
         };
@@ -62,17 +62,17 @@ namespace ROOT
         
         #region TutorialRelated
 
-        protected bool ActionEnded { get; private set; } = false;
+        //protected bool ActionEnded { get; private set; } = false;
         protected int ActionIndex { get; private set; } = -1;
         private int LastActionCount { get; set; } = 0;
 
-        protected bool LevelCompleted = false;
-        protected bool LevelFailed = false;
-        protected bool PlayerRequestedEnd = false;
-        protected bool PlayerRequestedQuit = false;
+        //protected bool LevelCompleted = false;
+        /*protected bool LevelFailed = false;
+        //protected bool PlayerRequestedEnd = false;
+        //protected bool PlayerRequestedQuit = false;
 
         protected bool OnceFlagA = false;
-        protected bool OnceFlagB = false;
+        protected bool OnceFlagB = false;*/
 
         protected abstract string MainGoalEntryContent { get; }
         protected virtual string SecondaryGoalEntryContent { get; } = "";
@@ -81,30 +81,26 @@ namespace ROOT
 
         private bool ShowText 
         {
-            set => SendHintData(HintEventType.ShowTutorialTextFrame, value);
+            set => SendHintData(HintEventType.SetTutorialTextShow, value);
         }
 
         private bool ShowCheckList
         {
-            set => SendHintData(HintEventType.ShowGoalCheckList, value);
+            set => SendHintData(HintEventType.SetGoalCheckListShow, value);
         }
+
+        private bool? PendingEndTutorial = null;//null不结束、true完成结束、false失败结束。
+        //INFO 现在失败还没有需求、有了再补。
 
         protected sealed override bool CheckGameOver
         {
             get
             {
-                if (LevelCompleted && PlayerRequestedEnd)
+                if (PendingEndTutorial.HasValue)
                 {
-                    LevelAsset.TutorialCompleted = true;
+                    LevelAsset.TutorialCompleted = PendingEndTutorial.Value;
                     return true;
                 }
-
-                if (LevelFailed && PlayerRequestedQuit)
-                {
-                    LevelAsset.TutorialCompleted = false;
-                    return true;
-                }
-
                 return false;
             }
         }
@@ -152,19 +148,17 @@ namespace ROOT
         {
             var hintData = new HintEventInfo
             {
-                HintEventType = HintEventType.ShowTutorialTextFrame,
+                HintEventType = HintEventType.SetTutorialTextContent,
                 StringData = text,
-                BoolData = true,
             };
             MessageDispatcher.SendMessage(hintData);
         }
 
         protected override void AdditionalReactIO()
         {
-            if (LevelCompleted)
+            if (_ctrlPack.HasFlag(ControllingCommand.Confirm) && CompleteCurrentHandOn)
             {
-                //这段代码想着放到AdditionalRIO里面去。
-                PlayerRequestedEnd = CtrlPack.HasFlag(ControllingCommand.Confirm);
+                DealHandOnCompleted();
             }
         }
         
@@ -194,7 +188,7 @@ namespace ROOT
                     CreateUnitOnBoard(data);
                     break;
                 case TutorialActionType.End:
-                    ActionEnded = true;
+                    PendingEndTutorial = true;
                     break;
                 case TutorialActionType.ShowText:
                     //TutorialOnHand = false;
@@ -212,6 +206,8 @@ namespace ROOT
                     break;
                 case TutorialActionType.HandOn:
                     SetHandOn(data);
+                    break;
+                case TutorialActionType.CreateCursor:
                     break;
                 default:
                     AdditionalDealStep(data);
@@ -244,15 +240,25 @@ namespace ROOT
         {
             TutorialOnHand = true;
             PendingHandOnChecking = CheckLib[data.HandOnCheckType];
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetMainGoalContent, StringData = data.HandOnMission});
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ShowGoalCheckList});
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission});
             ShowCheckList = true;
+            ShowText = false;
             CompleteCurrentHandOn = false;
+        }
+        
+        private void UnsetHandOn()
+        {
+            TutorialOnHand = true;
+            PendingHandOnChecking = (a, b) => false;
+            ShowCheckList = false;
+            CompleteCurrentHandOn = false;
+            StepForward();
+            DealStepMgr();
         }
         
         private bool CompletedAndRequestedEnd()
         {
-            return LevelCompleted && PlayerRequestedEnd;
+            return PendingEndTutorial.HasValue && PendingEndTutorial.Value;
         }
         
         private bool CheckTutorialCycle()
@@ -268,22 +274,23 @@ namespace ROOT
         private void TutorialCycle()
         {
             //Debug.Log("TutorialCycle");
-            if (!ActionEnded)
+            if (!CompletedAndRequestedEnd())
             {
                 StepForward();
                 DealStepMgr();
             }
         }
 
-        private bool CompleteCurrentHandOn = false;
-        
-        protected virtual void TutorialMinorUpkeep()
+        private bool CompleteCurrentHandOn { get; set; }
+
+        private void TutorialMinorUpkeep()
         {
             if (TutorialOnHand)
             {
-                var currentHandOn=PendingHandOnChecking(this, LevelAsset.GameBoard);
-                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.MainGoalComplete,BoolData = currentHandOn});
-                CompleteCurrentHandOn = currentHandOn;
+                CompleteCurrentHandOn = PendingHandOnChecking(this, LevelAsset.GameBoard);
+                //根据现在能识别到需要再接收一下玩家的“回车”来“手动通过”这个判断。
+                //那个判断现在具体的执行是：在系统判断到条件满足后、需要玩家手动按动一下确定键（回车）来继续。
+                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CompleteCurrentHandOn});
             }
         }
 
@@ -291,9 +298,6 @@ namespace ROOT
         {
             if (!shouldInitTutorial) return;
             shouldInitTutorial = false;
-            //Debug.Log("TutorialInit");
-            SendHintData(HintEventType.ShowTutorialTextFrame, false);
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetSecondaryGoalContent, StringData = ""});
             StepForward();
             DealStepMgr();
         }
@@ -301,6 +305,18 @@ namespace ROOT
         protected override void AdditionalMajorUpkeep()
         {
             TutorialInit();
+        }
+
+        private void DealHandOnCompleted()
+        {
+            //这里是处理任务完成后玩家又按了继续的流程。
+            if (CompleteCurrentHandOn) UnsetHandOn();
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _actionDriver = new TutorialControlActionDriver(this, _mainFSM);
         }
 
         protected sealed override void AdditionalMinorUpkeep()

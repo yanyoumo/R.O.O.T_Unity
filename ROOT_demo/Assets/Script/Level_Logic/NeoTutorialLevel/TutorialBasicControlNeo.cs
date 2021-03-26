@@ -17,7 +17,19 @@ namespace ROOT
     {
         protected override string MainGoalEntryContent => "将所有单元链接起来";
 
-        protected override void TutorialMinorUpkeep()
+        protected override void AdditionalDealStep(TutorialActionData data)
+        {
+            switch (data.ActionType)
+            {
+                case TutorialActionType.CreateCursor:
+                    WorldExecutor.InitCursor(ref LevelAsset,data.Pos);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        
+        /*protected override void TutorialMinorUpkeep()
         {
             base.TutorialMinorUpkeep();
             LevelCompleted = AllUnitConnected();
@@ -34,21 +46,9 @@ namespace ROOT
             SendHintData(HintEventType.ShowTutorialTextFrame, false);
         }
 
-        protected override void AdditionalDealStep(TutorialActionData data)
-        {
-            switch (data.ActionType)
-            {
-                case TutorialActionType.CreateCursor:
-                    WorldExecutor.InitCursor(ref LevelAsset,data.Pos);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
         protected override void AdditionalInitLevel()
         {
             //WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
-        }
+        }*/
     }
 }

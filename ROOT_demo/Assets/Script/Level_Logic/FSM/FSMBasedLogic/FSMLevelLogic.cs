@@ -438,7 +438,7 @@ namespace ROOT
             _mainFSM.ReplaceBreaking(RootFSMBreakings);
 
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            _actionDriver = new CareerControlActionDriver(this, _mainFSM);
+            _actionDriver = new BaseControlActionDriver(this, _mainFSM);
             
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
             MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry,BoardGridThermoZoneInquiryHandler);

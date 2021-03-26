@@ -16,15 +16,13 @@ namespace ROOT.UI
     
     public enum HintEventType
     {
-        //这里估计还是要有大改。
-        ShowGoalCheckList,
-        MainGoalComplete,
-        SecondaryGoalComplete,
-        SetMainGoalContent,
-        SetSecondaryGoalContent,
-        ShowTutorialTextFrame,
-        TutorialFailed,
-        ShowHelpScreen,
+        SetGoalContent,
+        SetGoalCheckListShow,
+        SetTutorialTextContent,
+        SetTutorialTextShow,
+        GoalComplete,
+        GoalFailed,
+        SetHelpScreenShow,
     }
     
     public class HintEventInfo : RootMessageBase
@@ -51,7 +49,7 @@ namespace ROOT.UI
                 //之前这个有bug的问题就是之前相关EventInfo的内容每天对。
                 switch (info.HintEventType)
                 {
-                    case HintEventType.ShowGoalCheckList:
+                    case HintEventType.SetGoalCheckListShow:
                         if (info.BoolData)
                         {
                             TutorialCheckList.Show();
@@ -61,33 +59,31 @@ namespace ROOT.UI
                             TutorialCheckList.Hide();
                         }
                         break;
-                    case HintEventType.ShowTutorialTextFrame:
+                    case HintEventType.SetTutorialTextShow:
                         if (info.BoolData)
                         {
                             TutorialMainTextFrame.Show();
-                            if (info.StringData!="") TutorialTextMainContent.text = info.StringData;
-                            break;
                         }
-                        TutorialMainTextFrame.Hide();
+                        else
+                        {
+                            TutorialMainTextFrame.Hide();
+                        }
                         break;
-                    case HintEventType.SetMainGoalContent:
+                    case HintEventType.SetTutorialTextContent:
+                        if (info.StringData!="") TutorialTextMainContent.text = info.StringData;
+                        break;
+                    case HintEventType.SetGoalContent:
                         TutorialCheckListCore.SetupMainGoalContent(info.StringData);
                         return;
-                    case HintEventType.SetSecondaryGoalContent:
-                        TutorialCheckListCore.SetupSecondaryGoalContent(info.StringData);
-                        return;
-                    case HintEventType.MainGoalComplete:
-                        TutorialCheckListCore.MainGoalCompleted = info.BoolData;
-                        return;
-                    case HintEventType.SecondaryGoalComplete:
-                        TutorialCheckListCore.SecondaryGoalCompleted = info.BoolData;
-                        return;
-                    case HintEventType.TutorialFailed:
+                    case HintEventType.GoalFailed:
                         TutorialCheckListCore.TutorialFailed = info.BoolData;
                         return;
-                    case HintEventType.ShowHelpScreen:
+                    case HintEventType.SetHelpScreenShow:
                         Debug.LogWarning("ShowHelpScreen Not yet implemented");
                         return;
+                    case HintEventType.GoalComplete:
+                        TutorialCheckListCore.MainGoalCompleted = info.BoolData;
+                        break;
                     default:
                         throw new NotImplementedException();
                 }

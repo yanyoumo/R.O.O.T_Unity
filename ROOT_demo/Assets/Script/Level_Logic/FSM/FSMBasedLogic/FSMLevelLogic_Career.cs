@@ -229,7 +229,7 @@ namespace ROOT
             }
             LevelAsset.Shop = FindObjectOfType<ShopBase>();
             AdditionalArtLevelReference(ref LevelAsset);
-            SendHintData(HintEventType.ShowTutorialTextFrame, false);
+            SendHintData(HintEventType.SetTutorialTextShow, false);
             PopulateArtLevelReference();
         }
         
@@ -260,6 +260,7 @@ namespace ROOT
         {
             base.Awake();
             RoundLibDriver = new RoundLibDriver {owner = this};
+            _actionDriver = new CareerControlActionDriver(this, _mainFSM);
         }
     }
 }
