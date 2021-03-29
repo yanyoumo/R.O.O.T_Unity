@@ -240,7 +240,7 @@ namespace ROOT
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission});
             ShowCheckList(true);
             ShowText(false);
-            CurrentHandOnCheckMet = false;
+            CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);//这边就就地测一下
         }
 
         private void UnsetHandOn()
@@ -265,6 +265,7 @@ namespace ROOT
         private void TutorialCycle()
         {
             //Debug.Log("TutorialCycle");
+            //TODO 这个还有个事儿、就是要把Logic承接不了的输入屏蔽掉，CouldHandleSkill这些参量可以利用起来。
             if (NotEnding && !TutorialOnHand)
             {
                 StepForward();

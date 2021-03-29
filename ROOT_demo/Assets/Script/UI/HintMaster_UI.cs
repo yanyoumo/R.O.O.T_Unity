@@ -95,6 +95,7 @@ namespace ROOT.UI
         private void Awake()
         {
             MessageDispatcher.AddListener(WorldEvent.HintRelatedEvent,HintEventHandler);
+            TutorialCheckListCore.SetupSecondaryGoalContent("");
         }
 
         private void OnDestroy()
