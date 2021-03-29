@@ -65,7 +65,7 @@ namespace ROOT
 
         protected abstract string SucceedEndingTerm { get; }
         protected abstract string FailedEndingTerm { get; }
-
+        
         #region 类属性
 
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
@@ -353,8 +353,11 @@ namespace ROOT
         {
             PendingCleanUp = true;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
-            LevelAsset.GameOverAsset.SuccessTerm = SucceedEndingTerm;
-            LevelAsset.GameOverAsset.FailedTerm = FailedEndingTerm;
+            LevelAsset.GameOverAsset = new GameOverAsset
+            {
+                SuccessTerm = SucceedEndingTerm, 
+                FailedTerm = FailedEndingTerm
+            };
         }
         
         protected virtual bool CheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();

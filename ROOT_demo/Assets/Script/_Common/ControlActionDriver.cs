@@ -323,11 +323,11 @@ namespace ROOT
 
     public class TutorialControlActionDriver : ControlActionDriver
     {
-        private FSMTutorialLogicInst owner;
+        private FSMTutorialLogic owner;
         
         public TutorialControlActionDriver(FSMLevelLogic _owner, RootFSM fsm) : base(_owner, fsm)
         {
-            owner = (FSMTutorialLogicInst) _owner;
+            owner = (FSMTutorialLogic) _owner;
         }
         
         protected override List<RespToCtrlEvent> RespondList

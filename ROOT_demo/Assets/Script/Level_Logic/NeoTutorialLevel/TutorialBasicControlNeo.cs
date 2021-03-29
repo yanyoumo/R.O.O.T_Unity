@@ -7,7 +7,7 @@ using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace ROOT
+/*namespace ROOT
 {
     using FSMActions = Dictionary<RootFSMStatus, Action>;
     using Trans = RootFSMTransition;
@@ -15,7 +15,7 @@ namespace ROOT
 
     public class TutorialBasicControlNeo : FSMTutorialLogic
     {
-        protected override string MainGoalEntryContent => "将所有单元链接起来";
+        /*protected override string MainGoalEntryContent => "将所有单元链接起来";
 
         protected override void AdditionalDealStep(TutorialActionData data)
         {
@@ -27,7 +27,7 @@ namespace ROOT
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
+        }*/
         
         /*protected override void TutorialMinorUpkeep()
         {
@@ -49,6 +49,10 @@ namespace ROOT
         protected override void AdditionalInitLevel()
         {
             //WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
-        }*/
+        }
+        protected override void AdditionalDealStep(TutorialActionData data)
+        {
+            throw new NotImplementedException();
+        }
     }
-}
+}*/

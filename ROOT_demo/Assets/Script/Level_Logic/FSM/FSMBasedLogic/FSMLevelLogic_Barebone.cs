@@ -39,8 +39,6 @@ namespace ROOT
             WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
         }
 
-        
-        
         public sealed override void InitLevel()
         {
             //就先这么Sealed、急了的话、所有需要"关掉"的可以在AdditionalInit里面再关掉。

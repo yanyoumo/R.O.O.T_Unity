@@ -7,7 +7,7 @@ using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace ROOT
+/*namespace ROOT
 {
     
     public class TutorialTimeLineNeo : FSMTutorialLogic
@@ -79,6 +79,6 @@ namespace ROOT
         protected override void AdditionalInitLevel()
         {
             LevelAsset.TimeLine.SetNoCount();
-        }*/
+        }
     }
-}
+}*/

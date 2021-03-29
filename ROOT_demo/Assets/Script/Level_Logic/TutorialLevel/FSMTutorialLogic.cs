@@ -41,7 +41,7 @@ namespace ROOT
         TestA,
     }
 
-    public abstract class FSMTutorialLogic : FSMLevelLogic_Barebone
+    public sealed class FSMTutorialLogic : FSMLevelLogic_Barebone
     {
         private readonly CheckingLib CheckLib = new CheckingLib
         {
@@ -62,43 +62,32 @@ namespace ROOT
         
         #region TutorialRelated
 
-        //protected bool ActionEnded { get; private set; } = false;
         protected int ActionIndex { get; private set; } = -1;
         private int LastActionCount { get; set; } = 0;
 
-        //protected bool LevelCompleted = false;
-        /*protected bool LevelFailed = false;
-        //protected bool PlayerRequestedEnd = false;
-        //protected bool PlayerRequestedQuit = false;
-
-        protected bool OnceFlagA = false;
-        protected bool OnceFlagB = false;*/
-
-        protected abstract string MainGoalEntryContent { get; }
-        protected virtual string SecondaryGoalEntryContent { get; } = "";
+        /*protected abstract string MainGoalEntryContent { get; }
+        protected virtual string SecondaryGoalEntryContent { get; } = "";*/
 
         private LevelActionAsset LevelActionAsset => LevelAsset.ActionAsset;
+        
+        private void ShowText(bool val)=>SendHintData(HintEventType.SetTutorialTextShow, val);
+        private void ShowCheckList(bool val)=>SendHintData(HintEventType.SetGoalCheckListShow, val);
+        
 
-        private bool ShowText 
-        {
-            set => SendHintData(HintEventType.SetTutorialTextShow, value);
-        }
-
-        private bool ShowCheckList
-        {
-            set => SendHintData(HintEventType.SetGoalCheckListShow, value);
-        }
-
-        private bool? PendingEndTutorial = null;//null不结束、true完成结束、false失败结束。
+        private bool? PendingEndTutorialData = null;//null不结束、true完成结束、false失败结束。
         //INFO 现在失败还没有需求、有了再补。
 
+        public bool NotEnding => !PendingEndTutorialData.HasValue;
+        public bool EndingWSuccess => PendingEndTutorialData.HasValue && PendingEndTutorialData.Value;
+        public bool EndingWFailed => PendingEndTutorialData.HasValue && !PendingEndTutorialData.Value;
+        
         protected sealed override bool CheckGameOver
         {
             get
             {
-                if (PendingEndTutorial.HasValue)
+                if (!NotEnding)
                 {
-                    LevelAsset.TutorialCompleted = PendingEndTutorial.Value;
+                    LevelAsset.TutorialCompleted = EndingWSuccess;
                     return true;
                 }
                 return false;
@@ -153,16 +142,27 @@ namespace ROOT
             };
             MessageDispatcher.SendMessage(hintData);
         }
+        
+        private bool ProcessdToTutorialCycle;
 
         protected override void AdditionalReactIO()
         {
-            if (_ctrlPack.HasFlag(ControllingCommand.Confirm) && CompleteCurrentHandOn)
+            if (_ctrlPack.HasFlag(ControllingCommand.Confirm))
             {
-                DealHandOnCompleted();
+                if (CurrentHandOnCheckMet)
+                {
+                    UnsetHandOn();
+                    return;
+                }
+
+                ProcessdToTutorialCycle = true;
+                //仔细想了一下、Driver和这个React的流程又要有、一个是吧额外的ActionID转义为ControllingCommand。
+                    //顺带、根据这个思路，可能可以把Driver再拆分一下。
+                //另一个是把ControllingCommand转义为实际的工作。
             }
         }
-        
-        protected abstract void AdditionalDealStep(TutorialActionData data);
+
+        //protected abstract void AdditionalDealStep(TutorialActionData data);
 
         private Func<FSMLevelLogic, Board, bool> PendingHandOnChecking = (a, b) => false;
         
@@ -188,21 +188,19 @@ namespace ROOT
                     CreateUnitOnBoard(data);
                     break;
                 case TutorialActionType.End:
-                    PendingEndTutorial = true;
+                    PendingEndTutorialData = true;
                     break;
                 case TutorialActionType.ShowText:
-                    //TutorialOnHand = false;
-                    ShowText = true;
+                    ShowText(true);
                     break;
                 case TutorialActionType.HideText:
-                    //TutorialOnHand = true;
-                    ShowText = false;
+                    ShowText(false);
                     break;
                 case TutorialActionType.ShowCheckList:
-                    ShowCheckList = true;
+                    ShowCheckList(true);
                     break;
                 case TutorialActionType.HideCheckList:
-                    ShowCheckList = false;
+                    ShowCheckList(false);
                     break;
                 case TutorialActionType.HandOn:
                     SetHandOn(data);
@@ -210,8 +208,7 @@ namespace ROOT
                 case TutorialActionType.CreateCursor:
                     break;
                 default:
-                    AdditionalDealStep(data);
-                    break;
+                    throw new NotImplementedException();
             }
         }
         
@@ -226,7 +223,6 @@ namespace ROOT
                     break;
                 }
 
-                //Debug.Log("LevelActionAsset.Actions[i].ActionIdx:"+LevelActionAsset.Actions[i].ActionIdx);
                 DealStep(LevelActionAsset.Actions[i]);
             }
         }
@@ -241,57 +237,51 @@ namespace ROOT
             TutorialOnHand = true;
             PendingHandOnChecking = CheckLib[data.HandOnCheckType];
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission});
-            ShowCheckList = true;
-            ShowText = false;
-            CompleteCurrentHandOn = false;
+            ShowCheckList(true);
+            ShowText(false);
+            CurrentHandOnCheckMet = false;
         }
-        
+
         private void UnsetHandOn()
         {
-            TutorialOnHand = true;
+            TutorialOnHand = false;
             PendingHandOnChecking = (a, b) => false;
-            ShowCheckList = false;
-            CompleteCurrentHandOn = false;
+            ShowCheckList(false);
+            CurrentHandOnCheckMet = false;
             StepForward();
             DealStepMgr();
         }
-        
+
         private bool CompletedAndRequestedEnd()
         {
-            return PendingEndTutorial.HasValue && PendingEndTutorial.Value;
-        }
-        
-        private bool CheckTutorialCycle()
-        {
-            //TODO 这里不行、需要和R_IO的代码整合。
-            return CtrlPack.HasFlag(ControllingCommand.Confirm);
+            return PendingEndTutorialData.HasValue && PendingEndTutorialData.Value;
         }
 
-        private bool CheckNotOnHand()
-        {
-            return !TutorialOnHand;
-        }
+        private bool CheckTutorialCycle() => ProcessdToTutorialCycle;
+        
+        private bool CheckNotOnHand() => !TutorialOnHand;
 
         private void TutorialCycle()
         {
             //Debug.Log("TutorialCycle");
-            if (!CompletedAndRequestedEnd() && !TutorialOnHand)
+            if (NotEnding && !TutorialOnHand)
             {
                 StepForward();
                 DealStepMgr();
             }
+            ProcessdToTutorialCycle = false; //只要到了这儿这个流程就要改一下。
         }
 
-        private bool CompleteCurrentHandOn { get; set; }
+        private bool CurrentHandOnCheckMet { get; set; }
 
         private void TutorialMinorUpkeep()
         {
             if (TutorialOnHand)
             {
-                CompleteCurrentHandOn = PendingHandOnChecking(this, LevelAsset.GameBoard);
+                CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);
                 //根据现在能识别到需要再接收一下玩家的“回车”来“手动通过”这个判断。
                 //那个判断现在具体的执行是：在系统判断到条件满足后、需要玩家手动按动一下确定键（回车）来继续。
-                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CompleteCurrentHandOn});
+                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
             }
         }
 
@@ -307,13 +297,7 @@ namespace ROOT
         {
             TutorialInit();
         }
-
-        private void DealHandOnCompleted()
-        {
-            //这里是处理任务完成后玩家又按了继续的流程。
-            if (CompleteCurrentHandOn) UnsetHandOn();
-        }
-
+        
         protected override void Awake()
         {
             base.Awake();

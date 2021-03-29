@@ -111,18 +111,6 @@ MonoBehaviour:
     HandOnCheckType: 0
     HandOnMission: "\u6D4B\u8BD5\u4EFB\u52A1"
   - ActionIdx: 2
-    ActionType: 3
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-  - ActionIdx: 2
     ActionType: 0
     Text: "\u6D4B\u8BD5B"
     DoppelgangerToggle: 0
@@ -134,7 +122,31 @@ MonoBehaviour:
     Tier: 0
     HandOnCheckType: 0
     HandOnMission: 
+  - ActionIdx: 2
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 3
+    ActionType: 8
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: "\u6D4B\u8BD5\u4EFB\u52A1-2"
+  - ActionIdx: 4
     ActionType: 0
     Text: "\u6D4B\u8BD5C"
     DoppelgangerToggle: 0
@@ -147,6 +159,18 @@ MonoBehaviour:
     HandOnCheckType: 0
     HandOnMission: 
   - ActionIdx: 4
+    ActionType: 3
+    Text: "\u6D4B\u8BD5C"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 5
     ActionType: 5
     Text: 
     DoppelgangerToggle: 0

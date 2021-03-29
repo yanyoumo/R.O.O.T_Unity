@@ -6,13 +6,13 @@ using ROOT.SetupAsset;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace ROOT
+/*namespace ROOT
 {
     public class TutorialBasicSignalNeo : TutorialBasicControlNeo
     {
         protected override void AdditionalDealStep(TutorialActionData data) { }
 
-        protected override string MainGoalEntryContent => "将所有接收端单元都链接至发送端";
+        //protected override string MainGoalEntryContent => "将所有接收端单元都链接至发送端";
 
         /*public override void InitLevel()
         {
@@ -110,6 +110,6 @@ namespace ROOT
             LevelAsset.GameOverEnabled = true;
 
             ReadyToGo = true;
-        }*/
+        }
     }
-}
+}*/
