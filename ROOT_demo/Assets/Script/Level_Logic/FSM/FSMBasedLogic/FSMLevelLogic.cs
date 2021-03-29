@@ -5,6 +5,7 @@ using System.Linq;
 using com.ootii.Messages;
 using ROOT.SetupAsset;
 using ROOT.Signal;
+using ROOT.UI;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -34,31 +35,15 @@ namespace ROOT
         COUNT,//搁在最后、计数的。
     }
 
-    public sealed class RoundLibDriver
-    {
-        public FSMLevelLogic owner;
-        private LevelActionAsset _ActionAsset => owner.LevelAsset.ActionAsset;
-        private RoundGist? GetRoundGistByStep(int step) => _ActionAsset?.GetCurrentRoundGist(step);
-        private StageType? Stage(int step) => _ActionAsset?.GetCurrentType(step);
-        public RoundGist? CurrentRoundGist => GetRoundGistByStep(owner.LevelAsset.StepCount);
-        public RoundGist? PreviousRoundGist => (owner.LevelAsset.StepCount - 1)>=0 ? _ActionAsset.GetCurrentRoundGist(owner.LevelAsset.StepCount - 1) : CurrentRoundGist;
-        public StageType? CurrentStage => Stage(owner.LevelAsset.StepCount);
-
-        public bool IsShopRound => CurrentStage == StageType.Shop;
-        public bool IsRequireRound => CurrentStage == StageType.Require;
-        public bool IsDestoryerRound => CurrentStage == StageType.Destoryer;
-        public bool IsBossRound => CurrentStage == StageType.Boss;
-    }
-    
     public abstract class FSMLevelLogic:MonoBehaviour   //LEVEL-LOGIC/每一关都有一个这个类。
     {
-        [ReadOnly] public bool Playing { get; set; }
-        [ReadOnly] public bool Animating = false;
-        [ReadOnly] public bool ReadyToGo = false;
-        [ReadOnly] public bool ReferenceOk = false;
-        [ReadOnly] public bool PendingCleanUp;
-        [ReadOnly] public bool IsTutorialLevel = false;
-        [ReadOnly] public bool movedTile = false;
+        public bool Playing { get; set; }
+        [HideInInspector] public bool Animating = false;
+        [HideInInspector] public bool ReadyToGo = false;
+        [HideInInspector] public bool ReferenceOk = false;
+        [HideInInspector] public bool PendingCleanUp;
+        [ShowInInspector] public bool IsTutorialLevel => IsTutorial;
+        [HideInInspector] public bool movedTile = false;
 
         public abstract bool IsTutorial { get; }
         public abstract bool CouldHandleSkill { get; }
@@ -80,7 +65,7 @@ namespace ROOT
 
         protected abstract string SucceedEndingTerm { get; }
         protected abstract string FailedEndingTerm { get; }
-
+        
         #region 类属性
 
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
@@ -368,8 +353,11 @@ namespace ROOT
         {
             PendingCleanUp = true;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
-            LevelAsset.GameOverAsset.SuccessTerm = SucceedEndingTerm;
-            LevelAsset.GameOverAsset.FailedTerm = FailedEndingTerm;
+            LevelAsset.GameOverAsset = new GameOverAsset
+            {
+                SuccessTerm = SucceedEndingTerm, 
+                FailedTerm = FailedEndingTerm
+            };
         }
         
         protected virtual bool CheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
@@ -453,7 +441,7 @@ namespace ROOT
             _mainFSM.ReplaceBreaking(RootFSMBreakings);
 
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            _actionDriver = new CareerControlActionDriver(this, _mainFSM);
+            _actionDriver = new BaseControlActionDriver(this, _mainFSM);
             
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
             MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry,BoardGridThermoZoneInquiryHandler);

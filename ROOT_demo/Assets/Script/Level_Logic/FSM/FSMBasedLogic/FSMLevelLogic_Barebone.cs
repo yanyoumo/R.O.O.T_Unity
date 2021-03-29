@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using com.ootii.Messages;
 using I2.Loc;
+using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -38,8 +39,6 @@ namespace ROOT
             WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
         }
 
-        
-        
         public sealed override void InitLevel()
         {
             //就先这么Sealed、急了的话、所有需要"关掉"的可以在AdditionalInit里面再关掉。
@@ -57,7 +56,7 @@ namespace ROOT
             
             ReadyToGo = true;
 
-            SendHintData(HintEventType.ShowGoalCheckList, false);
+            SendHintData(HintEventType.SetGoalCheckListShow, false);
         }
         
         public override IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene)
@@ -67,7 +66,7 @@ namespace ROOT
                 yield return 0;
             }
             AdditionalArtLevelReference(ref LevelAsset);
-            SendHintData(HintEventType.ShowTutorialTextFrame, false);
+            SendHintData(HintEventType.SetTutorialTextShow, false);
             PopulateArtLevelReference();
         }
         

@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3354999926667516176}
+  - component: {fileID: 25548497843498671}
   m_Layer: 0
-  m_Name: Tutorial_BasicControl_Neo
+  m_Name: FSMLevelLogicTutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,3 +31,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &25548497843498671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3354999926667516179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305cb39a18342994ba0377f7d82ea3b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animating: 0
+  ReadyToGo: 0
+  ReferenceOk: 0
+  PendingCleanUp: 0
+  movedTile: 0

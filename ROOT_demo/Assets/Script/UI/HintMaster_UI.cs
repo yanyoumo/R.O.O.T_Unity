@@ -1,6 +1,7 @@
 using System;
 using com.ootii.Messages;
 using Doozy.Engine.UI;
+using ROOT.Message;
 using TMPro;
 using UnityEngine;
 
@@ -11,6 +12,25 @@ namespace ROOT.UI
         public delegate void InGameManualFootterUpdate(int TotalPageCount, int CurrentPageCount);
 
         public delegate void InGameOverlayToggle();
+    }
+    
+    public enum HintEventType
+    {
+        SetGoalContent,
+        SetGoalCheckListShow,
+        SetTutorialTextContent,
+        SetTutorialTextShow,
+        GoalComplete,
+        GoalFailed,
+        SetHelpScreenShow,
+    }
+    
+    public class HintEventInfo : RootMessageBase
+    {
+        public HintEventType HintEventType;
+        public bool BoolData;
+        public String StringData = "";
+        public override string Type => WorldEvent.HintRelatedEvent;
     }
     
     public class HintMaster_UI : MonoBehaviour
@@ -29,7 +49,7 @@ namespace ROOT.UI
                 //之前这个有bug的问题就是之前相关EventInfo的内容每天对。
                 switch (info.HintEventType)
                 {
-                    case HintEventType.ShowGoalCheckList:
+                    case HintEventType.SetGoalCheckListShow:
                         if (info.BoolData)
                         {
                             TutorialCheckList.Show();
@@ -39,33 +59,31 @@ namespace ROOT.UI
                             TutorialCheckList.Hide();
                         }
                         break;
-                    case HintEventType.ShowTutorialTextFrame:
+                    case HintEventType.SetTutorialTextShow:
                         if (info.BoolData)
                         {
                             TutorialMainTextFrame.Show();
-                            if (info.StringData!="") TutorialTextMainContent.text = info.StringData;
-                            break;
                         }
-                        TutorialMainTextFrame.Hide();
+                        else
+                        {
+                            TutorialMainTextFrame.Hide();
+                        }
                         break;
-                    case HintEventType.ShowMainGoalContent:
+                    case HintEventType.SetTutorialTextContent:
+                        if (info.StringData!="") TutorialTextMainContent.text = info.StringData;
+                        break;
+                    case HintEventType.SetGoalContent:
                         TutorialCheckListCore.SetupMainGoalContent(info.StringData);
                         return;
-                    case HintEventType.ShowSecondaryGoalContent:
-                        TutorialCheckListCore.SetupSecondaryGoalContent(info.StringData);
-                        return;
-                    case HintEventType.ShowMainGoalComplete:
-                        TutorialCheckListCore.MainGoalCompleted = info.BoolData;
-                        return;
-                    case HintEventType.ShowSecondaryGoalComplete:
-                        TutorialCheckListCore.SecondaryGoalCompleted = info.BoolData;
-                        return;
-                    case HintEventType.ShowTutorialFailed:
+                    case HintEventType.GoalFailed:
                         TutorialCheckListCore.TutorialFailed = info.BoolData;
                         return;
-                    case HintEventType.ShowHelpScreen:
+                    case HintEventType.SetHelpScreenShow:
                         Debug.LogWarning("ShowHelpScreen Not yet implemented");
                         return;
+                    case HintEventType.GoalComplete:
+                        TutorialCheckListCore.MainGoalCompleted = info.BoolData;
+                        break;
                     default:
                         throw new NotImplementedException();
                 }

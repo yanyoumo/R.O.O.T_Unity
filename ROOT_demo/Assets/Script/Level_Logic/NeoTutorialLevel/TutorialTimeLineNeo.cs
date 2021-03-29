@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ROOT.SetupAsset;
+using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace ROOT
+/*namespace ROOT
 {
     
     public class TutorialTimeLineNeo : FSMTutorialLogic
@@ -28,8 +29,9 @@ namespace ROOT
             //throw new NotImplementedException();
         }*/
 
-        protected override void TutorialMinorUpkeep()
+        /*protected override void TutorialMinorUpkeep()
         {
+            base.TutorialMinorUpkeep();
             if (ReadyToGo)
             {
                 if (ActionIndex == 2)
@@ -45,8 +47,8 @@ namespace ROOT
 
             if (ActionEnded)
             {
-                SendHintData(HintEventType.ShowMainGoalComplete,AllUnitConnected());
-                SendHintData(HintEventType.ShowSecondaryGoalComplete,!OnceFlagB);
+                SendHintData(HintEventType.MainGoalComplete,AllUnitConnected());
+                SendHintData(HintEventType.SecondaryGoalComplete,!OnceFlagB);
                 LevelCompleted = (!OnceFlagB) && AllUnitConnected();
             }
 
@@ -64,7 +66,7 @@ namespace ROOT
             if (LevelFailed)
             {
                 PlayerRequestedQuit = CtrlPack.HasFlag(ControllingCommand.Confirm);
-                SendHintData(HintEventType.ShowTutorialFailed,true);
+                SendHintData(HintEventType.TutorialFailed,true);
             }
             
         }
@@ -79,4 +81,4 @@ namespace ROOT
             LevelAsset.TimeLine.SetNoCount();
         }
     }
-}
+}*/

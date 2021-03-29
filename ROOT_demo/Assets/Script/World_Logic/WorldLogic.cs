@@ -184,6 +184,7 @@ namespace ROOT
     {
         Nop,
         TelemetryPause,
+        TutorialContinue,
         QuitGame,
     }
 

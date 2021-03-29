@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3354999926667516176}
-  - component: {fileID: 1731643356829102264}
   m_Layer: 0
   m_Name: Tutorial_Timeline_Neo
   m_TagString: Untagged
@@ -31,21 +30,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1731643356829102264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3354999926667516179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5cfcfa1b0559cc458ac805484ae59ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Animating: 0
-  ReadyToGo: 0
-  ReferenceOk: 0
-  PendingCleanUp: 0
-  IsTutorialLevel: 1
-  movedTile: 0

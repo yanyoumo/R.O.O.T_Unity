@@ -20,28 +20,23 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: RoundLib
-      Entry: 6
-      Data: 
-    - Name: BossSetup
-      Entry: 6
-      Data: 
-  BossLib: {fileID: 11400000, guid: 73c88b7cba9be4e0781c1b92c34db97a, type: 2}
+    SerializationNodes: []
   TitleTerm: TutorialBasicControl
   Thumbnail: {fileID: 21300000, guid: f8294d4198f323b4cbd32bb90215b4fb, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: 7adc5e295115e85488339a30c9a13691,
     type: 3}
+  InitialCurrency: 36
+  ShopCost: 1
+  UnitCost: 1
   levelType: 0
-  GameModeAsset: {fileID: 11400000, guid: 4f78dbb5698c2454fbb62b632edc44bd, type: 2}
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 1
+    PlayingSignalTypeB: 2
   InitalBoard: []
-  NormalRoundCount: 0
   HasBossRound: 0
   Endless: 0
   BossStage: 0
+  RoundLib: []
   Actions:
   - ActionIdx: 0
     ActionType: 3
@@ -53,6 +48,8 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 00000000
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 0
     ActionType: 7
     Text: 
@@ -63,6 +60,8 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 0
     ActionType: 0
     Text: "\u4F60\u597D,\u6B22\u8FCE\u6765\u5230<b>[ROOT]</b>\u7684\u6559\u7A0B;\u8FD9\u662F\u4E00\u6B3E\u57FA\u4E8E\u68CB\u76D8\u7684\u6A21\u62DF\u7ECF\u8425\u7C7B\u6E38\u620F"
@@ -72,7 +71,9 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 1
     ActionType: 0
     Text: "\u9996\u5148,\u8FD9\u4E2A\u662F\u5355\u5143,\u6E38\u620F\u4E2D\u6700\u91CD\u8981\u7684\u5143\u7D20\u4E4B\u4E00"
@@ -83,6 +84,8 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 1
     ActionType: 1
     Text: 
@@ -91,8 +94,10 @@ MonoBehaviour:
     Pos: {x: 2, y: 1}
     Core: 0
     HardwareType: 1
-    Sides: 01000000000000000100000001000000
+    Sides: 00000000010000000100000001000000
     Tier: 1
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 2
     ActionType: 0
     Text: "\u7136\u540E,\u8FD9\u4E2A\u662F\u4F60\u7684\u5149\u6807"
@@ -103,6 +108,8 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 2
     ActionType: 2
     Text: 
@@ -113,6 +120,8 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 3
     ActionType: 0
     Text: "<b>[\u65B9\u5411\u952E]</b>\u79FB\u52A8,\u540C\u65F6\u6309\u4F4F<b>[\u7A7A\u683C]</b>\u62D6\u52A8\u5355\u5143,\\n<b>[\u5DE6Shift]</b>\u65CB\u8F6C"
@@ -123,6 +132,8 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 4
     ActionType: 0
     Text: "\u8BDD\u8BF4\uFF0C\u5728\u4E4B\u540E\u548C\u6B63\u5F0F\u6E38\u620F\u4E2D\u968F\u65F6\u53EF\u4EE5\u6309\u4F4F<b>[H]</b>\u952E\u6765\u663E\u793A\u64CD\u4F5C\u63D0\u793A\u3002"
@@ -133,6 +144,8 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 5
     ActionType: 0
     Text: "\u6211\u518D\u591A\u653E\u51E0\u4E2A\u5355\u5143,\u7136\u540E\u4F60\u9700\u8981\u5C06\u5B83\u4EEC\u90FD\u8FDE\u63A5\u8D77\u6765\u3002"
@@ -143,6 +156,8 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 6
     ActionType: 4
     Text: 
@@ -153,6 +168,8 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 6
     ActionType: 1
     Text: 
@@ -161,8 +178,10 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 0
     HardwareType: 1
-    Sides: 01000000010000000000000001000000
+    Sides: 01000000000000000100000001000000
     Tier: 1
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 6
     ActionType: 6
     Text: 
@@ -173,6 +192,8 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 6
     ActionType: 1
     Text: 
@@ -181,8 +202,10 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 0
     HardwareType: 1
-    Sides: 01000000010000000000000001000000
+    Sides: 01000000000000000100000001000000
     Tier: 1
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 6
     ActionType: 1
     Text: 
@@ -191,9 +214,23 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 0
     HardwareType: 1
-    Sides: 01000000010000000000000001000000
+    Sides: 01000000010000000100000000000000
     Tier: 1
+    HandOnCheckType: 0
+    HandOnMission: 
   - ActionIdx: 6
+    ActionType: 8
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: "\u6D4B\u8BD5\u7528\u4EFB\u52A1"
+  - ActionIdx: 7
     ActionType: 5
     Text: 
     DoppelgangerToggle: 0
@@ -203,4 +240,14 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  BossSetup:
+    BossStageTypeVal: 0
+    BossLength: 0
+    DestoryerCount: 0
+    InfoCount: 0
+    InfoVariantRatio: 0
+    InfoTargetRatio: 0
+    AcquiringTarget: 0
   ExcludedShop: 0

@@ -7,12 +7,10 @@ namespace ROOT.SetupAsset
     [Serializable]
     public struct TutorialActionData
     {
-        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [LabelWidth(80)]
         public int ActionIdx;
-
-        [EnumPaging] [VerticalGroup("Split/Right")]
         public TutorialActionType ActionType;
 
+        [Space]
         [ShowIf("ActionType", TutorialActionType.Text)] [LabelWidth(30)]
         public string Text;
 
@@ -24,19 +22,27 @@ namespace ROOT.SetupAsset
         [LabelWidth(135)]
         public string DoppelgangerText;
 
+        [Space]
         [ShowIf("@this.ActionType==TutorialActionType.CreateUnit||this.ActionType==TutorialActionType.CreateCursor")]
         public Vector2Int Pos;
 
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)] [VerticalGroup("Split/Left")]
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
         public SignalType Core;
 
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)] [VerticalGroup("Split/Left")]
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
         public HardwareType HardwareType;
 
-        [ShowIf("ActionType", TutorialActionType.CreateUnit)] [VerticalGroup("Split/Right")]
+        [ShowIf("ActionType", TutorialActionType.CreateUnit)]
         public SideType[] Sides;
 
         [ShowIf("ActionType", TutorialActionType.CreateUnit)] [Range(1, 5)]
         public int Tier;
+
+        [Space]
+        [ShowIf("ActionType", TutorialActionType.HandOn)]
+        public TutorialCheckType HandOnCheckType;
+        
+        [ShowIf("ActionType", TutorialActionType.HandOn)]
+        public String HandOnMission;
     }
 }
