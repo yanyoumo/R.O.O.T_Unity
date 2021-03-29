@@ -206,6 +206,7 @@ namespace ROOT
                     SetHandOn(data);
                     break;
                 case TutorialActionType.CreateCursor:
+                    //TODO 要从旧代码里面把这里的逻辑捞出来。
                     break;
                 default:
                     throw new NotImplementedException();
@@ -299,12 +300,6 @@ namespace ROOT
         protected override void AdditionalMajorUpkeep()
         {
             TutorialInit();
-        }
-        
-        protected override void Awake()
-        {
-            base.Awake();
-            _actionDriver = new BaseControlActionDriver(this, _mainFSM);
         }
 
         protected sealed override void AdditionalMinorUpkeep()

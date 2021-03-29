@@ -41,14 +41,15 @@ namespace ROOT
 
         private void RequestEnqueueCtrlPack()
         {
-            if (!_inputAntiSpam)
+            _ctrlPackQueue.Enqueue(CtrlPack);
+            //BUG 这里有Bug.
+            /*if (!_inputAntiSpam)
             {
                 _ctrlPackQueue.Enqueue(CtrlPack);
                 _inputAntiSpam = true;
                 _inputAntiSpamTimer = 0.0f;
-            }
+            }*/
 
-            //这里有Bug？
             //_ownerLogic.StartCoroutine(AntiSpamCoolDown()); //
         }
 
@@ -74,9 +75,9 @@ namespace ROOT
         {
             if (Camera.main == null)
             {
-                //Debug.LogWarning("not able to find main camera");
-                //return true;
-                throw new ApplicationException("无法获得主相机");
+                Debug.LogWarning("not able to find main camera");
+                return true;
+                //throw new ApplicationException("无法获得主相机");
             }
 
             switch (actionPack.ActionID)
@@ -112,6 +113,7 @@ namespace ROOT
             {
                 CtrlPack.CommandDir = dir.Value;
                 CtrlPack.ReplaceFlag(actionPack.HoldForDrag ? ControllingCommand.Drag : ControllingCommand.Move);
+                //BUG LevelAsset.Cursor再第二次获得的时候是null？??不再现了？？？
                 CtrlPack.CurrentPos = _ownerLogic.LevelAsset.Cursor.CurrentBoardPosition;
                 CtrlPack.NextPos = _ownerLogic.LevelAsset.Cursor.GetCoord(CtrlPack.CommandDir);
             }
