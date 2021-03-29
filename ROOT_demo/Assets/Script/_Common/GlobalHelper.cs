@@ -21,6 +21,7 @@ namespace ROOT
         public static readonly string TAG_NAME_HELP_SCREEN = "HelpScreen";
         public static readonly string TAG_NAME_TUTORIAL_FRAME = "TutorialTextFrame";
         public static readonly string TAG_NAME_ADV_SHOP_PANEL = "AdvShopPanel";
+        public static readonly string TAG_CONTROLLING_EVENT_MGR = "ControllingEventMgr";
     }
 
     public static class StaticPlayerPrefName

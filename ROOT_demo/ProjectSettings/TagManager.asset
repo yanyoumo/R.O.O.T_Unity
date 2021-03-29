@@ -11,6 +11,7 @@ TagManager:
   - SkillPalette
   - BoardGrid
   - BoardGridRoot
+  - ControllingEventMgr
   layers:
   - Default
   - TransparentFX

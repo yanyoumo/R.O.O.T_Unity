@@ -48,9 +48,9 @@ namespace ROOT
             {TutorialCheckType.TestA, TutorialCheckFunctionList.CheckA},
         };
         
-        protected sealed override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
-        protected sealed override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
-        public sealed override bool IsTutorial => true;
+        protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
+        protected override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
+        public override bool IsTutorial => true;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
@@ -157,7 +157,7 @@ namespace ROOT
 
                 ProcessdToTutorialCycle = true;
                 //仔细想了一下、Driver和这个React的流程又要有、一个是吧额外的ActionID转义为ControllingCommand。
-                    //顺带、根据这个思路，可能可以把Driver再拆分一下。
+                    //顺带、根据这个思路，可能可以把Driver再拆分一下。//现在先不这么做、有空给搞一下。
                 //另一个是把ControllingCommand转义为实际的工作。
             }
         }
@@ -289,6 +289,9 @@ namespace ROOT
         {
             if (!shouldInitTutorial) return;
             shouldInitTutorial = false;
+            TutorialOnHand = false;
+            LastActionCount = 0;
+            ActionIndex = -1;
             StepForward();
             DealStepMgr();
         }
@@ -301,7 +304,7 @@ namespace ROOT
         protected override void Awake()
         {
             base.Awake();
-            _actionDriver = new TutorialControlActionDriver(this, _mainFSM);
+            _actionDriver = new BaseControlActionDriver(this, _mainFSM);
         }
 
         protected sealed override void AdditionalMinorUpkeep()

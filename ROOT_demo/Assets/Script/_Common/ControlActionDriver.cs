@@ -48,7 +48,8 @@ namespace ROOT
                 _inputAntiSpamTimer = 0.0f;
             }
 
-            _ownerLogic.StartCoroutine(AntiSpamCoolDown()); //
+            //这里有Bug？
+            //_ownerLogic.StartCoroutine(AntiSpamCoolDown()); //
         }
 
         /// <summary>
@@ -73,6 +74,8 @@ namespace ROOT
         {
             if (Camera.main == null)
             {
+                //Debug.LogWarning("not able to find main camera");
+                //return true;
                 throw new ApplicationException("无法获得主相机");
             }
 
@@ -101,6 +104,7 @@ namespace ROOT
 
         protected bool CoreDrivingFunction(ActionPack actionPack)
         {
+            //TODO 这个里面有些问题、还需要处理。
             if (MouseDrivingFunction(actionPack)) return false;
 
             FilterDir(actionPack, out var dir);
@@ -321,7 +325,7 @@ namespace ROOT
         }
     }
 
-    public class TutorialControlActionDriver : ControlActionDriver
+    /*public class TutorialControlActionDriver : ControlActionDriver
     {
         private FSMTutorialLogic owner;
         
@@ -342,15 +346,5 @@ namespace ROOT
                 return res;
             }
         }
-
-        /*private bool TutorialRespondToControlEvent(ActionPack actionPack)
-        {
-            if (actionPack.IsAction(Confirm0) && owner.CompleteCurrentHandOn)
-            {
-                owner.DealHandOnCompleted();
-                return false;
-            }
-            return true;
-        }*/
-    }
+    }*/
 }

@@ -41,8 +41,8 @@ namespace ROOT
     //有一点是，这个类只做事实判断、不去考虑是否合法。只是重视地反馈玩家意图的Action。
     public class ControllingEventMgr : MonoBehaviour
     {
-        [NotNull] private static ControllingEventMgr _instance;
-        public static ControllingEventMgr Instance => _instance;
+        /*[NotNull] private static ControllingEventMgr _instance;
+        public static ControllingEventMgr Instance => _instance;*/
 
         [ReadOnly] public int playerId = 0;
         private Player player;
@@ -60,13 +60,13 @@ namespace ROOT
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            if (_instance != null && _instance != this)
+            /*if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
             
-            _instance = this;
+            _instance = this;*/
             
             if (PlayerPrefs.HasKey(StaticPlayerPrefName.MOUSE_DRAG_SENSITIVITY))
             {
@@ -76,7 +76,6 @@ namespace ROOT
             {
                 PlayerPrefs.SetInt(StaticPlayerPrefName.MOUSE_DRAG_SENSITIVITY, 50);
             }
-            
             
             player = ReInput.players.GetPlayer(playerId);
 
@@ -119,6 +118,14 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateMouseSingleClickRight, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseRight);
             player.AddInputEventDelegate(OnInputUpdateMouseSingleClickMiddle, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseMiddle);
             player.AddInputEventDelegate(OnInputUpdateMouseWheel, UpdateLoopType.Update, InputActionEventType.AxisActive, Passthough.MouseWheel);
+        }
+
+        private void OnDestroy()
+        {
+            //这里无论怎么处理都需要解注册…………
+            //player.RemoveInputEventDelegate();
+            //player.RemoveInputEventDelegate(OnInputUpdateMouseWheel, UpdateLoopType.Update, InputActionEventType.AxisActive, Passthough.MouseWheel);
+            //throw new NotImplementedException();
         }
 
         private void OnInputUpdateCurser(InputActionEventData obj)
@@ -189,6 +196,7 @@ namespace ROOT
                 HoldForDrag = holdForDrag,
                 Sender = this,
             };
+            Debug.Log("OnInputUpdateBasicButton");
             MessageDispatcher.SendMessage(actionPack);
         }
 

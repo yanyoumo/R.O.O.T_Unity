@@ -124,7 +124,9 @@ namespace ROOT
 
             PlayerPrefs.Save();
         }
-        
+
+        public GameObject ControllingEventPrefab;
+
         void Awake()
         {
             CheckPlayerPrefs();
@@ -192,6 +194,11 @@ namespace ROOT
 #else
             throw new ArgumentOutOfRangeException();
 #endif
+            if (GameObject.FindWithTag(StaticTagName.TAG_CONTROLLING_EVENT_MGR) == null)
+            {
+                Instantiate(ControllingEventPrefab);
+            }
+
             Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
             StartCoroutine(LoadLevelMasterSceneAndSetActive());
             LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
