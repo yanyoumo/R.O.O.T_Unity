@@ -5,7 +5,6 @@ using com.ootii.Messages;
 using I2.Loc;
 using ROOT.SetupAsset;
 using ROOT.UI;
-using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using static ROOT.TextProcessHelper;
@@ -41,7 +40,7 @@ namespace ROOT
 
     public enum TutorialCheckType
     {
-        [LabelText("MoveCursorTo5_5")]MoveCursorTo5_5,
+        MoveCursorTo5_5,
     }
 
     public sealed class FSMTutorialLogic : FSMLevelLogic_Barebone
