@@ -23,7 +23,7 @@ namespace ROOT
         public override bool CouldHandleBoss => false;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
-        protected override bool IsForwardCycle => AutoForward || movedTile;
+        protected override bool IsForwardCycle => AutoForward || MovedTile;
         private bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
         protected bool IsSkillAllowed => !RoundLibDriver.IsShopRound;
@@ -129,7 +129,11 @@ namespace ROOT
             }
         }
 
-        protected override void AdditionalReactIO() => AddtionalRecatIO_Skill();
+        protected override void AdditionalReactIO()
+        {
+            MovedTile |= WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
+            AddtionalRecatIO_Skill();
+        }
 
         private StageType? lastStageType = null;
 

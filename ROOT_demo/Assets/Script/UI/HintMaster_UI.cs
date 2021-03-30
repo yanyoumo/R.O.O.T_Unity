@@ -4,6 +4,7 @@ using Doozy.Engine.UI;
 using ROOT.Message;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ROOT.UI
 {
@@ -23,6 +24,7 @@ namespace ROOT.UI
         GoalComplete,
         GoalFailed,
         SetHelpScreenShow,
+        NextIsEnding,
     }
     
     public class HintEventInfo : RootMessageBase
@@ -40,6 +42,8 @@ namespace ROOT.UI
 
         public TextMeshProUGUI TutorialTextMainContent;
         public TutorialCheckList_Doozy TutorialCheckListCore;
+
+        public TextMeshProUGUI TutorialNextContent;
         
         private void HintEventHandler(IMessage rMessge)
         {
@@ -83,6 +87,9 @@ namespace ROOT.UI
                         return;
                     case HintEventType.GoalComplete:
                         TutorialCheckListCore.MainGoalCompleted = info.BoolData;
+                        break;
+                    case HintEventType.NextIsEnding:
+                        TutorialNextContent.text = "按[回车]以结束本关教程";
                         break;
                     default:
                         throw new NotImplementedException();

@@ -113,7 +113,7 @@ namespace ROOT
             {
                 CtrlPack.CommandDir = dir.Value;
                 CtrlPack.ReplaceFlag(actionPack.HoldForDrag ? ControllingCommand.Drag : ControllingCommand.Move);
-                //BUG LevelAsset.Cursor再第二次获得的时候是null？??不再现了？？？
+                //LevelAsset.Cursor再第二次获得的时候是null？??不再现了？？？
                 CtrlPack.CurrentPos = _ownerLogic.LevelAsset.Cursor.CurrentBoardPosition;
                 CtrlPack.NextPos = _ownerLogic.LevelAsset.Cursor.GetCoord(CtrlPack.CommandDir);
             }

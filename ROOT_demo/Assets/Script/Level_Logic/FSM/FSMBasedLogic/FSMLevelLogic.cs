@@ -43,7 +43,7 @@ namespace ROOT
         [HideInInspector] public bool ReferenceOk = false;
         [HideInInspector] public bool PendingCleanUp;
         [ShowInInspector] public bool IsTutorialLevel => IsTutorial;
-        [HideInInspector] public bool movedTile = false;
+        protected bool MovedTile;
 
         public abstract bool IsTutorial { get; }
         public abstract bool CouldHandleSkill { get; }
@@ -69,9 +69,9 @@ namespace ROOT
         #region 类属性
 
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
-        private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in movedTile, in movedCursor);
+        private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in movedCursor);
         private bool ShouldStartAnimate => ShouldCycle;
-        protected virtual bool IsForwardCycle => movedTile;
+        protected virtual bool IsForwardCycle => MovedTile;
         #endregion
 
         #region 元初始化相关函数
@@ -131,7 +131,7 @@ namespace ROOT
             //上面是个治标不治本的方法，感觉还是有比“空动画”的“意外”阻塞更加高明的算法。
             //SOLVED-还是先把“空动画”这个设计弄回来了；先从新整理一下再弄。
             AnimationTimerOrigin = Time.timeSinceLevelLoad;
-            LevelAsset.MovedTileAni = movedTile;
+            LevelAsset.MovedTileAni = MovedTile;
             LevelAsset.MovedCursorAni = movedCursor;
             animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
         }
@@ -312,7 +312,7 @@ namespace ROOT
 
         protected void CleanUp()
         {
-            movedTile = false;
+            MovedTile = false;
             movedCursor = false;
             animate_Co = null;
             LevelAsset.BoughtOnce = false;
@@ -330,21 +330,17 @@ namespace ROOT
         protected void ReactIO()
         {
             //这整个React to IO框架有可能都要模块化。
-            WorldExecutor.UpdateCursor_Unit(ref LevelAsset, in _ctrlPack, out movedTile, out movedCursor);
+            WorldExecutor.UpdateCursor_Unit(ref LevelAsset, in _ctrlPack, out MovedTile, out movedCursor);
             WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack);
             LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
-            var Res = WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
-
-            movedTile |= Res;
-            movedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
-
+            MovedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
             AdditionalReactIO();
         }
 
         protected void SkillMajorUpkeep()
         {
             LevelAsset.SkillMgr.SwapTick_FSM(LevelAsset, _ctrlPack);
-            movedTile = false;
+            MovedTile = false;
         }
 
         #endregion
