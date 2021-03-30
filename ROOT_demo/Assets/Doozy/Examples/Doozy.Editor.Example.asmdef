@@ -1,0 +1,19 @@
+{
+    "name": "Doozy.Editor.Example",
+    "rootNamespace": "",
+    "references": [
+        "GUID:55f90bab8f5498849b2143d5fd2e95d4",
+        "GUID:0554637672e986849bbb8534404467b5"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

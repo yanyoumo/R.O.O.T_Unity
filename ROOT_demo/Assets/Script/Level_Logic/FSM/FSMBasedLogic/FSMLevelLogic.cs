@@ -3,13 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
-using ROOT.SetupAsset;
 using ROOT.Signal;
 using ROOT.UI;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using static ROOT.WorldEvent;
 
 namespace ROOT

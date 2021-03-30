@@ -1,8 +1,3 @@
-using System;
-using com.ootii.Messages;
-using ROOT.Message;
-using UnityEngine;
-
 namespace ROOT
 {
     /*public class CurrencyInquiryInfo : RootMessageBase
