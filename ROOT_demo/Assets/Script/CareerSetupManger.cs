@@ -53,14 +53,14 @@ namespace ROOT.UI
 {
     public class CareerSetupManger : MonoBehaviour
     {
-        public static int sceneId;
+        public static int levelId;
         AdditionalGameSetup additionalGameSetup = new AdditionalGameSetup();
 
         public Progressor LoadingProgressor;
         public GameObject LoadingLabel;
-        private UIToggle matrixToggle;
-        private UIToggle scanToggle;
-        private UIToggle ThermalToggle;
+        private static UIToggle matrixToggle = new UIToggle();
+        private static UIToggle scanToggle = new UIToggle();
+        private static UIToggle ThermalToggle= new UIToggle();
 
         static Dictionary<string, SignalType> _dict = new Dictionary<string, SignalType>
         {
@@ -75,12 +75,11 @@ namespace ROOT.UI
         void Awake()
         {
             //TODO 需要在这里判断；如果是Tutorial的话、就不显示已有的框架了。
-            //顺带说、尽量把sceneId这个名字改了，容易引起歧义、叫类似LevelID什么的。
             matrixToggle = GameObject.Find("MatrixCoreUIToggle").GetComponent<UIToggle>();
             scanToggle = GameObject.Find("ScanCoreUIToggle").GetComponent<UIToggle>();
             ThermalToggle = GameObject.Find("ThermalCoreUIToggle").GetComponent<UIToggle>();
             uiPopup = GameObject.Find("UIPopup").GetComponent<UIPopup>();
-            var actionAsset = LevelLib.Instance.ActionAsset(sceneId);
+            var actionAsset = LevelLib.Instance.ActionAsset(levelId);
             var isTutorial = (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
             if (isTutorial) 
             {
@@ -194,7 +193,7 @@ namespace ROOT.UI
 
         public void Continue()
         {
-            var actionAsset = LevelLib.Instance.ActionAsset(sceneId);
+            var actionAsset = LevelLib.Instance.ActionAsset(levelId);
             additionalGameSetup.updateSignal();
             RootDebug.Log("the PlayingSignalType is " + additionalGameSetup.PlayingSignalTypeA + ", and " + additionalGameSetup.PlayingSignalTypeB, NameID.SuYuxuan_Log);
             if (!additionalGameSetup.PlayingSignalTypeA.Equals(additionalGameSetup.PlayingSignalTypeB))
