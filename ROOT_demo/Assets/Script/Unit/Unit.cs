@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using ROOT.Consts;
 using ROOT.Signal;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -12,16 +13,6 @@ using Object = UnityEngine.Object;
 
 namespace ROOT
 {
-    public enum RotationDirection
-    {
-        //即所为当前状态的表示，也作为旋转动作的标识
-        //顺时针为正：±0，+90，-90，±180
-        North,
-        East,
-        West,
-        South
-    }
-
     public struct ConnectionData
     {
         public bool HasConnector;

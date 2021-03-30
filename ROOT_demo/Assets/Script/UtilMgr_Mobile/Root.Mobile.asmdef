@@ -1,11 +1,11 @@
 {
-    "name": "Root_Editor",
+    "name": "Root.Mobile",
     "rootNamespace": "",
-    "references": [
-        "GUID:cf780540b58aad94e82159e92c04e08b"
-    ],
+    "references": [],
     "includePlatforms": [
-        "Editor"
+        "Android",
+        "Editor",
+        "iOS"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

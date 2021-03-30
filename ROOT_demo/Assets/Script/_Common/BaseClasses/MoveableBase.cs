@@ -28,6 +28,16 @@ namespace ROOT
         void Clicked();
     }
     
+    public enum RotationDirection
+    {
+        //即所为当前状态的表示，也作为旋转动作的标识
+        //顺时针为正：±0，+90，-90，±180
+        North,
+        East,
+        West,
+        South
+    }
+    
     public abstract class MoveableBase : MonoBehaviour//, IPlaceable
     {
         protected bool _immovable = false;

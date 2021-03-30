@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using Doozy.Engine.Progress;
+using ROOT.Consts;
 using ROOT.SetupAsset;
 using Random = UnityEngine.Random;
 

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
+using ROOT.Consts;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static ROOT.StaticPlayerPrefName;
+using static ROOT.Consts.StaticPlayerPrefName;
 using Random = UnityEngine.Random;
 
 namespace ROOT.SetupAsset
@@ -33,8 +34,8 @@ namespace ROOT
         Mouse,
         TouchScreen,
     }
-
-    public class StartGameMgr : MonoBehaviour
+    
+    public partial class StartGameMgr : MonoBehaviour
     {
         /*public enum SupportedDevice
         {
@@ -141,56 +142,7 @@ namespace ROOT
             DetectedScreenRatio = SupportedScreenRatio.HD;
             DetectedInputScheme = InputScheme.Keyboard;
 #elif UNITY_IOS
-            {
-                switch (UnityEngine.iOS.Device.generation)
-                {
-                    case DeviceGeneration.iPhone5S:
-                    case DeviceGeneration.iPhone6:
-                    case DeviceGeneration.iPhone6Plus:
-                    case DeviceGeneration.iPhone6S:
-                    case DeviceGeneration.iPhone6SPlus:
-                    case DeviceGeneration.iPhoneSE1Gen:
-                    case DeviceGeneration.iPhone7:
-                    case DeviceGeneration.iPhone7Plus:
-                    case DeviceGeneration.iPhone8:
-                    case DeviceGeneration.iPhone8Plus:
-                        DetectedScreenRatio = SupportedScreenRatio.HD;
-                        break;
-                    case DeviceGeneration.iPhoneX:
-                    case DeviceGeneration.iPhoneXS:
-                    case DeviceGeneration.iPhoneXSMax:
-                    case DeviceGeneration.iPhoneXR:
-                    case DeviceGeneration.iPhone11:
-                    case DeviceGeneration.iPhone11Pro:
-                    case DeviceGeneration.iPhone11ProMax:
-                        DetectedScreenRatio = SupportedScreenRatio.AppleHD;
-                        break;
-                    case DeviceGeneration.iPadAir1:
-                    case DeviceGeneration.iPadMini2Gen:
-                    case DeviceGeneration.iPadMini3Gen:
-                    case DeviceGeneration.iPadMini4Gen:
-                    case DeviceGeneration.iPadAir2:
-                    case DeviceGeneration.iPadPro1Gen:
-                    case DeviceGeneration.iPad5Gen:
-                    case DeviceGeneration.iPadPro2Gen:
-                    case DeviceGeneration.iPadPro10Inch1Gen:
-                    case DeviceGeneration.iPadPro10Inch2Gen:
-                    case DeviceGeneration.iPadPro11Inch:
-                    case DeviceGeneration.iPad6Gen:
-                    case DeviceGeneration.iPadPro3Gen:
-                    case DeviceGeneration.iPadAir3Gen:
-                    case DeviceGeneration.iPadMini5Gen:
-                    case DeviceGeneration.iPad7Gen:
-                    case DeviceGeneration.iPadUnknown:
-                        DetectedScreenRatio = SupportedScreenRatio.XGA;
-                        break;
-                    default:
-                        DetectedScreenRatio = SupportedScreenRatio.HD;
-                        break;
-                }
-
-                DetectedInputScheme = InputScheme.TouchScreen;
-            }
+            AdaptMobileScreen();
 #else
             throw new ArgumentOutOfRangeException();
 #endif
