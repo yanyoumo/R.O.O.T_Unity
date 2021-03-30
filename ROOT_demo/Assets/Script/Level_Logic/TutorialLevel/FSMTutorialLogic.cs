@@ -5,6 +5,7 @@ using com.ootii.Messages;
 using I2.Loc;
 using ROOT.SetupAsset;
 using ROOT.UI;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using static ROOT.TextProcessHelper;
 
@@ -30,22 +31,23 @@ namespace ROOT
    
     public static class TutorialCheckFunctionList
     {
-        public static bool CheckA(FSMLevelLogic fsm,Board board)
+        public static bool MoveCursorTo5_5(FSMLevelLogic fsm,Board board)
         {
-            return board.FindUnitUnderBoardPos(Vector2Int.zero) != null;
+            return fsm.LevelAsset.Cursor.CurrentBoardPosition.Equals(new Vector2Int(5,5));
         }
+        //todo
     }
 
     public enum TutorialCheckType
     {
-        TestA,
+        [LabelText("MoveCursorTo5_5")]MoveCursorTo5_5,
     }
 
     public sealed class FSMTutorialLogic : FSMLevelLogic_Barebone
     {
         private readonly CheckingLib CheckLib = new CheckingLib
         {
-            {TutorialCheckType.TestA, TutorialCheckFunctionList.CheckA},
+            {TutorialCheckType.MoveCursorTo5_5, TutorialCheckFunctionList.MoveCursorTo5_5},
         };
         
         protected sealed override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
