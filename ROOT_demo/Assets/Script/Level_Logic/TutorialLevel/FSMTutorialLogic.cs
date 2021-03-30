@@ -223,6 +223,7 @@ namespace ROOT
             TutorialOnHand = true;
             PendingHandOnChecking = CheckLib[data.HandOnCheckType];
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission});
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = true});
             ShowCheckList(true);
             ShowText(false);
             CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);//这边就就地测一下
@@ -232,6 +233,7 @@ namespace ROOT
         {
             TutorialOnHand = false;
             PendingHandOnChecking = (a, b) => false;
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
             ShowCheckList(false);
             CurrentHandOnCheckMet = false;
             StepForward();
@@ -283,6 +285,7 @@ namespace ROOT
             CurrentActionIndex = -1;
             StepForward();
             DealStepMgr();
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
         }
 
         protected override void AdditionalMajorUpkeep()
@@ -290,7 +293,7 @@ namespace ROOT
             TutorialInit();
         }
 
-        protected sealed override void AdditionalMinorUpkeep()
+        protected override void AdditionalMinorUpkeep()
         {
             TutorialMinorUpkeep();
         }
