@@ -14,7 +14,158 @@ using Vector2 = UnityEngine.Vector2;
 
 namespace ROOT
 {
-    public static class Utils
+    //partial这个关键字只能在同一个ASM里面用
+    public static partial class Utils
+    {
+        public static readonly RotationDirection[] ROTATION_LIST =
+        {
+            RotationDirection.East,
+            RotationDirection.North,
+            RotationDirection.South,
+            RotationDirection.West
+        };
+
+        public static RotationDirection GetInvertDirection(RotationDirection orgRotationDirection)
+        {
+            switch (orgRotationDirection)
+            {
+                case RotationDirection.North:
+                    return RotationDirection.South;
+                case RotationDirection.East:
+                    return RotationDirection.West;
+                case RotationDirection.West:
+                    return RotationDirection.East;
+                case RotationDirection.South:
+                    return RotationDirection.North;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(orgRotationDirection), orgRotationDirection, null);
+            }
+        }
+
+        public static RotationDirection GetCWDirection(RotationDirection orgRotationDirection)
+        {
+            switch (orgRotationDirection)
+            {
+                case RotationDirection.North:
+                    return RotationDirection.East;
+                case RotationDirection.East:
+                    return RotationDirection.South;
+                case RotationDirection.West:
+                    return RotationDirection.North;
+                case RotationDirection.South:
+                    return RotationDirection.West;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(orgRotationDirection), orgRotationDirection, null);
+            }
+        }
+
+        public static RotationDirection GetCCWDirection(RotationDirection orgRotationDirection)
+        {
+            switch (orgRotationDirection)
+            {
+                case RotationDirection.North:
+                    return RotationDirection.West;
+                case RotationDirection.East:
+                    return RotationDirection.North;
+                case RotationDirection.West:
+                    return RotationDirection.South;
+                case RotationDirection.South:
+                    return RotationDirection.East;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(orgRotationDirection), orgRotationDirection, null);
+            }
+        }
+
+        public static RotationDirection RotateDirectionAfterRotation(RotationDirection direction,
+            RotationDirection rotation)
+        {
+            switch (rotation)
+            {
+                case RotationDirection.North:
+                    return direction;
+                case RotationDirection.East:
+                    switch (direction)
+                    {
+                        case RotationDirection.North:
+                            return RotationDirection.East;
+                        case RotationDirection.East:
+                            return RotationDirection.South;
+                        case RotationDirection.West:
+                            return RotationDirection.North;
+                        case RotationDirection.South:
+                            return RotationDirection.West;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                    }
+                case RotationDirection.West:
+                    switch (direction)
+                    {
+                        case RotationDirection.North:
+                            return RotationDirection.West;
+                        case RotationDirection.East:
+                            return RotationDirection.North;
+                        case RotationDirection.West:
+                            return RotationDirection.South;
+                        case RotationDirection.South:
+                            return RotationDirection.East;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                    }
+                case RotationDirection.South:
+                    switch (direction)
+                    {
+                        case RotationDirection.North:
+                            return RotationDirection.South;
+                        case RotationDirection.East:
+                            return RotationDirection.West;
+                        case RotationDirection.West:
+                            return RotationDirection.East;
+                        case RotationDirection.South:
+                            return RotationDirection.North;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
+            }
+        }
+
+        public static RotationDirection RotateDirectionBeforeRotation(RotationDirection direction,
+            RotationDirection rotation)
+        {
+            if (direction == RotateDirectionAfterRotation(RotationDirection.North, rotation))
+                return RotationDirection.North;
+            if (direction == RotateDirectionAfterRotation(RotationDirection.South, rotation))
+                return RotationDirection.South;
+            if (direction == RotateDirectionAfterRotation(RotationDirection.East, rotation))
+                return RotationDirection.East;
+            if (direction == RotateDirectionAfterRotation(RotationDirection.West, rotation))
+                return RotationDirection.West;
+            throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+        }
+
+        public static Vector2Int ConvertDirectionToBoardPosOffset(RotationDirection direction)
+        {
+            switch (direction)
+            {
+                case RotationDirection.North:
+                    return new Vector2Int(0, 1);
+                case RotationDirection.East:
+                    return new Vector2Int(1, 0);
+                case RotationDirection.West:
+                    return new Vector2Int(-1, 0);
+                case RotationDirection.South:
+                    return new Vector2Int(0, -1);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+    }
+}
+
+namespace ROOT
+{
+    public static partial class Utils
     {
         public static void UIViewToggleWrapper(ref UIView view, bool toggle)
         {
@@ -225,150 +376,6 @@ namespace ROOT
         public static int GetUnitTierInt(Unit now)
         {
             return Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(now.Tier).Item1);
-        }
-
-        public static readonly RotationDirection[] ROTATION_LIST =
-        {
-            RotationDirection.East,
-            RotationDirection.North,
-            RotationDirection.South,
-            RotationDirection.West
-        };
-
-        public static RotationDirection GetInvertDirection(RotationDirection orgRotationDirection)
-        {
-            switch (orgRotationDirection)
-            {
-                case RotationDirection.North:
-                    return RotationDirection.South;
-                case RotationDirection.East:
-                    return RotationDirection.West;
-                case RotationDirection.West:
-                    return RotationDirection.East;
-                case RotationDirection.South:
-                    return RotationDirection.North;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(orgRotationDirection), orgRotationDirection, null);
-            }
-        }
-
-        public static RotationDirection GetCWDirection(RotationDirection orgRotationDirection)
-        {
-            switch (orgRotationDirection)
-            {
-                case RotationDirection.North:
-                    return RotationDirection.East;
-                case RotationDirection.East:
-                    return RotationDirection.South;
-                case RotationDirection.West:
-                    return RotationDirection.North;
-                case RotationDirection.South:
-                    return RotationDirection.West;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(orgRotationDirection), orgRotationDirection, null);
-            }
-        }
-
-        public static RotationDirection GetCCWDirection(RotationDirection orgRotationDirection)
-        {
-            switch (orgRotationDirection)
-            {
-                case RotationDirection.North:
-                    return RotationDirection.West;
-                case RotationDirection.East:
-                    return RotationDirection.North;
-                case RotationDirection.West:
-                    return RotationDirection.South;
-                case RotationDirection.South:
-                    return RotationDirection.East;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(orgRotationDirection), orgRotationDirection, null);
-            }
-        }
-
-        public static RotationDirection RotateDirectionAfterRotation(RotationDirection direction,
-            RotationDirection rotation)
-        {
-            switch (rotation)
-            {
-                case RotationDirection.North:
-                    return direction;
-                case RotationDirection.East:
-                    switch (direction)
-                    {
-                        case RotationDirection.North:
-                            return RotationDirection.East;
-                        case RotationDirection.East:
-                            return RotationDirection.South;
-                        case RotationDirection.West:
-                            return RotationDirection.North;
-                        case RotationDirection.South:
-                            return RotationDirection.West;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-                    }
-                case RotationDirection.West:
-                    switch (direction)
-                    {
-                        case RotationDirection.North:
-                            return RotationDirection.West;
-                        case RotationDirection.East:
-                            return RotationDirection.North;
-                        case RotationDirection.West:
-                            return RotationDirection.South;
-                        case RotationDirection.South:
-                            return RotationDirection.East;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-                    }
-                case RotationDirection.South:
-                    switch (direction)
-                    {
-                        case RotationDirection.North:
-                            return RotationDirection.South;
-                        case RotationDirection.East:
-                            return RotationDirection.West;
-                        case RotationDirection.West:
-                            return RotationDirection.East;
-                        case RotationDirection.South:
-                            return RotationDirection.North;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-                    }
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
-            }
-        }
-
-        public static RotationDirection RotateDirectionBeforeRotation(RotationDirection direction,
-            RotationDirection rotation)
-        {
-            if (direction == RotateDirectionAfterRotation(RotationDirection.North, rotation))
-                return RotationDirection.North;
-            if (direction == RotateDirectionAfterRotation(RotationDirection.South, rotation))
-                return RotationDirection.South;
-            if (direction == RotateDirectionAfterRotation(RotationDirection.East, rotation))
-                return RotationDirection.East;
-            if (direction == RotateDirectionAfterRotation(RotationDirection.West, rotation))
-                return RotationDirection.West;
-            throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-        }
-
-        public static Vector2Int ConvertDirectionToBoardPosOffset(RotationDirection direction)
-        {
-            switch (direction)
-            {
-                case RotationDirection.North:
-                    return new Vector2Int(0, 1);
-                case RotationDirection.East:
-                    return new Vector2Int(1, 0);
-                case RotationDirection.West:
-                    return new Vector2Int(-1, 0);
-                case RotationDirection.South:
-                    return new Vector2Int(0, -1);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-            }
         }
 
         public static void DebugLogArray(int[] Array)
@@ -735,42 +742,6 @@ namespace ROOT
             }
 
             return V2toV2Int(normalizedIn * rhs + center);
-        }
-    }
-    public static class TextProcessHelper
-    {
-        public static string TmpColorBlueXml(string content)
-        {
-            return TmpColorXml(content, Color.blue);
-        }
-        public static string TmpColorGreenXml(string content)
-        {
-            return TmpColorXml(content, Color.green * 0.35f);
-        }
-        public static string TmpColorXml(string content, Color col)
-        {
-            var hexCol = ColorUtility.ToHtmlStringRGB(col);
-            return "<color=#" + hexCol + ">" + content + "</color>";
-        }
-        public static string TmpColorBold(string content)
-        {
-            return "<b>" + content + "</b>";
-        }
-        public static string TmpBracket(string content)
-        {
-            return "[" + content + "]";
-        }
-        public static string TmpBracketAndBold(string content)
-        {
-            return TmpColorBold("[" + content + "]");
-        }
-        public static string TMPNormalDataCompo()
-        {
-            return TmpBracketAndBold(TmpColorGreenXml("一般数据"));
-        }
-        public static string TMPNetworkDataCompo()
-        {
-            return TmpBracketAndBold(TmpColorBlueXml("网络数据"));
         }
     }
 }
