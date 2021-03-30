@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Doozy.Engine.UI;
 using UnityEngine;
 using Rewired;
 using Random = UnityEngine.Random;
@@ -21,6 +22,7 @@ namespace ROOT
         public static readonly string TAG_NAME_HELP_SCREEN = "HelpScreen";
         public static readonly string TAG_NAME_TUTORIAL_FRAME = "TutorialTextFrame";
         public static readonly string TAG_NAME_ADV_SHOP_PANEL = "AdvShopPanel";
+        public static readonly string TAG_CONTROLLING_EVENT_MGR = "ControllingEventMgr";
     }
 
     public static class StaticPlayerPrefName
@@ -141,6 +143,18 @@ namespace ROOT
     }
     public static class Utils
     {
+        public static void UIViewToggleWrapper(ref UIView view, bool toggle)
+        {
+            if (toggle)
+            {
+                view.Show();
+            }
+            else
+            {
+                view.Hide();
+            }
+        }
+        
         public static int RoundToFive(decimal val) => Mathf.RoundToInt((float) val / 5.0f) * 5;
         public static float GetCustomizedDistance(Vector2 from, Vector2 to)
         {

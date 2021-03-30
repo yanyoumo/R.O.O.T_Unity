@@ -52,3 +52,5 @@ MonoBehaviour:
     type: 2}
   PCSimulateDevice: 1
   EditorInputScheme: 0
+  ControllingEventPrefab: {fileID: 2173914094584961221, guid: 18e6f5a66d8113541a33e5a3d24a8c90,
+    type: 3}

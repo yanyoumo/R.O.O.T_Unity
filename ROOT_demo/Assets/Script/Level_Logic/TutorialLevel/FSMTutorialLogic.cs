@@ -6,6 +6,7 @@ using I2.Loc;
 using ROOT.SetupAsset;
 using ROOT.UI;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using static ROOT.TextProcessHelper;
 
@@ -50,22 +51,17 @@ namespace ROOT
             {TutorialCheckType.MoveCursorTo5_5, TutorialCheckFunctionList.MoveCursorTo5_5},
         };
         
-        protected sealed override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
-        protected sealed override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
-        public sealed override bool IsTutorial => true;
+        protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
+        protected override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
+        public override bool IsTutorial => true;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
-        
-        protected bool AllUnitConnected()
-        {
-            return LevelAsset.GameBoard.Units.All(u => u.AnyConnection);
-        }
-        
+
         #region TutorialRelated
 
-        protected int ActionIndex { get; private set; } = -1;
-        private int LastActionCount { get; set; } = 0;
+        protected int CurrentActionIndex { get; private set; } = -1;
+        //private int LastActionCount { get; set; } = 0;
 
         /*protected abstract string MainGoalEntryContent { get; }
         protected virtual string SecondaryGoalEntryContent { get; } = "";*/
@@ -83,7 +79,7 @@ namespace ROOT
         public bool EndingWSuccess => PendingEndTutorialData.HasValue && PendingEndTutorialData.Value;
         public bool EndingWFailed => PendingEndTutorialData.HasValue && !PendingEndTutorialData.Value;
         
-        protected sealed override bool CheckGameOver
+        protected override bool CheckGameOver
         {
             get
             {
@@ -114,7 +110,8 @@ namespace ROOT
 
         private void StepForward()
         {
-            ActionIndex++;
+            CurrentActionIndex++;
+            //Debug.Log("ActionIndex:" + CurrentActionIndex);
         }
 
         private string ProcessText(string Text)
@@ -159,7 +156,7 @@ namespace ROOT
 
                 ProcessdToTutorialCycle = true;
                 //仔细想了一下、Driver和这个React的流程又要有、一个是吧额外的ActionID转义为ControllingCommand。
-                    //顺带、根据这个思路，可能可以把Driver再拆分一下。
+                    //顺带、根据这个思路，可能可以把Driver再拆分一下。//现在先不这么做、有空给搞一下。
                 //另一个是把ControllingCommand转义为实际的工作。
             }
         }
@@ -177,20 +174,14 @@ namespace ROOT
             switch (data.ActionType)
             {
                 case TutorialActionType.Text:
-                    if (data.DoppelgangerToggle)
-                    {
-                        DisplayText(StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text);
-                    }
-                    else
-                    {
-                        DisplayText(data.Text);
-                    }
+                    DisplayText(data.DoppelgangerToggle && StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text);
                     break;
                 case TutorialActionType.CreateUnit:
                     CreateUnitOnBoard(data);
                     break;
                 case TutorialActionType.End:
                     PendingEndTutorialData = true;
+                    //RISK 这里是把“准备结束”的flag设上了、需要再按一下enter才能实质结束。
                     break;
                 case TutorialActionType.ShowText:
                     ShowText(true);
@@ -208,24 +199,19 @@ namespace ROOT
                     SetHandOn(data);
                     break;
                 case TutorialActionType.CreateCursor:
+                    //TODO 要从旧代码里面把这里的逻辑捞出来。
                     break;
                 default:
                     throw new NotImplementedException();
             }
         }
-        
+
         private void DealStepMgr()
         {
-            int actionLength = LevelActionAsset.Actions.Length;
-            for (int i = LastActionCount; i < actionLength; i++)
+            LevelActionAsset.Actions.Where(a => a.ActionIdx == CurrentActionIndex).ForEach(DealStep);
+            if (LevelActionAsset.Actions.Any(a => a.ActionIdx == CurrentActionIndex + 1 && a.ActionType == TutorialActionType.End))
             {
-                if (LevelActionAsset.Actions[i].ActionIdx > ActionIndex)
-                {
-                    LastActionCount = i;
-                    break;
-                }
-
-                DealStep(LevelActionAsset.Actions[i]);
+                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.NextIsEnding});
             }
         }
 
@@ -239,15 +225,17 @@ namespace ROOT
             TutorialOnHand = true;
             PendingHandOnChecking = CheckLib[data.HandOnCheckType];
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission});
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = true});
             ShowCheckList(true);
             ShowText(false);
-            CurrentHandOnCheckMet = false;
+            CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);//这边就就地测一下
         }
 
         private void UnsetHandOn()
         {
             TutorialOnHand = false;
             PendingHandOnChecking = (a, b) => false;
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
             ShowCheckList(false);
             CurrentHandOnCheckMet = false;
             StepForward();
@@ -259,6 +247,8 @@ namespace ROOT
             return PendingEndTutorialData.HasValue && PendingEndTutorialData.Value;
         }
 
+        private bool CheckTutorialEnding() => EndingWSuccess;
+        
         private bool CheckTutorialCycle() => ProcessdToTutorialCycle;
         
         private bool CheckNotOnHand() => !TutorialOnHand;
@@ -266,6 +256,7 @@ namespace ROOT
         private void TutorialCycle()
         {
             //Debug.Log("TutorialCycle");
+            //TODO 这个还有个事儿、就是要把Logic承接不了的输入屏蔽掉，CouldHandleSkill这些参量可以利用起来。
             if (NotEnding && !TutorialOnHand)
             {
                 StepForward();
@@ -291,22 +282,20 @@ namespace ROOT
         {
             if (!shouldInitTutorial) return;
             shouldInitTutorial = false;
+            TutorialOnHand = false;
+            //LastActionCount = 0;
+            CurrentActionIndex = -1;
             StepForward();
             DealStepMgr();
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
         }
 
         protected override void AdditionalMajorUpkeep()
         {
             TutorialInit();
         }
-        
-        protected override void Awake()
-        {
-            base.Awake();
-            _actionDriver = new TutorialControlActionDriver(this, _mainFSM);
-        }
 
-        protected sealed override void AdditionalMinorUpkeep()
+        protected override void AdditionalMinorUpkeep()
         {
             TutorialMinorUpkeep();
         }
@@ -320,6 +309,7 @@ namespace ROOT
         protected override void ModifyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
             base.ModifyRootFSMTransitions(ref RootFSMTransitions);
+            RootFSMTransitions.Add(new Trans(RootFSMStatus.Tutorial_Cycle, RootFSMStatus.F_Cycle, 1, CheckTutorialEnding));
             RootFSMTransitions.Add(new Trans(RootFSMStatus.Tutorial_Cycle, RootFSMStatus.MajorUpKeep, 0, true));
             RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.F_Cycle, 5, CompletedAndRequestedEnd));
             RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.Tutorial_Cycle, 4, CheckTutorialCycle));

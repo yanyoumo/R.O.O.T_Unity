@@ -41,14 +41,16 @@ namespace ROOT
 
         private void RequestEnqueueCtrlPack()
         {
-            if (!_inputAntiSpam)
+            _ctrlPackQueue.Enqueue(CtrlPack);
+            //BUG 这里有Bug.
+            /*if (!_inputAntiSpam)
             {
                 _ctrlPackQueue.Enqueue(CtrlPack);
                 _inputAntiSpam = true;
                 _inputAntiSpamTimer = 0.0f;
-            }
+            }*/
 
-            _ownerLogic.StartCoroutine(AntiSpamCoolDown()); //
+            //_ownerLogic.StartCoroutine(AntiSpamCoolDown()); //
         }
 
         /// <summary>
@@ -73,7 +75,9 @@ namespace ROOT
         {
             if (Camera.main == null)
             {
-                throw new ApplicationException("无法获得主相机");
+                Debug.LogWarning("not able to find main camera");
+                return true;
+                //throw new ApplicationException("无法获得主相机");
             }
 
             switch (actionPack.ActionID)
@@ -101,6 +105,7 @@ namespace ROOT
 
         protected bool CoreDrivingFunction(ActionPack actionPack)
         {
+            //TODO 这个里面有些问题、还需要处理。
             if (MouseDrivingFunction(actionPack)) return false;
 
             FilterDir(actionPack, out var dir);
@@ -108,6 +113,7 @@ namespace ROOT
             {
                 CtrlPack.CommandDir = dir.Value;
                 CtrlPack.ReplaceFlag(actionPack.HoldForDrag ? ControllingCommand.Drag : ControllingCommand.Move);
+                //LevelAsset.Cursor再第二次获得的时候是null？??不再现了？？？
                 CtrlPack.CurrentPos = _ownerLogic.LevelAsset.Cursor.CurrentBoardPosition;
                 CtrlPack.NextPos = _ownerLogic.LevelAsset.Cursor.GetCoord(CtrlPack.CommandDir);
             }
@@ -321,7 +327,7 @@ namespace ROOT
         }
     }
 
-    public class TutorialControlActionDriver : ControlActionDriver
+    /*public class TutorialControlActionDriver : ControlActionDriver
     {
         private FSMTutorialLogic owner;
         
@@ -342,15 +348,5 @@ namespace ROOT
                 return res;
             }
         }
-
-        /*private bool TutorialRespondToControlEvent(ActionPack actionPack)
-        {
-            if (actionPack.IsAction(Confirm0) && owner.CompleteCurrentHandOn)
-            {
-                owner.DealHandOnCompleted();
-                return false;
-            }
-            return true;
-        }*/
-    }
+    }*/
 }

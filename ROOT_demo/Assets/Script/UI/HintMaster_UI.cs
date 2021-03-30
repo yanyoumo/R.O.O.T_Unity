@@ -1,9 +1,11 @@
 using System;
 using com.ootii.Messages;
+using DG.Tweening;
 using Doozy.Engine.UI;
 using ROOT.Message;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ROOT.UI
 {
@@ -23,6 +25,8 @@ namespace ROOT.UI
         GoalComplete,
         GoalFailed,
         SetHelpScreenShow,
+        NextIsEnding,
+        ToggleHandOnView,
     }
     
     public class HintEventInfo : RootMessageBase
@@ -37,10 +41,13 @@ namespace ROOT.UI
     {
         public UIView TutorialCheckList;
         public UIView TutorialMainTextFrame;
-
+        public UIView TutorialHandOff;
+        
         public TextMeshProUGUI TutorialTextMainContent;
         public TutorialCheckList_Doozy TutorialCheckListCore;
-        
+
+        public TextMeshProUGUI TutorialNextContent;
+
         private void HintEventHandler(IMessage rMessge)
         {
             if (rMessge is HintEventInfo info)
@@ -50,24 +57,10 @@ namespace ROOT.UI
                 switch (info.HintEventType)
                 {
                     case HintEventType.SetGoalCheckListShow:
-                        if (info.BoolData)
-                        {
-                            TutorialCheckList.Show();
-                        }
-                        else
-                        {
-                            TutorialCheckList.Hide();
-                        }
+                        Utils.UIViewToggleWrapper(ref TutorialCheckList, info.BoolData);
                         break;
                     case HintEventType.SetTutorialTextShow:
-                        if (info.BoolData)
-                        {
-                            TutorialMainTextFrame.Show();
-                        }
-                        else
-                        {
-                            TutorialMainTextFrame.Hide();
-                        }
+                        Utils.UIViewToggleWrapper(ref TutorialMainTextFrame, info.BoolData);
                         break;
                     case HintEventType.SetTutorialTextContent:
                         if (info.StringData!="") TutorialTextMainContent.text = info.StringData;
@@ -84,6 +77,12 @@ namespace ROOT.UI
                     case HintEventType.GoalComplete:
                         TutorialCheckListCore.MainGoalCompleted = info.BoolData;
                         break;
+                    case HintEventType.NextIsEnding:
+                        TutorialNextContent.text = "按[回车]以结束本关教程";
+                        break;
+                    case HintEventType.ToggleHandOnView:
+                        Utils.UIViewToggleWrapper(ref TutorialHandOff, !info.BoolData);
+                        break;
                     default:
                         throw new NotImplementedException();
                 }
@@ -95,6 +94,7 @@ namespace ROOT.UI
         private void Awake()
         {
             MessageDispatcher.AddListener(WorldEvent.HintRelatedEvent,HintEventHandler);
+            TutorialCheckListCore.SetupSecondaryGoalContent("");
         }
 
         private void OnDestroy()

@@ -19,6 +19,7 @@ namespace ROOT
             var go=Instantiate(levelLogicPrefab);
             var gameMgr = go.GetComponentInChildren<FSMLevelLogic>();
             StartCoroutine(KillNextFrame());
+            
             return gameMgr;
         }
     }
