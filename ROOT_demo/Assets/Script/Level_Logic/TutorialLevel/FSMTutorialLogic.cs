@@ -31,23 +31,53 @@ namespace ROOT
    
     public static class TutorialCheckFunctionList
     {
-        public static bool MoveCursorTo5_5(FSMLevelLogic fsm,Board board)
+        public static bool MoveCursorToTarget55(FSMLevelLogic fsm,Board board)
         {
             return fsm.LevelAsset.Cursor.CurrentBoardPosition.Equals(new Vector2Int(5,5));
         }
-        //todo
+
+        public static bool MoveMatrixUnitsToSameYIndex(FSMLevelLogic fsm, Board board)
+        {
+            var y = -1;
+            foreach (var unit in board.Units)
+            {
+                if (y == -1)
+                    y = unit.CurrentBoardPosition.y;
+                else if (y != unit.CurrentBoardPosition.y)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static bool MoveThreeMatrixUnitsToOneLink(FSMLevelLogic fsm, Board board)
+        {
+            foreach (var unit in board.Units)
+            {
+                foreach (var otherUnit in unit.GetConnectedOtherUnit)
+                {
+
+                }
+            }
+
+            return true;
+        }
     }
 
     public enum TutorialCheckType
     {
-        MoveCursorTo5_5,
+        MoveCursorToTarget55,
+        MoveMatrixUnitsToSameYIndex,
+        MoveThreeMatrixUnitsToOneLink
     }
 
     public sealed class FSMTutorialLogic : FSMLevelLogic_Barebone
     {
         private readonly CheckingLib CheckLib = new CheckingLib
         {
-            {TutorialCheckType.MoveCursorTo5_5, TutorialCheckFunctionList.MoveCursorTo5_5},
+            {TutorialCheckType.MoveCursorToTarget55, TutorialCheckFunctionList.MoveCursorToTarget55},
+            {TutorialCheckType.MoveMatrixUnitsToSameYIndex, TutorialCheckFunctionList.MoveMatrixUnitsToSameYIndex},
+            {TutorialCheckType.MoveThreeMatrixUnitsToOneLink, TutorialCheckFunctionList.MoveThreeMatrixUnitsToOneLink}
         };
         
         protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
