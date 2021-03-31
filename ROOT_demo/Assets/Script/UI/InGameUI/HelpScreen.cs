@@ -34,8 +34,12 @@ namespace ROOT
         void Awake()
         {
             _posXY = new Vector2(transform.position.x, transform.position.y);
-            BasicControlHint.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.BasicControl_Touch : ScriptTerms.BasicControl_KM;
-            HorHintText.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.HForHint_Touch : ScriptTerms.HForHint_KM;
+            
+            BasicControlHint.Term =  ScriptTerms.BasicControl_KM;
+            HorHintText.Term = ScriptTerms.HForHint_KM;
+            
+            /*BasicControlHint.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.BasicControl_Touch : ScriptTerms.BasicControl_KM;
+            HorHintText.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.HForHint_Touch : ScriptTerms.HForHint_KM;*/
         }
 
         // Update is called once per frame
@@ -60,7 +64,8 @@ namespace ROOT
                         _animatingUpOrDown = false;
                         Animating = true;
                         _slideTimer = Time.time;
-                        HorHintText.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.HForHint_Touch : ScriptTerms.HForHint_KM;
+                        HorHintText.Term = ScriptTerms.HForHint_KM;
+                        //HorHintText.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.HForHint_Touch : ScriptTerms.HForHint_KM;
                     }
                 }
             }

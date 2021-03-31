@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using ROOT;
-using UnityEngine;
-using UnityEngine.TestTools;
-using Random=UnityEngine.Random;
-
+﻿
 namespace Tests
 {
-    public partial class BoardRelatedScript
+    /*public partial class BoardRelatedScript
     {
         private int[] BoardLengthList={2,3,4,5,6,7,8};
 
@@ -156,8 +147,5 @@ namespace Tests
                 }
             }
         }
-
-        /*[Test]
-        */
-    }
+    }*/
 }

@@ -6,8 +6,12 @@ using Object = UnityEngine.Object;
 
 namespace ROOT.SetupAsset
 {
-    public partial class LevelLib : MonoBehaviour
+    public class LevelLib : MonoBehaviour
     {
+        public LevelActionAssetLib TutorialLevelActionAssetLib;
+        public LevelActionAssetLib CareerLevelActionAssetLib;
+        public LevelActionAssetLib TestingLevelActionAssetLib;
+        
         private static LevelLib _instance;
         public static LevelLib Instance => _instance;
 

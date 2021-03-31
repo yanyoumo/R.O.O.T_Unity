@@ -23,7 +23,7 @@ namespace ROOT
         {
             if (bonusIncomesVal > 0)
             {
-                BonusCurrency.text = "+" + Utils.PaddingNum(bonusIncomesVal, 2);
+                BonusCurrency.text = "+" + Common.Utils.PaddingNum(bonusIncomesVal, 2);
                 BonusCurrency.color = Color.green;
             }
             else if (bonusIncomesVal == 0)

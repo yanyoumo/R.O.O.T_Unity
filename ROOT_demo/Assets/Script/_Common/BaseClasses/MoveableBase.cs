@@ -4,40 +4,6 @@ using CommandDir = ROOT.RotationDirection;
 
 namespace ROOT
 {
-    public enum PosSetFlag
-    {
-        NONE,
-        Current,
-        Next,
-        Lerping,
-        NextAndLerping,
-        CurrentAndLerping,
-        CurrentAndNext,
-        All,
-    }
-
-    public enum RotateCommand
-    {
-        NOP,
-        Clockwise,
-        CounterClockwise,
-    }
-    
-    public interface IClickable
-    {
-        void Clicked();
-    }
-    
-    public enum RotationDirection
-    {
-        //即所为当前状态的表示，也作为旋转动作的标识
-        //顺时针为正：±0，+90，-90，±180
-        North,
-        East,
-        West,
-        South
-    }
-    
     public abstract class MoveableBase : MonoBehaviour//, IPlaceable
     {
         protected bool _immovable = false;

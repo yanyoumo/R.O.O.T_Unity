@@ -167,7 +167,7 @@ namespace ROOT
         private void UpdateEdgeSingleSide(RotationDirection side, List<Vector2Int> zone,EdgeStatus edgeStatus)
         {
             //set是true的话是设置新的Zone、如果是false走fallback流程。
-            var otherPos = OnboardPos + Utils.ConvertDirectionToBoardPosOffset(side);
+            var otherPos = OnboardPos + Common.Utils.ConvertDirectionToBoardPosOffset(side);
             var inZone = zone.Contains(OnboardPos);
             var otherInZone = zone.Contains(otherPos) && owner.CheckBoardPosValid(otherPos);
             _edgeDic[side].enabled = inZone && !otherInZone;
@@ -189,7 +189,7 @@ namespace ROOT
             //理论上这个框架还算是可以能用、主要是这个zone实际在Thermo时传递的是热力单元的坐标。
             if (edgeStatus == EdgeStatus.InfoZone)
             {
-                Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, edgeStatus));
+                Common.Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, edgeStatus));
             }
             else if (edgeStatus == EdgeStatus.ThermoZone)
             {
@@ -288,7 +288,7 @@ namespace ROOT
 
         private void SetText(int number)
         {
-            var numberAsString = (number >= 0 ? "+" : "-") + Utils.PaddingNum2Digit(Math.Abs(number));
+            var numberAsString = (number >= 0 ? "+" : "-") + Common.Utils.PaddingNum2Digit(Math.Abs(number));
             
             if (!_boardCouldIOCurrency)
             {

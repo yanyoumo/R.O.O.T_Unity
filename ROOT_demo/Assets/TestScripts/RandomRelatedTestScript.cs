@@ -10,7 +10,7 @@ namespace Tests
 {
     public class RandomRelatedTestScript
     {
-        // A Test behaves as an ordinary method
+        /*// A Test behaves as an ordinary method
         [Test]
         public void SumZeroRandomArraySimplePasses()
         {
@@ -33,6 +33,6 @@ namespace Tests
                     Random.Range(0.0f, 1.0f));
                 Utils.DebugLogArray(res);
             }
-        }
+        }*/
     }
 }

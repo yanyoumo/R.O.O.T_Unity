@@ -2,14 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using ROOT.Consts;
 using ROOT.Signal;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
-using Object = UnityEngine.Object;
+using ROOT.Common;
 
 namespace ROOT
 {
@@ -35,24 +34,7 @@ namespace ROOT
         }
     }
 
-    public enum PlayingSignalSelector
-    {
-        TypeA,
-        TypeB,
-    }
-
-    [Serializable]
-    public struct UnitGist
-    {
-        [Header("Basic")] public PlayingSignalSelector PlayingSignalSelector;
-        public HardwareType CoreGenre;
-        public SideType[] Sides;
-        [Range(1, 5)] public int Tier;
-
-        [Header("OnBoardInfo")] public Vector2Int Pos;
-        public bool IsStation;
-    }
-
+    
     public sealed partial class ShopMgr : ShopBase
     {
         /// <summary>
@@ -164,7 +146,7 @@ namespace ROOT
             private set
             {
                 _tier = value;
-                TierTag.text = Utils.PaddingNum2Digit(_tier);
+                TierTag.text = Common.Utils.PaddingNum2Digit(_tier);
                 TierLEDs.Val = _tier;
             }
         }
@@ -179,8 +161,8 @@ namespace ROOT
             {
                 _retailPrice = value;
                 PriceTag.text = _retailPrice <= 99
-                    ? Utils.PaddingNum2Digit(_retailPrice)
-                    : Utils.PaddingNum3Digit(_retailPrice);
+                    ? Common.Utils.PaddingNum2Digit(_retailPrice)
+                    : Common.Utils.PaddingNum3Digit(_retailPrice);
             }
         }
 
@@ -254,7 +236,7 @@ namespace ROOT
             if (_cost != -1)
             {
                 Cost = _cost;
-                CostTag.text = Utils.PaddingNum2Digit(Cost);
+                CostTag.text = Common.Utils.PaddingNum2Digit(Cost);
             }
 
             //这个discountRate写以百分比的数据，比如八折就是写20。（-20%）
@@ -263,7 +245,7 @@ namespace ROOT
                 discountRate = Mathf.Min(discountRate, 99);
                 HasDiscount = true;
                 var discountedPrice = Mathf.FloorToInt(retailPrice * (1.0f - discountRate * 0.01f));
-                DiscountedPriceTag.text = "<color=#00A62E>" + Utils.PaddingNum2Digit(discountedPrice) + "</color>";
+                DiscountedPriceTag.text = "<color=#00A62E>" + Common.Utils.PaddingNum2Digit(discountedPrice) + "</color>";
             }
             else
             {
@@ -511,12 +493,12 @@ namespace ROOT
 
         public void UnitRotateCw()
         {
-            _unitRotation = Utils.GetCWDirection(_unitRotation);
+            _unitRotation = Common.Utils.GetCWDirection(_unitRotation);
         }
 
         public void UnitRotateCcw()
         {
-            _unitRotation = Utils.GetCCWDirection(_unitRotation);
+            _unitRotation = Common.Utils.GetCCWDirection(_unitRotation);
         }
 
         public SideType GetLocalSpaceUnitSide(RotationDirection localDirection)
@@ -527,7 +509,7 @@ namespace ROOT
 
         public SideType GetWorldSpaceUnitSide(RotationDirection worldDirection)
         {
-            var desiredLocalSideDirection = Utils.RotateDirectionBeforeRotation(worldDirection, _unitRotation);
+            var desiredLocalSideDirection = Common.Utils.RotateDirectionBeforeRotation(worldDirection, _unitRotation);
             UnitSides.TryGetValue(desiredLocalSideDirection, out var res);
             return res;
         }
@@ -573,7 +555,7 @@ namespace ROOT
         {
             WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
             if (!data.HasConnector) return;
-            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(dir, _unitRotation),
+            ConnectorLocalDir.TryGetValue(Common.Utils.RotateDirectionBeforeRotation(dir, _unitRotation),
                 out Connector Connector);
             if (Connector == null) return;
             Connector.Signal_A_Val = 0;
@@ -608,7 +590,7 @@ namespace ROOT
         private void SetConnector(RotationDirection crtDir, bool ignoreVal = false)
         {
             WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
-            ConnectorLocalDir.TryGetValue(Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation), out var Connector);
+            ConnectorLocalDir.TryGetValue(Common.Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation), out var Connector);
             Connector.Connected = data.Connected;
 
             var otherUnit = data.OtherUnit;
@@ -652,7 +634,7 @@ namespace ROOT
         {
             if (requiredDirection == RotationDirection.West || requiredDirection == RotationDirection.South)
             {
-                var localRotation = Utils.RotateDirectionBeforeRotation(requiredDirection, _unitRotation);
+                var localRotation = Common.Utils.RotateDirectionBeforeRotation(requiredDirection, _unitRotation);
                 ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
                 if (Connector == null) return;
                 Connector.Blink(BlinkDuration);
@@ -670,14 +652,14 @@ namespace ROOT
                 if (SignalCore.SignalFromDir == RotationDirection.West ||
                     SignalCore.SignalFromDir == RotationDirection.South)
                 {
-                    var localRotation = Utils.RotateDirectionBeforeRotation(SignalCore.SignalFromDir, _unitRotation);
+                    var localRotation = Common.Utils.RotateDirectionBeforeRotation(SignalCore.SignalFromDir, _unitRotation);
                     ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
                     if (Connector != null) Connector.Blink(BlinkDuration);
                 }
                 else
                 {
                     var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalCore.SignalFromDir);
-                    if (nextUnit != null) nextUnit.SimpleBlink(Utils.GetInvertDirection(SignalCore.SignalFromDir));
+                    if (nextUnit != null) nextUnit.SimpleBlink(Common.Utils.GetInvertDirection(SignalCore.SignalFromDir));
                 }
 
                 StartCoroutine(NextBlinkGap(BlinkDuration));
@@ -689,7 +671,7 @@ namespace ROOT
                     if (!fromDirection.HasValue || (currentSideDirection != fromDirection.Value))
                     {
                         var localRotation =
-                            Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
+                            Common.Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
                         ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
 
                         if (Connector == null) continue;
@@ -713,7 +695,7 @@ namespace ROOT
                             else
                             {
                                 var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, nextBlinkDir);
-                                if (nextUnit != null) nextUnit.SimpleBlink(Utils.GetInvertDirection(nextBlinkDir));
+                                if (nextUnit != null) nextUnit.SimpleBlink(Common.Utils.GetInvertDirection(nextBlinkDir));
                             }
 
                             StartCoroutine(NextBlinkGap(BlinkDuration));
@@ -734,7 +716,7 @@ namespace ROOT
             else if ((UnitSignal == SignalType.Scan && UnitHardware == HardwareType.Field) && nextDirection.HasValue)
             {
                 var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, nextDirection.Value);
-                if (nextUnit != null) nextUnit.Blink(Utils.GetInvertDirection(nextDirection.Value));
+                if (nextUnit != null) nextUnit.Blink(Common.Utils.GetInvertDirection(nextDirection.Value));
             }
         }
 

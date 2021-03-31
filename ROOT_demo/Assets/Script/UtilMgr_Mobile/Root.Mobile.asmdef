@@ -1,7 +1,9 @@
 {
     "name": "Root.Mobile",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:85a99c805c32e4014949122b8135ecdc"
+    ],
     "includePlatforms": [
         "Android",
         "Editor",

@@ -9,7 +9,7 @@ namespace Tests
 {
     public class PaddingNum4DigitTestScript
     {
-        private int[] inputArray;
+        /*private int[] inputArray;
         private string[] outputArray;
         [SetUp]
         public void Setup() 
@@ -24,7 +24,7 @@ namespace Tests
         {
             // Use the Assert class to test conditions
             for (int index = 0; index < inputArray.Length; index++) {
-                Assert.AreEqual(outputArray[index], ROOT.Utils.PaddingNum4Digit(inputArray[index]));
+                Assert.AreEqual(outputArray[index], Utils_Common.PaddingNum4Digit(inputArray[index]));
             }
         }
 
@@ -36,6 +36,6 @@ namespace Tests
             // Use the Assert class to test conditions.
             // Use yield to skip a frame.
             yield return null;
-        }
+        }*/
     }
 }

@@ -9,6 +9,7 @@ using Random = System.Random;
 
 namespace ROOT
 {
+    [Obsolete]
     public class CostLine : MonoBehaviour
     {
         public Transform HigherCostArrowRoot;
@@ -29,7 +30,7 @@ namespace ROOT
         private Vector3 LumpLEDEnding => StartingLEDTrans.localPosition + new Vector3((_lumpedValUnit-1) * LumpedValUnitLength, 0, 0);
         private int ReminderIncome => income - LumpedVal;
         private int ReminderMaxIncome => MaxIncome - LumpedVal;
-        private CubeLED LumpedLED = null;
+        //private CubeLED LumpedLED = null;
 
         private float LumpedShrink
         {
@@ -50,7 +51,7 @@ namespace ROOT
         private const int BaseMaxIncome = 10;
         private const int BaseLumpIncome = BaseMaxIncome;
         private int MaxIncome = BaseMaxIncome;
-        private List<CubeLED> cubeLEDs = new List<CubeLED>();
+        //private List<CubeLED> cubeLEDs = new List<CubeLED>();
 
         /// <summary>
         /// 根据具体Income更新MaxIncome，MaxIncome不会小于BaseMaxIncome
@@ -86,7 +87,7 @@ namespace ROOT
         /// <summary>
         /// 专门处理LED数量的问题，LED点亮的问题不在这里处理。
         /// </summary>
-        private void UpdateLEDArray()
+        /*private void UpdateLEDArray()
         {
             var DesiredLength = ReminderMaxIncome;
             var maxIndex = Math.Max(DesiredLength, cubeLEDs.Count);
@@ -160,10 +161,10 @@ namespace ROOT
                     LumpedLED = null;
                 }
             }
-        }
+        }*/
 
         [HideInInspector]
-        public int Income
+        /*public int Income
         {
             set
             {
@@ -217,7 +218,7 @@ namespace ROOT
                 }
             }
             get => cost;
-        }
+        }*/
 
 
         void Awake()

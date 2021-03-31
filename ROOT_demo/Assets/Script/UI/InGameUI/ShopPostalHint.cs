@@ -23,7 +23,7 @@ namespace ROOT
 
         void Start()
         {
-            if (StartGameMgr.UseTouchScreen)
+            /*if (StartGameMgr.UseTouchScreen)
             {
                 AdvShopTextLocalizer.SetTerm(ScriptTerms.AdvShop_Touch);
                 AdvShopTextTwoLocalizer.SetTerm(ScriptTerms.AdvShop_2_Touch);
@@ -32,7 +32,9 @@ namespace ROOT
             {
                 AdvShopTextLocalizer.SetTerm(ScriptTerms.AdvShop_KM);
                 AdvShopTextTwoLocalizer.SetTerm(ScriptTerms.AdvShop_2_KM);
-            }
+            }*/
+            AdvShopTextLocalizer.SetTerm(ScriptTerms.AdvShop_KM);
+            AdvShopTextTwoLocalizer.SetTerm(ScriptTerms.AdvShop_2_KM);
         }
     }
 }

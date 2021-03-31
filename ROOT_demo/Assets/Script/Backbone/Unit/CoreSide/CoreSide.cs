@@ -5,41 +5,6 @@ using UnityEngine;
 
 namespace ROOT
 {
-    //需要一个SignalType和CoreType之间的双相映射。
-    //可能就是需要一个<CoreType,SignalType>的Dictionary，然后时常反着查？
-    public enum SignalType
-    {
-        Matrix,
-        Thermo,
-        Scan,
-        //Firewall,
-    }
-
-    public enum HardwareType
-    {
-        Core,
-        Field,
-        Support,
-        Other
-    }
-
-    public enum SideType
-    {
-        NoConnection,
-        Connection,
-        SIDETYPECOUNT
-    }
-
-    public enum ConnectionMeshType
-    {
-        NoConnectionMesh,
-        DtoDConnectedMesh,
-        StDConnectedMesh,
-        DtSConnectedMesh,
-        StSConnectedMesh,
-        NoChange
-    }
-    
     public sealed partial class ShopMgr : ShopBase
     {
         private int StationaryRateListLastIndex = 0;
@@ -104,45 +69,4 @@ namespace ROOT
             return totalPrice;
         }
     }
-
-    /*public partial class BoardDataCollector : MonoBehaviour
-    {
-        private const float perDriverIncome = 1.0f;
-        private Dictionary<CoreType, float> costByCore;
-
-        private void InitIncomeCost()
-        {
-            costByCore = new Dictionary<CoreType, float>()
-            {
-                {CoreType.PCB, 1.0f},
-                {CoreType.NetworkCable, 2.0f},
-                {CoreType.Server, 3.0f},
-                {CoreType.Bridge, 4.0f},
-                {CoreType.HardDrive, 2.0f},
-                {CoreType.Processor, 3.0f},
-            };
-        }
-
-        public float GetServerIncomeByLength(int length)
-        {
-            float[] incomeArrayDel = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
-            float incomeArrayBase = 0.0f;
-            float income = incomeArrayBase;
-            for (int i = 0; i < length; i++)
-            {
-                int idx = Mathf.Min(i, incomeArrayDel.Length - 1);
-                income += incomeArrayDel[idx];
-            }
-
-            return Mathf.Floor(income);
-        }
-
-        public static float GetPerDriverIncome => perDriverIncome;
-
-        public float GetCostByCore(CoreType key)
-        {
-            costByCore.TryGetValue(key, out float value);
-            return value;
-        }
-    }*/
 }

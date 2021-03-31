@@ -59,7 +59,7 @@ namespace ROOT
         
         private void UpdateCurrencyVal(int currencyVal)
         {
-            Currency.text = Utils.PaddingNum(currencyVal, 4);
+            Currency.text = Common.Utils.PaddingNum(currencyVal, 4);
         }
 
         protected virtual void UpdateIncomeValAsNotActive()
@@ -72,7 +72,7 @@ namespace ROOT
         {
             if (incomesVal > 0)
             {
-                Incomes.text = Utils.PaddingNum(incomesVal, 3);
+                Incomes.text = Common.Utils.PaddingNum(incomesVal, 3);
                 Incomes.color = Color.green;
             }
             else if (incomesVal == 0)
@@ -82,7 +82,7 @@ namespace ROOT
             }
             else
             {
-                Incomes.text = "-" + Utils.PaddingNum(Math.Abs(incomesVal), 2);
+                Incomes.text = "-" + Common.Utils.PaddingNum(Math.Abs(incomesVal), 2);
                 Incomes.color = Color.red;
             }
         }

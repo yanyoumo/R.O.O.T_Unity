@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
@@ -56,7 +55,7 @@ namespace ROOT
                         var otherUnit = value.GetComponentInChildren<Unit>();
                         connectionData.OtherUnit = otherUnit;
                         connectionData.Connected =
-                            (otherUnit.GetWorldSpaceUnitSide(Utils.GetInvertDirection(currentSideDirection)) ==
+                            (otherUnit.GetWorldSpaceUnitSide(Common.Utils.GetInvertDirection(currentSideDirection)) ==
                              SideType.Connection);
                         if (connectionData.Connected)
                         {
@@ -378,8 +377,8 @@ namespace ROOT
                 var waringTile = new List<Vector2Int>();
                 foreach (var actualHeatSinkPo in ActualHeatSinkPos)
                 {
-                    ROTATION_LIST
-                        .Select(o => ConvertDirectionToBoardPosOffset(o) + actualHeatSinkPo)
+                    Common.Utils.ROTATION_LIST
+                        .Select(o => Common.Utils.ConvertDirectionToBoardPosOffset(o) + actualHeatSinkPo)
                         .Where(s => !waringTile.Contains(s))
                         .ForEach(waringTile.Add);
                 }
@@ -729,7 +728,7 @@ namespace ROOT
 
         public Unit GetUnitWithPosAndDir(Vector2Int center, RotationDirection offsetDirection)
         {
-            var nextPos = center + ConvertDirectionToBoardPosOffset(offsetDirection);
+            var nextPos = center + Common.Utils.ConvertDirectionToBoardPosOffset(offsetDirection);
             return CheckBoardPosValidAndFilled(nextPos) ? UnitsGameObjects[nextPos].GetComponentInChildren<Unit>() : null;
         }
 

@@ -8,28 +8,6 @@ using UnityEngine.UI;
 
 namespace ROOT
 {
-    [Serializable]
-    public struct TutorialQuadDataPack
-    {
-        public string TitleTerm;
-        public string ButtonTerm;
-        public Sprite Thumbnail;
-
-        public TutorialQuadDataPack(string titleTerm, string _buttonTerm, string thumbnailName)
-        {
-            TitleTerm = titleTerm;
-            ButtonTerm = _buttonTerm;
-            Thumbnail = Resources.Load<Sprite>("UIThumbnail/TutorialThumbnail/" + thumbnailName);
-        }
-
-        public TutorialQuadDataPack(string titleTerm, string _buttonTerm, Sprite thumbnail)
-        {
-            TitleTerm = titleTerm;
-            ButtonTerm = _buttonTerm;
-            Thumbnail = thumbnail;
-        }
-    }
-
     public class TutorialLevelSelectionMainMenu : MonoBehaviour
     {
         private Vector2Int posZero = new Vector2Int(210, -295);

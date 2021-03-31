@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: d5cfcfa1b0559cc458ac805484ae59ff
+guid: b81783cb890c25a40a19c773fcc4e5e9
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - TutorialActionAsset: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

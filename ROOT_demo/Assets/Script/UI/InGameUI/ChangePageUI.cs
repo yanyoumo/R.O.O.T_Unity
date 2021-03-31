@@ -34,7 +34,7 @@ namespace ROOT
 
         private string getDisplayText()
         {
-            return Utils.PaddingNum2Digit(CurrentPage) + "/" + Utils.PaddingNum2Digit(_maxPage);
+            return Common.Utils.PaddingNum2Digit(CurrentPage) + "/" + Common.Utils.PaddingNum2Digit(_maxPage);
         }
 
         private void updateCurrentPageAndText()

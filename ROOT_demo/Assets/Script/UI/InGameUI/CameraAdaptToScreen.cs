@@ -28,7 +28,8 @@ namespace ROOT
 
         void Awake()
         {
-            switch (StartGameMgr.DetectedScreenRatio)
+            //TODO 这个需求现在不重要了、但是还是要整理一下。
+            /*switch (StartGameMgr.DetectedScreenRatio)
             {
                 case SupportedScreenRatio.XGA:
                     Crane.m_Orbits[1].m_Radius = 30.0f;
@@ -39,7 +40,7 @@ namespace ROOT
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
-            }
+            }*/
 
             MessageDispatcher.SendMessage(WorldEvent.MainCameraReadyEvent);
         }

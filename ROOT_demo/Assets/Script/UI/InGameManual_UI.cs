@@ -70,7 +70,7 @@ namespace ROOT.UI
         
         private void InGameManualFooterUpdate()
         {
-            InGameManualFooter.text = Utils.PaddingNum2Digit(CurrentPageCount+1) + "/" + Utils.PaddingNum2Digit(TotalPageCount);
+            InGameManualFooter.text = Common.Utils.PaddingNum2Digit(CurrentPageCount+1) + "/" + Common.Utils.PaddingNum2Digit(TotalPageCount);
         }
 
         private void PageChanged()

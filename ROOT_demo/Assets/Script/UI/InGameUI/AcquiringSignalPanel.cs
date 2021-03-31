@@ -57,7 +57,7 @@ namespace ROOT
         }
 
 
-        private static string _padding(int a) => Utils.PaddingNum2Digit(a);
+        private static string _padding(int a) => Common.Utils.PaddingNum2Digit(a);
 
         private int cachedTypeAVal = -1;
         private int cachedTypeBVal = -1;

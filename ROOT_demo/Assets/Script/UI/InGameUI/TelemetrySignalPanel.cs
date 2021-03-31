@@ -161,7 +161,7 @@ namespace ROOT
         public TextMeshPro SignalText;
         public TextMeshPro PausedTag;
 
-        private readonly Func<int, string> _padding = Utils.PaddingNum2Digit;
+        private readonly Func<int, string> _padding = Common.Utils.PaddingNum2Digit;
 
         private BoardSignalUpdatedData _cachedData;//这种缓存机制还是得有。
 
@@ -189,7 +189,7 @@ namespace ROOT
             MissionTarget_Big.text = "[" + _padding(_cachedData.CrtMission) + "]";
             NormalTierText.text = "[" + _padding(_cachedData.TypeATier) + "]";
             NetworkTierText.text = "[" + _padding(_cachedData.TypeBTier) + "]";
-            SignalText.text = Utils.PaddingNum4Digit(_cachedData.InfoCounter) + "/" + Utils.PaddingNum4Digit(_cachedData.InfoTarget);
+            SignalText.text = Common.Utils.PaddingNum4Digit(_cachedData.InfoCounter) + "/" + Common.Utils.PaddingNum4Digit(_cachedData.InfoTarget);
 
             UpdateIsTelemetry(_cachedData.IsTelemetryStage);
             UpdatePauseTag(_cachedData.TelemetryPaused,_cachedData.IsTelemetryStage);
