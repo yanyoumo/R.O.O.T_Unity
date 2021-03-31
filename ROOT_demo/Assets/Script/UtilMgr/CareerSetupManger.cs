@@ -21,6 +21,7 @@ namespace ROOT.UI
         private static UIToggle matrixToggle = new UIToggle();
         private static UIToggle scanToggle = new UIToggle();
         private static UIToggle ThermalToggle= new UIToggle();
+        private bool isTutorial;
 
         static Dictionary<string, SignalType> _dict = new Dictionary<string, SignalType>
         {
@@ -40,7 +41,7 @@ namespace ROOT.UI
             ThermalToggle = GameObject.Find("ThermalCoreUIToggle").GetComponent<UIToggle>();
             uiPopup = GameObject.Find("UIPopup").GetComponent<UIPopup>();
             var actionAsset = LevelLib.Instance.ActionAsset(levelId);
-            var isTutorial = (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
+            isTutorial = (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
             if (isTutorial) 
             {
                 GameObject.Find("View - CareerSetup_CoreSelection").GetComponent<UIView>().Hide();
@@ -156,7 +157,7 @@ namespace ROOT.UI
             var actionAsset = LevelLib.Instance.ActionAsset(levelId);
             additionalGameSetup.updateSignal();
             RootDebug.Log("the PlayingSignalType is " + additionalGameSetup.PlayingSignalTypeA + ", and " + additionalGameSetup.PlayingSignalTypeB, NameID.SuYuxuan_Log);
-            if (!additionalGameSetup.PlayingSignalTypeA.Equals(additionalGameSetup.PlayingSignalTypeB))
+            if (!additionalGameSetup.PlayingSignalTypeA.Equals(additionalGameSetup.PlayingSignalTypeB) || isTutorial)
             {
                 loadingProgressorCallBack(0.1f);
                 additionalGameSetup.OrderingSignal();
