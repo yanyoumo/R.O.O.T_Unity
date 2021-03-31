@@ -1,0 +1,16 @@
+{
+    "name": "Root.HeatSink",
+    "rootNamespace": "",
+    "references": [
+        "GUID:85a99c805c32e4014949122b8135ecdc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

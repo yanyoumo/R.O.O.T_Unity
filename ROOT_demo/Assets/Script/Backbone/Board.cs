@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using JetBrains.Annotations;
+using ROOT.Consts;
 using ROOT.SetupAsset;
 using ROOT.Signal;
 using Sirenix.OdinInspector;
@@ -579,7 +580,7 @@ namespace ROOT
             return newPos;
         }
 
-        public const int BoardLength = 6;
+        public static int BoardLength => StaticNumericData.BoardLength;
         public int TotalBoardCount => BoardLength * BoardLength;
         public readonly float _boardPhysicalLength = 1.2f;
         private readonly float _boardPhysicalOriginX = -3.1f - 1.75f-2.0f;

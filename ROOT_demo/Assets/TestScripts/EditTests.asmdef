@@ -5,7 +5,9 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Root_Assemble",
-        "Root.Common"
+        "Root.Common",
+        "Root.HeatSink",
+        "Root.Core"
     ],
     "includePlatforms": [
         "Editor"

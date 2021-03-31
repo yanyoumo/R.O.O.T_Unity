@@ -1,5 +1,10 @@
 namespace ROOT.Consts
 {
+    public static class StaticNumericData
+    {
+        public static int BoardLength = 6;
+    }
+    
     public static class GlobalResourcePath
     {
         public static string UNIT_MAT_PATH_PREFIX = "Unit/Material/";

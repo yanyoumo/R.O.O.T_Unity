@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ROOT.Consts;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
@@ -23,6 +22,8 @@ namespace ROOT
     [Serializable]
     public class HeatSinkDiminishing : ScriptableObject
     {
+        private static int BoardLength=> StaticNumericData.BoardLength;
+
         [ReadOnly]
         public List<Vector2Int> DiminishingList;
 
@@ -35,10 +36,10 @@ namespace ROOT
 
         private void CreateNullMatrix()
         {
-            Order = new int[Board.BoardLength, Board.BoardLength];
-            for (var i = 0; i < Board.BoardLength; i++)
+            Order = new int[BoardLength, BoardLength];
+            for (var i = 0; i < BoardLength; i++)
             {
-                for (var j = 0; j < Board.BoardLength; j++)
+                for (var j = 0; j < BoardLength; j++)
                 {
                     Order[i, j] = -1;
                 }
@@ -71,9 +72,9 @@ namespace ROOT
         public void SaveMat()
         {
             var unrollMat=new List<Tuple<int, Vector2Int>>();
-            for (var i = 0; i < Board.BoardLength; i++)
+            for (var i = 0; i < BoardLength; i++)
             {
-                for (var j = 0; j < Board.BoardLength; j++)
+                for (var j = 0; j < BoardLength; j++)
                 {
                     if (Order[i, j] != -1)
                     {

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using ROOT.Consts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,6 +10,8 @@ namespace ROOT
     [Serializable]
     public class HeatSinkPattern : ScriptableObject
     {
+        private static int BoardLength=> StaticNumericData.BoardLength;
+
         public List<Vector2Int> Lib;
         public int Count => Lib.Count;
 
@@ -22,9 +24,9 @@ namespace ROOT
         public void InvertList()
         {
             var newLib=new List<Vector2Int>();
-            for (int i = 0; i < Board.BoardLength; i++)
+            for (var i = 0; i < BoardLength; i++)
             {
-                for (int j = 0; j < Board.BoardLength; j++)
+                for (var j = 0; j < BoardLength; j++)
                 {
                     var tmp = new Vector2Int(i, j);
                     if (!Lib.Contains(tmp))
@@ -41,7 +43,7 @@ namespace ROOT
         [Button(Name = "Update Pattern")]
         public void UpdatePattern()
         {
-            Pattern=new bool[Board.BoardLength, Board.BoardLength];
+            Pattern=new bool[BoardLength, BoardLength];
             foreach (var vector2Int in Lib)
             {
                 Pattern[vector2Int.x, vector2Int.y] = true;
