@@ -48,6 +48,18 @@ namespace ROOT.UI
 
         public TextMeshProUGUI TutorialNextContent;
 
+        private void UIViewToggleWrapper(ref UIView view, bool toggle)
+        {
+            if (toggle)
+            {
+                view.Show();
+            }
+            else
+            {
+                view.Hide();
+            }
+        }
+        
         private void HintEventHandler(IMessage rMessge)
         {
             if (rMessge is HintEventInfo info)
@@ -57,10 +69,10 @@ namespace ROOT.UI
                 switch (info.HintEventType)
                 {
                     case HintEventType.SetGoalCheckListShow:
-                        Utils.UIViewToggleWrapper(ref TutorialCheckList, info.BoolData);
+                        UIViewToggleWrapper(ref TutorialCheckList, info.BoolData);
                         break;
                     case HintEventType.SetTutorialTextShow:
-                        Utils.UIViewToggleWrapper(ref TutorialMainTextFrame, info.BoolData);
+                        UIViewToggleWrapper(ref TutorialMainTextFrame, info.BoolData);
                         break;
                     case HintEventType.SetTutorialTextContent:
                         if (info.StringData!="") TutorialTextMainContent.text = info.StringData;
@@ -81,7 +93,7 @@ namespace ROOT.UI
                         TutorialNextContent.text = "按[回车]以结束本关教程";
                         break;
                     case HintEventType.ToggleHandOnView:
-                        Utils.UIViewToggleWrapper(ref TutorialHandOff, !info.BoolData);
+                        UIViewToggleWrapper(ref TutorialHandOff, !info.BoolData);
                         break;
                     default:
                         throw new NotImplementedException();

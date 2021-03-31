@@ -1,0 +1,20 @@
+{
+    "name": "Root.Mobile",
+    "rootNamespace": "",
+    "references": [
+        "GUID:85a99c805c32e4014949122b8135ecdc"
+    ],
+    "includePlatforms": [
+        "Android",
+        "Editor",
+        "iOS"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

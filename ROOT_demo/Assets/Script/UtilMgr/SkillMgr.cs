@@ -10,16 +10,6 @@ using Object = System.Object;
 
 namespace ROOT
 {
-    public enum SkillType
-    {
-        TimeFromMoney,          //α：花钱买时间。
-        FastForward,            //β：快速演进时间。（收费可能有返利）
-        Swap,                   //γ：单元交换位置。（操作是个问题）
-        RefreshHeatSink,        //δ-0：强制刷新HeatsinkPattern
-        ResetHeatSink,          //δ-1：清理HeatSink添加的Pattern
-        Discount,               //ε：下次商店会有折扣。
-    }
-
     public class SkillMgr : MonoBehaviour
     {
         public List<SkillPalette> SkillPalettes;

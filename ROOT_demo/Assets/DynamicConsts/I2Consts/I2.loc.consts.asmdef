@@ -1,0 +1,16 @@
+{
+    "name": "I2.loc.consts",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e3ece6dcacb884fe4ab985beba464f72"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
