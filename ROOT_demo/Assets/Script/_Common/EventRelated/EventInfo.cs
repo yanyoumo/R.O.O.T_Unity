@@ -41,7 +41,7 @@ namespace ROOT.Message
         public override string Type => WorldEvent.ShopTierOffsetChangedEvent;
     }
     
-    namespace ROOT.Message.Inquiry
+    namespace Inquiry
     {
         public class BalancingSignalSetupInquiry : RootMessageBase
         {

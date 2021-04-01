@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.UI
 {
     public enum RowEnum{
         CurrentMoney,

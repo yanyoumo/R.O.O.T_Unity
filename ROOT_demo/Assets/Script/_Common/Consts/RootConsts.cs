@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using I2.Loc;
 using UnityEngine;
 
 namespace ROOT.Consts
@@ -59,11 +59,11 @@ namespace ROOT.Consts
         }
         
         private static readonly Dictionary<StageType, string> StageNameTerm = new Dictionary<StageType, string> {
-            {StageType.Shop, "Shop"},
-            {StageType.Require, "Require"},
-            {StageType.Destoryer, "Destoryer"},
-            {StageType.Boss, "Boss"},
-            {StageType.Ending, "Ending"},
+            {StageType.Shop, ScriptTerms.Shop},
+            {StageType.Require, ScriptTerms.Require},
+            {StageType.Destoryer, ScriptTerms.Destoryer},
+            {StageType.Boss, ScriptTerms.Boss},
+            {StageType.Ending, ScriptTerms.Ending},
         };
 
         public static readonly string INPUT_BUTTON_TELEMETRY_PAUSE = "TelemetryPause";

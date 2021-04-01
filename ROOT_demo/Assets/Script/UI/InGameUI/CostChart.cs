@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using static ROOT.WorldEvent;
 
-namespace ROOT
+namespace ROOT.UI
 {
     public abstract class RoundRelatedUIBase : MonoBehaviour
     {

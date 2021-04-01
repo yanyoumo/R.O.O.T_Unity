@@ -1,14 +1,13 @@
 using System;
 using com.ootii.Messages;
-using DG.Tweening;
 using Doozy.Engine.UI;
 using ROOT.Message;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace ROOT.UI
 {
+    [Obsolete]
     public static class UIEvent
     {
         public delegate void InGameManualFootterUpdate(int TotalPageCount, int CurrentPageCount);

@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using Random = System.Random;
 
-namespace ROOT
+namespace ROOT.UI
 {
     [Obsolete]
     public class CostLine : MonoBehaviour

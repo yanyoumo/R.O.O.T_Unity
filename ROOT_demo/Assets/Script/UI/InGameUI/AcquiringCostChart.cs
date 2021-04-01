@@ -1,11 +1,9 @@
-using System;
 using com.ootii.Messages;
-using ROOT.Message;
-using ROOT.Message.ROOT.Message.Inquiry;
+using ROOT.Message.Inquiry;
 using TMPro;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.UI
 {
     public class AcquiringCostChart : CostChart
     {

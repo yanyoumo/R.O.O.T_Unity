@@ -8,7 +8,7 @@ using TMPro;
 using UnityEngine;
 using com.ootii.Messages;
 using ROOT.Message;
-using ROOT.Message.ROOT.Message.Inquiry;
+using ROOT.Message.Inquiry;
 using static ROOT.WorldEvent;
 
 namespace ROOT

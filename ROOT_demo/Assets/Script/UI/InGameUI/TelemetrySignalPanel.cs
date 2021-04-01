@@ -4,7 +4,7 @@ using ROOT.Message;
 using TMPro;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.UI
 {
     public class BoardSignalUpdatedData
     {

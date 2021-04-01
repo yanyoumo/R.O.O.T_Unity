@@ -135,6 +135,8 @@ namespace ROOT
 
         private StageType? lastStageType = null;
 
+        private bool StageAlertSuppressFlag = false;
+        
         private void CareerCycle()
         {
             if (LevelAsset.DestroyerEnabled)
@@ -173,15 +175,25 @@ namespace ROOT
 
                 if (RoundLibDriver.PreCheckRoundGist.HasValue)
                 {
-                    var preCheckStageType = RoundLibDriver.CurrentRoundGist.Value.Type;
-                    if (currentStageType != preCheckStageType)
+                    var preCheckStageType = RoundLibDriver.PreCheckRoundGist.Value.Type;
+                    if (!StageAlertSuppressFlag)
                     {
-                        var timingEvent = new TimingEventInfo
+                        if (currentStageType != preCheckStageType)
                         {
-                            Type = WorldEvent.InGameStageWarningEvent,
-                            NextStageType = preCheckStageType,
-                        };
-                        MessageDispatcher.SendMessage(timingEvent);
+                            var timingEvent = new TimingEventInfo
+                            {
+                                Type = WorldEvent.InGameStageWarningEvent,
+                                CurrentStageType = currentStageType,
+                                NextStageType = preCheckStageType,
+                            };
+                            //TODO 这里再弄一个计数、就是发一次后若干次不再发、或者就是等两个Stage相同后在再允许发。
+                            MessageDispatcher.SendMessage(timingEvent);
+                            StageAlertSuppressFlag = true;
+                        }
+                    }
+                    else
+                    {
+                        if (currentStageType == preCheckStageType) StageAlertSuppressFlag = false;
                     }
                 }
             }

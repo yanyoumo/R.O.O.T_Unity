@@ -2,7 +2,8 @@
     "name": "Root.Common",
     "rootNamespace": "",
     "references": [
-        "GUID:b3ce3b1a5e761c648944bc4f7dfeaa09"
+        "GUID:b3ce3b1a5e761c648944bc4f7dfeaa09",
+        "GUID:f983a2219abfff348a62f5ab7c812cc1"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
