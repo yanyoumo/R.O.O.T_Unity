@@ -42,7 +42,7 @@ namespace ROOT.UI
             uiPopup = GameObject.Find("UIPopup").GetComponent<UIPopup>();
             var actionAsset = LevelLib.Instance.ActionAsset(levelId);
             isTutorial = (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
-            if (isTutorial) 
+            if (isTutorial)
             {
                 GameObject.Find("View - CareerSetup_CoreSelection").GetComponent<UIView>().Hide();
             }
@@ -143,7 +143,7 @@ namespace ROOT.UI
             yield return new WaitForSeconds(Mathf.Lerp(0.025f, 0.15f, Random.value));
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
         }
-        
+
         private bool loadingProgressorCallBack(float val, bool completed = false)
         {
             LoadingProgressor.SetProgress(val);
