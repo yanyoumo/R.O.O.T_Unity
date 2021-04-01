@@ -164,7 +164,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 85, y: 267}
-  m_SizeDelta: {x: 641.84705, y: 92.820984}
+  m_SizeDelta: {x: 838.093, y: 121.201}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &61774370
 MonoBehaviour:
@@ -3386,7 +3386,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 101.747, y: 22.096}
+  m_AnchoredPosition: {x: 101.74707, y: 22.095947}
   m_SizeDelta: {x: 175.295, y: 33.409}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &575684850
@@ -3521,7 +3521,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -8.758, y: 21.5}
+  m_AnchoredPosition: {x: 3, y: 21.5}
   m_SizeDelta: {x: 846.485, y: 189}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &634585127
@@ -3544,7 +3544,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u9EC4\u6C6A\u8BA4\u4E3A\uFF0C\u4E2D\u56FD\u5236\u9020\u7684\u6982\u5FF5\u5DF2\u7ECF\u4ECE\u4E2D\u56FD\u672C\u571F\u751F\u4EA7\uFF0C\u9010\u6E10\u53D8\u6210\u4E86\u4E2D\u56FD\u7814\u53D1\uFF0C\u6C47\u96C6\u5168\u7403\u5DE5\u7A0B\u5E08\u667A\u6167\uFF0C\u518D\u7528\u5168\u7403\u6E20\u9053\u5C06\u4F18\u8D28\u4EA7\u54C1\u5356\u7ED9\u5168\u4E16\u754C\u6D88\u8D39\u8005\u7684\u65B0\u578B\u5236\u9020\u548C\u54C1\u724C\u6A21\u5F0F\u3002\u540C\u65F6\uFF0C\u4E3A\u4E86\u4FDD\u8BC1\u4EA7\u54C1\u7684\u9886\u5148\uFF0C\u534E\u7C73\u4E5F\u5F00\u59CB\u8FDB\u519B\u4E0A\u6E38\uFF0C\u52A0\u5927\u529B\u5EA6\u5728\u667A\u80FD\u624B\u8868\u624B\u73AF\u7684\u82AF\u7247\u548C\u4F20\u611F\u5668\u8FD9\u4E9B\u6838\u5FC3\u90E8\u4EF6\u7684\u7814\u53D1\u4E0A\u3002\u800C\u8FD9\u4E9B\u57FA\u7840\u80FD\u529B\uFF0C\u6700\u7EC8\u5C06\u5F00\u653E\u7ED9\u6574\u4E2A\u4EA7\u4E1A\u3002"
+  m_text: "\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57\u5B57"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -3572,7 +3572,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28.35
+  m_fontSize: 46.19
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3707,7 +3707,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45.65
+  m_fontSize: 60.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6197,7 +6197,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 94.6, y: -34}
+  m_AnchoredPosition: {x: 94.6001, y: -34}
   m_SizeDelta: {x: 166.435, y: 51.223}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &976680583
@@ -6332,7 +6332,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -115.5, y: 23.298004}
+  m_AnchoredPosition: {x: -115.5, y: 23.297974}
   m_SizeDelta: {x: 221.01404, y: 31.003998}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1029806181
@@ -18670,7 +18670,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 79.1, y: 76}
+  m_AnchoredPosition: {x: 79.1001, y: 76}
   m_SizeDelta: {x: 132.811, y: 132.795}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2039134619
