@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
 using ROOT.Consts;
-using ROOT.UI;
+using ROOT.Message;
 using UnityEngine;
 
 namespace ROOT
@@ -146,11 +146,12 @@ namespace ROOT
                     LevelAsset.DestoryedCoreType = outCore;
                 }
             }
-
+            
             if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
                 UpdateRoundData_Stepped();
-                if (lastStageType == null || lastStageType.Value != RoundLibDriver.CurrentRoundGist.Value.Type)
+                var currentStageType=RoundLibDriver.CurrentRoundGist.Value.Type;
+                if (lastStageType == null || lastStageType.Value != currentStageType)
                 {
                     //RISK 这个变成每个时刻都改了、想着加一个Guard
                     MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent); //为了令使和Round相关的数据强制更新。
@@ -168,6 +169,20 @@ namespace ROOT
                     MessageDispatcher.SendMessage(timingEvent);
                     MessageDispatcher.SendMessage(timingEvent2);
                     lastStageType = RoundLibDriver.CurrentRoundGist.Value.Type;
+                }
+
+                if (RoundLibDriver.PreCheckRoundGist.HasValue)
+                {
+                    var preCheckStageType = RoundLibDriver.CurrentRoundGist.Value.Type;
+                    if (currentStageType != preCheckStageType)
+                    {
+                        var timingEvent = new TimingEventInfo
+                        {
+                            Type = WorldEvent.InGameStageWarningEvent,
+                            NextStageType = preCheckStageType,
+                        };
+                        MessageDispatcher.SendMessage(timingEvent);
+                    }
                 }
             }
         }

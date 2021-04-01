@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
 using I2.Loc;
 using TMPro;
 using UnityEngine;

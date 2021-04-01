@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Doozy.Engine.UI;
 using ROOT.Consts;
 using UnityEngine;

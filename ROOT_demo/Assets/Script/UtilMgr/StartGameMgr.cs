@@ -4,7 +4,6 @@ using ROOT.Consts;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.iOS;
 using UnityEngine.SceneManagement;
 using static ROOT.Consts.StaticPlayerPrefName;
 using Random = UnityEngine.Random;
@@ -69,9 +68,6 @@ namespace ROOT
                 break;
             }
         }
-
-        /*[ShowInInspector]
-        public Func<int, bool> testAction = a => a > 0;*/
 
         [Button]
         void ClearPlayerPrefs()

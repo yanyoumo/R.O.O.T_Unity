@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Consts;
+using ROOT.Message.ROOT.Message.Inquiry;
 using UnityEngine;
 
 namespace ROOT

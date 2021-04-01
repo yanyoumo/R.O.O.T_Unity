@@ -15,28 +15,7 @@ namespace ROOT.UI
 
         public delegate void InGameOverlayToggle();
     }
-    
-    public enum HintEventType
-    {
-        SetGoalContent,
-        SetGoalCheckListShow,
-        SetTutorialTextContent,
-        SetTutorialTextShow,
-        GoalComplete,
-        GoalFailed,
-        SetHelpScreenShow,
-        NextIsEnding,
-        ToggleHandOnView,
-    }
-    
-    public class HintEventInfo : RootMessageBase
-    {
-        public HintEventType HintEventType;
-        public bool BoolData;
-        public String StringData = "";
-        public override string Type => WorldEvent.HintRelatedEvent;
-    }
-    
+
     public class HintMaster_UI : MonoBehaviour
     {
         public UIView TutorialCheckList;

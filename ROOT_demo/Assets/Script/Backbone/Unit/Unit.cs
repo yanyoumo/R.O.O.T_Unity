@@ -8,7 +8,6 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
-using ROOT.Common;
 
 namespace ROOT
 {

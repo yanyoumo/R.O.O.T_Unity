@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using I2.Loc;
 using ROOT.Consts;
-using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

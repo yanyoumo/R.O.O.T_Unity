@@ -1,10 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Sirenix.Utilities;
-using UnityEngine;
-
 namespace ROOT.Signal
 {
     public class MatrixSignalAsset : SignalAssetBase

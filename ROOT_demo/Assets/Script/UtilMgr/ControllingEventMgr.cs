@@ -1,9 +1,7 @@
 using System;
 using com.ootii.Messages;
-using JetBrains.Annotations;
 using Rewired;
 using ROOT.Consts;
-using ROOT.Message;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using static RewiredConsts.Action;
@@ -12,30 +10,6 @@ namespace ROOT
 {
     //这个东西比较蛋疼、键盘、手柄类基于按键的操作和鼠标这种基于时序的操作不同。
     //这里有点是两路输入拼在一起感觉、但是为了这个时间系统的解耦、目前就只能这么办。
-    [Serializable]
-    public class ActionPack : RootMessageBase
-    {
-        public int ActionID;
-        public InputActionEventType eventType;
-        public RotationDirection ActionDirection;
-        public Vector2 MouseScreenPosA;
-        public Vector2 MouseScreenPosB;
-        public int FuncID;
-        public bool HoldForDrag;
-        public float MouseWheelDelta;
-
-        public bool IsAction(int actionID)
-        {
-            return ActionPackIsAction(this, actionID);
-        }
-
-        public static bool ActionPackIsAction(ActionPack actPack, int actionID)
-        {
-            return actPack.ActionID == actionID;
-        }
-        
-        public override string Type => WorldEvent.ControllingEvent;
-    }
 
     //这个类的实例化和相关初始化已经搞定。
     //这个类认为是对玩家意愿的解释——拿到RAW的硬件事件后、“试图”理解玩家的意图，然后转化为Action实例。

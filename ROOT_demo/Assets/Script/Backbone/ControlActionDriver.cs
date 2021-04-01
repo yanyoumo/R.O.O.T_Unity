@@ -8,7 +8,6 @@ using UnityEngine;
 using static RewiredConsts.Action.Button;
 using static RewiredConsts.Action.Composite;
 using static RewiredConsts.Action.Passthough;
-using Action = RewiredConsts.Action;
 
 namespace ROOT
 {
