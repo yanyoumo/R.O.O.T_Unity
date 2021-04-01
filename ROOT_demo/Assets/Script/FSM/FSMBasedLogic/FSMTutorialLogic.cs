@@ -90,11 +90,10 @@ namespace ROOT
                 return false;
             }
         }
-        
+
         private void CreateUnitOnBoard(TutorialActionData data)
         {
-            GameObject go = LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core, data.HardwareType,
-                Utils.Shuffle(data.Sides), data.Tier);
+            GameObject go = LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core, data.HardwareType, data.Sides, data.Tier);
             if (data.Pos.x < 0 || data.Pos.y < 0)
             {
                 LevelAsset.GameBoard.DeliverUnitRandomPlace(go);
