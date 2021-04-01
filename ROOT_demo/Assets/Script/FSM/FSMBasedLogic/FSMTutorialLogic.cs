@@ -52,15 +52,7 @@ namespace ROOT
 
         public static bool MoveThreeMatrixUnitsToOneLink(FSMLevelLogic fsm, Board board)
         {
-            foreach (var unit in board.Units)
-            {
-                foreach (var otherUnit in unit.GetConnectedOtherUnit)
-                {
-
-                }
-            }
-
-            return true;
+            return board.GetConnectComponent()==1;
         }
     }
 

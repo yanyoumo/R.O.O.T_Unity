@@ -252,7 +252,7 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
-    HandOnCheckType: 0
+    HandOnCheckType: 1
     HandOnMission: 
   - ActionIdx: 10
     ActionType: 0
@@ -300,7 +300,7 @@ MonoBehaviour:
     HardwareType: 0
     Sides: 
     Tier: 0
-    HandOnCheckType: 0
+    HandOnCheckType: 2
     HandOnMission: 
   - ActionIdx: 14
     ActionType: 0

@@ -466,6 +466,37 @@ namespace ROOT
     
     public sealed class Board : MonoBehaviour
     {
+        public int GetConnectComponent()
+        {
+            int res = 0;
+            var vis = new Dictionary<Unit, bool>();
+            Units.ForEach(unit => vis[unit] = false);
+            foreach (var unit in Units)
+            {
+                if (vis[unit] == false)
+                {
+                    ++res;
+                    var queue = new Queue<Unit>();
+                    vis[unit] = true;
+                    queue.Enqueue(unit);
+                    while (queue.Count > 0)
+                    {
+                        var now = queue.Dequeue();
+                        foreach (var otherUnit in now.GetConnectedOtherUnit)
+                        {
+                            if (vis[otherUnit] == false)
+                            {
+                                vis[otherUnit] = true;
+                                queue.Enqueue(otherUnit);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return res;
+        }
+
         public BoardGirdDriver BoardGirdDriver;
         public HeatSinkPatternLib HeatSinkPatterns;
         public void TryDeleteIfFilledCertainUnit(Vector2Int pos)
