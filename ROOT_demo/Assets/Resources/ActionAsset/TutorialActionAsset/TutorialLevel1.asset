@@ -206,6 +206,319 @@ MonoBehaviour:
     Tier: 0
     HandOnCheckType: 0
     HandOnMission: 
+  - ActionIdx: 7
+    ActionType: 8
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: "\u5F53\u73A9\u5BB6\u5C06\u4E00\u4E2A\u5355\u5143\u4E0E\u6838\u5FC3\u8FDE\u63A5\u5230\u4E00\u8D77\u65F6"
+  - ActionIdx: 8
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 8
+    ActionType: 0
+    Text: "\u60A8\u5DF2\u7ECF\u5C06\u4E00\u4E2A\u5355\u5143\u6210\u529F\u4E0E\u4E00\u4E2A\u6838\u5FC3\u76F8\u8FDE"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 9
+    ActionType: 0
+    Text: "\u5728\u5DE6\u4E0A\u89D2\uFF0C\u60A8\u5C06\u770B\u5230\u7EFF\u8272\u6570\u5B57\uFF0C\u8FD9\u662F\u60A8\u7684\u76C8\u5229
+      \u63A5\u4E0B\u6765\u8BF7\u60A8\u5C06\u6240\u6709\u5355\u5143\u90FD\u4E0E\u6838\u5FC3\u76F8\u8FDE\u5427 "
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 10
+    ActionType: 8
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: "\u5F53\u73A9\u5BB6\u5C06\u6240\u6709\u5355\u5143\u90FD\u8FDE\u63A5\u5230\u4E00\u8D77\u65F6\u7EE7\u7EED"
+  - ActionIdx: 11
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 11
+    ActionType: 0
+    Text: "\u606D\u559C\u60A8\uFF0C\u60A8\u5DF2\u7ECF\u4E86\u89E3\u5982\u4F55\u8BA9\u77E9\u9635\u6838\u5FC3\u76C8\u5229\uFF0C\u63A5\u4E0B\u6765\u6211\u4EEC\u5C06\u5F15\u5165\u53E6\u4E00\u4E2A\u5355\u5143\uFF1A\u70ED\u529B\u5355\u5143"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 12
+    ActionType: 1
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: -1, y: -1}
+    Core: 1
+    HardwareType: 0
+    Sides: 01000000000000000000000000000000
+    Tier: 1
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 12
+    ActionType: 1
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: -1, y: -1}
+    Core: 1
+    HardwareType: 1
+    Sides: 01000000000000000100000000000000
+    Tier: 1
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 12
+    ActionType: 0
+    Text: "\u73B0\u5728\u4FE1\u606F\u5E73\u53F0\u4E0A\u65B0\u751F\u6210\u4E86\u4E24\u79CD\u5355\u5143\uFF0C\u6709\u4E24\u4E2A\u63A5\u53E3\u7684\u4E3A\u70ED\u529B\u5355\u5143\u7684\u6838\u5FC3\u5355\u5143\uFF0C\u6709\u4E00\u4E2A\u63A5\u53E3\u7684\u5355\u5143\u53EB\u70ED\u529B\u5355\u5143\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 13
+    ActionType: 0
+    Text: "\u8BF7\u5C06\u70ED\u529B\u5355\u5143\u548C\u70ED\u529B\u6838\u5FC3\u76F8\u8FDE\u8FDE\u6210\u94FE\u8DEF"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 14
+    ActionType: 8
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: "\u8BF7\u5C06\u70ED\u529B\u5355\u5143\u548C\u70ED\u529B\u6838\u5FC3\u76F8\u8FDE"
+  - ActionIdx: 15
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 15
+    ActionType: 0
+    Text: "\u5982\u60A8\u6240\u89C1\uFF0C\u4E0D\u540C\u7C7B\u578B\u7684\u5355\u5143\u53EA\u6709\u548C\u5BF9\u5E94\u7684\u6838\u5FC3\u5F62\u6210\u94FE\u8DEF\u624D\u53EF\u4EE5\u4EA7\u751F\u6536\u76CA\uFF0C\u8BF7\u60A8\u6CE8\u610F\u6B64\u65F6\u70ED\u529B\u5355\u5143\u65B0\u4EA7\u751F\u7684\u6536\u76CA"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 16
+    ActionType: 0
+    Text: "\u63A5\u4E0B\u6765\u8BF7\u60A8\u5C06\u70ED\u529B\u5355\u5143\u548C\u70ED\u529B\u6838\u5FC3\u7684\u94FE\u8DEF\u548C\u77E9\u9635\u94FE\u8DEF\u8FDE\u5728\u4E00\u8D77\uFF0C\u8BF7\u6CE8\u610F\u60A8\u7684\u6536\u76CA\u589E\u91CF\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 17
+    ActionType: 8
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: "\u8BF7\u5C06\u4E24\u4E2A\u94FE\u8DEF\u76F8\u8FDE"
+  - ActionIdx: 18
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 18
+    ActionType: 0
+    Text: "\u70ED\u529B\u5355\u5143\u7684\u76C8\u5229\u589E\u91CF\u4F1A\u968F\u7740\u70ED\u529B\u5355\u5143\u5468\u56F4\u7684\u5355\u5143\u6570\u91CF\u5F71\u54CD\uFF0C\u70ED\u529B\u5355\u5143\u5468\u56F4\u7684\u5355\u5143\u6570\u91CF\u8D8A\u591A\uFF0C\u70ED\u529B\u5355\u5143\u7684\u76C8\u5229\u589E\u91CF\u5C31\u4F1A\u8D8A\u5C11\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 19
+    ActionType: 1
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: -1, y: -1}
+    Core: 1
+    HardwareType: 1
+    Sides: 00000000000000000100000000000000
+    Tier: 1
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 20
+    ActionType: 0
+    Text: "\u8BF7\u60A8\u5C06\u65B0\u751F\u6210\u7684\u70ED\u529B\u5355\u5143\u5728\u4E0D\u6539\u53D8\u73B0\u6709\u94FE\u8DEF\u7684\u7ED3\u6784\u6761\u4EF6\u4E0B\u8FDE\u5165\u94FE\u8DEF\u5427\uFF0C\u60A8\u4E5F\u53EF\u4EE5\u501F\u6B64\u89C2\u5BDF\u70ED\u529B\u5355\u5143\u7684\u76C8\u5229\u89C4\u5219\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 21
+    ActionType: 8
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: "\u5C06\u65B0\u751F\u6210\u7684\u70ED\u529B\u5355\u5143\u8FDE\u5165\u94FE\u8DEF"
+  - ActionIdx: 22
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 22
+    ActionType: 0
+    Text: "\u5982\u60A8\u6240\u89C1\uFF0C\u5728\u73B0\u6709\u7684\u94FE\u8DEF\u7ED3\u6784\u4E0B\uFF0C\u867D\u7136\u60A8\u65B0\u63A5\u5165\u7684\u70ED\u529B\u5355\u5143\u6CA1\u6709\u4E0E\u70ED\u529B\u6838\u5FC3\u76F4\u63A5\u76F8\u8FDE\uFF0C\u65B0\u63A5\u5165\u7684\u5355\u5143\u4E5F\u88AB\u6FC0\u6D3B\u4EA7\u751F\u6536\u76CA\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 23
+    ActionType: 0
+    Text: "\u5355\u5143\u53EA\u8981\u63A5\u5165\u5230\u6709\u5BF9\u5E94\u5176\u7C7B\u578B\u7684\u6838\u5FC3\u5C31\u4F1A\u6FC0\u6D3B\u4EA7\u751F\u6536\u76CA\uFF0C\u540C\u65F6\u4E5F\u4F1A\u4F20\u9012\u4E0D\u5931\u5176\u7C7B\u578B\u7684\u6838\u5FC3\u4FE1\u53F7\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 24
+    ActionType: 0
+    Text: "\u6BD4\u5982\u867D\u7136\u77E9\u9635\u5355\u5143\u8FDE\u63A5\u70ED\u529B\u6838\u5FC3\u4E0D\u4F1A\u4EA7\u751F\u6536\u76CA\uFF0C\u4F46\u662F\u5B83\u53EF\u4EE5\u4F20\u8F93\u70ED\u529B\u6838\u5FC3\u6240\u53D1\u51FA\u7684\u4FE1\u53F7\uFF0C\u8BA9\u5176\u4ED6\u63A5\u5165\u94FE\u8DEF\u7684\u70ED\u529B\u5355\u5143\u4EA7\u751F\u6536\u76CA"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 25
+    ActionType: 0
+    Text: "\u606D\u559C\u60A8\u5B8C\u6210\u4FE1\u53F7\u57FA\u7840\u6559\u7A0B\uFF0C\u60A8\u53EF\u4EE5\u9000\u51FA\u5230\u4E0B\u4E00\u5173\uFF0C\u6216\u8005\u7EE7\u7EED\u7559\u5728\u672C\u5173\u5C1D\u8BD5\u4E0D\u540C\u94FE\u8DEF\u7EC4\u5408\uFF0C\u6765\u611F\u53D7\u77E9\u9635\u548C\u70ED\u529B\u5355\u5143\u7684\u76C8\u5229\u89C4\u5219\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 0

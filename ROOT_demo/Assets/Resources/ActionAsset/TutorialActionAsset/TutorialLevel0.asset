@@ -31,7 +31,7 @@ MonoBehaviour:
   levelType: 0
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 2
+    PlayingSignalTypeB: 0
   InitalBoard: []
   HasBossRound: 0
   Endless: 0
@@ -159,6 +159,18 @@ MonoBehaviour:
     HandOnCheckType: 0
     HandOnMission: 
   - ActionIdx: 5
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+  - ActionIdx: 5
     ActionType: 0
     Text: "\u606D\u559C\u60A8\u5B66\u4F1A\u5982\u4F55\u64CD\u7EB5\u5149\u6807"
     DoppelgangerToggle: 0
@@ -190,7 +202,7 @@ MonoBehaviour:
     Pos: {x: 3, y: 0}
     Core: 0
     HardwareType: 1
-    Sides: 01000000000000000100000000000000
+    Sides: 01000000010000000000000000000000
     Tier: 1
     HandOnCheckType: 0
     HandOnMission: 
@@ -202,7 +214,7 @@ MonoBehaviour:
     Pos: {x: 2, y: 3}
     Core: 0
     HardwareType: 1
-    Sides: 00000000010000000000000001000000
+    Sides: 00000000000000000100000001000000
     Tier: 1
     HandOnCheckType: 0
     HandOnMission: 
@@ -214,7 +226,7 @@ MonoBehaviour:
     Pos: {x: 4, y: 4}
     Core: 0
     HardwareType: 1
-    Sides: 00000000010000000000000001000000
+    Sides: 01000000010000000000000000000000
     Tier: 1
     HandOnCheckType: 0
     HandOnMission: 
@@ -253,6 +265,18 @@ MonoBehaviour:
     Sides: 
     Tier: 0
     HandOnCheckType: 1
+    HandOnMission: 
+  - ActionIdx: 10
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
     HandOnMission: 
   - ActionIdx: 10
     ActionType: 0
@@ -301,6 +325,18 @@ MonoBehaviour:
     Sides: 
     Tier: 0
     HandOnCheckType: 2
+    HandOnMission: 
+  - ActionIdx: 14
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    HandOnCheckType: 0
     HandOnMission: 
   - ActionIdx: 14
     ActionType: 0
