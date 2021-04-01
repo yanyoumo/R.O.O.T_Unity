@@ -15,23 +15,17 @@ namespace ROOT
         public static Color ParseHtmlStringNotNull(string htmlString)
         {
             var col = ParseHtmlString(htmlString);
-            if (col.HasValue)
-            {
-                return col.Value;
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
+            if (col.HasValue) return col.Value;
+            throw new ArgumentException();
         }
 
         /// <summary>
         /// Unity默认给的哪个TryParseHtmlString是out出来的，不好用，用这个Wrapper搞一下。
         /// </summary>
         /// <returns>如果转换失败返回的null</returns>
-        public static Color? ParseHtmlString(string htmlString)
+        private static Color? ParseHtmlString(string htmlString)
         {
-            bool res = ColorUtility.TryParseHtmlString(htmlString, out Color color);
+            var res = ColorUtility.TryParseHtmlString(htmlString, out var color);
             return res ? (Color?) color : null;
         }
     }
