@@ -34,7 +34,7 @@ namespace ROOT
     }
 
     
-    public sealed partial class ShopMgr : ShopBase
+    public sealed partial class ShopMgr
     {
         /// <summary>
         /// 生成新的静态单元Flag的Array。
@@ -123,6 +123,7 @@ namespace ROOT
 
     public partial class Unit : MoveableBase,IClickable
     {
+        [ReadOnly] public UnitTag UnitTag = UnitTag.NoTag;
         public UnitSignalCoreBase SignalCore;
         public TextMeshPro BillBoardText;
 
@@ -216,8 +217,7 @@ namespace ROOT
             ShopBackPlane.gameObject.SetActive(false);
             ShopID = -1;
         }
-
-
+        
         public void SetShop(int shopID, int retailPrice, int discountRate, int _cost, bool? showQuad)
         {
             ShopID = shopID;
@@ -252,6 +252,18 @@ namespace ROOT
             }
         }
 
+        private void SetClampMesh()
+        {
+            if (!StationUnit)
+            {
+                AdditionalClampMesh.enabled = false;
+            }
+            else
+            {
+                AdditionalClampMesh.material = ImmovableMat;
+            }
+        }
+        
         public bool SetPendingBuying
         {
             set
@@ -263,14 +275,7 @@ namespace ROOT
                 }
                 else
                 {
-                    if (!StationUnit)
-                    {
-                        AdditionalClampMesh.enabled = false;
-                    }
-                    else
-                    {
-                        AdditionalClampMesh.material = ImmovableMat;
-                    }
+                    SetClampMesh();
                 }
             }
         }
@@ -422,8 +427,7 @@ namespace ROOT
             Tier = tier;
         }
 
-        public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides,
-            int tier, Board gameBoard = null)
+        public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides, int tier, Board gameBoard = null)
         {
             Debug.Assert(sides.Length == 4);
             InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3],
@@ -434,7 +438,7 @@ namespace ROOT
         public static SignalType PlayingSignalB;
 
 
-        public void InitUnit(SignalType signal, HardwareType genre,
+        private void InitUnit(SignalType signal, HardwareType genre,
             SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
             int tier, Board gameBoard = null)
         {

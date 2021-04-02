@@ -110,32 +110,32 @@ namespace ROOT
             FilterDir(actionPack, out var dir);
             if (dir.HasValue)
             {
+                var cursor = _ownerLogic.LevelAsset.Cursor;
+                if (cursor == null)
+                {
+                    Debug.LogWarning("try to move but no cursor");
+                    return false;
+                }
                 CtrlPack.CommandDir = dir.Value;
                 CtrlPack.ReplaceFlag(actionPack.HoldForDrag ? ControllingCommand.Drag : ControllingCommand.Move);
-                //LevelAsset.Cursor再第二次获得的时候是null？??不再现了？？？
                 CtrlPack.CurrentPos = _ownerLogic.LevelAsset.Cursor.CurrentBoardPosition;
                 CtrlPack.NextPos = _ownerLogic.LevelAsset.Cursor.GetCoord(CtrlPack.CommandDir);
             }
             else if (actionPack.IsAction(RotateUnit))
             {
+                var cursor = _ownerLogic.LevelAsset.Cursor;
+                if (cursor == null)
+                {
+                    Debug.LogWarning("try to move but no cursor");
+                    return false;
+                }
                 CtrlPack.CurrentPos = _ownerLogic.LevelAsset.Cursor.CurrentBoardPosition;
                 CtrlPack.SetFlag(ControllingCommand.Rotate);
             }
 
-            if (actionPack.IsAction(CycleNext))
-            {
-                CtrlPack.SetFlag(ControllingCommand.CycleNext);
-            }
-
-            if (actionPack.IsAction(Confirm0))
-            {
-                CtrlPack.SetFlag(ControllingCommand.Confirm);
-            }
-
-            if (actionPack.IsAction(LeftAlt))
-            {
-                CtrlPack.SetFlag(ControllingCommand.Cancel);
-            }
+            if (actionPack.IsAction(CycleNext)) CtrlPack.SetFlag(ControllingCommand.CycleNext);
+            if (actionPack.IsAction(Confirm0)) CtrlPack.SetFlag(ControllingCommand.Confirm);
+            if (actionPack.IsAction(LeftAlt)) CtrlPack.SetFlag(ControllingCommand.Cancel);
 
             if (actionPack.IsAction(InGameOverLayToggle))
             {

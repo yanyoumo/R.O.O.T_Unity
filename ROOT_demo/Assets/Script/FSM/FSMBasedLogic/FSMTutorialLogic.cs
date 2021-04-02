@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using I2.Loc;
+using ROOT.Consts;
 using ROOT.Message;
 using ROOT.SetupAsset;
 using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static ROOT.TextProcessHelper;
 
 
@@ -115,16 +117,9 @@ namespace ROOT
 
         private void CreateUnitOnBoard(TutorialActionData data)
         {
-            GameObject go = LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core, data.HardwareType, data.Sides, data.Tier);
-            if (data.Pos.x < 0 || data.Pos.y < 0)
-            {
-                LevelAsset.GameBoard.DeliverUnitRandomPlace(go);
-            }
-            else
-            {
-                LevelAsset.GameBoard.DeliverUnitAssignedPlace(go, data.Pos);
-            }
-
+            var pos = data.Pos;
+            if (pos.x < 0 || pos.y < 0) pos = LevelAsset.GameBoard.FindRandomEmptyPlace();
+            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier,data.IsStationary);
             LevelAsset.GameBoard.UpdateBoardUnit();
         }
 
@@ -201,7 +196,6 @@ namespace ROOT
                     break;
                 case TutorialActionType.End:
                     PendingEndTutorialData = true;
-                    //RISK 这里是把“准备结束”的flag设上了、需要再按一下enter才能实质结束。
                     break;
                 case TutorialActionType.ShowText:
                     ShowText(true);
@@ -219,7 +213,7 @@ namespace ROOT
                     SetHandOn(data);
                     break;
                 case TutorialActionType.CreateCursor:
-                    //TODO 要从旧代码里面把这里的逻辑捞出来。
+                    WorldExecutor.InitCursor(ref LevelAsset,data.Pos);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -308,6 +302,11 @@ namespace ROOT
             StepForward();
             DealStepMgr();
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
+        }
+
+        protected override void AdditionalInitLevel()
+        {
+            //base.AdditionalInitLevel();DO nothing.
         }
 
         protected override void AdditionalMajorUpkeep()

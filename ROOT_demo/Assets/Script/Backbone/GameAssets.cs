@@ -49,7 +49,15 @@ namespace ROOT
         public CinemachineFreeLook CineCam;
 
         internal GameObject GameCursor;
-        internal Cursor Cursor => GameCursor.GetComponent<Cursor>();
+        internal Cursor Cursor
+        {
+            get
+            {
+                if (GameCursor != null) return GameCursor.GetComponent<Cursor>();
+                Debug.LogWarning("Requested Cursor but not found");
+                return null;
+            }
+        }
 
         internal GameCurrencyMgr GameCurrencyMgr;
         internal float CurrencyRebate = 1.0f;

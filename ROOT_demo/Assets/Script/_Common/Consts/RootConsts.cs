@@ -8,6 +8,7 @@ namespace ROOT.Consts
     {
         public static int BoardLength = 6;
         public static int StageWarningThreshold = 3;
+        public static int RandomBoardRowIndex = Random.Range(0, BoardLength);
     }
     
     public static class GlobalResourcePath
