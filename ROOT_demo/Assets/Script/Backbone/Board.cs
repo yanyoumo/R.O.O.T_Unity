@@ -482,7 +482,7 @@ namespace ROOT
                     while (queue.Count > 0)
                     {
                         var now = queue.Dequeue();
-                        foreach (var otherUnit in now.GetConnectedOtherUnit)
+                        foreach (var otherUnit in now.GetConnectedOtherUnit)//BUG 可能是坑在GetConnectedOtherUnit的更新上了。
                         {
                             if (vis[otherUnit] == false)
                             {

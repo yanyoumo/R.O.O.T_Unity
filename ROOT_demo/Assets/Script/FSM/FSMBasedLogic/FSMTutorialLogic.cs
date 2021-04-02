@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using I2.Loc;
-using ROOT.Consts;
 using ROOT.Message;
 using ROOT.SetupAsset;
 using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using static ROOT.TextProcessHelper;
 
 
@@ -241,12 +239,13 @@ namespace ROOT
         private void SetHandOn(TutorialActionData data)
         {
             TutorialOnHand = true;
-            PendingHandOnChecking = CheckLib[data.HandOnCheckType];//BUG 这个流程有个问题、需要再走一周才能判断，但是放在Minor里面的，应该能判明白的？
+            PendingHandOnChecking = CheckLib[data.HandOnCheckType];
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission});
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = true});
             ShowCheckList(true);
             ShowText(false);
             CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);//这边就就地测一下
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
         }
 
         private void UnsetHandOn()
@@ -285,17 +284,6 @@ namespace ROOT
 
         private bool CurrentHandOnCheckMet { get; set; }
 
-        private void TutorialMinorUpkeep()
-        {
-            if (TutorialOnHand)
-            {
-                CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);
-                //根据现在能识别到需要再接收一下玩家的“回车”来“手动通过”这个判断。
-                //那个判断现在具体的执行是：在系统判断到条件满足后、需要玩家手动按动一下确定键（回车）来继续。
-                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
-            }
-        }
-
         private void TutorialInit()
         {
             if (!shouldInitTutorial) return;
@@ -320,7 +308,15 @@ namespace ROOT
 
         protected override void AdditionalMinorUpkeep()
         {
-            TutorialMinorUpkeep();
+            if (TutorialOnHand)
+            {
+                //BUG 这个流程有个问题、需要再走一周才能判断，但是放在Minor里面的，应该能判明白的？
+                //有可能是digong那个函数的具体实现的问题、但是和整体时序都有关系。
+                CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);
+                //根据现在能识别到需要再接收一下玩家的“回车”来“手动通过”这个判断。
+                //那个判断现在具体的执行是：在系统判断到条件满足后、需要玩家手动按动一下确定键（回车）来继续。
+                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
+            }
         }
 
         protected override void ModifyFSMActions(ref Dictionary<RootFSMStatus, Action> actions)
