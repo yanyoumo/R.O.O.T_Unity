@@ -50,5 +50,13 @@ namespace ROOT.SetupAsset
         
         [ShowIf("ActionType", TutorialActionType.HandOn)]
         public String HandOnMission;
+
+        [Space] 
+        [ShowIf("ActionType", TutorialActionType.SetUnitStationary)]
+        public UnitTag TargetTag;
+        
+        [Space] 
+        [ShowIf("ActionType", TutorialActionType.SetUnitStationary)]
+        public bool Set;//Or unset
     }
 }

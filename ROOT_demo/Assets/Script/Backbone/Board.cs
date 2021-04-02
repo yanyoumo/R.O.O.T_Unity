@@ -550,7 +550,8 @@ namespace ROOT
 
             return UnitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
         }
-        
+        public Unit[] FindUnitsByUnitTag(UnitTag tag) => Units.Where(u => u.UnitTag == tag).ToArray();
+
         public Unit FindNearestSignalAP(Vector2Int Pos)
         {
             var distance = float.MaxValue;
@@ -733,14 +734,14 @@ namespace ROOT
         }
 
         
-        public GameObject CreateUnit(Vector2Int board_pos,SignalType signal,HardwareType genre,SideType[] sides,int Tier,bool IsStationary=false)
+        public GameObject CreateUnit(Vector2Int board_pos,SignalType signal,HardwareType genre,SideType[] sides,int Tier,bool IsStationary=false,UnitTag unitTag=UnitTag.NoTag)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(board_pos.ToString());
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(board_pos);
             UnitsGameObjects.Add(board_pos, go);
-            unit.InitUnit(signal,genre, sides, Tier,this);
+            unit.InitUnit(signal,genre, sides, Tier,unitTag,this);
             if (IsStationary)
             {
                 unit.SetupStationUnit();

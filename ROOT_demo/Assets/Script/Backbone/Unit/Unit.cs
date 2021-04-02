@@ -316,7 +316,7 @@ namespace ROOT
             Immovable = true;
             StationUnit = true;
         }
-
+        
         //Rotation使用的世界方向的。
         public Dictionary<RotationDirection, ConnectionData> WorldNeighboringData { protected set; get; }
 
@@ -427,11 +427,11 @@ namespace ROOT
             Tier = tier;
         }
 
-        public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides, int tier, Board gameBoard = null)
+        public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides, int tier,UnitTag unitTag=UnitTag.NoTag, Board gameBoard = null)
         {
             Debug.Assert(sides.Length == 4);
             InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3],
-                tier, gameBoard);
+                tier,unitTag, gameBoard);
         }
 
         public static SignalType PlayingSignalA;
@@ -440,8 +440,9 @@ namespace ROOT
 
         private void InitUnit(SignalType signal, HardwareType genre,
             SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
-            int tier, Board gameBoard = null)
+            int tier,UnitTag _unitTag=UnitTag.NoTag, Board gameBoard = null)
         {
+            UnitTag = _unitTag;
             UnitSignal = signal;
             InitUnitMeshByCore(signal, genre);
 

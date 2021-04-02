@@ -119,7 +119,7 @@ namespace ROOT
         {
             var pos = data.Pos;
             if (pos.x < 0 || pos.y < 0) pos = LevelAsset.GameBoard.FindRandomEmptyPlace();
-            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier,data.IsStationary);
+            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary, data.Tag);
             LevelAsset.GameBoard.UpdateBoardUnit();
         }
 
@@ -215,6 +215,10 @@ namespace ROOT
                 case TutorialActionType.CreateCursor:
                     WorldExecutor.InitCursor(ref LevelAsset,data.Pos);
                     break;
+                case TutorialActionType.SetUnitStationary:
+                    var units = LevelAsset.GameBoard.FindUnitsByUnitTag(data.TargetTag);
+                    units.ForEach(u => u.SetupStationUnit());//TODO 现在还没做unset流程、实际上Unit就没有UnsetStationary流程。
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -237,7 +241,7 @@ namespace ROOT
         private void SetHandOn(TutorialActionData data)
         {
             TutorialOnHand = true;
-            PendingHandOnChecking = CheckLib[data.HandOnCheckType];
+            PendingHandOnChecking = CheckLib[data.HandOnCheckType];//BUG 这个流程有个问题、需要再走一周才能判断，但是放在Minor里面的，应该能判明白的？
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission});
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = true});
             ShowCheckList(true);
