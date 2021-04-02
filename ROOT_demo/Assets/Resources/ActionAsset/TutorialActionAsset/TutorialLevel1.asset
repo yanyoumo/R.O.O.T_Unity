@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: TutorialUnitBasic
-  Thumbnail: {fileID: 0}
+  Thumbnail: {fileID: 21300000, guid: 6a65727d6cebf18419b06ffd46b11c0c, type: 3}
   LevelLogic: {fileID: 3354999926667516179, guid: 60e38e86d2a29474180bc466c3a252ec,
     type: 3}
   InitialCurrency: 36
