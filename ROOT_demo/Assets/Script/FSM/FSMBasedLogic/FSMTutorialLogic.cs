@@ -60,7 +60,12 @@ namespace ROOT
     {
         MoveCursorToTarget55,
         MoveMatrixUnitsToSameYIndex,
-        MoveThreeMatrixUnitsToOneLink
+        MoveThreeMatrixUnitsToOneLink,
+        ConnectOneMatrixUnitWithMatrixCore,
+        ConnectAllMatrixUnitsWithMatrixCore,
+        ConnectThermalUnitWithThermalCore,
+        ConnectMatrixLinksWithThermalLinks,
+        ConnectNewAddedThermalUnitsIntoLinks
     }
 
     public sealed class FSMTutorialLogic : FSMLevelLogic_Barebone
