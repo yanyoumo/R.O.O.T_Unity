@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using I2.Loc;
+using ROOT.Consts;
+using ROOT.Message;
 using ROOT.SetupAsset;
-using ROOT.UI;
 using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static ROOT.TextProcessHelper;
+using static ROOT.TutorialActionType;
 
 
 namespace ROOT
@@ -52,6 +55,7 @@ namespace ROOT
 
         public static bool MoveThreeMatrixUnitsToOneLink(FSMLevelLogic fsm, Board board)
         {
+            while (!board.IsDataReady) { }
             return board.GetConnectComponent()==1;
         }
     }
@@ -68,7 +72,7 @@ namespace ROOT
         ConnectNewAddedThermalUnitsIntoLinks
     }
 
-    public sealed class FSMTutorialLogic : FSMLevelLogic_Barebone
+    public sealed class FSMLevelLogic_Tutorial : FSMLevelLogic_Barebone
     {
         private readonly CheckingLib CheckLib = new CheckingLib
         {
@@ -80,12 +84,15 @@ namespace ROOT
         protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
         protected override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
         public override bool IsTutorial => true;
-        public override bool CouldHandleSkill => true;
+        public override bool CouldHandleSkill => false;
         public override bool CouldHandleBoss => false;
+        public override bool CouldHandleShop => _couldHandleShopLocal;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
         #region TutorialRelated
 
+        private bool _couldHandleShopLocal;
+        
         protected int CurrentActionIndex { get; private set; } = -1;
         //private int LastActionCount { get; set; } = 0;
 
@@ -94,8 +101,8 @@ namespace ROOT
 
         private LevelActionAsset LevelActionAsset => LevelAsset.ActionAsset;
         
-        private void ShowText(bool val)=>SendHintData(HintEventType.SetTutorialTextShow, val);
-        private void ShowCheckList(bool val)=>SendHintData(HintEventType.SetGoalCheckListShow, val);
+        private void ShowTextFunc(bool val)=>SendHintData(HintEventType.SetTutorialTextShow, val);
+        private void ShowCheckListFunc(bool val)=>SendHintData(HintEventType.SetGoalCheckListShow, val);
         
 
         private bool? PendingEndTutorialData = null;//null不结束、true完成结束、false失败结束。
@@ -117,46 +124,16 @@ namespace ROOT
                 return false;
             }
         }
-        
+
         private void CreateUnitOnBoard(TutorialActionData data)
         {
-            GameObject go = LevelAsset.GameBoard.InitUnit(Vector2Int.zero, data.Core, data.HardwareType,
-                Utils.Shuffle(data.Sides), data.Tier);
-            if (data.Pos.x < 0 || data.Pos.y < 0)
-            {
-                LevelAsset.GameBoard.DeliverUnitRandomPlace(go);
-            }
-            else
-            {
-                LevelAsset.GameBoard.DeliverUnitAssignedPlace(go, data.Pos);
-            }
-
+            var pos = data.Pos;
+            if (pos.x < 0 || pos.y < 0) pos = LevelAsset.GameBoard.FindRandomEmptyPlace();
+            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary, data.Tag);
             LevelAsset.GameBoard.UpdateBoardUnit();
         }
 
-        private void StepForward()
-        {
-            CurrentActionIndex++;
-            //Debug.Log("ActionIndex:" + CurrentActionIndex);
-        }
-
-        private string ProcessText(string Text)
-        {
-            Text = Text.Replace("\\n", "\n");
-            Text = Text.Replace("单元", "<b>[单元]</b>");
-            Text = Text.Replace("方形", "<b>[方形]</b>");
-            Text = Text.Replace("圆形", "<b>[圆形]</b>");
-            Text = Text.Replace("周期", "<b>[周期]</b>");
-            Text = Text.Replace("一般数据", TMPNormalDataCompo());
-            Text = Text.Replace("网络数据", TMPNetworkDataCompo());
-            Text = Text.Replace("收入/损失",
-                TmpBracketAndBold(TmpColorXml("收入", Color.green * 0.4f) + "/" + TmpColorGreenXml("损失")));
-            Text = Text.Replace("绿色", TmpBracketAndBold(TmpColorXml("绿色", Color.green * 0.4f)));
-            Text = Text.Replace("红色", TmpColorXml("红色", Color.red));
-            ColorUtility.TryParseHtmlString("#71003E", out Color col);
-            Text = Text.Replace("深紫色", TmpColorXml("深紫色", col));
-            return Text;
-        }
+        private void StepForward() => CurrentActionIndex++;
 
         private void DisplayText(string text)
         {
@@ -167,7 +144,7 @@ namespace ROOT
             };
             MessageDispatcher.SendMessage(hintData);
         }
-        
+
         private bool ProcessdToTutorialCycle;
 
         protected override void AdditionalReactIO()
@@ -189,53 +166,38 @@ namespace ROOT
 
         //protected abstract void AdditionalDealStep(TutorialActionData data);
 
-        private Func<FSMLevelLogic, Board, bool> PendingHandOnChecking = (a, b) => false;
+        private void ShowShop()
+        {
+            if (LevelAsset.Shop == null)
+            {
+                LevelAsset.Shop = FindObjectOfType<ShopSelectableMgr>();
+                if (LevelAsset.Shop == null) throw new ArgumentException("Could not find shop in scene.");
+            }
+            WorldExecutor.InitShop(ref LevelAsset);
+
+            _couldHandleShopLocal = true;
+        }
         
-        /// <summary>
-        /// Tutorial父类里面会为通用的动作做一个处理。如果没有会throw
-        /// </summary>
-        /// <param name="data">输入的TutorialActionData</param>
+        private Func<FSMLevelLogic, Board, bool> PendingHandOnChecking = (a, b) => false;
+
+        private Dictionary<TutorialActionType, Action<TutorialActionData>> StepActionLib;
+
+        private void SetStationaryByTag(TutorialActionData data)
+        {
+            //TODO 现在还没做unset流程、实际上Unit就没有UnsetStationary流程。
+            LevelAsset.GameBoard.FindUnitsByUnitTag(data.TargetTag).ForEach(u => u.SetupStationUnit());
+        }
+
         private void DealStep(TutorialActionData data)
         {
-            switch (data.ActionType)
-            {
-                case TutorialActionType.Text:
-                    DisplayText(data.DoppelgangerToggle && StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text);
-                    break;
-                case TutorialActionType.CreateUnit:
-                    CreateUnitOnBoard(data);
-                    break;
-                case TutorialActionType.End:
-                    PendingEndTutorialData = true;
-                    //RISK 这里是把“准备结束”的flag设上了、需要再按一下enter才能实质结束。
-                    break;
-                case TutorialActionType.ShowText:
-                    ShowText(true);
-                    break;
-                case TutorialActionType.HideText:
-                    ShowText(false);
-                    break;
-                case TutorialActionType.ShowCheckList:
-                    ShowCheckList(true);
-                    break;
-                case TutorialActionType.HideCheckList:
-                    ShowCheckList(false);
-                    break;
-                case TutorialActionType.HandOn:
-                    SetHandOn(data);
-                    break;
-                case TutorialActionType.CreateCursor:
-                    //TODO 要从旧代码里面把这里的逻辑捞出来。
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
+            StepActionLib.Where(v => v.Key == data.ActionType).Select(v => v.Value).ForEach(v => v(data));
         }
 
         private void DealStepMgr()
         {
-            LevelActionAsset.Actions.Where(a => a.ActionIdx == CurrentActionIndex).ForEach(DealStep);
-            if (LevelActionAsset.Actions.Any(a => a.ActionIdx == CurrentActionIndex + 1 && a.ActionType == TutorialActionType.End))
+            //现在是执行也按照SubIdx升序执行。
+            LevelActionAsset.Actions.Where(a => a.ActionIdx == CurrentActionIndex).OrderBy(d=>d.ActionSubIdx).ForEach(DealStep);
+            if (LevelActionAsset.Actions.Any(a => a.ActionIdx == CurrentActionIndex + 1 && a.ActionType == End))
             {
                 MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.NextIsEnding});
             }
@@ -252,9 +214,10 @@ namespace ROOT
             PendingHandOnChecking = CheckLib[data.HandOnCheckType];
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission});
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = true});
-            ShowCheckList(true);
-            ShowText(false);
+            ShowCheckListFunc(true);
+            ShowTextFunc(false);
             CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);//这边就就地测一下
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
         }
 
         private void UnsetHandOn()
@@ -262,7 +225,7 @@ namespace ROOT
             TutorialOnHand = false;
             PendingHandOnChecking = (a, b) => false;
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
-            ShowCheckList(false);
+            ShowCheckListFunc(false);
             CurrentHandOnCheckMet = false;
             StepForward();
             DealStepMgr();
@@ -293,17 +256,6 @@ namespace ROOT
 
         private bool CurrentHandOnCheckMet { get; set; }
 
-        private void TutorialMinorUpkeep()
-        {
-            if (TutorialOnHand)
-            {
-                CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);
-                //根据现在能识别到需要再接收一下玩家的“回车”来“手动通过”这个判断。
-                //那个判断现在具体的执行是：在系统判断到条件满足后、需要玩家手动按动一下确定键（回车）来继续。
-                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
-            }
-        }
-
         private void TutorialInit()
         {
             if (!shouldInitTutorial) return;
@@ -316,14 +268,65 @@ namespace ROOT
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
         }
 
+        public override void InitLevel()
+        {
+            //就先这么Sealed、急了的话、所有需要"关掉"的可以在AdditionalInit里面再关掉。
+            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+
+            LevelAsset.BaseDeltaCurrency = 0.0f;
+            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
+            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
+            
+            LevelAsset.EnableAllCoreFunctionAndFeature();
+            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
+            LevelAsset.GameBoard.UpdateBoardAnimation();
+            AdditionalInitLevel();
+            
+            ReadyToGo = true;
+
+            SendHintData(HintEventType.SetGoalCheckListShow, false);
+        }
+
+        protected override void AdditionalInitLevel()
+        {
+            StepActionLib = new Dictionary<TutorialActionType, Action<TutorialActionData>>
+            {
+                {Text,data=>DisplayText(data.DoppelgangerToggle && StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text)},
+                {CreateUnit,CreateUnitOnBoard},
+                {End,data=>PendingEndTutorialData = true},
+                {ShowText,data=>ShowTextFunc(true)},
+                {HideText,data=>ShowTextFunc(false)},
+                {ShowCheckList,data=>ShowCheckListFunc(true)},
+                {HideCheckList,data=>ShowCheckListFunc(false)},
+                {HandOn,SetHandOn},
+                {CreateCursor,data=>WorldExecutor.InitCursor(ref LevelAsset,data.Pos)},
+                {SetUnitStationary,SetStationaryByTag},
+                {ShowStorePanel,data=>ShowShop()},
+            };
+        }
+
         protected override void AdditionalMajorUpkeep()
         {
             TutorialInit();
+            if (TutorialOnHand)
+            {
+                CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);//这边就就地测一下
+                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
+            }
         }
 
         protected override void AdditionalMinorUpkeep()
         {
-            TutorialMinorUpkeep();
+            if (TutorialOnHand)
+            {
+                //这个流程有个问题、需要再走一周才能判断，但是放在Minor里面的，应该能判明白的？//还得放到major里面用一下。
+                //有可能是digong那个函数的具体实现的问题、但是和整体时序都有关系。
+                CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);
+                //根据现在能识别到需要再接收一下玩家的“回车”来“手动通过”这个判断。
+                //那个判断现在具体的执行是：在系统判断到条件满足后、需要玩家手动按动一下确定键（回车）来继续。
+                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
+            }
         }
 
         protected override void ModifyFSMActions(ref Dictionary<RootFSMStatus, Action> actions)

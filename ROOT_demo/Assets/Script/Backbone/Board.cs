@@ -550,7 +550,8 @@ namespace ROOT
 
             return UnitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
         }
-        
+        public Unit[] FindUnitsByUnitTag(UnitTag tag) => Units.Where(u => u.UnitTag == tag).ToArray();
+
         public Unit FindNearestSignalAP(Vector2Int Pos)
         {
             var distance = float.MaxValue;
@@ -717,16 +718,6 @@ namespace ROOT
             }*/
         }
 
-        public GameObject InitUnit(Vector2Int board_pos,SignalType signal,HardwareType genre,SideType[] sides,int Tier)
-        {
-            var go = Instantiate(UnitTemplate);
-            go.name = "Unit_" + Hash128.Compute(board_pos.ToString());
-            var unit = go.GetComponentInChildren<Unit>();
-            unit.InitPosWithAnimation(board_pos);
-            unit.InitUnit(signal,genre, sides, Tier);
-            return go;
-        }
-
         SignalType SignalTypeFromAdditionalGameSetup(AdditionalGameSetup additionalGameSetup,PlayingSignalSelector selector)
         {
             if (selector == PlayingSignalSelector.TypeA)
@@ -742,19 +733,25 @@ namespace ROOT
             return SignalType.Matrix;
         }
 
-        private void CreateUnitOnBoard(UnitGist unitGist, AdditionalGameSetup additionalGameSetup)
+        
+        public GameObject CreateUnit(Vector2Int board_pos,SignalType signal,HardwareType genre,SideType[] sides,int Tier,bool IsStationary=false,UnitTag unitTag=UnitTag.NoTag)
         {
-            var unitGO = Instantiate(UnitTemplate);
-            unitGO.name = "Unit_" + Hash128.Compute(unitGist.Pos.ToString());
-            Unit unit = unitGO.GetComponentInChildren<Unit>();
-            unit.InitPosWithAnimation(unitGist.Pos);
-            UnitsGameObjects.Add(unitGist.Pos, unitGO);
-            var signalType = SignalTypeFromAdditionalGameSetup(additionalGameSetup, unitGist.PlayingSignalSelector);
-            unit.InitUnit(signalType, unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, this);
-            if (unitGist.IsStation)
+            var go = Instantiate(UnitTemplate);
+            go.name = "Unit_" + Hash128.Compute(board_pos.ToString());
+            var unit = go.GetComponentInChildren<Unit>();
+            unit.InitPosWithAnimation(board_pos);
+            UnitsGameObjects.Add(board_pos, go);
+            unit.InitUnit(signal,genre, sides, Tier,unitTag,this);
+            if (IsStationary)
             {
                 unit.SetupStationUnit();
             }
+            return go;
+        }
+        private void CreateUnitOnBoard(UnitGist unitGist, AdditionalGameSetup additionalGameSetup)
+        {
+            var signalType = SignalTypeFromAdditionalGameSetup(additionalGameSetup, unitGist.PlayingSignalSelector);
+            CreateUnit(unitGist.Pos, signalType, unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, unitGist.IsStation);
         }
 
         public Unit GetUnitWithPosAndDir(Vector2Int center, RotationDirection offsetDirection)
@@ -853,6 +850,16 @@ namespace ROOT
             return DeliverUnitAssignedPlace(go, To);
         }
 
+        public Vector2Int FindRandomEmptyPlace()
+        {
+            var res = Vector2Int.zero;
+            do
+            {
+                res = new Vector2Int(StaticNumericData.RandomBoardRowIndex, StaticNumericData.RandomBoardRowIndex);
+            } while (UnitsGameObjects.ContainsKey(res));
+            return res;
+        }
+        
         public bool DeliverUnitRandomPlace(GameObject unit)
         {
             return DeliverUnitRandomPlace(unit, out Vector2Int vector2Int);
@@ -991,8 +998,11 @@ namespace ROOT
 
         private int GridHashCode => BoardGirdDriver.BoardGirds.Aggregate(0, (current, val) => current ^ (val.Key.GetHashCode() ^ val.Value.CellStatus.GetHashCode()));
 
+        public bool IsDataReady { get; private set; } = false;
+        
         private void FullyUpdateBoardData(IMessage rMessage)
         {
+            IsDataReady = false;
             //现在要假设所有场景内容全是错的，准备更新。
             Units.ForEach(u => u.UpdateNeighboringData());
             //至此所有Unit边界数据设置完成。
@@ -1002,6 +1012,7 @@ namespace ROOT
             Units.ForEach(u => u.UpdateActivationLED());
             //至此所有单元提示灯具设置完成。
             MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent);
+            IsDataReady = true;
         }
         
         private void Update()

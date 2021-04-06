@@ -12,9 +12,12 @@ namespace I2.Loc
 		public static string Back 		{ get{ return LocalizationManager.GetTranslation ("Back"); } }
 		public static string BasicControl_KM 		{ get{ return LocalizationManager.GetTranslation ("BasicControl_KM"); } }
 		public static string BasicControl_Touch 		{ get{ return LocalizationManager.GetTranslation ("BasicControl_Touch"); } }
+		public static string Boss 		{ get{ return LocalizationManager.GetTranslation ("Boss"); } }
 		public static string CareerButton 		{ get{ return LocalizationManager.GetTranslation ("CareerButton"); } }
 		public static string Continue 		{ get{ return LocalizationManager.GetTranslation ("Continue"); } }
 		public static string CoreSelection 		{ get{ return LocalizationManager.GetTranslation ("CoreSelection"); } }
+		public static string Destoryer 		{ get{ return LocalizationManager.GetTranslation ("Destoryer"); } }
+		public static string Ending 		{ get{ return LocalizationManager.GetTranslation ("Ending"); } }
 		public static string EndingMessageAcquiring_Failed 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageAcquiring_Failed"); } }
 		public static string EndingMessageAcquiring_Successed 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageAcquiring_Successed"); } }
 		public static string EndingMessageNoBoss_EarnedMoney 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageNoBoss_EarnedMoney"); } }
@@ -49,9 +52,11 @@ namespace I2.Loc
 		public static string OK 		{ get{ return LocalizationManager.GetTranslation ("OK"); } }
 		public static string PlayLevel 		{ get{ return LocalizationManager.GetTranslation ("PlayLevel"); } }
 		public static string ReleaseToReturn_KM 		{ get{ return LocalizationManager.GetTranslation ("ReleaseToReturn_KM"); } }
+		public static string Require 		{ get{ return LocalizationManager.GetTranslation ("Require"); } }
 		public static string Restart 		{ get{ return LocalizationManager.GetTranslation ("Restart"); } }
 		public static string Scan_Core 		{ get{ return LocalizationManager.GetTranslation ("Scan Core"); } }
 		public static string SelectTwoCore 		{ get{ return LocalizationManager.GetTranslation ("SelectTwoCore"); } }
+		public static string Shop 		{ get{ return LocalizationManager.GetTranslation ("Shop"); } }
 		public static string StartGame 		{ get{ return LocalizationManager.GetTranslation ("StartGame"); } }
 		public static string Thermal_Core 		{ get{ return LocalizationManager.GetTranslation ("Thermal Core"); } }
 		public static string TouchHintCollapsed 		{ get{ return LocalizationManager.GetTranslation ("TouchHintCollapsed"); } }
@@ -82,9 +87,12 @@ namespace I2.Loc
 		public const string Back = "Back";
 		public const string BasicControl_KM = "BasicControl_KM";
 		public const string BasicControl_Touch = "BasicControl_Touch";
+		public const string Boss = "Boss";
 		public const string CareerButton = "CareerButton";
 		public const string Continue = "Continue";
 		public const string CoreSelection = "CoreSelection";
+		public const string Destoryer = "Destoryer";
+		public const string Ending = "Ending";
 		public const string EndingMessageAcquiring_Failed = "EndingMessageAcquiring_Failed";
 		public const string EndingMessageAcquiring_Successed = "EndingMessageAcquiring_Successed";
 		public const string EndingMessageNoBoss_EarnedMoney = "EndingMessageNoBoss_EarnedMoney";
@@ -119,9 +127,11 @@ namespace I2.Loc
 		public const string OK = "OK";
 		public const string PlayLevel = "PlayLevel";
 		public const string ReleaseToReturn_KM = "ReleaseToReturn_KM";
+		public const string Require = "Require";
 		public const string Restart = "Restart";
 		public const string Scan_Core = "Scan Core";
 		public const string SelectTwoCore = "SelectTwoCore";
+		public const string Shop = "Shop";
 		public const string StartGame = "StartGame";
 		public const string Thermal_Core = "Thermal Core";
 		public const string TouchHintCollapsed = "TouchHintCollapsed";

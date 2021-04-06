@@ -1,8 +1,14 @@
+using System.Collections.Generic;
+using I2.Loc;
+using UnityEngine;
+
 namespace ROOT.Consts
 {
     public static class StaticNumericData
     {
         public static int BoardLength = 6;
+        public static int StageWarningThreshold = 3;
+        public static int RandomBoardRowIndex = Random.Range(0, BoardLength);
     }
     
     public static class GlobalResourcePath
@@ -40,6 +46,27 @@ namespace ROOT.Consts
 
     public static class StaticName
     {
+        public static string GetNameTermForStage(StageType stage)
+        {
+            try
+            {
+                return StageNameTerm[stage];
+            }
+            catch (KeyNotFoundException)
+            {
+                Debug.LogError("Desired stage name is not present.");
+                return "N\\A";
+            }
+        }
+        
+        private static readonly Dictionary<StageType, string> StageNameTerm = new Dictionary<StageType, string> {
+            {StageType.Shop, ScriptTerms.Shop},
+            {StageType.Require, ScriptTerms.Require},
+            {StageType.Destoryer, ScriptTerms.Destoryer},
+            {StageType.Boss, ScriptTerms.Boss},
+            {StageType.Ending, ScriptTerms.Ending},
+        };
+
         public static readonly string INPUT_BUTTON_TELEMETRY_PAUSE = "TelemetryPause";
 
         public static readonly string INPUT_BUTTON_NAME_CURSORUP = "CursorUp";

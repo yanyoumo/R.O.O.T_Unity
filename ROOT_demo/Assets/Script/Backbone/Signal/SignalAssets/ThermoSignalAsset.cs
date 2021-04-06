@@ -1,10 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using ROOT;
-using Sirenix.Utilities;
-using UnityEngine;
-
 namespace ROOT.Signal
 {
     //现在几点比较严重的问题、就是现在几个新的系统结合起来不匹配。

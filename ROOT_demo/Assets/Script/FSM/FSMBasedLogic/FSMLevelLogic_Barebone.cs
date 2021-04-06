@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using I2.Loc;
 using ROOT.Consts;
-using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,6 +31,7 @@ namespace ROOT
         public override bool IsTutorial => false;
         public override bool CouldHandleSkill => false;
         public override bool CouldHandleBoss => false;
+        public override bool CouldHandleShop => false;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
         protected virtual void AdditionalInitLevel()
@@ -39,7 +39,7 @@ namespace ROOT
             WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
         }
 
-        public sealed override void InitLevel()
+        public override void InitLevel()
         {
             //就先这么Sealed、急了的话、所有需要"关掉"的可以在AdditionalInit里面再关掉。
             Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……

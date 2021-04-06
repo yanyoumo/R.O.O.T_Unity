@@ -559,6 +559,46 @@ MonoBehaviour:
       - Time to work
       Flags: 0000
       Languages_Touch: []
+    - Term: Boss
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u6700\u7EC8"
+      - Boss
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Shop
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u5546\u5E97"
+      - Shop
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Require
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4EFB\u52A1"
+      - Require
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Destoryer
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u5929\u707E"
+      - Destoryer
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Ending
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u7ED3\u675F"
+      - Ending
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 

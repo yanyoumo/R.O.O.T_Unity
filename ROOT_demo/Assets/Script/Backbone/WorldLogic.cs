@@ -1,5 +1,4 @@
 ﻿using System;
-using ROOT.Message;
 using Sirenix.Utilities;
 using UnityEngine;
 using CommandDir = ROOT.RotationDirection;
@@ -1065,23 +1064,31 @@ namespace ROOT
 
         public static void InitDestoryer(ref GameAssets LevelAsset)
         {
+            if (LevelAsset.WarningDestoryer == null)
+            {
+                Debug.LogError("WarningDestoryer is null, please fix."); return;
+            }
             LevelAsset.WarningDestoryer = new MeteoriteBomber {GameBoard = LevelAsset.GameBoard};
             LevelAsset.WarningDestoryer.Init(4, 1);
         }
-
+       
         public static void InitShop(ref GameAssets LevelAsset)
         {
+            if (LevelAsset.Shop == null)
+            {
+                Debug.LogError("Shop is null, please fix."); return;
+            }
             LevelAsset.Shop.ShopInit(LevelAsset);
             LevelAsset.Shop.CurrentGameCurrencyMgr = LevelAsset.GameCurrencyMgr;
             LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
-            if (LevelAsset.ActionAsset.ExcludedShop)
-            {
-                LevelAsset.Shop.excludedTypes = LevelAsset.ActionAsset.ShopExcludedType;
-            }
         }
         
         public static void StartShop(ref GameAssets LevelAsset)
         {
+            if (LevelAsset.Shop == null)
+            {
+                Debug.LogError("Shop is null, please fix."); return;
+            }
             LevelAsset.Shop.ShopStart();
         }
         
@@ -1092,6 +1099,9 @@ namespace ROOT
                 if (currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos))
                 {
                     var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
+                    //RISK 下面这句话控制stationary单位是否能旋转、目前出于教程的用途（实际玩法框架中目前没有这个机制）；也禁止旋转。
+                    //RISK 但是、如果这个feature要放到实际玩法框架中、可能还要移动、旋转细分。
+                    if (unit.GetComponentInChildren<Unit>().StationUnit) return;
                     System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
                     unit.GetComponentInChildren<Unit>().UnitRotateCw();
                     //currentLevelAsset.GameBoard.UpdateBoard();

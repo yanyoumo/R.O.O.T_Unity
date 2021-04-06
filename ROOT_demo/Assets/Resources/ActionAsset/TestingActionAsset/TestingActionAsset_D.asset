@@ -31,7 +31,7 @@ MonoBehaviour:
   levelType: 1
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 1
+    PlayingSignalTypeB: 2
   InitalBoard:
   - PlayingSignalSelector: 1
     CoreGenre: 0

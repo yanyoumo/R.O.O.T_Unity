@@ -1,17 +1,10 @@
-using System;
 using com.ootii.Messages;
-using ROOT.Message;
+using ROOT.Message.Inquiry;
 using TMPro;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.UI
 {
-    public class AcquiringCostTargetInquiry : RootMessageBase
-    {
-        public Action<int> AcquiringCostTargetCallBack;
-        public override string Type => WorldEvent.AcquiringCostTargetInquiry;
-    }
-    
     public class AcquiringCostChart : CostChart
     {
         //这里现在需要调整一下显示；需要显示出基础收入和额外输入。

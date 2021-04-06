@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using ROOT;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 

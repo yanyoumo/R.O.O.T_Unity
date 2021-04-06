@@ -1,12 +1,10 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using ROOT.Consts;
 using ROOT.SetupAsset;
 using ROOT.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Random = UnityEngine.Random;
 
 namespace ROOT
 {

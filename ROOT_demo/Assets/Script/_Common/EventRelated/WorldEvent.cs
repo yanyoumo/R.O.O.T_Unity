@@ -2,6 +2,7 @@ namespace ROOT
 {
     public static class WorldEvent
     {
+        public static string InGameStageWarningEvent = "InGameStageWarningEvent";
         public static string InGameStageChangedEvent = "InGameStageChangedEvent";
         public static string CurrencyIOStatusChangedEvent = "CurrencyIOStatusChangedEvent";
         public static string CurrencyUpdatedEvent = "CurrencyUpdatedEvent";
@@ -18,11 +19,11 @@ namespace ROOT
         /// <summary>
         /// 主要是UI方面的事件、主要是可以向核心逻辑调查一些数据；可以放一个回调函数。
         /// </summary>
-        public static class Visual_Inquiry_Event
+        /*public static class Visual_Inquiry_Event
         {
             //还是优先使用Cache流程吧、Cache搞不定的情况再Inquiry。
             //public static string CurrencyInquiryEvent = "CurrencyInquiryEvent";
-        }
+        }*/
         
         public static string BoardShouldUpdateEvent = "BoardShouldUpdateEvent";
         public static string BoardUpdatedEvent = "BoardUpdatedEvent";

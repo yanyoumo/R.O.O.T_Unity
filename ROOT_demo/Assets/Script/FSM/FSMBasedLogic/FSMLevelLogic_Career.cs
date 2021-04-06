@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
 using ROOT.Consts;
-using ROOT.UI;
+using ROOT.Message;
 using UnityEngine;
 
 namespace ROOT
@@ -19,6 +19,7 @@ namespace ROOT
         public override bool IsTutorial => false;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
+        public override bool CouldHandleShop => true;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
         protected override bool IsForwardCycle => AutoForward || MovedTile;
@@ -129,12 +130,13 @@ namespace ROOT
 
         protected override void AdditionalReactIO()
         {
-            MovedTile |= WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
             AddtionalRecatIO_Skill();
         }
 
         private StageType? lastStageType = null;
 
+        private bool StageAlertSuppressFlag = false;
+        
         private void CareerCycle()
         {
             if (LevelAsset.DestroyerEnabled)
@@ -146,11 +148,12 @@ namespace ROOT
                     LevelAsset.DestoryedCoreType = outCore;
                 }
             }
-
+            
             if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
                 UpdateRoundData_Stepped();
-                if (lastStageType == null || lastStageType.Value != RoundLibDriver.CurrentRoundGist.Value.Type)
+                var currentStageType=RoundLibDriver.CurrentRoundGist.Value.Type;
+                if (lastStageType == null || lastStageType.Value != currentStageType)
                 {
                     //RISK 这个变成每个时刻都改了、想着加一个Guard
                     MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent); //为了令使和Round相关的数据强制更新。
@@ -168,6 +171,30 @@ namespace ROOT
                     MessageDispatcher.SendMessage(timingEvent);
                     MessageDispatcher.SendMessage(timingEvent2);
                     lastStageType = RoundLibDriver.CurrentRoundGist.Value.Type;
+                }
+
+                if (RoundLibDriver.PreCheckRoundGist.HasValue)
+                {
+                    var preCheckStageType = RoundLibDriver.PreCheckRoundGist.Value.Type;
+                    if (!StageAlertSuppressFlag)
+                    {
+                        if (currentStageType != preCheckStageType)
+                        {
+                            var timingEvent = new TimingEventInfo
+                            {
+                                Type = WorldEvent.InGameStageWarningEvent,
+                                CurrentStageType = currentStageType,
+                                NextStageType = preCheckStageType,
+                            };
+                            //TODO 这里再弄一个计数、就是发一次后若干次不再发、或者就是等两个Stage相同后在再允许发。
+                            MessageDispatcher.SendMessage(timingEvent);
+                            StageAlertSuppressFlag = true;
+                        }
+                    }
+                    else
+                    {
+                        if (currentStageType == preCheckStageType) StageAlertSuppressFlag = false;
+                    }
                 }
             }
         }
@@ -229,7 +256,7 @@ namespace ROOT
             {
                 yield return 0;
             }
-            LevelAsset.Shop = FindObjectOfType<ShopBase>();
+            LevelAsset.Shop = FindObjectOfType<ShopSelectableMgr>();
             AdditionalArtLevelReference(ref LevelAsset);
             SendHintData(HintEventType.SetTutorialTextShow, false);
             PopulateArtLevelReference();

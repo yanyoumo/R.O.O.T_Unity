@@ -1,42 +1,20 @@
 using System;
 using com.ootii.Messages;
-using DG.Tweening;
 using Doozy.Engine.UI;
 using ROOT.Message;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace ROOT.UI
 {
+    [Obsolete]
     public static class UIEvent
     {
         public delegate void InGameManualFootterUpdate(int TotalPageCount, int CurrentPageCount);
 
         public delegate void InGameOverlayToggle();
     }
-    
-    public enum HintEventType
-    {
-        SetGoalContent,
-        SetGoalCheckListShow,
-        SetTutorialTextContent,
-        SetTutorialTextShow,
-        GoalComplete,
-        GoalFailed,
-        SetHelpScreenShow,
-        NextIsEnding,
-        ToggleHandOnView,
-    }
-    
-    public class HintEventInfo : RootMessageBase
-    {
-        public HintEventType HintEventType;
-        public bool BoolData;
-        public String StringData = "";
-        public override string Type => WorldEvent.HintRelatedEvent;
-    }
-    
+
     public class HintMaster_UI : MonoBehaviour
     {
         public UIView TutorialCheckList;

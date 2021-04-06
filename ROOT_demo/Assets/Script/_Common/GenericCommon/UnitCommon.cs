@@ -44,6 +44,23 @@ namespace ROOT
         TypeB,
     }
 
+    public enum UnitTag
+    {
+        Red = 1 << 0,
+        Orange = 1 << 1,
+        Yellow = 1 << 2,
+        Green = 1 << 3,
+        Blue = 1 << 4,
+        Cyan = 1 << 5,
+        Purple = 1 << 6,
+        Magenta = 1 << 7,
+        Tan = 1 << 8,
+        Brown = 1 << 9,
+        White = 1 << 10,
+        Black = 1 << 11,
+        NoTag = 0,
+    }
+
     [Serializable]
     public struct UnitGist
     {

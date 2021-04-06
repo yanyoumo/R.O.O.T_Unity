@@ -1,5 +1,18 @@
 namespace ROOT
 {
+    public enum HintEventType
+    {
+        SetGoalContent,
+        SetGoalCheckListShow,
+        SetTutorialTextContent,
+        SetTutorialTextShow,
+        GoalComplete,
+        GoalFailed,
+        SetHelpScreenShow,
+        NextIsEnding,
+        ToggleHandOnView,
+    }
+    
     public enum SupportedScreenRatio
     {
         XGA, //4:3/iPadAir2/iPadPro4Gen

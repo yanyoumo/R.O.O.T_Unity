@@ -1,10 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
-using ROOT.SetupAsset;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace ROOT.SetupAsset

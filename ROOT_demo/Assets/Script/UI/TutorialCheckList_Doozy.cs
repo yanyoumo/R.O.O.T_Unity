@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ROOT
+namespace ROOT.UI
 {
     public class TutorialCheckList_Doozy : MonoBehaviour
     {

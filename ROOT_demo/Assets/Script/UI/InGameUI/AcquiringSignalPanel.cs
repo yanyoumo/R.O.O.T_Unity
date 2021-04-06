@@ -1,18 +1,11 @@
 using System;
 using com.ootii.Messages;
-using ROOT.Message;
-using Sirenix.OdinInspector;
+using ROOT.Message.Inquiry;
 using TMPro;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.UI
 {
-    public class BalancingSignalSetupInquiry : RootMessageBase
-    {
-        public Action<Func<int, int, float>> BalancingSignalFuncCallBack;
-        public override string Type => WorldEvent.BalancingSignalSetupInquiry;
-    }
-    
     public class AcquiringSignalPanel : RoundRelatedUIBase
     {
         private Func<int, int, float> _balancingSignalFunc = (a,b)=>0.0f;

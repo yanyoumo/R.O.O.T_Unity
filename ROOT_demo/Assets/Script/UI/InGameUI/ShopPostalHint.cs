@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using I2.Loc;
 using UnityEngine;
 
-namespace ROOT
+namespace ROOT.UI
 {
     /*public partial class HintMaster : MonoBehaviour
     {

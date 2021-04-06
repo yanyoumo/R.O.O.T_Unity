@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using JetBrains.Annotations;
@@ -14,12 +12,6 @@ namespace ROOT
 {
     using UnitTypeCombo=Tuple<SignalType,HardwareType>;
 
-    public class ShopTierOffsetChangedData:RootMessageBase
-    {
-        public bool UpwardOrDownward = true;
-        public override string Type => WorldEvent.ShopTierOffsetChangedEvent;
-    }
-    
     public class ShopSelectableMgr : ShopBase
     {
         private void UpdateShopSelf(int discount)
