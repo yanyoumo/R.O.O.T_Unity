@@ -2787,7 +2787,7 @@ MonoBehaviour:
     PresetName: 
   TargetLabel: 2
   TextLabel: {fileID: 0}
-  TextMeshProLabel: {fileID: 0}
+  TextMeshProLabel: {fileID: 1712382427}
 --- !u!114 &324662205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6304,6 +6304,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d96fb4d7af0f19b44b5a322675fd1f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TutorialLevelActionAssetLib: {fileID: 0}
+  CareerLevelActionAssetLib: {fileID: 0}
+  TestingLevelActionAssetLib: {fileID: 0}
 --- !u!1 &835564402
 GameObject:
   m_ObjectHideFlags: 0

@@ -188,51 +188,10 @@ namespace ROOT
             StepActionLib.Where(v => v.Key == data.ActionType).Select(v => v.Value).ForEach(v => v(data));
         }
 
-        /*private void DealStep(TutorialActionData data)
-        {
-            switch (data.ActionType)
-            {
-                case Text:
-                    DisplayText(data.DoppelgangerToggle && StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text);
-                    break;
-                case CreateUnit:
-                    CreateUnitOnBoard(data);
-                    break;
-                case End:
-                    PendingEndTutorialData = true;
-                    break;
-                case ShowText:
-                    ShowTextFunc(true);
-                    break;
-                case HideText:
-                    ShowTextFunc(false);
-                    break;
-                case ShowCheckList:
-                    ShowCheckListFunc(true);
-                    break;
-                case HideCheckList:
-                    ShowCheckListFunc(false);
-                    break;
-                case HandOn:
-                    SetHandOn(data);
-                    break;
-                case CreateCursor:
-                    WorldExecutor.InitCursor(ref LevelAsset,data.Pos);
-                    break;
-                case SetUnitStationary:
-                    LevelAsset.GameBoard.FindUnitsByUnitTag(data.TargetTag).ForEach(u => u.SetupStationUnit());//TODO 现在还没做unset流程、实际上Unit就没有UnsetStationary流程。
-                    break;
-                case ShowStorePanel:
-                    ShowShop();
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }*/
-
         private void DealStepMgr()
         {
-            LevelActionAsset.Actions.Where(a => a.ActionIdx == CurrentActionIndex).ForEach(DealStep);
+            //现在是执行也按照SubIdx升序执行。
+            LevelActionAsset.Actions.Where(a => a.ActionIdx == CurrentActionIndex).OrderBy(d=>d.ActionSubIdx).ForEach(DealStep);
             if (LevelActionAsset.Actions.Any(a => a.ActionIdx == CurrentActionIndex + 1 && a.ActionType == End))
             {
                 MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.NextIsEnding});
