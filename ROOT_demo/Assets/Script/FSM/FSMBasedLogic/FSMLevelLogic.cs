@@ -47,6 +47,7 @@ namespace ROOT
         public abstract bool IsTutorial { get; }
         public abstract bool CouldHandleSkill { get; }
         public abstract bool CouldHandleBoss { get; }
+        public abstract bool CouldHandleShop { get; }
         public abstract BossStageType HandleBossType { get; }
         
         public abstract int LEVEL_ART_SCENE_ID { get; }
@@ -333,6 +334,7 @@ namespace ROOT
             WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack);
             LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
             MovedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
+            if (CouldHandleShop) MovedTile |= WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
             AdditionalReactIO();
         }
 

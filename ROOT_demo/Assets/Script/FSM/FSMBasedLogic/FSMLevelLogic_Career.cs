@@ -19,6 +19,7 @@ namespace ROOT
         public override bool IsTutorial => false;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
+        public override bool CouldHandleShop => true;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
         protected override bool IsForwardCycle => AutoForward || MovedTile;
@@ -129,7 +130,6 @@ namespace ROOT
 
         protected override void AdditionalReactIO()
         {
-            MovedTile |= WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
             AddtionalRecatIO_Skill();
         }
 
@@ -256,7 +256,7 @@ namespace ROOT
             {
                 yield return 0;
             }
-            LevelAsset.Shop = FindObjectOfType<ShopBase>();
+            LevelAsset.Shop = FindObjectOfType<ShopSelectableMgr>();
             AdditionalArtLevelReference(ref LevelAsset);
             SendHintData(HintEventType.SetTutorialTextShow, false);
             PopulateArtLevelReference();

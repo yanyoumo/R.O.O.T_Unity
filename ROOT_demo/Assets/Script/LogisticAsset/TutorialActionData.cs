@@ -7,7 +7,10 @@ namespace ROOT.SetupAsset
     [Serializable]
     public struct TutorialActionData
     {
+        [HorizontalGroup("BaseData")]
         public int ActionIdx;
+        [HorizontalGroup("BaseData")]
+        public int ActionSubIdx;
         public TutorialActionType ActionType;
 
         [Space]

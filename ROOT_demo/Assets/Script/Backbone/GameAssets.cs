@@ -61,7 +61,7 @@ namespace ROOT
 
         internal GameCurrencyMgr GameCurrencyMgr;
         internal float CurrencyRebate = 1.0f;
-        internal ShopBase Shop;
+        internal ShopSelectableMgr Shop;
         internal SkillMgr SkillMgr;
         internal IWarningDestoryer WarningDestoryer;
         internal GameObject[] WarningGo;

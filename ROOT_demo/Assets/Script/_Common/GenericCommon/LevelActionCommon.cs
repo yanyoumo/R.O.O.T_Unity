@@ -20,6 +20,7 @@ namespace ROOT
         HideCheckList,
         HandOn,
         SetUnitStationary,
+        ShowStorePanel,
     }
 
     public enum BossStageType

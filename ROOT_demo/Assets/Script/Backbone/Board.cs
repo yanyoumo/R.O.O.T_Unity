@@ -482,7 +482,7 @@ namespace ROOT
                     while (queue.Count > 0)
                     {
                         var now = queue.Dequeue();
-                        foreach (var otherUnit in now.GetConnectedOtherUnit)//BUG 可能是坑在GetConnectedOtherUnit的更新上了。
+                        foreach (var otherUnit in now.GetConnectedOtherUnit)
                         {
                             if (vis[otherUnit] == false)
                             {
@@ -998,8 +998,11 @@ namespace ROOT
 
         private int GridHashCode => BoardGirdDriver.BoardGirds.Aggregate(0, (current, val) => current ^ (val.Key.GetHashCode() ^ val.Value.CellStatus.GetHashCode()));
 
+        public bool IsDataReady { get; private set; } = false;
+        
         private void FullyUpdateBoardData(IMessage rMessage)
         {
+            IsDataReady = false;
             //现在要假设所有场景内容全是错的，准备更新。
             Units.ForEach(u => u.UpdateNeighboringData());
             //至此所有Unit边界数据设置完成。
@@ -1009,6 +1012,7 @@ namespace ROOT
             Units.ForEach(u => u.UpdateActivationLED());
             //至此所有单元提示灯具设置完成。
             MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent);
+            IsDataReady = true;
         }
         
         private void Update()

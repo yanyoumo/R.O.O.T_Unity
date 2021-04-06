@@ -53,6 +53,14 @@ namespace ROOT.SetupAsset
         [Header("Tutorial")] [ShowIf("levelType", LevelType.Tutorial)]
         public TutorialActionData[] Actions;
         
+        [ShowIf("levelType", LevelType.Tutorial)][Button("Reorder Tutorial Actions")]
+        public void ReorderTutorialActions() => Actions = Actions.OrderBy(GetOrderingKeyOfTutorialAction).ToArray();
+
+        private int GetOrderingKeyOfTutorialAction(TutorialActionData data)
+        {
+            return data.ActionIdx * 10 + data.ActionSubIdx;
+        }
+        
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
 
         public BossStageType? GetBossStage => HasBossRound ? BossStage : (BossStageType?) null;
@@ -178,12 +186,19 @@ namespace ROOT.SetupAsset
                 Endless = false;
             }
         }
-        
+
         private void BossTypeChanged()
         {
-            BossSetup.BossStageTypeVal = BossStageVal;
+            try
+            {
+                BossSetup.BossStageTypeVal = BossStageVal;
+            }
+            catch (ArgumentException)
+            {
+                Debug.Log("Has no boss");
+            }
         }
-        
+
         public (int, bool, bool) GameStartingData => (InitialCurrency, ShopCost, UnitCost);
 
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;

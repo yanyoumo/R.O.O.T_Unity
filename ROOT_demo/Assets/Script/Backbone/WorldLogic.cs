@@ -1064,23 +1064,31 @@ namespace ROOT
 
         public static void InitDestoryer(ref GameAssets LevelAsset)
         {
+            if (LevelAsset.WarningDestoryer == null)
+            {
+                Debug.LogError("WarningDestoryer is null, please fix."); return;
+            }
             LevelAsset.WarningDestoryer = new MeteoriteBomber {GameBoard = LevelAsset.GameBoard};
             LevelAsset.WarningDestoryer.Init(4, 1);
         }
-
+       
         public static void InitShop(ref GameAssets LevelAsset)
         {
+            if (LevelAsset.Shop == null)
+            {
+                Debug.LogError("Shop is null, please fix."); return;
+            }
             LevelAsset.Shop.ShopInit(LevelAsset);
             LevelAsset.Shop.CurrentGameCurrencyMgr = LevelAsset.GameCurrencyMgr;
             LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
-            if (LevelAsset.ActionAsset.ExcludedShop)
-            {
-                LevelAsset.Shop.excludedTypes = LevelAsset.ActionAsset.ShopExcludedType;
-            }
         }
         
         public static void StartShop(ref GameAssets LevelAsset)
         {
+            if (LevelAsset.Shop == null)
+            {
+                Debug.LogError("Shop is null, please fix."); return;
+            }
             LevelAsset.Shop.ShopStart();
         }
         
