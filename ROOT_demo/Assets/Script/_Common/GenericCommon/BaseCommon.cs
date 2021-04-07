@@ -11,6 +11,7 @@ namespace ROOT
         SetHelpScreenShow,
         NextIsEnding,
         ToggleHandOnView,
+        ToggleAlternateTextPos,
     }
     
     public enum SupportedScreenRatio

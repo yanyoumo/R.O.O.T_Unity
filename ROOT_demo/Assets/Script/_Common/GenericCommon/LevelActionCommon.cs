@@ -21,6 +21,8 @@ namespace ROOT
         HandOn,
         SetUnitStationary,
         ShowStorePanel,
+        ToggleAlternateTextPos,
+        HighLightUI,
     }
 
     public enum BossStageType

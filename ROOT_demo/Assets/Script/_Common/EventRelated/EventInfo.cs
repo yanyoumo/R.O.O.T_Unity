@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ROOT;
+using ROOT.Common;
 using ROOT.Consts;
 using ROOT.Message;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace ROOT.Message
         public int CountDownTiming => StaticNumericData.StageWarningThreshold;
         public override string Type { get; set; }
     }
-    
+
     public class CurrencyUpdatedInfo : RootMessageBase
     {
         public int TotalIncomesVal = int.MaxValue;
@@ -34,13 +35,20 @@ namespace ROOT.Message
         public String StringData = "";
         public override string Type => WorldEvent.HintRelatedEvent;
     }
-    
-    public class ShopTierOffsetChangedData:RootMessageBase
+
+    public class ShopTierOffsetChangedData : RootMessageBase
     {
         public bool UpwardOrDownward = true;
         public override string Type => WorldEvent.ShopTierOffsetChangedEvent;
     }
-    
+
+    public class HighLightingUIChangedData : RootMessageBase
+    {
+        public bool Toggle = false;
+        public UITag uiTag = UITag.Currency;
+        public override string Type => WorldEvent.HighLightingUIChangedEvent;
+    }
+
     namespace Inquiry
     {
         public class BalancingSignalSetupInquiry : RootMessageBase
@@ -48,7 +56,7 @@ namespace ROOT.Message
             public Action<Func<int, int, float>> BalancingSignalFuncCallBack;
             public override string Type => WorldEvent.BalancingSignalSetupInquiry;
         }
-        
+
         public class AcquiringCostTargetInquiry : RootMessageBase
         {
             public Action<int> AcquiringCostTargetCallBack;

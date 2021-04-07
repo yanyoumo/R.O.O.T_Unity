@@ -55,6 +55,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 0
     ActionSubIdx: 1
     ActionType: 0
@@ -72,8 +74,29 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 0
     ActionSubIdx: 2
+    ActionType: 11
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    UITag: 0
+  - ActionIdx: 0
+    ActionSubIdx: 3
     ActionType: 3
     Text: 
     DoppelgangerToggle: 0
@@ -89,6 +112,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 1
     ActionSubIdx: 0
     ActionType: 0
@@ -106,6 +131,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 1
     ActionSubIdx: 1
     ActionType: 0
@@ -123,6 +150,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 2
     ActionSubIdx: 0
     ActionType: 0
@@ -140,6 +169,27 @@ MonoBehaviour:
     HandOnMission: "\u6D4B\u8BD5\u4EFB\u52A1"
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
+  - ActionIdx: 2
+    ActionSubIdx: 1
+    ActionType: 12
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TargetTag: 0
+    Set: 0
+    HLSet: 1
+    UITag: 0
   - ActionIdx: 3
     ActionSubIdx: 0
     ActionType: 0
@@ -157,6 +207,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 3
     ActionSubIdx: 1
     ActionType: 2
@@ -174,6 +226,27 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
+  - ActionIdx: 3
+    ActionSubIdx: 2
+    ActionType: 12
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TargetTag: 0
+    Set: 0
+    HLSet: 1
+    UITag: 1
   - ActionIdx: 4
     ActionSubIdx: 0
     ActionType: 0
@@ -191,6 +264,8 @@ MonoBehaviour:
     HandOnMission: "\u6D4B\u8BD5\u4EFB\u52A1-2"
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 4
     ActionSubIdx: 1
     ActionType: 8
@@ -208,6 +283,27 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
+  - ActionIdx: 4
+    ActionSubIdx: 2
+    ActionType: 12
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 5
     ActionSubIdx: 0
     ActionType: 3
@@ -225,6 +321,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 5
     ActionSubIdx: 1
     ActionType: 0
@@ -242,6 +340,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 6
     ActionSubIdx: 0
     ActionType: 0
@@ -259,6 +359,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 6
     ActionSubIdx: 1
     ActionType: 1
@@ -270,12 +372,14 @@ MonoBehaviour:
     HardwareType: 1
     Sides: 01000000000000000100000000000000
     Tier: 1
-    IsStationary: 0
+    IsStationary: 1
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 6
     ActionSubIdx: 2
     ActionType: 1
@@ -293,6 +397,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 6
     ActionSubIdx: 3
     ActionType: 1
@@ -310,6 +416,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 7
     ActionSubIdx: 0
     ActionType: 0
@@ -327,6 +435,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 8
     ActionSubIdx: 0
     ActionType: 0
@@ -344,6 +454,27 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
+  - ActionIdx: 8
+    ActionSubIdx: 1
+    ActionType: 11
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 9
     ActionSubIdx: 0
     ActionType: 8
@@ -361,6 +492,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 10
     ActionSubIdx: 0
     ActionType: 3
@@ -378,6 +511,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 10
     ActionSubIdx: 1
     ActionType: 0
@@ -395,6 +530,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 11
     ActionSubIdx: 0
     ActionType: 0
@@ -412,6 +549,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 12
     ActionSubIdx: 0
     ActionType: 0
@@ -429,6 +568,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 13
     ActionSubIdx: 0
     ActionType: 8
@@ -446,6 +587,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 14
     ActionSubIdx: 0
     ActionType: 3
@@ -463,6 +606,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 14
     ActionSubIdx: 1
     ActionType: 0
@@ -480,6 +625,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 15
     ActionSubIdx: 0
     ActionType: 0
@@ -497,6 +644,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 16
     ActionSubIdx: 0
     ActionType: 5
@@ -514,6 +663,8 @@ MonoBehaviour:
     HandOnMission: 
     TargetTag: 0
     Set: 0
+    HLSet: 0
+    UITag: 0
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 0

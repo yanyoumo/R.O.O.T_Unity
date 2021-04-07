@@ -16,7 +16,7 @@ namespace ROOT.UI
         {
             if (bonusIncomesVal > 0)
             {
-                BonusCurrency.text = "+" + Common.Utils.PaddingNum(bonusIncomesVal, 2);
+                BonusCurrency.text = "+" + ROOT.Common.Utils.PaddingNum(bonusIncomesVal, 2);
                 BonusCurrency.color = Color.green;
             }
             else if (bonusIncomesVal == 0)

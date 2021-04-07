@@ -82,6 +82,7 @@ namespace ROOT
         public override bool CouldHandleSkill => false;
         public override bool CouldHandleBoss => false;
         public override bool CouldHandleShop => _couldHandleShopLocal;
+        public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
         #region TutorialRelated
@@ -283,21 +284,34 @@ namespace ROOT
             SendHintData(HintEventType.SetGoalCheckListShow, false);
         }
 
+        private void ToggleAlternateText(TutorialActionData data)
+        {
+            Debug.Log("MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleAlternateTextPos});");
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleAlternateTextPos});
+        }
+
+        private void HighLightUIFunc(TutorialActionData data)
+        {
+            MessageDispatcher.SendMessage(new HighLightingUIChangedData {Toggle = data.HLSet,uiTag = data.UITag});
+        }
+
         protected override void AdditionalInitLevel()
         {
             StepActionLib = new Dictionary<TutorialActionType, Action<TutorialActionData>>
             {
-                {Text,data=>DisplayText(data.DoppelgangerToggle && StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text)},
-                {CreateUnit,CreateUnitOnBoard},
-                {End,data=>PendingEndTutorialData = true},
-                {ShowText,data=>ShowTextFunc(true)},
-                {HideText,data=>ShowTextFunc(false)},
-                {ShowCheckList,data=>ShowCheckListFunc(true)},
-                {HideCheckList,data=>ShowCheckListFunc(false)},
-                {HandOn,SetHandOn},
-                {CreateCursor,data=>WorldExecutor.InitCursor(ref LevelAsset,data.Pos)},
-                {SetUnitStationary,SetStationaryByTag},
-                {ShowStorePanel,data=>ShowShop()},
+                {Text, data => DisplayText(data.DoppelgangerToggle && StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text)},
+                {CreateUnit, CreateUnitOnBoard},
+                {End, data => PendingEndTutorialData = true},
+                {ShowText, data => ShowTextFunc(true)},
+                {HideText, data => ShowTextFunc(false)},
+                {ShowCheckList, data => ShowCheckListFunc(true)},
+                {HideCheckList, data => ShowCheckListFunc(false)},
+                {HandOn, SetHandOn},
+                {CreateCursor, data => WorldExecutor.InitCursor(ref LevelAsset, data.Pos)},
+                {SetUnitStationary, SetStationaryByTag},
+                {ShowStorePanel, data => ShowShop()},
+                {ToggleAlternateTextPos, ToggleAlternateText},
+                {HighLightUI, HighLightUIFunc},
             };
         }
 

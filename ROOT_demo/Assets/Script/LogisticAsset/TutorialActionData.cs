@@ -1,4 +1,5 @@
 using System;
+using ROOT.Common;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -17,11 +18,10 @@ namespace ROOT.SetupAsset
         [ShowIf("ActionType", TutorialActionType.Text)] [LabelWidth(30)]
         public string Text;
 
-        [ShowIf("ActionType", TutorialActionType.Text)] [HorizontalGroup("Doppelganger")] [LabelWidth(135)]
+        [ShowIf("ActionType", TutorialActionType.Text)]
         public bool DoppelgangerToggle;
 
         [ShowIf("@this.ActionType==TutorialActionType.Text&&this.DoppelgangerToggle")]
-        [HorizontalGroup("Doppelganger")]
         [LabelWidth(135)]
         public string DoppelgangerText;
 
@@ -58,8 +58,14 @@ namespace ROOT.SetupAsset
         [ShowIf("ActionType", TutorialActionType.SetUnitStationary)]
         public UnitTag TargetTag;
         
-        [Space] 
         [ShowIf("ActionType", TutorialActionType.SetUnitStationary)]
         public bool Set;//Or unset
+        
+        [Space][LabelText("Set")]
+        [ShowIf("ActionType", TutorialActionType.HighLightUI)]
+        public bool HLSet;//Or unset
+        
+        [ShowIf("@this.ActionType==TutorialActionType.HighLightUI&&this.HLSet")]
+        public UITag UITag;
     }
 }

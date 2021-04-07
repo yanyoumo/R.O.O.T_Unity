@@ -19,12 +19,15 @@ namespace ROOT.UI
     {
         public UIView TutorialCheckList;
         public UIView TutorialMainTextFrame;
+        public UIView TutorialMainTextFrame_Alter;
         public UIView TutorialHandOff;
         
         public TextMeshProUGUI TutorialTextMainContent;
+        public TextMeshProUGUI TutorialTextMainContent_Alter;
         public TutorialCheckList_Doozy TutorialCheckListCore;
 
         public TextMeshProUGUI TutorialNextContent;
+        public TextMeshProUGUI TutorialNextContent_Alter;
 
         private void UIViewToggleWrapper(ref UIView view, bool toggle)
         {
@@ -37,7 +40,24 @@ namespace ROOT.UI
                 view.Hide();
             }
         }
+
+        private bool _usingAlternateFrame;
         
+        private bool _setUsingAlternateFrame
+        {
+            set
+            {
+                _usingAlternateFrame = value;
+                Debug.Log(" _usingAlternateFrame = value;");
+                if (TutorialMainTextFrame.IsVisible || TutorialMainTextFrame_Alter.IsVisible)//这个判断不靠谱？？
+                {
+                    Debug.Log("TutorialMainTextFrame.IsShowing || TutorialMainTextFrame_Alter.IsShowing");
+                    TutorialMainTextFrame.Toggle();
+                    TutorialMainTextFrame_Alter.Toggle();
+                }
+            }
+        }
+
         private void HintEventHandler(IMessage rMessge)
         {
             if (rMessge is HintEventInfo info)
@@ -50,10 +70,14 @@ namespace ROOT.UI
                         UIViewToggleWrapper(ref TutorialCheckList, info.BoolData);
                         break;
                     case HintEventType.SetTutorialTextShow:
-                        UIViewToggleWrapper(ref TutorialMainTextFrame, info.BoolData);
+                        SetTutorialText(info);
                         break;
                     case HintEventType.SetTutorialTextContent:
-                        if (info.StringData!="") TutorialTextMainContent.text = info.StringData;
+                        if (info.StringData != "")
+                        {
+                            TutorialTextMainContent.text = info.StringData;
+                            TutorialTextMainContent_Alter.text = info.StringData;
+                        }
                         break;
                     case HintEventType.SetGoalContent:
                         TutorialCheckListCore.SetupMainGoalContent(info.StringData);
@@ -69,9 +93,13 @@ namespace ROOT.UI
                         break;
                     case HintEventType.NextIsEnding:
                         TutorialNextContent.text = "按[回车]以结束本关教程";
+                        TutorialNextContent_Alter.text = "按[回车]以结束本关教程";
                         break;
                     case HintEventType.ToggleHandOnView:
                         UIViewToggleWrapper(ref TutorialHandOff, !info.BoolData);
+                        break;
+                    case HintEventType.ToggleAlternateTextPos:
+                        _setUsingAlternateFrame = !_usingAlternateFrame;
                         break;
                     default:
                         throw new NotImplementedException();
@@ -79,6 +107,19 @@ namespace ROOT.UI
                 return;
             }
             throw new ArgumentException("info type miss match");
+        }
+
+        private void SetTutorialText(HintEventInfo info)
+        {
+            if (!_usingAlternateFrame || !info.BoolData)
+            {
+                UIViewToggleWrapper(ref TutorialMainTextFrame, info.BoolData);
+            }
+
+            if (_usingAlternateFrame || !info.BoolData)
+            {
+                UIViewToggleWrapper(ref TutorialMainTextFrame_Alter, info.BoolData);
+            }
         }
 
         private void Awake()
