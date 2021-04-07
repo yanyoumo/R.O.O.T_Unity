@@ -19,22 +19,22 @@ namespace ROOT
     public enum RootFSMStatus
     {
         //这里写全部的、Root系列中、全部可以使用的潜在状态。
-        PreInit,//FSM逻辑在初始化完成之前“阻塞性”逻辑、原则上里面不写实际逻辑。
-        MajorUpKeep,//查询玩家的输入事件、并且进行基础的清理、更新逻辑。
-        MinorUpKeep,//即使在Animate流程也会执行的逻辑部分、主要是查询是否有打断输入。
-        R_Cycle,//倒行逻辑的部分。
-        F_Cycle,//整形逻辑的核心逻辑、主要是执行具体的主干更新、数据更新等等。
-        Career_Cycle,//现有“职业”模式需要的逻辑、包含但不限于对时间轴数据的更新、等等。
-        Tutorial_Cycle,//教程相关流程的演进。
-        R_IO,//ReactToIO、对从Driver获得的CtrlPack转换成实际执行的逻辑。
-        Skill,//这个是在使用某些技能的时候需要进行Upkeep的代码。
-        TelemetryPause,//在Boss暂停的时候执行的代码。
-        Animate,//将动画向前执行一帧、但是Root的动画流程时绑定时间而不是绑定帧数的。
-        CleanUp,//将所有FSM的类数据重置、并且是FSM流程等待一帧的充分条件。
-        COUNT,//搁在最后、计数的。
+        PreInit, //FSM逻辑在初始化完成之前“阻塞性”逻辑、原则上里面不写实际逻辑。
+        MajorUpKeep, //查询玩家的输入事件、并且进行基础的清理、更新逻辑。
+        MinorUpKeep, //即使在Animate流程也会执行的逻辑部分、主要是查询是否有打断输入。
+        R_Cycle, //倒行逻辑的部分。
+        F_Cycle, //整形逻辑的核心逻辑、主要是执行具体的主干更新、数据更新等等。
+        Career_Cycle, //现有“职业”模式需要的逻辑、包含但不限于对时间轴数据的更新、等等。
+        Tutorial_Cycle, //教程相关流程的演进。
+        R_IO, //ReactToIO、对从Driver获得的CtrlPack转换成实际执行的逻辑。
+        Skill, //这个是在使用某些技能的时候需要进行Upkeep的代码。
+        TelemetryPause, //在Boss暂停的时候执行的代码。
+        Animate, //将动画向前执行一帧、但是Root的动画流程时绑定时间而不是绑定帧数的。
+        CleanUp, //将所有FSM的类数据重置、并且是FSM流程等待一帧的充分条件。
+        COUNT, //搁在最后、计数的。
     }
 
-    public abstract class FSMLevelLogic:MonoBehaviour   //LEVEL-LOGIC/每一关都有一个这个类。
+    public abstract class FSMLevelLogic : MonoBehaviour //LEVEL-LOGIC/每一关都有一个这个类。
     {
         public bool Playing { get; set; }
         [HideInInspector] public bool Animating = false;
@@ -49,34 +49,42 @@ namespace ROOT
         public abstract bool CouldHandleBoss { get; }
         public abstract bool CouldHandleShop { get; }
         public abstract BossStageType HandleBossType { get; }
-        
+
         public abstract int LEVEL_ART_SCENE_ID { get; }
         private bool movedCursor = false;
-        
+
         protected internal GameAssets LevelAsset;
         private Cursor Cursor => LevelAsset.Cursor;
         protected ControllingPack _ctrlPack;
         protected ControllingPack CtrlPack => _ctrlPack;
 
         private float AnimationTimerOrigin = 0.0f; //都是秒
-        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? AutoAnimationDuration : DefaultAnimationDuration;
+
+        public static float AnimationDuration =>
+            WorldCycler.AnimationTimeLongSwitch ? AutoAnimationDuration : DefaultAnimationDuration;
+
         private static readonly float DefaultAnimationDuration = 0.15f; //都是秒
         private static readonly float AutoAnimationDuration = 1.5f; //都是秒
 
         protected abstract string SucceedEndingTerm { get; }
         protected abstract string FailedEndingTerm { get; }
-        
+
         #region 类属性
 
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
-        private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in movedCursor);
+
+        private bool ShouldCycle =>
+            (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in movedCursor);
+
         private bool ShouldStartAnimate => ShouldCycle;
         protected virtual bool IsForwardCycle => MovedTile;
+
         #endregion
 
         #region 元初始化相关函数
 
-        protected void SendHintData(HintEventType type, bool boolData) => MessageDispatcher.SendMessage(new HintEventInfo {BoolData = boolData, HintEventType = type});
+        protected void SendHintData(HintEventType type, bool boolData) =>
+            MessageDispatcher.SendMessage(new HintEventInfo {BoolData = boolData, HintEventType = type});
 
         [Obsolete]
         public bool CheckReference() => true;
@@ -92,23 +100,27 @@ namespace ROOT
         }
 
         //这个肯定也要改成Virtual的、并且要听两个的aOP。
-        public abstract IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene);
+        public abstract IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,
+            AsyncOperation addtionalVisualScene);
 
         #endregion
 
         #region FSM参数
+
         protected RootFSM _mainFSM;
         protected ControlActionDriver _actionDriver;
         protected abstract FSMActions fsmActions { get; }
         protected abstract FSMTransitions RootFSMTransitions { get; }
+
         protected virtual Dictionary<BreakingCommand, Action> RootFSMBreakings => new Dictionary<BreakingCommand, Action>();
-        
+
         protected float TypeASignalScore = 0;
         protected float TypeBSignalScore = 0;
         protected int TypeASignalCount = 0;
         protected int TypeBSignalCount = 0;
+
         #endregion
-        
+
         #region TransitionReq
 
         protected bool CheckInited() => (ReadyToGo) && (!PendingCleanUp);
@@ -135,8 +147,9 @@ namespace ROOT
             LevelAsset.MovedCursorAni = movedCursor;
             animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
         }
-        
-        private bool ShouldCycleFunc(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
+
+        private bool ShouldCycleFunc(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile,
+            in bool movedCursor)
         {
             var shouldCycleTMP = false;
             var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
@@ -161,7 +174,7 @@ namespace ROOT
         #region Init
 
         public abstract void InitLevel();
-        
+
         private void UpdateLogicLevelReference()
         {
             LevelAsset.CursorTemplate = Resources.Load<GameObject>("Cursor/Prefab/Cursor");
@@ -174,7 +187,9 @@ namespace ROOT
         #endregion
 
         #region Animate
+
         private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
+
         private float AnimationLerper
         {
             get
@@ -185,6 +200,7 @@ namespace ROOT
         }
 
         private Coroutine animate_Co;
+
         private void AnimatingUpdate(MoveableBase moveableBase)
         {
             if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
@@ -208,7 +224,7 @@ namespace ROOT
             {
                 yield return 0;
                 LevelAsset.AnimationPendingObj.ForEach(AnimatingUpdate);
-                
+
                 //加上允许手动步进后，这个逻辑就应该独立出来了。
                 if (LevelAsset.MovedTileAni && LevelAsset.Shop && LevelAsset.Shop is IAnimatableShop shop)
                 {
@@ -264,15 +280,15 @@ namespace ROOT
         {
             //NOP
         }
-        
+
         protected void MajorUpkeepAction()
         {
             _ctrlPack = _actionDriver.CtrlQueueHeader;
-            UpdateBoardData_Stepped(ref LevelAsset);//RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
+            UpdateBoardData_Stepped(ref LevelAsset); //RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
             AdditionalMajorUpkeep();
             //WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
-        
+
         //现在在MinorUpkeep流程中、会将队列的break命令一口气全处理完。
         protected void MinorUpKeepAction()
         {
@@ -282,6 +298,7 @@ namespace ROOT
                 //这个东西也要改成可配置的。 DONE
                 _mainFSM.Breaking(_actionDriver.RequestedBreakType);
             }
+
             if (CheckGameOver) GameEnding();
         }
 
@@ -317,7 +334,7 @@ namespace ROOT
             animate_Co = null;
             LevelAsset.BoughtOnce = false;
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            LevelAsset.LevelProgress = LevelAsset.StepCount / (float)LevelAsset.ActionAsset.PlayableCount;
+            LevelAsset.LevelProgress = LevelAsset.StepCount / (float) LevelAsset.ActionAsset.PlayableCount;
         }
 
         protected void AnimateAction()
@@ -326,7 +343,7 @@ namespace ROOT
             Debug.Assert(animate_Co != null);
             UpdateBoardData_Stepped(ref LevelAsset);
         }
-        
+
         protected void ReactIO()
         {
             //这整个React to IO框架有可能都要模块化。
@@ -352,11 +369,11 @@ namespace ROOT
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
             LevelAsset.GameOverAsset = new GameOverAsset
             {
-                SuccessTerm = SucceedEndingTerm, 
+                SuccessTerm = SucceedEndingTerm,
                 FailedTerm = FailedEndingTerm
             };
         }
-        
+
         protected virtual bool CheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
 
         private void UpdateBoardData_Instantly()
@@ -370,8 +387,8 @@ namespace ROOT
                 out var hardwareBCount, out TypeBSignalCount);
             if (LevelAsset.ActionAsset.AdditionalGameSetup.IsPlayingCertainSignal(SignalType.Thermo))
             {
-                var thermoFieldUnits=LevelAsset.GameBoard.FindUnitWithCoreType(SignalType.Thermo, HardwareType.Field);
-                var res = thermoFieldUnits.Where(u=>u.SignalCore.IsUnitActive).Select(u => u.CurrentBoardPosition);
+                var thermoFieldUnits = LevelAsset.GameBoard.FindUnitWithCoreType(SignalType.Thermo, HardwareType.Field);
+                var res = thermoFieldUnits.Where(u => u.SignalCore.IsUnitActive).Select(u => u.CurrentBoardPosition);
                 currentLevelAsset.ThermoZone = res.Where(LevelAsset.GameBoard.CheckBoardPosValid).Distinct().ToList();
             }
         }
@@ -393,13 +410,15 @@ namespace ROOT
                 {
                     CrtTypeASignal = TypeASignalCount,
                     CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
-                    TypeBTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                    TypeATier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(
+                        LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
+                    TypeBTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(
+                        LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
                 },
             };
             MessageDispatcher.SendMessage(signalInfo);
         }
-        
+
         private void BoardGridThermoZoneInquiryHandler(IMessage rMessage)
         {
             if (rMessage is BoardGridThermoZoneInquiry info)
@@ -407,7 +426,7 @@ namespace ROOT
                 info.BoardGridThermoZoneInquiryCallBack(LevelAsset.ThermoZone);
             }
         }
-        
+
         private void Update()
         {
             do
@@ -420,15 +439,16 @@ namespace ROOT
                 RootDebug.Log("FSM:" + _mainFSM.currentStatus, NameID.YanYoumo_Log);
                 //RootDebug.Watch("FSM:" + _mainFSM.currentStatus, WatchID.YanYoumo_WatchA);
             } while (!_mainFSM.waitForNextFrame);
-            _mainFSM.waitForNextFrame = false;//等待之后就把这个关了。
+
+            _mainFSM.waitForNextFrame = false; //等待之后就把这个关了。
         }
-        
+
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
             _mainFSM = new RootFSM {owner = this};
             //_inquiryResponder = new FSMEventInquiryResponder(this);
-            
+
             UpdateLogicLevelReference();
 
             _mainFSM.ReplaceActions(fsmActions);
@@ -437,13 +457,14 @@ namespace ROOT
 
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
             _actionDriver = new BaseControlActionDriver(this, _mainFSM);
-            
+
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
-            MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry,BoardGridThermoZoneInquiryHandler);
+            MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
         }
+
         protected virtual void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.BoardGridThermoZoneInquiry,BoardGridThermoZoneInquiryHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
             MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
 
             _actionDriver.unsubscribe();

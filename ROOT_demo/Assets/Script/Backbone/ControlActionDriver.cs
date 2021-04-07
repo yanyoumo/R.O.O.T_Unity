@@ -119,7 +119,7 @@ namespace ROOT
                 CtrlPack.CommandDir = dir.Value;
                 CtrlPack.ReplaceFlag(actionPack.HoldForDrag ? ControllingCommand.Drag : ControllingCommand.Move);
                 CtrlPack.CurrentPos = _ownerLogic.LevelAsset.Cursor.CurrentBoardPosition;
-                CtrlPack.NextPos = _ownerLogic.LevelAsset.Cursor.GetCoord(CtrlPack.CommandDir);
+                CtrlPack.NextPos = _ownerLogic.LevelAsset.Cursor.GetNeigbourCoord(CtrlPack.CommandDir);
             }
             else if (actionPack.IsAction(RotateUnit))
             {

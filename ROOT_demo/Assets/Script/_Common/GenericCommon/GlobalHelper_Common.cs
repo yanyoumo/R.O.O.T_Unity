@@ -5,6 +5,23 @@ namespace ROOT.Common
 {
     public static class Utils
     {
+        public static Quaternion RotationToQuaternion(RotationDirection direction)
+        {
+            switch (direction)
+            {
+                case RotationDirection.North:
+                    return Quaternion.Euler(0, 0, 0);
+                case RotationDirection.East:
+                    return Quaternion.Euler(0, 90, 0);
+                case RotationDirection.West:
+                    return Quaternion.Euler(0, 270, 0);
+                default:
+                    return Quaternion.Euler(0, 180, 0);
+            }
+        }
+        
+        public static Vector2Int _V2ToV2Int(Vector2 pos) => new Vector2Int(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y));
+
         public static string PaddingNum(int input, int digit)
         {
             switch (digit)

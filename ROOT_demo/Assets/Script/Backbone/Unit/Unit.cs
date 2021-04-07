@@ -520,7 +520,7 @@ namespace ROOT
 
         public void UpdateWorldRotationTransform()
         {
-            _rootTransform.rotation = RotationToQuaternion(_unitRotation);
+            _rootTransform.rotation = Common.Utils.RotationToQuaternion(_unitRotation);
         }
 
 

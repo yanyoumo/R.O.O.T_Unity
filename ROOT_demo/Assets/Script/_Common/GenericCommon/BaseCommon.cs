@@ -1,3 +1,5 @@
+using System;
+
 namespace ROOT
 {
     public enum HintEventType
@@ -27,17 +29,18 @@ namespace ROOT
         Mouse,
         TouchScreen,
     }
-    
+
+    [Flags]
     public enum PosSetFlag
     {
-        NONE,
-        Current,
-        Next,
-        Lerping,
-        NextAndLerping,
-        CurrentAndLerping,
-        CurrentAndNext,
-        All,
+        NONE = 0,
+        Current = 1 << 0,
+        Next = 1 << 1,
+        Lerping = 1 << 2,
+        NextAndLerping = Next | Lerping,
+        CurrentAndLerping = Current | Lerping,
+        CurrentAndNext = Current | Next,
+        All = Current | Next | Lerping,
     }
 
     public enum RotateCommand
