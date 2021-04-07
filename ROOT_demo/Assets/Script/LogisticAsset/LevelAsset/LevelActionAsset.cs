@@ -18,19 +18,16 @@ namespace ROOT.SetupAsset
         [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab")]
         public GameObject LevelLogic;
 
-        [Range(0, 100)]
-        public int InitialCurrency = 36;
+        [Range(0, 100)] public int InitialCurrency = 36;
 
-        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")]
-        [LabelText("Shop has cost")]
+        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [LabelText("Shop has cost")]
         public bool ShopCost = true;
-        
-        [VerticalGroup("Split/Right")]
-        [LabelText("Unit could cost")]
+
+        [VerticalGroup("Split/Right")] [LabelText("Unit could cost")]
         public bool UnitCost = true;
-        
+
         [Space] [EnumToggleButtons] public LevelType levelType;
-        
+
         [Header("Career")] [ShowIf("levelType", LevelType.Career)]
         public AdditionalGameSetup AdditionalGameSetup;
 
@@ -43,27 +40,30 @@ namespace ROOT.SetupAsset
         [ShowIf("levelType", LevelType.Career)] [HideIf("HasBossRound")]
         public bool Endless;
 
-        [ShowIf("levelType", LevelType.Career)] [ShowIf("HasBossRound")]
-        [OnValueChanged("BossTypeChanged")]
+        [ShowIf("levelType", LevelType.Career)] [ShowIf("HasBossRound")] [OnValueChanged("BossTypeChanged")]
         public BossStageType BossStage;
-        
+
         [ShowIf("levelType", LevelType.Career)]
         public List<RoundData> RoundLib;
 
-        [Header("Tutorial")] [ShowIf("levelType", LevelType.Tutorial)]
+        [Header("Tutorial")]
+        [ShowIf("levelType", LevelType.Tutorial)]
+        [TableList(DrawScrollView = true, MinScrollViewHeight = 500, MaxScrollViewHeight = 1000)]
         public TutorialActionData[] Actions;
-        
-        [ShowIf("levelType", LevelType.Tutorial)][Button("Reorder Tutorial Actions")]
+
+        [ShowIf("levelType", LevelType.Tutorial)]
+        [Button("Reorder Tutorial Actions")]
         public void ReorderTutorialActions() => Actions = Actions.OrderBy(GetOrderingKeyOfTutorialAction).ToArray();
 
         private int GetOrderingKeyOfTutorialAction(TutorialActionData data)
         {
             return data.ActionIdx * 10 + data.ActionSubIdx;
         }
-        
+
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
 
         public BossStageType? GetBossStage => HasBossRound ? BossStage : (BossStageType?) null;
+
         public BossStageType BossStageVal
         {
             get
@@ -72,6 +72,7 @@ namespace ROOT.SetupAsset
                 {
                     return GetBossStage.Value;
                 }
+
                 throw new ArgumentException("this lib has no bossStage.");
             }
         }
@@ -88,11 +89,13 @@ namespace ROOT.SetupAsset
                     throw new Exception("a round lib couldn't has boss and being endless");
 #endif
                 }
+
                 return Endless;
             }
         }
 
         [ShowInInspector]
+        [ShowIf("levelType", LevelType.Career)]
         public int PlayableCount
         {
             get
@@ -110,9 +113,10 @@ namespace ROOT.SetupAsset
             {
                 return false;
             }
+
             return StepCount >= PlayableCount;
         }
-        
+
         [ShowInInspector] [ShowIf("HasBossRound")]
         public BossAdditionalSetupAsset BossSetup;
 
@@ -122,14 +126,15 @@ namespace ROOT.SetupAsset
             return GetCurrentRound(step, out truncatedStep, out normalRoundEnded, ref loopedCount);
         }
 
-        private RoundData GetCurrentRound(int step, out int truncatedStep,out bool normalRoundEnded,ref int loopedCount)
+        private RoundData GetCurrentRound(int step, out int truncatedStep, out bool normalRoundEnded,
+            ref int loopedCount)
         {
             var tmpStep = step;
             normalRoundEnded = false;
             foreach (var roundData in RoundLib)
             {
                 tmpStep -= roundData.TotalLength;
-                if (tmpStep<0)
+                if (tmpStep < 0)
                 {
                     truncatedStep = tmpStep + roundData.TotalLength;
                     loopedCount = 0;
@@ -158,18 +163,19 @@ namespace ROOT.SetupAsset
 
         public RoundGist GetCurrentRoundGist(int step)
         {
-            var round = GetCurrentRound(step,out var truncatedStep,out var normalRoundEnded);
+            var round = GetCurrentRound(step, out var truncatedStep, out var normalRoundEnded);
             if (!normalRoundEnded)
             {
                 var stage = GetCurrentType(step);
                 return round.ExtractGist(stage);
             }
+
             return new RoundGist {owner = RoundLib[0], Type = StageType.Boss};
         }
-        
+
         public StageType GetCurrentType(int step)
         {
-            var currentRound=GetCurrentRound(step, out int truncatedStep,out var normalRoundEnded);
+            var currentRound = GetCurrentRound(step, out int truncatedStep, out var normalRoundEnded);
             return !normalRoundEnded ? currentRound.GetCurrentType(truncatedStep) : StageType.Boss;
         }
 
@@ -178,7 +184,7 @@ namespace ROOT.SetupAsset
             GetCurrentRound(step, out var res, out var B);
             return res;
         }
-        
+
         private void HasBossChanged()
         {
             if (HasBossRound)

@@ -20,7 +20,7 @@ namespace ROOT
         HideCheckList,
         HandOn,
         SetUnitStationary,
-        ShowStorePanel,
+        ShowStorePanel,//TODO not tested
         ToggleAlternateTextPos,
         HighLightUI,
     }
