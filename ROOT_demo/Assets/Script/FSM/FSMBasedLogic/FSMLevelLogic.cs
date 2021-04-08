@@ -430,6 +430,8 @@ namespace ROOT
             _mainFSM.waitForNextFrame = false; //等待之后就把这个关了。
         }
 
+        protected abstract void createDriver();
+        
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
@@ -443,7 +445,8 @@ namespace ROOT
             _mainFSM.ReplaceBreaking(RootFSMBreakings);
 
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            _actionDriver = new BaseControlActionDriver(this, _mainFSM);
+            createDriver();
+            Debug.Assert(_actionDriver!=null,"have to implement controller driver in 'createDriver' func");
 
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
             MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
@@ -454,7 +457,7 @@ namespace ROOT
             MessageDispatcher.RemoveListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
             MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
 
-            _actionDriver.unsubscribe();
+            _actionDriver.Unsubscribe();
             _actionDriver = null;
         }
     }

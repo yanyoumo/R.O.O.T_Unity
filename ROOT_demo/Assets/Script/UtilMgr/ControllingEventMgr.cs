@@ -171,6 +171,7 @@ namespace ROOT
                 HoldForDrag = holdForDrag,
                 Sender = this,
             };
+            //Debug.Log("OnInputUpdateBasicButton");
             MessageDispatcher.SendMessage(actionPack);
         }
 

@@ -218,7 +218,7 @@ namespace ROOT
 
         public static int GetUnitTierInt(Unit now)
         {
-            return Mathf.RoundToInt(ROOT.ShopMgr.TierMultiplier(now.Tier).Item1);
+            return Mathf.RoundToInt(ShopSelectableMgr.TierMultiplier(now.Tier).Item1);
         }
 
         public static void DebugLogArray(int[] Array)

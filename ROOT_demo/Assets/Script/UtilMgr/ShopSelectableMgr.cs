@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using JetBrains.Annotations;
+using ROOT;
 using ROOT.Message;
 using ROOT.Signal;
 using TMPro;
@@ -12,8 +14,84 @@ namespace ROOT
 {
     using UnitTypeCombo=Tuple<SignalType,HardwareType>;
 
-    public class ShopSelectableMgr : ShopBase
+    public interface IAnimatableShop
     {
+        void ShopPreAnimationUpdate();
+        void ShopUpdateAnimation(float lerp);
+        void ShopPostAnimationUpdate();
+    }
+    
+    public class ShopSelectableMgr : MonoBehaviour
+    {
+        //目前这两个是写死的；之后商店这个种类也改成可配置的；DONE
+        private SignalType _signalTypeA = SignalType.Matrix;
+        private SignalType _signalTypeB = SignalType.Scan;
+
+        private ((UnitTypeCombo, UnitTypeCombo), (UnitTypeCombo, UnitTypeCombo)) UnitType => (UnitTypeA,UnitTypeB);
+        private (UnitTypeCombo, UnitTypeCombo) UnitTypeA=> (new UnitTypeCombo(_signalTypeA, HardwareType.Core), new UnitTypeCombo(_signalTypeA, HardwareType.Field));
+        private (UnitTypeCombo, UnitTypeCombo) UnitTypeB => (new UnitTypeCombo(_signalTypeB, HardwareType.Core), new UnitTypeCombo(_signalTypeB, HardwareType.Field));
+
+        public GameObject UnitTemplate;
+        private GameAssets currentLevelAsset;
+        public Board GameBoard;
+        public GameCurrencyMgr CurrentGameCurrencyMgr;
+        public List<SignalType> excludedTypes = new List<SignalType>();
+        
+        private bool _shopOpening;
+        private int TotalCount = 0;
+        
+        [CanBeNull] private Unit[] _itemUnit => _items.Select(unit => unit ? unit.GetComponentInChildren<Unit>() : null).ToArray();
+
+        private float[] _hardwarePrices;
+
+        private GameObject InitUnitShopCore(SignalType signal, HardwareType genre, SideType[] sides, int ID,
+            int _cost, int tier)
+        {
+            var go = Instantiate(UnitTemplate);
+            go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
+            var unit = go.GetComponentInChildren<Unit>();
+            unit.InitPosWithAnimation(Vector2Int.zero);
+            unit.InitUnit(signal, genre, sides,  tier);
+            return go;
+        }
+
+        private int TierProgress(float gameProgress)
+        {
+            var fluctuationRate = 0.25f;
+            var fluctuation = 1.0f;
+            var baseTier = Mathf.Lerp(1, 6, gameProgress);
+            return Mathf.Clamp(Mathf.RoundToInt(baseTier), 1, 5);
+        }
+
+        private Dictionary<SideType, float> _priceBySide { set; get; }
+
+        private void InitPrice()
+        {
+            _priceBySide = new Dictionary<SideType, float>()
+            {
+                {SideType.NoConnection, 0.0f},
+                {SideType.Connection, 2.0f},
+            };
+        }
+
+        private GameObject[] _items;
+
+        /// <summary>
+        /// 从Tier获取单元各种数据的倍率。
+        /// </summary>
+        /// <param name="Tier">位于哪个Tier</param>
+        /// <returns>依次为（分数、购买价格、Cost）的float Tuple</returns>
+        public static Tuple<float, float, float> TierMultiplier(int Tier)
+        {
+            //目前对Tier进行设定：
+            //先确定需要由Tier影响的内容：
+            //分数、购买价格、Cost。
+            var SignalMultipler = (float) Tier;
+            var PriceMultipler = 1.0f + 1.75f * (Tier - 1);//这个数据现在看起来太温柔、斜率绝对不能小于1.
+            var CostMultipler = 1.0f + 0.5f * Tier;
+            return new Tuple<float, float, float>(SignalMultipler, PriceMultipler, CostMultipler);
+        }
+        
         private void UpdateShopSelf(int discount)
         {
             //主要是要把打折的相关数据放进来。
@@ -35,9 +113,9 @@ namespace ROOT
             }
         }
 
-        public override bool ShopOpening
+        public bool ShopOpening
         {
-            protected set
+            private set
             {
                 DisplayRoot.gameObject.SetActive(value);
                 _shopOpening = value;
@@ -97,13 +175,13 @@ namespace ROOT
 
         private readonly float YOffset = 0.05f;
 
-        private int discountRate = 0;
+        private int _discountRate = 0;
 
         private int UnitRetailPrice(int idx, int tier)
         {
             var val = _hardwarePrices[idx] * TierMultiplier(tier).Item2;
             val = tier <= 2 ? Mathf.Round(val) : Mathf.Round(val / 5.0f) * 5.0f;//在这里对数据进行一个规范化。
-            val *= 1.0f - discountRate * 0.01f;
+            val *= 1.0f - _discountRate * 0.01f;
             return Mathf.RoundToInt(Math.Max(val, 1));
         }
 
@@ -171,10 +249,10 @@ namespace ROOT
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
-        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(SignalTypeB,HardwareType.Core) > 0;
-        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(SignalTypeA,HardwareType.Core) > 0;
+        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(_signalTypeB,HardwareType.Core) > 0;
+        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(_signalTypeA,HardwareType.Core) > 0;
 
-        protected override UnitTypeCombo GenerateRandomCore()
+        protected UnitTypeCombo GenerateRandomCore()
         {
             return Random.value > 0.5f ? UnitType.Item1.Item2 : UnitType.Item2.Item2;
         }
@@ -238,29 +316,29 @@ namespace ROOT
             }
         }
 
-        public override void ShopInit(GameAssets _currentLevelAsset)
+        public void ShopInit(GameAssets _currentLevelAsset)
         {
             currentLevelAsset = _currentLevelAsset;
             _items = new GameObject[MaxDisplayCount];
             _hardwarePrices = new float[MaxDisplayCount];
-            SignalTypeA = _currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA;
-            SignalTypeB = _currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB;
+            _signalTypeA = _currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA;
+            _signalTypeB = _currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB;
         }
 
         //Init和Start还是在这个层级拆开吧、一个是设置数据、一个是实际实现数据。
-        public override void ShopStart()
+        public void ShopStart()
         {
             InitPrice();
             CreateSelfUnit();
             ShopTierMultiplierText.text = "1";
         }
 
-        public override void OpenShop(bool Opening, int discount)
+        public void OpenShop(bool Opening, int discount)
         {
             if (Opening && !_shopOpening)
             {
                 UpdateShopSelf(discount);
-                discountRate = discount;
+                _discountRate = discount;
             }
             ShopOpening = Opening;
         }
@@ -275,7 +353,7 @@ namespace ROOT
             return go;
         }
 
-        public override bool BuyToRandom(int shopID)
+        public bool BuyToRandom(int shopID)
         {
             var itemID = ItemIDFromShopID(shopID);
             if (!_items[itemID]) return false;
@@ -303,7 +381,7 @@ namespace ROOT
             return shopID;
         }
 
-        public override bool RequestBuy(int shopID, out int postalPrice)
+        public bool RequestBuy(int shopID, out int postalPrice)
         {
             postalPrice = 0;
             var itemID = ItemIDFromShopID(shopID);
@@ -319,12 +397,12 @@ namespace ROOT
             return false;
         }
 
-        public override void ResetPendingBuy()
+        public void ResetPendingBuy()
         {
             //throw new NotImplementedException();
         }
 
-        public override bool BuyToPos(int idx, Vector2Int pos, bool crash)
+        public bool BuyToPos(int idx, Vector2Int pos, bool crash)
         {
             return false;
             //throw new NotImplementedException();
@@ -357,7 +435,7 @@ namespace ROOT
                 if (tmpTier > 0 && tmpTier < 6)
                 {
                     _ShopTierMultiplierOffset = tmpOffset;
-                    UpdateShopSelf(discountRate);
+                    UpdateShopSelf(_discountRate);
                 }
                 ShopTierMultiplierText.text = ShopTierMultiplier.ToString();
             }

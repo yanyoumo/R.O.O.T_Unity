@@ -59,7 +59,12 @@ namespace ROOT
 
             SendHintData(HintEventType.SetGoalCheckListShow, false);
         }
-        
+
+        protected override void createDriver()
+        {
+            _actionDriver = new BaseControlActionDriver(this, _mainFSM);
+        }
+
         public override IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene)
         {
             while (!baseVisualScene.isDone)

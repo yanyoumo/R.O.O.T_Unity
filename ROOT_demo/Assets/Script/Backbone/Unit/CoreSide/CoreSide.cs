@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ROOT
 {
-    public sealed partial class ShopMgr : ShopBase
+    /*public sealed partial class ShopMgr : ShopBase
     {
         private int StationaryRateListLastIndex = 0;
         //因为静态单位对游戏体验还是太重要了，不能随便放给随机。还是要控制起来。
@@ -67,5 +67,5 @@ namespace ROOT
             postalPrice = totalPrice - unitPrice;
             return totalPrice;
         }
-    }
+    }*/
 }

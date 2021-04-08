@@ -137,7 +137,7 @@ namespace ROOT
             };
             if (dic.Count==1) return dic.Keys.ToArray()[0];
 
-            ShopMgr.NormalizeDicVal(ref dic);
+            Common.Utils.NormalizeDicVal(ref dic);
 
             Vector2Int res;
             const int countMax = 100;

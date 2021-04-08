@@ -1166,7 +1166,7 @@ namespace ROOT
 
         [Obsolete]
         public static void UpdateShopBuy(
-            GameAssets currentLevelAsset, ShopBase shopMgr,
+            GameAssets currentLevelAsset, ShopSelectableMgr shopMgr,
             in ControllingPack ctrlPack, bool crashable,
             ref bool boughtOnce, out int postalPrice)
         {

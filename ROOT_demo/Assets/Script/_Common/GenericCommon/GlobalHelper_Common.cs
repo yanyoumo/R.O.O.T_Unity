@@ -1,10 +1,31 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ROOT.Common
 {
     public static class Utils
     {
+        public static void NormalizeDicVal<T>(ref Dictionary<T, float> lib)
+        {
+            float totalWeight = 0;
+            foreach (var weight in lib.Values)
+            {
+                totalWeight += weight;
+            }
+
+            if (!(Mathf.Abs(totalWeight - 1) < 1e-3))
+            {
+                var keys = lib.Keys.ToArray().Clone() as T[];
+                foreach (var coreType in keys)
+                {
+                    lib[coreType] /= totalWeight;
+                }
+            }
+        }
+
+        
         public static Quaternion RotationToQuaternion(RotationDirection direction)
         {
             switch (direction)

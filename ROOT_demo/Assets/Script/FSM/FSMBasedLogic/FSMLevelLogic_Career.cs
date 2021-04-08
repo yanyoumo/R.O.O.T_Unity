@@ -285,11 +285,15 @@ namespace ROOT
             RootFSMTransitions.Add(new RootFSMTransition(RootFSMStatus.R_Cycle, RootFSMStatus.Career_Cycle));
         }
 
+        protected override void createDriver()
+        {
+            _actionDriver = new CareerControlActionDriver(this, _mainFSM);
+        }
+
         protected override void Awake()
         {
             base.Awake();
             RoundLibDriver = new RoundLibDriver {owner = this};
-            _actionDriver = new CareerControlActionDriver(this, _mainFSM);
         }
     }
 }

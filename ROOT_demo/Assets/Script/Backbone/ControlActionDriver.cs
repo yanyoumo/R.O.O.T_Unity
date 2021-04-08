@@ -15,8 +15,6 @@ namespace ROOT
 
     public abstract class ControlActionDriver
     {
-        //public static UI.UIEvent.InGameOverlayToggle InGameOverlayToggleEvent;
-
         private readonly FSMLevelLogic _ownerLogic;
         private RootFSM _mainFsm;
         private readonly Queue<ControllingPack> _ctrlPackQueue;
@@ -143,8 +141,10 @@ namespace ROOT
                 return false;
             }
 
+            //Debug.Log("CoreDrivingFunction");
             if (actionPack.IsAction(ShopTierUp))
             {
+                //Debug.Log("SendMessage(new ShopTierOffsetChangedData {UpwardOrDownward = true})");
                 MessageDispatcher.SendMessage(new ShopTierOffsetChangedData {UpwardOrDownward = true});
                 return false;
             }
@@ -251,6 +251,7 @@ namespace ROOT
             var actionPack = rMessage as ActionPack;
             CtrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
             _shouldQueue = true;
+            //Debug.Log("RespondToControlEvent");
             foreach (var rsp in RespondList)
             {
                 _shouldQueue = rsp(actionPack);
@@ -262,9 +263,9 @@ namespace ROOT
             }
         }
 
-        public void unsubscribe()
+        public void Unsubscribe()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.ControllingEvent, RespondToControlEvent);
+            MessageDispatcher.RemoveListener(WorldEvent.ControllingEvent, RespondToControlEvent, true);
         }
     }
 

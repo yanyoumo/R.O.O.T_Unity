@@ -34,7 +34,7 @@ namespace ROOT
     }
 
     
-    public sealed partial class ShopMgr
+    /*public sealed partial class ShopMgr
     {
         /// <summary>
         /// 生成新的静态单元Flag的Array。
@@ -119,7 +119,7 @@ namespace ROOT
         {
             throw new NotImplementedException();
         }
-    }
+    }*/
 
     public partial class Unit : MoveableBase,IClickable
     {
