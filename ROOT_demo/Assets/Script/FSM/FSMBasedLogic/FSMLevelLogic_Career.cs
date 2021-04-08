@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
+using ROOT.Common;
 using ROOT.Consts;
 using ROOT.Message;
 using UnityEngine;

@@ -64,7 +64,6 @@ namespace ROOT
         void SetRequire(int dur, int normal, int network);
         void ResetRequire();
     }
-
     
     public abstract class ShopBase : MonoBehaviour
     {
