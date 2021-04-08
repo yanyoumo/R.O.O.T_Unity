@@ -389,7 +389,7 @@ MonoBehaviour:
     Pos: {x: 3, y: 0}
     Core: 0
     HardwareType: 1
-    Sides: 01000000000000000100000000000000
+    Sides: 00000000010000000000000001000000
     Tier: 1
     IsStationary: 1
     Tag: 0
@@ -408,7 +408,7 @@ MonoBehaviour:
     Pos: {x: 2, y: 3}
     Core: 0
     HardwareType: 1
-    Sides: 00000000010000000000000001000000
+    Sides: 01000000010000000000000000000000
     Tier: 1
     IsStationary: 0
     Tag: 0
@@ -427,7 +427,7 @@ MonoBehaviour:
     Pos: {x: 4, y: 4}
     Core: 0
     HardwareType: 1
-    Sides: 00000000010000000000000001000000
+    Sides: 00000000000000000100000001000000
     Tier: 1
     IsStationary: 0
     Tag: 0

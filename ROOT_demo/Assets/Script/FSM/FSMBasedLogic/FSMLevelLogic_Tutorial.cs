@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Common;
@@ -26,19 +27,19 @@ namespace ROOT
     //从技术上讲可以、使用Dict存储一个enum-Func对儿；这样在Action里面就可以通过enum配置实际的逻辑。
     //这么搞的确有很多优势、但是也有一些问题。
     //先说优势：
-        //1、极端情况下、就都不用每个教程关卡都需要一个新的FSM了。
-        //2、判断函数是可以对立拎出来了。
+    //1、极端情况下、就都不用每个教程关卡都需要一个新的FSM了。
+    //2、判断函数是可以对立拎出来了。
     //再说劣势：
-        //1、实现框架需要仔细想；可能会十分复杂。
-        //2、判断函数的参数定死了。（FSMLogic和Board可以提供数据源
-            //但是一个重要的问题，是具体可配置的参数怎么办？例如判断已有的某个数据是否高于某个阈值、这个阈值怎么传进去？
-            //理论上可以传一个Object、但是也有不少问题。
-   
+    //1、实现框架需要仔细想；可能会十分复杂。
+    //2、判断函数的参数定死了。（FSMLogic和Board可以提供数据源
+    //但是一个重要的问题，是具体可配置的参数怎么办？例如判断已有的某个数据是否高于某个阈值、这个阈值怎么传进去？
+    //理论上可以传一个Object、但是也有不少问题。
+
     public static class TutorialCheckFunctionList
     {
-        public static bool MoveCursorToTarget55(FSMLevelLogic fsm,Board board)
+        public static bool MoveCursorToTarget55(FSMLevelLogic fsm, Board board)
         {
-            return fsm.LevelAsset.Cursor.CurrentBoardPosition.Equals(new Vector2Int(5,5));
+            return fsm.LevelAsset.Cursor.CurrentBoardPosition.Equals(new Vector2Int(5, 5));
         }
 
         public static bool MoveMatrixUnitsToSameYIndex(FSMLevelLogic fsm, Board board)
@@ -57,16 +58,62 @@ namespace ROOT
 
         public static bool MoveThreeMatrixUnitsToOneLink(FSMLevelLogic fsm, Board board)
         {
+            // to get connectivity
             while (!board.IsDataReady) { }
-            return board.GetConnectComponent()==1;
+            return board.GetConnectComponent() == 1;
         }
+
+        public static bool ConnectOneMatrixUnitWithMatrixCore(FSMLevelLogic fsm, Board board)
+        {
+            // to get connectivity
+            while (!board.IsDataReady) { }
+            // we have one matrix field and one matrix core here
+            return board.Units.Where(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
+                unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Field)));
+        }
+
+        public static bool ConnectAllMatrixUnitsWithMatrixCore(FSMLevelLogic fsm, Board board)
+        {
+            // to get connectivity
+            while (!board.IsDataReady) { }
+            // link all the units together
+            return board.GetConnectComponent() == 1;
+        }
+
+        public static bool ConnectThermalUnitWithThermalCore(FSMLevelLogic fsm, Board board)
+        {
+            // to get connectivity
+            while (!board.IsDataReady) { }
+            // we have one thermo field and one thermo core here
+            return board.Units.Where(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Core)).Any(unit =>
+                unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Field)));
+        }
+
+        public static bool Buy3UnitsOrNotEnoughMoney(FSMLevelLogic fsm, Board board)
+        {
+            return board.Units.Length >= 3 || Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) < 4;
+        }
+
+        public static bool FourWarningGridOneHeatSink(FSMLevelLogic fsm, Board board)
+        {
+            return board.BoardGirdDriver.BoardGirds.Values.Count(cell => cell.CellStatus == CellStatus.Warning) >= 4 &&
+                   board.BoardGirdDriver.BoardGirds.Values.Any(cell => cell.CellStatus == CellStatus.Sink);
+        }
+
     }
 
     public enum TutorialCheckType
     {
         MoveCursorToTarget55,
         MoveMatrixUnitsToSameYIndex,
-        MoveThreeMatrixUnitsToOneLink
+        MoveThreeMatrixUnitsToOneLink,
+        ConnectOneMatrixUnitWithMatrixCore,
+        ConnectAllMatrixUnitsWithMatrixCore,
+        ConnectThermalUnitWithThermalCore,
+        ConnectMatrixLinksWithThermalLinks,
+        ConnectNewAddedThermalUnitsIntoLinks,
+        Buy3UnitsOrNotEnoughMoney,
+        FourWarningGridOneHeatSink,
     }
 
     public sealed class FSMLevelLogic_Tutorial : FSMLevelLogic_Barebone
@@ -75,9 +122,16 @@ namespace ROOT
         {
             {TutorialCheckType.MoveCursorToTarget55, TutorialCheckFunctionList.MoveCursorToTarget55},
             {TutorialCheckType.MoveMatrixUnitsToSameYIndex, TutorialCheckFunctionList.MoveMatrixUnitsToSameYIndex},
-            {TutorialCheckType.MoveThreeMatrixUnitsToOneLink, TutorialCheckFunctionList.MoveThreeMatrixUnitsToOneLink}
+            {TutorialCheckType.MoveThreeMatrixUnitsToOneLink, TutorialCheckFunctionList.MoveThreeMatrixUnitsToOneLink},
+            {TutorialCheckType.ConnectOneMatrixUnitWithMatrixCore, TutorialCheckFunctionList.ConnectOneMatrixUnitWithMatrixCore},
+            {TutorialCheckType.ConnectAllMatrixUnitsWithMatrixCore, TutorialCheckFunctionList.ConnectAllMatrixUnitsWithMatrixCore},
+            {TutorialCheckType.ConnectThermalUnitWithThermalCore, TutorialCheckFunctionList.ConnectThermalUnitWithThermalCore},
+            //{TutorialCheckType.ConnectMatrixLinksWithThermalLinks, TutorialCheckFunctionList.ConnectMatrixLinksWithThermalLinks},
+            //{TutorialCheckType.ConnectNewAddedThermalUnitsIntoLinks, TutorialCheckFunctionList.ConnectNewAddedThermalUnitsIntoLinks},
+            {TutorialCheckType.Buy3UnitsOrNotEnoughMoney, TutorialCheckFunctionList.Buy3UnitsOrNotEnoughMoney},
+            {TutorialCheckType.FourWarningGridOneHeatSink, TutorialCheckFunctionList.FourWarningGridOneHeatSink}
         };
-        
+
         protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
         protected override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
         public override bool IsTutorial => true;
@@ -90,7 +144,7 @@ namespace ROOT
         #region TutorialRelated
 
         private bool _couldHandleShopLocal;
-        
+
         protected int CurrentActionIndex { get; private set; } = -1;
         //private int LastActionCount { get; set; } = 0;
 
@@ -110,7 +164,7 @@ namespace ROOT
         public bool NotEnding => !PendingEndTutorialData.HasValue;
         public bool EndingWSuccess => PendingEndTutorialData.HasValue && PendingEndTutorialData.Value;
         public bool EndingWFailed => PendingEndTutorialData.HasValue && !PendingEndTutorialData.Value;
-        
+
         protected override bool CheckGameOver
         {
             get
@@ -158,7 +212,7 @@ namespace ROOT
 
                 ProcessdToTutorialCycle = true;
                 //仔细想了一下、Driver和这个React的流程又要有、一个是吧额外的ActionID转义为ControllingCommand。
-                    //顺带、根据这个思路，可能可以把Driver再拆分一下。//现在先不这么做、有空给搞一下。
+                //顺带、根据这个思路，可能可以把Driver再拆分一下。//现在先不这么做、有空给搞一下。
                 //另一个是把ControllingCommand转义为实际的工作。
             }
         }
@@ -185,7 +239,7 @@ namespace ROOT
             LevelAsset.Shop.OpenShop(true, 0);
             _couldHandleShopLocal = true;
         }
-        
+
         private Func<FSMLevelLogic, Board, bool> PendingHandOnChecking = (a, b) => false;
 
         private Dictionary<TutorialActionType, Action<TutorialActionData>> StepActionLib;
@@ -208,7 +262,7 @@ namespace ROOT
             tutActions.Where(a => a.ActionIdx == CurrentActionIndex).OrderBy(d=>d.ActionSubIdx).ForEach(DealStep);
             if (tutActions.Any(a => a.ActionIdx == CurrentActionIndex + 1 && a.ActionType == End))
             {
-                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.NextIsEnding});
+                MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.NextIsEnding });
             }
         }
 
@@ -221,19 +275,19 @@ namespace ROOT
         {
             TutorialOnHand = true;
             PendingHandOnChecking = CheckLib[data.HandOnCheckType];
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission});
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = true});
+            MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission });
+            MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = true });
             ShowCheckListFunc(true);
             ShowTextFunc(false);
             CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);//这边就就地测一下
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
+            MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet });
         }
 
         private void UnsetHandOn()
         {
             TutorialOnHand = false;
             PendingHandOnChecking = (a, b) => false;
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
+            MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = false });
             ShowCheckListFunc(false);
             CurrentHandOnCheckMet = false;
             StepForward();
@@ -246,9 +300,9 @@ namespace ROOT
         }
 
         private bool CheckTutorialEnding() => EndingWSuccess;
-        
+
         private bool CheckTutorialCycle() => ProcessdToTutorialCycle;
-        
+
         private bool CheckNotOnHand() => !TutorialOnHand;
 
         private void TutorialCycle()
@@ -274,7 +328,7 @@ namespace ROOT
             CurrentActionIndex = -1;
             StepForward();
             DealStepMgr();
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
+            MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = false });
         }
 
         public override void InitLevel()
@@ -286,12 +340,12 @@ namespace ROOT
             LevelAsset.BaseDeltaCurrency = 0.0f;
             LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
             LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
-            
+
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
             AdditionalInitLevel();
-            
+
             ReadyToGo = true;
 
             SendHintData(HintEventType.SetGoalCheckListShow, false);
@@ -362,7 +416,7 @@ namespace ROOT
             if (TutorialOnHand)
             {
                 CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);//这边就就地测一下
-                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
+                MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet });
             }
         }
 
@@ -375,7 +429,7 @@ namespace ROOT
                 CurrentHandOnCheckMet = PendingHandOnChecking(this, LevelAsset.GameBoard);
                 //根据现在能识别到需要再接收一下玩家的“回车”来“手动通过”这个判断。
                 //那个判断现在具体的执行是：在系统判断到条件满足后、需要玩家手动按动一下确定键（回车）来继续。
-                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet});
+                MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet });
             }
         }
 
