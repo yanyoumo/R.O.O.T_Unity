@@ -4,6 +4,8 @@ using System.Linq;
 using com.ootii.Messages;
 using JetBrains.Annotations;
 using ROOT;
+using ROOT.Configs;
+using ROOT.Consts;
 using ROOT.Message;
 using ROOT.Signal;
 using TMPro;
@@ -34,9 +36,8 @@ namespace ROOT
         public GameObject UnitTemplate;
         private GameAssets currentLevelAsset;
         public Board GameBoard;
-        public GameCurrencyMgr CurrentGameCurrencyMgr;
-        public List<SignalType> excludedTypes = new List<SignalType>();
-        
+        public GameCurrencyMgr CurrencyMgr;
+
         private bool _shopOpening;
         private int TotalCount = 0;
         
@@ -55,43 +56,8 @@ namespace ROOT
             return go;
         }
 
-        private int TierProgress(float gameProgress)
-        {
-            var fluctuationRate = 0.25f;
-            var fluctuation = 1.0f;
-            var baseTier = Mathf.Lerp(1, 6, gameProgress);
-            return Mathf.Clamp(Mathf.RoundToInt(baseTier), 1, 5);
-        }
-
-        private Dictionary<SideType, float> _priceBySide { set; get; }
-
-        private void InitPrice()
-        {
-            _priceBySide = new Dictionary<SideType, float>()
-            {
-                {SideType.NoConnection, 0.0f},
-                {SideType.Connection, 2.0f},
-            };
-        }
-
         private GameObject[] _items;
 
-        /// <summary>
-        /// 从Tier获取单元各种数据的倍率。
-        /// </summary>
-        /// <param name="Tier">位于哪个Tier</param>
-        /// <returns>依次为（分数、购买价格、Cost）的float Tuple</returns>
-        public static Tuple<float, float, float> TierMultiplier(int Tier)
-        {
-            //目前对Tier进行设定：
-            //先确定需要由Tier影响的内容：
-            //分数、购买价格、Cost。
-            var SignalMultipler = (float) Tier;
-            var PriceMultipler = 1.0f + 1.75f * (Tier - 1);//这个数据现在看起来太温柔、斜率绝对不能小于1.
-            var CostMultipler = 1.0f + 0.5f * Tier;
-            return new Tuple<float, float, float>(SignalMultipler, PriceMultipler, CostMultipler);
-        }
-        
         private void UpdateShopSelf(int discount)
         {
             //主要是要把打折的相关数据放进来。
@@ -179,7 +145,7 @@ namespace ROOT
 
         private int UnitRetailPrice(int idx, int tier)
         {
-            var val = _hardwarePrices[idx] * TierMultiplier(tier).Item2;
+            var val = _hardwarePrices[idx] * ConfigCommons.TierMultiplier(tier).Item2;
             val = tier <= 2 ? Mathf.Round(val) : Mathf.Round(val / 5.0f) * 5.0f;//在这里对数据进行一个规范化。
             val *= 1.0f - _discountRate * 0.01f;
             return Mathf.RoundToInt(Math.Max(val, 1));
@@ -249,15 +215,12 @@ namespace ROOT
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
 
-        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(_signalTypeB,HardwareType.Core) > 0;
         private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(_signalTypeA,HardwareType.Core) > 0;
+        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(_signalTypeB,HardwareType.Core) > 0;
 
-        protected UnitTypeCombo GenerateRandomCore()
-        {
-            return Random.value > 0.5f ? UnitType.Item1.Item2 : UnitType.Item2.Item2;
-        }
+        private UnitTypeCombo GenerateRandomCore() => Random.value > 0.5f ? UnitType.Item1.Item2 : UnitType.Item2.Item2;
 
-        private int _rawShopTierMultiplier => TierProgress(currentLevelAsset.LevelProgress);
+        private int _rawShopTierMultiplier => ConfigCommons.TierProgress(currentLevelAsset.LevelProgress);
         private int _ShopTierMultiplierOffset = 0;
 
         private int ShopTierMultiplier => _rawShopTierMultiplier + _ShopTierMultiplierOffset;
@@ -328,7 +291,6 @@ namespace ROOT
         //Init和Start还是在这个层级拆开吧、一个是设置数据、一个是实际实现数据。
         public void ShopStart()
         {
-            InitPrice();
             CreateSelfUnit();
             ShopTierMultiplierText.text = "1";
         }
@@ -358,7 +320,7 @@ namespace ROOT
             var itemID = ItemIDFromShopID(shopID);
             if (!_items[itemID]) return false;
 
-            if (!CurrentGameCurrencyMgr.SpendShopCurrency(UnitRetailPrice(itemID, _itemUnit[itemID].Tier))) return false;
+            if (!CurrencyMgr.SpendShopCurrency(UnitRetailPrice(itemID, _itemUnit[itemID].Tier))) return false;
 
             if (_itemUnit != null)
             {
@@ -371,7 +333,7 @@ namespace ROOT
             }
         }
 
-        private static int ItemIDFromShopID(in int shopID)
+        private static int ItemIDFromShopID(in int shopID)//这个是shop本身的、不用提出去。
         {
             //Key:   1234567890
             //ShopID:0123456789
@@ -388,12 +350,11 @@ namespace ROOT
             if (!_items[itemID]) return false;
 
             var totalPrice = UnitRetailPrice(itemID, _itemUnit[itemID].Tier);
-            if (CurrentGameCurrencyMgr.Currency >= totalPrice)
+            if (CurrencyMgr.Currency >= totalPrice)
             {
                 _items[itemID].GetComponentInChildren<Unit>().SetPendingBuying = true;
                 return true;
             }
-
             return false;
         }
 
@@ -432,7 +393,7 @@ namespace ROOT
             {
                 var tmpOffset = _ShopTierMultiplierOffset + (data.UpwardOrDownward ? 1 : -1);
                 var tmpTier = _rawShopTierMultiplier + tmpOffset;
-                if (tmpTier > 0 && tmpTier < 6)
+                if (tmpTier > 0 && tmpTier < StaticNumericData.MaxUnitTier)
                 {
                     _ShopTierMultiplierOffset = tmpOffset;
                     UpdateShopSelf(_discountRate);

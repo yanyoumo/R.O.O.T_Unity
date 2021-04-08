@@ -1079,7 +1079,7 @@ namespace ROOT
                 Debug.LogError("Shop is null, please fix."); return;
             }
             LevelAsset.Shop.ShopInit(LevelAsset);
-            LevelAsset.Shop.CurrentGameCurrencyMgr = LevelAsset.GameCurrencyMgr;
+            LevelAsset.Shop.CurrencyMgr = LevelAsset.GameCurrencyMgr;
             LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
             LevelAsset.Shop.ShopStart();
         }

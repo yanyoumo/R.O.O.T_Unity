@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ROOT.Configs;
 using UnityEngine;
 using ROOT.Consts;
 using Random = UnityEngine.Random;
@@ -218,7 +219,7 @@ namespace ROOT
 
         public static int GetUnitTierInt(Unit now)
         {
-            return Mathf.RoundToInt(ShopSelectableMgr.TierMultiplier(now.Tier).Item1);
+            return Mathf.RoundToInt(ConfigCommons.TierMultiplier(now.Tier).Item1);
         }
 
         public static void DebugLogArray(int[] Array)
