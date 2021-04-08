@@ -87,6 +87,17 @@ namespace ROOT
                 unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Field)));
         }
 
+        public static bool Buy3UnitsOrNotEnoughMoney(FSMLevelLogic fsm, Board board)
+        {
+            return board.Units.Length >= 3 || Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) < 4;
+        }
+
+        public static bool FourWarningGridOneHeatSink(FSMLevelLogic fsm, Board board)
+        {
+            return board.BoardGirdDriver.BoardGirds.Values.Count(cell => cell.CellStatus == CellStatus.Warning) >= 4 &&
+                   board.BoardGirdDriver.BoardGirds.Values.Any(cell => cell.CellStatus == CellStatus.Sink);
+        }
+
     }
 
     public enum TutorialCheckType
@@ -98,7 +109,9 @@ namespace ROOT
         ConnectAllMatrixUnitsWithMatrixCore,
         ConnectThermalUnitWithThermalCore,
         ConnectMatrixLinksWithThermalLinks,
-        ConnectNewAddedThermalUnitsIntoLinks
+        ConnectNewAddedThermalUnitsIntoLinks,
+        Buy3UnitsOrNotEnoughMoney,
+        FourWarningGridOneHeatSink,
     }
 
     public sealed class FSMLevelLogic_Tutorial : FSMLevelLogic_Barebone
@@ -112,7 +125,9 @@ namespace ROOT
             {TutorialCheckType.ConnectAllMatrixUnitsWithMatrixCore, TutorialCheckFunctionList.ConnectAllMatrixUnitsWithMatrixCore},
             {TutorialCheckType.ConnectThermalUnitWithThermalCore, TutorialCheckFunctionList.ConnectThermalUnitWithThermalCore},
             //{TutorialCheckType.ConnectMatrixLinksWithThermalLinks, TutorialCheckFunctionList.ConnectMatrixLinksWithThermalLinks},
-            //{TutorialCheckType.ConnectNewAddedThermalUnitsIntoLinks, TutorialCheckFunctionList.ConnectNewAddedThermalUnitsIntoLinks}
+            //{TutorialCheckType.ConnectNewAddedThermalUnitsIntoLinks, TutorialCheckFunctionList.ConnectNewAddedThermalUnitsIntoLinks},
+            {TutorialCheckType.Buy3UnitsOrNotEnoughMoney, TutorialCheckFunctionList.Buy3UnitsOrNotEnoughMoney},
+            {TutorialCheckType.FourWarningGridOneHeatSink, TutorialCheckFunctionList.FourWarningGridOneHeatSink}
         };
 
         protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
