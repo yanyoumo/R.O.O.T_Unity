@@ -33,7 +33,7 @@ namespace ROOT
         }
     }
 
-    
+
     public sealed partial class ShopMgr
     {
         /// <summary>
@@ -121,7 +121,7 @@ namespace ROOT
         }
     }
 
-    public partial class Unit : MoveableBase,IClickable
+    public partial class Unit : MoveableBase, IClickable
     {
         [ReadOnly] public UnitTag UnitTag = UnitTag.NoTag;
         public UnitSignalCoreBase SignalCore;
@@ -129,11 +129,16 @@ namespace ROOT
 
         public Dictionary<SignalType, SignalData> SignalDataPackList => SignalCore.SignalDataPackList;
 
+        public bool JudgeType(SignalType signalType, HardwareType hardwareType)
+        {
+            return UnitSignal == signalType && UnitHardware == hardwareType;
+        }
+
         public SignalData SignalDataVal(SignalType signalType)
         {
             return SignalDataPackList[signalType];
         }
-        
+
         public MeshRenderer UnitActivationLEDMat;
         public Color[] UnitActivationLEDMat_Colors => SignalMasterMgr.Instance.UnitActivationLED_Colors;
 
@@ -217,7 +222,7 @@ namespace ROOT
             ShopBackPlane.gameObject.SetActive(false);
             ShopID = -1;
         }
-        
+
         public void SetShop(int shopID, int retailPrice, int discountRate, int _cost, bool? showQuad)
         {
             ShopID = shopID;
@@ -263,7 +268,7 @@ namespace ROOT
                 AdditionalClampMesh.material = ImmovableMat;
             }
         }
-        
+
         public bool SetPendingBuying
         {
             set
@@ -316,7 +321,7 @@ namespace ROOT
             Immovable = true;
             StationUnit = true;
         }
-        
+
         //Rotation使用的世界方向的。
         public Dictionary<RotationDirection, ConnectionData> WorldNeighboringData { protected set; get; }
 
@@ -427,11 +432,11 @@ namespace ROOT
             Tier = tier;
         }
 
-        public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides, int tier,UnitTag unitTag=UnitTag.NoTag, Board gameBoard = null)
+        public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides, int tier, UnitTag unitTag = UnitTag.NoTag, Board gameBoard = null)
         {
             Debug.Assert(sides.Length == 4);
             InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3],
-                tier,unitTag, gameBoard);
+                tier, unitTag, gameBoard);
         }
 
         public static SignalType PlayingSignalA;
@@ -440,7 +445,7 @@ namespace ROOT
 
         private void InitUnit(SignalType signal, HardwareType genre,
             SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
-            int tier,UnitTag _unitTag=UnitTag.NoTag, Board gameBoard = null)
+            int tier, UnitTag _unitTag = UnitTag.NoTag, Board gameBoard = null)
         {
             UnitTag = _unitTag;
             UnitSignal = signal;
@@ -601,8 +606,8 @@ namespace ROOT
 
             var shouldShow = false;
 
-            var signal = new[] {SignalType.Thermo};
-            
+            var signal = new[] { SignalType.Thermo };
+
             foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
             {
                 var tmpShouldShow = SignalMasterMgr.Instance.ShowSignal(signalType, crtDir, this, otherUnit);
@@ -619,7 +624,7 @@ namespace ROOT
             WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
             return data.HasConnector && data.Connected && SideFilter(dir) && data.OtherUnit != null;
         }
-        
+
         #region Blink
 
         //这里需要完全重做、但是优先级没有多高。
@@ -745,7 +750,7 @@ namespace ROOT
 
         public SignalPath FindSignalPath_Iter(SignalType targetSignalType)
         {
-            var res = new SignalPath {this};
+            var res = new SignalPath { this };
             var unit = SignalCore.SignalDataPackList[targetSignalType].UpstreamUnit;
             if (unit != null)
             {
@@ -758,7 +763,7 @@ namespace ROOT
         public bool NotBeingSignallyReferenced(SignalType targetSignalType)
         {
             var otherUnits = GetConnectedOtherUnit;
-            if (otherUnits.Count==0) return false;
+            if (otherUnits.Count == 0) return false;
             return otherUnits.All(u => u.SignalDataVal(targetSignalType).UpstreamUnit != this);
         }
     }
