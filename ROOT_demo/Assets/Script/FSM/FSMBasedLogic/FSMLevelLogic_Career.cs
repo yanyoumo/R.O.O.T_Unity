@@ -73,8 +73,7 @@ namespace ROOT
             base.AdditionalInitLevel();
             WorldExecutor.InitDestoryer(ref LevelAsset);
             LevelAsset.DestroyerEnabled = false;
-            WorldExecutor.InitShop(ref LevelAsset);
-            WorldExecutor.StartShop(ref LevelAsset);
+            WorldExecutor.InitAndStartShop(ref LevelAsset);
             
             var message = new CurrencyUpdatedInfo()
             {

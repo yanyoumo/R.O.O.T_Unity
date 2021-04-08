@@ -152,6 +152,25 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+  - ActionIdx: 1
+    ActionSubIdx: 2
+    ActionType: 10
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    UITag: 0
   - ActionIdx: 2
     ActionSubIdx: 0
     ActionType: 0

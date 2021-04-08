@@ -35,16 +35,6 @@ namespace ROOT
             }
         }
 
-        public override void OpenShop(bool Opening, int discount)
-        {
-            if (Opening && !_shopOpening)
-            {
-                UpdateShopSelf(discount);
-                discountRate = discount;
-            }
-            ShopOpening = Opening;
-        }
-
         public override bool ShopOpening
         {
             protected set
@@ -257,14 +247,24 @@ namespace ROOT
             SignalTypeB = _currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB;
         }
 
+        //Init和Start还是在这个层级拆开吧、一个是设置数据、一个是实际实现数据。
         public override void ShopStart()
         {
             InitPrice();
-            //InitSideCoreWeight();
             CreateSelfUnit();
             ShopTierMultiplierText.text = "1";
         }
 
+        public override void OpenShop(bool Opening, int discount)
+        {
+            if (Opening && !_shopOpening)
+            {
+                UpdateShopSelf(discount);
+                discountRate = discount;
+            }
+            ShopOpening = Opening;
+        }
+        
         private GameObject InitUnitShop(Unit SelfUnit)
         {
             var go = Instantiate(UnitTemplate);

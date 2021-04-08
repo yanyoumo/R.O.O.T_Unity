@@ -1072,7 +1072,7 @@ namespace ROOT
             LevelAsset.WarningDestoryer.Init(4, 1);
         }
        
-        public static void InitShop(ref GameAssets LevelAsset)
+        public static void InitAndStartShop(ref GameAssets LevelAsset)
         {
             if (LevelAsset.Shop == null)
             {
@@ -1081,17 +1081,9 @@ namespace ROOT
             LevelAsset.Shop.ShopInit(LevelAsset);
             LevelAsset.Shop.CurrentGameCurrencyMgr = LevelAsset.GameCurrencyMgr;
             LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
-        }
-        
-        public static void StartShop(ref GameAssets LevelAsset)
-        {
-            if (LevelAsset.Shop == null)
-            {
-                Debug.LogError("Shop is null, please fix."); return;
-            }
             LevelAsset.Shop.ShopStart();
         }
-        
+
         public static void UpdateRotate(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack)
         {
             if (ctrlPack.HasFlag(ControllingCommand.Rotate))

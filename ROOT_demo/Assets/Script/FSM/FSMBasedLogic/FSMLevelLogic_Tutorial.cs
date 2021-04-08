@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
@@ -96,7 +97,8 @@ namespace ROOT
         protected virtual string SecondaryGoalEntryContent { get; } = "";*/
 
         private LevelActionAsset LevelActionAsset => LevelAsset.ActionAsset;
-        
+        private TutorialActionData[] tutActions => LevelActionAsset.Actions;
+
         private void ShowTextFunc(bool val)=>SendHintData(HintEventType.SetTutorialTextShow, val);
         private void ShowCheckListFunc(bool val)=>SendHintData(HintEventType.SetGoalCheckListShow, val);
         
@@ -162,21 +164,31 @@ namespace ROOT
 
         //protected abstract void AdditionalDealStep(TutorialActionData data);
 
-        private void ShowShop()
+        private void PrepShowShop()
         {
             if (LevelAsset.Shop == null)
             {
                 LevelAsset.Shop = FindObjectOfType<ShopSelectableMgr>();
                 if (LevelAsset.Shop == null) throw new ArgumentException("Could not find shop in scene.");
-            }
-            WorldExecutor.InitShop(ref LevelAsset);
+            }    
+        }
 
+        private void InitShop()
+        {
+            WorldExecutor.InitAndStartShop(ref LevelAsset);//果然这个东西有问题、三个初始化节点可能都得拆、找引用、Init和start。
+        }
+        
+        private void ShowShop(TutorialActionData data)
+        {
+            //TODO 还是接一下Data的内容。//Hide 相关的流程放在里面。
+            LevelAsset.Shop.OpenShop(true, 0);
             _couldHandleShopLocal = true;
         }
         
         private Func<FSMLevelLogic, Board, bool> PendingHandOnChecking = (a, b) => false;
 
         private Dictionary<TutorialActionType, Action<TutorialActionData>> StepActionLib;
+        private Dictionary<TutorialActionType, Tuple<Action,Action>> ActionPrepLib;
 
         private void SetStationaryByTag(TutorialActionData data)
         {
@@ -192,8 +204,8 @@ namespace ROOT
         private void DealStepMgr()
         {
             //现在是执行也按照SubIdx升序执行。
-            LevelActionAsset.Actions.Where(a => a.ActionIdx == CurrentActionIndex).OrderBy(d=>d.ActionSubIdx).ForEach(DealStep);
-            if (LevelActionAsset.Actions.Any(a => a.ActionIdx == CurrentActionIndex + 1 && a.ActionType == End))
+            tutActions.Where(a => a.ActionIdx == CurrentActionIndex).OrderBy(d=>d.ActionSubIdx).ForEach(DealStep);
+            if (tutActions.Any(a => a.ActionIdx == CurrentActionIndex + 1 && a.ActionType == End))
             {
                 MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.NextIsEnding});
             }
@@ -295,10 +307,22 @@ namespace ROOT
             MessageDispatcher.SendMessage(new HighLightingUIChangedData {Toggle = data.HLSet,uiTag = data.UITag});
         }
 
-        protected override void AdditionalInitLevel()
+        public override IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene, AsyncOperation addtionalVisualScene)
         {
-            StepActionLib = new Dictionary<TutorialActionType, Action<TutorialActionData>>
+            while (!baseVisualScene.isDone||!addtionalVisualScene.isDone)
             {
+                yield return 0;
+            }
+            SetActionPrep();//这个节点上主要是可以做一些找场景引用的事情。
+            AdditionalArtLevelReference(ref LevelAsset);
+            SendHintData(HintEventType.SetTutorialTextShow, false);
+            PopulateArtLevelReference();
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            StepActionLib = new Dictionary<TutorialActionType, Action<TutorialActionData>> {
                 {Text, data => DisplayText(data.DoppelgangerToggle && StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text)},
                 {CreateUnit, CreateUnitOnBoard},
                 {End, data => PendingEndTutorialData = true},
@@ -309,10 +333,26 @@ namespace ROOT
                 {HandOn, SetHandOn},
                 {CreateCursor, data => WorldExecutor.InitCursor(ref LevelAsset, data.Pos)},
                 {SetUnitStationary, SetStationaryByTag},
-                {ShowStorePanel, data => ShowShop()},
+                {ShowStorePanel, ShowShop},
                 {ToggleAlternateTextPos, ToggleAlternateText},
                 {HighLightUI, HighLightUIFunc},
             };
+            ActionPrepLib = new Dictionary<TutorialActionType, Tuple<Action,Action>> {
+                {ShowStorePanel, new Tuple<Action, Action>(PrepShowShop,InitShop)},
+            };//RISK 这个框架在技术上可以、但是真的有必要吗？和是不是别的框架设计需要更新。
+        }
+        
+        private void SetActionPrep() => ActionPrepLib
+            .Where(v => tutActions.Select(a => a.ActionType).Contains(v.Key))
+            .ForEach(v => v.Value.Item1());
+
+        private void SetActionInit() => ActionPrepLib
+            .Where(v => tutActions.Select(a => a.ActionType).Contains(v.Key))
+            .ForEach(v => v.Value.Item2());
+        
+        protected override void AdditionalInitLevel()
+        {
+            SetActionInit();
         }
 
         protected override void AdditionalMajorUpkeep()

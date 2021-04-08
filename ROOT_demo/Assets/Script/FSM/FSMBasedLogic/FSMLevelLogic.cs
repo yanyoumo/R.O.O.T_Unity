@@ -351,7 +351,11 @@ namespace ROOT
             WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack);
             LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
             MovedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
-            if (CouldHandleShop) MovedTile |= WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
+            if (CouldHandleShop)
+            {
+                Debug.Log("CouldHandleShop");
+                MovedTile |= WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
+            }
             AdditionalReactIO();
         }
 
