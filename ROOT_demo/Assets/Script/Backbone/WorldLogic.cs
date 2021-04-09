@@ -1071,17 +1071,17 @@ namespace ROOT
             LevelAsset.WarningDestoryer = new MeteoriteBomber {GameBoard = LevelAsset.GameBoard};
             LevelAsset.WarningDestoryer.Init(4, 1);
         }
-       
+
         public static void InitAndStartShop(ref GameAssets LevelAsset)
         {
-            if (LevelAsset.Shop == null)
+            try
             {
-                Debug.LogError("Shop is null, please fix."); return;
+                LevelAsset.Shop.ShopStart();
             }
-            LevelAsset.Shop.ShopInit(LevelAsset);
-            LevelAsset.Shop.CurrencyMgr = LevelAsset.GameCurrencyMgr;
-            LevelAsset.Shop.GameBoard = LevelAsset.GameBoard;
-            LevelAsset.Shop.ShopStart();
+            catch (NullReferenceException)
+            {
+                Debug.LogError("Shop is null, please fix.");
+            }
         }
 
         public static void UpdateRotate(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack)

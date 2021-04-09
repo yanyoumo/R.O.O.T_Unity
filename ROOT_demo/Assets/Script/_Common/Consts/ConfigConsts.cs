@@ -13,6 +13,18 @@ namespace ROOT.Configs
             {SideType.Connection, 2.0f},
         };
 
+        public static SideType[] ShopSidesByCount(int i)
+        {
+            var lib = new[]
+            {
+                new[] {SideType.Connection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection},
+                new[] {SideType.Connection, SideType.Connection, SideType.NoConnection, SideType.NoConnection},
+                new[] {SideType.Connection, SideType.NoConnection, SideType.Connection, SideType.NoConnection},
+                new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.NoConnection},
+            };
+            return lib[i];
+        }
+        
         /// <summary>
         /// 从Tier获取单元各种数据的倍率。
         /// </summary>

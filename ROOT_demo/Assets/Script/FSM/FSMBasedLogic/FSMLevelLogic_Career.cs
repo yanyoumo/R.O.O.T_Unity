@@ -257,6 +257,7 @@ namespace ROOT
                 yield return 0;
             }
             LevelAsset.Shop = FindObjectOfType<ShopSelectableMgr>();
+            LevelAsset.Shop._fsmLevelLogic = this;
             AdditionalArtLevelReference(ref LevelAsset);
             SendHintData(HintEventType.SetTutorialTextShow, false);
             PopulateArtLevelReference();

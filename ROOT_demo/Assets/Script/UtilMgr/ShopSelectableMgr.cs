@@ -22,42 +22,73 @@ namespace ROOT
         void ShopUpdateAnimation(float lerp);
         void ShopPostAnimationUpdate();
     }
-    
+
     public class ShopSelectableMgr : MonoBehaviour
     {
-        //目前这两个是写死的；之后商店这个种类也改成可配置的；DONE
-        private SignalType _signalTypeA = SignalType.Matrix;
-        private SignalType _signalTypeB = SignalType.Scan;
+        #region UnitType
 
-        private ((UnitTypeCombo, UnitTypeCombo), (UnitTypeCombo, UnitTypeCombo)) UnitType => (UnitTypeA,UnitTypeB);
-        private (UnitTypeCombo, UnitTypeCombo) UnitTypeA=> (new UnitTypeCombo(_signalTypeA, HardwareType.Core), new UnitTypeCombo(_signalTypeA, HardwareType.Field));
-        private (UnitTypeCombo, UnitTypeCombo) UnitTypeB => (new UnitTypeCombo(_signalTypeB, HardwareType.Core), new UnitTypeCombo(_signalTypeB, HardwareType.Field));
+        private SignalType AType => CurrentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA;
+        private SignalType BType => CurrentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB;
 
-        public GameObject UnitTemplate;
-        private GameAssets currentLevelAsset;
-        public Board GameBoard;
-        public GameCurrencyMgr CurrencyMgr;
+        private UnitTypeCombo TypeAField => new UnitTypeCombo(AType, HardwareType.Field);
+        private UnitTypeCombo TypeACore => new UnitTypeCombo(AType, HardwareType.Core);
+        private UnitTypeCombo TypeBField => new UnitTypeCombo(BType, HardwareType.Field);
+        private UnitTypeCombo TypeBCore => new UnitTypeCombo(BType, HardwareType.Core);
 
-        private bool _shopOpening;
-        private int TotalCount = 0;
+        #endregion
         
-        [CanBeNull] private Unit[] _itemUnit => _items.Select(unit => unit ? unit.GetComponentInChildren<Unit>() : null).ToArray();
+        public GameObject UnitTemplate;
 
-        private float[] _hardwarePrices;
+        [HideInInspector]
+        public FSMLevelLogic _fsmLevelLogic;
 
-        private GameObject InitUnitShopCore(SignalType signal, HardwareType genre, SideType[] sides, int ID,
-            int _cost, int tier)
-        {
-            var go = Instantiate(UnitTemplate);
-            go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
-            var unit = go.GetComponentInChildren<Unit>();
-            unit.InitPosWithAnimation(Vector2Int.zero);
-            unit.InitUnit(signal, genre, sides,  tier);
-            return go;
-        }
+        private GameAssets CurrentLevelAsset => _fsmLevelLogic.LevelAsset;
+        private Board GameBoard => _fsmLevelLogic.LevelAsset.GameBoard;
+        private GameCurrencyMgr CurrencyMgr => CurrentLevelAsset.GameCurrencyMgr;
+
+        private int TotalCount = 0;
 
         private GameObject[] _items;
+        private int _discountRate = 0;
+        private float[] _hardwarePrices;
+        [CanBeNull] private Unit[] _itemUnit => _items.Select(unit => unit ? unit.GetComponentInChildren<Unit>() : null).ToArray();
 
+        private bool _shopOpening;
+        public bool ShopOpening
+        {
+            private set
+            {
+                DisplayRoot.gameObject.SetActive(value);
+                _shopOpening = value;
+            }
+            get => _shopOpening;
+        }
+
+        public Transform DisplayRoot;
+        public Transform StaticContent;
+        private readonly float Offset = 1.589f;
+        private readonly float OffsetX = -1.926f;
+        private readonly int HorizontalCount = 4;
+        private readonly int VerticalCount = 3;
+        private readonly int PremiumCount = 2;
+
+        public TextMeshPro ShopTierMultiplierText;
+        
+        private int EmptyCount => HorizontalCount - PremiumCount;
+        private int RetailCount => HorizontalCount * (VerticalCount - 1);
+        private int MaxDisplayCount => (VerticalCount - 1) * HorizontalCount + PremiumCount;
+
+        private readonly float YOffset = 0.05f;
+        
+        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(AType,HardwareType.Core) > 0;
+        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(BType,HardwareType.Core) > 0;
+
+        private UnitTypeCombo GenerateRandomCore() => Random.value > 0.5f ? TypeAField : TypeBField;
+
+        private int _rawShopTierMultiplier => ConfigCommons.TierProgress(CurrentLevelAsset.LevelProgress);
+        private int _ShopTierMultiplierOffset = 0;
+        private int ShopTierMultiplier => _rawShopTierMultiplier + _ShopTierMultiplierOffset;
+        
         private void UpdateShopSelf(int discount)
         {
             //主要是要把打折的相关数据放进来。
@@ -78,71 +109,6 @@ namespace ROOT
                 }
             }
         }
-
-        public bool ShopOpening
-        {
-            private set
-            {
-                DisplayRoot.gameObject.SetActive(value);
-                _shopOpening = value;
-            }
-            get => _shopOpening;
-        }
-
-        /// <summary>
-        /// 根据商店的基本设置从2D转换为线性的ID。
-        /// </summary>
-        /// <param name="i">输入 i</param>
-        /// <param name="j">输入 j</param>
-        /// <returns>如果此处不应该放置单位则返回-1</returns>
-        private int IJtoID(int i, int j)
-        {
-            var rawRes = j + i * HorizontalCount;
-            if (i < VerticalCount - 1)
-            {
-                return rawRes;
-            }
-            else
-            {
-                return j < EmptyCount ? -1 : rawRes - EmptyCount;
-            }
-        }
-
-        /// <summary>
-        /// 根据现有设置，从1D的ID转换为二维ID。
-        /// </summary>
-        /// <param name="ID">输入ID</param>
-        /// <returns>如果输入非法ID则返回null</returns>
-        [CanBeNull]
-        private Tuple<int, int> IDtoIJ(int ID)
-        {
-            if (ID >= TotalCount) return null;
-
-            var modID = (ID >= RetailCount) ? ID + EmptyCount : ID;
-
-            //if (ID >= RetailCount) modID += EmptyCount;
-
-            return new Tuple<int, int>(modID / HorizontalCount, modID % HorizontalCount);
-        }
-
-        public Transform DisplayRoot;
-        public Transform StaticContent;
-        private readonly float Offset = 1.589f;
-        private readonly float OffsetX = -1.926f;
-        private readonly int HorizontalCount = 4;
-        private readonly int VerticalCount = 3;
-        private readonly int PremiumCount = 2;
-
-        public TextMeshPro ShopTierMultiplierText;
-        
-        private int EmptyCount => HorizontalCount - PremiumCount;
-        private int RetailCount => HorizontalCount * (VerticalCount - 1);
-        private int MaxDisplayCount => (VerticalCount - 1) * HorizontalCount + PremiumCount;
-
-        private readonly float YOffset = 0.05f;
-
-        private int _discountRate = 0;
-
         private int UnitRetailPrice(int idx, int tier)
         {
             var val = _hardwarePrices[idx] * ConfigCommons.TierMultiplier(tier).Item2;
@@ -150,8 +116,6 @@ namespace ROOT
             val *= 1.0f - _discountRate * 0.01f;
             return Mathf.RoundToInt(Math.Max(val, 1));
         }
-
-        //TEMP 这个还是要统一管理起来。
         private int UnitHardwarePrice(SignalType signal,HardwareType genre, SideType[] sides)
         {
             var corePrice = SignalMasterMgr.Instance.PriceFromUnit(signal, genre);
@@ -160,102 +124,15 @@ namespace ROOT
             var hardwarePrice = corePrice + sidePrice;
             return Mathf.RoundToInt(hardwarePrice);
         }
-
-        private GameObject InitUnitShop(SignalType signal,HardwareType genre, SideType[] sides, out int hardwarePrice, int ID, int _cost,
-            int tier, int discount)
+        
+        private UnitTypeCombo GenerateSelfCoreAndTier(in int typeID, out int tier)
         {
-            var go = InitUnitShopCore(signal,genre, sides, ID, _cost, tier);
-            go.transform.parent = DisplayRoot;
-            var unit = go.GetComponentInChildren<Unit>();
-            hardwarePrice = UnitHardwarePrice(signal,genre, sides);
-            _hardwarePrices[ID] = hardwarePrice;
-            //TODO
-            unit.SetShop(ID, UnitRetailPrice(ID, tier), discount, _cost, true);
-            _items[ID] = go;
-            return go;
-        }
-
-        private UnitTypeCombo GenerateSelfCoreAndTier(in int i, out int tier)
-        {
-            tier =ShopTierMultiplier;
-            switch (i)
+            tier = ShopTierMultiplier;
+            return typeID switch
             {
-                case 0:
-                    return UnitType.Item1.Item2;
-                case 1:
-                default:
-                    return UnitType.Item2.Item2;
-            }
-        }
-
-        private SideType[] GenerateSide(in int i)
-        {
-            switch (i)
-            {
-                case 0:
-                    return new[]
-                        {SideType.Connection, SideType.NoConnection, SideType.NoConnection, SideType.NoConnection};
-                case 1:
-                    return new[]
-                        {SideType.Connection, SideType.Connection, SideType.NoConnection, SideType.NoConnection};
-                case 2:
-                    return new[]
-                        {SideType.Connection, SideType.NoConnection, SideType.Connection, SideType.NoConnection};
-                case 3:
-                default:
-                    return new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.NoConnection};
-            }
-        }
-
-        private void CreateSelfUnit(int i, int j, int discount)
-        {
-            var ID = IJtoID(i, j);
-            var core = GenerateSelfCoreAndTier(in i, out var tier);
-            var go = InitUnitShop(core.Item1,core.Item2, GenerateSide(j), out var hardwarePrice, ID, 0, tier, discount);
-            go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
-        }
-
-        private bool CoreUnitTypeAOnBoard => GameBoard.GetCountByType(_signalTypeA,HardwareType.Core) > 0;
-        private bool CoreUnitTypeBOnBoard => GameBoard.GetCountByType(_signalTypeB,HardwareType.Core) > 0;
-
-        private UnitTypeCombo GenerateRandomCore() => Random.value > 0.5f ? UnitType.Item1.Item2 : UnitType.Item2.Item2;
-
-        private int _rawShopTierMultiplier => ConfigCommons.TierProgress(currentLevelAsset.LevelProgress);
-        private int _ShopTierMultiplierOffset = 0;
-
-        private int ShopTierMultiplier => _rawShopTierMultiplier + _ShopTierMultiplierOffset;
-
-        private void CreatePremiumUnit(int i, int j, int discount)
-        {
-            //ShopTierMultiplier = TierProgress(currentLevelAsset.LevelProgress);
-            var ID = IJtoID(i, j);
-            UnitTypeCombo core;
-            if (CoreUnitTypeBOnBoard && CoreUnitTypeAOnBoard)
-            {
-                //RISK 这里的生成有问题。还是要确认一下。
-                //这个函数是基类提供的；那个配置代码没有和UnitType解耦干净。
-                core = GenerateRandomCore();
-            }
-            else if (CoreUnitTypeBOnBoard)
-            {
-                core = UnitType.Item1.Item1;
-            }
-            else if (CoreUnitTypeAOnBoard)
-            {
-                core = UnitType.Item2.Item1;
-            }
-            else
-            {
-                //hmmmmm这里先这样吧…………
-                core = Random.value > 0.5 ? UnitType.Item1.Item1 : UnitType.Item2.Item1;
-            }
-
-            //TEMP 这个Tier到时候还是统一管理一下。
-            var sides = Utils.Shuffle(new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.NoConnection});
-            if (ShopTierMultiplier > 4) sides = new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection};
-
-            var go = InitUnitShop(core.Item1, core.Item2, sides, out var hardwarePrice, ID, 0, ShopTierMultiplier, discount);
-            go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
+                0 => TypeAField,
+                _ => TypeBField
+            };
         }
 
         private void CreateSelfUnit()
@@ -272,23 +149,52 @@ namespace ROOT
                     }
                     else
                     {
-                        CreateSelfUnit(i, j, 0);
+                        CreateNormalUnit(i, j, 0);
                         TotalCount++;
                     }
                 }
             }
         }
-
-        public void ShopInit(GameAssets _currentLevelAsset)
+        private void CreateNormalUnit(int i, int j, int discount)
         {
-            currentLevelAsset = _currentLevelAsset;
-            _items = new GameObject[MaxDisplayCount];
-            _hardwarePrices = new float[MaxDisplayCount];
-            _signalTypeA = _currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA;
-            _signalTypeB = _currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB;
+            var ID = IJtoID(i, j);
+            var core = GenerateSelfCoreAndTier(in i, out var tier);
+            var go = InitUnitShop(core.Item1,core.Item2, ConfigCommons.ShopSidesByCount(j), out var hardwarePrice, ID, 0, tier, discount);
+            go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
+        private void CreatePremiumUnit(int i, int j, int discount)
+        {
+            //ShopTierMultiplier = TierProgress(currentLevelAsset.LevelProgress);
+            var ID = IJtoID(i, j);
+            UnitTypeCombo core;
+            if (CoreUnitTypeBOnBoard && CoreUnitTypeAOnBoard)
+            {
+                //RISK 这里的生成有问题。还是要确认一下。
+                //这个函数是基类提供的；那个配置代码没有和UnitType解耦干净。
+                core = GenerateRandomCore();
+            }
+            else if (CoreUnitTypeBOnBoard)
+            {
+                core = TypeACore;
+            }
+            else if (CoreUnitTypeAOnBoard)
+            {
+                core = TypeBCore;
+            }
+            else
+            {
+                //hmmmmm这里先这样吧…………
+                core = Random.value > 0.5 ? TypeACore :TypeBCore;
+            }
 
-        //Init和Start还是在这个层级拆开吧、一个是设置数据、一个是实际实现数据。
+            //TEMP 这个Tier到时候还是统一管理一下。
+            var sides = Utils.Shuffle(new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.NoConnection});
+            if (ShopTierMultiplier > 4) sides = new[] {SideType.Connection, SideType.Connection, SideType.Connection, SideType.Connection};
+
+            var go = InitUnitShop(core.Item1, core.Item2, sides, out var hardwarePrice, ID, 0, ShopTierMultiplier, discount);
+            go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
+        }
+        
         public void ShopStart()
         {
             CreateSelfUnit();
@@ -305,35 +211,44 @@ namespace ROOT
             ShopOpening = Opening;
         }
         
-        private GameObject InitUnitShop(Unit SelfUnit)
+        private GameObject DuplicateUnitToBoard(Unit SelfUnit) => InitUnitShopCore(SelfUnit.UnitSignal, SelfUnit.UnitHardware, SelfUnit.UnitSides.Values.ToArray(), SelfUnit.Tier);
+        private GameObject InitUnitShop(SignalType signal,HardwareType genre, SideType[] sides, out int hardwarePrice, int ID, int _cost, int tier, int discount)
+        {
+            var go = InitUnitShopCore(signal,genre, sides, tier);
+            go.transform.parent = DisplayRoot;
+            var unit = go.GetComponentInChildren<Unit>();
+            hardwarePrice = UnitHardwarePrice(signal,genre, sides);
+            _hardwarePrices[ID] = hardwarePrice;
+            unit.SetShop(ID, UnitRetailPrice(ID, tier), discount, _cost, true);
+            _items[ID] = go;
+            return go;
+        }
+        private GameObject InitUnitShopCore(SignalType signal, HardwareType genre, SideType[] sides, int tier)
         {
             var go = Instantiate(UnitTemplate);
-            go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString());
+            go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString("F5"));
             var unit = go.GetComponentInChildren<Unit>();
-            unit.InitPosWithAnimation(Vector2Int.zero);
-            unit.InitUnit(SelfUnit.UnitSignal, SelfUnit.UnitHardware, SelfUnit.UnitSides.Values.ToArray(), SelfUnit.Tier);
+            unit.InitPosWithAnimation(Vector2.zero);
+            unit.InitUnit(signal, genre, sides,  tier);
             return go;
         }
 
+        
         public bool BuyToRandom(int shopID)
         {
             var itemID = ItemIDFromShopID(shopID);
             if (!_items[itemID]) return false;
-
             if (!CurrencyMgr.SpendShopCurrency(UnitRetailPrice(itemID, _itemUnit[itemID].Tier))) return false;
 
             if (_itemUnit != null)
             {
-                GameBoard.DeliverUnitRandomPlace(InitUnitShop(_itemUnit[itemID]));
+                GameBoard.DeliverUnitRandomPlace(DuplicateUnitToBoard(_itemUnit[itemID]));
                 return true;
             }
-            else
-            {
-                throw new ArgumentException();
-            }
+            throw new ArgumentException();
         }
 
-        private static int ItemIDFromShopID(in int shopID)//这个是shop本身的、不用提出去。
+        private int ItemIDFromShopID(in int shopID)//这个是shop本身的、不用提出去。
         {
             //Key:   1234567890
             //ShopID:0123456789
@@ -341,32 +256,6 @@ namespace ROOT
             //ItemID:0123456789
             //很蛋疼，但是为了操作和管理，这个还得弄。
             return shopID;
-        }
-
-        public bool RequestBuy(int shopID, out int postalPrice)
-        {
-            postalPrice = 0;
-            var itemID = ItemIDFromShopID(shopID);
-            if (!_items[itemID]) return false;
-
-            var totalPrice = UnitRetailPrice(itemID, _itemUnit[itemID].Tier);
-            if (CurrencyMgr.Currency >= totalPrice)
-            {
-                _items[itemID].GetComponentInChildren<Unit>().SetPendingBuying = true;
-                return true;
-            }
-            return false;
-        }
-
-        public void ResetPendingBuy()
-        {
-            //throw new NotImplementedException();
-        }
-
-        public bool BuyToPos(int idx, Vector2Int pos, bool crash)
-        {
-            return false;
-            //throw new NotImplementedException();
         }
 
         private void ShopTierOffsetChangedEventHandler(IMessage rMessage)
@@ -404,12 +293,64 @@ namespace ROOT
         
         private void Awake()
         {
+            _items = new GameObject[MaxDisplayCount];
+            _hardwarePrices = new float[MaxDisplayCount];
             MessageDispatcher.AddListener(WorldEvent.ShopTierOffsetChangedEvent,ShopTierOffsetChangedEventHandler);
         }
 
         private void OnDestroy()
         {
             MessageDispatcher.RemoveListener(WorldEvent.ShopTierOffsetChangedEvent,ShopTierOffsetChangedEventHandler);
+        }
+        
+        /// <summary>
+        /// 根据商店的基本设置从2D转换为线性的ID。
+        /// </summary>
+        /// <param name="i">输入 i</param>
+        /// <param name="j">输入 j</param>
+        /// <returns>如果此处不应该放置单位则返回-1</returns>
+        private int IJtoID(int i, int j)
+        {
+            var rawRes = j + i * HorizontalCount;
+            if (i < VerticalCount - 1) return rawRes;
+            return j < EmptyCount ? -1 : rawRes - EmptyCount;
+        }
+
+        /// <summary>
+        /// 根据现有设置，从1D的ID转换为二维ID。
+        /// </summary>
+        /// <param name="ID">输入ID</param>
+        /// <returns>如果输入非法ID则返回null</returns>
+        [CanBeNull]
+        private Tuple<int, int> IDtoIJ(int ID)
+        {
+            if (ID >= TotalCount) return null;
+            var modID = (ID >= RetailCount) ? ID + EmptyCount : ID;
+            return new Tuple<int, int>(modID / HorizontalCount, modID % HorizontalCount);
+        }
+        
+        [Obsolete] public bool RequestBuy(int shopID, out int postalPrice)
+        {
+            postalPrice = 0;
+            var itemID = ItemIDFromShopID(shopID);
+            if (!_items[itemID]) return false;
+
+            var totalPrice = UnitRetailPrice(itemID, _itemUnit[itemID].Tier);
+            if (CurrencyMgr.Currency >= totalPrice)
+            {
+                _items[itemID].GetComponentInChildren<Unit>().SetPendingBuying = true;
+                return true;
+            }
+            return false;
+        }
+        [Obsolete] public void ResetPendingBuy()
+        {
+            //throw new NotImplementedException();
+        }
+        [Obsolete] public bool BuyToPos(int idx, Vector2Int pos, bool crash)
+        {
+            return false;
+            //throw new NotImplementedException();
         }
     }
 }
