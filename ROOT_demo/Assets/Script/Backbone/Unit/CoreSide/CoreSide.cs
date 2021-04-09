@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
-
-namespace ROOT
+﻿namespace ROOT
 {
     /*public sealed partial class ShopMgr : ShopBase
     {

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Common;
@@ -12,7 +11,6 @@ using ROOT.SetupAsset;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static ROOT.TextProcessHelper;
 using static ROOT.TutorialActionType;
 
 
@@ -116,6 +114,11 @@ namespace ROOT
         FourWarningGridOneHeatSink,
     }
 
+    //FSMLevelLogic这个流程要使用Module的流程、让它可以任意挂在Barebone、Career、这些FSM里面挂上的。
+    //需要在FSMLevelLogic里面直接配置某个个派生类要不要生成自己的教程版本。
+    //Tutorial需要不同的feature的话、就由不同等级的派生类生成版本。但是就出现一个问题：还是需要在各自的派生类里面有各种开关？
+    //之前这么设计的时候、是为了将Tutorial相关逻辑彻底从Gameplay中拆开、但是这样的话Tutorial要运行不同派生类里面的逻辑又要捞出来。
+    //所以说：【要么Tutorial要零散地弥散到全部基类和派生类中一部分】或者【Tutorial中要想办法移植Gameplay版中的所需逻辑】。
     public sealed class FSMLevelLogic_Tutorial : FSMLevelLogic_Barebone
     {
         private readonly CheckingLib CheckLib = new CheckingLib

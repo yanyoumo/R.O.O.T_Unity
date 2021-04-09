@@ -54,7 +54,7 @@ namespace ROOT
 
         #region 类属性
 
-        protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
+        protected internal bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
 
         private bool ShouldCycle =>
             (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in movedCursor);
