@@ -23,7 +23,7 @@ MonoBehaviour:
     SerializationNodes: []
   TitleTerm: TutorialBasicControl
   Thumbnail: {fileID: 21300000, guid: eaf49197130f18748af6c9b4d2bd1baf, type: 3}
-  LevelLogic: {fileID: 3354999926667516179, guid: 60e38e86d2a29474180bc466c3a252ec,
+  LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
     type: 3}
   InitialCurrency: 36
   ShopCost: 1

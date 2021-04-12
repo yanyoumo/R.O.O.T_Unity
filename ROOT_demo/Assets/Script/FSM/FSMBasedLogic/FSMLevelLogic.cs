@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using ROOT.Common;
+using ROOT.Consts;
+using ROOT.FSM;
 using ROOT.Message;
 using ROOT.Message.Inquiry;
+using ROOT.SetupAsset;
 using ROOT.Signal;
 using ROOT.UI;
 using Sirenix.OdinInspector;
@@ -24,31 +27,33 @@ namespace ROOT
         [HideInInspector] public bool ReadyToGo = false;
         [HideInInspector] public bool ReferenceOk = false;
         [HideInInspector] public bool PendingCleanUp;
-        [ShowInInspector] public bool IsTutorialLevel => IsTutorial;
+        public bool IsTutorialLevel => UseTutorialVer;
+        public bool UseTutorialVer = false;
         protected bool MovedTile;
 
-        public abstract bool IsTutorial { get; }
+        //public abstract bool IsTutorial { get; }
         public abstract bool CouldHandleSkill { get; }
         public abstract bool CouldHandleBoss { get; }
         public abstract bool CouldHandleShop { get; }
         public abstract BossStageType HandleBossType { get; }
 
         public abstract int LEVEL_ART_SCENE_ID { get; }
+        [HideInInspector]public readonly int LEVEL_TUTORIAL_SCENE_ID = StaticName.SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL;
         private bool movedCursor = false;
 
         protected internal GameAssets LevelAsset;
         private Cursor Cursor => LevelAsset.Cursor;
-        protected ControllingPack _ctrlPack;
+        internal ControllingPack _ctrlPack;
         protected ControllingPack CtrlPack => _ctrlPack;
 
         private float AnimationTimerOrigin = 0.0f; //都是秒
 
-        public static float AnimationDuration =>
-            WorldCycler.AnimationTimeLongSwitch ? AutoAnimationDuration : DefaultAnimationDuration;
+        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? AutoAnimationDuration : DefaultAnimationDuration;
 
         private static readonly float DefaultAnimationDuration = 0.15f; //都是秒
         private static readonly float AutoAnimationDuration = 1.5f; //都是秒
 
+        //TODO 下面这两个也要Wrap一下。
         protected abstract string SucceedEndingTerm { get; }
         protected abstract string FailedEndingTerm { get; }
 
@@ -66,8 +71,7 @@ namespace ROOT
 
         #region 元初始化相关函数
 
-        protected void SendHintData(HintEventType type, bool boolData) =>
-            MessageDispatcher.SendMessage(new HintEventInfo {BoolData = boolData, HintEventType = type});
+        protected static void SendHintData(HintEventType type, bool boolData) => MessageDispatcher.SendMessage(new HintEventInfo {BoolData = boolData, HintEventType = type});
 
         [Obsolete]
         public bool CheckReference() => true;
@@ -77,14 +81,28 @@ namespace ROOT
             ReferenceOk = CheckReference();
         }
 
-        protected virtual void AdditionalArtLevelReference(ref GameAssets LevelAsset)
+        protected abstract void AdditionalArtLevelReference(ref GameAssets LevelAsset);
+        
+        //这个肯定也要改成Virtual的、并且要听两个的aOP。
+        public IEnumerator UpdateArtLevelReference(
+            AsyncOperation baseVisualScene,
+            AsyncOperation tutorialScene,
+            AsyncOperation addtionalVisualScene)
         {
-            //BaseVerison,DoNothing.
+            var couldProceed = false;
+            do
+            {
+                couldProceed = baseVisualScene.isDone
+                               && (addtionalVisualScene == null || addtionalVisualScene.isDone)
+                               && (!UseTutorialVer || tutorialScene.isDone);
+                yield return 0;
+            } while (!couldProceed);
+
+            AdditionalArtLevelReference(ref LevelAsset);
+            SendHintData(HintEventType.SetTutorialTextShow, false);
+            PopulateArtLevelReference();
         }
 
-        //这个肯定也要改成Virtual的、并且要听两个的aOP。
-        public abstract IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,
-            AsyncOperation addtionalVisualScene);
 
         #endregion
 
@@ -242,17 +260,27 @@ namespace ROOT
 
         protected virtual void AdditionalReactIO()
         {
-            //BaseVerison Do-nothing.
+            if (UseTutorialVer)
+            {
+                TutorialModule.TutorialReactIO();
+            }
         }
 
         protected virtual void AdditionalMajorUpkeep()
         {
-            //BaseVerison Do-nothing.
+            //RISK 这个东西之前没有base链式调用、改了后可能有问题；
+            if (UseTutorialVer)
+            {
+                TutorialModule.TutorialMajorUpkeep();
+            }
         }
 
         protected virtual void AdditionalMinorUpkeep()
         {
-            //BaseVerison Do-nothing.
+            if (UseTutorialVer)
+            {
+                TutorialModule.TutorialMinorUpkeep();
+            }
         }
 
         #endregion
@@ -361,22 +389,23 @@ namespace ROOT
             };
         }
 
-        protected virtual bool CheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
+        protected virtual bool NormalCheckGameOver=>LevelAsset.GameCurrencyMgr.EndGameCheck();
+
+        private bool CheckGameOver => UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver;
 
         private void UpdateBoardData_Instantly()
         {
-            var currentLevelAsset = LevelAsset;
             TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(
-                currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, currentLevelAsset.GameBoard,
+                LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, LevelAsset.GameBoard,
                 out var hardwareACount, out TypeASignalCount);
             TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(
-                currentLevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, currentLevelAsset.GameBoard,
+                LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, LevelAsset.GameBoard,
                 out var hardwareBCount, out TypeBSignalCount);
             if (LevelAsset.ActionAsset.AdditionalGameSetup.IsPlayingCertainSignal(SignalType.Thermo))
             {
                 var thermoFieldUnits = LevelAsset.GameBoard.FindUnitWithCoreType(SignalType.Thermo, HardwareType.Field);
                 var res = thermoFieldUnits.Where(u => u.SignalCore.IsUnitActive).Select(u => u.CurrentBoardPosition);
-                currentLevelAsset.ThermoZone = res.Where(LevelAsset.GameBoard.CheckBoardPosValid).Distinct().ToList();
+                LevelAsset.ThermoZone = res.Where(LevelAsset.GameBoard.CheckBoardPosValid).Distinct().ToList();
             }
         }
 
@@ -431,11 +460,14 @@ namespace ROOT
         }
 
         protected abstract void createDriver();
+
+        protected TutorialFSMModule TutorialModule;
         
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
             _mainFSM = new RootFSM {owner = this};
+            if (UseTutorialVer) TutorialModule = new TutorialFSMModule(this);
             //_inquiryResponder = new FSMEventInquiryResponder(this);
 
             UpdateLogicLevelReference();
@@ -460,5 +492,20 @@ namespace ROOT
             _actionDriver.Unsubscribe();
             _actionDriver = null;
         }
+
+        #region static Func
+
+        public static void CreateUnitOnBoard(TutorialActionData data,GameAssets LevelAsset)
+        {
+            var pos = data.Pos;
+            if (pos.x < 0 || pos.y < 0) pos = LevelAsset.GameBoard.FindRandomEmptyPlace();
+            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary, data.Tag);
+            LevelAsset.GameBoard.UpdateBoardUnit();
+        }
+        
+        public static void ShowTextFunc(bool val)=>SendHintData(HintEventType.SetTutorialTextShow, val);
+        public static void ShowCheckListFunc(bool val)=>SendHintData(HintEventType.SetGoalCheckListShow, val);
+
+        #endregion
     }
 }

@@ -17,7 +17,6 @@ namespace ROOT
 
         protected RoundLibDriver RoundLibDriver;
 
-        public override bool IsTutorial => false;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
         public override bool CouldHandleShop => true;
@@ -51,13 +50,6 @@ namespace ROOT
             }
         }
 
-        protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
-        {
-            LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
-            LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
-            LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
-        }
-        
         protected override void AdditionalMajorUpkeep()
         {
             base.AdditionalMajorUpkeep();
@@ -68,13 +60,13 @@ namespace ROOT
                 LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
             }
         }
-        
+
         protected override void AdditionalInitLevel()
         {
             base.AdditionalInitLevel();
             WorldExecutor.InitDestoryer(ref LevelAsset);
             LevelAsset.DestroyerEnabled = false;
-            WorldExecutor.InitAndStartShop(ref LevelAsset);
+            WorldExecutor.InitAndStartShop(LevelAsset);
             
             var message = new CurrencyUpdatedInfo()
             {
@@ -130,6 +122,7 @@ namespace ROOT
 
         protected override void AdditionalReactIO()
         {
+            base.AdditionalReactIO();
             AddtionalRecatIO_Skill();
         }
 
@@ -199,7 +192,7 @@ namespace ROOT
             }
         }
 
-        protected override bool CheckGameOver
+        protected override bool NormalCheckGameOver
         {
             get
             {
@@ -250,19 +243,14 @@ namespace ROOT
             actions.Add(RootFSMStatus.Skill, SkillMajorUpkeep);
         }
 
-        public override IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene)
+        protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
         {
-            while (!baseVisualScene.isDone||!addtionalVisualScene.isDone)
-            {
-                yield return 0;
-            }
-            LevelAsset.Shop = FindObjectOfType<ShopSelectableMgr>();
-            LevelAsset.Shop._fsmLevelLogic = this;
-            AdditionalArtLevelReference(ref LevelAsset);
-            SendHintData(HintEventType.SetTutorialTextShow, false);
-            PopulateArtLevelReference();
+            base.AdditionalArtLevelReference(ref LevelAsset);
+            LevelAsset.TimeLine = FindObjectOfType<TimeLine>();
+            LevelAsset.SkillMgr = FindObjectOfType<SkillMgr>();
+            LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
         }
-        
+
         protected override void ModifyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
         {
             base.ModifyRootFSMTransitions(ref RootFSMTransitions);

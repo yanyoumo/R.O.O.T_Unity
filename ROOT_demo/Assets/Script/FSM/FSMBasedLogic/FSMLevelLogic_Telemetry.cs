@@ -20,7 +20,6 @@ namespace ROOT
     {
         protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTelemetry_Successed;
         protected override string FailedEndingTerm => ScriptTerms.EndingMessageTelemetry_Failed;
-        public override bool IsTutorial => false;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => true;
         public override BossStageType HandleBossType => BossStageType.Telemetry;
@@ -175,6 +174,7 @@ namespace ROOT
 
         protected override void AdditionalMajorUpkeep()
         {
+            base.AdditionalMajorUpkeep();
             //Debug.Log("AdditionalMajorUpkeep_Telem");
             //base.AdditionalMajorUpkeep();
             if (CheckTelemetryStageInit())
@@ -203,6 +203,7 @@ namespace ROOT
 
         protected override void AdditionalMinorUpkeep()
         {
+            base.AdditionalMinorUpkeep();
             if (CheckTelemetryStage())
             {
                 TelemetryMinorUpdate();

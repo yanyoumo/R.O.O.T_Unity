@@ -29,7 +29,6 @@ namespace ROOT
             //Base version, DoNothing.
         }
 
-        public override bool IsTutorial => false;
         public override bool CouldHandleSkill => false;
         public override bool CouldHandleBoss => false;
         public override bool CouldHandleShop => false;
@@ -37,10 +36,17 @@ namespace ROOT
 
         protected virtual void AdditionalInitLevel()
         {
-            WorldExecutor.InitCursor(ref LevelAsset,new Vector2Int(2, 3));
+            if (UseTutorialVer)
+            {
+                TutorialModule.TutorialInit();
+            }
+            else
+            {
+                WorldExecutor.InitCursor(LevelAsset, new Vector2Int(2, 3));
+            }
         }
 
-        public override void InitLevel()
+        public sealed override void InitLevel()
         {
             //就先这么Sealed、急了的话、所有需要"关掉"的可以在AdditionalInit里面再关掉。
             Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
@@ -65,15 +71,10 @@ namespace ROOT
             _actionDriver = new BaseControlActionDriver(this, _mainFSM);
         }
 
-        public override IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene,AsyncOperation addtionalVisualScene)
+        protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
         {
-            while (!baseVisualScene.isDone)
-            {
-                yield return 0;
-            }
-            AdditionalArtLevelReference(ref LevelAsset);
-            SendHintData(HintEventType.SetTutorialTextShow, false);
-            PopulateArtLevelReference();
+            LevelAsset.Shop = FindObjectOfType<ShopSelectableMgr>();
+            LevelAsset.Shop._fsmLevelLogic = this;
         }
         
         protected sealed override FSMActions fsmActions
@@ -92,6 +93,7 @@ namespace ROOT
                     {Status.R_IO, ReactIO},
                 };
                 ModifyFSMActions(ref _fsmActions);
+                if (UseTutorialVer) TutorialModule.InjectTutorialFSMActions(ref _fsmActions);
                 return _fsmActions;
             }
         }
@@ -115,6 +117,7 @@ namespace ROOT
                     new Trans(RootFSMStatus.CleanUp, RootFSMStatus.MajorUpKeep, 0, true),
                 };
                 ModifyRootFSMTransitions(ref transitions);
+                if (UseTutorialVer) TutorialModule.InjectTutorialFSMTransitions(ref transitions);
                 return transitions;
             }
         }

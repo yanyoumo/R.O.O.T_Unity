@@ -89,7 +89,6 @@ namespace ROOT
         public bool SpendShopCurrency(float price) => !_shopCost || _currency.SpendCurrency(price);
         public bool PerMove(float deltaCurrency) => !_unitCost || _currency.ChangeCurrency(deltaCurrency);
 
-        [Obsolete]
         public bool EndGameCheck()
         {
             return _currency < 0; //|| (GetGameTime() <= 0);

@@ -1054,7 +1054,7 @@ namespace ROOT
 
         //这里哪敢随便改成基于事件的啊；这里都是很看重时序的东西。
         //但是改成基于事件的解耦特性还是值得弄的、但是得注意。
-        public static void InitCursor(ref GameAssets currentLevelAsset,Vector2Int pos)
+        public static void InitCursor(GameAssets currentLevelAsset,Vector2Int pos)
         {
             currentLevelAsset.GameCursor = Object.Instantiate(currentLevelAsset.CursorTemplate);
             Cursor cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
@@ -1072,7 +1072,7 @@ namespace ROOT
             LevelAsset.WarningDestoryer.Init(4, 1);
         }
 
-        public static void InitAndStartShop(ref GameAssets LevelAsset)
+        public static void InitAndStartShop(GameAssets LevelAsset)
         {
             try
             {

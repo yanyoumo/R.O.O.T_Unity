@@ -13,7 +13,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using static ROOT.TutorialActionType;
 
-
 namespace ROOT
 {
     using FSMActions = Dictionary<RootFSMStatus, Action>;
@@ -33,92 +32,12 @@ namespace ROOT
     //但是一个重要的问题，是具体可配置的参数怎么办？例如判断已有的某个数据是否高于某个阈值、这个阈值怎么传进去？
     //理论上可以传一个Object、但是也有不少问题。
 
-    public static class TutorialCheckFunctionList
-    {
-        public static bool MoveCursorToTarget55(FSMLevelLogic fsm, Board board)
-        {
-            return fsm.LevelAsset.Cursor.CurrentBoardPosition.Equals(new Vector2Int(5, 5));
-        }
-
-        public static bool MoveMatrixUnitsToSameYIndex(FSMLevelLogic fsm, Board board)
-        {
-            var y = -1;
-            foreach (var unit in board.Units)
-            {
-                if (y == -1)
-                    y = unit.CurrentBoardPosition.y;
-                else if (y != unit.CurrentBoardPosition.y)
-                    return false;
-            }
-
-            return true;
-        }
-
-        public static bool MoveThreeMatrixUnitsToOneLink(FSMLevelLogic fsm, Board board)
-        {
-            // to get connectivity
-            while (!board.IsDataReady) { }
-            return board.GetConnectComponent() == 1;
-        }
-
-        public static bool ConnectOneMatrixUnitWithMatrixCore(FSMLevelLogic fsm, Board board)
-        {
-            // to get connectivity
-            while (!board.IsDataReady) { }
-            // we have one matrix field and one matrix core here
-            return board.Units.Where(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
-                unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Field)));
-        }
-
-        public static bool ConnectAllMatrixUnitsWithMatrixCore(FSMLevelLogic fsm, Board board)
-        {
-            // to get connectivity
-            while (!board.IsDataReady) { }
-            // link all the units together
-            return board.GetConnectComponent() == 1;
-        }
-
-        public static bool ConnectThermalUnitWithThermalCore(FSMLevelLogic fsm, Board board)
-        {
-            // to get connectivity
-            while (!board.IsDataReady) { }
-            // we have one thermo field and one thermo core here
-            return board.Units.Where(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Core)).Any(unit =>
-                unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Field)));
-        }
-
-        public static bool Buy3UnitsOrNotEnoughMoney(FSMLevelLogic fsm, Board board)
-        {
-            return board.Units.Length >= 3 || Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) < 4;
-        }
-
-        public static bool FourWarningGridOneHeatSink(FSMLevelLogic fsm, Board board)
-        {
-            return board.BoardGirdDriver.BoardGirds.Values.Count(cell => cell.CellStatus == CellStatus.Warning) >= 4 &&
-                   board.BoardGirdDriver.BoardGirds.Values.Any(cell => cell.CellStatus == CellStatus.Sink);
-        }
-
-    }
-
-    public enum TutorialCheckType
-    {
-        MoveCursorToTarget55,
-        MoveMatrixUnitsToSameYIndex,
-        MoveThreeMatrixUnitsToOneLink,
-        ConnectOneMatrixUnitWithMatrixCore,
-        ConnectAllMatrixUnitsWithMatrixCore,
-        ConnectThermalUnitWithThermalCore,
-        ConnectMatrixLinksWithThermalLinks,
-        ConnectNewAddedThermalUnitsIntoLinks,
-        Buy3UnitsOrNotEnoughMoney,
-        FourWarningGridOneHeatSink,
-    }
-
     //FSMLevelLogic这个流程要使用Module的流程、让它可以任意挂在Barebone、Career、这些FSM里面挂上的。
     //需要在FSMLevelLogic里面直接配置某个个派生类要不要生成自己的教程版本。
     //Tutorial需要不同的feature的话、就由不同等级的派生类生成版本。但是就出现一个问题：还是需要在各自的派生类里面有各种开关？
     //之前这么设计的时候、是为了将Tutorial相关逻辑彻底从Gameplay中拆开、但是这样的话Tutorial要运行不同派生类里面的逻辑又要捞出来。
     //所以说：【要么Tutorial要零散地弥散到全部基类和派生类中一部分】或者【Tutorial中要想办法移植Gameplay版中的所需逻辑】。
+    [Obsolete]
     public sealed class FSMLevelLogic_Tutorial : FSMLevelLogic_Barebone
     {
         private readonly CheckingLib CheckLib = new CheckingLib
@@ -135,13 +54,14 @@ namespace ROOT
             {TutorialCheckType.FourWarningGridOneHeatSink, TutorialCheckFunctionList.FourWarningGridOneHeatSink}
         };
 
+        //TODO 这里的相当于从抽象化的东西变成基本框架的一部分、主要是关于TutorialModule的Wrapper了。
+        //还有一些东西需要直接内嵌了、这个内嵌是目前框架下的妥协。
         protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
         protected override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
-        public override bool IsTutorial => true;
-        public override bool CouldHandleSkill => false;
-        public override bool CouldHandleBoss => false;
-        public override bool CouldHandleShop => _couldHandleShopLocal;
-        public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL;
+        public override bool CouldHandleSkill => false;//这个的数据不受IsTutorial的限制、是宏观来看的。
+        public override bool CouldHandleBoss => false;//这个的数据不受IsTutorial的限制、是宏观来看的。
+        public override bool CouldHandleShop => _couldHandleShopLocal;//这个的数据不受IsTutorial的限制、是宏观来看的。（这个框架需要改）
+        public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL;//这个直接内嵌吧…………
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
         #region TutorialRelated
@@ -153,10 +73,6 @@ namespace ROOT
         private LevelActionAsset LevelActionAsset => LevelAsset.ActionAsset;
         private TutorialActionData[] tutActions => LevelActionAsset.Actions;
 
-        private void ShowTextFunc(bool val)=>SendHintData(HintEventType.SetTutorialTextShow, val);
-        private void ShowCheckListFunc(bool val)=>SendHintData(HintEventType.SetGoalCheckListShow, val);
-        
-
         private bool? PendingEndTutorialData = null;//null不结束、true完成结束、false失败结束。
         //INFO 现在失败还没有需求、有了再补。
 
@@ -164,7 +80,7 @@ namespace ROOT
         public bool EndingWSuccess => PendingEndTutorialData.HasValue && PendingEndTutorialData.Value;
         public bool EndingWFailed => PendingEndTutorialData.HasValue && !PendingEndTutorialData.Value;
 
-        protected override bool CheckGameOver
+        protected override bool NormalCheckGameOver
         {
             get
             {
@@ -175,14 +91,6 @@ namespace ROOT
                 }
                 return false;
             }
-        }
-
-        private void CreateUnitOnBoard(TutorialActionData data)
-        {
-            var pos = data.Pos;
-            if (pos.x < 0 || pos.y < 0) pos = LevelAsset.GameBoard.FindRandomEmptyPlace();
-            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary, data.Tag);
-            LevelAsset.GameBoard.UpdateBoardUnit();
         }
 
         private void StepForward() => CurrentActionIndex++;
@@ -313,27 +221,7 @@ namespace ROOT
             DealStepMgr();
             MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = false });
         }
-
-        public override void InitLevel()
-        {
-            //就先这么Sealed、急了的话、所有需要"关掉"的可以在AdditionalInit里面再关掉。
-            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
-
-            LevelAsset.BaseDeltaCurrency = 0.0f;
-            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
-            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
-
-            LevelAsset.EnableAllCoreFunctionAndFeature();
-            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
-            LevelAsset.GameBoard.UpdateBoardAnimation();
-            AdditionalInitLevel();
-
-            ReadyToGo = true;
-
-            SendHintData(HintEventType.SetGoalCheckListShow, false);
-        }
-
+        
         private void ToggleAlternateText(TutorialActionData data)
         {
             Debug.Log("MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleAlternateTextPos});");
@@ -345,17 +233,10 @@ namespace ROOT
             MessageDispatcher.SendMessage(new HighLightingUIChangedData {Toggle = data.HLSet,uiTag = data.UITag});
         }
 
-        public override IEnumerator UpdateArtLevelReference(AsyncOperation baseVisualScene, AsyncOperation addtionalVisualScene)
+        protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)
         {
-            while (!baseVisualScene.isDone||!addtionalVisualScene.isDone)
-            {
-                yield return 0;
-            }
             LevelAsset.Shop = FindObjectOfType<ShopSelectableMgr>();
             LevelAsset.Shop._fsmLevelLogic = this;
-            AdditionalArtLevelReference(ref LevelAsset);
-            SendHintData(HintEventType.SetTutorialTextShow, false);
-            PopulateArtLevelReference();
         }
 
         protected override void Awake()
@@ -363,14 +244,14 @@ namespace ROOT
             base.Awake();
             StepActionLib = new Dictionary<TutorialActionType, Action<TutorialActionData>> {
                 {Text, data => DisplayText(data.DoppelgangerToggle && StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text)},
-                {CreateUnit, CreateUnitOnBoard},
+                {CreateUnit, data =>CreateUnitOnBoard(data,LevelAsset)},
                 {End, data => PendingEndTutorialData = true},
                 {ShowText, data => ShowTextFunc(true)},
                 {HideText, data => ShowTextFunc(false)},
                 {ShowCheckList, data => ShowCheckListFunc(true)},
                 {HideCheckList, data => ShowCheckListFunc(false)},
                 {HandOn, SetHandOn},
-                {CreateCursor, data => WorldExecutor.InitCursor(ref LevelAsset, data.Pos)},
+                {CreateCursor, data => WorldExecutor.InitCursor(LevelAsset, data.Pos)},
                 {SetUnitStationary, SetStationaryByTag},
                 {ShowStorePanel, ShowShop},
                 {ToggleAlternateTextPos, ToggleAlternateText},
@@ -380,7 +261,7 @@ namespace ROOT
 
         protected override void AdditionalInitLevel()
         {
-            WorldExecutor.InitAndStartShop(ref LevelAsset);//shop这个东西还是要留给开关。
+            WorldExecutor.InitAndStartShop(LevelAsset);//shop这个东西还是要留给开关。
             LevelAsset.Shop.OpenShop(false, 0);
         }
 
