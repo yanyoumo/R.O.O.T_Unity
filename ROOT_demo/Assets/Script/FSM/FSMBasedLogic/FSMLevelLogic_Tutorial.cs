@@ -1,17 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using com.ootii.Messages;
-using I2.Loc;
 using ROOT.Common;
-using ROOT.Consts;
-using ROOT.Message;
-using ROOT.SetupAsset;
-using Sirenix.Utilities;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using static ROOT.TutorialActionType;
 
 namespace ROOT
 {
@@ -38,9 +27,9 @@ namespace ROOT
     //之前这么设计的时候、是为了将Tutorial相关逻辑彻底从Gameplay中拆开、但是这样的话Tutorial要运行不同派生类里面的逻辑又要捞出来。
     //所以说：【要么Tutorial要零散地弥散到全部基类和派生类中一部分】或者【Tutorial中要想办法移植Gameplay版中的所需逻辑】。
     [Obsolete]
-    public sealed class FSMLevelLogic_Tutorial : FSMLevelLogic_Barebone
+    public sealed class FSMLevelLogic_Tutorial : FSMLevelLogic_Barebone//挪到TutorialFSMModule去了。
     {
-        private readonly CheckingLib CheckLib = new CheckingLib
+        /*private readonly CheckingLib CheckLib = new CheckingLib
         {
             {TutorialCheckType.MoveCursorToTarget55, TutorialCheckFunctionList.MoveCursorToTarget55},
             {TutorialCheckType.MoveMatrixUnitsToSameYIndex, TutorialCheckFunctionList.MoveMatrixUnitsToSameYIndex},
@@ -302,6 +291,6 @@ namespace ROOT
             RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.F_Cycle, 5, CompletedAndRequestedEnd));
             RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.Tutorial_Cycle, 4, CheckTutorialCycle));
             RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, 3, CheckNotOnHand));
-        }
+        }*/
     }
 }

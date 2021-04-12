@@ -11,7 +11,6 @@ using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
 using ROOT.Signal;
 using ROOT.UI;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using static ROOT.WorldEvent;
 
@@ -53,13 +52,13 @@ namespace ROOT
         private static readonly float DefaultAnimationDuration = 0.15f; //都是秒
         private static readonly float AutoAnimationDuration = 1.5f; //都是秒
 
-        //TODO 下面这两个也要Wrap一下。
+        //TODO 下面这两个也要Wrap一下。这个不是Tutorial那个、是游戏结束的那个文字。
         protected abstract string SucceedEndingTerm { get; }
         protected abstract string FailedEndingTerm { get; }
 
         #region 类属性
 
-        protected internal bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
+        protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
 
         private bool ShouldCycle =>
             (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in movedCursor);
@@ -85,8 +84,7 @@ namespace ROOT
         
         //这个肯定也要改成Virtual的、并且要听两个的aOP。
         public IEnumerator UpdateArtLevelReference(
-            AsyncOperation baseVisualScene,
-            AsyncOperation tutorialScene,
+            AsyncOperation baseVisualScene, AsyncOperation tutorialScene,
             AsyncOperation addtionalVisualScene)
         {
             var couldProceed = false;

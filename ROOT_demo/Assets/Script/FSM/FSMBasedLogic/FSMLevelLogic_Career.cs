@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
@@ -12,7 +11,6 @@ namespace ROOT
 {
     public class FSMLevelLogic_Career : FSMLevelLogic_Barebone
     {
-        
         public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_CAREER;
 
         protected RoundLibDriver RoundLibDriver;
@@ -34,6 +32,11 @@ namespace ROOT
         private bool CheckAutoF() => AutoDrive.HasValue && AutoDrive.Value;
         private bool CheckAutoR() => IsReverseCycle;
 
+        protected bool HandlingSkill => !UseTutorialVer || handlingSkillLocal;
+
+        private bool handlingSkillLocal = true;
+        
+        
         protected virtual void UpdateLevelAsset()
         {
             var lastStage = RoundLibDriver.PreviousRoundGist?.Type ?? StageType.Shop;
@@ -111,7 +114,7 @@ namespace ROOT
         
         private void AddtionalRecatIO_Skill()
         {
-            if (LevelAsset.SkillEnabled)
+            if (LevelAsset.SkillEnabled && HandlingSkill)
             {
                 if (LevelAsset.SkillMgr != null)
                 {

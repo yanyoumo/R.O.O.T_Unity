@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
-using I2.Loc;
 using ROOT.Common;
-using ROOT.Consts;
 using ROOT.Message;
 using ROOT.SetupAsset;
 using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using static ROOT.FSMLevelLogic;
 using static ROOT.TutorialActionType;
 
@@ -39,15 +36,6 @@ namespace ROOT.FSM
             {TutorialCheckType.FourWarningGridOneHeatSink, TutorialCheckFunctionList.FourWarningGridOneHeatSink}
         };
 
-        /*protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTutorial;
-        protected override string FailedEndingTerm => ScriptTerms.EndingMessageTutorialFailed;
-        public override bool IsTutorial => true;
-        public override bool CouldHandleSkill => false;
-        public override bool CouldHandleBoss => false;
-        public override bool CouldHandleShop => _couldHandleShopLocal;
-        public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL;
-        public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");*/
-
         #region TutorialRelated
 
         private bool _couldHandleShopLocal;
@@ -57,9 +45,6 @@ namespace ROOT.FSM
         private LevelActionAsset LevelActionAsset => LevelAsset.ActionAsset;
         private TutorialActionData[] tutActions => LevelActionAsset.Actions;
 
-        /*private void ShowTextFunc(bool val)=>SendHintData(HintEventType.SetTutorialTextShow, val);
-        private void ShowCheckListFunc(bool val)=>SendHintData(HintEventType.SetGoalCheckListShow, val);*/
-        
         private bool? PendingEndTutorialData = null;//null不结束、true完成结束、false失败结束。
         //INFO 现在失败还没有需求、有了再补。
 
@@ -209,26 +194,6 @@ namespace ROOT.FSM
             MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = false });
         }
 
-        /*public override void InitLevel()
-        {
-            //就先这么Sealed、急了的话、所有需要"关掉"的可以在AdditionalInit里面再关掉。
-            Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
-
-            LevelAsset.BaseDeltaCurrency = 0.0f;
-            LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
-            LevelAsset.GameCurrencyMgr.InitGameMode(LevelAsset.ActionAsset.GameStartingData);
-
-            LevelAsset.EnableAllCoreFunctionAndFeature();
-            LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
-            LevelAsset.GameBoard.UpdateBoardAnimation();
-            AdditionalInitLevel();
-
-            ReadyToGo = true;
-
-            SendHintData(HintEventType.SetGoalCheckListShow, false);
-        }*/
-
         private void ToggleAlternateText(TutorialActionData data)
         {
             Debug.Log("MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleAlternateTextPos});");
@@ -260,11 +225,6 @@ namespace ROOT.FSM
                 {HighLightUI, HighLightUIFunc},
             };
         }
-
-        /*protected void InitTutorial()//TODO 这个应该不用接了、但是要处理一下。
-        {
-
-        }*/
 
         internal void TutorialMajorUpkeep()
         {
