@@ -17,8 +17,8 @@ using static ROOT.WorldEvent;
 namespace ROOT
 {
     using FSMActions = Dictionary<RootFSMStatus, Action>;
-    using FSMTransitions = HashSet<RootFSMTransition>;
-    
+    using FSMTransitions = RootFSMTranstionLib;
+
     public abstract class FSMLevelLogic : MonoBehaviour //LEVEL-LOGIC/每一关都有一个这个类。
     {
         public bool Playing { get; set; }
@@ -37,7 +37,7 @@ namespace ROOT
         public abstract BossStageType HandleBossType { get; }
 
         public abstract int LEVEL_ART_SCENE_ID { get; }
-        [HideInInspector]public readonly int LEVEL_TUTORIAL_SCENE_ID = StaticName.SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL;
+        [HideInInspector] public readonly int LEVEL_TUTORIAL_SCENE_ID = StaticName.SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL;
         private bool movedCursor = false;
 
         protected internal GameAssets LevelAsset;
@@ -60,8 +60,7 @@ namespace ROOT
 
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
 
-        private bool ShouldCycle =>
-            (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in movedCursor);
+        private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in movedCursor);
 
         private bool ShouldStartAnimate => ShouldCycle;
         protected virtual bool IsForwardCycle => MovedTile;
@@ -81,7 +80,7 @@ namespace ROOT
         }
 
         protected abstract void AdditionalArtLevelReference(ref GameAssets LevelAsset);
-        
+
         //这个肯定也要改成Virtual的、并且要听两个的aOP。
         public IEnumerator UpdateArtLevelReference(
             AsyncOperation baseVisualScene, AsyncOperation tutorialScene,
@@ -111,7 +110,8 @@ namespace ROOT
         protected abstract FSMActions fsmActions { get; }
         protected abstract FSMTransitions RootFSMTransitions { get; }
 
-        protected virtual Dictionary<BreakingCommand, Action> RootFSMBreakings => new Dictionary<BreakingCommand, Action>();
+        protected virtual Dictionary<BreakingCommand, Action> RootFSMBreakings =>
+            new Dictionary<BreakingCommand, Action>();
 
         protected float TypeASignalScore = 0;
         protected float TypeBSignalScore = 0;
@@ -365,6 +365,7 @@ namespace ROOT
                 Debug.Log("CouldHandleShop");
                 MovedTile |= WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
             }
+
             AdditionalReactIO();
         }
 
@@ -387,7 +388,7 @@ namespace ROOT
             };
         }
 
-        protected virtual bool NormalCheckGameOver=>LevelAsset.GameCurrencyMgr.EndGameCheck();
+        protected virtual bool NormalCheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
 
         private bool CheckGameOver => UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver;
 
@@ -424,10 +425,8 @@ namespace ROOT
                 {
                     CrtTypeASignal = TypeASignalCount,
                     CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(
-                        LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
-                    TypeBTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(
-                        LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                    TypeATier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
+                    TypeBTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
                 },
             };
             MessageDispatcher.SendMessage(signalInfo);
@@ -460,7 +459,7 @@ namespace ROOT
         protected abstract void createDriver();
 
         protected TutorialFSMModule TutorialModule;
-        
+
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
@@ -476,7 +475,7 @@ namespace ROOT
 
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
             createDriver();
-            Debug.Assert(_actionDriver!=null,"have to implement controller driver in 'createDriver' func");
+            Debug.Assert(_actionDriver != null, "have to implement controller driver in 'createDriver' func");
 
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
             MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
@@ -493,16 +492,17 @@ namespace ROOT
 
         #region static Func
 
-        public static void CreateUnitOnBoard(TutorialActionData data,GameAssets LevelAsset)
+        public static void CreateUnitOnBoard(TutorialActionData data, GameAssets LevelAsset)
         {
             var pos = data.Pos;
             if (pos.x < 0 || pos.y < 0) pos = LevelAsset.GameBoard.FindRandomEmptyPlace();
-            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary, data.Tag);
+            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary,
+                data.Tag);
             LevelAsset.GameBoard.UpdateBoardUnit();
         }
-        
-        public static void ShowTextFunc(bool val)=>SendHintData(HintEventType.SetTutorialTextShow, val);
-        public static void ShowCheckListFunc(bool val)=>SendHintData(HintEventType.SetGoalCheckListShow, val);
+
+        public static void ShowTextFunc(bool val) => SendHintData(HintEventType.SetTutorialTextShow, val);
+        public static void ShowCheckListFunc(bool val) => SendHintData(HintEventType.SetGoalCheckListShow, val);
 
         #endregion
     }

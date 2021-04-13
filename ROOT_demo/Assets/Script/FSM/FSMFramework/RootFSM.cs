@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ROOT.Common;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
@@ -15,7 +16,7 @@ namespace ROOT
         [ReadOnly] public RootFSMStatus currentStatus = RootFSMStatus.PreInit;
         [ReadOnly] public bool waitForNextFrame = false;
 
-        private HashSet<RootFSMTransition> _transitions;
+        private RootFSMTranstionLib _transitions;
         private FSMActions _actions;
         private Dictionary<BreakingCommand, Action> _breakingActions;
 
@@ -68,13 +69,10 @@ namespace ROOT
             _breakingActions = breakingActions;
         }
         
-        public void ReplaceTransition(HashSet<RootFSMTransition> transitions)
+        public void ReplaceTransition(RootFSMTranstionLib transitions)
         {
             _transitions = transitions;
-            foreach (var msmTransition in _transitions)
-            {
-                msmTransition.owner = this;
-            }
+            _transitions.ForEach(t => t.owner = this);
         }
     }
 }

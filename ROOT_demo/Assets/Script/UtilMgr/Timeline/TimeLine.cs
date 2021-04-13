@@ -6,53 +6,6 @@ using UnityEngine;
 
 namespace ROOT
 {
-    public enum TimeLineTokenType
-    {
-        RequireNormal=0,//Green
-        RequireNetwork = 1,//Blue
-        DestoryerIncome = 2,//Red
-        Ending = 3,//Black
-        HeatSinkSwitch = 4,//ICON
-        ShopOpened = 5,//
-        BossStage = 6,//Purple
-    }
-
-    [Serializable]
-    public class TimeLineToken: IComparable
-    {
-        public int TokenID;
-        public TimeLineTokenType type;
-        [ShowIf("@this.type==TimeLineTokenType.RequireNormal||this.type==TimeLineTokenType.RequireNetwork")]
-        public int RequireAmount;
-        public Vector2Int Range;//[Starting,Ending),Ending==-1 means Always
-
-        public int CompareTo(object obj)
-        {
-            switch (obj)
-            {
-                case null:
-                    return 1;
-                case TimeLineToken other:
-                    return (int) type - (int) other.type;
-                default:
-                    throw new ArgumentException("Object is not a TimeLineToken");
-            }
-        }
-
-        public bool InRange(int count)
-        {
-            if (Range.y >= 0)
-            {
-                return count >= Range.x && count < Range.y;
-            }
-            else
-            {
-                return count >= Range.x;
-            }
-        }
-    }
-
-    //[ExecuteInEditMode]
     public class TimeLine : MonoBehaviour
     {
         public TimeLineGoalMarker GoalMarker;
@@ -121,26 +74,13 @@ namespace ROOT
 
         void CheckToken(Transform MarkRoot, int j, int markerID)
         {
-            RoundGist roundGist = new RoundGist();
-            //BUG 这里会出一个Exception，但是似乎不影响运行。
+            var roundGist = new RoundGist();
             if (_currentGameAsset.ActionAsset.HasEnded(markerID))
             {
                 roundGist.Type = StageType.Ending;
             }
             else
             {
-                /*var truncatedCount = _currentGameAsset.ActionAsset.GetTruncatedCount(markerID, out var RoundCount);
-
-                if (RoundCount >= RoundDatas.Length || RoundCount == -1)
-                {
-                    return;
-                }
-
-                RoundData round = RoundDatas[RoundCount];
-                //这里的逻辑还是不太行。
-                var stage = round.CheckStage(truncatedCount, RoundCount == RoundDatas.Length - 1);
-                if (!stage.HasValue) return;*/
-
                 roundGist =_currentGameAsset.ActionAsset.GetCurrentRoundGist(markerID);
                 var truncatedCount=_currentGameAsset.ActionAsset.GetTruncatedStep(markerID);
                 HasHeatsinkSwitch = roundGist.SwitchHeatsink(truncatedCount);

@@ -36,7 +36,12 @@ namespace ROOT
 
         private bool handlingSkillLocal = true;
         
-        
+        private StageType? lastStageType = null;
+
+        private bool StageAlertSuppressFlag = false;
+
+        private int Cost => LevelAsset.GameBoard.BoardGirdDriver.HeatSinkCost;
+
         protected virtual void UpdateLevelAsset()
         {
             var lastStage = RoundLibDriver.PreviousRoundGist?.Type ?? StageType.Shop;
@@ -112,7 +117,7 @@ namespace ROOT
             LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = IsSkillAllowed;
         }
         
-        private void AddtionalRecatIO_Skill()
+        private void AddtionalReactIO_Skill()
         {
             if (LevelAsset.SkillEnabled && HandlingSkill)
             {
@@ -126,13 +131,9 @@ namespace ROOT
         protected override void AdditionalReactIO()
         {
             base.AdditionalReactIO();
-            AddtionalRecatIO_Skill();
+            AddtionalReactIO_Skill();
         }
 
-        private StageType? lastStageType = null;
-
-        private bool StageAlertSuppressFlag = false;
-        
         private void CareerCycle()
         {
             if (LevelAsset.DestroyerEnabled)
@@ -182,7 +183,6 @@ namespace ROOT
                                 CurrentStageType = currentStageType,
                                 NextStageType = preCheckStageType,
                             };
-                            //TODO 这里再弄一个计数、就是发一次后若干次不再发、或者就是等两个Stage相同后在再允许发。
                             MessageDispatcher.SendMessage(timingEvent);
                             StageAlertSuppressFlag = true;
                         }
@@ -208,8 +208,6 @@ namespace ROOT
         protected int GetBaseInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore));
         protected virtual int GetBonusInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore) * (LevelAsset.CurrencyRebate - 1.0f));//BUG 这个数据有问题？没有实质的加上去？
         
-        private int Cost=>LevelAsset.GameBoard.BoardGirdDriver.HeatSinkCost;
-
         protected override void BoardUpdatedHandler(IMessage rMessage)
         {
             base.BoardUpdatedHandler(rMessage);
@@ -254,7 +252,7 @@ namespace ROOT
             LevelAsset.CineCam = FindObjectOfType<CinemachineFreeLook>();
         }
 
-        protected override void ModifyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
+        protected override void ModifyRootFSMTransitions(ref RootFSMTranstionLib RootFSMTransitions)
         {
             base.ModifyRootFSMTransitions(ref RootFSMTransitions);
             RootFSMTransitions.Remove(new RootFSMTransition(RootFSMStatus.F_Cycle, RootFSMStatus.Animate, 1, CheckStartAnimate, TriggerAnimation));

@@ -10,7 +10,6 @@ namespace ROOT
 {
     using FSMActions = Dictionary<RootFSMStatus, Action>;
     using Trans= RootFSMTransition;
-    using FSMTransitions = HashSet<RootFSMTransition>;
     using Status = RootFSMStatus;
     public class FSMLevelLogic_Barebone : FSMLevelLogic
     {
@@ -23,7 +22,7 @@ namespace ROOT
             //Base version, DoNothing.
         }
         
-        protected virtual void ModifyRootFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
+        protected virtual void ModifyRootFSMTransitions(ref RootFSMTranstionLib RootFSMTransitions)
         {
             //Base version, DoNothing.
         }
@@ -96,10 +95,10 @@ namespace ROOT
                 return _fsmActions;
             }
         }
-        protected sealed override HashSet<RootFSMTransition> RootFSMTransitions {
+        protected sealed override RootFSMTranstionLib RootFSMTransitions {
             get
             {
-                var transitions = new FSMTransitions
+                var transitions = new RootFSMTranstionLib
                 {
                     new Trans(Status.PreInit, Status.MajorUpKeep, 1, CheckInited),
                     new Trans(Status.PreInit),
