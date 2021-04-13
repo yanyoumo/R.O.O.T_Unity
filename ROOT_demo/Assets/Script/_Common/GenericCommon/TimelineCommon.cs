@@ -4,6 +4,13 @@ using UnityEngine;
 
 namespace ROOT.Common
 {
+    public enum TimeLineStatus
+    {
+        Normal,
+        GreyOut,
+        Disabled
+    }
+    
     public enum TimeLineTokenType
     {
         RequireNormal=0,//Green

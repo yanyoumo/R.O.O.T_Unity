@@ -1,31 +1,20 @@
 ﻿using System;
 using System.Collections;
+using ROOT.Common;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
 {
     public class TimeLine : MonoBehaviour
     {
+        //TODO 这里调整Status还是个大工作。
         public TimeLineGoalMarker GoalMarker;
         private GameAssets _currentGameAsset;
 
-        public void SetNoCount()
-        {
-            SetGoalCount = 0;
-            SetCurrentCount = 0;
-        }
-
-        public int SetGoalCount
-        {
-            set => GoalMarker.TargetCount = value;
-        }
-
-        public int SetCurrentCount
-        {
-            set => GoalMarker.CurrentCount = value;
-        }
+        public Transform DisabledCover;
 
         public MeshRenderer ArrowRenderer;
         private bool _requirementSatisfied;
@@ -69,6 +58,60 @@ namespace ROOT
             }
         }
 
+        private TimeLineStatus _currentStatus;
+        public TimeLineStatus CurrentStatus
+        {
+            get => _currentStatus;
+            set
+            {
+                _currentStatus = value;
+                UpdateTimeLineByStatus();
+            }
+        }
+        private void UpdateTimeLineByStatus()
+        {
+            switch (_currentStatus)
+            {
+                case TimeLineStatus.Normal:
+                    DisabledCover.gameObject.SetActive(false);
+                    UpdateRodToNormalGreyOut(true);
+                    break;
+                case TimeLineStatus.GreyOut:
+                    DisabledCover.gameObject.SetActive(false);
+                    UpdateRodToNormalGreyOut(false);
+                    break;
+                case TimeLineStatus.Disabled:
+                    DisabledCover.gameObject.SetActive(true);
+                    UpdateRodToNormalGreyOut(false);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private TimeLineMarker[] timeLineMarkers => TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
+
+        private void UpdateRodToNormalGreyOut(bool normalOrGreyOut)
+        {
+            timeLineMarkers.ForEach(t => t.SetNormal = normalOrGreyOut);
+        }
+        
+        public void SetNoCount()
+        {
+            SetGoalCount = 0;
+            SetCurrentCount = 0;
+        }
+
+        public int SetGoalCount
+        {
+            set => GoalMarker.TargetCount = value;
+        }
+
+        public int SetCurrentCount
+        {
+            set => GoalMarker.CurrentCount = value;
+        }
+        
         //private RoundLib _roundLib;
         private bool HasHeatsinkSwitch = false;
 

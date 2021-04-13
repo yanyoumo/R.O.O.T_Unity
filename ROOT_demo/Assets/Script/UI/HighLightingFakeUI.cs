@@ -13,6 +13,7 @@ namespace ROOT.UI
         {
             {UITag.Currency, new Tuple<Vector3, Vector3>(new Vector3(-4.3827f,0.0f,4.9814f), new Vector3(7.723504f,2.637291f,1.0f))},
             {UITag.Currency_Acquiring, new Tuple<Vector3, Vector3>(new Vector3(-3.4393f,0.0f,5.0412f), new Vector3(12.5594f,3.118955f,1.0f))},
+            {UITag.TimeLine, new Tuple<Vector3, Vector3>(new Vector3(7.18f,0.0f,4.18f), new Vector3(15.31289f,4.711506f,1.0f))},
         };
             
         public SpriteRenderer CurtainImage;

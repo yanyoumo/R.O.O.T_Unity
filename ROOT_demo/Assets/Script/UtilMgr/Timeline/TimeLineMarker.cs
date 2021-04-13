@@ -1,12 +1,30 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace ROOT
 {
     public class TimeLineMarker : MonoBehaviour
     {
-        [ReadOnly]
-        public bool PendingKill = false;
+        private bool _normalOrGreyOut = true;
+
+        public bool SetNormal
+        {
+            get => _normalOrGreyOut;
+            set
+            {
+                _normalOrGreyOut = value;
+                RodRenderer.material = _normalOrGreyOut ? NormalMat : GreyOutMat;
+                SmallRodRenderer.material = _normalOrGreyOut ? NormalMat : GreyOutMat;
+            }
+        }
+
+        public Material NormalMat;
+        public Material GreyOutMat;
+        public MeshRenderer RodRenderer;
+        public MeshRenderer SmallRodRenderer;
+        
+        [HideInInspector]public bool PendingKill = false;
         public bool UseMajorMark
         {
             set
@@ -19,6 +37,11 @@ namespace ROOT
 
         public MeshRenderer MajorMark;
         public MeshRenderer MinorMark;
+
+        private void Awake()
+        {
+            //SetNormal = true;
+        }
 
         void Update()
         {
