@@ -27,9 +27,10 @@ namespace ROOT
         {
             set
             {
-                var absVal = Mathf.Abs(value);
+                /*var absVal = Mathf.Abs(value);
                 var scale = Mathf.Max(absVal / (float) maxVal, 1e-3f);
-                var scaleVec = Vector3.Lerp(MinArrowScale, MaxArrowScale, scale);
+                var scaleVec = Vector3.Lerp(MinArrowScale, MaxArrowScale, scale);*/
+                var scaleVec = Vector3.Lerp(MinArrowScale, MaxArrowScale, 1.0f);
                 PosXArrow.transform.localScale = scaleVec;
                 NegXArrow.transform.localScale = scaleVec;
                 if (value==0)

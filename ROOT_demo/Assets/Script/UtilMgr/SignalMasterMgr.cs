@@ -10,8 +10,6 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    //using SignalData = Tuple<int, int, int, Unit>;
-
     [Serializable]
     [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
     public sealed class SignalData
@@ -198,6 +196,81 @@ namespace ROOT.Signal
             set => _core[index] = value;
         }
     }
+
+    public sealed class SignalDataPack : Dictionary<SignalType, SignalData>
+    {
+
+    }
+
+    public sealed class SignalPathLib : Dictionary<SignalType, List<SignalPath>>
+    {
+        public bool HasAnyPath(SignalType signalType)
+        {
+            return ContainsKey(signalType) && this[signalType].Count > 0;
+        }
+
+        public bool WithinAnyPath(Unit unit)
+        {
+            return Values.Any(v => v.Any(s => s.Contains(unit)));
+        }
+        
+        public bool WithinCRPDSignalPath(Unit unit)
+        {
+            return WithinCertainSignalPath(unit, unit.UnitSignal);
+        }
+        
+        public bool WithinCertainSignalPath(Unit unit,SignalType signalType)
+        {
+            return HasAnyPath(signalType) && this[signalType].Any(signalPath => signalPath.Contains(unit));
+        }
+        
+        public bool WithinAnySamePath(Unit unitA,Unit unitB)
+        {
+            return Keys.Any(k => WithinCertainSignalSamePath(unitA, unitB, k));
+        }
+        
+        public bool WithinCertainSignalSamePath(Unit unitA,Unit unitB,SignalType signalType)
+        {
+            return HasAnyPath(signalType) && this[signalType].Any(s => s.Contains(unitA) && s.Contains(unitB));
+        }
+
+        public bool WithinCertainSignalSamePathAndNeighboring(Unit unitA, Unit unitB, SignalType signalType)
+        {
+            if (!WithinCertainSignalSamePath(unitA, unitB, signalType)) return false;
+            var _pathes = this[signalType].Where(s => s.Contains(unitA) && s.Contains(unitB));
+            foreach (var tmpPath in _pathes)
+            {
+                var unitAIndex = tmpPath.IndexOf(unitA);
+                var unitBIndexA = Mathf.Clamp(unitAIndex - 1, 0, tmpPath.Count - 1);
+                var unitBIndexB = Mathf.Clamp(unitAIndex + 1, 0, tmpPath.Count - 1);
+                if (unitBIndexA != unitAIndex && tmpPath[unitBIndexA] == unitB) return true;
+                if (unitBIndexB != unitAIndex && tmpPath[unitBIndexB] == unitB) return true;
+            }
+
+            return false;
+        }
+
+        public SignalDataPack GetMaxSignalDataPackByUnit(Unit unit)
+        {
+            if (!WithinAnyPath(unit)) return new SignalDataPack();
+
+            var res = new SignalDataPack();
+            
+            foreach (var kv in this.Where(p => p.Value.Any(v => v.Contains(unit))))
+            {
+                var signalType = kv.Key;
+                var data = new SignalData
+                {
+                    HardwareDepth = kv.Value.Where(p => p.Contains(unit)).ToList()[0].Select(d => d.SignalDataPackList[signalType].HardwareDepth).Max(),
+                    FlatSignalDepth = kv.Value.Where(p => p.Contains(unit)).ToList()[0].Select(d => d.SignalDataPackList[signalType].FlatSignalDepth).Max(),
+                    SignalDepth = kv.Value.Where(p => p.Contains(unit)).ToList()[0].Select(d => d.SignalDataPackList[signalType].SignalDepth).Max()
+                };
+                res.Add(signalType, data);
+            }
+            
+            return res;
+        }
+    }
     
     public class SignalMasterMgr : MonoBehaviour
     {
@@ -296,58 +369,13 @@ namespace ROOT.Signal
             }
         }
 
-        public Dictionary<SignalType, List<SignalPath>> Paths => _paths == null ? new Dictionary<SignalType, List<SignalPath>>() : _paths;
+        public SignalPathLib Paths => _paths == null ? new SignalPathLib() : _paths;
         
-        private Dictionary<SignalType, List<SignalPath>> _paths;
-
-        public bool HasAnyPath(SignalType signalType)
-        {
-            return _paths != null && _paths.ContainsKey(signalType) && _paths[signalType].Count > 0;
-        }
-
-        public bool WithinAnyPath(Unit unit)
-        {
-            return _paths != null && _paths.Values.Any(v => v.Any(s => s.Contains(unit)));
-        }
-        
-        public bool WithinCRPDSignalPath(Unit unit)
-        {
-            return WithinCertainSignalPath(unit, unit.UnitSignal);
-        }
-        
-        public bool WithinCertainSignalPath(Unit unit,SignalType signalType)
-        {
-            return HasAnyPath(signalType) && _paths[signalType].Any(signalPath => signalPath.Contains(unit));
-        }
-        
-        public bool WithinAnySamePath(Unit unitA,Unit unitB)
-        {
-            return _paths != null && _paths.Keys.Any(k => WithinCertainSignalSamePath(unitA, unitB, k));
-        }
-        
-        public bool WithinCertainSignalSamePath(Unit unitA,Unit unitB,SignalType signalType)
-        {
-            return HasAnyPath(signalType) && _paths[signalType].Any(s => s.Contains(unitA) && s.Contains(unitB));
-        }
-
-        public bool WithinCertainSignalSamePathAndNeighboring(Unit unitA, Unit unitB, SignalType signalType)
-        {
-            if (!WithinCertainSignalSamePath(unitA,unitB,signalType)) return false;
-            var _pathes=_paths[signalType].Where(s => s.Contains(unitA) && s.Contains(unitB));
-            foreach (var tmpPath in _pathes)
-            {
-                var unitAIndex = tmpPath.IndexOf(unitA);
-                var unitBIndexA = Mathf.Clamp(unitAIndex - 1, 0, tmpPath.Count - 1);
-                var unitBIndexB = Mathf.Clamp(unitAIndex + 1, 0, tmpPath.Count - 1);
-                if (unitBIndexA!=unitAIndex && tmpPath[unitBIndexA] == unitB) return true;
-                if (unitBIndexB!=unitAIndex && tmpPath[unitBIndexB] == unitB) return true;
-            }
-            return false;
-        }
+        private SignalPathLib _paths;
 
         private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
         {
-            _paths = new Dictionary<SignalType, List<SignalPath>>();
+            _paths = new SignalPathLib();
             board.Units.Select(u => u.SignalCore).ForEach(s => s.ResetSignalStrengthComplex());
             foreach (var signalAssetBase in signalAssetLib.Where(v => selectedTypes.Contains(v.Key)).Select(v => v.Value))
             {
@@ -355,7 +383,7 @@ namespace ROOT.Signal
                 Paths[signalAssetBase.SignalType] = signalAssetBase.FindAllPathSingleLayer(board).ToList();
             }
         }
-
+        
         #region Delegate
         public bool ShowSignal(SignalType type, RotationDirection dir, Unit unit, Unit otherUnit)
         {
