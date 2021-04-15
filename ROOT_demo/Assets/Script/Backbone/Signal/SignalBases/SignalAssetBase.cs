@@ -41,7 +41,7 @@ namespace ROOT.Signal
             var hwValA = unit.SignalCore.SignalDataPackList[SignalType].HardwareDepth;
             var hwValB = otherUnit.SignalCore.SignalDataPackList[SignalType].HardwareDepth;
 
-            var sign = -Math.Sign(hwValA - hwValB); //在这里调整箭头的方向、目前是 核<=场
+            var sign = Math.Sign(hwValA - hwValB); //在这里调整箭头的方向、目前是 核=>场
             return showSig ? sign * (/*maxSignalVal - */Math.Max(ValA, ValB)) : 0;//TODO 这里的代码有问题。
         }
 
