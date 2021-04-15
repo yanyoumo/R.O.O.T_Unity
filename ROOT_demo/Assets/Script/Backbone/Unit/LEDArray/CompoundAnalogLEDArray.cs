@@ -9,7 +9,7 @@ namespace ROOT
 
         internal void SetNVal(float nVal)
         {
-            float normalizedVal = nVal;
+            float normalizedVal = Mathf.Abs(nVal);
             float posX;
             if (OtherwayAround)
             {

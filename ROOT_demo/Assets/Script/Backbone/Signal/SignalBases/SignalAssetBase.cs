@@ -26,7 +26,12 @@ namespace ROOT.Signal
             //TODO 这里显示的LED逻辑还是需要弄一下、现在是最远最大、考虑反过来。
             var ValA = unit.SignalCore.SignalDataPackList[SignalType].SignalDepth + 1;
             var ValB = otherUnit.SignalCore.SignalDataPackList[SignalType].SignalDepth + 1;
-            return showSig ? Math.Max(ValA, ValB) : 0;
+
+            var hwValA = unit.SignalCore.SignalDataPackList[SignalType].HardwareDepth;
+            var hwValB = otherUnit.SignalCore.SignalDataPackList[SignalType].HardwareDepth;
+            
+            var sign = Math.Sign(hwValA - hwValB);//在这里调整箭头的方向、目前是 核=>场
+            return showSig ? sign * Math.Max(ValA, ValB) : 0;
         }
 
         public float CalAllScore(Board gameBoard, out int hardwareCount,out int signalCount)

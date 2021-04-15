@@ -66,26 +66,26 @@ namespace ROOT
         public LEDArray SignalBArray;
 
         public GameObject BlinkCube;
-        public GameObject NormalED;
+        public GameObject NormalLED;
 
         public void Awake()
         {
             Hided = true;
             BlinkCube.gameObject.SetActive(false);
-            NormalED.gameObject.SetActive(true);
+            NormalLED.gameObject.SetActive(true);
         }
 
         IEnumerator Blink_Coroutine(float duration)
         {
             yield return new WaitForSeconds(duration);
             BlinkCube.gameObject.SetActive(false);
-            NormalED.gameObject.SetActive(true);
+            NormalLED.gameObject.SetActive(true);
         }
 
         public void Blink(float duration)
         {
             BlinkCube.gameObject.SetActive(true);
-            NormalED.gameObject.SetActive(false);
+            NormalLED.gameObject.SetActive(false);
             StartCoroutine("Blink_Coroutine", duration);
         }
     }
