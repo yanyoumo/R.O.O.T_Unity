@@ -8,8 +8,11 @@ namespace ROOT
 {
     public class SingleFlowLED : LEDArray
     {
-        public SpriteRenderer PosXArrow;
-        public SpriteRenderer NegXArrow;
+        /*public SpriteRenderer PosXArrow;
+        public SpriteRenderer NegXArrow;*/
+        
+        public MeshRenderer PosXArrow_Tex;
+        public MeshRenderer NegXArrow_Tex;
 
         private Vector3 MaxArrowScale = new Vector3(0.33f, 0.33f, 1.0f);
         private Vector3 MinArrowScale = new Vector3(0.1f, 0.1f, 1.0f);
@@ -19,8 +22,13 @@ namespace ROOT
         
         private void Awake()
         {
-            PosXArrow.color = LEDColor;
-            NegXArrow.color = LEDColor;
+            PosXArrow_Tex.sharedMaterial.color = LEDColor;
+            NegXArrow_Tex.sharedMaterial.color = LEDColor;
+        }
+
+        private void Update()
+        {
+            PosXArrow_Tex.sharedMaterial.mainTextureOffset = new Vector2(-0.01f * Time.frameCount, 0.0f);
         }
 
         public override int Val
@@ -30,23 +38,23 @@ namespace ROOT
                 /*var absVal = Mathf.Abs(value);
                 var scale = Mathf.Max(absVal / (float) maxVal, 1e-3f);
                 var scaleVec = Vector3.Lerp(MinArrowScale, MaxArrowScale, scale);*/
-                var scaleVec = Vector3.Lerp(MinArrowScale, MaxArrowScale, 1.0f);
-                PosXArrow.transform.localScale = scaleVec;
-                NegXArrow.transform.localScale = scaleVec;
+                //var scaleVec = Vector3.Lerp(MinArrowScale, MaxArrowScale, 1.0f);
+                /*PosXArrow_Tex.transform.localScale = scaleVec;
+                NegXArrow_Tex.transform.localScale = scaleVec;*/
                 if (value==0)
                 {
                     //目前是要用==0来关掉的。
-                    PosXArrow.enabled = false;
-                    NegXArrow.enabled = false;
+                    PosXArrow_Tex.enabled = false;
+                    NegXArrow_Tex.enabled = false;
                 }else if (value > 0)
                 {
-                    PosXArrow.enabled = true;
-                    NegXArrow.enabled = false;
+                    PosXArrow_Tex.enabled = true;
+                    NegXArrow_Tex.enabled = false;
                 }
                 else
                 {
-                    PosXArrow.enabled = false;
-                    NegXArrow.enabled = true;
+                    PosXArrow_Tex.enabled = false;
+                    NegXArrow_Tex.enabled = true;
                 }
             }
         }
