@@ -40,15 +40,11 @@ namespace ROOT
 
         public static bool MoveThreeMatrixUnitsToOneLink(FSMLevelLogic fsm, Board board)
         {
-            // to get connectivity
-            while (!board.IsDataReady) { }
             return board.GetConnectComponent() == 1;
         }
 
         public static bool ConnectOneMatrixUnitWithMatrixCore(FSMLevelLogic fsm, Board board)
         {
-            // to get connectivity
-            while (!board.IsDataReady) { }
             // we have one matrix field and one matrix core here
             return board.Units.Where(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
                 unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Field)));
@@ -56,16 +52,12 @@ namespace ROOT
 
         public static bool ConnectAllMatrixUnitsWithMatrixCore(FSMLevelLogic fsm, Board board)
         {
-            // to get connectivity
-            while (!board.IsDataReady) { }
             // link all the units together
             return board.GetConnectComponent() == 1;
         }
 
         public static bool ConnectThermalUnitWithThermalCore(FSMLevelLogic fsm, Board board)
         {
-            // to get connectivity
-            while (!board.IsDataReady) { }
             // we have one thermo field and one thermo core here
             return board.Units.Where(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Core)).Any(unit =>
                 unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Field)));
