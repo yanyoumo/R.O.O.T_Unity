@@ -8,6 +8,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace ROOT
 {
@@ -537,24 +538,27 @@ namespace ROOT
             return data.HasConnector && data.Connected && SideFilter(dir) && data.OtherUnit != null;
         }
 
+        private IEnumerator blinkUpInterval(Unit otherUnit)
+        {
+            yield return new WaitForSeconds(StaticNumericData.BlinkTransferInterval);
+            otherUnit.Blink();
+        }
+
+        private RotationDirection WorldDir(RotationDirection direction) => Common.Utils.RotateDirectionBeforeRotation(direction, _unitRotation);
+
+        //TODO 这个玩意儿技术上搞定了，调一下Blink就能正常的闪到核心，但是还有一些周边问题要继续处理：
+        //  1、常规信号和Blink流程的切换和管理流程。
+        //  2、Blink本身的颜色调整。
         public void Blink()
         {
             var upStreamUnit = SignalDataPackList.Select(d => d.Value.UpstreamUnit).ToArray()[0];
             if (upStreamUnit == null) return;
             var dir = WorldNeighboringData.Where(v => v.Value.OtherUnit == upStreamUnit).Select(v => v.Key).ToArray()[0];
-            if (FilterConnector(dir))
-            {
-                var cctor=ConnectorLocalDir[Common.Utils.RotateDirectionBeforeRotation(dir, _unitRotation)];
-                cctor.Blink(0.1f, false);
-            }
-            else
-            {
-                var cctor = upStreamUnit.ConnectorLocalDir[Common.Utils.RotateDirectionBeforeRotation(Common.Utils.GetInvertDirection(dir), _unitRotation)];
-                cctor.Blink(0.1f, true);
-            }
-            upStreamUnit.Blink();
+            var cctor = FilterConnector(dir) ? ConnectorLocalDir[WorldDir(dir)] : upStreamUnit.ConnectorLocalDir[WorldDir(Common.Utils.GetInvertDirection(dir))];
+            cctor.Blink(StaticNumericData.BlinkSingleDuration, !FilterConnector(dir));
+            StartCoroutine(blinkUpInterval(upStreamUnit));
         }
-        
+
         public override int GetHashCode()
         {
             var A = CurrentBoardPosition.GetHashCode();
