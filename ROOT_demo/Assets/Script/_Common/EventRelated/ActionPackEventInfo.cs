@@ -13,6 +13,7 @@ namespace ROOT
         public RotationDirection ActionDirection;
         public Vector2 MouseScreenPosA;
         public Vector2 MouseScreenPosB;
+        public Vector2Int OnBoardPos;
         public int FuncID;
         public bool HoldForDrag;
         public float MouseWheelDelta;

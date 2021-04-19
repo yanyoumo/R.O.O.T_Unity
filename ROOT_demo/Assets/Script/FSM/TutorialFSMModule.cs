@@ -156,7 +156,7 @@ namespace ROOT.FSM
             StepForward();
             DealStepMgr();
         }
-
+        
         private bool CompletedAndRequestedEnd()
         {
             return PendingEndTutorialData.HasValue && PendingEndTutorialData.Value;
@@ -205,6 +205,22 @@ namespace ROOT.FSM
             MessageDispatcher.SendMessage(new HighLightingUIChangedData {Toggle = data.HLSet,uiTag = data.UITag});
         }
 
+        private void MoveCursorToPosFunc(TutorialActionData data)
+        {
+            var actionPack = new ActionPack
+            {
+                ActionID = RewiredConsts.Action.Composite.ForceFlyUnit,
+                OnBoardPos = data.Pos,
+                Sender = this,
+            };
+            MessageDispatcher.SendMessage(actionPack);
+        }
+
+        private void MoveCursorToUnitByTagFunc(TutorialActionData data)
+        {
+            throw new NotImplementedException();
+        }
+        
         public TutorialFSMModule(FSMLevelLogic _fsm)
         {
             //base.Awake();
@@ -223,6 +239,8 @@ namespace ROOT.FSM
                 {ShowStorePanel, ShowShop},
                 {ToggleAlternateTextPos, ToggleAlternateText},
                 {HighLightUI, HighLightUIFunc},
+                {MoveCursorToPos, MoveCursorToPosFunc},
+                {MoveCursorToUnitByTag, MoveCursorToUnitByTagFunc},
             };
         }
 

@@ -45,7 +45,7 @@ namespace ROOT
 
         public Vector2Int GetNeigbourCoord(CommandDir rotation) => CurrentBoardPosition + Utils.ConvertDirectionToBoardPosOffset(rotation);
         public void Move(CommandDir dir) => NextBoardPosition = GetNeigbourCoord(dir);
-        private void MoveTo(Vector2Int pos) => NextBoardPosition = pos;
+        public void MoveTo(Vector2Int pos) => NextBoardPosition = pos;
 
         public void SetPosWithAnimation(Vector2 pos, PosSetFlag flag)
         {

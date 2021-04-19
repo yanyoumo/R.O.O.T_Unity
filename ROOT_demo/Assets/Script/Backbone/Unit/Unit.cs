@@ -477,8 +477,7 @@ namespace ROOT
         {
             WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
             if (!data.HasConnector) return;
-            ConnectorLocalDir.TryGetValue(Common.Utils.RotateDirectionBeforeRotation(dir, _unitRotation),
-                out Connector Connector);
+            ConnectorLocalDir.TryGetValue(Common.Utils.RotateDirectionBeforeRotation(dir, _unitRotation), out Connector Connector);
             if (Connector == null) return;
             Connector.Signal_A_Val = 0;
             Connector.Signal_B_Val = 0;
@@ -573,7 +572,6 @@ namespace ROOT
         public void Clicked()
         {
             Debug.Log("I'm clicked");
-            //throw new NotImplementedException();
         }
 
         public SignalPath FindSignalPath_Iter(SignalType targetSignalType)

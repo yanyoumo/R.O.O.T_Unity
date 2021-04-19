@@ -172,8 +172,9 @@ namespace ROOT
         Skill = 1 << 12,
         TelemetryResume = 1 << 13,
         CameraMov = 1 << 14,
-        ClickOnGrid = 1 << 15,//日了，这个还是要铺满场地。
-        FloatingOnGrid = 1 << 16//估计也能搞，而且早晚也得搞。
+        ClickOnGrid = 1 << 15, //日了，这个还是要铺满场地。
+        FloatingOnGrid = 1 << 16, //估计也能搞，而且早晚也得搞。
+        ForceFlyUnit = 1 << 17
     }
 
     public enum BreakingCommand
@@ -1107,6 +1108,19 @@ namespace ROOT
             //相当于现在这个函数是Cursor和Unit混在一起的，可能还需要拆开。
             movedTile = false;
             movedCursor = false;
+
+            if (ctrlPack.HasFlag(ControllingCommand.ForceFlyUnit))
+            {
+                if (!currentLevelAsset.GameBoard.CheckBoardPosValid(ctrlPack.NextPos))
+                {
+                    Debug.LogError("ForceFlyUnit NextPos not Valid");
+                    return;
+                }
+                currentLevelAsset.Cursor.MoveTo(ctrlPack.NextPos);
+                movedTile = false;
+                movedCursor = true;
+                return;
+            }
 
             var validAction = currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos) &&
                               currentLevelAsset.GameBoard.CheckBoardPosValidAndEmpty(ctrlPack.NextPos);

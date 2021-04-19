@@ -23,6 +23,8 @@ namespace ROOT
         ShowStorePanel,//TODO not tested
         ToggleAlternateTextPos,
         HighLightUI,
+        MoveCursorToPos,
+        MoveCursorToUnitByTag,
     }
 
     public enum BossStageType

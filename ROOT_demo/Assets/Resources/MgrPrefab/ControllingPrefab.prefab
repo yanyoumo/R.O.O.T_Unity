@@ -589,6 +589,15 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 1
+    - _id: 44
+      _name: ForceFlyUnit
+      _type: 1
+      _descriptiveName: ForceFlyUnit
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 3
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -627,7 +636,7 @@ MonoBehaviour:
       - categoryId: 2
         actionIds: 170000001a000000190000001b000000
       - categoryId: 3
-        actionIds: 06000000070000001e000000200000002800000029000000
+        actionIds: 06000000070000001e0000002000000028000000290000002c000000
       - categoryId: 4
         actionIds: 160000001c0000001d00000021000000230000002400000025000000
     inputBehaviors:
@@ -1228,7 +1237,7 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 44
+    actionIdCounter: 45
     actionCategoryIdCounter: 5
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 2

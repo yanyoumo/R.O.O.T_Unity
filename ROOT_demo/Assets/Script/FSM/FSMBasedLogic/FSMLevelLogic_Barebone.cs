@@ -66,7 +66,14 @@ namespace ROOT
 
         protected override void createDriver()
         {
-            _actionDriver = new BaseControlActionDriver(this, _mainFSM);
+            if (UseTutorialVer)
+            {
+                _actionDriver = new TutorialControlActionDriver(this, _mainFSM);
+            }
+            else
+            {
+                _actionDriver = new BaseControlActionDriver(this, _mainFSM);
+            }
         }
 
         protected override void AdditionalArtLevelReference(ref GameAssets LevelAsset)

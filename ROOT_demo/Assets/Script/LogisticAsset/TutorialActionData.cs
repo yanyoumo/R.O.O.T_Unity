@@ -32,7 +32,7 @@ namespace ROOT.SetupAsset
         public string DoppelgangerText;
 
         [VerticalGroup("DetailedData")]
-        [ShowIf("@this.ActionType==TutorialActionType.CreateUnit||this.ActionType==TutorialActionType.CreateCursor")]
+        [ShowIf("@this.ActionType==TutorialActionType.CreateUnit||this.ActionType==TutorialActionType.CreateCursor||this.ActionType==TutorialActionType.MoveCursorToPos")]
         public Vector2Int Pos;
 
         [VerticalGroup("DetailedData")]
@@ -68,7 +68,7 @@ namespace ROOT.SetupAsset
         public String HandOnMission;
 
         [VerticalGroup("DetailedData")]
-        [ShowIf("ActionType", TutorialActionType.SetUnitStationary)]
+        [ShowIf("@this.ActionType==TutorialActionType.SetUnitStationary||this.ActionType==TutorialActionType.MoveCursorToUnitByTag")]
         public UnitTag TargetTag;
         
         [VerticalGroup("DetailedData")]
