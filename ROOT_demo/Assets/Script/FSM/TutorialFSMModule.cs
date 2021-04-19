@@ -17,24 +17,10 @@ namespace ROOT.FSM
     using FSMTransitions = HashSet<RootFSMTransition>;
     using CheckingLib = Dictionary<TutorialCheckType, Func<FSMLevelLogic, Board, bool>>;
     
-    public class TutorialFSMModule
+    public partial class TutorialFSMModule
     {
         private FSMLevelLogic owner;
         private GameAssets LevelAsset => owner.LevelAsset;
-
-        private readonly CheckingLib CheckLib = new CheckingLib
-        {
-            {TutorialCheckType.MoveCursorToTarget55, TutorialCheckFunctionList.MoveCursorToTarget55},
-            {TutorialCheckType.MoveMatrixUnitsToSameYIndex, TutorialCheckFunctionList.MoveMatrixUnitsToSameYIndex},
-            {TutorialCheckType.MoveThreeMatrixUnitsToOneLink, TutorialCheckFunctionList.MoveThreeMatrixUnitsToOneLink},
-            {TutorialCheckType.ConnectOneMatrixUnitWithMatrixCore, TutorialCheckFunctionList.ConnectOneMatrixUnitWithMatrixCore},
-            {TutorialCheckType.ConnectAllMatrixUnitsWithMatrixCore, TutorialCheckFunctionList.ConnectAllMatrixUnitsWithMatrixCore},
-            {TutorialCheckType.ConnectThermalUnitWithThermalCore, TutorialCheckFunctionList.ConnectThermalUnitWithThermalCore},
-            //{TutorialCheckType.ConnectMatrixLinksWithThermalLinks, TutorialCheckFunctionList.ConnectMatrixLinksWithThermalLinks},
-            //{TutorialCheckType.ConnectNewAddedThermalUnitsIntoLinks, TutorialCheckFunctionList.ConnectNewAddedThermalUnitsIntoLinks},
-            {TutorialCheckType.Buy3UnitsOrNotEnoughMoney, TutorialCheckFunctionList.Buy3UnitsOrNotEnoughMoney},
-            {TutorialCheckType.FourWarningGridOneHeatSink, TutorialCheckFunctionList.FourWarningGridOneHeatSink}
-        };
 
         #region TutorialRelated
 
