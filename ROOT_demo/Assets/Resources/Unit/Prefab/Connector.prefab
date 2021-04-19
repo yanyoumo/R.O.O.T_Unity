@@ -330,7 +330,7 @@ MonoBehaviour:
   ScrStub: {fileID: 4068373912626513877, guid: 7f444bf4635e1fe49a4a3b470adf1862, type: 3}
   DestStub: {fileID: 873292305874184162, guid: 79e7c870840583d47a1b809e1248374f, type: 3}
   SignalAArray: {fileID: 7256321562947788485}
-  SignalBArray: {fileID: 5585507821544170344}
+  SignalBArray: {fileID: 8812747900196046603}
   BlinkCube: {fileID: 2628410081631669835}
   NormalLED: {fileID: 627016974660139423}
 --- !u!1001 &1762007477560408664
@@ -340,6 +340,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6259388091219638975}
     m_Modifications:
+    - target: {fileID: 822296007098620593, guid: 60589c8686d3e4f1fb8ced13d382a062,
+        type: 3}
+      propertyPath: m_Name
+      value: SingleFlowLED_B
+      objectReference: {fileID: 0}
     - target: {fileID: 1207093252085253063, guid: 60589c8686d3e4f1fb8ced13d382a062,
         type: 3}
       propertyPath: m_Name
@@ -426,9 +431,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bfc3139d4b0d4ba0aca3c2bc7818c31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5585507821544170344 stripped
+--- !u!114 &8812747900196046603 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6192552507372181808, guid: 60589c8686d3e4f1fb8ced13d382a062,
+  m_CorrespondingSourceObject: {fileID: 7079311112345271635, guid: 60589c8686d3e4f1fb8ced13d382a062,
     type: 3}
   m_PrefabInstance: {fileID: 1762007477560408664}
   m_PrefabAsset: {fileID: 0}

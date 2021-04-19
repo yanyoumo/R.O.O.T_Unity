@@ -22,6 +22,8 @@ namespace ROOT
         
         private void Awake()
         {
+            PosXArrow_Tex.material = new Material(PosXArrow_Tex.material);
+            NegXArrow_Tex.material = new Material(NegXArrow_Tex.material);
             PosXArrow_Tex.sharedMaterial.color = LEDColor;
             NegXArrow_Tex.sharedMaterial.color = LEDColor;
         }
@@ -29,6 +31,7 @@ namespace ROOT
         private void Update()
         {
             PosXArrow_Tex.sharedMaterial.mainTextureOffset = new Vector2(-0.01f * Time.frameCount, 0.0f);
+            NegXArrow_Tex.sharedMaterial.mainTextureOffset = new Vector2(-0.01f * Time.frameCount, 0.0f);
         }
 
         public override int Val
