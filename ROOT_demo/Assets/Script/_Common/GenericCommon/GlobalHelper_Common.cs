@@ -61,7 +61,7 @@ namespace ROOT.Common
         public static string PaddingNum3Digit(int input) => input >= 1000 ? "???" : input.ToString("D3");
         public static string PaddingNum2Digit(int input) => input >= 100 ? "??" : input.ToString("D2");
         
-                public static readonly RotationDirection[] ROTATION_LIST =
+        public static readonly RotationDirection[] ROTATION_LIST =
         {
             RotationDirection.East,
             RotationDirection.North,

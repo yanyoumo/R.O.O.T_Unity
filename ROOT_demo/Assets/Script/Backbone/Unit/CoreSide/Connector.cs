@@ -38,55 +38,21 @@ namespace ROOT
         public GameObject Display;
         public Mesh ScrStub;
         public Mesh DestStub;
-        private int _signalAVal;
-        private int _signalBVal;
+        public CompositeLEDArray LEDArray_Comp;
 
         public int Signal_A_Val
         {
-            set
-            {
-                var val = value;
-                _signalAVal = val;
-                SignalAArray.Val = val;
-            }
-            get => _signalAVal;
+            set => LEDArray_Comp.Signal_A_Val = value;
         }
         public int Signal_B_Val
         {
-            set
-            {
-                var val = value;
-                _signalBVal = val;
-                SignalBArray.Val = val;
-            }
-            get => _signalBVal;
+            set => LEDArray_Comp.Signal_B_Val = value;
         }
-
-        public LEDArray SignalAArray;
-        public LEDArray SignalBArray;
-
-        public GameObject BlinkCube;
-        public GameObject NormalED;
-
+        public void Blink(float duration, bool inORout = true) => LEDArray_Comp.Blink(duration, inORout);
+        
         public void Awake()
         {
             Hided = true;
-            BlinkCube.gameObject.SetActive(false);
-            NormalED.gameObject.SetActive(true);
-        }
-
-        IEnumerator Blink_Coroutine(float duration)
-        {
-            yield return new WaitForSeconds(duration);
-            BlinkCube.gameObject.SetActive(false);
-            NormalED.gameObject.SetActive(true);
-        }
-
-        public void Blink(float duration)
-        {
-            BlinkCube.gameObject.SetActive(true);
-            NormalED.gameObject.SetActive(false);
-            StartCoroutine("Blink_Coroutine", duration);
         }
     }
 }

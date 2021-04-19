@@ -318,7 +318,7 @@ namespace ROOT.Signal
         {
             get
             {
-                if (SignalMasterMgr.Instance.Paths == null || !SignalMasterMgr.Instance.HasAnyPath(SignalType)) return false;
+                if (SignalMasterMgr.Instance.Paths == null || !SignalMasterMgr.Instance.Paths.HasAnyPath(SignalType)) return false;
                 return Owner == SignalMasterMgr.Instance.Paths[SignalType][0].Last();
             }
         }
@@ -327,8 +327,8 @@ namespace ROOT.Signal
         {
             get
             {
-                if (!SignalMasterMgr.Instance.HasAnyPath(SignalType)) return false;
-                var normalActive = SignalMasterMgr.Instance.WithinCertainSignalPath(Owner, SignalType);
+                if (!SignalMasterMgr.Instance.Paths.HasAnyPath(SignalType)) return false;
+                var normalActive = SignalMasterMgr.Instance.Paths.WithinCertainSignalPath(Owner, SignalType);
                 return normalActive || IsUnitVeryActive;
             }
         }

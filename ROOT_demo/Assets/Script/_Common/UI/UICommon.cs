@@ -6,6 +6,7 @@ namespace ROOT
         {
             Currency,
             Currency_Acquiring,
+            TimeLine,
         }
     }
 }

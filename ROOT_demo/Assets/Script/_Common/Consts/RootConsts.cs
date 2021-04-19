@@ -11,6 +11,9 @@ namespace ROOT.Consts
         public static int RandomBoardRowIndex = Random.Range(0, BoardLength);
 
         public static int MaxUnitTier = 6;
+
+        public static float BlinkSingleDuration = 0.1f;
+        public static float BlinkTransferInterval = 0.05f;
     }
     
     public static class GlobalResourcePath

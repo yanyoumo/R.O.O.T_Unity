@@ -254,11 +254,11 @@ namespace ROOT.FSM
             actions.Add(RootFSMStatus.Tutorial_Cycle, TutorialCycle);
         }
 
-        internal void InjectTutorialFSMTransitions(ref HashSet<RootFSMTransition> RootFSMTransitions)
+        internal void InjectTutorialFSMTransitions(ref RootFSMTranstionLib RootFSMTransitions)
         {
             RootFSMTransitions.Add(new Trans(RootFSMStatus.Tutorial_Cycle, RootFSMStatus.F_Cycle, 1, CheckTutorialEnding));
             RootFSMTransitions.Add(new Trans(RootFSMStatus.Tutorial_Cycle, RootFSMStatus.MajorUpKeep, 0, true));
-            var existingRIOMaxPriority = RootFSMTransitions.Where(t => t.StartingStatus == RootFSMStatus.R_IO).Select(t => t.priority).Max();
+            var existingRIOMaxPriority = RootFSMTransitions.GetMaxPriorityByStatus(RootFSMStatus.R_IO);
             RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.F_Cycle, existingRIOMaxPriority + 3, CompletedAndRequestedEnd));
             RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.Tutorial_Cycle, existingRIOMaxPriority + 2, CheckTutorialCycle));
             RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, existingRIOMaxPriority + 1, CheckNotOnHand));

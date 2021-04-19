@@ -17,13 +17,13 @@ namespace ROOT.Signal
         
         [ReadOnly]
         [ShowInInspector]
-        public Dictionary<SignalType,SignalData> SignalDataPackList;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
+        public SignalDataPack SignalDataPackList;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
 
         public SignalData CorrespondingSignalData => SignalDataPackList[SignalType];
 
         public void ResetSignalStrengthComplex()
         {
-            SignalDataPackList = new Dictionary<SignalType,SignalData>();
+            SignalDataPackList = new SignalDataPack();
             foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
             {
                 SignalDataPackList[signalType] = new SignalData(0, 0, 0, null);
@@ -84,7 +84,7 @@ namespace ROOT.Signal
             InServerGrid = false;
             //IsMatrixFieldAndHasMatrixSignal = false;
             //SignalStrength = new Dictionary<SignalType, int>();
-            SignalDataPackList = new Dictionary<SignalType, SignalData>();
+            SignalDataPackList = new SignalDataPack();
             try
             {
                 foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
@@ -125,7 +125,7 @@ namespace ROOT.Signal
                     return 2;
                 }
 
-                if (SignalMasterMgr.Instance.WithinAnyPath(Owner))
+                if (SignalMasterMgr.Instance.Paths.WithinAnyPath(Owner))
                 {
                     return 1;
                 }

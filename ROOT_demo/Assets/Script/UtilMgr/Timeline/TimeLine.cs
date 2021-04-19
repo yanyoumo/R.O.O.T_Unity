@@ -1,78 +1,20 @@
 ﻿using System;
 using System.Collections;
+using ROOT.Common;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
 {
-    public enum TimeLineTokenType
-    {
-        RequireNormal=0,//Green
-        RequireNetwork = 1,//Blue
-        DestoryerIncome = 2,//Red
-        Ending = 3,//Black
-        HeatSinkSwitch = 4,//ICON
-        ShopOpened = 5,//
-        BossStage = 6,//Purple
-    }
-
-    [Serializable]
-    public class TimeLineToken: IComparable
-    {
-        public int TokenID;
-        public TimeLineTokenType type;
-        [ShowIf("@this.type==TimeLineTokenType.RequireNormal||this.type==TimeLineTokenType.RequireNetwork")]
-        public int RequireAmount;
-        public Vector2Int Range;//[Starting,Ending),Ending==-1 means Always
-
-        public int CompareTo(object obj)
-        {
-            switch (obj)
-            {
-                case null:
-                    return 1;
-                case TimeLineToken other:
-                    return (int) type - (int) other.type;
-                default:
-                    throw new ArgumentException("Object is not a TimeLineToken");
-            }
-        }
-
-        public bool InRange(int count)
-        {
-            if (Range.y >= 0)
-            {
-                return count >= Range.x && count < Range.y;
-            }
-            else
-            {
-                return count >= Range.x;
-            }
-        }
-    }
-
-    //[ExecuteInEditMode]
     public class TimeLine : MonoBehaviour
     {
+        //TODO 这里调整Status还是个大工作。
         public TimeLineGoalMarker GoalMarker;
         private GameAssets _currentGameAsset;
 
-        public void SetNoCount()
-        {
-            SetGoalCount = 0;
-            SetCurrentCount = 0;
-        }
-
-        public int SetGoalCount
-        {
-            set => GoalMarker.TargetCount = value;
-        }
-
-        public int SetCurrentCount
-        {
-            set => GoalMarker.CurrentCount = value;
-        }
+        public Transform DisabledCover;
 
         public MeshRenderer ArrowRenderer;
         private bool _requirementSatisfied;
@@ -116,31 +58,72 @@ namespace ROOT
             }
         }
 
+        private TimeLineStatus _currentStatus;
+        public TimeLineStatus CurrentStatus
+        {
+            get => _currentStatus;
+            set
+            {
+                _currentStatus = value;
+                UpdateTimeLineByStatus();
+            }
+        }
+        private void UpdateTimeLineByStatus()
+        {
+            switch (_currentStatus)
+            {
+                case TimeLineStatus.Normal:
+                    DisabledCover.gameObject.SetActive(false);
+                    UpdateRodToNormalGreyOut(true);
+                    break;
+                case TimeLineStatus.GreyOut:
+                    DisabledCover.gameObject.SetActive(false);
+                    UpdateRodToNormalGreyOut(false);
+                    break;
+                case TimeLineStatus.Disabled:
+                    DisabledCover.gameObject.SetActive(true);
+                    UpdateRodToNormalGreyOut(false);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private TimeLineMarker[] timeLineMarkers => TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
+
+        private void UpdateRodToNormalGreyOut(bool normalOrGreyOut)
+        {
+            timeLineMarkers.ForEach(t => t.SetNormal = normalOrGreyOut);
+        }
+        
+        public void SetNoCount()
+        {
+            SetGoalCount = 0;
+            SetCurrentCount = 0;
+        }
+
+        public int SetGoalCount
+        {
+            set => GoalMarker.TargetCount = value;
+        }
+
+        public int SetCurrentCount
+        {
+            set => GoalMarker.CurrentCount = value;
+        }
+        
         //private RoundLib _roundLib;
         private bool HasHeatsinkSwitch = false;
 
         void CheckToken(Transform MarkRoot, int j, int markerID)
         {
-            RoundGist roundGist = new RoundGist();
-            //BUG 这里会出一个Exception，但是似乎不影响运行。
+            var roundGist = new RoundGist();
             if (_currentGameAsset.ActionAsset.HasEnded(markerID))
             {
                 roundGist.Type = StageType.Ending;
             }
             else
             {
-                /*var truncatedCount = _currentGameAsset.ActionAsset.GetTruncatedCount(markerID, out var RoundCount);
-
-                if (RoundCount >= RoundDatas.Length || RoundCount == -1)
-                {
-                    return;
-                }
-
-                RoundData round = RoundDatas[RoundCount];
-                //这里的逻辑还是不太行。
-                var stage = round.CheckStage(truncatedCount, RoundCount == RoundDatas.Length - 1);
-                if (!stage.HasValue) return;*/
-
                 roundGist =_currentGameAsset.ActionAsset.GetCurrentRoundGist(markerID);
                 var truncatedCount=_currentGameAsset.ActionAsset.GetTruncatedStep(markerID);
                 HasHeatsinkSwitch = roundGist.SwitchHeatsink(truncatedCount);
