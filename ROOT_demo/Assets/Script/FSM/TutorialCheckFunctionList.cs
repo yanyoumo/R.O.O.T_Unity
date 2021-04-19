@@ -16,7 +16,7 @@ namespace ROOT
         Buy3UnitsOrNotEnoughMoney,
         FourWarningGridOneHeatSink,
     }
-    
+
     public static class TutorialCheckFunctionList
     {
         public static bool MoveCursorToTarget55(FSMLevelLogic fsm, Board board)
