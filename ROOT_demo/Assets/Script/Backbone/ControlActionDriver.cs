@@ -102,7 +102,7 @@ namespace ROOT
 
         protected bool CoreDrivingFunction(ActionPack actionPack)
         {
-            Debug.Log("CoreDrivingFunction");
+            //Debug.Log("CoreDrivingFunction");
             //TODO 这个里面有些问题、还需要处理。
             if (MouseDrivingFunction(actionPack)) return false;
 
@@ -335,7 +335,7 @@ namespace ROOT
         {
             if (actionPack.IsAction(ForceFlyUnit))
             {
-                Debug.Log("TutorialRespondToControlEvent");
+                //Debug.Log("TutorialRespondToControlEvent");
                 CtrlPack.SetFlag(ControllingCommand.ForceFlyUnit);
                 CtrlPack.NextPos = actionPack.OnBoardPos;
                 return true;

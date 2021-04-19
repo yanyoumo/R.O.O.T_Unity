@@ -152,8 +152,10 @@ namespace ROOT.FSM
 
         private bool CheckTutorialCycle() => ProcessdToTutorialCycle;
 
-        private bool CheckNotOnHand() => !TutorialOnHand;
+        private bool CheckNotOnHandNorForceCycle() => !TutorialOnHand && !_forceCycle;
 
+        private bool _forceCycle = false;
+        
         private void TutorialCycle()
         {
             if (NotEnding && !TutorialOnHand)
@@ -182,7 +184,7 @@ namespace ROOT.FSM
 
         private void ToggleAlternateText(TutorialActionData data)
         {
-            Debug.Log("MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleAlternateTextPos});");
+            //Debug.Log("MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleAlternateTextPos});");
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleAlternateTextPos});
         }
 
@@ -200,11 +202,25 @@ namespace ROOT.FSM
                 Sender = this,
             };
             MessageDispatcher.SendMessage(actionPack);
+            _forceCycle = true;
         }
 
         private void MoveCursorToUnitByTagFunc(TutorialActionData data)
         {
-            throw new NotImplementedException();
+            var units = owner.LevelAsset.GameBoard.FindUnitsByUnitTag(data.TargetTag);
+            if (units.Length==0)
+            {
+                Debug.LogWarning("not find unit by that tag");
+                return;
+            }
+            var actionPack = new ActionPack
+            {
+                ActionID = RewiredConsts.Action.Composite.ForceFlyUnit,
+                OnBoardPos = units[0].CurrentBoardPosition,
+                Sender = this,
+            };
+            MessageDispatcher.SendMessage(actionPack);
+            _forceCycle = true;
         }
         
         public TutorialFSMModule(FSMLevelLogic _fsm)
@@ -251,6 +267,7 @@ namespace ROOT.FSM
                 //那个判断现在具体的执行是：在系统判断到条件满足后、需要玩家手动按动一下确定键（回车）来继续。
                 MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet });
             }
+            _forceCycle = false;
         }
 
         internal void InjectTutorialFSMActions(ref Dictionary<RootFSMStatus, Action> actions)
@@ -265,7 +282,7 @@ namespace ROOT.FSM
             var existingRIOMaxPriority = RootFSMTransitions.GetMaxPriorityByStatus(RootFSMStatus.R_IO);
             RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.F_Cycle, existingRIOMaxPriority + 3, CompletedAndRequestedEnd));
             RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.Tutorial_Cycle, existingRIOMaxPriority + 2, CheckTutorialCycle));
-            RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, existingRIOMaxPriority + 1, CheckNotOnHand));
+            RootFSMTransitions.Add(new Trans(RootFSMStatus.R_IO, RootFSMStatus.MajorUpKeep, existingRIOMaxPriority + 1, CheckNotOnHandNorForceCycle));
         }
     }
 }

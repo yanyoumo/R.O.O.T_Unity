@@ -1117,6 +1117,7 @@ namespace ROOT
                     return;
                 }
                 currentLevelAsset.Cursor.MoveTo(ctrlPack.NextPos);
+                currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
                 movedTile = false;
                 movedCursor = true;
                 return;
