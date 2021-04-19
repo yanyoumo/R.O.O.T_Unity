@@ -537,112 +537,24 @@ namespace ROOT
             return data.HasConnector && data.Connected && SideFilter(dir) && data.OtherUnit != null;
         }
 
-        #region Blink
-
-        //这里需要完全重做、但是优先级没有多高。
-
-        private readonly float BlinkDuration = 0.075f;
-
-        private RotationDirection nextBlinkDir;
-
-        private IEnumerator NextBlinkGap(float duration)
+        public void Blink()
         {
-            yield return new WaitForSeconds(duration);
-            NextBlink(nextBlinkDir);
+            var upStreamUnit = SignalDataPackList.Select(d => d.Value.UpstreamUnit).ToArray()[0];
+            if (upStreamUnit == null) return;
+            var dir = WorldNeighboringData.Where(v => v.Value.OtherUnit == upStreamUnit).Select(v => v.Key).ToArray()[0];
+            if (FilterConnector(dir))
+            {
+                var cctor=ConnectorLocalDir[Common.Utils.RotateDirectionBeforeRotation(dir, _unitRotation)];
+                cctor.Blink(0.1f, false);
+            }
+            else
+            {
+                var cctor = upStreamUnit.ConnectorLocalDir[Common.Utils.RotateDirectionBeforeRotation(Common.Utils.GetInvertDirection(dir), _unitRotation)];
+                cctor.Blink(0.1f, true);
+            }
+            upStreamUnit.Blink();
         }
-
-        internal void SimpleBlink(RotationDirection requiredDirection)
-        {
-            if (requiredDirection == RotationDirection.West || requiredDirection == RotationDirection.South)
-            {
-                var localRotation = Common.Utils.RotateDirectionBeforeRotation(requiredDirection, _unitRotation);
-                ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
-                if (Connector == null) return;
-                Connector.Blink(BlinkDuration);
-                return;
-            }
-
-            throw new ArgumentException();
-        }
-
-        public void Blink(RotationDirection? fromDirection)
-        {
-            //Server那里用不用迪公帮忙把路径捋出来？目前看不用
-            if (UnitSignal == SignalType.Matrix && UnitHardware == HardwareType.Field)
-            {
-                if (SignalCore.SignalFromDir == RotationDirection.West ||
-                    SignalCore.SignalFromDir == RotationDirection.South)
-                {
-                    var localRotation = Common.Utils.RotateDirectionBeforeRotation(SignalCore.SignalFromDir, _unitRotation);
-                    ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
-                    if (Connector != null) Connector.Blink(BlinkDuration);
-                }
-                else
-                {
-                    var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalCore.SignalFromDir);
-                    if (nextUnit != null) nextUnit.SimpleBlink(Common.Utils.GetInvertDirection(SignalCore.SignalFromDir));
-                }
-
-                StartCoroutine(NextBlinkGap(BlinkDuration));
-            }
-            else if (UnitSignal == SignalType.Scan && UnitHardware == HardwareType.Field)
-            {
-                foreach (var currentSideDirection in RotationList)
-                {
-                    if (!fromDirection.HasValue || (currentSideDirection != fromDirection.Value))
-                    {
-                        var localRotation =
-                            Common.Utils.RotateDirectionBeforeRotation(currentSideDirection, _unitRotation);
-                        ConnectorLocalDir.TryGetValue(localRotation, out Connector Connector);
-
-                        if (Connector == null) continue;
-
-                        WorldNeighboringData.TryGetValue(currentSideDirection, out ConnectionData data);
-                        var otherUnit = data.OtherUnit;
-
-                        if (otherUnit == null) continue;
-
-                        var showNetLed = SignalCore.InServerGrid && otherUnit.SignalCore.InServerGrid;
-                        showNetLed &=
-                            Math.Abs(SignalCore.ScanSignalPathDepth - otherUnit.SignalCore.ScanSignalPathDepth) <= 1;
-
-                        if (showNetLed)
-                        {
-                            nextBlinkDir = currentSideDirection;
-                            if (nextBlinkDir == RotationDirection.West || nextBlinkDir == RotationDirection.South)
-                            {
-                                Connector.Blink(BlinkDuration);
-                            }
-                            else
-                            {
-                                var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, nextBlinkDir);
-                                if (nextUnit != null) nextUnit.SimpleBlink(Common.Utils.GetInvertDirection(nextBlinkDir));
-                            }
-
-                            StartCoroutine(NextBlinkGap(BlinkDuration));
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        private void NextBlink(RotationDirection? nextDirection)
-        {
-            if (UnitSignal == SignalType.Matrix && UnitHardware == HardwareType.Field)
-            {
-                var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, SignalCore.SignalFromDir);
-                if (nextUnit != null) nextUnit.Blink(null);
-            }
-            else if ((UnitSignal == SignalType.Scan && UnitHardware == HardwareType.Field) && nextDirection.HasValue)
-            {
-                var nextUnit = GameBoard.GetUnitWithPosAndDir(CurrentBoardPosition, nextDirection.Value);
-                if (nextUnit != null) nextUnit.Blink(Common.Utils.GetInvertDirection(nextDirection.Value));
-            }
-        }
-
-        #endregion
-
+        
         public override int GetHashCode()
         {
             var A = CurrentBoardPosition.GetHashCode();

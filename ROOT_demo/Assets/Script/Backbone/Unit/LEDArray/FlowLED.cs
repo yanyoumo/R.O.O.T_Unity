@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Doozy;
 using UnityEngine;
 
 namespace ROOT
 {
-    public class FlowLED : MonoBehaviour
+    public class FlowLED : CompositeLEDArray
     {
-        public SingleFlowLED SignalFlowLEDA;
-        public SingleFlowLED SignalFlowLEDB;
+        public override void Blink(float duration, bool inORout)
+        {
+            //TODO
+            Debug.LogWarning("Blink not in fact implemented!!");
+        }
     }
 }

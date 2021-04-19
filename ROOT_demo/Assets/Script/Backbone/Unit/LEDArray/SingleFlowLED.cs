@@ -8,9 +8,6 @@ namespace ROOT
 {
     public class SingleFlowLED : LEDArray
     {
-        /*public SpriteRenderer PosXArrow;
-        public SpriteRenderer NegXArrow;*/
-        
         public MeshRenderer PosXArrow_Tex;
         public MeshRenderer NegXArrow_Tex;
 
