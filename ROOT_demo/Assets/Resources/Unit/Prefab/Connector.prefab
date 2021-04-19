@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640265114306648438}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.158, y: 0.0403, z: -0}
-  m_LocalScale: {x: 0.23960078, y: 0.035563037, z: 0.29757965}
+  m_LocalPosition: {x: 0.101, y: 0.0403, z: -0}
+  m_LocalScale: {x: 0.32945108, y: 0.035563037, z: 0.29757965}
   m_Children: []
   m_Father: {fileID: 9199502811668912752}
   m_RootOrder: 0
@@ -329,8 +329,8 @@ MonoBehaviour:
   Display: {fileID: 3936630852167391257}
   ScrStub: {fileID: 4068373912626513877, guid: 7f444bf4635e1fe49a4a3b470adf1862, type: 3}
   DestStub: {fileID: 873292305874184162, guid: 79e7c870840583d47a1b809e1248374f, type: 3}
-  SignalAArray: {fileID: 3596200225812902046}
-  SignalBArray: {fileID: 4729557235857375014}
+  SignalAArray: {fileID: 7256321562947788485}
+  SignalBArray: {fileID: 5585507821544170344}
   BlinkCube: {fileID: 2628410081631669835}
   NormalLED: {fileID: 627016974660139423}
 --- !u!1001 &1762007477560408664
@@ -344,46 +344,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DirectionalFlowLED
-      objectReference: {fileID: 0}
-    - target: {fileID: 1207093252085253063, guid: 60589c8686d3e4f1fb8ced13d382a062,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2998180717907675846, guid: 60589c8686d3e4f1fb8ced13d382a062,
-        type: 3}
-      propertyPath: LEDColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2998180717907675846, guid: 60589c8686d3e4f1fb8ced13d382a062,
-        type: 3}
-      propertyPath: LEDColor.b
-      value: 0.83800006
-      objectReference: {fileID: 0}
-    - target: {fileID: 2998180717907675846, guid: 60589c8686d3e4f1fb8ced13d382a062,
-        type: 3}
-      propertyPath: LEDColor.g
-      value: 0.82239515
-      objectReference: {fileID: 0}
-    - target: {fileID: 2998180717907675846, guid: 60589c8686d3e4f1fb8ced13d382a062,
-        type: 3}
-      propertyPath: LEDColor.r
-      value: 0.372072
-      objectReference: {fileID: 0}
-    - target: {fileID: 6472001729687307646, guid: 60589c8686d3e4f1fb8ced13d382a062,
-        type: 3}
-      propertyPath: LEDColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6472001729687307646, guid: 60589c8686d3e4f1fb8ced13d382a062,
-        type: 3}
-      propertyPath: LEDColor.g
-      value: 0.7264151
-      objectReference: {fileID: 0}
-    - target: {fileID: 6472001729687307646, guid: 60589c8686d3e4f1fb8ced13d382a062,
-        type: 3}
-      propertyPath: LEDColor.r
-      value: 0.06662756
       objectReference: {fileID: 0}
     - target: {fileID: 6537329666541416137, guid: 60589c8686d3e4f1fb8ced13d382a062,
         type: 3}
@@ -454,9 +414,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1762007477560408664}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3596200225812902046 stripped
+--- !u!114 &7256321562947788485 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2998180717907675846, guid: 60589c8686d3e4f1fb8ced13d382a062,
+  m_CorrespondingSourceObject: {fileID: 8989266714282910877, guid: 60589c8686d3e4f1fb8ced13d382a062,
     type: 3}
   m_PrefabInstance: {fileID: 1762007477560408664}
   m_PrefabAsset: {fileID: 0}
@@ -466,9 +426,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bfc3139d4b0d4ba0aca3c2bc7818c31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4729557235857375014 stripped
+--- !u!114 &5585507821544170344 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6472001729687307646, guid: 60589c8686d3e4f1fb8ced13d382a062,
+  m_CorrespondingSourceObject: {fileID: 6192552507372181808, guid: 60589c8686d3e4f1fb8ced13d382a062,
     type: 3}
   m_PrefabInstance: {fileID: 1762007477560408664}
   m_PrefabAsset: {fileID: 0}
