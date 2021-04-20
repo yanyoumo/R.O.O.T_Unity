@@ -8,6 +8,8 @@ namespace ROOT
         MoveCursorToTarget55,
         MoveMatrixUnitsToSameYIndex,
         MoveThreeMatrixUnitsToOneLink,
+        ConnectCorrespondingCoreAndField,
+        ConnectDifferentCoreAndField,
         ConnectOneMatrixUnitWithMatrixCore,
         ConnectAllMatrixUnitsWithMatrixCore,
         ConnectThermalUnitWithThermalCore,
@@ -50,17 +52,23 @@ namespace ROOT
                 unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Field)));
         }
 
-        public static bool ConnectAllMatrixUnitsWithMatrixCore(FSMLevelLogic fsm, Board board)
-        {
-            // link all the units together
-            return board.GetConnectComponent() == 1;
-        }
-
         public static bool ConnectThermalUnitWithThermalCore(FSMLevelLogic fsm, Board board)
         {
             // we have one thermo field and one thermo core here
             return board.Units.Where(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Core)).Any(unit =>
                 unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Field)));
+        }
+
+        public static bool ConnectCorrespondingCoreAndField(FSMLevelLogic fsm, Board board)
+        {
+            // we have one thermo field and one thermo core here
+            return ConnectOneMatrixUnitWithMatrixCore(fsm, board) && ConnectThermalUnitWithThermalCore(fsm, board);
+        }
+
+        public static bool ConnectDifferentCoreAndField(FSMLevelLogic fsm, Board board)
+        {
+            // we have one thermo field and one thermo core here
+            return !ConnectOneMatrixUnitWithMatrixCore(fsm, board) && !ConnectThermalUnitWithThermalCore(fsm, board);
         }
 
         public static bool Buy3UnitsOrNotEnoughMoney(FSMLevelLogic fsm, Board board)
