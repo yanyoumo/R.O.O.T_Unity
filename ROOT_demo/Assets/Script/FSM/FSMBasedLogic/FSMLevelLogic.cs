@@ -366,12 +366,6 @@ namespace ROOT
             AdditionalReactIO();
         }
 
-        protected void SkillMajorUpkeep()
-        {
-            LevelAsset.SkillMgr.SwapTick_FSM(LevelAsset, _ctrlPack);
-            MovedTile = false;
-        }
-
         #endregion
 
         private void GameEnding()
@@ -493,8 +487,7 @@ namespace ROOT
         {
             var pos = data.Pos;
             if (pos.x < 0 || pos.y < 0) pos = LevelAsset.GameBoard.FindRandomEmptyPlace();
-            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary,
-                data.Tag);
+            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary, data.Tag);
             LevelAsset.GameBoard.UpdateBoardUnit();
         }
 

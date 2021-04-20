@@ -223,9 +223,33 @@ namespace ROOT.FSM
             _forceCycle = true;
         }
 
-        private void SetTimeLineFunc(TutorialActionData data)
+        private void SetRoundRelatedData(TutorialActionData data)
         {
-            owner.LevelAsset.TimeLine.CurrentStatus = data.TimeLineStatus;
+            if (owner is FSMLevelLogic_Career logic_career)
+            {
+                switch (data.TimeLineStatus)
+                {
+                    case TimeLineStatus.Normal:
+                        logic_career.HandlingRound = true;
+                        break;
+                    case TimeLineStatus.NoToken:
+                        logic_career.HandlingRound = false;
+                        logic_career.LevelAsset.TimeLine.CurrentStatus = TimeLineStatus.NoToken;
+                        break;
+                    case TimeLineStatus.Disabled:
+                        logic_career.HandlingRound = false;
+                        logic_career.LevelAsset.TimeLine.CurrentStatus = TimeLineStatus.Disabled;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            Debug.LogWarning("need use at least career level of fsm or deeper");
+        }
+
+        private void ResetApparentStep(TutorialActionData tutorialActionData)
+        {
+            WorldCycler.ResetApparentStep();
         }
         
         public TutorialFSMModule(FSMLevelLogic _fsm)
@@ -248,7 +272,8 @@ namespace ROOT.FSM
                 {HighLightUI, HighLightUIFunc},
                 {MoveCursorToPos, MoveCursorToPosFunc},
                 {MoveCursorToUnitByTag, MoveCursorToUnitByTagFunc},
-                {SetTimeline, SetTimeLineFunc},
+                {SetTimeline, SetRoundRelatedData},
+                {ResetStep, ResetApparentStep},
             };
         }
 

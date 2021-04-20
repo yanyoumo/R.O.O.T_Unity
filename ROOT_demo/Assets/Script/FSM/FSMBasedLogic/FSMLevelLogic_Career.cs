@@ -11,16 +11,14 @@ namespace ROOT
 {
     public class FSMLevelLogic_Career : FSMLevelLogic_Barebone
     {
-        public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_CAREER;
-
-        protected RoundLibDriver RoundLibDriver;
-
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
         public override bool CouldHandleShop => true;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
-
+        public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_CAREER;
         protected override bool IsForwardCycle => AutoForward || MovedTile;
+        
+        protected RoundLibDriver RoundLibDriver;
         private bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
         protected bool IsSkillAllowed => !RoundLibDriver.IsShopRound;
@@ -28,16 +26,51 @@ namespace ROOT
         
         private bool CheckIsSkill() => LevelAsset.SkillMgr != null && LevelAsset.SkillMgr.CurrentSkillType.HasValue &&
                                        LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
-
         private bool CheckAutoF() => AutoDrive.HasValue && AutoDrive.Value;
         private bool CheckAutoR() => IsReverseCycle;
 
-        protected bool HandlingSkill => !UseTutorialVer || handlingSkillLocal;
-
-        private bool handlingSkillLocal = true;
+        #region FeatureSet_TutorialOnly.
         
-        private StageType? lastStageType = null;
+        public bool HandlingRound
+        {
+            get => (!UseTutorialVer || _roundEnabled);
+            set
+            {
+                if (UseTutorialVer)
+                {
+                    _roundEnabled = value;
+                    if (HandlingRound)
+                    {
+                        LevelAsset.TimeLine.CurrentStatus = TimeLineStatus.Normal;
+                    }
+                    else
+                    {
+                        LevelAsset.TimeLine.CurrentStatus = TimeLineStatus.NoToken;
+                    }
+                }
+                Debug.LogWarning("Have to set feature in tutorial mode.");
+            }
+        }
+        public bool HandlingSkill
+        {
+            get => (!UseTutorialVer || _skillEnabled) && HandlingRound;
+            set
+            {
+                if (UseTutorialVer)
+                {
+                    _skillEnabled = value;
+                }
+                Debug.LogWarning("Have to set feature in tutorial mode.");
+            }
+        }
 
+        #endregion
+        
+        private bool _roundEnabled = true;
+        private bool _skillEnabled = true;
+
+        private StageType? lastStageType = null;
+        
         private bool StageAlertSuppressFlag = false;
 
         private int Cost => LevelAsset.GameBoard.BoardGirdDriver.HeatSinkCost;
@@ -63,7 +96,7 @@ namespace ROOT
             base.AdditionalMajorUpkeep();
             LevelAsset.GameBoard.BoardGirdDriver.UpkeepHeatSink(RoundLibDriver.CurrentStage.Value);
             LevelAsset.GameBoard.BoardGirdDriver.CheckOverlappedHeatSinkCount(out LevelAsset.occupiedHeatSinkCount);
-            if (LevelAsset.SkillEnabled)
+            if (LevelAsset.SkillEnabled && HandlingSkill)
             {
                 LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
             }
@@ -93,6 +126,12 @@ namespace ROOT
                     LevelAsset.TimeLine.InitWithAssets(LevelAsset);
                 }
             }
+            if (UseTutorialVer)
+            {
+                HandlingRound = false;
+                HandlingSkill = false;
+                LevelAsset.TimeLine.CurrentStatus = TimeLineStatus.Disabled;
+            }
         }
 
         protected virtual void UpdateRoundData_Stepped()
@@ -108,15 +147,15 @@ namespace ROOT
 
             var discount = 0;
 
-            if (!LevelAsset.Shop.ShopOpening && RoundLibDriver.IsShopRound)
+            if (!LevelAsset.Shop.ShopOpening && RoundLibDriver.IsShopRound && HandlingSkill)
             {
                 discount = LevelAsset.SkillMgr.CheckDiscount();
             }
 
             LevelAsset.Shop.OpenShop(RoundLibDriver.IsShopRound, discount);
-            LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = IsSkillAllowed;
+            LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = (IsSkillAllowed && HandlingSkill);
         }
-        
+
         private void AddtionalReactIO_Skill()
         {
             if (LevelAsset.SkillEnabled && HandlingSkill)
@@ -131,11 +170,25 @@ namespace ROOT
         protected override void AdditionalReactIO()
         {
             base.AdditionalReactIO();
-            AddtionalReactIO_Skill();
+            if (HandlingSkill)
+            {
+                AddtionalReactIO_Skill();
+            }
         }
 
+        private void SkillMajorUpkeep()
+        {
+            if (HandlingSkill)
+            {
+                LevelAsset.SkillMgr.SwapTick_FSM(LevelAsset, _ctrlPack);
+                MovedTile = false;
+            }
+        }
+        
         private void CareerCycle()
         {
+            if (!HandlingRound) return;
+            
             if (LevelAsset.DestroyerEnabled)
             {
                 WorldExecutor.UpdateDestoryer(LevelAsset);
@@ -216,6 +269,7 @@ namespace ROOT
 
         private void UpdateBoardData_Instantly_Career()
         {
+            if (!HandlingRound) return;
             //在这里更新DeltaCurrency并没有错、严格来说是更新DeltaCurrency的Cache；
             //这个DeltaCurrency只有在Stepped的时刻才会计算到Currency里面。
             LevelAsset.BaseDeltaCurrency = BoardCouldIOCurrency ? (RoundLibDriver.IsRequireRound ? GetBaseInCome() : 0) - Cost : 0;

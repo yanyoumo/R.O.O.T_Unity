@@ -2,6 +2,7 @@ namespace ROOT
 {
     public static class WorldEvent
     {
+        public static string ApparentStepResetedEvent="ApparentStepResetedEvent";
         public static string InGameStageWarningEvent = "InGameStageWarningEvent";
         public static string InGameStageChangedEvent = "InGameStageChangedEvent";
         public static string CurrencyIOStatusChangedEvent = "CurrencyIOStatusChangedEvent";

@@ -1,4 +1,5 @@
 using System;
+using com.ootii.Messages;
 
 namespace ROOT
 {
@@ -118,6 +119,7 @@ namespace ROOT
         public static void ResetApparentStep()
         {
             ApparentOffset = -RawStep;
+            MessageDispatcher.SendMessage(WorldEvent.ApparentStepResetedEvent);
         }
     }
 }

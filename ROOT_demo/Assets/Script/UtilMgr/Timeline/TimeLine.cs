@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using com.ootii.Messages;
 using ROOT.Common;
 using ROOT.SetupAsset;
 using Sirenix.Utilities;
@@ -20,7 +21,7 @@ namespace ROOT
     //核心逻辑想了一下、估计意外地没办法优化了。现在Timeline的主体是要做开启和关闭的调整；
     //以及Timeline的重置、关闭Token、重置Token、调整Token等等管理性Feature。
     
-    //TODO 下一个要搞的Featrue是吧Time的表现层和数据层分开、虽然数据层只有一个Step、但是尽量也和marker和token部分分开。
+    //下一个要搞的Featrue是吧Time的表现层和数据层分开、虽然数据层只有一个Step、但是尽量也和marker和token部分分开。
     //还有就是Token部分的更新。
     public class TimeLine : MonoBehaviour
     {
@@ -95,7 +96,7 @@ namespace ROOT
                     break;
                 case TimeLineStatus.Disabled:
                     DisabledCover.gameObject.SetActive(true);
-                    UpdateMarkerToHideToken(false);
+                    UpdateMarkerToHideToken(true);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -224,9 +225,21 @@ namespace ROOT
             UpdateTimeLine();
         }
 
-        void Awake()
+        private void ApparentStepResetedHandler(IMessage rMessage)
+        {
+            //目前是瞬间变过去、就先这样吧。
+            UpdateTimeLine();
+        }
+        
+        private void Awake()
         {
             RequirementSatisfied = false;
+            MessageDispatcher.AddListener(WorldEvent.ApparentStepResetedEvent,ApparentStepResetedHandler);
+        }
+
+        private void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.ApparentStepResetedEvent,ApparentStepResetedHandler);
         }
     }
 }
