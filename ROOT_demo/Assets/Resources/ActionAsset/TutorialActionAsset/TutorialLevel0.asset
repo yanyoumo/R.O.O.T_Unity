@@ -57,6 +57,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 0
     ActionSubIdx: 1
     ActionType: 0
@@ -76,6 +79,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 0
     ActionSubIdx: 2
     ActionType: 11
@@ -95,6 +101,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 0
     ActionSubIdx: 3
     ActionType: 3
@@ -114,6 +123,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 1
     ActionSubIdx: 0
     ActionType: 0
@@ -133,6 +145,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 1
     ActionSubIdx: 1
     ActionType: 0
@@ -152,6 +167,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 1
     ActionSubIdx: 2
     ActionType: 10
@@ -171,6 +189,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 2
     ActionSubIdx: 0
     ActionType: 0
@@ -190,6 +211,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 2
     ActionSubIdx: 1
     ActionType: 12
@@ -209,6 +233,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 1
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 3
     ActionSubIdx: 0
     ActionType: 0
@@ -228,6 +255,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 3
     ActionSubIdx: 1
     ActionType: 2
@@ -247,6 +277,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 3
     ActionSubIdx: 2
     ActionType: 12
@@ -266,6 +299,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 1
     UITag: 1
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 4
     ActionSubIdx: 0
     ActionType: 0
@@ -285,6 +321,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 4
     ActionSubIdx: 1
     ActionType: 8
@@ -304,6 +343,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 4
     ActionSubIdx: 2
     ActionType: 12
@@ -323,6 +365,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 5
     ActionSubIdx: 0
     ActionType: 3
@@ -342,6 +387,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 5
     ActionSubIdx: 1
     ActionType: 0
@@ -361,6 +409,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 6
     ActionSubIdx: 0
     ActionType: 0
@@ -380,6 +431,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 6
     ActionSubIdx: 1
     ActionType: 1
@@ -399,6 +453,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 6
     ActionSubIdx: 2
     ActionType: 1
@@ -418,6 +475,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 6
     ActionSubIdx: 3
     ActionType: 1
@@ -437,6 +497,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 6
     ActionSubIdx: 4
     ActionType: 13
@@ -456,6 +519,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 7
     ActionSubIdx: 0
     ActionType: 0
@@ -475,6 +541,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 8
     ActionSubIdx: 0
     ActionType: 0
@@ -494,6 +563,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 8
     ActionSubIdx: 1
     ActionType: 11
@@ -513,6 +585,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 9
     ActionSubIdx: 0
     ActionType: 8
@@ -532,6 +607,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 10
     ActionSubIdx: 0
     ActionType: 3
@@ -551,6 +629,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 10
     ActionSubIdx: 1
     ActionType: 0
@@ -570,6 +651,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 11
     ActionSubIdx: 0
     ActionType: 0
@@ -589,6 +673,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 12
     ActionSubIdx: 0
     ActionType: 0
@@ -608,6 +695,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 13
     ActionSubIdx: 0
     ActionType: 8
@@ -627,6 +717,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 14
     ActionSubIdx: 0
     ActionType: 3
@@ -646,6 +739,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 14
     ActionSubIdx: 1
     ActionType: 0
@@ -665,6 +761,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 15
     ActionSubIdx: 0
     ActionType: 0
@@ -684,6 +783,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   - ActionIdx: 16
     ActionSubIdx: 0
     ActionType: 5
@@ -703,6 +805,9 @@ MonoBehaviour:
     Set: 0
     HLSet: 0
     UITag: 0
+    TimeLineStatus: 0
+    HighLightColor: {r: 0, g: 0, b: 0, a: 0}
+    poses: []
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 0
