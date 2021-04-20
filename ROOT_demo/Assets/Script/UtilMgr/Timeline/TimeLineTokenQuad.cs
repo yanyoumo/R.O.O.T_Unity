@@ -25,6 +25,11 @@ namespace ROOT
         public TextMeshPro valMarkerNetwork;
         float yOffset = 0.01f;
 
+        public bool SetHideToken
+        {
+            set => QuadTransform.gameObject.SetActive(!value);
+        }
+        
         public Color QuadColor
         {
             set => GetComponentInChildren<MeshRenderer>().material.color = value;

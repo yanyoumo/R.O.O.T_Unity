@@ -6,14 +6,17 @@ namespace ROOT.Consts
 {
     public static class StaticNumericData
     {
-        public static int BoardLength = 6;
-        public static int StageWarningThreshold = 3;
-        public static int RandomBoardRowIndex = Random.Range(0, BoardLength);
+        public static readonly int BoardLength = 6;
+        public static readonly int StageWarningThreshold = 3;
+        public static readonly int RandomBoardRowIndex = Random.Range(0, BoardLength);
 
-        public static int MaxUnitTier = 6;
+        public static readonly int MaxUnitTier = 6;
 
-        public static float BlinkSingleDuration = 0.1f;
-        public static float BlinkTransferInterval = 0.05f;
+        public static readonly float BlinkSingleDuration = 0.1f;
+        public static readonly float BlinkTransferInterval = 0.05f;
+        
+        public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
+        public static readonly float AutoAnimationDuration = 1.5f; //都是秒
     }
     
     public static class GlobalResourcePath

@@ -47,10 +47,7 @@ namespace ROOT
 
         private float AnimationTimerOrigin = 0.0f; //都是秒
 
-        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? AutoAnimationDuration : DefaultAnimationDuration;
-
-        private static readonly float DefaultAnimationDuration = 0.15f; //都是秒
-        private static readonly float AutoAnimationDuration = 1.5f; //都是秒
+        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? StaticNumericData.AutoAnimationDuration : StaticNumericData.DefaultAnimationDuration;
 
         //TODO 下面这两个也要Wrap一下。这个不是Tutorial那个、是游戏结束的那个文字。
         protected abstract string SucceedEndingTerm { get; }
@@ -369,12 +366,6 @@ namespace ROOT
             AdditionalReactIO();
         }
 
-        protected void SkillMajorUpkeep()
-        {
-            LevelAsset.SkillMgr.SwapTick_FSM(LevelAsset, _ctrlPack);
-            MovedTile = false;
-        }
-
         #endregion
 
         private void GameEnding()
@@ -496,8 +487,7 @@ namespace ROOT
         {
             var pos = data.Pos;
             if (pos.x < 0 || pos.y < 0) pos = LevelAsset.GameBoard.FindRandomEmptyPlace();
-            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary,
-                data.Tag);
+            LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary, data.Tag);
             LevelAsset.GameBoard.UpdateBoardUnit();
         }
 

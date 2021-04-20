@@ -11,7 +11,7 @@ using static RewiredConsts.Action.Passthough;
 
 namespace ROOT
 {
-    using RespToCtrlEvent = Func<ActionPack, bool>;
+    using RespToCtrlEvent = Func<ActionPack, bool>;//bool? 的代表是，true需要加入队伍；false不需要加入队伍；
 
     public abstract class ControlActionDriver
     {
@@ -102,6 +102,7 @@ namespace ROOT
 
         protected bool CoreDrivingFunction(ActionPack actionPack)
         {
+            //Debug.Log("CoreDrivingFunction");
             //TODO 这个里面有些问题、还需要处理。
             if (MouseDrivingFunction(actionPack)) return false;
 
@@ -114,6 +115,7 @@ namespace ROOT
                     Debug.LogWarning("try to move but no cursor");
                     return false;
                 }
+
                 CtrlPack.CommandDir = dir.Value;
                 CtrlPack.ReplaceFlag(actionPack.HoldForDrag ? ControllingCommand.Drag : ControllingCommand.Move);
                 CtrlPack.CurrentPos = _ownerLogic.LevelAsset.Cursor.CurrentBoardPosition;
@@ -158,7 +160,7 @@ namespace ROOT
             //TODO 下面两套的流程应该能有更好的管理方法。
             ShopBuyID(ref CtrlPack, in actionPack);
             SkillID(ref CtrlPack, in actionPack);
-            return _shouldQueue;
+            return true;
         }
 
         public BreakingCommand RequestedBreakType
@@ -250,11 +252,11 @@ namespace ROOT
         {
             var actionPack = rMessage as ActionPack;
             CtrlPack = new ControllingPack {CtrlCMD = ControllingCommand.Nop};
-            _shouldQueue = true;
+            _shouldQueue = false;
             //Debug.Log("RespondToControlEvent");
             foreach (var rsp in RespondList)
             {
-                _shouldQueue = rsp(actionPack);
+                _shouldQueue |= rsp(actionPack);
             }
 
             if (_shouldQueue)
@@ -327,13 +329,23 @@ namespace ROOT
         }
     }
 
-    /*public class TutorialControlActionDriver : ControlActionDriver
+    public class TutorialControlActionDriver : ControlActionDriver
     {
-        private FSMTutorialLogic owner;
-        
+        private bool TutorialRespondToControlEvent(ActionPack actionPack)
+        {
+            if (actionPack.IsAction(ForceFlyUnit))
+            {
+                //Debug.Log("TutorialRespondToControlEvent");
+                CtrlPack.SetFlag(ControllingCommand.ForceFlyUnit);
+                CtrlPack.NextPos = actionPack.OnBoardPos;
+                return true;
+            }
+            return false;
+        }
+
         public TutorialControlActionDriver(FSMLevelLogic _owner, RootFSM fsm) : base(_owner, fsm)
         {
-            owner = (FSMTutorialLogic) _owner;
+            
         }
         
         protected override List<RespToCtrlEvent> RespondList
@@ -342,11 +354,11 @@ namespace ROOT
             {
                 var res = new List<RespToCtrlEvent>
                 {
+                    TutorialRespondToControlEvent,
                     CoreDrivingFunction,
-                    //TutorialRespondToControlEvent,
                 };
                 return res;
             }
         }
-    }*/
+    }
 }

@@ -8,21 +8,16 @@ namespace ROOT
     {
         private bool _normalOrGreyOut = true;
 
-        public bool SetNormal
+        public bool SetHide
         {
-            get => _normalOrGreyOut;
-            set
-            {
-                _normalOrGreyOut = value;
-                RodRenderer.material = _normalOrGreyOut ? NormalMat : GreyOutMat;
-                SmallRodRenderer.material = _normalOrGreyOut ? NormalMat : GreyOutMat;
-            }
+            set => Token.SetHideToken = value;
         }
-
+        
         public Material NormalMat;
         public Material GreyOutMat;
         public MeshRenderer RodRenderer;
         public MeshRenderer SmallRodRenderer;
+        public TimeLineTokenQuad Token;
         
         [HideInInspector]public bool PendingKill = false;
         public bool UseMajorMark

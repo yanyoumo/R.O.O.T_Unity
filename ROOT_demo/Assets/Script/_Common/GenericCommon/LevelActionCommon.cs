@@ -20,9 +20,13 @@ namespace ROOT
         HideCheckList,
         HandOn,
         SetUnitStationary,
-        ShowStorePanel,//TODO not tested
+        ShowStorePanel,
         ToggleAlternateTextPos,
         HighLightUI,
+        MoveCursorToPos,
+        MoveCursorToUnitByTag,
+        SetTimeline,
+        ResetStep,//实际是重置“视在Step”、RawStep目前也不让重设。
     }
 
     public enum BossStageType

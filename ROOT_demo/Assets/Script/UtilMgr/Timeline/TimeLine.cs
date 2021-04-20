@@ -1,16 +1,30 @@
 ﻿using System;
 using System.Collections;
+using com.ootii.Messages;
 using ROOT.Common;
 using ROOT.SetupAsset;
-using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
 {
+    //煊煊的需求派生出如下几个实际feature：
+    //1、WorldCycler里面的Step数据可以重置、视在Step通过offset重置。
+    //2、Timeline是否Disable
+    //3、Timeline是否现实Token
+    //4、Career及以上FSM是否处理round的事件。
+    
+    //前三个化为TutorialAction暴露给外面。
+    //对于第四个需求、默认看是用一个和tutorialVer的Bool。但是、现在突然想到，有没有可能给FSM不同的层级加个以Tag分类的开关系统。
+    //通过这些Tag挂在一个bool来整建制开关FSM的转移；并且FSM转移要通过Tag系统标记。
+
+    //核心逻辑想了一下、估计意外地没办法优化了。现在Timeline的主体是要做开启和关闭的调整；
+    //以及Timeline的重置、关闭Token、重置Token、调整Token等等管理性Feature。
+    
+    //下一个要搞的Featrue是吧Time的表现层和数据层分开、虽然数据层只有一个Step、但是尽量也和marker和token部分分开。
+    //还有就是Token部分的更新。
     public class TimeLine : MonoBehaviour
     {
-        //TODO 这里调整Status还是个大工作。
         public TimeLineGoalMarker GoalMarker;
         private GameAssets _currentGameAsset;
 
@@ -45,14 +59,14 @@ namespace ROOT
 
         public int StepCount => _currentGameAsset.StepCount;
 
-        protected float AnimationTimerOrigin = 0.0f; //都是秒
-        private float animationTimer => Time.time - AnimationTimerOrigin;
+        private float _animationTimerOrigin = 0.0f; //都是秒
+        private float AnimationTimer => Time.time - _animationTimerOrigin;
 
         private float AnimationLerper
         {
             get
             {
-                float res = animationTimer / FSMLevelLogic.AnimationDuration;
+                var res = AnimationTimer / FSMLevelLogic.AnimationDuration;
                 res = Mathf.Clamp01(res);
                 return Utils.EaseInOutCubic(res);
             }
@@ -74,28 +88,28 @@ namespace ROOT
             {
                 case TimeLineStatus.Normal:
                     DisabledCover.gameObject.SetActive(false);
-                    UpdateRodToNormalGreyOut(true);
+                    UpdateMarkerToHideToken(false);
                     break;
-                case TimeLineStatus.GreyOut:
+                case TimeLineStatus.NoToken:
                     DisabledCover.gameObject.SetActive(false);
-                    UpdateRodToNormalGreyOut(false);
+                    UpdateMarkerToHideToken(true);
                     break;
                 case TimeLineStatus.Disabled:
                     DisabledCover.gameObject.SetActive(true);
-                    UpdateRodToNormalGreyOut(false);
+                    UpdateMarkerToHideToken(true);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private TimeLineMarker[] timeLineMarkers => TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
-
-        private void UpdateRodToNormalGreyOut(bool normalOrGreyOut)
+        private void UpdateMarkerToHideToken(bool Hide)
         {
-            timeLineMarkers.ForEach(t => t.SetNormal = normalOrGreyOut);
+            timeLineMarkers.ForEach(t => t.SetHide = Hide);
         }
         
+        private TimeLineMarker[] timeLineMarkers => TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
+
         public void SetNoCount()
         {
             SetGoalCount = 0;
@@ -115,7 +129,7 @@ namespace ROOT
         //private RoundLib _roundLib;
         private bool HasHeatsinkSwitch = false;
 
-        void CheckToken(Transform MarkRoot, int j, int markerID)
+        private void CreateToken(TimeLineMarker marker, int markerID)
         {
             var roundGist = new RoundGist();
             if (_currentGameAsset.ActionAsset.HasEnded(markerID))
@@ -129,19 +143,27 @@ namespace ROOT
                 HasHeatsinkSwitch = roundGist.SwitchHeatsink(truncatedCount);
             }
 
-            var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
-            token.GetComponent<TimeLineTokenQuad>().owner = this;
-            token.GetComponent<TimeLineTokenQuad>().InitQuadShape(UnitLength, SubDivision, roundGist, HasHeatsinkSwitch);
-            token.GetComponent<TimeLineTokenQuad>().MarkerID = markerID;
+            var token = Instantiate(TimeLineTokenTemplate, marker.transform);
+            var tokenS = token.GetComponent<TimeLineTokenQuad>();
+            marker.Token = tokenS;
+            tokenS.owner = this;
+            tokenS.InitQuadShape(UnitLength, SubDivision, roundGist, HasHeatsinkSwitch);
+            tokenS.MarkerID = markerID;
+            if (_currentStatus == TimeLineStatus.NoToken)
+            {
+                //新建的Token要在这儿设置。
+                tokenS.SetHideToken = true;
+            }
         }
 
-        void CreateMarker(int placeID, int markerID)
+        private void CreateMarker(int placeID, int markerID)
         {
             var marker = Instantiate(TimeLineMarkerTemplate, TimeLineMarkerRoot);
             var unitLocalX = (UnitLength / SubDivision) * (placeID);
             marker.transform.localPosition = TimeLineMarkerZeroing.localPosition + new Vector3(unitLocalX, 0, 0);
-            CheckToken(marker.transform, placeID, markerID);
-            marker.GetComponent<TimeLineMarker>().UseMajorMark = (markerID % SubDivision == 0);
+            var markerS = marker.GetComponent<TimeLineMarker>();
+            CreateToken(markerS, markerID);
+            markerS.UseMajorMark = (markerID % SubDivision == 0);
         }
 
         void UpdateTimeLine()
@@ -169,7 +191,7 @@ namespace ROOT
 
         IEnumerator Animate(bool Forward)
         {
-            AnimationTimerOrigin = Time.time;
+            _animationTimerOrigin = Time.time;
             while (AnimationLerper < 1.0f)
             {
                 yield return 0;
@@ -180,6 +202,8 @@ namespace ROOT
             UpdateTimeLine();
         }
 
+        private int counter = 0;
+        
         public void Step()
         {
             StartCoroutine(Animate(true));
@@ -201,9 +225,21 @@ namespace ROOT
             UpdateTimeLine();
         }
 
-        void Awake()
+        private void ApparentStepResetedHandler(IMessage rMessage)
+        {
+            //目前是瞬间变过去、就先这样吧。
+            UpdateTimeLine();
+        }
+        
+        private void Awake()
         {
             RequirementSatisfied = false;
+            MessageDispatcher.AddListener(WorldEvent.ApparentStepResetedEvent,ApparentStepResetedHandler);
+        }
+
+        private void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.ApparentStepResetedEvent,ApparentStepResetedHandler);
         }
     }
 }

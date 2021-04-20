@@ -48,10 +48,10 @@ namespace ROOT.UI
             set
             {
                 _usingAlternateFrame = value;
-                Debug.Log(" _usingAlternateFrame = value;");
+                //Debug.Log(" _usingAlternateFrame = value;");
                 if (TutorialMainTextFrame.IsVisible || TutorialMainTextFrame_Alter.IsVisible)//这个判断不靠谱？？
                 {
-                    Debug.Log("TutorialMainTextFrame.IsShowing || TutorialMainTextFrame_Alter.IsShowing");
+                    //Debug.Log("TutorialMainTextFrame.IsShowing || TutorialMainTextFrame_Alter.IsShowing");
                     TutorialMainTextFrame.Toggle();
                     TutorialMainTextFrame_Alter.Toggle();
                 }

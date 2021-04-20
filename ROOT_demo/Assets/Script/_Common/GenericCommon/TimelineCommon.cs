@@ -7,7 +7,7 @@ namespace ROOT.Common
     public enum TimeLineStatus
     {
         Normal,
-        GreyOut,
+        NoToken,
         Disabled
     }
     
