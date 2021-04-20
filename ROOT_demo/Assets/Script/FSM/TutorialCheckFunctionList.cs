@@ -10,11 +10,6 @@ namespace ROOT
         MoveThreeMatrixUnitsToOneLink,
         ConnectCorrespondingCoreAndField,
         ConnectDifferentCoreAndField,
-        ConnectOneMatrixUnitWithMatrixCore,
-        ConnectAllMatrixUnitsWithMatrixCore,
-        ConnectThermalUnitWithThermalCore,
-        ConnectMatrixLinksWithThermalLinks,
-        ConnectNewAddedThermalUnitsIntoLinks,
         Buy3UnitsOrNotEnoughMoney,
         FourWarningGridOneHeatSink,
     }
