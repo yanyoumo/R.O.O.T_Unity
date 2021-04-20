@@ -8,9 +8,10 @@ using UnityEngine;
 
 namespace ROOT
 {
+    //核心逻辑想了一下、估计意外地没办法优化了。现在Timeline的主体是要做开启和关闭的调整；
+    //以及Timeline的重置、关闭Token、重置Token、调整Token等等管理性Feature。
     public class TimeLine : MonoBehaviour
     {
-        //TODO 这里调整Status还是个大工作。
         public TimeLineGoalMarker GoalMarker;
         private GameAssets _currentGameAsset;
 
@@ -52,7 +53,7 @@ namespace ROOT
         {
             get
             {
-                float res = animationTimer / FSMLevelLogic.AnimationDuration;
+                var res = animationTimer / FSMLevelLogic.AnimationDuration;
                 res = Mathf.Clamp01(res);
                 return Utils.EaseInOutCubic(res);
             }
@@ -74,28 +75,28 @@ namespace ROOT
             {
                 case TimeLineStatus.Normal:
                     DisabledCover.gameObject.SetActive(false);
-                    UpdateRodToNormalGreyOut(true);
+                    UpdateMarkerToHideToken(false);
                     break;
-                case TimeLineStatus.GreyOut:
+                case TimeLineStatus.NoToken:
                     DisabledCover.gameObject.SetActive(false);
-                    UpdateRodToNormalGreyOut(false);
+                    UpdateMarkerToHideToken(true);
                     break;
                 case TimeLineStatus.Disabled:
                     DisabledCover.gameObject.SetActive(true);
-                    UpdateRodToNormalGreyOut(false);
+                    UpdateMarkerToHideToken(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private TimeLineMarker[] timeLineMarkers => TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
-
-        private void UpdateRodToNormalGreyOut(bool normalOrGreyOut)
+        private void UpdateMarkerToHideToken(bool Hide)
         {
-            timeLineMarkers.ForEach(t => t.SetNormal = normalOrGreyOut);
+            timeLineMarkers.ForEach(t => t.SetHide = Hide);
         }
         
+        private TimeLineMarker[] timeLineMarkers => TimeLineMarkerRoot.GetComponentsInChildren<TimeLineMarker>();
+
         public void SetNoCount()
         {
             SetGoalCount = 0;
@@ -115,7 +116,7 @@ namespace ROOT
         //private RoundLib _roundLib;
         private bool HasHeatsinkSwitch = false;
 
-        void CheckToken(Transform MarkRoot, int j, int markerID)
+        private void CheckToken(TimeLineMarker marker, int j, int markerID)
         {
             var roundGist = new RoundGist();
             if (_currentGameAsset.ActionAsset.HasEnded(markerID))
@@ -129,19 +130,27 @@ namespace ROOT
                 HasHeatsinkSwitch = roundGist.SwitchHeatsink(truncatedCount);
             }
 
-            var token = Instantiate(TimeLineTokenTemplate, MarkRoot);
-            token.GetComponent<TimeLineTokenQuad>().owner = this;
-            token.GetComponent<TimeLineTokenQuad>().InitQuadShape(UnitLength, SubDivision, roundGist, HasHeatsinkSwitch);
-            token.GetComponent<TimeLineTokenQuad>().MarkerID = markerID;
+            var token = Instantiate(TimeLineTokenTemplate, marker.transform);
+            var tokenS = token.GetComponent<TimeLineTokenQuad>();
+            marker.Token = tokenS;
+            tokenS.owner = this;
+            tokenS.InitQuadShape(UnitLength, SubDivision, roundGist, HasHeatsinkSwitch);
+            tokenS.MarkerID = markerID;
+            if (_currentStatus == TimeLineStatus.NoToken)
+            {
+                //新建的Token要在这儿设置。
+                tokenS.SetHideToken = true;
+            }
         }
 
-        void CreateMarker(int placeID, int markerID)
+        private void CreateMarker(int placeID, int markerID)
         {
             var marker = Instantiate(TimeLineMarkerTemplate, TimeLineMarkerRoot);
             var unitLocalX = (UnitLength / SubDivision) * (placeID);
             marker.transform.localPosition = TimeLineMarkerZeroing.localPosition + new Vector3(unitLocalX, 0, 0);
-            CheckToken(marker.transform, placeID, markerID);
-            marker.GetComponent<TimeLineMarker>().UseMajorMark = (markerID % SubDivision == 0);
+            var markerS = marker.GetComponent<TimeLineMarker>();
+            CheckToken(markerS, placeID, markerID);
+            markerS.UseMajorMark = (markerID % SubDivision == 0);
         }
 
         void UpdateTimeLine()
@@ -180,6 +189,8 @@ namespace ROOT
             UpdateTimeLine();
         }
 
+        private int counter = 0;
+        
         public void Step()
         {
             StartCoroutine(Animate(true));
