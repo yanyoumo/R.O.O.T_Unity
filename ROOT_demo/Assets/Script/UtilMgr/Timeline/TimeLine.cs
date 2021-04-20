@@ -2,14 +2,26 @@
 using System.Collections;
 using ROOT.Common;
 using ROOT.SetupAsset;
-using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
 {
+    //煊煊的需求派生出如下几个实际feature：
+    //1、WorldCycler里面的Step数据可以重置、视在Step通过offset重置。
+    //2、Timeline是否Disable
+    //3、Timeline是否现实Token
+    //4、Career及以上FSM是否处理round的事件。
+    
+    //前三个化为TutorialAction暴露给外面。
+    //对于第四个需求、默认看是用一个和tutorialVer的Bool。但是、现在突然想到，有没有可能给FSM不同的层级加个以Tag分类的开关系统。
+    //通过这些Tag挂在一个bool来整建制开关FSM的转移；并且FSM转移要通过Tag系统标记。
+
     //核心逻辑想了一下、估计意外地没办法优化了。现在Timeline的主体是要做开启和关闭的调整；
     //以及Timeline的重置、关闭Token、重置Token、调整Token等等管理性Feature。
+    
+    //TODO 下一个要搞的Featrue是吧Time的表现层和数据层分开、虽然数据层只有一个Step、但是尽量也和marker和token部分分开。
+    //还有就是Token部分的更新。
     public class TimeLine : MonoBehaviour
     {
         public TimeLineGoalMarker GoalMarker;
@@ -46,14 +58,14 @@ namespace ROOT
 
         public int StepCount => _currentGameAsset.StepCount;
 
-        protected float AnimationTimerOrigin = 0.0f; //都是秒
-        private float animationTimer => Time.time - AnimationTimerOrigin;
+        private float _animationTimerOrigin = 0.0f; //都是秒
+        private float AnimationTimer => Time.time - _animationTimerOrigin;
 
         private float AnimationLerper
         {
             get
             {
-                var res = animationTimer / FSMLevelLogic.AnimationDuration;
+                var res = AnimationTimer / FSMLevelLogic.AnimationDuration;
                 res = Mathf.Clamp01(res);
                 return Utils.EaseInOutCubic(res);
             }
@@ -116,7 +128,7 @@ namespace ROOT
         //private RoundLib _roundLib;
         private bool HasHeatsinkSwitch = false;
 
-        private void CheckToken(TimeLineMarker marker, int j, int markerID)
+        private void CreateToken(TimeLineMarker marker, int markerID)
         {
             var roundGist = new RoundGist();
             if (_currentGameAsset.ActionAsset.HasEnded(markerID))
@@ -149,7 +161,7 @@ namespace ROOT
             var unitLocalX = (UnitLength / SubDivision) * (placeID);
             marker.transform.localPosition = TimeLineMarkerZeroing.localPosition + new Vector3(unitLocalX, 0, 0);
             var markerS = marker.GetComponent<TimeLineMarker>();
-            CheckToken(markerS, placeID, markerID);
+            CreateToken(markerS, markerID);
             markerS.UseMajorMark = (markerID % SubDivision == 0);
         }
 
@@ -178,7 +190,7 @@ namespace ROOT
 
         IEnumerator Animate(bool Forward)
         {
-            AnimationTimerOrigin = Time.time;
+            _animationTimerOrigin = Time.time;
             while (AnimationLerper < 1.0f)
             {
                 yield return 0;

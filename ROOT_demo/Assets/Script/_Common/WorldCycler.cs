@@ -13,7 +13,7 @@ namespace ROOT
 
         public static bool AnimationTimeLongSwitch => TelemetryStage && !TelemetryPause;
 
-        public static int Step => ActualStep;
+        public static int Step => ApparentStep;
 
         public static bool TelemetryStage = false;
         public static bool TelemetryPause = false;
@@ -22,8 +22,8 @@ namespace ROOT
         {
             get
             {
-                if (ActualStep == ExpectedStep) return null;
-                return ExpectedStep > ActualStep;
+                if (ApparentStep == ExpectedStep) return null;
+                return ExpectedStep > ApparentStep;
             }
         }
 
@@ -54,45 +54,53 @@ namespace ROOT
             }
         }
 
-        public static int ActualStep { private set; get; }
+        public static int RawStep { private set; get; }
+        public static int ApparentOffset { private set; get; }
         public static int ExpectedStep { private set; get; }
+        public static int ApparentStep
+        {
+            set => RawStep = value;
+            get => RawStep + ApparentOffset;
+        }
+
 
         public static void InitCycler()
         {
-            ActualStep = 0;
+            RawStep = 0;
+            ApparentOffset = 0;
             ExpectedStep = 0;
         }
 
         public static void StepUp()
         {
-            if (ExpectedStep < ActualStep)
+            if (ExpectedStep < ApparentStep)
             {
                 throw new Exception("Should not further Increase Step when ExpectedStep is Lower");
             }
-            else if (ExpectedStep > ActualStep)
+            else if (ExpectedStep > ApparentStep)
             {
-                ActualStep++;
+                ApparentStep++;
             }
-            else if (ExpectedStep == ActualStep)
+            else if (ExpectedStep == ApparentStep)
             {
-                ActualStep++;
+                ApparentStep++;
                 ExpectedStep++;
             }
         }
 
         public static void StepDown()
         {
-            if (ExpectedStep > ActualStep)
+            if (ExpectedStep > ApparentStep)
             {
                 throw new Exception("Should not further Decrease Step when ExpectedStep is Higher");
             }
-            else if (ExpectedStep < ActualStep)
+            else if (ExpectedStep < ApparentStep)
             {
-                ActualStep--;
+                ApparentStep--;
             }
-            else if (ExpectedStep == ActualStep)
+            else if (ExpectedStep == ApparentStep)
             {
-                ActualStep--;
+                ApparentStep--;
                 ExpectedStep--;
             }
         }
@@ -105,6 +113,11 @@ namespace ROOT
         public static void ExpectedStepDecrement(int amount)
         {
             ExpectedStep -= amount;
+        }
+
+        public static void ResetApparentStep()
+        {
+            ApparentOffset = -RawStep;
         }
     }
 }

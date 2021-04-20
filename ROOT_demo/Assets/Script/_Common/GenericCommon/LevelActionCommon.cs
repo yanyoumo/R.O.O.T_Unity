@@ -20,11 +20,12 @@ namespace ROOT
         HideCheckList,
         HandOn,
         SetUnitStationary,
-        ShowStorePanel,//TODO not tested
+        ShowStorePanel,
         ToggleAlternateTextPos,
         HighLightUI,
         MoveCursorToPos,
         MoveCursorToUnitByTag,
+        SetTimeline,
     }
 
     public enum BossStageType

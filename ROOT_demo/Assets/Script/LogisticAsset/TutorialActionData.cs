@@ -82,5 +82,9 @@ namespace ROOT.SetupAsset
         [VerticalGroup("DetailedData")]
         [ShowIf("@this.ActionType==TutorialActionType.HighLightUI&&this.HLSet")]
         public UITag UITag;
+        
+        [VerticalGroup("DetailedData")]
+        [ShowIf("ActionType", TutorialActionType.SetTimeline)]
+        public TimeLineStatus TimeLineStatus;
     }
 }

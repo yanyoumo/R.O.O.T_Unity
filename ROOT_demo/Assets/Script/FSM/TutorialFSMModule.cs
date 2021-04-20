@@ -222,6 +222,11 @@ namespace ROOT.FSM
             MessageDispatcher.SendMessage(actionPack);
             _forceCycle = true;
         }
+
+        private void SetTimeLineFunc(TutorialActionData data)
+        {
+            owner.LevelAsset.TimeLine.CurrentStatus = data.TimeLineStatus;
+        }
         
         public TutorialFSMModule(FSMLevelLogic _fsm)
         {
@@ -243,6 +248,7 @@ namespace ROOT.FSM
                 {HighLightUI, HighLightUIFunc},
                 {MoveCursorToPos, MoveCursorToPosFunc},
                 {MoveCursorToUnitByTag, MoveCursorToUnitByTagFunc},
+                {SetTimeline, SetTimeLineFunc},
             };
         }
 
