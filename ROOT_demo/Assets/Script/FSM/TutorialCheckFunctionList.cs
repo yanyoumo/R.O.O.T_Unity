@@ -5,13 +5,13 @@ namespace ROOT
 {
     public enum TutorialCheckType
     {
-        MoveCursorToTarget55,
-        MoveMatrixUnitsToSameYIndex,
-        MoveThreeMatrixUnitsToOneLink,
-        ConnectCorrespondingCoreAndField,
-        ConnectDifferentCoreAndField,
-        Buy3UnitsOrNotEnoughMoney,
-        FourWarningGridOneHeatSink,
+        MoveCursorToTarget55 = 0,
+        MoveMatrixUnitsToSameYIndex = 1,
+        MoveThreeMatrixUnitsToOneLink = 2,
+        ConnectCorrespondingCoreAndField = 10,
+        ConnectDifferentCoreAndField = 11,
+        Buy3UnitsOrNotEnoughMoney = 99,
+        FourWarningGridOneHeatSink = 100,
     }
 
     public static class TutorialCheckFunctionList
@@ -40,14 +40,14 @@ namespace ROOT
             return board.GetConnectComponent() == 1;
         }
 
-        public static bool ConnectOneMatrixUnitWithMatrixCore(FSMLevelLogic fsm, Board board)
+        private static bool ConnectOneMatrixUnitWithMatrixCore(FSMLevelLogic fsm, Board board)
         {
             // we have one matrix field and one matrix core here
             return board.Units.Where(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
                 unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Field)));
         }
 
-        public static bool ConnectThermalUnitWithThermalCore(FSMLevelLogic fsm, Board board)
+        private static bool ConnectThermalUnitWithThermalCore(FSMLevelLogic fsm, Board board)
         {
             // we have one thermo field and one thermo core here
             return board.Units.Where(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Core)).Any(unit =>
