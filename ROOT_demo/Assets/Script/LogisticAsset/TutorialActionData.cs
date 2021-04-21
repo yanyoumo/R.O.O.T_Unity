@@ -84,7 +84,7 @@ namespace ROOT.SetupAsset
         [ShowIf("@this.ActionType==TutorialActionType.HighLightGrid&&this.Set")]
         public GridHighLightType HighLightType;
 
-        [VerticalGroup("DetailedData")] 
+        [VerticalGroup("DetailedData")]
         [ShowIf("@this.ActionType==TutorialActionType.HighLightGrid&&(!(!this.Set&&this.AllClear))")]
         public Vector2Int[] poses;
     }

@@ -291,7 +291,7 @@ namespace ROOT.FSM
                 {HandOn, SetHandOn},
                 {CreateCursor, data => WorldExecutor.InitCursor(LevelAsset, data.Pos)},
                 {SetUnitStationary, SetStationaryByTag},
-                {ShowStorePanel, ShowShop},
+                {ToggleFSMCoreFeat, ShowShop},
                 {ToggleAlternateTextPos, ToggleAlternateText},
                 {HighLightUI, HighLightUIFunc},
                 {MoveCursorToPos, MoveCursorToPosFunc},
