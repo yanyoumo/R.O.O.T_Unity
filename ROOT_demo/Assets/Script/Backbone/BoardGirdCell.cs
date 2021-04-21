@@ -115,9 +115,9 @@ namespace ROOT
             switch (edgeStatus)
             {
                 case EdgeStatus.InfoZone:
-                    return ColorUtilityWrapper.ParseHtmlStringNotNull("#00B3B3");
+                    return ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_ZONE_INFO;
                 case EdgeStatus.ThermoZone:
-                    return ColorUtilityWrapper.ParseHtmlStringNotNull("#C83B00");
+                    return ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_ZONE_THERMO;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

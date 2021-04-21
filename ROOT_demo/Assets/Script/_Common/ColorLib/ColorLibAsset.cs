@@ -20,51 +20,62 @@ namespace ROOT.SetupAsset
     public class ColorLibAsset : ScriptableObject
     {   
         [Title("Master")]
-        [PropertyOrder(-1)]
+        [PropertyOrder(-2)]
         public Color ROOT_MASTER_SCAN;
-        [PropertyOrder(0)]
+        [PropertyOrder(-1)]
         public Color ROOT_MASTER_MATRIX;
-        [PropertyOrder(1)]
+        [PropertyOrder(0)]
         public Color ROOT_MASTER_THERMO;
-        [PropertyOrder(2)]
+        [PropertyOrder(1)]
         public Color ROOT_MASTER_DISASTER;
         
         [PropertySpace]
         [Title("TimeLine")]
+        [PropertyOrder(2)]
+        [ShowInInspector]
+        [PropertyTooltip("Same as ROOT_MASTER_MATRIX")]
+        public Color ROOT_TIMELINE_MATRIX => ROOT_MASTER_MATRIX;
         [PropertyOrder(3)]
         [ShowInInspector]
-        public Color ROOT_TIMELINE_MATRIX => ROOT_MASTER_MATRIX;
-        [PropertyOrder(4)]
-        [ShowInInspector]
+        [PropertyTooltip("Same as ROOT_MASTER_MATRIX")]
         public Color ROOT_TIMELINE_SCAN => ROOT_MASTER_MATRIX;//这个是遗留问题、TimeLineToken的逻辑要变。
-        [PropertyOrder(5)] 
+        [PropertyOrder(4)] 
         [ShowInInspector]
+        [PropertyTooltip("Same as ROOT_TIMELINE_SHOPOPENED")]
         public Color ROOT_TIMELINE_HEATSINKSWITCH => ROOT_TIMELINE_SHOPOPENED;//同上
-        [PropertyOrder(6)]
+        [PropertyOrder(5)]
         public Color ROOT_TIMELINE_SHOPOPENED;
-        [PropertyOrder(7)]
+        [PropertyOrder(6)]
         public Color ROOT_TIMELINE_BOSS;
         [ShowInInspector]
-        [PropertyOrder(8)]
+        [PropertyOrder(7)]
+        [PropertyTooltip("Same as ROOT_MASTER_DISASTER")]
         public Color ROOT_TIMELINE_DISASTER => ROOT_MASTER_DISASTER;
-        [PropertyOrder(9)]
+        [PropertyOrder(8)]
         public Color ROOT_TIMELINE_ENDING;
 
         [PropertySpace]
         [Title("Event")]
-        [PropertyOrder(10)]
+        [PropertyOrder(9)]
         [ShowInInspector]
+        [PropertyTooltip("Same as ROOT_MASTER_DISASTER")]
         public Color ROOT_EVENT_DISASTER_RED => ROOT_MASTER_DISASTER;
 
         [PropertySpace]
         [Title("Signal")]
         [ShowInInspector]
-        [PropertyOrder(11)]
+        [PropertyOrder(10)]
+        [PropertyTooltip("Same as ROOT_MASTER_SCAN")]
         public Color ROOT_SIGNAL_SCAN => ROOT_MASTER_SCAN;
         [ShowInInspector]
-        [PropertyOrder(12)]
+        [PropertyOrder(11)]
+        [PropertyTooltip("Same as ROOT_MASTER_MATRIX")]
         public Color ROOT_SIGNAL_MATRIX => ROOT_MASTER_MATRIX;
-
+        [ShowInInspector]
+        [PropertyOrder(12)]
+        [PropertyTooltip("Same as ROOT_MASTER_THERMO")]
+        public Color ROOT_SIGNAL_THREMO => ROOT_MASTER_THERMO;
+        
         [PropertySpace]
         [Title("BoardGrid")]
         [PropertyOrder(13)]
@@ -77,27 +88,42 @@ namespace ROOT.SetupAsset
         public Color ROOT_MAT_BOARDGRID_INFO;
         [PropertyOrder(17)]
         public Color ROOT_MAT_BOARDGRID_PREWARNING;
+        [Title("BoardGrid Stroke")]
         [PropertyOrder(18)]
         public Color ROOT_MAT_BOARDGRIDSTROKE_NORMAL;
         [PropertyOrder(19)]
         public Color ROOT_MAT_BOARDGRIDSTROKE_FLOATING;
         [PropertyOrder(20)]
         public Color ROOT_MAT_BOARDGRIDSTROKE_HIGHLIGHTED;
-
+        [Title("BoardGrid Zone")]
+        [PropertyOrder(21)]
+        public Color ROOT_MAT_BOARDGRID_ZONE_INFO;
+        [ShowInInspector]
+        [PropertyOrder(22)] 
+        [PropertyTooltip("Same as ROOT_MASTER_THERMO")]
+        public Color ROOT_MAT_BOARDGRID_ZONE_THERMO => ROOT_MASTER_THERMO;
+        [Title("BoardGrid Custom HighLighting")]
+        [PropertyOrder(23)]
+        public Color ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_A;
+        [PropertyOrder(24)]
+        public Color ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_B;
+        [PropertyOrder(25)]
+        public Color ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_C;
+        
         [PropertySpace]
         [Title("Destoryer")]
-        [PropertyOrder(21)]
+        [PropertyOrder(26)]
         public Color ROOT_DESTORYER_STRIKING;
-        [PropertyOrder(22)]
+        [PropertyOrder(27)]
         public Color ROOT_DESTORYER_WARNING;
 
         [PropertySpace]
         [Title("Skill")]
-        [PropertyOrder(23)]
+        [PropertyOrder(28)]
         public Color ROOT_SKILL_SWAP_UNITA;
-        [PropertyOrder(24)]
+        [PropertyOrder(29)]
         public Color ROOT_SKILL_SWAP_UNITB;
-        [PropertyOrder(25)]
+        [PropertyOrder(30)]
         public Color ROOT_SHOP_CHEAP_PURPLE;
     }
 }
