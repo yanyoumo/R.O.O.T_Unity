@@ -264,7 +264,18 @@ namespace ROOT.FSM
             };
             MessageDispatcher.SendMessage(data);
         }
-        
+
+        private void ToggleGameplayUIFunc(TutorialActionData tutorialActionData)
+        {
+            var data = new ToggleGameplayUIData
+            {
+                Set = tutorialActionData.Set,
+                SelectAll = tutorialActionData.AllClear,
+                UITag = tutorialActionData.UITag
+            };
+            MessageDispatcher.SendMessage(data);
+        }
+
         public TutorialFSMModule(FSMLevelLogic _fsm)
         {
             //base.Awake();
@@ -288,6 +299,7 @@ namespace ROOT.FSM
                 {SetTimeline, SetRoundRelatedData},
                 {ResetStep, ResetApparentStep},
                 {HighLightGrid, HighLightGridFunc},
+                {ToggleGameplayUI, ToggleGameplayUIFunc},
             };
         }
 

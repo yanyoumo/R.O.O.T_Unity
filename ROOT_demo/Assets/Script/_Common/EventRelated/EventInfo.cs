@@ -77,5 +77,13 @@ namespace ROOT.Message
             public Vector2Int[] Poses;
             public override string Type => WorldEvent.BoardGridHighLightSetEvent;
         }
+
+        public class ToggleGameplayUIData : RootMessageBase
+        {
+            public bool Set;
+            public bool SelectAll;
+            public UITag UITag;
+            public override string Type => WorldEvent.ToggleGamePlayUIEvent;
+        }
     }
 }

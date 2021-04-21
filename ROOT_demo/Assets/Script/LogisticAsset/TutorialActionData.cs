@@ -64,17 +64,17 @@ namespace ROOT.SetupAsset
         public UnitTag TargetTag;
 
         [VerticalGroup("DetailedData")]
-        [ShowIf("@this.ActionType==TutorialActionType.SetUnitStationary||this.ActionType==TutorialActionType.HighLightGrid")]
+        [ShowIf("@this.ActionType==TutorialActionType.ToggleGameplayUI||this.ActionType==TutorialActionType.SetUnitStationary||this.ActionType==TutorialActionType.HighLightGrid")]
         public bool Set; //Or unset
 
         [VerticalGroup("DetailedData")] [LabelText("Set")] [ShowIf("ActionType", TutorialActionType.HighLightUI)]
         public bool HLSet; //Or unset
 
-        [VerticalGroup("DetailedData")]
-        [ShowIf("@this.ActionType==TutorialActionType.HighLightGrid&&!this.Set")]
+        [VerticalGroup("DetailedData")][LabelText("Select All")]
+        [ShowIf("@(this.ActionType==TutorialActionType.ToggleGameplayUI&&!this.Set)||(this.ActionType==TutorialActionType.HighLightGrid&&!this.Set)")]
         public bool AllClear;
         
-        [VerticalGroup("DetailedData")] [ShowIf("@this.ActionType==TutorialActionType.HighLightUI&&this.HLSet")]
+        [VerticalGroup("DetailedData")] [ShowIf("@(this.ActionType==TutorialActionType.ToggleGameplayUI)&&(!(!this.Set&&this.AllClear))||(this.ActionType==TutorialActionType.HighLightUI&&this.HLSet)")]
         public UITag UITag;
 
         [VerticalGroup("DetailedData")] [ShowIf("ActionType", TutorialActionType.SetTimeline)]
@@ -85,7 +85,7 @@ namespace ROOT.SetupAsset
         public GridHighLightType HighLightType;
 
         [VerticalGroup("DetailedData")] 
-        [ShowIf("@this.ActionType==TutorialActionType.HighLightGrid&&!this.AllClear")]
+        [ShowIf("@this.ActionType==TutorialActionType.HighLightGrid&&(!(!this.Set&&this.AllClear))")]
         public Vector2Int[] poses;
     }
 }

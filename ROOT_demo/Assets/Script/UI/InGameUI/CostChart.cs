@@ -2,6 +2,7 @@
 using com.ootii.Messages;
 using ROOT.Common;
 using ROOT.Message;
+using ROOT.Message.Inquiry;
 using TMPro;
 using UnityEngine;
 using static ROOT.WorldEvent;
@@ -14,17 +15,33 @@ namespace ROOT.UI
 
         private void HidingEventHandler(IMessage rMessage)
         {
-            
+            if (rMessage is ToggleGameplayUIData info)
+            {
+                if (info.Set)
+                {
+                    if (UITag==info.UITag)
+                    {
+                        gameObject.SetActive(true);
+                    }
+                }
+                else
+                {
+                    if (info.SelectAll || UITag == info.UITag)
+                    {
+                        gameObject.SetActive(false);
+                    }
+                }
+            }
         }
         
         protected void Awake()
         {
-            MessageDispatcher.AddListener(ToggleHideableUIEvent,HidingEventHandler);
+            MessageDispatcher.AddListener(ToggleGamePlayUIEvent,HidingEventHandler);
         }
 
         protected void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(ToggleHideableUIEvent,HidingEventHandler);
+            MessageDispatcher.RemoveListener(ToggleGamePlayUIEvent,HidingEventHandler);
         }
     }
     

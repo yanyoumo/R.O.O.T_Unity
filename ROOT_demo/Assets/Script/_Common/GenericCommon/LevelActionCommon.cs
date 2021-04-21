@@ -28,6 +28,7 @@ namespace ROOT
         SetTimeline,
         ResetStep,//实际是重置“视在Step”、RawStep目前也不让重设。
         HighLightGrid,
+        ToggleGameplayUI,
     }
 
     public enum BossStageType

@@ -17,7 +17,7 @@ namespace ROOT
         public static string MainCameraReadyEvent = "MainCameraReadyEvent";
         public static string ApparentStepResetedEvent="ApparentStepResetedEvent";
         public static string InGameOverlayToggleEvent = "InGameOverlayToggleEvent";
-        public static string ToggleHideableUIEvent = "ToggleHideableUIEvent";
+        public static string ToggleGamePlayUIEvent = "ToggleGamePlayUIEvent";
 
         public static string BoardShouldUpdateEvent = "BoardShouldUpdateEvent";
         public static string BoardUpdatedEvent = "BoardUpdatedEvent";
