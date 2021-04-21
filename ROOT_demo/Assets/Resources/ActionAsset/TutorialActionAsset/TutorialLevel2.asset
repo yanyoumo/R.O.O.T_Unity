@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: TutorialSignalBasic
-  Thumbnail: {fileID: 21300000, guid: 6a65727d6cebf18419b06ffd46b11c0c, type: 3}
+  Thumbnail: {fileID: 21300000, guid: 8d879c0911826e84f8e6ddb6e4b95db5, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9d91410b0b8c8545b41feda51e82d76,
     type: 3}
   InitialCurrency: 36
@@ -46,7 +46,7 @@ MonoBehaviour:
   Actions:
   - ActionIdx: 0
     ActionSubIdx: 0
-    ActionType: 7
+    ActionType: 17
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
@@ -60,54 +60,23 @@ MonoBehaviour:
     HandOnCheckType: 0
     HandOnMission: 
     TargetTag: 0
-    Set: 0
+    Set: 1
     HLSet: 0
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
-  - ActionIdx: 0
-    ActionSubIdx: 1
-    ActionType: 3
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    UITag: 0
-    TimeLineStatus: 0
-  - ActionIdx: 0
-    ActionSubIdx: 2
-    ActionType: 0
-    Text: 111
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    UITag: 0
-    TimeLineStatus: 0
+    HighLightType: 0
+    poses:
+    - {x: 0, y: 0}
+    - {x: 1, y: 1}
+    - {x: 2, y: 2}
+    - {x: 3, y: 3}
+    - {x: 4, y: 4}
+    - {x: 5, y: 5}
   - ActionIdx: 1
     ActionSubIdx: 0
-    ActionType: 0
-    Text: 222
+    ActionType: 17
+    Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -120,13 +89,22 @@ MonoBehaviour:
     HandOnCheckType: 0
     HandOnMission: 
     TargetTag: 0
-    Set: 0
+    Set: 1
     HLSet: 0
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 1
+    poses:
+    - {x: 5, y: 0}
+    - {x: 4, y: 1}
+    - {x: 3, y: 2}
+    - {x: 2, y: 3}
+    - {x: 1, y: 4}
+    - {x: 0, y: 5}
   - ActionIdx: 2
     ActionSubIdx: 0
-    ActionType: 2
+    ActionType: 17
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
@@ -142,28 +120,15 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
-  - ActionIdx: 2
-    ActionSubIdx: 1
-    ActionType: 8
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    UITag: 0
-    TimeLineStatus: 0
+    HighLightType: 0
+    poses:
+    - {x: 2, y: 2}
+    - {x: 3, y: 3}
+    - {x: 2, y: 3}
+    - {x: 3, y: 2}
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 0

@@ -7,6 +7,7 @@ using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 using com.ootii.Messages;
+using ROOT.Common;
 using ROOT.Message;
 using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
@@ -86,28 +87,33 @@ namespace ROOT
             set
             {
                 _cellStatus = value;
-                switch (_cellStatus)
-                {
-                    case CellStatus.Normal:
-                        BoardGridMesh.material.color = NormalColor;
-                        break;
-                    case CellStatus.PreWarning:
-                        BoardGridMesh.material.color = PreWarningColor;
-                        break;
-                    case CellStatus.Warning:
-                        BoardGridMesh.material.color = WarningColor;
-                        break;
-                    case CellStatus.Sink:
-                        BoardGridMesh.material.color = HeatSinkColor;
-                        break;
-                    case CellStatus.InfoCol:
-                        BoardGridMesh.material.color = InfoColColor;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                UpdateCellColorByStatus();
             }
             get => _cellStatus;
+        }
+
+        private void UpdateCellColorByStatus()
+        {
+            switch (_cellStatus)
+            {
+                case CellStatus.Normal:
+                    BoardGridMesh.material.color = NormalColor;
+                    break;
+                case CellStatus.PreWarning:
+                    BoardGridMesh.material.color = PreWarningColor;
+                    break;
+                case CellStatus.Warning:
+                    BoardGridMesh.material.color = WarningColor;
+                    break;
+                case CellStatus.Sink:
+                    BoardGridMesh.material.color = HeatSinkColor;
+                    break;
+                case CellStatus.InfoCol:
+                    BoardGridMesh.material.color = InfoColColor;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private Color GetColorFromEdgeStatus(EdgeStatus edgeStatus)
@@ -372,6 +378,38 @@ namespace ROOT
                 MessageDispatcher.SendMessage(data);
             }
         }
+
+        private void BoardGridHighLightSetHandler(IMessage rmessage)
+        {
+            if (rmessage is BoardGridHighLightSetData info)
+            {
+                Debug.Log("(rmessage is BoardGridHighLightSetData info)");
+                if (!info.Set)
+                {
+                    if (info.AllClear || info.Poses.Contains(OnboardPos))
+                    {
+                        UpdateCellColorByStatus();
+                    }
+                    return;
+                }
+
+                if (info.Poses.Contains(OnboardPos))
+                {
+                    switch (info.HLType)
+                    {
+                        case GridHighLightType.TypeA:
+                            BoardGridMesh.material.color = ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_A;
+                            break;
+                        case GridHighLightType.TypeB:
+                            BoardGridMesh.material.color = ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_B;
+                            break;
+                        default:
+                            BoardGridMesh.material.color = ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_C;
+                            break;
+                    }
+                }
+            }
+        }
         
         protected void Awake()
         {
@@ -399,10 +437,12 @@ namespace ROOT
             MessageDispatcher.AddListener(InGameOverlayToggleEvent, HintToggle);
             MessageDispatcher.AddListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
             MessageDispatcher.AddListener(BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
+            MessageDispatcher.AddListener(BoardGridHighLightSetEvent, BoardGridHighLightSetHandler);
         }
 
         protected void OnDestroy()
         {
+            MessageDispatcher.RemoveListener(BoardGridHighLightSetEvent, BoardGridHighLightSetHandler);
             MessageDispatcher.RemoveListener(BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
             MessageDispatcher.RemoveListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
             MessageDispatcher.RemoveListener(InGameOverlayToggleEvent, HintToggle);

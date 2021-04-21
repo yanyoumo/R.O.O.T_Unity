@@ -70,6 +70,10 @@ namespace ROOT.SetupAsset
         [VerticalGroup("DetailedData")] [LabelText("Set")] [ShowIf("ActionType", TutorialActionType.HighLightUI)]
         public bool HLSet; //Or unset
 
+        [VerticalGroup("DetailedData")]
+        [ShowIf("@this.ActionType==TutorialActionType.HighLightGrid&&!this.Set")]
+        public bool AllClear;
+        
         [VerticalGroup("DetailedData")] [ShowIf("@this.ActionType==TutorialActionType.HighLightUI&&this.HLSet")]
         public UITag UITag;
 
@@ -77,11 +81,11 @@ namespace ROOT.SetupAsset
         public TimeLineStatus TimeLineStatus;
 
         [VerticalGroup("DetailedData")] 
-        [ShowIf("ActionType", TutorialActionType.HighLightGrid)]
-        public Color HighLightColor;
+        [ShowIf("@this.ActionType==TutorialActionType.HighLightGrid&&this.Set")]
+        public GridHighLightType HighLightType;
 
         [VerticalGroup("DetailedData")] 
-        [ShowIf("ActionType", TutorialActionType.HighLightGrid)]
+        [ShowIf("@this.ActionType==TutorialActionType.HighLightGrid&&!this.AllClear")]
         public Vector2Int[] poses;
     }
 }

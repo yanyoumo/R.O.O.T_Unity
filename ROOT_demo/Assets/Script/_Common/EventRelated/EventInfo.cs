@@ -68,5 +68,14 @@ namespace ROOT.Message
             public Action<List<Vector2Int>> BoardGridThermoZoneInquiryCallBack;
             public override string Type => WorldEvent.BoardGridThermoZoneInquiry;
         }
+
+        public class BoardGridHighLightSetData : RootMessageBase
+        {
+            public bool Set;
+            public GridHighLightType HLType;
+            public bool AllClear;
+            public Vector2Int[] Poses;
+            public override string Type => WorldEvent.BoardGridHighLightSetEvent;
+        }
     }
 }

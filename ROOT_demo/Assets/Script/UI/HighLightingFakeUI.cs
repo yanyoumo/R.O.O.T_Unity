@@ -23,8 +23,15 @@ namespace ROOT.UI
         {
             if (rMessage is HighLightingUIChangedData data)
             {
-                CarveOut.localPosition = UITransLib[data.uiTag].Item1;
-                CarveOut.localScale = UITransLib[data.uiTag].Item2;
+                try
+                {
+                    CarveOut.localPosition = UITransLib[data.uiTag].Item1;
+                    CarveOut.localScale = UITransLib[data.uiTag].Item2;
+                }
+                catch (KeyNotFoundException)
+                {
+                    Debug.LogError("Key " + data.uiTag + " is not present in 2D pos Lib, please add.");
+                }
                 CurtainImage.enabled = data.Toggle;
             }
         }

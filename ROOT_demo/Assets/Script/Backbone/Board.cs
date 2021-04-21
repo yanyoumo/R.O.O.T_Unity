@@ -368,8 +368,11 @@ namespace ROOT
             }
         }
 
+        private int LastActualHeatSinkPos = -1;
+        
         public void UpkeepHeatSink(StageType type)
         {
+            if (ActualHeatSinkPos.Length == LastActualHeatSinkPos) return;
             //在这里计算每个HeatSink的价值。
             ResetGridStatus();
             //这里需要把status接进来，然后判是什么阶段的。
@@ -395,12 +398,15 @@ namespace ROOT
                 BoardGirds[key].HeatSinkCost = CalcPerHeatSinkCost(i);
                 BoardGirds[key].CellStatus = GettargetingStatus(type);
             }
+
+            LastActualHeatSinkPos = ActualHeatSinkPos.Length;
         }
 
         /// <summary>
         /// 游戏板扫描格点查看是否有可服务的HeatSink格
         /// </summary>
         /// <returns>返回有多少个HeatSink格没有被满足，返回0即均满足。</returns>
+        [Obsolete]
         public int ScanHeatSink()
         {
             //RISK 这个是O(n2)的函数，千万不能每帧调，就是Per-move才调。
