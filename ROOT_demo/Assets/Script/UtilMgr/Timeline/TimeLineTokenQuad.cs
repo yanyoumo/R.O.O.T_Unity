@@ -110,13 +110,13 @@ namespace ROOT
             DisableValMarker();
             QuadColors = new[]
             {
-                ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_GENERAL),
-                ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_NETWORK),
-                ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_DISASTER),
-                ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_TIMELINE_ENDING),
-                ColorUtilityWrapper.ParseHtmlStringNotNull("#FF8800"),
-                ColorUtilityWrapper.ParseHtmlStringNotNull("#0E195E"),
-                ColorUtilityWrapper.ParseHtmlStringNotNull("#AB00C2"),
+                ColorLibManager.Instance.ColorLib.ROOT_TIMELINE_MATRIX,
+                ColorLibManager.Instance.ColorLib.ROOT_TIMELINE_SCAN,
+                ColorLibManager.Instance.ColorLib.ROOT_TIMELINE_DISASTER,
+                ColorLibManager.Instance.ColorLib.ROOT_TIMELINE_ENDING,
+                ColorLibManager.Instance.ColorLib.ROOT_TIMELINE_HEATSINKSWITCH,
+                ColorLibManager.Instance.ColorLib.ROOT_TIMELINE_SHOPOPENED,
+                ColorLibManager.Instance.ColorLib.ROOT_TIMELINE_BOSS,
             };
         }
 

@@ -42,7 +42,7 @@ namespace ROOT
     /// </summary>
     public static class ColorName
     {
-        private const string ROOT_MASTER_NETWORK = "#2D39FF";
+        /*private const string ROOT_MASTER_NETWORK = "#2D39FF";
         private const string ROOT_MASTER_GENERAL = "#2DFF3F";
         private const string ROOT_MASTER_DISASTER = "#FF1515";
         
@@ -65,6 +65,6 @@ namespace ROOT
         public const string ROOT_DESTORYER_WARNING = "#FFEA04";
 
         public const string ROOT_SKILL_SWAP_UNITA = "#008585";
-        public const string ROOT_SKILL_SWAP_UNITB = "#00FFFF";
+        public const string ROOT_SKILL_SWAP_UNITB = "#00FFFF";*/
     }
 }

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d054641eb895a6943b27c649d8dbe479, type: 3}
+  m_Name: DefaultColorLib
+  m_EditorClassIdentifier: 
+  ROOT_MASTER_SCAN: {r: 0.1764706, g: 0.22352941, b: 1, a: 1}
+  ROOT_MASTER_MATRIX: {r: 0.1764706, g: 1, b: 0.24705882, a: 1}
+  ROOT_MASTER_THERMO: {r: 1, g: 0.6365967, b: 0.19496846, a: 1}
+  ROOT_MASTER_DISASTER: {r: 1, g: 0.08235294, b: 0.08235294, a: 1}
+  ROOT_TIMELINE_SHOPOPENED: {r: 0.05490196, g: 0.09803922, b: 0.36862746, a: 1}
+  ROOT_TIMELINE_BOSS: {r: 0.67058825, g: 0, b: 0.7607843, a: 1}
+  ROOT_TIMELINE_ENDING: {r: 0, g: 0, b: 0, a: 1}
+  ROOT_MAT_BOARDGRID_NORMAL: {r: 0.08235294, g: 0.09411765, b: 0.18431373, a: 1}
+  ROOT_MAT_BOARDGRID_WARNING: {r: 0.45882353, g: 0.14117648, b: 0.07058824, a: 1}
+  ROOT_MAT_BOARDGRID_HEATSINK: {r: 0.39607844, g: 0, b: 0.06666667, a: 1}
+  ROOT_MAT_BOARDGRID_INFO: {r: 0, g: 1, b: 1, a: 1}
+  ROOT_MAT_BOARDGRID_PREWARNING: {r: 0.8117647, g: 0.61960787, b: 0, a: 1}
+  ROOT_MAT_BOARDGRIDSTROKE_NORMAL: {r: 0.078431375, g: 0.078431375, b: 0.078431375,
+    a: 1}
+  ROOT_MAT_BOARDGRIDSTROKE_FLOATING: {r: 0.6, g: 0.7372549, b: 0.6745098, a: 1}
+  ROOT_MAT_BOARDGRIDSTROKE_HIGHLIGHTED: {r: 0.93333334, g: 0.4745098, b: 0.34901962,
+    a: 1}
+  ROOT_DESTORYER_STRIKING: {r: 1, g: 0.2, b: 0, a: 1}
+  ROOT_DESTORYER_WARNING: {r: 1, g: 0.91764706, b: 0.015686275, a: 1}
+  ROOT_SKILL_SWAP_UNITA: {r: 0, g: 0.52156866, b: 0.52156866, a: 1}
+  ROOT_SKILL_SWAP_UNITB: {r: 0, g: 1, b: 1, a: 1}
+  ROOT_SHOP_CHEAP_PURPLE: {r: 0.6156863, g: 0.2, b: 1, a: 1}

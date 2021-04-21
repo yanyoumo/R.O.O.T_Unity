@@ -9,6 +9,7 @@ using UnityEngine;
 using com.ootii.Messages;
 using ROOT.Message;
 using ROOT.Message.Inquiry;
+using ROOT.SetupAsset;
 using static ROOT.WorldEvent;
 
 namespace ROOT
@@ -51,14 +52,14 @@ namespace ROOT
         }
         
         public Dictionary<EdgeStatus, bool> LayeringEdgeStatus;
-        private Color NormalColor=> ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_MAT_BOARDGRID_NORMAL);
-        private Color WarningColor=> ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_MAT_BOARDGRID_WARNING);
-        private Color HeatSinkColor=> ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_MAT_BOARDGRID_HEATSINK);
-        private Color InfoColColor => ColorUtilityWrapper.ParseHtmlStringNotNull("#00FFFF");
-        private Color PreWarningColor => ColorUtilityWrapper.ParseHtmlStringNotNull("#CF9E00");
-        private Color NormalStrokeColor => ColorUtilityWrapper.ParseHtmlStringNotNull("#141414");
-        private Color FloatingStrokeColor => ColorUtilityWrapper.ParseHtmlStringNotNull("#99bcac");
-        private Color HighLightedStrokeColor => ColorUtilityWrapper.ParseHtmlStringNotNull("#ee7959");
+        private Color NormalColor => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_NORMAL;
+        private Color WarningColor=> ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_WARNING;
+        private Color HeatSinkColor=> ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_HEATSINK;
+        private Color InfoColColor => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_INFO;
+        private Color PreWarningColor => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_PREWARNING;
+        private Color NormalStrokeColor => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRIDSTROKE_NORMAL;
+        private Color FloatingStrokeColor => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRIDSTROKE_FLOATING;
+        private Color HighLightedStrokeColor => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRIDSTROKE_HIGHLIGHTED;
 
         [ReadOnly]
         public Board owner;
