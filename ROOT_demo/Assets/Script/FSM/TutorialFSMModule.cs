@@ -4,6 +4,7 @@ using System.Linq;
 using com.ootii.Messages;
 using ROOT.Common;
 using ROOT.Message;
+using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -251,7 +252,30 @@ namespace ROOT.FSM
         {
             WorldCycler.ResetApparentStep();
         }
-        
+
+        private void HighLightGridFunc(TutorialActionData tutorialActionData)
+        {
+            var data = new BoardGridHighLightSetData
+            {
+                Set = tutorialActionData.Set,
+                AllClear = tutorialActionData.AllClear,
+                HLType = tutorialActionData.HighLightType,
+                Poses = tutorialActionData.poses
+            };
+            MessageDispatcher.SendMessage(data);
+        }
+
+        private void ToggleGameplayUIFunc(TutorialActionData tutorialActionData)
+        {
+            var data = new ToggleGameplayUIData
+            {
+                Set = tutorialActionData.Set,
+                SelectAll = tutorialActionData.AllClear,
+                UITag = tutorialActionData.UITag
+            };
+            MessageDispatcher.SendMessage(data);
+        }
+
         public TutorialFSMModule(FSMLevelLogic _fsm)
         {
             //base.Awake();
@@ -274,6 +298,8 @@ namespace ROOT.FSM
                 {MoveCursorToUnitByTag, MoveCursorToUnitByTagFunc},
                 {SetTimeline, SetRoundRelatedData},
                 {ResetStep, ResetApparentStep},
+                {HighLightGrid, HighLightGridFunc},
+                {ToggleGameplayUI, ToggleGameplayUIFunc},
             };
         }
 

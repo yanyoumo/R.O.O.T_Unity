@@ -1,5 +1,6 @@
 using System;
 using com.ootii.Messages;
+using ROOT.Common;
 using ROOT.Message.Inquiry;
 using TMPro;
 using UnityEngine;
@@ -8,6 +9,8 @@ namespace ROOT.UI
 {
     public class AcquiringSignalPanel : RoundRelatedUIBase
     {
+        protected override UITag UITag => UITag.SignalPanel_Acquiring;
+
         private Func<int, int, float> _balancingSignalFunc = (a,b)=>0.0f;
         public TextMeshPro NormalSignal;
         public TextMeshPro NetworkSignal;

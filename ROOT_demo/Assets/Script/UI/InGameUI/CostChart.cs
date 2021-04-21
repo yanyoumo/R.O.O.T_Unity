@@ -1,13 +1,51 @@
 ﻿using System;
 using com.ootii.Messages;
+using ROOT.Common;
 using ROOT.Message;
+using ROOT.Message.Inquiry;
 using TMPro;
 using UnityEngine;
 using static ROOT.WorldEvent;
 
 namespace ROOT.UI
 {
-    public abstract class RoundRelatedUIBase : MonoBehaviour
+    public abstract class HideableUI : MonoBehaviour
+    {
+        protected abstract UITag UITag { get; }
+
+        private void HidingEventHandler(IMessage rMessage)
+        {
+            if (rMessage is ToggleGameplayUIData info)
+            {
+                if (info.Set)
+                {
+                    if (UITag==info.UITag)
+                    {
+                        gameObject.SetActive(true);
+                    }
+                }
+                else
+                {
+                    if (info.SelectAll || UITag == info.UITag)
+                    {
+                        gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
+        
+        protected void Awake()
+        {
+            MessageDispatcher.AddListener(ToggleGamePlayUIEvent,HidingEventHandler);
+        }
+
+        protected void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(ToggleGamePlayUIEvent,HidingEventHandler);
+        }
+    }
+    
+    public abstract class RoundRelatedUIBase : HideableUI
     {
         protected StageType StageType = StageType.Shop;
         
@@ -21,17 +59,21 @@ namespace ROOT.UI
         
         protected virtual void Awake()
         {
+            base.Awake();
             MessageDispatcher.AddListener(InGameStageChangedEvent, RoundTypeChangedHandler);
         }
 
         protected virtual void OnDestroy()
         {
             MessageDispatcher.RemoveListener(InGameStageChangedEvent, RoundTypeChangedHandler);
+            base.OnDestroy();
         }
     }
 
     public class CostChart : RoundRelatedUIBase
     {
+        protected override UITag UITag => UITag.Currency;
+
         public TextMeshPro Currency;
         public TextMeshPro Incomes;
 
@@ -59,7 +101,7 @@ namespace ROOT.UI
         
         private void UpdateCurrencyVal(int currencyVal)
         {
-            Currency.text = Common.Utils.PaddingNum(currencyVal, 4);
+            Currency.text = Utils.PaddingNum(currencyVal, 4);
         }
 
         protected virtual void UpdateIncomeValAsNotActive()
@@ -72,7 +114,7 @@ namespace ROOT.UI
         {
             if (incomesVal > 0)
             {
-                Incomes.text = Common.Utils.PaddingNum(incomesVal, 3);
+                Incomes.text = Utils.PaddingNum(incomesVal, 3);
                 Incomes.color = Color.green;
             }
             else if (incomesVal == 0)
@@ -82,7 +124,7 @@ namespace ROOT.UI
             }
             else
             {
-                Incomes.text = "-" + Common.Utils.PaddingNum(Math.Abs(incomesVal), 2);
+                Incomes.text = "-" + Utils.PaddingNum(Math.Abs(incomesVal), 2);
                 Incomes.color = Color.red;
             }
         }

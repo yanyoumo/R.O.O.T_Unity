@@ -1,5 +1,6 @@
 ﻿using System;
 using com.ootii.Messages;
+using ROOT.Common;
 using ROOT.Message;
 using TMPro;
 using UnityEngine;
@@ -100,6 +101,8 @@ namespace ROOT.UI
     
     public sealed class TelemetrySignalPanel : RoundRelatedUIBase
     {
+        protected override UITag UITag => UITag.SignalPanel_Telemetry;
+
         private void BoardSignalUpdatedHandler(IMessage rmMessage)
         {
             if (rmMessage is BoardSignalUpdatedInfo info)

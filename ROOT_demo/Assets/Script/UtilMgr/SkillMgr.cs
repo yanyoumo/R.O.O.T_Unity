@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using ROOT.Message;
+using ROOT.SetupAsset;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -240,8 +241,7 @@ namespace ROOT
 
         private void UpdateAIndicator(GameAssets currentLevelAsset, Vector2Int Pos)
         {
-            var col = ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_SKILL_SWAP_UNITA);
-            currentLevelAsset.SkillIndGoA = WorldExecutor.CreateIndicator(currentLevelAsset, Pos, col);
+            currentLevelAsset.SkillIndGoA = WorldExecutor.CreateIndicator(currentLevelAsset, Pos, ColorLibManager.Instance.ColorLib.ROOT_SKILL_SWAP_UNITA);
         }
 
         private void UpdateBIndicator(GameAssets currentLevelAsset,List<Vector2Int> incomings)
@@ -250,8 +250,7 @@ namespace ROOT
             currentLevelAsset.SkillIndGoB = new GameObject[count];
             for (var i = 0; i < count; i++)
             {
-                var col = ColorUtilityWrapper.ParseHtmlStringNotNull(ColorName.ROOT_SKILL_SWAP_UNITB);
-                currentLevelAsset.SkillIndGoB[i] = WorldExecutor.CreateIndicator(currentLevelAsset, incomings[i], col);
+                currentLevelAsset.SkillIndGoB[i] = WorldExecutor.CreateIndicator(currentLevelAsset, incomings[i], ColorLibManager.Instance.ColorLib.ROOT_SKILL_SWAP_UNITB);
             }
         }
 
