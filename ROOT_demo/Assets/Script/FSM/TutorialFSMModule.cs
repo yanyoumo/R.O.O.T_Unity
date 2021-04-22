@@ -25,7 +25,7 @@ namespace ROOT.FSM
 
         #region TutorialRelated
 
-        private bool _couldHandleShopLocal;
+        //private bool _couldHandleShopLocal;
 
         protected int CurrentActionIndex { get; private set; } = -1;
 
@@ -82,14 +82,7 @@ namespace ROOT.FSM
                 //另一个是把ControllingCommand转义为实际的工作。
             }
         }
-
-        private void ShowShop(TutorialActionData data)
-        {
-            //TODO 还是接一下Data的内容。//Hide 相关的流程放在里面。
-            LevelAsset.Shop.OpenShop(true, 0);
-            _couldHandleShopLocal = true;
-        }
-
+        
         private Func<FSMLevelLogic, Board, bool> PendingHandOnChecking = (a, b) => false;
 
         private Dictionary<TutorialActionType, Action<TutorialActionData>> StepActionLib;
@@ -231,14 +224,14 @@ namespace ROOT.FSM
                 switch (data.TimeLineStatus)
                 {
                     case TimeLineStatus.Normal:
-                        logic_career.HandlingRound = true;
+                        logic_career.FeatureManager.RequestChangeFeature(FSMFeatures.Round, true, true);
                         break;
                     case TimeLineStatus.NoToken:
-                        logic_career.HandlingRound = false;
+                        logic_career.FeatureManager.RequestChangeFeature(FSMFeatures.Round, false, true);
                         logic_career.LevelAsset.TimeLine.CurrentStatus = TimeLineStatus.NoToken;
                         break;
                     case TimeLineStatus.Disabled:
-                        logic_career.HandlingRound = false;
+                        logic_career.FeatureManager.RequestChangeFeature(FSMFeatures.Round, false, true);
                         logic_career.LevelAsset.TimeLine.CurrentStatus = TimeLineStatus.Disabled;
                         break;
                     default:
@@ -276,6 +269,11 @@ namespace ROOT.FSM
             MessageDispatcher.SendMessage(data);
         }
 
+        private void ToggleFSMCoreFeatFunc(TutorialActionData tutorialActionData)
+        {
+            owner.FeatureManager.RequestChangeFeature(tutorialActionData.FSMCoreFeat, tutorialActionData.Set, true);
+        }
+        
         public TutorialFSMModule(FSMLevelLogic _fsm)
         {
             //base.Awake();
@@ -291,7 +289,7 @@ namespace ROOT.FSM
                 {HandOn, SetHandOn},
                 {CreateCursor, data => WorldExecutor.InitCursor(LevelAsset, data.Pos)},
                 {SetUnitStationary, SetStationaryByTag},
-                {ShowStorePanel, ShowShop},
+                {ToggleFSMCoreFeat, ToggleFSMCoreFeatFunc},
                 {ToggleAlternateTextPos, ToggleAlternateText},
                 {HighLightUI, HighLightUIFunc},
                 {MoveCursorToPos, MoveCursorToPosFunc},

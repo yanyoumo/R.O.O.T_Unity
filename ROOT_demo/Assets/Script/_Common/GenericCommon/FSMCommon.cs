@@ -3,6 +3,17 @@ using static ROOT.TextProcessHelper;
 
 namespace ROOT.Common
 {
+    public enum FSMFeatures
+    {
+        Currency = 0,
+        Shop = 1, //现在对Shop设定是：如果没有轮次feature，那就是常在的；有了轮次的feature后，就根据round走。
+        Round = 2,
+        Skill = 3,
+        Acquire = 4,
+        Telemetry = 5,
+    }
+
+
     public enum RootFSMStatus
     {
         //这里写全部的、Root系列中、全部可以使用的潜在状态。

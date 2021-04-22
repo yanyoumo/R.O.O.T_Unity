@@ -36,6 +36,10 @@ namespace ROOT
         public abstract bool CouldHandleShop { get; }
         public abstract BossStageType HandleBossType { get; }
 
+        //这个有点儿怪，但是Shop逻辑是直接放在和核心FSM里面一体的。
+        protected bool HandlingCurrency => !UseTutorialVer || FeatureManager.GetExternalToggleVal(FSMFeatures.Currency);
+        protected bool HandlingShop => !UseTutorialVer || FeatureManager.GetExternalToggleVal(FSMFeatures.Shop);
+
         public abstract int LEVEL_ART_SCENE_ID { get; }
         [HideInInspector] public readonly int LEVEL_TUTORIAL_SCENE_ID = StaticName.SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL;
         private bool movedCursor = false;
@@ -329,8 +333,11 @@ namespace ROOT
                 LevelAsset.TimeLine.Step();
             }
 
-            LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
-            SendCurrencyMessage();
+            if (HandlingCurrency)
+            {
+                LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
+                SendCurrencyMessage();
+            }
         }
 
         protected void CleanUp()
@@ -357,9 +364,8 @@ namespace ROOT
             WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack);
             LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
             MovedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
-            if (CouldHandleShop)
+            if (HandlingShop)
             {
-                Debug.Log("CouldHandleShop");
                 MovedTile |= WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
             }
 
@@ -451,12 +457,24 @@ namespace ROOT
 
         protected TutorialFSMModule TutorialModule;
 
+        public FSMFeatureManager FeatureManager;
+
+        protected virtual void FeaturesChangedHandler()
+        {
+            //baseVersion Do Nothing.
+        }
+
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
             _mainFSM = new RootFSM {owner = this};
-            if (UseTutorialVer) TutorialModule = new TutorialFSMModule(this);
-            //_inquiryResponder = new FSMEventInquiryResponder(this);
+            if (UseTutorialVer)
+            {
+                TutorialModule = new TutorialFSMModule(this);
+                FeatureManager = new FSMFeatureManager {FeaturesChanged = FeaturesChangedHandler};
+                FeatureManager.RegistFSMFeature(FSMFeatures.Currency,new FSMFeatures[0], false);
+                FeatureManager.RegistFSMFeature(FSMFeatures.Shop,new [] {FSMFeatures.Currency}, false);
+            }
 
             UpdateLogicLevelReference();
 
