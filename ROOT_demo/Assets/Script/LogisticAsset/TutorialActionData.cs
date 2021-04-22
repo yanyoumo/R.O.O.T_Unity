@@ -64,7 +64,7 @@ namespace ROOT.SetupAsset
         public UnitTag TargetTag;
 
         [VerticalGroup("DetailedData")]
-        [ShowIf("@this.ActionType==TutorialActionType.ToggleGameplayUI||this.ActionType==TutorialActionType.SetUnitStationary||this.ActionType==TutorialActionType.HighLightGrid")]
+        [ShowIf("@this.ActionType==TutorialActionType.ToggleFSMCoreFeat||this.ActionType==TutorialActionType.ToggleGameplayUI||this.ActionType==TutorialActionType.SetUnitStationary||this.ActionType==TutorialActionType.HighLightGrid")]
         public bool Set; //Or unset
 
         [VerticalGroup("DetailedData")] [LabelText("Set")] [ShowIf("ActionType", TutorialActionType.HighLightUI)]
@@ -87,5 +87,9 @@ namespace ROOT.SetupAsset
         [VerticalGroup("DetailedData")]
         [ShowIf("@this.ActionType==TutorialActionType.HighLightGrid&&(!(!this.Set&&this.AllClear))")]
         public Vector2Int[] poses;
+        
+        [VerticalGroup("DetailedData")] 
+        [ShowIf("ActionType", TutorialActionType.ToggleFSMCoreFeat)]
+        public FSMFeatures FSMCoreFeat;
     }
 }

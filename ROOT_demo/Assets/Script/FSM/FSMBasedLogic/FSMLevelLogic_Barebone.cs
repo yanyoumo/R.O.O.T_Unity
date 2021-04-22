@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Common;
 using ROOT.Consts;
+using ROOT.Message.Inquiry;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,7 +31,7 @@ namespace ROOT
 
         public override bool CouldHandleSkill => false;
         public override bool CouldHandleBoss => false;
-        public override bool CouldHandleShop => false;
+        public override bool CouldHandleShop => true;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
         protected virtual void AdditionalInitLevel()
@@ -41,6 +43,20 @@ namespace ROOT
             else
             {
                 WorldExecutor.InitCursor(LevelAsset, new Vector2Int(2, 3));
+            }
+        }
+
+        protected override void FeaturesChangedHandler()
+        {
+            base.FeaturesChangedHandler();
+            if (HandlingCurrency)
+            {
+                MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = true, SelectAll = false, UITag = UITag.Currency});
+            }
+
+            if (HandlingShop)
+            {
+                LevelAsset.Shop.OpenShop(true, 0);
             }
         }
 
@@ -57,8 +73,8 @@ namespace ROOT
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
+
             AdditionalInitLevel();
-            
             ReadyToGo = true;
 
             SendHintData(HintEventType.SetGoalCheckListShow, false);
@@ -81,7 +97,7 @@ namespace ROOT
             LevelAsset.Shop = FindObjectOfType<ShopSelectableMgr>();
             LevelAsset.Shop._fsmLevelLogic = this;
         }
-        
+
         protected sealed override FSMActions fsmActions
         {
             get

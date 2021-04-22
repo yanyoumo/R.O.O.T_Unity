@@ -26,6 +26,12 @@ namespace ROOT
         
         private Func<int, int, int> DelSignalFunc => (a, b) => Math.Abs(a - b);
 
+        #region FeatureSet_TutorialOnly.
+        public bool HandlingAcquiring => (!UseTutorialVer || (_acquiringEnabled && HandlingRound));
+        private bool _acquiringEnabled = true;
+
+        #endregion
+
         private float BalancingSignal(int ASignalCount, int BSignalCount)
         {
             var del = DelSignalFunc(ASignalCount, BSignalCount);
