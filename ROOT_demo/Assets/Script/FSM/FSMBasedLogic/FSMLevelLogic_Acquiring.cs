@@ -48,8 +48,8 @@ namespace ROOT
             var levelAsset = LevelAsset;
             var lvlLogic = this;
 
-            var aSignalCount = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field);
-            var bSignalCount = levelAsset.GameBoard.GetTotalTierCountByCoreType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field);
+            var aSignalCount = levelAsset.GameBoard.GetTotalTierCountByType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field);
+            var bSignalCount = levelAsset.GameBoard.GetTotalTierCountByType(levelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field);
 
             if (RoundLibDriver.IsRequireRound)
             {

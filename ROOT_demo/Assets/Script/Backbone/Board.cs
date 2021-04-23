@@ -112,13 +112,25 @@ namespace ROOT
         public Transform BoardGridRoot;
         public Transform BoardGridZeroing;
 
-        private Dictionary<Vector2Int, GameObject> UnitsGameObjects;// { get; private set; }
+        private Dictionary<Vector2Int, GameObject> _unitsGameObjects;
         
+        public int GetUnitCount => _unitsGameObjects.Count;
+        public int GetCountByType(SignalType signal, HardwareType genre) => FindUnitWithCoreType(signal, genre).Length;
+        public int GetTotalTierCountByType(SignalType signal, HardwareType genre) => Units.Where(unit => unit.UnitSignal == signal && unit.UnitHardware == genre).Sum(unit => unit.Tier);
+        public List<Vector2Int> GetInfoCollectorZone()
+        {
+            //这里保证前面调过一次计分函数，实在不行在这儿再调一遍。
+            var res = new List<Vector2Int>();
+            Units.Select(u => u.SignalCore).Where(s => s.IsUnitActive).ForEach(s => res.AddRange(s.SingleInfoCollectorZone));
+            return res.Where(CheckBoardPosValid).Distinct().ToList();
+        }
+
+        public Unit[] Units => _unitsGameObjects.Values.Select(u => u.GetComponentInChildren<Unit>()).ToArray();
         public Unit FindNearestUnit(Vector2Int Pos)
         {
             var distance = float.MaxValue;
             var nearestPos = Vector2Int.zero;
-            foreach (var vector2Int in UnitsGameObjects.Keys)
+            foreach (var vector2Int in _unitsGameObjects.Keys)
             {
                 if (vector2Int == Pos)
                 {
@@ -137,16 +149,16 @@ namespace ROOT
                 }
             }
 
-            return UnitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
+            return _unitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
         }
         public Unit[] FindUnitsByUnitTag(UnitTag tag) => Units.Where(u => u.UnitTag == tag).ToArray();
         public Unit FindNearestSignalAP(Vector2Int Pos)
         {
             var distance = float.MaxValue;
             var nearestPos = Vector2Int.zero;
-            foreach (var vector2Int in UnitsGameObjects.Keys)
+            foreach (var vector2Int in _unitsGameObjects.Keys)
             {
-                var unit = UnitsGameObjects[vector2Int].GetComponentInChildren<Unit>();
+                var unit = _unitsGameObjects[vector2Int].GetComponentInChildren<Unit>();
 
                 if ((unit.UnitSignal == SignalType.Matrix && unit.UnitHardware == HardwareType.Field) ||
                     ((unit.UnitSignal == SignalType.Scan && unit.UnitHardware == HardwareType.Field) &&
@@ -170,12 +182,10 @@ namespace ROOT
                 }
             }
 
-            return UnitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
+            return _unitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
         }
-        [CanBeNull]
-        public Unit FindRandomUnit => GetUnitCount == 0 ? null : Units[Mathf.FloorToInt(UnityEngine.Random.value * Units.Length)];
-        [CanBeNull]
-        public Unit FindUnitByPos(Vector2Int boardPos)
+        [CanBeNull] public Unit FindRandomUnit => GetUnitCount == 0 ? null : Units[Mathf.FloorToInt(UnityEngine.Random.value * Units.Length)];
+        [CanBeNull] public Unit FindUnitByPos(Vector2Int boardPos)
         {
             Debug.Assert(CheckBoardPosValid(boardPos));
             if (CheckBoardPosValidAndEmpty(boardPos))
@@ -183,9 +193,10 @@ namespace ROOT
                 return null;
             }
 
-            return UnitsGameObjects.TryGetValue(boardPos, out var go) ? go.GetComponentInChildren<Unit>() : null;
+            return _unitsGameObjects.TryGetValue(boardPos, out var go) ? go.GetComponentInChildren<Unit>() : null;
         }
-        
+        public Unit[] FindUnitWithCoreType(SignalType signal, HardwareType genre) => Units.Where(u => u.UnitSignal == signal && u.UnitHardware == genre).ToArray();
+
         public void SomeGridHasCollectedInfo(BoardGirdCell girdCell)
         {
             //逻辑到这里居然是好用的，只是需要去调整Extend的内容。
@@ -195,19 +206,11 @@ namespace ROOT
             var collectingUnit = FindNearestSignalAP(girdPos);
             collectingUnit.Blink(); //接收了就先闪亮一下
         }
-
-        public List<Vector2Int> GetInfoCollectorZone()
-        {
-            //这里保证前面调过一次计分函数，实在不行在这儿再调一遍。
-            var res = new List<Vector2Int>();
-            Units.Select(u => u.SignalCore).Where(s => s.IsUnitActive).ForEach(s => res.AddRange(s.SingleInfoCollectorZone));
-            return res.Where(CheckBoardPosValid).Distinct().ToList();
-        }
         
         public bool CheckBoardPosValid(Vector2Int mVector2Int) => CheckBoardPosValidStatic(mVector2Int);
         public static bool CheckBoardPosValidStatic(Vector2Int mVector2Int) => (mVector2Int.x >= 0) && (mVector2Int.y >= 0) && (mVector2Int.x < BoardLength) && (mVector2Int.y < BoardLength);
-        public bool CheckBoardPosValidAndEmpty(Vector2Int mVector2Int) => (!UnitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
-        public bool CheckBoardPosValidAndFilled(Vector2Int mVector2Int) => (UnitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
+        public bool CheckBoardPosValidAndEmpty(Vector2Int mVector2Int) => (!_unitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
+        public bool CheckBoardPosValidAndFilled(Vector2Int mVector2Int) => (_unitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
 
         public int GetUnitsConnectedIsland()
         {
@@ -255,18 +258,9 @@ namespace ROOT
             do
             {
                 res = new Vector2Int(StaticNumericData.RandomBoardRowIndex, StaticNumericData.RandomBoardRowIndex);
-            } while (UnitsGameObjects.ContainsKey(res));
+            } while (_unitsGameObjects.ContainsKey(res));
             return res;
         }
-        
-        public int GetTotalTierCountByCoreType(SignalType signal, HardwareType genre)
-        {
-            return Units.Where(unit => unit.UnitSignal == signal && unit.UnitHardware == genre).Sum(unit => unit.Tier);
-        }
-        public int GetUnitCount => UnitsGameObjects.Count;
-        public Unit[] Units => UnitsGameObjects.Values.Select(unitsValue => unitsValue.GetComponentInChildren<Unit>()).ToArray();
-        public Unit[] FindUnitWithCoreType(SignalType signal, HardwareType genre) => Units.Where(u => u.UnitSignal == signal && u.UnitHardware == genre).ToArray();
-        public int GetCountByType(SignalType signal, HardwareType genre) => FindUnitWithCoreType(signal, genre).Length;
 
         public Vector3 GetFloatTransform(Vector2Int boardPos)
         {
@@ -276,22 +270,6 @@ namespace ROOT
         public Vector3 GetFloatTransformAnimation(Vector2 boardPos)
         {
             return new Vector3(_boardPhysicalOriginX + boardPos.x * _boardPhysicalLength, 0, _boardPhysicalOriginY + boardPos.y * _boardPhysicalLength);
-        }
-
-        public void UpdateUnitBoardPosAnimation(Vector2Int oldKey)
-        {
-            UnitsGameObjects.TryGetValue(oldKey, out var unit);//这里get出来和上面拿到的Unit不是一个？？
-            UnitsGameObjects.Remove(oldKey);
-            System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-            UnitsGameObjects.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit);
-        }
-        public void UpdateUnitBoardPosAnimation_Touch(Unit unit)
-        {
-            //这里get出来和上面拿到的Unit不是一个？？
-            //RISK 用这个弄了一下，但是不知道为什么。
-            UnitsGameObjects.Remove(unit.CurrentBoardPosition);
-            System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-            UnitsGameObjects.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit.gameObject);
         }
 
         public void UpdateBoardUnit()
@@ -324,7 +302,22 @@ namespace ROOT
                 unit.UpdateNeighboringDataAndSideMesh();
             }*/
         }
-
+        public void UpdateUnitBoardPosAnimation(Vector2Int oldKey)
+        {
+            _unitsGameObjects.TryGetValue(oldKey, out var unit);//这里get出来和上面拿到的Unit不是一个？？
+            _unitsGameObjects.Remove(oldKey);
+            System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
+            _unitsGameObjects.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit);
+        }
+        public void UpdateUnitBoardPosAnimation_Touch(Unit unit)
+        {
+            //这里get出来和上面拿到的Unit不是一个？？
+            //RISK 用这个弄了一下，但是不知道为什么。
+            _unitsGameObjects.Remove(unit.CurrentBoardPosition);
+            System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
+            _unitsGameObjects.Add(unit.GetComponentInChildren<Unit>().NextBoardPosition, unit.gameObject);
+        }
+        
         SignalType SignalTypeFromAdditionalGameSetup(AdditionalGameSetup additionalGameSetup, PlayingSignalSelector selector)
         {
             if (selector == PlayingSignalSelector.TypeA)
@@ -339,66 +332,57 @@ namespace ROOT
 
             return SignalType.Matrix;
         }
-        
+
+        private void CreateUnitByGist(UnitGist unitGist, AdditionalGameSetup additionalGameSetup)
+        {
+            var signalType = SignalTypeFromAdditionalGameSetup(additionalGameSetup, unitGist.PlayingSignalSelector);
+            CreateUnit(unitGist.Pos, signalType, unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, unitGist.IsStation);
+        }
         public void CreateUnit(Vector2Int board_pos, SignalType signal, HardwareType genre, SideType[] sides, int Tier, bool IsStationary = false, UnitTag unitTag = UnitTag.NoTag)
         {
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(board_pos.ToString());
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(board_pos);
-            UnitsGameObjects.Add(board_pos, go);
+            _unitsGameObjects.Add(board_pos, go);
             unit.InitUnit(signal, genre, sides, Tier, unitTag, this);
             if (IsStationary)
             {
                 unit.SetupStationUnit();
             }
         }
-        private void CreateUnitByGist(UnitGist unitGist, AdditionalGameSetup additionalGameSetup)
-        {
-            var signalType = SignalTypeFromAdditionalGameSetup(additionalGameSetup, unitGist.PlayingSignalSelector);
-            CreateUnit(unitGist.Pos, signalType, unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, unitGist.IsStation);
-        }
 
+        public bool DeliverUnitRandomPlace(GameObject unit) => DeliverUnitRandomPlace(unit, out Vector2Int vector2Int);
+        private bool DeliverUnitRandomPlace(GameObject unit, out Vector2Int deliveringPos)
+        {
+            Vector2Int[] emptyPlace = GetAllEmptySpace();
+            if (emptyPlace.Length == 0)
+            {
+                deliveringPos = -Vector2Int.one;
+                return false;
+            }
+            deliveringPos = GenerateWeightedRandom(emptyPlace);
+            return DeliverUnitAssignedPlace(unit, deliveringPos);
+        }
         public bool DeliverUnitAssignedPlaceCrash(GameObject unit, Vector2Int AssignedPos)
         {
             if (!CheckBoardPosValidAndEmpty(AssignedPos))
             {
                 TryDeleteCertainUnit(AssignedPos);
             }
-
             return DeliverUnitAssignedPlace(unit, AssignedPos);
         }
-        public bool DeliverUnitAssignedPlace(GameObject unit, Vector2Int AssignedPos)
+        private bool DeliverUnitAssignedPlace(GameObject unit, Vector2Int AssignedPos)
         {
             if (CheckBoardPosValidAndEmpty(AssignedPos))
             {
                 unit.GetComponentInChildren<Unit>().InitPosWithAnimation(AssignedPos);
                 unit.GetComponentInChildren<Unit>().GameBoard = this;
-                UnitsGameObjects.Add(AssignedPos, unit);
+                _unitsGameObjects.Add(AssignedPos, unit);
                 UpdateBoardUnit();
                 return true;
             }
             return false;
-        }
-        public bool DeliverUnitRandomPlace(GameObject unit)
-        {
-            return DeliverUnitRandomPlace(unit, out Vector2Int vector2Int);
-        }
-        public bool DeliverUnitRandomPlace(GameObject unit, out Vector2Int deliveringPos)
-        {
-            Vector2Int[] emptyPlace = GetAllEmptySpace();
-            if (emptyPlace.Length == 0)
-            {
-                deliveringPos = Vector2Int.zero;
-                return false;
-            }
-            Vector2Int randomPlace = GenerateWeightedRandom(emptyPlace);
-            unit.GetComponentInChildren<Unit>().InitPosWithAnimation(randomPlace);
-            unit.GetComponentInChildren<Unit>().GameBoard = this;
-            UnitsGameObjects.Add(randomPlace, unit);
-            UpdateBoardUnit();
-            deliveringPos = randomPlace;
-            return true;
         }
 
         public bool SwapUnit(Vector2Int posA, Vector2Int posB)
@@ -413,10 +397,10 @@ namespace ROOT
             }
             else if (unitA != null && unitB != null)
             {
-                UnitsGameObjects.TryGetValue(posA, out GameObject goA);
-                UnitsGameObjects.TryGetValue(posB, out GameObject goB);
-                UnitsGameObjects.Remove(posA);
-                UnitsGameObjects.Remove(posB);
+                _unitsGameObjects.TryGetValue(posA, out GameObject goA);
+                _unitsGameObjects.TryGetValue(posB, out GameObject goB);
+                _unitsGameObjects.Remove(posA);
+                _unitsGameObjects.Remove(posB);
                 var resA = DeliverUnitAssignedPlace(goA, posB);
                 var resB = DeliverUnitAssignedPlace(goB, posA);
                 return resA && resB;
@@ -431,8 +415,8 @@ namespace ROOT
         public bool TransferUnitAssignedPlace(Vector2Int From, Vector2Int To)
         {
             if (!CheckBoardPosValidAndFilled(From)) return false;
-            UnitsGameObjects.TryGetValue(From, out GameObject go);
-            UnitsGameObjects.Remove(From);
+            _unitsGameObjects.TryGetValue(From, out GameObject go);
+            _unitsGameObjects.Remove(From);
             //UpdateBoard();
             return DeliverUnitAssignedPlace(go, To);
         }
@@ -454,7 +438,7 @@ namespace ROOT
                 {
                     destoryedCore = unit.UnitSignal;
                     Destroy(unit.transform.parent.gameObject);
-                    UnitsGameObjects.Remove(pos);
+                    _unitsGameObjects.Remove(pos);
                     return true;
                 }
             }
@@ -500,7 +484,7 @@ namespace ROOT
 
         void Awake()
         {
-            UnitsGameObjects = new Dictionary<Vector2Int, GameObject>();
+            _unitsGameObjects = new Dictionary<Vector2Int, GameObject>();
             BoardGirdDriver = new BoardGirdDriver { owner = this };
             BoardGirdDriver.InitBoardGird();
             BoardGirdDriver.UpkeepHeatSink(StageType.Shop);
