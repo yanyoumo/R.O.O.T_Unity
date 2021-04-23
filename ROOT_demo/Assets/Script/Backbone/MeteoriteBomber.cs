@@ -184,13 +184,13 @@ namespace ROOT
         /// <returns>如果棋盘上没有单位，则返回null</returns>
         private Vector2Int? RandomUnitTarget()
         {
-            if (GameBoard.RandomUnit == null)
+            if (GameBoard.FindRandomUnit == null)
             {
                 return null;
             }
             else
             {
-                return GameBoard.RandomUnit.CurrentBoardPosition;
+                return GameBoard.FindRandomUnit.CurrentBoardPosition;
             }
         }
 

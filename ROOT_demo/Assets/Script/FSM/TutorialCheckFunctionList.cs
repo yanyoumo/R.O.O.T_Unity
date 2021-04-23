@@ -42,7 +42,7 @@ namespace ROOT
         {
             // to get connectivity
             while (!board.IsDataReady) { }
-            return board.GetConnectComponent() == 1;
+            return board.GetUnitsConnectedIsland() == 1;
         }
 
         public static bool ConnectOneMatrixUnitWithMatrixCore(FSMLevelLogic fsm, Board board)
@@ -59,7 +59,7 @@ namespace ROOT
             // to get connectivity
             while (!board.IsDataReady) { }
             // link all the units together
-            return board.GetConnectComponent() == 1;
+            return board.GetUnitsConnectedIsland() == 1;
         }
 
         public static bool ConnectThermalUnitWithThermalCore(FSMLevelLogic fsm, Board board)

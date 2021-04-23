@@ -42,7 +42,7 @@ namespace ROOT
         {
             foreach (var actualHeatSinkPo in ActualHeatSinkPos)
             {
-                owner.TryDeleteIfFilledCertainUnit(actualHeatSinkPo);
+                owner.TryDeleteCertainUnit(actualHeatSinkPo);
             }
         }
 

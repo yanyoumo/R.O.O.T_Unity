@@ -277,7 +277,7 @@ namespace ROOT
             {
                 if (owner.CheckBoardPosValidAndEmpty(OnboardPos)) return 0;
 
-                var unit=owner.FindUnitUnderBoardPos(OnboardPos)?.GetComponentInChildren<Unit>();
+                var unit=owner.FindUnitByPos(OnboardPos);
                 if (unit == null) throw new ArgumentException();
                 return Mathf.RoundToInt(unit.SignalCore.SingleUnitScore) - HeatSinkCost;
             }
