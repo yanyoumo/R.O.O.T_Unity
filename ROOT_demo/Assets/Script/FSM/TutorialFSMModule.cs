@@ -184,7 +184,14 @@ namespace ROOT.FSM
 
         private void HighLightUIFunc(TutorialActionData data)
         {
-            MessageDispatcher.SendMessage(new HighLightingUIChangedData {Toggle = data.HLSet,uiTag = data.UITag});
+            MessageDispatcher.SendMessage(new HighLightingUIChangedData
+            {
+                Toggle = data.HLSet,
+                uiTag = data.UITag,
+                CustomBool = data.HLCustomPos,
+                pos = data.HighLightingPos,
+                scale = data.HighLightingScale
+            });
         }
 
         private void MoveCursorToPosFunc(TutorialActionData data)

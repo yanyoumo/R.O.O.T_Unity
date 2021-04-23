@@ -45,6 +45,9 @@ namespace ROOT.Message
     public class HighLightingUIChangedData : RootMessageBase
     {
         public bool Toggle = false;
+        public bool CustomBool = false;
+        public Vector2 pos = Vector2.zero;
+        public Vector2 scale = Vector2.zero;
         public UITag uiTag = UITag.Currency;
         public override string Type => WorldEvent.HighLightingUIChangedEvent;
     }

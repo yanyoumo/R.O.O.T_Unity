@@ -70,6 +70,18 @@ namespace ROOT.SetupAsset
         [VerticalGroup("DetailedData")] [LabelText("Set")] [ShowIf("ActionType", TutorialActionType.HighLightUI)]
         public bool HLSet; //Or unset
 
+        [VerticalGroup("DetailedData")] [LabelText("Custom HighLight Pos")]
+        [ShowIf("@this.ActionType==TutorialActionType.HighLightUI&&this.HLSet")]
+        public bool HLCustomPos;
+        
+        [VerticalGroup("DetailedData")] 
+        [ShowIf("@this.ActionType==TutorialActionType.HighLightUI&&this.HLSet&&this.HLCustomPos")]
+        public Vector2 HighLightingPos;
+        
+        [VerticalGroup("DetailedData")] 
+        [ShowIf("@this.ActionType==TutorialActionType.HighLightUI&&this.HLSet&&this.HLCustomPos")]
+        public Vector2 HighLightingScale;
+        
         [VerticalGroup("DetailedData")][LabelText("Select All")]
         [ShowIf("@this.ShowAllClear()")]
         public bool AllClear;
@@ -114,15 +126,15 @@ namespace ROOT.SetupAsset
             var isToggleGameplayUI = ActionType == TutorialActionType.ToggleGameplayUI;
             var isHighLightUI = ActionType == TutorialActionType.HighLightUI;
             var notAllClear = Set || !AllClear;
-            return (isToggleGameplayUI && notAllClear) || (isHighLightUI && HLSet);
+            return (isToggleGameplayUI && notAllClear) || (isHighLightUI && HLSet && !HLCustomPos);
         }
 
         bool ShowAllClear()
         {
             var isToggleGameplayUI = ActionType == TutorialActionType.ToggleGameplayUI;
-            var isHighLightUI = ActionType == TutorialActionType.HighLightUI;
+            var isHighLightGrid = ActionType == TutorialActionType.HighLightGrid;
             var isDeleteUnit = ActionType == TutorialActionType.DeleteUnit;
-            return isDeleteUnit || (isToggleGameplayUI && !Set) || (isHighLightUI && !Set);
+            return isDeleteUnit || (isToggleGameplayUI && !Set) || (isHighLightGrid && !Set);
         }
 
         bool ShowPoses()
