@@ -178,7 +178,7 @@ MonoBehaviour:
     FSMCoreFeat: 1
   - ActionIdx: 2
     ActionSubIdx: 1
-    ActionType: 8
+    ActionType: 19
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 

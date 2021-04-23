@@ -445,6 +445,18 @@ namespace ROOT
             destoryedCore = null;
             return false;
         }
+        public void TryDeleteAllUnits()
+        {
+            var oldKeys = _unitsGameObjects.Keys.ToArray();//必须得存出来、因为删除那里会动Key，所以不能轮换删。
+            oldKeys.ForEach(k => TryDeleteCertainUnit(k));
+        }
+        public void TryDeleteUnitByTags(UnitTag targetTag)
+        {
+            var targetingUnit = FindUnitsByUnitTag(targetTag);
+            if (targetingUnit.Length==0) return;
+            var oldKeys = targetingUnit.Select(u => u.CurrentBoardPosition);
+            oldKeys.ForEach(k => TryDeleteCertainUnit(k));
+        }
 
         public bool IsDataReady { get; private set; } = false;
         

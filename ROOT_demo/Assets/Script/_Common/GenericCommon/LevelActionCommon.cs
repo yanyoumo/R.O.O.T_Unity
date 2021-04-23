@@ -29,6 +29,7 @@ namespace ROOT
         ResetStep = 16, //实际是重置“视在Step”、RawStep目前也不让重设。
         HighLightGrid = 17,
         ToggleGameplayUI = 18,
+        DeleteUnit = 19,
     }
 
     public enum BossStageType

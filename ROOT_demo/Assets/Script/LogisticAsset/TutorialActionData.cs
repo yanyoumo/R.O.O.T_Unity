@@ -60,21 +60,21 @@ namespace ROOT.SetupAsset
         public String HandOnMission;
 
         [VerticalGroup("DetailedData")]
-        [ShowIf("@this.ActionType==TutorialActionType.SetUnitStationary||this.ActionType==TutorialActionType.MoveCursorToUnitByTag")]
+        [ShowIf("@this.ShowUnitTag()")]
         public UnitTag TargetTag;
 
         [VerticalGroup("DetailedData")]
-        [ShowIf("@this.ActionType==TutorialActionType.ToggleFSMCoreFeat||this.ActionType==TutorialActionType.ToggleGameplayUI||this.ActionType==TutorialActionType.SetUnitStationary||this.ActionType==TutorialActionType.HighLightGrid")]
+        [ShowIf("@this.ShowSet()")]
         public bool Set; //Or unset
 
         [VerticalGroup("DetailedData")] [LabelText("Set")] [ShowIf("ActionType", TutorialActionType.HighLightUI)]
         public bool HLSet; //Or unset
 
         [VerticalGroup("DetailedData")][LabelText("Select All")]
-        [ShowIf("@(this.ActionType==TutorialActionType.ToggleGameplayUI&&!this.Set)||(this.ActionType==TutorialActionType.HighLightGrid&&!this.Set)")]
+        [ShowIf("@this.ShowAllClear()")]
         public bool AllClear;
         
-        [VerticalGroup("DetailedData")] [ShowIf("@(this.ActionType==TutorialActionType.ToggleGameplayUI)&&(!(!this.Set&&this.AllClear))||(this.ActionType==TutorialActionType.HighLightUI&&this.HLSet)")]
+        [VerticalGroup("DetailedData")] [ShowIf("@this.ShowUITag()")]
         public UITag UITag;
 
         [VerticalGroup("DetailedData")] [ShowIf("ActionType", TutorialActionType.SetTimeline)]
@@ -85,11 +85,50 @@ namespace ROOT.SetupAsset
         public GridHighLightType HighLightType;
 
         [VerticalGroup("DetailedData")]
-        [ShowIf("@this.ActionType==TutorialActionType.HighLightGrid&&(!(!this.Set&&this.AllClear))")]
+        [ShowIf("@this.ShowPoses()")]
         public Vector2Int[] poses;
         
         [VerticalGroup("DetailedData")] 
         [ShowIf("ActionType", TutorialActionType.ToggleFSMCoreFeat)]
         public FSMFeatures FSMCoreFeat;
+
+        bool ShowSet()
+        {
+            var IsToggleFSMCoreFeat = ActionType == TutorialActionType.ToggleFSMCoreFeat;
+            var IsToggleGameplayUI = ActionType == TutorialActionType.ToggleGameplayUI;
+            var IsSetUnitStationary = ActionType == TutorialActionType.SetUnitStationary;
+            var HighLightGrid = ActionType == TutorialActionType.HighLightGrid;
+            return IsToggleFSMCoreFeat || IsToggleGameplayUI || IsSetUnitStationary || HighLightGrid;
+        }
+
+        bool ShowUnitTag()
+        {
+            var IsSetUnitStationary = ActionType == TutorialActionType.SetUnitStationary;
+            var IsMoveCursorToUnitByTag = ActionType == TutorialActionType.MoveCursorToUnitByTag;
+            var IsDeleteUnit = ActionType == TutorialActionType.DeleteUnit;
+            return IsSetUnitStationary || IsMoveCursorToUnitByTag || (IsDeleteUnit && (!AllClear));
+        }
+        
+        bool ShowUITag()
+        {
+            var isToggleGameplayUI = ActionType == TutorialActionType.ToggleGameplayUI;
+            var isHighLightUI = ActionType == TutorialActionType.HighLightUI;
+            var notAllClear = Set || !AllClear;
+            return (isToggleGameplayUI && notAllClear) || (isHighLightUI && HLSet);
+        }
+
+        bool ShowAllClear()
+        {
+            var isToggleGameplayUI = ActionType == TutorialActionType.ToggleGameplayUI;
+            var isHighLightUI = ActionType == TutorialActionType.HighLightUI;
+            var isDeleteUnit = ActionType == TutorialActionType.DeleteUnit;
+            return isDeleteUnit || (isToggleGameplayUI && !Set) || (isHighLightUI && !Set);
+        }
+
+        bool ShowPoses()
+        {
+            var notAllClear = Set || !AllClear;
+            return ActionType == TutorialActionType.HighLightGrid && notAllClear;
+        }
     }
 }
