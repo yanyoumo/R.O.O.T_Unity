@@ -978,12 +978,11 @@ namespace ROOT
             {
                 if (currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos))
                 {
-                    var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
+                    var unit = currentLevelAsset.GameBoard.FindUnitByPos(ctrlPack.CurrentPos);
                     //RISK 下面这句话控制stationary单位是否能旋转、目前出于教程的用途（实际玩法框架中目前没有这个机制）；也禁止旋转。
                     //RISK 但是、如果这个feature要放到实际玩法框架中、可能还要移动、旋转细分。
-                    if (unit.GetComponentInChildren<Unit>().StationUnit) return;
-                    System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-                    unit.GetComponentInChildren<Unit>().UnitRotateCw();
+                    if (unit == null || unit.StationUnit) return;
+                    unit.UnitRotateCw();
                     //currentLevelAsset.GameBoard.UpdateBoard();
                 }
             }
@@ -1016,11 +1015,9 @@ namespace ROOT
 
             if (ControllingPack.HasFlag(extractedCommand, ControllingCommand.Drag) && validAction)
             {
-                var unit = currentLevelAsset.GameBoard.FindUnitUnderBoardPos(ctrlPack.CurrentPos);
-                if (!unit.GetComponentInChildren<Unit>().StationUnit)
+                var movingUnit = currentLevelAsset.GameBoard.FindUnitByPos(ctrlPack.CurrentPos);
+                if (movingUnit != null && !movingUnit.StationUnit)
                 {
-                    System.Diagnostics.Debug.Assert(unit != null, nameof(unit) + " != null");
-                    var movingUnit = unit.GetComponentInChildren<Unit>();
                     movingUnit.Move(ctrlPack.CommandDir);
                     currentLevelAsset.GameBoard.UpdateUnitBoardPosAnimation(ctrlPack.CurrentPos);
                     if (StartGameMgr.UseKeyboard)

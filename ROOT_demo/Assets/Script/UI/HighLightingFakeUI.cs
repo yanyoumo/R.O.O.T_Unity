@@ -25,19 +25,28 @@ namespace ROOT.UI
         {
             if (rMessage is HighLightingUIChangedData data)
             {
-                try
+                if (!data.CustomBool)
                 {
-                    CarveOut.localPosition = UITransLib[data.uiTag].Item1;
-                    CarveOut.localScale = UITransLib[data.uiTag].Item2;
+                    CarveOut.localPosition = new Vector3(data.pos.x, 0.0f, data.pos.y);
+                    CarveOut.localScale = new Vector3(data.scale.x, data.scale.y, 1.0f);
                 }
-                catch (KeyNotFoundException)
+                else
                 {
-                    Debug.LogError("Key " + data.uiTag + " is not present in 2D pos Lib, please add.");
+                    try
+                    {
+                        CarveOut.localPosition = UITransLib[data.uiTag].Item1;
+                        CarveOut.localScale = UITransLib[data.uiTag].Item2;
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        Debug.LogError("Key " + data.uiTag + " is not present in 2D pos Lib, please add.");
+                    }
                 }
+
                 CurtainImage.enabled = data.Toggle;
             }
         }
-        
+
         private void Awake()
         {
             CurtainImage.enabled = false;

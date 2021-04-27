@@ -61,17 +61,17 @@ namespace ROOT
         private void GenerateNewIncomes()
         {
             NextIncomes = new Vector2Int[NextStrikingCount];
-            for (int i = 0; i < NextStrikingCount; i++)
+            for (var i = 0; i < NextStrikingCount; i++)
             {
-                //只有
-                bool noSource = true;
+                var noSource = true;
                 Vector2Int pos;
                 do
                 {
                     pos = ComplexRandomTarget();
-                    if (GameBoard.UnitsGameObjects.TryGetValue(pos, out var value))
+                    var value = GameBoard.FindUnitByPos(pos);
+                    if (value != null)
                     {
-                        noSource = (value.GetComponentInChildren<Unit>().UnitHardware != HardwareType.Core);
+                        noSource = (value.UnitHardware != HardwareType.Core);
                     }
                     else
                     {
@@ -82,7 +82,7 @@ namespace ROOT
                 NextIncomes[i] = pos;
             }
         }
-        
+
         public void Init(int startingMedian = 4, int startingVariance = 1)
         {
             NextStrikingCount = 1;
@@ -184,13 +184,13 @@ namespace ROOT
         /// <returns>如果棋盘上没有单位，则返回null</returns>
         private Vector2Int? RandomUnitTarget()
         {
-            if (GameBoard.RandomUnit == null)
+            if (GameBoard.FindRandomUnit == null)
             {
                 return null;
             }
             else
             {
-                return GameBoard.RandomUnit.CurrentBoardPosition;
+                return GameBoard.FindRandomUnit.CurrentBoardPosition;
             }
         }
 

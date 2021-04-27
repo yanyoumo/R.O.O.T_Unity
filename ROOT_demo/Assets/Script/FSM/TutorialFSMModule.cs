@@ -184,7 +184,14 @@ namespace ROOT.FSM
 
         private void HighLightUIFunc(TutorialActionData data)
         {
-            MessageDispatcher.SendMessage(new HighLightingUIChangedData {Toggle = data.HLSet,uiTag = data.UITag});
+            MessageDispatcher.SendMessage(new HighLightingUIChangedData
+            {
+                Toggle = data.HLSet,
+                uiTag = data.UITag,
+                CustomBool = data.HLCustomPos,
+                pos = data.HighLightingPos,
+                scale = data.HighLightingScale
+            });
         }
 
         private void MoveCursorToPosFunc(TutorialActionData data)
@@ -273,10 +280,21 @@ namespace ROOT.FSM
         {
             owner.FeatureManager.RequestChangeFeature(tutorialActionData.FSMCoreFeat, tutorialActionData.Set, true);
         }
+
+        private void DeleteUnitFunc(TutorialActionData tutorialActionData)
+        {
+            if (tutorialActionData.AllClear)
+            {
+                owner.LevelAsset.GameBoard.TryDeleteAllUnits();
+            }
+            else
+            {
+                owner.LevelAsset.GameBoard.TryDeleteUnitByTags(tutorialActionData.TargetTag);
+            }
+        }
         
         public TutorialFSMModule(FSMLevelLogic _fsm)
         {
-            //base.Awake();
             owner = _fsm;
             StepActionLib = new Dictionary<TutorialActionType, Action<TutorialActionData>> {
                 {Text, data => DisplayText(data.DoppelgangerToggle && StartGameMgr.UseTouchScreen ? data.DoppelgangerText : data.Text)},
@@ -298,6 +316,7 @@ namespace ROOT.FSM
                 {ResetStep, ResetApparentStep},
                 {HighLightGrid, HighLightGridFunc},
                 {ToggleGameplayUI, ToggleGameplayUIFunc},
+                {DeleteUnit, DeleteUnitFunc},
             };
         }
 

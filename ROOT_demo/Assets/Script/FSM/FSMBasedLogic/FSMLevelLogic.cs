@@ -422,8 +422,8 @@ namespace ROOT
                 {
                     CrtTypeASignal = TypeASignalCount,
                     CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
-                    TypeBTier = LevelAsset.GameBoard.GetTotalTierCountByCoreType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                    TypeATier = LevelAsset.GameBoard.GetTotalTierCountByType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
+                    TypeBTier = LevelAsset.GameBoard.GetTotalTierCountByType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
                 },
             };
             MessageDispatcher.SendMessage(signalInfo);

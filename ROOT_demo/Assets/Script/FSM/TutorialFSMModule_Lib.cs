@@ -11,8 +11,14 @@ namespace ROOT.FSM
             {TutorialCheckType.MoveCursorToTarget55, TutorialCheckFunctionList.MoveCursorToTarget55},
             {TutorialCheckType.MoveMatrixUnitsToSameYIndex, TutorialCheckFunctionList.MoveMatrixUnitsToSameYIndex},
             {TutorialCheckType.MoveThreeMatrixUnitsToOneLink, TutorialCheckFunctionList.MoveThreeMatrixUnitsToOneLink},
-            {TutorialCheckType.ConnectCorrespondingCoreAndField, TutorialCheckFunctionList.ConnectCorrespondingCoreAndField},
+            {TutorialCheckType.ConnectOneMatrixCoreWithOneMatrixField, TutorialCheckFunctionList.ConnectOneMatrixCoreWithOneMatrixField},
+            {TutorialCheckType.ConnectOneMatrixCoreWithTwoMatrixField, TutorialCheckFunctionList.ConnectOneMatrixCoreWithTwoMatrixField},
+            {TutorialCheckType.ConnectOneMatrixCoreWithFiveMatrixField, TutorialCheckFunctionList.ConnectOneMatrixCoreWithFiveMatrixField},
+            {TutorialCheckType.ConnectOneThermalCoreWithOneThermalField, TutorialCheckFunctionList.ConnectOneThermalCoreWithOneThermalField},
+            {TutorialCheckType.ConnectOneThermalCoreWithFourThermalField, TutorialCheckFunctionList.ConnectOneThermalCoreWithFourThermalField},
             {TutorialCheckType.ConnectDifferentCoreAndField, TutorialCheckFunctionList.ConnectDifferentCoreAndField},
+            {TutorialCheckType.MoveThreeMatrixAndTwoThermalToPlace, TutorialCheckFunctionList.MoveThreeMatrixAndTwoThermalToPlace},
+            {TutorialCheckType.MoveOneMatrixToPlace, TutorialCheckFunctionList.MoveOneMatrixToPlace},
             {TutorialCheckType.Buy3UnitsOrNotEnoughMoney, TutorialCheckFunctionList.Buy3UnitsOrNotEnoughMoney},
             {TutorialCheckType.FourWarningGridOneHeatSink, TutorialCheckFunctionList.FourWarningGridOneHeatSink}
         };
