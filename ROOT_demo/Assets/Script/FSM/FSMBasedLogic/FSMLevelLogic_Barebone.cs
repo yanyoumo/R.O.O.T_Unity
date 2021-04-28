@@ -97,16 +97,12 @@ namespace ROOT
             LevelAsset.Shop._fsmLevelLogic = this;
         }
 
-        //TODO 有些相关的feature还是扭在一起了、还是要整理出来。
+        protected override bool NormalCheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
+
         protected override void GameEnding()
         {
-            PendingCleanUp = true;
-            LevelMasterManager.Instance.LevelFinished(LevelAsset);
-            LevelAsset.GameOverAsset = new GameOverAsset
-            {
-                SuccessTerm = ScriptTerms.EndingMessageNoBoss_EarnedMoney,
-                FailedTerm = ScriptTerms.EndingMessageNoBoss_NoEarnedMoney,
-            };
+            //实质上Barebone模式下其实不能结束。
+            throw new Exception("This game mode could not end.");
         }
         
         protected sealed override FSMActions fsmActions

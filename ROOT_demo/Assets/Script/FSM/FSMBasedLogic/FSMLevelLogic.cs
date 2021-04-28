@@ -371,11 +371,10 @@ namespace ROOT
         }
 
         #endregion
-
-        //TODO 这个东西可能还是要发下去允许层级自定义。
+        
         protected abstract void GameEnding();
 
-        protected virtual bool NormalCheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
+        protected abstract bool NormalCheckGameOver { get; }
 
         private bool CheckGameOver => UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver;
 

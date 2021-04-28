@@ -280,17 +280,23 @@ namespace ROOT
             LevelAsset.TimeLine.Reverse();
         }
 
-        protected override void GameEnding()
+        protected virtual void populateGameOverAsset(ref GameOverAsset _gameOverAsset)
         {
-            PendingCleanUp = true;
-            LevelMasterManager.Instance.LevelFinished(LevelAsset);
-            LevelAsset.GameOverAsset = new GameOverAsset
+            _gameOverAsset = new GameOverAsset
             {
                 SuccessTerm = SucceedEndingTerm,
-                FailedTerm = FailedEndingTerm
+                FailedTerm = FailedEndingTerm,
+                ValueInt = LevelAsset.GameCurrencyMgr.CurrencyDiffFromStartToNow,
             };
         }
-        
+
+        protected sealed override void GameEnding()
+        {
+            PendingCleanUp = true;
+            populateGameOverAsset(ref LevelAsset.GameOverAsset);
+            LevelMasterManager.Instance.LevelFinished(LevelAsset);
+        }
+
         private void InitCareer()
         {
             CareerCycle();
