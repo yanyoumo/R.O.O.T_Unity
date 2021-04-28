@@ -15,6 +15,7 @@ namespace ROOT
     using Status = RootFSMStatus;
     public class FSMLevelLogic_Barebone : FSMLevelLogic
     {
+        protected override float LevelProgress => 0.0f;
         protected override string SucceedEndingTerm => ScriptTerms.EndingMessageNoBoss_EarnedMoney;
         protected override string FailedEndingTerm => ScriptTerms.EndingMessageNoBoss_NoEarnedMoney;
         public override int LEVEL_ART_SCENE_ID => -1;

@@ -11,6 +11,7 @@ namespace ROOT
 {
     public class FSMLevelLogic_Career : FSMLevelLogic_Barebone
     {
+        protected override float LevelProgress => LevelAsset.StepCount / (float) RoundLibDriver.PlayableCount;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
         public override bool CouldHandleShop => true;
@@ -115,7 +116,7 @@ namespace ROOT
                 WorldCycler.InitCycler();
                 if (LevelAsset.TimeLine != null)
                 {
-                    LevelAsset.TimeLine.InitWithAssets(LevelAsset);
+                    LevelAsset.TimeLine.InitWithAssets(RoundLibDriver);
                 }
             }
             if (UseTutorialVer)
@@ -129,7 +130,7 @@ namespace ROOT
         protected virtual void UpdateRoundData_Stepped()
         {
             var roundGist = RoundLibDriver.CurrentRoundGist.Value;
-            var tCount = LevelAsset.ActionAsset.GetTruncatedStep(LevelAsset.StepCount);
+            var tCount = RoundLibDriver.GetTruncatedStep(LevelAsset.StepCount);
             if (roundGist.SwitchHeatsink(tCount))
             {
                 LevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
@@ -244,7 +245,7 @@ namespace ROOT
         {
             get
             {
-                var res=LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount);
+                var res=RoundLibDriver.HasEnded(LevelAsset.StepCount);
                 if (res) WorldCycler.Reset();
                 return res;
             }

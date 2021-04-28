@@ -65,6 +65,7 @@ namespace ROOT
 
         private bool ShouldStartAnimate => ShouldCycle;
         protected virtual bool IsForwardCycle => MovedTile;
+        protected abstract float LevelProgress { get; }
 
         #endregion
 
@@ -347,7 +348,7 @@ namespace ROOT
             animate_Co = null;
             LevelAsset.BoughtOnce = false;
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            LevelAsset.LevelProgress = LevelAsset.StepCount / (float) LevelAsset.ActionAsset.PlayableCount;
+            LevelAsset.LevelProgress = LevelProgress;
         }
 
         protected void AnimateAction()
