@@ -16,6 +16,9 @@ namespace ROOT.UI
             {UITag.TimeLine, new Tuple<Vector3, Vector3>(new Vector3(7.18f,0.0f,4.18f), new Vector3(15.31289f,4.711506f,1.0f))},
             {UITag.SignalPanel_Acquiring, new Tuple<Vector3, Vector3>(new Vector3(-0.6117f,0.0f,-2.9898f), new Vector3(12.54302f,3.068625f,1.0f))},
             {UITag.SignalPanel_Telemetry, new Tuple<Vector3, Vector3>(new Vector3(-0.6117f,0.0f,-2.9898f), new Vector3(12.54302f,3.068625f,1.0f))},
+            {UITag.MainBoard, new Tuple<Vector3, Vector3>(new Vector3(-0.6475f,0.0f,0.9712f), new Vector3(18.17862f,18.2992f,1.0f))},
+            {UITag.Shop, new Tuple<Vector3, Vector3>(new Vector3(7.166f,0.0f,0.1978f), new Vector3(16.87271f,15.77461f,1.0f))},
+            {UITag.Skill, new Tuple<Vector3, Vector3>(new Vector3(7.166f,0.0f,0.1978f), new Vector3(16.87271f,15.77461f,1.0f))},
         };
             
         public SpriteRenderer CurtainImage;

@@ -16,8 +16,6 @@ namespace ROOT
     public class FSMLevelLogic_Barebone : FSMLevelLogic
     {
         protected override float LevelProgress => 0.0f;
-        protected override string SucceedEndingTerm => ScriptTerms.EndingMessageNoBoss_EarnedMoney;
-        protected override string FailedEndingTerm => ScriptTerms.EndingMessageNoBoss_NoEarnedMoney;
         public override int LEVEL_ART_SCENE_ID => -1;
         
         protected virtual void ModifyFSMActions(ref FSMActions actions)
@@ -99,6 +97,18 @@ namespace ROOT
             LevelAsset.Shop._fsmLevelLogic = this;
         }
 
+        //TODO 有些相关的feature还是扭在一起了、还是要整理出来。
+        protected override void GameEnding()
+        {
+            PendingCleanUp = true;
+            LevelMasterManager.Instance.LevelFinished(LevelAsset);
+            LevelAsset.GameOverAsset = new GameOverAsset
+            {
+                SuccessTerm = ScriptTerms.EndingMessageNoBoss_EarnedMoney,
+                FailedTerm = ScriptTerms.EndingMessageNoBoss_NoEarnedMoney,
+            };
+        }
+        
         protected sealed override FSMActions fsmActions
         {
             get

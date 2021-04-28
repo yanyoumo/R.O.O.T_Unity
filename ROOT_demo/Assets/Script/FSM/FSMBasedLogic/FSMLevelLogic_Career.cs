@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
+using I2.Loc;
 using ROOT.Common;
 using ROOT.Consts;
 using ROOT.Message;
@@ -11,6 +12,9 @@ namespace ROOT
 {
     public class FSMLevelLogic_Career : FSMLevelLogic_Barebone
     {
+        protected virtual string SucceedEndingTerm => ScriptTerms.EndingMessageNoBoss_EarnedMoney;
+        protected virtual string FailedEndingTerm => ScriptTerms.EndingMessageNoBoss_NoEarnedMoney;
+        
         protected override float LevelProgress => LevelAsset.StepCount / (float) RoundLibDriver.PlayableCount;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
@@ -276,6 +280,17 @@ namespace ROOT
             LevelAsset.TimeLine.Reverse();
         }
 
+        protected override void GameEnding()
+        {
+            PendingCleanUp = true;
+            LevelMasterManager.Instance.LevelFinished(LevelAsset);
+            LevelAsset.GameOverAsset = new GameOverAsset
+            {
+                SuccessTerm = SucceedEndingTerm,
+                FailedTerm = FailedEndingTerm
+            };
+        }
+        
         private void InitCareer()
         {
             CareerCycle();

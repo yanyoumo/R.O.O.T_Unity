@@ -9,6 +9,9 @@ namespace ROOT
             TimeLine,
             SignalPanel_Telemetry,
             SignalPanel_Acquiring,
+            Shop,
+            Skill,
+            MainBoard,
         }
         
         public enum GridHighLightType

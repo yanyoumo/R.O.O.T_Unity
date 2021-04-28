@@ -52,10 +52,7 @@ namespace ROOT
         private float AnimationTimerOrigin = 0.0f; //都是秒
 
         public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? StaticNumericData.AutoAnimationDuration : StaticNumericData.DefaultAnimationDuration;
-
-        //TODO 下面这两个也要Wrap一下。这个不是Tutorial那个、是游戏结束的那个文字。
-        protected abstract string SucceedEndingTerm { get; }
-        protected abstract string FailedEndingTerm { get; }
+        
 
         #region 类属性
 
@@ -375,16 +372,8 @@ namespace ROOT
 
         #endregion
 
-        private void GameEnding()
-        {
-            PendingCleanUp = true;
-            LevelMasterManager.Instance.LevelFinished(LevelAsset);
-            LevelAsset.GameOverAsset = new GameOverAsset
-            {
-                SuccessTerm = SucceedEndingTerm,
-                FailedTerm = FailedEndingTerm
-            };
-        }
+        //TODO 这个东西可能还是要发下去允许层级自定义。
+        protected abstract void GameEnding();
 
         protected virtual bool NormalCheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
 
