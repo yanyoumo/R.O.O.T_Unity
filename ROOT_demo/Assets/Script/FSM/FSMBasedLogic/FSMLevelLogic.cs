@@ -52,10 +52,7 @@ namespace ROOT
         private float AnimationTimerOrigin = 0.0f; //都是秒
 
         public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? StaticNumericData.AutoAnimationDuration : StaticNumericData.DefaultAnimationDuration;
-
-        //TODO 下面这两个也要Wrap一下。这个不是Tutorial那个、是游戏结束的那个文字。
-        protected abstract string SucceedEndingTerm { get; }
-        protected abstract string FailedEndingTerm { get; }
+        
 
         #region 类属性
 
@@ -65,6 +62,7 @@ namespace ROOT
 
         private bool ShouldStartAnimate => ShouldCycle;
         protected virtual bool IsForwardCycle => MovedTile;
+        protected abstract float LevelProgress { get; }
 
         #endregion
 
@@ -347,7 +345,7 @@ namespace ROOT
             animate_Co = null;
             LevelAsset.BoughtOnce = false;
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            LevelAsset.LevelProgress = LevelAsset.StepCount / (float) LevelAsset.ActionAsset.PlayableCount;
+            LevelAsset.LevelProgress = LevelProgress;
         }
 
         protected void AnimateAction()
@@ -373,19 +371,10 @@ namespace ROOT
         }
 
         #endregion
+        
+        protected abstract void GameEnding();
 
-        private void GameEnding()
-        {
-            PendingCleanUp = true;
-            LevelMasterManager.Instance.LevelFinished(LevelAsset);
-            LevelAsset.GameOverAsset = new GameOverAsset
-            {
-                SuccessTerm = SucceedEndingTerm,
-                FailedTerm = FailedEndingTerm
-            };
-        }
-
-        protected virtual bool NormalCheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
+        protected abstract bool NormalCheckGameOver { get; }
 
         private bool CheckGameOver => UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver;
 
