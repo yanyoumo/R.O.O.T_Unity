@@ -68,123 +68,14 @@ namespace ROOT.SetupAsset
         {
             get
             {
-                if (GetBossStage.HasValue)
-                {
-                    return GetBossStage.Value;
-                }
-
+                if (GetBossStage.HasValue) return GetBossStage.Value;
                 throw new ArgumentException("this lib has no bossStage.");
             }
         }
 
-        public bool GetEndless
-        {
-            get
-            {
-                if (HasBossRound && Endless)
-                {
-#if UNITY_EDITOR
-                    return false;
-#else
-                    throw new Exception("a round lib couldn't has boss and being endless");
-#endif
-                }
-
-                return Endless;
-            }
-        }
-
-        [ShowInInspector]
-        [ShowIf("levelType", LevelType.Career)]
-        public int PlayableCount
-        {
-            get
-            {
-                if (GetEndless) return int.MaxValue;
-                if (RoundLib == null) return 0;
-                if (!HasBossRound) return RoundLib.Sum(round => round.TotalLength);
-                return RoundLib.Sum(round => round.TotalLength) + BossSetup.BossLength;
-            }
-        }
-
-        public bool HasEnded(int StepCount)
-        {
-            if (GetEndless)
-            {
-                return false;
-            }
-
-            return StepCount >= PlayableCount;
-        }
-
         [ShowInInspector] [ShowIf("HasBossRound")]
         public BossAdditionalSetupAsset BossSetup;
-
-        private RoundData GetCurrentRound(int step, out int truncatedStep, out bool normalRoundEnded)
-        {
-            var loopedCount = 0;
-            return GetCurrentRound(step, out truncatedStep, out normalRoundEnded, ref loopedCount);
-        }
-
-        private RoundData GetCurrentRound(int step, out int truncatedStep, out bool normalRoundEnded,
-            ref int loopedCount)
-        {
-            var tmpStep = step;
-            normalRoundEnded = false;
-            foreach (var roundData in RoundLib)
-            {
-                tmpStep -= roundData.TotalLength;
-                if (tmpStep < 0)
-                {
-                    truncatedStep = tmpStep + roundData.TotalLength;
-                    loopedCount = 0;
-                    return roundData;
-                }
-            }
-
-            if (HasBossRound)
-            {
-                normalRoundEnded = true;
-                truncatedStep = step - RoundLib.Sum(r => r.TotalLength);
-                loopedCount = 0;
-                return new RoundData();
-            }
-
-            if (Endless)
-            {
-                var extraStep = step - RoundLib.Sum(r => r.TotalLength);
-                var res = GetCurrentRound(extraStep, out truncatedStep, out normalRoundEnded, ref loopedCount);
-                loopedCount++;
-                return res;
-            }
-
-            throw new ArgumentException("Round should have Ended");
-        }
-
-        public RoundGist GetCurrentRoundGist(int step)
-        {
-            var round = GetCurrentRound(step, out var truncatedStep, out var normalRoundEnded);
-            if (!normalRoundEnded)
-            {
-                var stage = GetCurrentType(step);
-                return round.ExtractGist(stage);
-            }
-
-            return new RoundGist {owner = RoundLib[0], Type = StageType.Boss};
-        }
-
-        public StageType GetCurrentType(int step)
-        {
-            var currentRound = GetCurrentRound(step, out int truncatedStep, out var normalRoundEnded);
-            return !normalRoundEnded ? currentRound.GetCurrentType(truncatedStep) : StageType.Boss;
-        }
-
-        public int GetTruncatedStep(int step)
-        {
-            GetCurrentRound(step, out var res, out var B);
-            return res;
-        }
-
+        
         private void HasBossChanged()
         {
             if (HasBossRound)

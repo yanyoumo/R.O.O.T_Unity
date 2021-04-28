@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cinemachine;
 using com.ootii.Messages;
+using I2.Loc;
 using ROOT.Common;
 using ROOT.Consts;
 using ROOT.Message;
@@ -11,6 +12,10 @@ namespace ROOT
 {
     public class FSMLevelLogic_Career : FSMLevelLogic_Barebone
     {
+        protected virtual string SucceedEndingTerm => ScriptTerms.EndingMessageNoBoss_EarnedMoney;
+        protected virtual string FailedEndingTerm => ScriptTerms.EndingMessageNoBoss_NoEarnedMoney;
+        
+        protected override float LevelProgress => LevelAsset.StepCount / (float) RoundLibDriver.PlayableCount;
         public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => false;
         public override bool CouldHandleShop => true;
@@ -115,7 +120,7 @@ namespace ROOT
                 WorldCycler.InitCycler();
                 if (LevelAsset.TimeLine != null)
                 {
-                    LevelAsset.TimeLine.InitWithAssets(LevelAsset);
+                    LevelAsset.TimeLine.InitWithAssets(RoundLibDriver);
                 }
             }
             if (UseTutorialVer)
@@ -129,7 +134,7 @@ namespace ROOT
         protected virtual void UpdateRoundData_Stepped()
         {
             var roundGist = RoundLibDriver.CurrentRoundGist.Value;
-            var tCount = LevelAsset.ActionAsset.GetTruncatedStep(LevelAsset.StepCount);
+            var tCount = RoundLibDriver.GetTruncatedStep(LevelAsset.StepCount);
             if (roundGist.SwitchHeatsink(tCount))
             {
                 LevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
@@ -244,7 +249,7 @@ namespace ROOT
         {
             get
             {
-                var res=LevelAsset.ActionAsset.HasEnded(LevelAsset.StepCount);
+                var res=RoundLibDriver.HasEnded(LevelAsset.StepCount);
                 if (res) WorldCycler.Reset();
                 return res;
             }
@@ -273,6 +278,23 @@ namespace ROOT
         {
             WorldCycler.StepDown();
             LevelAsset.TimeLine.Reverse();
+        }
+
+        protected virtual void populateGameOverAsset(ref GameOverAsset _gameOverAsset)
+        {
+            _gameOverAsset = new GameOverAsset
+            {
+                SuccessTerm = SucceedEndingTerm,
+                FailedTerm = FailedEndingTerm,
+                ValueInt = LevelAsset.GameCurrencyMgr.CurrencyDiffFromStartToNow,
+            };
+        }
+
+        protected sealed override void GameEnding()
+        {
+            PendingCleanUp = true;
+            populateGameOverAsset(ref LevelAsset.GameOverAsset);
+            LevelMasterManager.Instance.LevelFinished(LevelAsset);
         }
 
         private void InitCareer()

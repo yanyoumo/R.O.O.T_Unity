@@ -187,7 +187,11 @@ namespace ROOT
         [CanBeNull] public Unit FindRandomUnit => GetUnitCount == 0 ? null : Units[Mathf.FloorToInt(UnityEngine.Random.value * Units.Length)];
         [CanBeNull] public Unit FindUnitByPos(Vector2Int boardPos)
         {
-            Debug.Assert(CheckBoardPosValid(boardPos));
+            if (!CheckBoardPosValid(boardPos))
+            {
+                Debug.LogError("Requesting a not valid board position!!");
+                return null;
+            }
             if (CheckBoardPosValidAndEmpty(boardPos))
             {
                 return null;

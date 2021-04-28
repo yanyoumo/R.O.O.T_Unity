@@ -26,7 +26,8 @@ namespace ROOT
     public class TimeLine : MonoBehaviour
     {
         public TimeLineGoalMarker GoalMarker;
-        private GameAssets _currentGameAsset;
+        //private GameAssets _currentGameAsset;
+        private RoundLibDriver _currentRoundLibDriver;
 
         public Transform DisabledCover;
 
@@ -57,7 +58,7 @@ namespace ROOT
         public int MarkerCount;
         private int TotalCount;
 
-        public int StepCount => _currentGameAsset.StepCount;
+        public int StepCount => _currentRoundLibDriver.StepCount;
 
         private float _animationTimerOrigin = 0.0f; //都是秒
         private float AnimationTimer => Time.time - _animationTimerOrigin;
@@ -132,14 +133,14 @@ namespace ROOT
         private void CreateToken(TimeLineMarker marker, int markerID)
         {
             var roundGist = new RoundGist();
-            if (_currentGameAsset.ActionAsset.HasEnded(markerID))
+            if (_currentRoundLibDriver.HasEnded(markerID))
             {
                 roundGist.Type = StageType.Ending;
             }
             else
             {
-                roundGist =_currentGameAsset.ActionAsset.GetCurrentRoundGist(markerID);
-                var truncatedCount=_currentGameAsset.ActionAsset.GetTruncatedStep(markerID);
+                roundGist = _currentRoundLibDriver.GetCurrentRoundGist(markerID);
+                var truncatedCount = _currentRoundLibDriver.GetTruncatedStep(markerID);
                 HasHeatsinkSwitch = roundGist.SwitchHeatsink(truncatedCount);
             }
 
@@ -217,11 +218,9 @@ namespace ROOT
         private uint HeadingCount = 2;
         private uint TailingCount = 9;
 
-        public void InitWithAssets(GameAssets levelAsset)
+        public void InitWithAssets(RoundLibDriver currentRoundLibDriver)
         {
-            _currentGameAsset = levelAsset;
-            Debug.Assert(_currentGameAsset.StepCount == 0);
-            //_roundLib = levelAsset.ActionAsset.RoundLibVal;
+            _currentRoundLibDriver = currentRoundLibDriver;
             UpdateTimeLine();
         }
 

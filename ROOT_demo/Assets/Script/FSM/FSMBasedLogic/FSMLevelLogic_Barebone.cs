@@ -15,8 +15,7 @@ namespace ROOT
     using Status = RootFSMStatus;
     public class FSMLevelLogic_Barebone : FSMLevelLogic
     {
-        protected override string SucceedEndingTerm => ScriptTerms.EndingMessageNoBoss_EarnedMoney;
-        protected override string FailedEndingTerm => ScriptTerms.EndingMessageNoBoss_NoEarnedMoney;
+        protected override float LevelProgress => 0.0f;
         public override int LEVEL_ART_SCENE_ID => -1;
         
         protected virtual void ModifyFSMActions(ref FSMActions actions)
@@ -98,6 +97,14 @@ namespace ROOT
             LevelAsset.Shop._fsmLevelLogic = this;
         }
 
+        protected override bool NormalCheckGameOver => LevelAsset.GameCurrencyMgr.EndGameCheck();
+
+        protected override void GameEnding()
+        {
+            //实质上Barebone模式下其实不能结束。
+            throw new Exception("This game mode could not end.");
+        }
+        
         protected sealed override FSMActions fsmActions
         {
             get
