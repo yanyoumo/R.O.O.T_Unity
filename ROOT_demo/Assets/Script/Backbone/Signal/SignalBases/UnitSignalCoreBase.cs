@@ -135,6 +135,7 @@ namespace ROOT.Signal
         }
 
         //BUGS 不白送了 这个玩意儿和单元判断（和LED）有关系，但是又和分数的计算又混杂在一起了。
+
         public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
 
         public abstract float SingleUnitScore { get; }
