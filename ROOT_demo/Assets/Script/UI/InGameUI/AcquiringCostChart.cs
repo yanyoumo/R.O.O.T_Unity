@@ -1,4 +1,5 @@
 using com.ootii.Messages;
+using ROOT.Common;
 using ROOT.Message.Inquiry;
 using TMPro;
 using UnityEngine;
@@ -8,7 +9,9 @@ namespace ROOT.UI
     public class AcquiringCostChart : CostChart
     {
         //这里现在需要调整一下显示；需要显示出基础收入和额外输入。
-        
+
+        protected override UITag UITag => UITag.Currency_Acquiring;
+
         public TextMeshPro TgtCurrency;//这个数据一局中不会变，所以原则上应该不用cache
         public TextMeshPro BonusCurrency;//这个数据一局中不会变，所以原则上应该不用cache
 

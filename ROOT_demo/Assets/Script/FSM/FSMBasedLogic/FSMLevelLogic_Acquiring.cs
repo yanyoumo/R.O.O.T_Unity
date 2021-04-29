@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using com.ootii.Messages;
 using I2.Loc;
+using ROOT.Common;
 using ROOT.Consts;
 using ROOT.Message.Inquiry;
 using ROOT.UI;
@@ -95,7 +96,13 @@ namespace ROOT
                 inquiry.AcquiringCostTargetCallBack(TargetCurrency);
             }
         }
-        
+
+        protected override void AdditionalInitLevel()
+        {
+            base.AdditionalInitLevel();
+            MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = false, SelectAll = false, UITag = UITag.Currency});
+        }
+
         protected override void OnDestroy()
         {
             MessageDispatcher.RemoveListener(WorldEvent.AcquiringCostTargetInquiry,AcquiringCostTargetHandler);
