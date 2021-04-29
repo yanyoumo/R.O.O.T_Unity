@@ -161,7 +161,8 @@ namespace ROOT.UI
             {
                 loadingProgressorCallBack(0.1f);
                 additionalGameSetup.OrderingSignal();
-                actionAsset.AdditionalGameSetup = additionalGameSetup;
+                //如果是Tutorial那么就无视玩家选择、只使用内部数据。
+                if (!isTutorial) actionAsset.AdditionalGameSetup = additionalGameSetup;
                 LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset, null, loadingProgressorCallBack);
                 //这个卸载函数现在放到那个回调函数里面去了。-youmo
             }
