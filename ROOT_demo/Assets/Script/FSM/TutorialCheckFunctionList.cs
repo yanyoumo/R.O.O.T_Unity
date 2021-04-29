@@ -89,8 +89,10 @@ namespace ROOT
         public static bool ConnectDifferentCoreAndField(FSMLevelLogic fsm, Board board)
         {
             // we have one thermo field and one thermo core here
-            return !ConnectAnyMatrixFieldDirectlyWithMatrixCore(fsm, board) &&
-                   !ConnectAnyThermalFieldDirectlyWithThermalCore(fsm, board);
+            return board.Units.Where(unit => unit.CheckType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
+                unit.GetConnectedOtherUnit.Any(unit => unit.CheckType(SignalType.Thermo, HardwareType.Field))) && 
+                   board.Units.Where(unit => unit.CheckType(SignalType.Thermo, HardwareType.Core)).Any(unit =>
+                    unit.GetConnectedOtherUnit.Any(unit => unit.CheckType(SignalType.Matrix, HardwareType.Field)));
         }
 
         public static bool MoveThreeMatrixAndTwoThermalToPlace(FSMLevelLogic fsm, Board board)
@@ -111,7 +113,8 @@ namespace ROOT
                 if (unit.UnitSignal != i.Value)
                     return false;
             }
-            return  board.CheckAllActive();
+
+            return board.GetUnitsConnectedIsland() == 1;
         }
 
         public static bool MoveOneMatrixToPlace(FSMLevelLogic fsm, Board board)
