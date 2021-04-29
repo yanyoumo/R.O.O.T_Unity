@@ -122,7 +122,7 @@ namespace ROOT
             var unit = board.FindUnitByPos(new Vector2Int(2,1));
             if (unit == null)
                 return false;
-            return unit.UnitSignal == SignalType.Matrix && board.CheckAllActive();
+            return unit.UnitSignal == SignalType.Matrix && board.GetUnitsConnectedIsland() == 1;
         }
 
         public static bool Buy3UnitsOrNotEnoughMoney(FSMLevelLogic fsm, Board board)
