@@ -12,6 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d054641eb895a6943b27c649d8dbe479, type: 3}
   m_Name: MasterColorLib
   m_EditorClassIdentifier: 
+  MASTER_WHITE: {r: 1, g: 1, b: 1, a: 1}
+  MASTER_BLACK: {r: 0, g: 0, b: 0, a: 1}
+  MASTER_RED: {r: 0.87, g: 0.14964, b: 0.14964, a: 1}
+  MASTER_YELLOW: {r: 0.884, g: 0.884, b: 0.36509198, a: 1}
+  MASTER_GREEN: {r: 0.25212, g: 0.955, b: 0.25212, a: 1}
+  MASTER_CYAN: {r: 0.356, g: 1, b: 1, a: 1}
+  MASTER_BLUE: {r: 0.1698, g: 0.1698, b: 0.84900004, a: 1}
+  MASTER_PURPLE: {r: 0.6509434, g: 0.19446416, b: 0.6509434, a: 1}
   ROOT_MASTER_SCAN: {r: 0.1764706, g: 0.22352941, b: 1, a: 1}
   ROOT_MASTER_MATRIX: {r: 0.1764706, g: 1, b: 0.24705882, a: 1}
   ROOT_MASTER_THERMO: {r: 1, g: 0.6365967, b: 0.19496846, a: 1}

@@ -37,11 +37,6 @@ namespace ROOT.Signal
         [ReadOnly] public bool Visited;//dequeue
         [ReadOnly] public bool Visiting;//enqueue
 
-        //这个偶尔会报个Excp、到时候要看看。
-        /*public bool IsActiveMatrixFieldUnit => (Owner.UnitSignal == SignalType.Matrix && Owner.UnitHardware == HardwareType.Field) && IsUnitActive;
-        
-        public bool IsEndingScanFieldUnit => Owner.SignalCore is ScanUnitSignalCore core && core.IsUnitVeryActive;*/
-        
         public int FindCertainSignalDiv_FlatSignal(SignalType signalType)
         {
             var hw0 = CertainSignalData(signalType).FlatSignalDepth;
@@ -102,7 +97,7 @@ namespace ROOT.Signal
         //1:has signal but no active.
         //2:signal and active.
 
-        public int GetActivationStatus
+        public int GetLEDLightingStatus
         {
             get
             {
@@ -114,7 +109,7 @@ namespace ROOT.Signal
                     //TODO 先写在这里、到时候估计还要整。
                     var core = Owner.SignalCore as ScanUnitSignalCore;
                     Debug.Assert(core != null);
-                    if (core.IsUnitVeryActive)
+                    if (core.IsScoringUnit)
                     {
                         return 3;
                     }
@@ -134,8 +129,10 @@ namespace ROOT.Signal
             }
         }
 
-        //BUGS 不白送了 这个玩意儿和单元判断（和LED）有关系，但是又和分数的计算又混杂在一起了。
-
+        //现在Unit的几层逻辑框架分层拆开：
+        //激活层：简单计算单元是否有对应信号对应+所有的核心单元。(扫描信号分开)
+        //分数层：每个信号均不同。
+        //LED层:同上
         public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
 
         public abstract float SingleUnitScore { get; }

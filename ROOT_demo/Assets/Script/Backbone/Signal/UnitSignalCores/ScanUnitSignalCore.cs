@@ -302,7 +302,7 @@ namespace ROOT.Signal
         {
             get
             {
-                if (!IsUnitVeryActive) return new List<Vector2Int>();
+                if (!IsScoringUnit) return new List<Vector2Int>();
                 const float networkA = 1.45f;
                 const float networkB = 1.74f;
                 var circleTier = Math.Max(Mathf.RoundToInt(Mathf.Pow(SignalMasterMgr.MaxNetworkDepth / networkB, networkA)), 0);
@@ -314,7 +314,7 @@ namespace ROOT.Signal
         }
 
         [Obsolete("这个要准备改成private了")]
-        internal bool IsUnitVeryActive
+        internal bool IsScoringUnit
         {
             get
             {
@@ -329,10 +329,10 @@ namespace ROOT.Signal
             {
                 if (!SignalMasterMgr.Instance.Paths.HasAnyPath(SignalType)) return false;
                 var normalActive = SignalMasterMgr.Instance.Paths.WithinCertainSignalPath(Owner, SignalType);
-                return normalActive || IsUnitVeryActive;
+                return normalActive || IsScoringUnit;
             }
         }
 
-        public override float SingleUnitScore => IsUnitVeryActive ? GetServerIncomeByLength(Owner.SignalCore.SignalDataPackList[SignalType.Scan].SignalDepth) : 0.0f;
+        public override float SingleUnitScore => IsScoringUnit ? GetServerIncomeByLength(Owner.SignalCore.SignalDataPackList[SignalType.Scan].SignalDepth) : 0.0f;
     }
 }

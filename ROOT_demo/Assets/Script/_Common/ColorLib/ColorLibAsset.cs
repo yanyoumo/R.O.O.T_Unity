@@ -20,6 +20,23 @@ namespace ROOT.SetupAsset
     public class ColorLibAsset : ScriptableObject
     {   
         [Title("Master")]
+        [PropertyOrder(-10)]
+        public Color MASTER_WHITE;
+        [PropertyOrder(-9)]
+        public Color MASTER_BLACK;
+        [PropertyOrder(-8)]
+        public Color MASTER_RED;
+        [PropertyOrder(-7)]
+        public Color MASTER_YELLOW;
+        [PropertyOrder(-6)]
+        public Color MASTER_GREEN;
+        [PropertyOrder(-5)]
+        public Color MASTER_CYAN;
+        [PropertyOrder(-4)]
+        public Color MASTER_BLUE;
+        [PropertyOrder(-3)]
+        public Color MASTER_PURPLE;
+        [PropertySpace]
         [PropertyOrder(-2)]
         public Color ROOT_MASTER_SCAN;
         [PropertyOrder(-1)]

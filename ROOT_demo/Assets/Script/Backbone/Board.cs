@@ -79,9 +79,9 @@ namespace ROOT
         internal void UpdateActivationLED()
         {
             int noSignalIndex = UnitHardware == HardwareType.Core ? 1 : 0;
-            if (AnyConnection && SignalCore.GetActivationStatus != 0)
+            if (AnyConnection && SignalCore.GetLEDLightingStatus != 0)
             {
-                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[SignalCore.GetActivationStatus];
+                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[SignalCore.GetLEDLightingStatus];
             }
             else
             {
