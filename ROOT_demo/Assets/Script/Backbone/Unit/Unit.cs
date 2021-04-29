@@ -411,15 +411,15 @@ namespace ROOT
             StartCoroutine(blinkUpInterval(upStreamUnit));
         }
         
-        public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides, int tier, UnitTag unitTag = UnitTag.NoTag, Board gameBoard = null)
+        public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides, int tier, Board gameBoard = null, UnitTag unitTag = UnitTag.NoTag)
         {
             Debug.Assert(sides.Length == 4);
             InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3],
-                tier, unitTag, gameBoard);
+                tier, gameBoard, unitTag);
         }
         private void InitUnit(SignalType signal, HardwareType genre,
             SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
-            int tier, UnitTag _unitTag = UnitTag.NoTag, Board gameBoard = null)
+            int tier, Board gameBoard, UnitTag _unitTag)
         {
             UnitTag = _unitTag;
             UnitSignal = signal;

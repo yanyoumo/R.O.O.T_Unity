@@ -345,7 +345,7 @@ namespace ROOT
             var unit = go.GetComponentInChildren<Unit>();
             unit.InitPosWithAnimation(board_pos);
             _unitsGameObjects.Add(board_pos, go);
-            unit.InitUnit(signal, genre, sides, Tier, unitTag, this);
+            unit.InitUnit(signal, genre, sides, Tier, this, unitTag);
             if (IsStationary)
             {
                 unit.SetupStationUnit();
