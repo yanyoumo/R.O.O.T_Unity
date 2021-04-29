@@ -28,7 +28,7 @@ namespace ROOT.UI
         {
             if (rMessage is HighLightingUIChangedData data)
             {
-                if (!data.CustomBool)
+                if (data.CustomBool)
                 {
                     CarveOut.localPosition = new Vector3(data.pos.x, 0.0f, data.pos.y);
                     CarveOut.localScale = new Vector3(data.scale.x, data.scale.y, 1.0f);

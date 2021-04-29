@@ -8,7 +8,7 @@ namespace ROOT.Consts
     {
         public static readonly int BoardLength = 6;
         public static readonly int StageWarningThreshold = 3;
-        public static readonly int RandomBoardRowIndex = Random.Range(0, BoardLength);
+        public static int RandomBoardRowIndex => Random.Range(0, BoardLength);
 
         public static readonly int MaxUnitTier = 6;
 

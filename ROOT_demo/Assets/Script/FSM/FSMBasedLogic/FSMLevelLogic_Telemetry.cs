@@ -175,8 +175,6 @@ namespace ROOT
         protected override void AdditionalMajorUpkeep()
         {
             base.AdditionalMajorUpkeep();
-            //Debug.Log("AdditionalMajorUpkeep_Telem");
-            //base.AdditionalMajorUpkeep();
             if (CheckTelemetryStageInit())
             {
                 TelemetryInit();
@@ -262,21 +260,20 @@ namespace ROOT
         private int[] SprayCountArray;
         private int SprayCounter = 0;
 
+        private BossAdditionalSetupAsset BossRoundData => LevelAsset.ActionAsset.BossSetup;
+        private int TotalSprayCount => BossRoundData.BossLength * SprayCountPerAnimateInterval;
+        private int TargetInfoCount => Mathf.RoundToInt(BossRoundData.InfoCount * BossRoundData.InfoTargetRatio);
+        
         private void TelemetryInit()
         {
-            var bossRoundData = LevelAsset.ActionAsset.BossSetup;
-            var totalSprayCount = bossRoundData.BossLength * SprayCountPerAnimateInterval;
-            //这个数据还得传过去。
-            var targetInfoCount = Mathf.RoundToInt(bossRoundData.InfoCount * bossRoundData.InfoTargetRatio);
-
-            SprayCountArray = Utils.SpreadOutLayingWRandomization(totalSprayCount, bossRoundData.InfoCount, bossRoundData.InfoVariantRatio);
+            SprayCountArray = Utils.SpreadOutLayingWRandomization(TotalSprayCount, BossRoundData.InfoCount, BossRoundData.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
             WorldCycler.TelemetryStage = true;
             
             var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData()
             {
-                InfoTarget = targetInfoCount,
+                InfoTarget = TargetInfoCount,
                 IsTelemetryStage=WorldCycler.TelemetryStage,//
             },};
             MessageDispatcher.SendMessage(signalInfo);
@@ -324,6 +321,12 @@ namespace ROOT
             }
         }
 
+        protected override void populateGameOverAsset(ref GameOverAsset _gameOverAsset)
+        {
+            base.populateGameOverAsset(ref _gameOverAsset);
+            _gameOverAsset.ValueInt = TotalSprayCount;//TODO 这个东西有问题。没有在哪记录
+        }
+        
         protected override Dictionary<BreakingCommand, Action> RootFSMBreakings
         {
             get
