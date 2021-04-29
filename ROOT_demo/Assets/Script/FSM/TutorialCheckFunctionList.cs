@@ -90,7 +90,7 @@ namespace ROOT
         {
             // we have one thermo field and one thermo core here
             return !ConnectAnyMatrixFieldDirectlyWithMatrixCore(fsm, board) &&
-                   !ConnectAnyThermalFieldDirectlyWithThermalCore(fsm, board) && board.CheckAllActive();
+                   !ConnectAnyThermalFieldDirectlyWithThermalCore(fsm, board);
         }
 
         public static bool MoveThreeMatrixAndTwoThermalToPlace(FSMLevelLogic fsm, Board board)
