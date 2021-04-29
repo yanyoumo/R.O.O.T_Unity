@@ -101,7 +101,17 @@ namespace ROOT
 
         protected override void GameEnding()
         {
-            //实质上Barebone模式下其实不能结束。
+            //实质上Barebone模式下其实不能结束。//Tutorial版可以。
+            if (UseTutorialVer)
+            {
+                PendingCleanUp = true;
+                LevelMasterManager.Instance.LevelFinished(LevelAsset);
+                LevelAsset.GameOverAsset = new GameOverAsset
+                {
+                    SuccessTerm = ScriptTerms.EndingMessageTutorial,
+                    FailedTerm = ScriptTerms.EndingMessageTutorialFailed
+                };
+            }
             throw new Exception("This game mode could not end.");
         }
         

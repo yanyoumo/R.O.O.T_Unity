@@ -293,7 +293,18 @@ namespace ROOT
         protected sealed override void GameEnding()
         {
             PendingCleanUp = true;
-            populateGameOverAsset(ref LevelAsset.GameOverAsset);
+            if (UseTutorialVer)
+            {
+                LevelAsset.GameOverAsset = new GameOverAsset
+                {
+                    SuccessTerm = ScriptTerms.EndingMessageTutorial,
+                    FailedTerm = ScriptTerms.EndingMessageTutorialFailed
+                };
+            }
+            else
+            {
+                populateGameOverAsset(ref LevelAsset.GameOverAsset);
+            }
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
         }
 
