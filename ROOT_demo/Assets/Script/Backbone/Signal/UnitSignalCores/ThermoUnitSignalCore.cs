@@ -38,8 +38,6 @@ namespace ROOT.Signal
 
         public override List<Vector2Int> SingleInfoCollectorZone => ExpellingPatternList;
         
-        public override bool IsUnitActive => HasCertainSignal(SignalType);
-        
         public override float SingleUnitScore
         {
             get

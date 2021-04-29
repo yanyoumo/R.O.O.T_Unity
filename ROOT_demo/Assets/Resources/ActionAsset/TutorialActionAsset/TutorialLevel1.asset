@@ -31,7 +31,7 @@ MonoBehaviour:
   levelType: 0
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 0
+    PlayingSignalTypeB: 1
   InitalBoard: []
   HasBossRound: 0
   Endless: 0
@@ -903,6 +903,33 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+  - ActionIdx: 18
+    ActionSubIdx: 1
+    ActionType: 12
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
   - ActionIdx: 19
     ActionSubIdx: 0
     ActionType: 0
@@ -1417,6 +1444,33 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+  - ActionIdx: 30
+    ActionSubIdx: 1
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
   - ActionIdx: 31
     ActionSubIdx: 0
     ActionType: 0
@@ -1507,7 +1561,7 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 1
     HardwareType: 1
-    Sides: 00000000010000000000000000000000
+    Sides: 01000000010000000100000000000000
     Tier: 1
     IsStationary: 0
     Tag: 1
