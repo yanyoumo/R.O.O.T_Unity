@@ -50,15 +50,15 @@ namespace ROOT
         private static bool ConnectAnyMatrixFieldDirectlyWithMatrixCore(FSMLevelLogic fsm, Board board)
         {
             // we have one matrix field and one matrix core here
-            return board.Units.Where(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
-                unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Matrix, HardwareType.Field)));
+            return board.Units.Where(unit => unit.CheckType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
+                unit.GetConnectedOtherUnit.Any(unit => unit.CheckType(SignalType.Matrix, HardwareType.Field)));
         }
 
         private static bool ConnectAnyThermalFieldDirectlyWithThermalCore(FSMLevelLogic fsm, Board board)
         {
             // we have one thermo field and one thermo core here
-            return board.Units.Where(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Core)).Any(unit =>
-                unit.GetConnectedOtherUnit.Any(unit => unit.JudgeType(SignalType.Thermo, HardwareType.Field)));
+            return board.Units.Where(unit => unit.CheckType(SignalType.Thermo, HardwareType.Core)).Any(unit =>
+                unit.GetConnectedOtherUnit.Any(unit => unit.CheckType(SignalType.Thermo, HardwareType.Field)));
         }
 
         public static bool ConnectOneMatrixCoreWithOneMatrixField(FSMLevelLogic fsm, Board board)

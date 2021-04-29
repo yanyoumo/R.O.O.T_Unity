@@ -41,7 +41,7 @@ namespace ROOT
         {
             WorldNeighboringData = new Dictionary<RotationDirection, ConnectionData>();
             if (GameBoard == null) return;
-            foreach (var currentSideDirection in RotationList)
+            foreach (var currentSideDirection in Common.Utils.ROTATION_LIST)
             {
                 var connectionData = new ConnectionData();
 
@@ -70,10 +70,10 @@ namespace ROOT
         internal void UpdateSideMesh()
         {
             if (WorldNeighboringData == null) return;
-            RotationList.ForEach(ResetConnector);
+            Common.Utils.ROTATION_LIST.ForEach(ResetConnector);
             ConnectorLocalDir.Values.ForEach(val => val.Connected = false);
             var ignoreVal = WorldCycler.TelemetryStage && !WorldCycler.TelemetryPause;
-            RotationList.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
+            Common.Utils.ROTATION_LIST.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
         }
 
         internal void UpdateActivationLED() => UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[(int) SignalCore.GetLEDLightingStatus];
@@ -481,7 +481,7 @@ namespace ROOT
 
         public IEnumerable<Unit> FindEndingUnit(SignalType signalType)
         {
-            return Units.Where(u => u.NotBeingSignallyReferenced(signalType));
+            return Units.Where(u => u.CheckNotBeingSignallyReferenced(signalType));
         }
 
         public void InitBoardWAsset(LevelActionAsset actionAsset)

@@ -36,28 +36,37 @@ namespace ROOT
 
     public partial class Unit : MoveableBase, IClickable
     {
-        [ReadOnly] public UnitTag UnitTag = UnitTag.NoTag;
-        public UnitSignalCoreBase SignalCore;
+        public TextMeshPro TierTag;
+        public TextMeshPro CostTag;
+        public TextMeshPro PriceTag;
+        public TextMeshPro DiscountedPriceTag;
         public TextMeshPro BillBoardText;
 
-        public Dictionary<SignalType, SignalData> SignalDataPackList => SignalCore.SignalDataPackList;
-
-        public bool JudgeType(SignalType signalType, HardwareType hardwareType)
-        {
-            return UnitSignal == signalType && UnitHardware == hardwareType;
-        }
-
-        public SignalData SignalDataVal(SignalType signalType)
-        {
-            return SignalDataPackList[signalType];
-        }
-
         public MeshRenderer UnitActivationLEDMat;
-        public Color[] UnitActivationLEDMat_Colors => SignalMasterMgr.Instance.UnitActivationLED_Colors;
+        public MeshRenderer BackQuadRenderer;
+        public MeshRenderer AdditionalClampMesh;
+        public Material BuyingMat;
+        public Material ImmovableMat;
 
-        private int Cost = 0;
-        private int _tier = 0;
+        public Transform ShopBackPlane;
+        public Transform ShopDiscountRoot;
+        
+        public Connector _localNorthConnector;
+        public Connector _localEastConnector;
+        public Connector _localWestConnector;
+        public Connector _localSouthConnector;
+        public List<Unit> GetConnectedOtherUnit => WorldNeighboringData.Values.Where(data => data.Connected).Select(data => data.OtherUnit).ToList();
 
+        public Mesh DtoDSideMesh;
+        public Mesh DtoSSideMesh;
+
+        public SimpleLEDArray TierLEDs;
+
+        public Board GameBoard;
+        
+        public UnitSignalCoreBase SignalCore;
+        public Dictionary<SignalType, SignalData> SignalDataPackList => SignalCore.SignalDataPackList;
+        
         public int Tier
         {
             get => _tier;
@@ -69,32 +78,6 @@ namespace ROOT
             }
         }
 
-        private int _hardwarePrice = -1;
-        private int _retailPrice = -1;
-
-        public int RetailPrice
-        {
-            get => _retailPrice;
-            internal set
-            {
-                _retailPrice = value;
-                PriceTag.text = _retailPrice <= 99
-                    ? Common.Utils.PaddingNum2Digit(_retailPrice)
-                    : Common.Utils.PaddingNum3Digit(_retailPrice);
-            }
-        }
-
-        public SimpleLEDArray TierLEDs;
-
-        public TextMeshPro TierTag;
-        public TextMeshPro CostTag;
-        public TextMeshPro PriceTag;
-        public TextMeshPro DiscountedPriceTag;
-
-        public MeshRenderer BackQuadRenderer;
-        public Material BuyingMat;
-        public Material ImmovableMat;
-
         public override bool Immovable
         {
             set
@@ -105,83 +88,8 @@ namespace ROOT
             }
             get => _immovable;
         }
-
-        public MeshRenderer AdditionalClampMesh;
         public bool StationUnit { get; private set; }
-
-        public Transform ShopBackPlane;
-        public Transform ShopDiscountRoot;
-
-        public bool IsActiveThermoFieldUnit;
-
-        private bool _hasDiscount = false;
-
-        private bool HasDiscount
-        {
-            set
-            {
-                _hasDiscount = ShopID != -1 && value;
-                ShopDiscountRoot.gameObject.SetActive(_hasDiscount);
-            }
-            get => _hasDiscount;
-        }
-
         public int ShopID { get; private set; } = -1;
-
-        public void UnsetShop()
-        {
-            HasDiscount = false;
-            SetPendingBuying = false;
-            ShopBackPlane.gameObject.SetActive(false);
-            ShopID = -1;
-        }
-
-        public void SetShop(int shopID, int retailPrice, int discountRate, int _cost, bool? showQuad)
-        {
-            ShopID = shopID;
-            if (retailPrice != -1)
-            {
-                RetailPrice = retailPrice;
-            }
-
-            ShopBackPlane.gameObject.SetActive(true);
-            if (showQuad.HasValue)
-            {
-                BackQuadRenderer.enabled = showQuad.Value;
-            }
-
-            if (_cost != -1)
-            {
-                Cost = _cost;
-                CostTag.text = Common.Utils.PaddingNum2Digit(Cost);
-            }
-
-            //这个discountRate写以百分比的数据，比如八折就是写20。（-20%）
-            if (discountRate > 0)
-            {
-                discountRate = Mathf.Min(discountRate, 99);
-                HasDiscount = true;
-                var discountedPrice = Mathf.FloorToInt(retailPrice * (1.0f - discountRate * 0.01f));
-                DiscountedPriceTag.text = "<color=#00A62E>" + Common.Utils.PaddingNum2Digit(discountedPrice) + "</color>";
-            }
-            else
-            {
-                HasDiscount = false;
-            }
-        }
-
-        private void SetClampMesh()
-        {
-            if (!StationUnit)
-            {
-                AdditionalClampMesh.enabled = false;
-            }
-            else
-            {
-                AdditionalClampMesh.material = ImmovableMat;
-            }
-        }
-
         public bool SetPendingBuying
         {
             set
@@ -198,47 +106,131 @@ namespace ROOT
             }
         }
 
-        protected string UnitName { get; }
-
+        [ReadOnly] public UnitTag UnitTag = UnitTag.NoTag;
         [ReadOnly] [ShowInInspector] public SignalType UnitSignal { get; private set; }
         [ReadOnly] [ShowInInspector] public HardwareType UnitHardware { get; private set; }
-        public bool IsCore => UnitHardware == HardwareType.Core;
         public Dictionary<RotationDirection, SideType> UnitSides { get; private set; }
-
+        
         private RotationDirection _unitRotation
         {
             get => ApparentRotationDirection;
             set => ApparentRotationDirection = value;
         }
-
+        private int _cost = 0;
+        private int _tier = 0;
+        private int _hardwarePrice = -1;
+        private int _retailPrice = -1;
+        private int RetailPrice
+        {
+            get => _retailPrice;
+            set
+            {
+                _retailPrice = value;
+                PriceTag.text = _retailPrice <= 99
+                    ? Common.Utils.PaddingNum2Digit(_retailPrice)
+                    : Common.Utils.PaddingNum3Digit(_retailPrice);
+            }
+        }
+        private bool _hasDiscount = false;
+        private MeshRenderer _coreMeshRenderer;
         private Transform _rootTransform => transform.parent;
         private Material _coreMat;
-
-        private MeshRenderer _coreMeshRenderer;
-        public Dictionary<RotationDirection, Connector> ConnectorLocalDir;
-        public Connector _localNorthConnector;
-        public Connector _localEastConnector;
-        public Connector _localWestConnector;
-        public Connector _localSouthConnector;
-
         private Transform _sideRootTransform;
         private Transform _coreTransform;
+        private Color[] UnitActivationLEDMat_Colors => SignalMasterMgr.Instance.UnitActivationLED_Colors;
+        private Dictionary<RotationDirection, ConnectionData> WorldNeighboringData { set; get; }//Rotation使用的世界方向的。
+        private Dictionary<RotationDirection, Connector> ConnectorLocalDir;
+        private RotationDirection WorldDir(RotationDirection direction) => Common.Utils.RotateDirectionBeforeRotation(direction, _unitRotation);
+        private bool HasDiscount
+        {
+            set
+            {
+                _hasDiscount = ShopID != -1 && value;
+                ShopDiscountRoot.gameObject.SetActive(_hasDiscount);
+            }
+            get => _hasDiscount;
+        }
+        
+        public void SetShop(int shopID, int retailPrice, int discountRate, int _cost, bool? showQuad)
+        {
+            ShopID = shopID;
+            if (retailPrice != -1)
+            {
+                RetailPrice = retailPrice;
+            }
 
-        public Mesh DtoDSideMesh;
-        public Mesh DtoSSideMesh;
+            ShopBackPlane.gameObject.SetActive(true);
+            if (showQuad.HasValue)
+            {
+                BackQuadRenderer.enabled = showQuad.Value;
+            }
 
-        public Board GameBoard;
+            if (_cost != -1)
+            {
+                this._cost = _cost;
+                CostTag.text = Common.Utils.PaddingNum2Digit(this._cost);
+            }
 
+            //这个discountRate写以百分比的数据，比如八折就是写20。（-20%）
+            if (discountRate > 0)
+            {
+                discountRate = Mathf.Min(discountRate, 99);
+                HasDiscount = true;
+                var discountedPrice = Mathf.FloorToInt(retailPrice * (1.0f - discountRate * 0.01f));
+                DiscountedPriceTag.text = "<color=#00A62E>" + Common.Utils.PaddingNum2Digit(discountedPrice) + "</color>";
+            }
+            else
+            {
+                HasDiscount = false;
+            }
+        }
+        public void UnsetShop()
+        {
+            HasDiscount = false;
+            SetPendingBuying = false;
+            ShopBackPlane.gameObject.SetActive(false);
+            ShopID = -1;
+        }
         public void SetupStationUnit()
         {
             Immovable = true;
             StationUnit = true;
         }
+       
+        public SideType GetLocalSpaceUnitSide(RotationDirection localDirection)
+        {
+            UnitSides.TryGetValue(_unitRotation, out var res);
+            return res;
+        }
+        public SideType GetWorldSpaceUnitSide(RotationDirection worldDirection)
+        {
+            var desiredLocalSideDirection = Common.Utils.RotateDirectionBeforeRotation(worldDirection, _unitRotation);
+            UnitSides.TryGetValue(desiredLocalSideDirection, out var res);
+            return res;
+        }
 
-        //Rotation使用的世界方向的。
-        public Dictionary<RotationDirection, ConnectionData> WorldNeighboringData { protected set; get; }
-
-        public bool AnyConnection
+        public SignalPath FindSignalPath_Iter(SignalType targetSignalType)
+        {
+            var res = new SignalPath { this };
+            var unit = SignalCore.SignalDataPackList[targetSignalType].UpstreamUnit;
+            if (unit != null)
+            {
+                //这样做出来的路径是终叶到Core的。
+                res.AddRange(unit.FindSignalPath_Iter(targetSignalType));
+            }
+            return res;
+        }
+        public bool CheckNotBeingSignallyReferenced(SignalType targetSignalType)
+        {
+            var otherUnits = GetConnectedOtherUnit;
+            if (otherUnits.Count == 0) return false;
+            return otherUnits.All(u => u.GetSignalDataVal(targetSignalType).UpstreamUnit != this);
+        }
+        public bool CheckType(SignalType signalType, HardwareType hardwareType)
+        {
+            return UnitSignal == signalType && UnitHardware == hardwareType;
+        }
+        public bool CheckAnyConnection
         {
             get
             {
@@ -247,16 +239,22 @@ namespace ROOT
             }
         }
 
-        private readonly RotationDirection[] RotationList =
+        private void SetClampMesh()
         {
-            RotationDirection.East,
-            RotationDirection.North,
-            RotationDirection.South,
-            RotationDirection.West
-        };
-
-        [HideInInspector] public Vector2Int LastNetworkPos = Vector2Int.zero;
-
+            if (!StationUnit)
+            {
+                AdditionalClampMesh.enabled = false;
+            }
+            else
+            {
+                AdditionalClampMesh.material = ImmovableMat;
+            }
+        }
+        private SignalData GetSignalDataVal(SignalType signalType)
+        {
+            return SignalDataPackList[signalType];
+        }
+        
         private void InitConnector(Connector connector, SideType sideType)
         {
             connector.UseScrVersion = (UnitHardware == HardwareType.Core);
@@ -265,20 +263,6 @@ namespace ROOT
             connector.Signal_B_Val = 0;
             //TODO 这里把颜色数据注入进去。
         }
-
-        //North,South,West,East
-        protected void InitSide(MeshRenderer meshRenderer, SideType sideType)
-        {
-            if (sideType == SideType.Connection)
-            {
-                meshRenderer.material.SetColor("_Color", Color.green * 0.55f);
-            }
-            else if (sideType == SideType.NoConnection)
-            {
-                meshRenderer.enabled = false;
-            }
-        }
-
         private void InitUnitMeshByCore(SignalType signal, HardwareType genre)
         {
             UnitHardware = genre;
@@ -332,22 +316,100 @@ namespace ROOT
                 {RotationDirection.West, _localWestConnector},
             };
 
-            TierLEDs.gameObject.SetActive(!IsCore);
+            TierLEDs.gameObject.SetActive(UnitHardware == HardwareType.Field);
         }
-
-        public void SetCoreEmissive(Color color)
-        {
-            _coreMeshRenderer.material.EnableKeyword("_EMISSION"); //还是不懂，为什么每次设置前得Enable一下。
-            _coreMeshRenderer.material.SetColor("_EmissionColor", color);
-        }
-
         public void UpdateUnitTier(int tier)
         {
             Tier = tier;
         }
+        public override void UpdateTransform(Vector3 pos)
+        {
+            _rootTransform.position = pos;
+        }
 
-        /*public static SignalType PlayingSignalA;
-        public static SignalType PlayingSignalB;*/
+        public void UnitRotateCw()
+        {
+            _unitRotation = Common.Utils.GetCWDirection(_unitRotation);
+        }
+        public void UnitRotateCcw()
+        {
+            _unitRotation = Common.Utils.GetCCWDirection(_unitRotation);
+        }
+        public void UpdateWorldRotationTransform()
+        {
+            _rootTransform.rotation = Common.Utils.RotationToQuaternion(_unitRotation);
+        }
+
+        private bool SideFilter(RotationDirection dir)
+        {
+            return dir == RotationDirection.West || dir == RotationDirection.South;
+        }
+        private void ResetConnector(RotationDirection dir)
+        {
+            WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
+            if (!data.HasConnector) return;
+            ConnectorLocalDir.TryGetValue(Common.Utils.RotateDirectionBeforeRotation(dir, _unitRotation), out Connector Connector);
+            if (Connector == null) return;
+            Connector.Signal_A_Val = 0;
+            Connector.Signal_B_Val = 0;
+            Connector.Hided = true;
+        }
+        private void ConnectorSignalMux(ref Connector connector, SignalType type, int val, bool ignoreVal = false)
+        {
+            //这个函数是将信号配置到具体的接口LED上面、这个东西只能手动配置；相当于信号和硬件儿的映射。
+            //这个相当于硬件软件间的一个接口、这个具体放在哪就还好。
+            if (type == Board.PlayingSignalA)
+                connector.Signal_A_Val = ignoreVal ? 0 : val;
+            else if (type ==  Board.PlayingSignalB)
+                connector.Signal_B_Val = ignoreVal ? 0 : val;
+            else
+                Debug.LogWarning(type + " of signal is not processed.");
+        }
+        private void SetConnector(RotationDirection crtDir, bool ignoreVal = false)
+        {
+            WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
+            ConnectorLocalDir.TryGetValue(Common.Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation), out var Connector);
+            Connector.Connected = data.Connected;
+
+            var otherUnit = data.OtherUnit;
+
+            var shouldShow = false;
+
+            var signal = new[] { SignalType.Thermo };
+
+            foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
+            {
+                var tmpShouldShow = SignalMasterMgr.Instance.ShowSignal(signalType, crtDir, this, otherUnit);
+                var tmpVal = SignalMasterMgr.Instance.SignalVal(signalType, crtDir, this, otherUnit);
+                ConnectorSignalMux(ref Connector, signalType, tmpVal, ignoreVal);
+                shouldShow |= tmpShouldShow;
+            }
+
+            Connector.Hided = !shouldShow;
+        }
+        private bool FilterConnector(RotationDirection dir)
+        {
+            WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
+            return data.HasConnector && data.Connected && SideFilter(dir) && data.OtherUnit != null;
+        }
+        
+        private IEnumerator blinkUpInterval(Unit otherUnit)
+        {
+            yield return new WaitForSeconds(StaticNumericData.BlinkTransferInterval);
+            otherUnit.Blink();
+        }
+        //TODO 这个玩意儿技术上搞定了，调一下Blink就能正常的闪到核心，但是还有一些周边问题要继续处理：
+        //  1、常规信号和Blink流程的切换和管理流程。
+        //  2、Blink本身的颜色调整。
+        public void Blink()
+        {
+            var upStreamUnit = SignalDataPackList.Select(d => d.Value.UpstreamUnit).ToArray()[0];
+            if (upStreamUnit == null) return;
+            var dir = WorldNeighboringData.Where(v => v.Value.OtherUnit == upStreamUnit).Select(v => v.Key).ToArray()[0];
+            var cctor = FilterConnector(dir) ? ConnectorLocalDir[WorldDir(dir)] : upStreamUnit.ConnectorLocalDir[WorldDir(Common.Utils.GetInvertDirection(dir))];
+            cctor.Blink(StaticNumericData.BlinkSingleDuration, !FilterConnector(dir));
+            StartCoroutine(blinkUpInterval(upStreamUnit));
+        }
         
         public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides, int tier, UnitTag unitTag = UnitTag.NoTag, Board gameBoard = null)
         {
@@ -355,7 +417,6 @@ namespace ROOT
             InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3],
                 tier, unitTag, gameBoard);
         }
-
         private void InitUnit(SignalType signal, HardwareType genre,
             SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
             int tier, UnitTag _unitTag = UnitTag.NoTag, Board gameBoard = null)
@@ -395,7 +456,21 @@ namespace ROOT
                 SignalCore.Owner = this;
             }
         }
-
+        public override int GetHashCode()
+        {
+            var A = CurrentBoardPosition.GetHashCode();
+            var B = _unitRotation.GetHashCode();
+            var C = SignalCore.GetHashCode();
+            var D = UnitHardware.GetHashCode();
+            var E = UnitSides.GetHashCode();
+            var F = _tier.GetHashCode();
+            return A ^ B ^ C ^ D ^ E ^ F;
+        }
+        public void Clicked()
+        {
+            Debug.Log("I'm clicked");
+        }
+        
         protected void Awake()
         {
             ShopID = -1;
@@ -406,40 +481,7 @@ namespace ROOT
             Immovable = false;
             ShopBackPlane.gameObject.SetActive(false);
         }
-
-        public override void UpdateTransform(Vector3 pos)
-        {
-            _rootTransform.position = pos;
-        }
-
-        public void UnitRotateCw()
-        {
-            _unitRotation = Common.Utils.GetCWDirection(_unitRotation);
-        }
-
-        public void UnitRotateCcw()
-        {
-            _unitRotation = Common.Utils.GetCCWDirection(_unitRotation);
-        }
-
-        public SideType GetLocalSpaceUnitSide(RotationDirection localDirection)
-        {
-            UnitSides.TryGetValue(_unitRotation, out var res);
-            return res;
-        }
-
-        public SideType GetWorldSpaceUnitSide(RotationDirection worldDirection)
-        {
-            var desiredLocalSideDirection = Common.Utils.RotateDirectionBeforeRotation(worldDirection, _unitRotation);
-            UnitSides.TryGetValue(desiredLocalSideDirection, out var res);
-            return res;
-        }
-
-        public void UpdateWorldRotationTransform()
-        {
-            _rootTransform.rotation = Common.Utils.RotationToQuaternion(_unitRotation);
-        }
-
+        
         [Obsolete]
         private void UpdateDestConnectionSide(ConnectionMeshType connectionMeshType, ref Connector connector)
         {
@@ -460,134 +502,23 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-        // 获得相连的所有Unit
-        public List<Unit> GetConnectedOtherUnit => WorldNeighboringData.Values.Where(data => data.Connected)
-            .Select(data => data.OtherUnit).ToList();
-
-        private bool SideFilter(RotationDirection dir)
+        [Obsolete]
+        public void SetCoreEmissive(Color color)
         {
-            return dir == RotationDirection.West || dir == RotationDirection.South;
+            _coreMeshRenderer.material.EnableKeyword("_EMISSION"); //还是不懂，为什么每次设置前得Enable一下。
+            _coreMeshRenderer.material.SetColor("_EmissionColor", color);
         }
-
-        private void ResetConnector(RotationDirection dir)
+        [Obsolete]
+        protected void InitSide(MeshRenderer meshRenderer, SideType sideType)
         {
-            WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
-            if (!data.HasConnector) return;
-            ConnectorLocalDir.TryGetValue(Common.Utils.RotateDirectionBeforeRotation(dir, _unitRotation), out Connector Connector);
-            if (Connector == null) return;
-            Connector.Signal_A_Val = 0;
-            Connector.Signal_B_Val = 0;
-            Connector.Hided = true;
-        }
-
-        //对，仔细想下，如果需要搞，这里的东西也需要抽象出来。
-        //包括Connector本身的设计也需要抽象。
-        //现在Connector不能是：有一个network灯、一个hardware灯。
-        //而需要是：有两个通用的灯。
-        //其实为了添加新的Unit，除了Asset部分、所有现有矩阵和扫描相关的代码都得抽象掉。
-
-        //这块儿的代码还可以进行抽象出来、理论上可以：
-        //这里的代码需要遍历所有的信号类型（因为所有接口应该可以传送所有信号）。
-        //可以把所有的LED具体显示逻辑（661~2行）可以挂在UnitLogicBase上面变成静态函数。
-        //利用lib系统的设计，这里需要能够遍历UnitLogicBase中所有对应静态函数来计分。
-        //当然、LED上面能不能显示那么多是另一回事、抽象框架设计出来后，都会好一些。
-
-        private void ConnectorSignalMux(ref Connector connector, SignalType type, int val, bool ignoreVal = false)
-        {
-            //这个函数是将信号配置到具体的接口LED上面、这个东西只能手动配置；相当于信号和硬件儿的映射。
-            //这个相当于硬件软件间的一个接口、这个具体放在哪就还好。
-            if (type == Board.PlayingSignalA)
-                connector.Signal_A_Val = ignoreVal ? 0 : val;
-            else if (type ==  Board.PlayingSignalB)
-                connector.Signal_B_Val = ignoreVal ? 0 : val;
-            else
-                Debug.LogWarning(type + " of signal is not processed.");
-        }
-
-        private void SetConnector(RotationDirection crtDir, bool ignoreVal = false)
-        {
-            WorldNeighboringData.TryGetValue(crtDir, out ConnectionData data);
-            ConnectorLocalDir.TryGetValue(Common.Utils.RotateDirectionBeforeRotation(crtDir, _unitRotation), out var Connector);
-            Connector.Connected = data.Connected;
-
-            var otherUnit = data.OtherUnit;
-
-            var shouldShow = false;
-
-            var signal = new[] { SignalType.Thermo };
-
-            foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
+            if (sideType == SideType.Connection)
             {
-                var tmpShouldShow = SignalMasterMgr.Instance.ShowSignal(signalType, crtDir, this, otherUnit);
-                var tmpVal = SignalMasterMgr.Instance.SignalVal(signalType, crtDir, this, otherUnit);
-                ConnectorSignalMux(ref Connector, signalType, tmpVal, ignoreVal);
-                shouldShow |= tmpShouldShow;
+                meshRenderer.material.SetColor("_Color", Color.green * 0.55f);
             }
-
-            Connector.Hided = !shouldShow;
-        }
-
-        private bool FilterConnector(RotationDirection dir)
-        {
-            WorldNeighboringData.TryGetValue(dir, out ConnectionData data);
-            return data.HasConnector && data.Connected && SideFilter(dir) && data.OtherUnit != null;
-        }
-
-        private IEnumerator blinkUpInterval(Unit otherUnit)
-        {
-            yield return new WaitForSeconds(StaticNumericData.BlinkTransferInterval);
-            otherUnit.Blink();
-        }
-
-        private RotationDirection WorldDir(RotationDirection direction) => Common.Utils.RotateDirectionBeforeRotation(direction, _unitRotation);
-
-        //TODO 这个玩意儿技术上搞定了，调一下Blink就能正常的闪到核心，但是还有一些周边问题要继续处理：
-        //  1、常规信号和Blink流程的切换和管理流程。
-        //  2、Blink本身的颜色调整。
-        public void Blink()
-        {
-            var upStreamUnit = SignalDataPackList.Select(d => d.Value.UpstreamUnit).ToArray()[0];
-            if (upStreamUnit == null) return;
-            var dir = WorldNeighboringData.Where(v => v.Value.OtherUnit == upStreamUnit).Select(v => v.Key).ToArray()[0];
-            var cctor = FilterConnector(dir) ? ConnectorLocalDir[WorldDir(dir)] : upStreamUnit.ConnectorLocalDir[WorldDir(Common.Utils.GetInvertDirection(dir))];
-            cctor.Blink(StaticNumericData.BlinkSingleDuration, !FilterConnector(dir));
-            StartCoroutine(blinkUpInterval(upStreamUnit));
-        }
-
-        public override int GetHashCode()
-        {
-            var A = CurrentBoardPosition.GetHashCode();
-            var B = _unitRotation.GetHashCode();
-            var C = SignalCore.GetHashCode();
-            var D = UnitHardware.GetHashCode();
-            var E = UnitSides.GetHashCode();
-            var F = _tier.GetHashCode();
-            return A ^ B ^ C ^ D ^ E ^ F;
-        }
-
-        public void Clicked()
-        {
-            Debug.Log("I'm clicked");
-        }
-
-        public SignalPath FindSignalPath_Iter(SignalType targetSignalType)
-        {
-            var res = new SignalPath { this };
-            var unit = SignalCore.SignalDataPackList[targetSignalType].UpstreamUnit;
-            if (unit != null)
+            else if (sideType == SideType.NoConnection)
             {
-                //这样做出来的路径是终叶到Core的。
-                res.AddRange(unit.FindSignalPath_Iter(targetSignalType));
+                meshRenderer.enabled = false;
             }
-            return res;
-        }
-
-        public bool NotBeingSignallyReferenced(SignalType targetSignalType)
-        {
-            var otherUnits = GetConnectedOtherUnit;
-            if (otherUnits.Count == 0) return false;
-            return otherUnits.All(u => u.SignalDataVal(targetSignalType).UpstreamUnit != this);
-        }
+        }//North,South,West,East
     }
 }
