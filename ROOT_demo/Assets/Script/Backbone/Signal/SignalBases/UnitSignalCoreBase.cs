@@ -97,42 +97,20 @@ namespace ROOT.Signal
         //1:has signal but no active.
         //2:signal and active.
 
-        public int GetLEDLightingStatus
+        public virtual UnitActivationLEDColor GetLEDLightingStatus
         {
             get
             {
-                //TODO 现在认为扫描信号只有终端单元是激活的、这个还是要改。
-                //尽量需要一个这个点亮系统的配置流程、这个可以搞。
-                //这个激活还是要弄、要不然所有其他干线的networkSignal都不算的、这个还是得弄。
-                if (Owner.UnitSignal == SignalType.Scan && Owner.UnitHardware == HardwareType.Field)
-                {
-                    //TODO 先写在这里、到时候估计还要整。
-                    var core = Owner.SignalCore as ScanUnitSignalCore;
-                    Debug.Assert(core != null);
-                    if (core.IsScoringUnit)
-                    {
-                        return 3;
-                    }
-                }
-
-                if (IsUnitActive)
-                {
-                    return 2;
-                }
-
-                if (SignalMasterMgr.Instance.Paths.WithinAnyPath(Owner))
-                {
-                    return 1;
-                }
-
-                return 0;
+                if (IsUnitActive) return UnitActivationLEDColor.Activated;
+                if (SignalMasterMgr.Instance.Paths.WithinAnyPath(Owner)) return UnitActivationLEDColor.Dormant;
+                return UnitActivationLEDColor.Deactivated;
             }
         }
 
         //现在Unit的几层逻辑框架分层拆开：
         //激活层：简单计算单元是否有对应信号对应+所有的核心单元。(扫描信号分开)
         //分数层：每个信号均不同。
-        //LED层:同上
+        //LED 层:每个信号均不同。
         public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
 
         public abstract float SingleUnitScore { get; }

@@ -263,6 +263,7 @@ namespace ROOT
             connector.gameObject.SetActive(sideType == SideType.Connection);
             connector.Signal_A_Val = 0;
             connector.Signal_B_Val = 0;
+            //TODO 这里把颜色数据注入进去。
         }
 
         //North,South,West,East
@@ -345,16 +346,15 @@ namespace ROOT
             Tier = tier;
         }
 
+        /*public static SignalType PlayingSignalA;
+        public static SignalType PlayingSignalB;*/
+        
         public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides, int tier, UnitTag unitTag = UnitTag.NoTag, Board gameBoard = null)
         {
             Debug.Assert(sides.Length == 4);
             InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3],
                 tier, unitTag, gameBoard);
         }
-
-        public static SignalType PlayingSignalA;
-        public static SignalType PlayingSignalB;
-
 
         private void InitUnit(SignalType signal, HardwareType genre,
             SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
@@ -370,7 +370,6 @@ namespace ROOT
             UnitSides.Add(RotationDirection.East, lESide);
 
             _coreMeshRenderer.material = SignalMasterMgr.Instance.GetMatByUnitType(signal, genre);
-            //Debug.Assert(_coreMeshRenderer.material);
 
             InitConnector(_localNorthConnector, lNSide);
             InitConnector(_localEastConnector, lESide);
@@ -384,8 +383,8 @@ namespace ROOT
             UpdateSideMesh();
 
             UnitActivationLEDMat.material.color = UnitHardware == HardwareType.Core
-                ? UnitActivationLEDMat_Colors[1]
-                : UnitActivationLEDMat_Colors[0];
+                ? UnitActivationLEDMat_Colors[(int)UnitActivationLEDColor.Activated]
+                : UnitActivationLEDMat_Colors[(int)UnitActivationLEDColor.Deactivated];
 
             if (SignalCore == null)
             {
@@ -440,8 +439,6 @@ namespace ROOT
         {
             _rootTransform.rotation = Common.Utils.RotationToQuaternion(_unitRotation);
         }
-
-
 
         [Obsolete]
         private void UpdateDestConnectionSide(ConnectionMeshType connectionMeshType, ref Connector connector)
@@ -500,9 +497,9 @@ namespace ROOT
         {
             //这个函数是将信号配置到具体的接口LED上面、这个东西只能手动配置；相当于信号和硬件儿的映射。
             //这个相当于硬件软件间的一个接口、这个具体放在哪就还好。
-            if (type == PlayingSignalA)
+            if (type == Board.PlayingSignalA)
                 connector.Signal_A_Val = ignoreVal ? 0 : val;
-            else if (type == PlayingSignalB)
+            else if (type ==  Board.PlayingSignalB)
                 connector.Signal_B_Val = ignoreVal ? 0 : val;
             else
                 Debug.LogWarning(type + " of signal is not processed.");

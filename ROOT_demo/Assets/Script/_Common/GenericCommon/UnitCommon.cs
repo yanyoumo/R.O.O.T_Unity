@@ -24,8 +24,7 @@ namespace ROOT
     public enum SideType
     {
         NoConnection,
-        Connection,
-        SIDETYPECOUNT
+        Connection
     }
 
     public enum ConnectionMeshType
@@ -44,6 +43,14 @@ namespace ROOT
         TypeB,
     }
 
+    public enum UnitActivationLEDColor
+    {
+        Deactivated=0,
+        Dormant=1,
+        Activated=2,
+        HyperActivated=3,
+    }
+    
     public enum UnitTag
     {
         Red = 1 << 0,

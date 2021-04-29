@@ -313,8 +313,19 @@ namespace ROOT.Signal
             }
         }
 
-        [Obsolete("这个要准备改成private了")]
-        internal bool IsScoringUnit
+        public override UnitActivationLEDColor GetLEDLightingStatus
+        {
+            get
+            {
+                if (Owner.SignalCore is ScanUnitSignalCore core && (Owner.UnitHardware == HardwareType.Field))
+                {
+                    if (core.IsScoringUnit) return UnitActivationLEDColor.HyperActivated;
+                }
+                return base.GetLEDLightingStatus;
+            }
+        }
+
+        private bool IsScoringUnit
         {
             get
             {
@@ -327,9 +338,9 @@ namespace ROOT.Signal
         {
             get
             {
-                if (!SignalMasterMgr.Instance.Paths.HasAnyPath(SignalType)) return false;
+                if (!SignalMasterMgr.Instance.Paths.HasAnyPath(SignalType)) return Owner.UnitHardware == HardwareType.Core;
                 var normalActive = SignalMasterMgr.Instance.Paths.WithinCertainSignalPath(Owner, SignalType);
-                return normalActive || IsScoringUnit;
+                return normalActive || IsScoringUnit || (Owner.UnitHardware == HardwareType.Core);
             }
         }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
+using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -280,7 +281,13 @@ namespace ROOT.Signal
 
         public static float GetPerDriverIncome = 1.5f;
 
-        public Color[] UnitActivationLED_Colors;
+        public Color[] UnitActivationLED_Colors => new[]
+        {
+            ColorLibManager.Instance.ColorLib.ROOT_UNIT_ACTIVATION_LED_0,
+            ColorLibManager.Instance.ColorLib.ROOT_UNIT_ACTIVATION_LED_1,
+            ColorLibManager.Instance.ColorLib.ROOT_UNIT_ACTIVATION_LED_2,
+            ColorLibManager.Instance.ColorLib.ROOT_UNIT_ACTIVATION_LED_3,
+        };
         
         void Awake()
         {

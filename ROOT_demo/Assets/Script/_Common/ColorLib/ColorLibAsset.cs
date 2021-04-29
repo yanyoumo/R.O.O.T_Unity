@@ -142,5 +142,16 @@ namespace ROOT.SetupAsset
         public Color ROOT_SKILL_SWAP_UNITB;
         [PropertyOrder(30)]
         public Color ROOT_SHOP_CHEAP_PURPLE;
+        
+        [PropertySpace]
+        [Title("Unit Activation LED")]
+        [PropertyOrder(31)]
+        public Color ROOT_UNIT_ACTIVATION_LED_0;
+        [PropertyOrder(32)]
+        public Color ROOT_UNIT_ACTIVATION_LED_1;
+        [PropertyOrder(33)]
+        public Color ROOT_UNIT_ACTIVATION_LED_2;
+        [PropertyOrder(34)]
+        public Color ROOT_UNIT_ACTIVATION_LED_3;
     }
 }

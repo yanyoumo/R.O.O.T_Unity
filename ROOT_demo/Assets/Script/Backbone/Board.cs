@@ -76,22 +76,14 @@ namespace ROOT
             RotationList.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
         }
 
-        internal void UpdateActivationLED()
-        {
-            int noSignalIndex = UnitHardware == HardwareType.Core ? 1 : 0;
-            if (AnyConnection && SignalCore.GetLEDLightingStatus != 0)
-            {
-                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[SignalCore.GetLEDLightingStatus];
-            }
-            else
-            {
-                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[noSignalIndex];
-            }
-        }
+        internal void UpdateActivationLED() => UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[(int) SignalCore.GetLEDLightingStatus];
     }
     
     public sealed class Board : MonoBehaviour
     {
+        public static SignalType PlayingSignalA;
+        public static SignalType PlayingSignalB;
+
         public BoardGirdDriver BoardGirdDriver;
         public HeatSinkPatternLib HeatSinkPatterns;
 
@@ -494,8 +486,8 @@ namespace ROOT
 
         public void InitBoardWAsset(LevelActionAsset actionAsset)
         {
-            Unit.PlayingSignalA = actionAsset.AdditionalGameSetup.PlayingSignalTypeA;
-            Unit.PlayingSignalB = actionAsset.AdditionalGameSetup.PlayingSignalTypeB;
+            PlayingSignalA = actionAsset.AdditionalGameSetup.PlayingSignalTypeA;
+            PlayingSignalB = actionAsset.AdditionalGameSetup.PlayingSignalTypeB;
             foreach (var unitGist in actionAsset.InitalBoard)
             {
                 CreateUnitByGist(unitGist, actionAsset.AdditionalGameSetup);
