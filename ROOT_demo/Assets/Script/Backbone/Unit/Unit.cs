@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ROOT.Consts;
+using ROOT.SetupAsset;
 using ROOT.Signal;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -431,10 +432,13 @@ namespace ROOT
 
             _coreMeshRenderer.material = SignalMasterMgr.Instance.GetMatByUnitType(signal, genre);
 
-            InitConnector(_localNorthConnector, lNSide);
-            InitConnector(_localEastConnector, lESide);
-            InitConnector(_localWestConnector, lWSide);
-            InitConnector(_localSouthConnector, lSSide);
+            var signalColorA = ColorLibManager.Instance.GetColorBySignalType(Board.PlayingSignalA);
+            var signalColorB = ColorLibManager.Instance.GetColorBySignalType(Board.PlayingSignalA);
+
+            InitConnector(_localNorthConnector, lNSide, signalColorA, signalColorB);
+            InitConnector(_localEastConnector, lESide, signalColorA, signalColorB);
+            InitConnector(_localWestConnector, lWSide, signalColorA, signalColorB);
+            InitConnector(_localSouthConnector, lSSide, signalColorA, signalColorB);
 
             GameBoard = gameBoard;
 
