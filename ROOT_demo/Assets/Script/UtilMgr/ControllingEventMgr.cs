@@ -16,14 +16,9 @@ namespace ROOT
     //有一点是，这个类只做事实判断、不去考虑是否合法。只是重视地反馈玩家意图的Action。
     public class ControllingEventMgr : MonoBehaviour
     {
-        /*[NotNull] private static ControllingEventMgr _instance;
-        public static ControllingEventMgr Instance => _instance;*/
-
         [ReadOnly] public int playerId = 0;
         private Player player;
-
-        //public static WorldEvent.ControllingEventHandler ControllingEvent;
-
+        
         private static bool holdForDrag = false;
 
         private static Vector2 MouseScreenPos;
@@ -35,14 +30,7 @@ namespace ROOT
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            /*if (_instance != null && _instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            
-            _instance = this;*/
-            
+
             if (PlayerPrefs.HasKey(StaticPlayerPrefName.MOUSE_DRAG_SENSITIVITY))
             {
                 MouseDragSensitivity = PlayerPrefs.GetInt(StaticPlayerPrefName.MOUSE_DRAG_SENSITIVITY);

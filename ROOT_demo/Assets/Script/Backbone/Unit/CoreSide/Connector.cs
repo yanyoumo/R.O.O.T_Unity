@@ -40,6 +40,16 @@ namespace ROOT
         public Mesh DestStub;
         public CompositeLEDArray LEDArray_Comp;
 
+        public Color Signal_A_Col
+        {
+            set => LEDArray_Comp.Signal_A_Col = value;
+        }
+
+        public Color Signal_B_Col
+        {
+            set => LEDArray_Comp.Signal_B_Col = value;
+        }
+
         public int Signal_A_Val
         {
             set => LEDArray_Comp.Signal_A_Val = value;

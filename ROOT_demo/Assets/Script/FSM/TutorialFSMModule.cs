@@ -169,12 +169,13 @@ namespace ROOT.FSM
             TutorialOnHand = false;
             //LastActionCount = 0;
             CurrentActionIndex = -1;
-            StepForward();
-            DealStepMgr();
             WorldExecutor.InitAndStartShop(LevelAsset);//shop这个东西还是要留给开关。
             LevelAsset.Shop.OpenShop(false, 0);
             MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = false });
             MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = false, SelectAll = true,});
+            //下面两句话要最后做、要不然实质相当于初始化没做完。
+            StepForward();
+            DealStepMgr();
         }
 
         private void ToggleAlternateText(TutorialActionData data)

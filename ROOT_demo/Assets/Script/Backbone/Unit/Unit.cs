@@ -112,6 +112,9 @@ namespace ROOT
         [ReadOnly] [ShowInInspector] public HardwareType UnitHardware { get; private set; }
         public Dictionary<RotationDirection, SideType> UnitSides { get; private set; }
         
+        private Color signalColorA => ColorLibManager.Instance.GetColorBySignalType(Board.PlayingSignalA);
+        private Color signalColorB => ColorLibManager.Instance.GetColorBySignalType(Board.PlayingSignalB);
+        
         private RotationDirection _unitRotation
         {
             get => ApparentRotationDirection;
@@ -262,7 +265,8 @@ namespace ROOT
             connector.gameObject.SetActive(sideType == SideType.Connection);
             connector.Signal_A_Val = 0;
             connector.Signal_B_Val = 0;
-            //TODO 这里把颜色数据注入进去。
+            connector.Signal_A_Col = SignalColorA;
+            connector.Signal_B_Col = SignalColorB;
         }
         private void InitUnitMeshByCore(SignalType signal, HardwareType genre)
         {
@@ -431,9 +435,6 @@ namespace ROOT
             UnitSides.Add(RotationDirection.East, lESide);
 
             _coreMeshRenderer.material = SignalMasterMgr.Instance.GetMatByUnitType(signal, genre);
-
-            var signalColorA = ColorLibManager.Instance.GetColorBySignalType(Board.PlayingSignalA);
-            var signalColorB = ColorLibManager.Instance.GetColorBySignalType(Board.PlayingSignalA);
 
             InitConnector(_localNorthConnector, lNSide, signalColorA, signalColorB);
             InitConnector(_localEastConnector, lESide, signalColorA, signalColorB);

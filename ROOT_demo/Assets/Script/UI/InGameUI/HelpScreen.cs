@@ -5,19 +5,14 @@ using UnityEngine;
 
 namespace ROOT
 {
-    /*public partial class HintMaster : MonoBehaviour
-    {
-        public HelpScreen HelpScreen;
-    }*/
-
     public class HelpScreen : MonoBehaviour
     {
         public Localize HorHintText;
         public Localize BasicControlHint;
 
         private bool _atUpOrDown = false;
-        internal bool ShouldShow = false;
-        internal bool Animating { get; private set; } = false;
+        [HideInInspector]public bool ShouldShow = false;
+        public bool Animating { get; private set; } = false;
         private bool _animatingUpOrDown = true;
 
         private float _upPos = -1.64f;
@@ -37,9 +32,6 @@ namespace ROOT
             
             BasicControlHint.Term =  ScriptTerms.BasicControl_KM;
             HorHintText.Term = ScriptTerms.HForHint_KM;
-            
-            /*BasicControlHint.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.BasicControl_Touch : ScriptTerms.BasicControl_KM;
-            HorHintText.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.HForHint_Touch : ScriptTerms.HForHint_KM;*/
         }
 
         // Update is called once per frame
