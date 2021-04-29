@@ -255,7 +255,7 @@ namespace ROOT
             return SignalDataPackList[signalType];
         }
         
-        private void InitConnector(Connector connector, SideType sideType)
+        private void InitConnector(Connector connector, SideType sideType,Color SignalColorA,Color SignalColorB)
         {
             connector.UseScrVersion = (UnitHardware == HardwareType.Core);
             connector.gameObject.SetActive(sideType == SideType.Connection);
@@ -414,8 +414,7 @@ namespace ROOT
         public void InitUnit(SignalType signal, HardwareType genre, SideType[] sides, int tier, Board gameBoard = null, UnitTag unitTag = UnitTag.NoTag)
         {
             Debug.Assert(sides.Length == 4);
-            InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3],
-                tier, gameBoard, unitTag);
+            InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3], tier, gameBoard, unitTag);
         }
         private void InitUnit(SignalType signal, HardwareType genre,
             SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
