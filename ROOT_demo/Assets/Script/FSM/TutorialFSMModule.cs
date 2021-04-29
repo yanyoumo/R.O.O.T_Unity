@@ -174,6 +174,7 @@ namespace ROOT.FSM
             WorldExecutor.InitAndStartShop(LevelAsset);//shop这个东西还是要留给开关。
             LevelAsset.Shop.OpenShop(false, 0);
             MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = false });
+            MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = false, SelectAll = true,});
         }
 
         private void ToggleAlternateText(TutorialActionData data)
