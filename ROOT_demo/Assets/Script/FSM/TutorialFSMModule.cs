@@ -294,6 +294,14 @@ namespace ROOT.FSM
                 owner.LevelAsset.GameBoard.TryDeleteUnitByTags(tutorialActionData.TargetTag);
             }
         }
+
+        private void ToggleTutorialHintPageFunc(TutorialActionData tutorialActionData)
+        {
+            MessageDispatcher.SendMessage(new HintPageChangedData
+            {
+                Toggle = tutorialActionData.Set, TutorialOrGameplay = true, PageNum = tutorialActionData.Numpage
+            });
+        }
         
         public TutorialFSMModule(FSMLevelLogic _fsm)
         {
@@ -319,6 +327,7 @@ namespace ROOT.FSM
                 {HighLightGrid, HighLightGridFunc},
                 {ToggleGameplayUI, ToggleGameplayUIFunc},
                 {DeleteUnit, DeleteUnitFunc},
+                {ToggleTutorialHintPage, ToggleTutorialHintPageFunc},
             };
         }
 

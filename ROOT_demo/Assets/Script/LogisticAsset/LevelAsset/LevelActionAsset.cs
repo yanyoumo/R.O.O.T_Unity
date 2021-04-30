@@ -26,9 +26,9 @@ namespace ROOT.SetupAsset
         [VerticalGroup("Split/Right")] [LabelText("Unit could cost")]
         public bool UnitCost = true;
 
-        [Space] [EnumToggleButtons] public LevelType levelType;
+        [Space] public LevelType levelType;
 
-        [Header("Career")] [ShowIf("levelType", LevelType.Career)]
+        [Header("Detail")]
         public AdditionalGameSetup AdditionalGameSetup;
 
         [ShowIf("levelType", LevelType.Career)]
@@ -43,7 +43,6 @@ namespace ROOT.SetupAsset
         [ShowIf("levelType", LevelType.Career)] [ShowIf("HasBossRound")] [OnValueChanged("BossTypeChanged")]
         public BossStageType BossStage;
 
-        [ShowIf("levelType", LevelType.Career)]
         public List<RoundData> RoundLib;
 
         [Header("Tutorial")]
@@ -55,6 +54,14 @@ namespace ROOT.SetupAsset
         [Button("Reorder Tutorial Actions")]
         public void ReorderTutorialActions() => Actions = Actions.OrderBy(GetOrderingKeyOfTutorialAction).ToArray();
 
+        [ShowIf("levelType", LevelType.Tutorial)]
+        [Button("Shrink Tutorial Actions")]
+        public void ShrinkTutorialActions() => throw new NotImplementedException();//TODO
+        
+        [ShowIf("levelType", LevelType.Tutorial)]
+        [Button("Insert Tutorial Action")]
+        public void InsertTutorialActions() => throw new NotImplementedException();//TODO
+        
         private int GetOrderingKeyOfTutorialAction(TutorialActionData data)
         {
             return data.ActionIdx * 10 + data.ActionSubIdx;

@@ -104,13 +104,19 @@ namespace ROOT.SetupAsset
         [ShowIf("ActionType", TutorialActionType.ToggleFSMCoreFeat)]
         public FSMFeatures FSMCoreFeat;
 
+        [VerticalGroup("DetailedData")] 
+        [ShowIf("ActionType", TutorialActionType.ToggleTutorialHintPage)]
+        [ShowIf("Set")]
+        public int Numpage;
+        
         bool ShowSet()
         {
             var IsToggleFSMCoreFeat = ActionType == TutorialActionType.ToggleFSMCoreFeat;
             var IsToggleGameplayUI = ActionType == TutorialActionType.ToggleGameplayUI;
             var IsSetUnitStationary = ActionType == TutorialActionType.SetUnitStationary;
             var HighLightGrid = ActionType == TutorialActionType.HighLightGrid;
-            return IsToggleFSMCoreFeat || IsToggleGameplayUI || IsSetUnitStationary || HighLightGrid;
+            var ToggleTutorialHintPage = ActionType == TutorialActionType.ToggleTutorialHintPage;
+            return IsToggleFSMCoreFeat || IsToggleGameplayUI || IsSetUnitStationary || HighLightGrid || ToggleTutorialHintPage;
         }
 
         bool ShowUnitTag()

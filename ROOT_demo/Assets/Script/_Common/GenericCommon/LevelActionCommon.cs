@@ -30,6 +30,7 @@ namespace ROOT
         HighLightGrid = 17,
         ToggleGameplayUI = 18,
         DeleteUnit = 19,
+        ToggleTutorialHintPage = 20,
     }
 
     public enum BossStageType
