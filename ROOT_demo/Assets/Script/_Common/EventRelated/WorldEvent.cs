@@ -18,6 +18,9 @@ namespace ROOT
         public static string ApparentStepResetedEvent="ApparentStepResetedEvent";
         public static string InGameOverlayToggleEvent = "InGameOverlayToggleEvent";
         public static string ToggleGamePlayUIEvent = "ToggleGamePlayUIEvent";
+        public static string ToggleHintUIUpEvent = "ToggleHintUIUpEvent";
+        public static string ToggleHintUIDownEvent = "ToggleHintUIDownEvent";
+        public static string HintPageChangedEvent = "HintPageChangedEvent";
 
         public static string BoardShouldUpdateEvent = "BoardShouldUpdateEvent";
         public static string BoardUpdatedEvent = "BoardUpdatedEvent";

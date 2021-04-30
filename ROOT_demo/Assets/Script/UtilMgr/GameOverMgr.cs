@@ -48,7 +48,7 @@ namespace ROOT
         {
             BackButton.onClick.AddListener(Back);
             //这里控制游戏结束部分的代码。
-            if (_lastGameAssets.Owner.IsTutorialLevel)
+            if (_lastGameAssets.Owner.UseTutorialVer)
             {
                 bool tutorialCompleted = _lastGameAssets.TutorialCompleted.Value;
                 EndingTitleLocalize.Term = ScriptTerms.TutorialSectionOver;

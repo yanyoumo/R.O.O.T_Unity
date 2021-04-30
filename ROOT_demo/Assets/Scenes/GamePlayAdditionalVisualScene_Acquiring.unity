@@ -167,6 +167,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -606,6 +607,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AcquiringCostChart
+      objectReference: {fileID: 0}
+    - target: {fileID: 1813293451839880238, guid: 1e2745ed757424c9c9e06881c3702c29,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e2745ed757424c9c9e06881c3702c29, type: 3}

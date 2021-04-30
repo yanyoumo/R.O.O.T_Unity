@@ -439,7 +439,7 @@ MonoBehaviour:
     HighLightingPos: {x: 0, y: 0}
     HighLightingScale: {x: 0, y: 0}
     AllClear: 0
-    UITag: 0
+    UITag: -1
     TimeLineStatus: 0
     HighLightType: 0
     poses: []
@@ -493,7 +493,7 @@ MonoBehaviour:
     HighLightingPos: {x: 0, y: 0}
     HighLightingScale: {x: 0, y: 0}
     AllClear: 0
-    UITag: 0
+    UITag: -1
     TimeLineStatus: 0
     HighLightType: 0
     poses: []
@@ -844,7 +844,7 @@ MonoBehaviour:
     HighLightingPos: {x: 0, y: 0}
     HighLightingScale: {x: 0, y: 0}
     AllClear: 0
-    UITag: 0
+    UITag: -1
     TimeLineStatus: 0
     HighLightType: 0
     poses: []

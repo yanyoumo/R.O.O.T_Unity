@@ -48,10 +48,18 @@ namespace ROOT.Message
         public bool CustomBool = false;
         public Vector2 pos = Vector2.zero;
         public Vector2 scale = Vector2.zero;
-        public UITag uiTag = UITag.Currency;
+        public UITag uiTag = UITag.Currency_Career;
         public override string Type => WorldEvent.HighLightingUIChangedEvent;
     }
 
+    public class HintPageChangedData : RootMessageBase
+    {
+        public bool TutorialOrGameplay = true;
+        public bool Toggle = false;
+        public int PageNum = 0;
+        public override string Type => WorldEvent.HintPageChangedEvent;
+    }
+    
     namespace Inquiry
     {
         public class BalancingSignalSetupInquiry : RootMessageBase

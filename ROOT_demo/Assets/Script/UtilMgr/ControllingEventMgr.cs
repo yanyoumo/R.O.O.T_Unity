@@ -60,12 +60,14 @@ namespace ROOT
 
             player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HoldForDrag);
             player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Button.HoldForDrag);
-
+            
+            player.AddInputEventDelegate(OnInputHintUp, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintControl);
+            player.AddInputEventDelegate(OnInputHintDown, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Button.HintControl);
+            
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.TelemetryPause);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.RotateUnit);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintHDD);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintNetwork);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintControl);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CycleNext);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.InGameOverLayToggle);
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Confirm0);
@@ -119,6 +121,31 @@ namespace ROOT
             MessageDispatcher.SendMessage(actionPack);
         }
 
+        private void OnInputHintUp(InputActionEventData obj)
+        {
+            var actionPack = new ActionPack
+            {
+                ActionID = Button.HintControl,
+                eventType = obj.eventType,
+                HoldForHint = true,
+                Sender = this,
+            };
+            MessageDispatcher.SendMessage(actionPack);
+        }
+        
+        private void OnInputHintDown(InputActionEventData obj)
+        {
+            var actionPack = new ActionPack
+            {
+                ActionID = Button.HintControl,
+                eventType = obj.eventType,
+                HoldForHint = false,
+                Sender = this,
+            };
+            MessageDispatcher.SendMessage(actionPack);
+        }
+
+        
         private void OnInputUpdateFunc(InputActionEventData obj)
         {
             var actionPack = new ActionPack

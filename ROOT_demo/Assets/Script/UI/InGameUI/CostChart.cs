@@ -9,70 +9,9 @@ using static ROOT.WorldEvent;
 
 namespace ROOT.UI
 {
-    public abstract class HideableUI : MonoBehaviour
-    {
-        protected abstract UITag UITag { get; }
-
-        private void HidingEventHandler(IMessage rMessage)
-        {
-            if (rMessage is ToggleGameplayUIData info)
-            {
-                if (info.Set)
-                {
-                    if (UITag==info.UITag)
-                    {
-                        gameObject.SetActive(true);
-                    }
-                }
-                else
-                {
-                    if (info.SelectAll || UITag == info.UITag)
-                    {
-                        gameObject.SetActive(false);
-                    }
-                }
-            }
-        }
-        
-        protected void Awake()
-        {
-            MessageDispatcher.AddListener(ToggleGamePlayUIEvent,HidingEventHandler);
-        }
-
-        protected void OnDestroy()
-        {
-            MessageDispatcher.RemoveListener(ToggleGamePlayUIEvent,HidingEventHandler);
-        }
-    }
-    
-    public abstract class RoundRelatedUIBase : HideableUI
-    {
-        protected StageType StageType = StageType.Shop;
-        
-        protected virtual void RoundTypeChangedHandler(IMessage rmessage)
-        {
-            if (rmessage is TimingEventInfo info)
-            {
-                StageType = info.CurrentStageType;
-            }
-        }
-        
-        protected virtual void Awake()
-        {
-            base.Awake();
-            MessageDispatcher.AddListener(InGameStageChangedEvent, RoundTypeChangedHandler);
-        }
-
-        protected virtual void OnDestroy()
-        {
-            MessageDispatcher.RemoveListener(InGameStageChangedEvent, RoundTypeChangedHandler);
-            base.OnDestroy();
-        }
-    }
-
     public class CostChart : RoundRelatedUIBase
     {
-        protected override UITag UITag => UITag.Currency;
+        protected override UITag UITag => UITag.Currency_Career;
 
         public TextMeshPro Currency;
         public TextMeshPro Incomes;

@@ -26,41 +26,71 @@ namespace ROOT
         [HideInInspector] public bool ReadyToGo = false;
         [HideInInspector] public bool ReferenceOk = false;
         [HideInInspector] public bool PendingCleanUp;
-        public bool IsTutorialLevel => UseTutorialVer;
         public bool UseTutorialVer = false;
         protected bool MovedTile;
 
-        //public abstract bool IsTutorial { get; }
         public abstract bool CouldHandleSkill { get; }
         public abstract bool CouldHandleBoss { get; }
         public abstract bool CouldHandleShop { get; }
         public abstract BossStageType HandleBossType { get; }
 
-        //这个有点儿怪，但是Shop逻辑是直接放在和核心FSM里面一体的。
-        protected bool HandlingCurrency => !UseTutorialVer || FeatureManager.GetExternalToggleVal(FSMFeatures.Currency);
-        protected bool HandlingShop => !UseTutorialVer || FeatureManager.GetExternalToggleVal(FSMFeatures.Shop);
-
         public abstract int LEVEL_ART_SCENE_ID { get; }
-        [HideInInspector] public readonly int LEVEL_TUTORIAL_SCENE_ID = StaticName.SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL;
-        private bool movedCursor = false;
+        protected bool movedCursor = false;
 
         protected internal GameAssets LevelAsset;
         private Cursor Cursor => LevelAsset.Cursor;
         internal ControllingPack _ctrlPack;
         protected ControllingPack CtrlPack => _ctrlPack;
-
-        private float AnimationTimerOrigin = 0.0f; //都是秒
+        protected TutorialFSMModule TutorialModule;
+        public FSMFeatureManager FeatureManager;
+        
+        protected float AnimationTimerOrigin = 0.0f; //都是秒
 
         public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? StaticNumericData.AutoAnimationDuration : StaticNumericData.DefaultAnimationDuration;
         
+        #region FSM参数
 
+        protected RootFSM _mainFSM;
+        protected ControlActionDriver _actionDriver;
+        protected abstract FSMActions fsmActions { get; }
+        protected abstract FSMTransitions RootFSMTransitions { get; }
+
+        protected virtual Dictionary<BreakingCommand, Action> RootFSMBreakings => new Dictionary<BreakingCommand, Action>();
+
+        protected float TypeASignalScore = 0;
+        protected float TypeBSignalScore = 0;
+        protected int TypeASignalCount = 0;
+        protected int TypeBSignalCount = 0;
+
+        #endregion
+        
         #region 类属性
 
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
 
         private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in movedCursor);
 
-        private bool ShouldStartAnimate => ShouldCycle;
+        private bool ShouldCycleFunc(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
+        {
+            var shouldCycleTMP = false;
+            var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
+            if (StartGameMgr.UseTouchScreen)
+            {
+                shouldCycleTMP = movedTile | hasCycleNext;
+            }
+            else if (StartGameMgr.UseMouse)
+            {
+                shouldCycleTMP = ((movedTile | movedCursor)) | hasCycleNext;
+            }
+            else
+            {
+                shouldCycleTMP = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
+            }
+
+            return shouldCycleTMP;
+        }
+
+        protected bool ShouldStartAnimate => ShouldCycle;
         protected virtual bool IsForwardCycle => MovedTile;
         protected abstract float LevelProgress { get; }
 
@@ -98,75 +128,7 @@ namespace ROOT
             SendHintData(HintEventType.SetTutorialTextShow, false);
             PopulateArtLevelReference();
         }
-
-
-        #endregion
-
-        #region FSM参数
-
-        protected RootFSM _mainFSM;
-        protected ControlActionDriver _actionDriver;
-        protected abstract FSMActions fsmActions { get; }
-        protected abstract FSMTransitions RootFSMTransitions { get; }
-
-        protected virtual Dictionary<BreakingCommand, Action> RootFSMBreakings =>
-            new Dictionary<BreakingCommand, Action>();
-
-        protected float TypeASignalScore = 0;
-        protected float TypeBSignalScore = 0;
-        protected int TypeASignalCount = 0;
-        protected int TypeBSignalCount = 0;
-
-        #endregion
-
-        #region TransitionReq
-
-        protected bool CheckInited() => (ReadyToGo) && (!PendingCleanUp);
-        protected bool CheckFCycle() => IsForwardCycle;
-        protected bool CheckCtrlPackAny() => CtrlPack.AnyFlag();
-        protected bool CheckStartAnimate() => ShouldStartAnimate;
-        protected bool CheckLoopAnimate() => Animating;
-        protected bool CheckNotAnimating() => !Animating;
-
-        protected void TriggerAnimation()
-        {
-            _mainFSM.currentStatus = RootFSMStatus.Animate;
-            Animating = true;
-            //这里的流程和多态机还不是特别兼容，差不多了还是要整理一下。
-            //RISK Skill那个状态并不是FF技能好使的原因；是因为那个时候，关了输入，但是也跑了对应事件长度的动画。
-            //FF前进N个时刻，就跑N个空主动画阻塞；只是恰好主动画时长和时间轴动画时长匹配；
-            //就造成了时间轴动画“匹配阻塞”的“假象”。
-            //在FSM流程中，不去跑错误的空动画了；就匹配不上了。
-            //（也不是说时序的问题；只是Animating的计算逻辑原本计算了AutoDrive，之前为了简化删了；按照原始的逻辑补回来就好了）
-            //上面是个治标不治本的方法，感觉还是有比“空动画”的“意外”阻塞更加高明的算法。
-            //SOLVED-还是先把“空动画”这个设计弄回来了；先从新整理一下再弄。
-            AnimationTimerOrigin = Time.timeSinceLevelLoad;
-            LevelAsset.MovedTileAni = MovedTile;
-            LevelAsset.MovedCursorAni = movedCursor;
-            animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
-        }
-
-        private bool ShouldCycleFunc(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile,
-            in bool movedCursor)
-        {
-            var shouldCycleTMP = false;
-            var hasCycleNext = ctrlPack.HasFlag(ControllingCommand.CycleNext);
-            if (StartGameMgr.UseTouchScreen)
-            {
-                shouldCycleTMP = movedTile | hasCycleNext;
-            }
-            else if (StartGameMgr.UseMouse)
-            {
-                shouldCycleTMP = ((movedTile | movedCursor)) | hasCycleNext;
-            }
-            else
-            {
-                shouldCycleTMP = (pressedAny & (movedTile | movedCursor)) | hasCycleNext;
-            }
-
-            return shouldCycleTMP;
-        }
-
+        
         #endregion
 
         #region Init
@@ -197,7 +159,7 @@ namespace ROOT
             }
         }
 
-        private Coroutine animate_Co;
+        protected Coroutine animate_Co;
 
         private void AnimatingUpdate(MoveableBase moveableBase)
         {
@@ -216,7 +178,7 @@ namespace ROOT
             moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
         }
 
-        private IEnumerator Animate()
+        protected IEnumerator Animate()
         {
             while (AnimationLerper < 1.0f)
             {
@@ -282,141 +244,11 @@ namespace ROOT
 
         #endregion
 
-        #region Status
-
-        protected void PreInit()
-        {
-            //NOP
-        }
-
-        protected void MajorUpkeepAction()
-        {
-            _ctrlPack = _actionDriver.CtrlQueueHeader;
-            UpdateBoardData_Stepped(ref LevelAsset); //RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
-            AdditionalMajorUpkeep();
-            //WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
-        }
-
-        //现在在MinorUpkeep流程中、会将队列的break命令一口气全处理完。
-        protected void MinorUpKeepAction()
-        {
-            AdditionalMinorUpkeep();
-            while (_actionDriver.PendingRequestedBreak)
-            {
-                //这个东西也要改成可配置的。 DONE
-                _mainFSM.Breaking(_actionDriver.RequestedBreakType);
-            }
-
-            if (CheckGameOver) GameEnding();
-        }
-
-        protected void SendCurrencyMessage()
-        {
-            var message = new CurrencyUpdatedInfo()
-            {
-                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
-                TotalIncomesVal = Mathf.RoundToInt(LevelAsset.DeltaCurrency),
-                BaseIncomesVal = Mathf.RoundToInt(LevelAsset.BaseDeltaCurrency),
-                BonusIncomesVal = Mathf.RoundToInt(LevelAsset.BonusDeltaCurrency),
-            };
-            MessageDispatcher.SendMessage(message);
-        }
-
-        //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
-        protected void ForwardCycle()
-        {
-            WorldCycler.StepUp();
-            if (LevelAsset.TimeLine != null)
-            {
-                LevelAsset.TimeLine.Step();
-            }
-
-            if (HandlingCurrency)
-            {
-                LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
-                SendCurrencyMessage();
-            }
-        }
-
-        protected void CleanUp()
-        {
-            MovedTile = false;
-            movedCursor = false;
-            animate_Co = null;
-            LevelAsset.BoughtOnce = false;
-            LevelAsset.AnimationPendingObj = new List<MoveableBase>();
-            LevelAsset.LevelProgress = LevelProgress;
-        }
-
-        protected void AnimateAction()
-        {
-            //目前这里基本空的，到时候可能把Animate的CoRoutine里面的东西弄出来。
-            Debug.Assert(animate_Co != null);
-            UpdateBoardData_Stepped(ref LevelAsset);
-        }
-
-        protected void ReactIO()
-        {
-            //这整个React to IO框架有可能都要模块化。
-            WorldExecutor.UpdateCursor_Unit(ref LevelAsset, in _ctrlPack, out MovedTile, out movedCursor);
-            WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack);
-            LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
-            MovedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
-            if (HandlingShop)
-            {
-                MovedTile |= WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
-            }
-
-            AdditionalReactIO();
-        }
-
-        #endregion
-        
-        protected abstract void GameEnding();
-
         protected abstract bool NormalCheckGameOver { get; }
 
-        private bool CheckGameOver => UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver;
+        protected bool CheckGameOver => UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver;
 
-        private void UpdateBoardData_Instantly()
-        {
-            TypeASignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(
-                LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, LevelAsset.GameBoard,
-                out var hardwareACount, out TypeASignalCount);
-            TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(
-                LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, LevelAsset.GameBoard,
-                out var hardwareBCount, out TypeBSignalCount);
-            if (LevelAsset.ActionAsset.AdditionalGameSetup.IsPlayingCertainSignal(SignalType.Thermo))
-            {
-                var thermoFieldUnits = LevelAsset.GameBoard.FindUnitWithCoreType(SignalType.Thermo, HardwareType.Field);
-                var res = thermoFieldUnits.Where(u => u.SignalCore.IsUnitActive).Select(u => u.CurrentBoardPosition);
-                LevelAsset.ThermoZone = res.Where(LevelAsset.GameBoard.CheckBoardPosValid).Distinct().ToList();
-            }
-        }
-
-        protected virtual void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)
-        {
-            //BaseVerison Do-nothing.
-        }
-
-
-        //这个函数只有在Board被更新的时候才会走、但是里面有和轮次相关的数据。
-        //现在的解决方法是变轮次的的时候，发一个"Board已更新"的事件.
-        protected virtual void BoardUpdatedHandler(IMessage rMessage)
-        {
-            UpdateBoardData_Instantly();
-            var signalInfo = new BoardSignalUpdatedInfo
-            {
-                SignalData = new BoardSignalUpdatedData()
-                {
-                    CrtTypeASignal = TypeASignalCount,
-                    CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = LevelAsset.GameBoard.GetTotalTierCountByType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
-                    TypeBTier = LevelAsset.GameBoard.GetTotalTierCountByType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
-                },
-            };
-            MessageDispatcher.SendMessage(signalInfo);
-        }
+        protected abstract void BoardUpdatedHandler(IMessage rMessage);
 
         private void BoardGridThermoZoneInquiryHandler(IMessage rMessage)
         {
@@ -443,10 +275,6 @@ namespace ROOT
         }
 
         protected abstract void createDriver();
-
-        protected TutorialFSMModule TutorialModule;
-
-        public FSMFeatureManager FeatureManager;
 
         protected virtual void FeaturesChangedHandler()
         {
@@ -490,6 +318,17 @@ namespace ROOT
 
         #region static Func
 
+        protected static void SendCurrencyMessage(GameAssets LevelAsset)
+        {
+            var message = new CurrencyUpdatedInfo()
+            {
+                CurrencyVal = Mathf.RoundToInt(LevelAsset.GameCurrencyMgr.Currency),
+                TotalIncomesVal = Mathf.RoundToInt(LevelAsset.DeltaCurrency),
+                BaseIncomesVal = Mathf.RoundToInt(LevelAsset.BaseDeltaCurrency),
+                BonusIncomesVal = Mathf.RoundToInt(LevelAsset.BonusDeltaCurrency),
+            };
+            MessageDispatcher.SendMessage(message);
+        }
         public static void CreateUnitOnBoard(TutorialActionData data, GameAssets LevelAsset)
         {
             var pos = data.Pos;
@@ -497,7 +336,6 @@ namespace ROOT
             LevelAsset.GameBoard.CreateUnit(pos, data.Core, data.HardwareType, data.Sides, data.Tier, data.IsStationary, data.Tag);
             LevelAsset.GameBoard.UpdateBoardUnit();
         }
-
         public static void ShowTextFunc(bool val) => SendHintData(HintEventType.SetTutorialTextShow, val);
         public static void ShowCheckListFunc(bool val) => SendHintData(HintEventType.SetGoalCheckListShow, val);
 

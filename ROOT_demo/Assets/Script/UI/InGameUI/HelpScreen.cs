@@ -1,18 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Linq;
+using com.ootii.Messages;
 using I2.Loc;
+using ROOT.Message;
 using UnityEngine;
 
 namespace ROOT
 {
     public class HelpScreen : MonoBehaviour
     {
+        public Transform GameplayPageRoot;
+        public Transform TutorialPageRoot;
+        
+        private int _gameplayPageCount => _gameplayPages.Length;
+        private int _tutorialPageCount => _tutorialPages.Length;
+        
         public Localize HorHintText;
-        public Localize BasicControlHint;
-
-        private bool _atUpOrDown = false;
         [HideInInspector]public bool ShouldShow = false;
         public bool Animating { get; private set; } = false;
+        public AnimationCurve Curve;
+
+        private Vector2 _posXY;
+        private float TimeLerper => (Time.time - _slideTimer) / _slideDuration;
         private bool _animatingUpOrDown = true;
 
         private float _upPos = -1.64f;
@@ -20,18 +28,60 @@ namespace ROOT
 
         private float _slideTimer = 0.0f;
         private float _slideDuration = 0.3f;
-        private float TimeLerper => (Time.time - _slideTimer) / _slideDuration;
 
-        public AnimationCurve Curve;
+        private bool _atUpOrDown = false;
+        void ToggleHintUIUpEventHandler(IMessage rMessage)
+        {
+            ShouldShow = true;
+        }
+        
+        void ToggleHintUIDownEventHandler(IMessage rMessage)
+        {
+            ShouldShow = false;
+        }
+        
+        void HintPageChangedEventHandler(IMessage rMessage)
+        {
+            if (rMessage is HintPageChangedData data)
+            {
+                var targetingPages = data.TutorialOrGameplay ? _tutorialPages : _gameplayPages;
+                Debug.Log("targetingPages.Length=" + targetingPages.Length);
+                if (data.Toggle && (data.PageNum < 0 || data.PageNum >= targetingPages.Length))
+                {
+                    Debug.LogWarning("Requesting page:"+data.PageNum+" for "+ (data.TutorialOrGameplay ? "Tutorial" : "Gameplay")+" is not valid, request ignored!");
+                    return;
+                }
+                for (var i = 0; i < targetingPages.Length; i++)
+                {
+                    targetingPages[i].gameObject.SetActive(data.Toggle && (i == data.PageNum));
+                }
+            }
+        }
 
-        private Vector2 _posXY;
+        //这两个不能变为属性、因为如果实时拿的话、Inactive的Page会拿不到、就只能在一开始全齐的时候拿一下然后存起来。
+        private Transform[] _gameplayPages;
+        private Transform[] _tutorialPages;
 
         void Awake()
         {
             _posXY = new Vector2(transform.position.x, transform.position.y);
-            
-            BasicControlHint.Term =  ScriptTerms.BasicControl_KM;
             HorHintText.Term = ScriptTerms.HForHint_KM;
+
+            _gameplayPages = GameplayPageRoot.GetComponentsInChildren<Transform>().Where(t => t.parent == GameplayPageRoot).ToArray();
+            _tutorialPages = TutorialPageRoot.GetComponentsInChildren<Transform>().Where(t => t.parent == TutorialPageRoot).ToArray();
+
+            MessageDispatcher.AddListener(WorldEvent.ToggleHintUIUpEvent, ToggleHintUIUpEventHandler);
+            MessageDispatcher.AddListener(WorldEvent.ToggleHintUIDownEvent, ToggleHintUIDownEventHandler);
+            MessageDispatcher.AddListener(WorldEvent.HintPageChangedEvent, HintPageChangedEventHandler);
+            Debug.Log("_gameplayPageCount=" + _gameplayPageCount);
+            Debug.Log("_tutorialPageCount=" + _tutorialPageCount);
+        }
+
+        private void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.HintPageChangedEvent,HintPageChangedEventHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.ToggleHintUIDownEvent,ToggleHintUIDownEventHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.ToggleHintUIUpEvent,ToggleHintUIUpEventHandler);
         }
 
         // Update is called once per frame
@@ -57,7 +107,6 @@ namespace ROOT
                         Animating = true;
                         _slideTimer = Time.time;
                         HorHintText.Term = ScriptTerms.HForHint_KM;
-                        //HorHintText.Term = StartGameMgr.UseTouchScreen ? ScriptTerms.HForHint_Touch : ScriptTerms.HForHint_KM;
                     }
                 }
             }

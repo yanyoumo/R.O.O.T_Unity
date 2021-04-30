@@ -6,6 +6,7 @@ using I2.Loc;
 using ROOT.Common;
 using ROOT.Consts;
 using ROOT.Message;
+using ROOT.Message.Inquiry;
 using UnityEngine;
 
 namespace ROOT
@@ -123,6 +124,7 @@ namespace ROOT
                     LevelAsset.TimeLine.InitWithAssets(RoundLibDriver);
                 }
             }
+            MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = false, SelectAll = false, UITag = UITag.Currency_BareBone});
             if (UseTutorialVer)
             {
                 FeatureManager.RegistFSMFeature(FSMFeatures.Round,new []{FSMFeatures.Shop,FSMFeatures.Currency}, false);
@@ -255,7 +257,6 @@ namespace ROOT
             }
         }
 
-        protected int GetBaseInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore));
         protected virtual int GetBonusInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore) * (LevelAsset.CurrencyRebate - 1.0f));//BUG 这个数据有问题？没有实质的加上去？
         
         protected override void BoardUpdatedHandler(IMessage rMessage)
@@ -271,7 +272,7 @@ namespace ROOT
             //这个DeltaCurrency只有在Stepped的时刻才会计算到Currency里面。
             LevelAsset.BaseDeltaCurrency = BoardCouldIOCurrency ? (RoundLibDriver.IsRequireRound ? GetBaseInCome() : 0) - Cost : 0;
             LevelAsset.BonusDeltaCurrency = BoardCouldIOCurrency && RoundLibDriver.IsRequireRound ? GetBonusInCome() : 0;
-            SendCurrencyMessage();
+            SendCurrencyMessage(LevelAsset);
         }
 
         private void ReverseCycle()

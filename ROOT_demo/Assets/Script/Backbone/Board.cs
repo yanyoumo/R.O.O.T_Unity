@@ -49,7 +49,7 @@ namespace ROOT
                 {
                     connectionData.HasConnector = true;
                     var otherUnitPos = GetNeigbourCoord(currentSideDirection);
-                    var otherUnit = GameBoard.FindUnitByPos(otherUnitPos);
+                    var otherUnit = GameBoard.FindUnitByPos(otherUnitPos);//这个还是要处理、但是千万要注意；这里的代码太核心了。
                     if (otherUnit != null)
                     {
                         connectionData.OtherUnit = otherUnit;

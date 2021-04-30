@@ -8,6 +8,7 @@ using UnityEngine;
 using static RewiredConsts.Action.Button;
 using static RewiredConsts.Action.Composite;
 using static RewiredConsts.Action.Passthough;
+using static ROOT.WorldEvent;
 
 namespace ROOT
 {
@@ -137,9 +138,15 @@ namespace ROOT
             if (actionPack.IsAction(Confirm0)) CtrlPack.SetFlag(ControllingCommand.Confirm);
             if (actionPack.IsAction(LeftAlt)) CtrlPack.SetFlag(ControllingCommand.Cancel);
 
+            if (actionPack.IsAction(HintControl))
+            {
+                MessageDispatcher.SendMessage(actionPack.HoldForHint ? ToggleHintUIUpEvent : ToggleHintUIDownEvent);
+                return false;
+            }
+            
             if (actionPack.IsAction(InGameOverLayToggle))
             {
-                MessageDispatcher.SendMessage(WorldEvent.InGameOverlayToggleEvent);
+                MessageDispatcher.SendMessage(InGameOverlayToggleEvent);
                 return false;
             }
 
@@ -192,7 +199,7 @@ namespace ROOT
             _mainFsm = fsm;
             _ctrlPackQueue = new Queue<ControllingPack>();
             _breakingCMDQueue = new Queue<BreakingCommand>();
-            MessageDispatcher.AddListener(WorldEvent.ControllingEvent, RespondToControlEvent);
+            MessageDispatcher.AddListener(ControllingEvent, RespondToControlEvent);
         }
 
         private void FilterDir(ActionPack actionPack, out RotationDirection? direction)
@@ -267,7 +274,7 @@ namespace ROOT
 
         public void Unsubscribe()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.ControllingEvent, RespondToControlEvent, true);
+            MessageDispatcher.RemoveListener(ControllingEvent, RespondToControlEvent, true);
         }
     }
 

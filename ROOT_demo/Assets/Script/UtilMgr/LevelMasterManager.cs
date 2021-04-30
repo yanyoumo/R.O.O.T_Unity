@@ -72,7 +72,7 @@ namespace ROOT
             }
             if (_gameLogic.UseTutorialVer)
             {
-                TutorialScene = SceneManager.LoadSceneAsync(_gameLogic.LEVEL_TUTORIAL_SCENE_ID, LoadSceneMode.Additive);
+                TutorialScene = SceneManager.LoadSceneAsync(StaticName.SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL, LoadSceneMode.Additive);
             }
             loadingProgressorCallBack(1.0f, false);
             yield return _gameLogic.UpdateArtLevelReference(baseVisualScene, TutorialScene, addtionalVisualScene); //这里是第二次的LinkLevel。匹配ArtScene里面的引用//和第三次的Init里面的UpdateReference。通过根引用去查找其他引用。

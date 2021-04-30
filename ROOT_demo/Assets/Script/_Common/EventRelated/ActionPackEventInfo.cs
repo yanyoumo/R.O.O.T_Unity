@@ -16,6 +16,7 @@ namespace ROOT
         public Vector2Int OnBoardPos;
         public int FuncID;
         public bool HoldForDrag;
+        public bool HoldForHint;
         public float MouseWheelDelta;
 
         public bool IsAction(int actionID)

@@ -100,7 +100,7 @@ namespace ROOT
         protected override void AdditionalInitLevel()
         {
             base.AdditionalInitLevel();
-            MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = false, SelectAll = false, UITag = UITag.Currency});
+            MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = false, SelectAll = false, UITag = UITag.Currency_Career});
         }
 
         protected override void OnDestroy()
