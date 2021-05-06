@@ -331,13 +331,21 @@ namespace ROOT.FSM
             };
         }
 
-        internal void TutorialMajorUpkeep()
+        internal void TutorialMajorUpkeep(Func<ControllingPack> CtrlPack)
         {
             TutorialInit();
             if (TutorialOnHand)
             {
                 CurrentHandOnCheckMet = PendingHandOnChecking(owner, LevelAsset.GameBoard);//这边就就地测一下
                 MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet });
+            }
+            else
+            {
+                if (Input.anyKeyDown && !CtrlPack().HasFlag(ControllingCommand.Confirm))
+                {
+                    //现在这个执行还稍稍有些半吊子，还是需要优化一下。
+                    MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ControllerBlockedAlert});
+                }
             }
         }
 

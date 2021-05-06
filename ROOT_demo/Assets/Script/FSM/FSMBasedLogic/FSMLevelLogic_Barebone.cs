@@ -134,6 +134,11 @@ namespace ROOT
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
             LevelAsset.GameBoard.UpdateBoardAnimation();
 
+            if (!UseTutorialVer)
+            {
+                MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = true});
+            }
+
             AdditionalInitLevel();
             ReadyToGo = true;
 

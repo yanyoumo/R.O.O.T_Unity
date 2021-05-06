@@ -1,5 +1,6 @@
 using System;
 using com.ootii.Messages;
+using DG.Tweening;
 using Doozy.Engine.UI;
 using ROOT.Message;
 using TMPro;
@@ -57,7 +58,18 @@ namespace ROOT.UI
                 }
             }
         }
-
+        
+        Vector3 handsOffOldPos;
+        private void OnCompleteTest()
+        {
+            TutorialHandOff.transform.localPosition = handsOffOldPos;
+        }
+        private void BlinkControllerBlockedAlert()
+        {
+            TutorialHandOff.transform.DOShakePosition(0.3f, 12.5f, 15).OnComplete(OnCompleteTest);
+            
+        }
+        
         private void HintEventHandler(IMessage rMessge)
         {
             if (rMessge is HintEventInfo info)
@@ -101,6 +113,9 @@ namespace ROOT.UI
                     case HintEventType.ToggleAlternateTextPos:
                         _setUsingAlternateFrame = !_usingAlternateFrame;
                         break;
+                    case HintEventType.ControllerBlockedAlert:
+                        BlinkControllerBlockedAlert();
+                        break;
                     default:
                         throw new NotImplementedException();
                 }
@@ -124,13 +139,23 @@ namespace ROOT.UI
 
         private void Awake()
         {
-            MessageDispatcher.AddListener(WorldEvent.HintRelatedEvent,HintEventHandler);
+            MessageDispatcher.AddListener(WorldEvent.HintRelatedEvent, HintEventHandler);
+            DOTween.Init();
             TutorialCheckListCore.SetupSecondaryGoalContent("");
+            handsOffOldPos = TutorialHandOff.transform.localPosition;
+        }
+
+        private void Update()
+        {
+            /*if (Input.GetKeyDown(KeyCode.O))
+            {
+                BlinkControllerBlockedAlert();
+            }*/
         }
 
         private void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.HintRelatedEvent,HintEventHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.HintRelatedEvent, HintEventHandler);
         }
     }
 }

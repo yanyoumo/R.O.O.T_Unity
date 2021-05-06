@@ -227,10 +227,10 @@ namespace ROOT
 
         protected virtual void AdditionalMajorUpkeep()
         {
-            //RISK 这个东西之前没有base链式调用、改了后可能有问题；
+            //这个东西之前没有base链式调用、改了后可能有问题；好像没有
             if (UseTutorialVer)
             {
-                TutorialModule.TutorialMajorUpkeep();
+                TutorialModule.TutorialMajorUpkeep(() => CtrlPack);
             }
         }
 
