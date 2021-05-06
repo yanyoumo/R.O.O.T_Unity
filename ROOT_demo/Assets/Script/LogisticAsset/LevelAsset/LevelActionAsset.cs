@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,58 +12,123 @@ namespace ROOT.SetupAsset
     [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : SerializedScriptableObject
     {
-        [Header("Basic Data")] public string TitleTerm;
+        [Header("Basic Data"),PropertyOrder(-99)] public string TitleTerm;
 
-        [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail")]
+        [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-98)]
         public Sprite Thumbnail;
 
-        [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab")]
+        [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab"),PropertyOrder(-97)]
         public GameObject LevelLogic;
 
-        [Range(0, 100)] public int InitialCurrency = 36;
+        [Range(0, 100),PropertyOrder(-96)] public int InitialCurrency = 36;
 
-        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [LabelText("Shop has cost")]
+        [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [LabelText("Shop has cost")][PropertyOrder(-95)]
         public bool ShopCost = true;
 
-        [VerticalGroup("Split/Right")] [LabelText("Unit could cost")]
+        [VerticalGroup("Split/Right")] [LabelText("Unit could cost")][PropertyOrder(-94)]
         public bool UnitCost = true;
 
-        [Space] public LevelType levelType;
+        [Space][PropertyOrder(0)] public LevelType levelType;
 
-        [Header("Detail")]
+        [Header("Detail")][PropertyOrder(1)]
         public AdditionalGameSetup AdditionalGameSetup;
 
-        [ShowIf("levelType", LevelType.Career)]
+        [ShowIf("levelType", LevelType.Career)][PropertyOrder(2)]
         public UnitGist[] InitalBoard;
 
-        [ShowIf("levelType", LevelType.Career)] [OnValueChanged("HasBossChanged")]
+        [ShowIf("levelType", LevelType.Career)] [OnValueChanged("HasBossChanged")][PropertyOrder(3)]
         public bool HasBossRound;
 
-        [ShowIf("levelType", LevelType.Career)] [HideIf("HasBossRound")]
+        [ShowIf("levelType", LevelType.Career)] [HideIf("HasBossRound")][PropertyOrder(4)]
         public bool Endless;
 
-        [ShowIf("levelType", LevelType.Career)] [ShowIf("HasBossRound")] [OnValueChanged("BossTypeChanged")]
+        [ShowIf("levelType", LevelType.Career)] 
+        [ShowIf("HasBossRound")] 
+        [OnValueChanged("BossTypeChanged")]
+        [PropertyOrder(5)]
         public BossStageType BossStage;
 
+        [PropertyOrder(6)]
         public List<RoundData> RoundLib;
 
+        [ShowInInspector] [ShowIf("HasBossRound")][PropertyOrder(7)]
+        public BossAdditionalSetupAsset BossSetup;
+        
         [Header("Tutorial")]
         [ShowIf("levelType", LevelType.Tutorial)]
         [TableList(DrawScrollView = true, MinScrollViewHeight = 500, MaxScrollViewHeight = 1000)]
+        [PropertyOrder(8)]
         public TutorialActionData[] Actions;
 
         [ShowIf("levelType", LevelType.Tutorial)]
         [Button("Reorder Tutorial Actions")]
+        [PropertyOrder(90)]
         public void ReorderTutorialActions() => Actions = Actions.OrderBy(GetOrderingKeyOfTutorialAction).ToArray();
 
-        [ShowIf("levelType", LevelType.Tutorial)]
-        [Button("Shrink Tutorial Actions")]
-        public void ShrinkTutorialActions() => throw new NotImplementedException();//TODO
-        
-        [ShowIf("levelType", LevelType.Tutorial)]
-        [Button("Insert Tutorial Action")]
-        public void InsertTutorialActions() => throw new NotImplementedException();//TODO
-        
+        [Space]
+        [ShowIf("levelType", LevelType.Tutorial), PropertyOrder(91)]
+        public string CSVFileName;
+
+        [ShowIf("levelType", LevelType.Tutorial), Button("Export Text To CSV")][PropertyOrder(92)]
+        public void ExportTextToCSV()
+        {
+            var sw = new StreamWriter(@"Assets/" + CSVFileName + ".csv", false, Encoding.UTF8);
+            var title = string.Join(",", new[] {"MainIdx", "SubIdx", "Content"});
+            sw.WriteLine(title);
+            var contents = Actions.Where(a => a.ActionType == TutorialActionType.Text).Select(a => new Tuple<int, int, string>(a.ActionIdx, a.ActionSubIdx, a.Text));
+            contents = contents.OrderBy(t => t.Item1 * 100 + t.Item2).ToArray();//RISK 100现在是个magicNumber，假设subindex不超过100。
+            foreach (var content in contents)
+            {
+                var contentStr = string.Join(",", content.Item1, content.Item2, content.Item3);
+                sw.WriteLine(contentStr);
+            }
+            sw.Close();
+        }
+
+        [ShowIf("levelType", LevelType.Tutorial), Button("Try Replace Text From CSV")][PropertyOrder(93)]
+        public void TryReplaceTextFromCSV()
+        {
+            var sw = new StreamReader(@"Assets/" + CSVFileName + ".csv", Encoding.UTF8);
+            sw.ReadLine();//SkipTileLine
+            var contentBuffer = new List<Tuple<int, int, string>>();
+            do
+            {
+                //Debug.Log(sw.ReadLine());
+                var contents = sw.ReadLine().Split(',');
+                Debug.Log(contents[2]);
+                var mainIdx = -1;
+                var subIdx = -1;
+                try
+                {
+                    mainIdx = int.Parse(contents[0]);
+                    subIdx = int.Parse(contents[1]);
+                }
+                catch (Exception)
+                {
+                    Debug.LogWarning("Error when parsing index, Replace abort, please check!!");
+                    sw.Close();
+                    return;
+                }
+                contentBuffer.Add(new Tuple<int, int, string>(mainIdx, subIdx, contents[2]));
+            } while (!sw.EndOfStream);
+            sw.Close();
+
+            var typeValid=contentBuffer.All(t => Actions.Where(a => a.ActionIdx == t.Item1 && a.ActionSubIdx == t.Item2).All(a => a.ActionType == TutorialActionType.Text));
+            if (!typeValid)
+            {
+                Debug.LogWarning("Actions type is not text, Replace abort, please check!!");
+                return;
+            }
+            for (var i = 0; i < Actions.Length; i++)
+            {
+                var li = contentBuffer.Where(t => t.Item1 == Actions[i].ActionIdx && t.Item2 == Actions[i].ActionSubIdx).ToArray();
+                if (li.Length>0)
+                {
+                    Actions[i].Text = li[0].Item3;
+                }
+            }
+        }
+
         private int GetOrderingKeyOfTutorialAction(TutorialActionData data)
         {
             return data.ActionIdx * 10 + data.ActionSubIdx;
@@ -80,9 +147,6 @@ namespace ROOT.SetupAsset
             }
         }
 
-        [ShowInInspector] [ShowIf("HasBossRound")]
-        public BossAdditionalSetupAsset BossSetup;
-        
         private void HasBossChanged()
         {
             if (HasBossRound)

@@ -56,8 +56,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 0
     ActionSubIdx: 1
     ActionType: 0
@@ -76,8 +84,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 0
     ActionSubIdx: 3
     ActionType: 3
@@ -96,8 +112,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 1
     ActionSubIdx: 0
     ActionType: 0
@@ -116,8 +140,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 2
     ActionSubIdx: 1
     ActionType: 0
@@ -136,8 +168,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 2
     ActionSubIdx: 2
     ActionType: 0
@@ -156,8 +196,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 3
     ActionSubIdx: 1
     ActionType: 0
@@ -176,8 +224,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 3
     ActionSubIdx: 2
     ActionType: 2
@@ -196,8 +252,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 4
     ActionSubIdx: 0
     ActionType: 0
@@ -216,8 +280,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 4
     ActionSubIdx: 1
     ActionType: 8
@@ -236,8 +308,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 5
     ActionSubIdx: 0
     ActionType: 3
@@ -256,8 +336,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 5
     ActionSubIdx: 1
     ActionType: 0
@@ -276,8 +364,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 6
     ActionSubIdx: 0
     ActionType: 0
@@ -296,8 +392,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 6
     ActionSubIdx: 1
     ActionType: 1
@@ -316,8 +420,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 6
     ActionSubIdx: 2
     ActionType: 1
@@ -336,8 +448,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 6
     ActionSubIdx: 3
     ActionType: 1
@@ -356,8 +476,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 7
     ActionSubIdx: 0
     ActionType: 0
@@ -376,8 +504,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 8
     ActionSubIdx: 0
     ActionType: 0
@@ -396,8 +532,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 9
     ActionSubIdx: 0
     ActionType: 8
@@ -416,8 +560,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 10
     ActionSubIdx: 0
     ActionType: 3
@@ -436,8 +588,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 10
     ActionSubIdx: 1
     ActionType: 0
@@ -456,8 +616,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 11
     ActionSubIdx: 0
     ActionType: 0
@@ -476,8 +644,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 12
     ActionSubIdx: 0
     ActionType: 0
@@ -496,8 +672,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 13
     ActionSubIdx: 0
     ActionType: 8
@@ -516,8 +700,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 14
     ActionSubIdx: 0
     ActionType: 3
@@ -536,8 +728,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 14
     ActionSubIdx: 1
     ActionType: 0
@@ -556,8 +756,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 15
     ActionSubIdx: 0
     ActionType: 0
@@ -576,8 +784,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 16
     ActionSubIdx: 0
     ActionType: 5
@@ -596,8 +812,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 6
     ActionSubIdx: 4
     ActionType: 0
@@ -616,8 +840,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 2
     ActionSubIdx: 0
     ActionType: 11
@@ -636,8 +868,16 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 3
     ActionSubIdx: 0
     ActionType: 11
@@ -656,8 +896,17 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
     UITag: 0
     TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  CSVFileName: TutorialLevel0_Text
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 0
