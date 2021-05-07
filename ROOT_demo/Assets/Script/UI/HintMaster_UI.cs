@@ -150,14 +150,6 @@ namespace ROOT.UI
             altNextTextOldPos = TutorialNextContent_Alter.transform.localPosition;
         }
 
-        /*private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                BlinkControllerBlockedAlert();
-            }
-        }*/
-
         private void OnDestroy()
         {
             MessageDispatcher.RemoveListener(WorldEvent.HintRelatedEvent, HintEventHandler);

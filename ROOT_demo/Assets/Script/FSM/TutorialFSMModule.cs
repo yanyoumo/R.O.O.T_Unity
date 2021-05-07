@@ -35,6 +35,9 @@ namespace ROOT.FSM
         private bool? PendingEndTutorialData = null;//null不结束、true完成结束、false失败结束。
         //INFO 现在失败还没有需求、有了再补。
 
+        private int handOnTimeOutThreadholdSec = -1;
+        private float handOnTimeOutTimer = 0.0f;
+
         private bool NotEnding => !PendingEndTutorialData.HasValue;
         private bool EndingWSuccess => PendingEndTutorialData.HasValue && PendingEndTutorialData.Value;
         public bool EndingWFailed => PendingEndTutorialData.HasValue && !PendingEndTutorialData.Value;
@@ -123,20 +126,24 @@ namespace ROOT.FSM
             ShowCheckListFunc(true);
             ShowTextFunc(false);
             CurrentHandOnCheckMet = PendingHandOnChecking(owner, LevelAsset.GameBoard);//这边就就地测一下
+            handOnTimeOutThreadholdSec = data.TimeOutSec <= 0 ? 60 : data.TimeOutSec;//RISK
+            handOnTimeOutTimer = 0.0f;
             MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet });
         }
 
         private void UnsetHandOn()
         {
+            handOnTimeOutThreadholdSec = -1;
+            handOnTimeOutTimer = 0.0f;
             TutorialOnHand = false;
             PendingHandOnChecking = (a, b) => false;
-            MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = false });
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
             ShowCheckListFunc(false);
             CurrentHandOnCheckMet = false;
             StepForward();
             DealStepMgr();
         }
-        
+
         private bool CompletedAndRequestedEnd()
         {
             return PendingEndTutorialData.HasValue && PendingEndTutorialData.Value;
@@ -338,6 +345,24 @@ namespace ROOT.FSM
             {
                 CurrentHandOnCheckMet = PendingHandOnChecking(owner, LevelAsset.GameBoard);//这边就就地测一下
                 MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet });
+                if (handOnTimeOutThreadholdSec > 0)
+                {
+                    if (CurrentHandOnCheckMet)
+                    {
+                        handOnTimeOutTimer = 0.0f;
+                    }
+                    else
+                    {
+                        //现在的设计是HandOn之后每X秒后震3Sec
+                        handOnTimeOutTimer += Time.deltaTime;
+                        if (handOnTimeOutTimer >= handOnTimeOutThreadholdSec)
+                        {
+                            handOnTimeOutTimer = 0.0f;
+                            MessageDispatcher.SendMessage(WorldEvent.HelpScreenShouldAlertEvent);
+                            MessageDispatcher.SendMessage(WorldEvent.TutorialMissionShouldAlertEvent);
+                        }
+                    }
+                }
             }
             else
             {

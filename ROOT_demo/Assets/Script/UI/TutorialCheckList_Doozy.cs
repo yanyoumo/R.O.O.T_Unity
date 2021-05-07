@@ -1,3 +1,6 @@
+using System;
+using com.ootii.Messages;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -63,11 +66,30 @@ namespace ROOT.UI
                 CheckCompleted();
             }
         }
+
+        private Vector3 OldMissionPos;
+
+        private void TutorialMissionShouldAlertCompleted()
+        {
+            MainEntryPanel.transform.localPosition = OldMissionPos;
+        }
+        
+        private void TutorialMissionShouldAlertHandler(IMessage rMessage)
+        {
+            MainEntryPanel.transform.DOShakePosition(3f, (Vector3.up + Vector3.left) * 7.5f).OnComplete(TutorialMissionShouldAlertCompleted);
+        }
         
         void Awake()
         {
             PressESCToReturn.gameObject.SetActive(false);
             CheckCompleted();
+            OldMissionPos = MainEntryPanel.transform.localPosition;
+            MessageDispatcher.AddListener(WorldEvent.TutorialMissionShouldAlertEvent,TutorialMissionShouldAlertHandler);
+        }
+
+        private void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.TutorialMissionShouldAlertEvent,TutorialMissionShouldAlertHandler);
         }
 
         public void SetupMainGoalContent(string mainEntryContent)

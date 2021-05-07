@@ -22,6 +22,7 @@ namespace ROOT
         public static string ToggleHintUIDownEvent = "ToggleHintUIDownEvent";
         public static string HintScreenChangedEvent = "HintScreenChangedEvent";
         public static string HelpScreenShouldAlertEvent = "HelpScreenShouldAlertEvent";
+        public static string TutorialMissionShouldAlertEvent = "TutorialMissionShouldAlertEvent";
 
         public static string BoardShouldUpdateEvent = "BoardShouldUpdateEvent";
         public static string BoardUpdatedEvent = "BoardUpdatedEvent";

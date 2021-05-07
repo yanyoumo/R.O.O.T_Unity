@@ -71,12 +71,12 @@ namespace ROOT
         {
             PressHForHintText.transform.localPosition = OldPressHForHintTextPos;
         }
-        
+
         private void HelpScreenShouldAlertHandler(IMessage rMessage)
         {
-            PressHForHintText.transform.DOShakePosition(0.3f).OnComplete(HelpScreenAlertComplete);
+            PressHForHintText.transform.DOShakePosition(3f, (Vector3.up + Vector3.left) * 1.5f).OnComplete(HelpScreenAlertComplete);
         }
-        
+
         void Awake()
         {
             _posXY = new Vector2(transform.position.x, transform.position.y);
