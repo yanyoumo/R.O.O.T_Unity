@@ -57,7 +57,7 @@ namespace ROOT.Message
         public bool TutorialOrGameplay = true;
         public bool Toggle = false;
         public int PageNum = 0;
-        public override string Type => WorldEvent.HintPageChangedEvent;
+        public override string Type => WorldEvent.HintScreenChangedEvent;
     }
     
     namespace Inquiry

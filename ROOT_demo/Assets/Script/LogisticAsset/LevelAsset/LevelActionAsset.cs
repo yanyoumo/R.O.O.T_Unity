@@ -79,7 +79,7 @@ namespace ROOT.SetupAsset
             contents = contents.OrderBy(t => t.Item1 * 100 + t.Item2).ToArray();//RISK 100现在是个magicNumber，假设subindex不超过100。
             foreach (var content in contents)
             {
-                var contentStr = string.Join(",", content.Item1, content.Item2, content.Item3);
+                var contentStr = string.Join(",", content.Item1, content.Item2, "\"" + content.Item3 + "\"");
                 sw.WriteLine(contentStr);
             }
             sw.Close();
@@ -95,7 +95,7 @@ namespace ROOT.SetupAsset
             {
                 //Debug.Log(sw.ReadLine());
                 var contents = sw.ReadLine().Split(',');
-                Debug.Log(contents[2]);
+                //Debug.Log(contents[2]);
                 var mainIdx = -1;
                 var subIdx = -1;
                 try
@@ -124,7 +124,8 @@ namespace ROOT.SetupAsset
                 var li = contentBuffer.Where(t => t.Item1 == Actions[i].ActionIdx && t.Item2 == Actions[i].ActionSubIdx).ToArray();
                 if (li.Length>0)
                 {
-                    Actions[i].Text = li[0].Item3;
+                    var rawStr = li[0].Item3;
+                    Actions[i].Text =rawStr.Substring(1, rawStr.Length - 2);
                 }
             }
         }

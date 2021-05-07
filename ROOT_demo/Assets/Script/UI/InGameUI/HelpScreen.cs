@@ -1,13 +1,16 @@
 ﻿using System.Linq;
 using com.ootii.Messages;
+using DG.Tweening;
 using I2.Loc;
 using ROOT.Message;
+using TMPro;
 using UnityEngine;
 
 namespace ROOT
 {
     public class HelpScreen : MonoBehaviour
     {
+        public TextMeshPro PressHForHintText;
         public Transform GameplayPageRoot;
         public Transform TutorialPageRoot;
         
@@ -62,6 +65,18 @@ namespace ROOT
         private Transform[] _gameplayPages;
         private Transform[] _tutorialPages;
 
+        private Vector3 OldPressHForHintTextPos;
+
+        private void HelpScreenAlertComplete()
+        {
+            PressHForHintText.transform.localPosition = OldPressHForHintTextPos;
+        }
+        
+        private void HelpScreenShouldAlertHandler(IMessage rMessage)
+        {
+            PressHForHintText.transform.DOShakePosition(0.3f).OnComplete(HelpScreenAlertComplete);
+        }
+        
         void Awake()
         {
             _posXY = new Vector2(transform.position.x, transform.position.y);
@@ -70,16 +85,20 @@ namespace ROOT
             _gameplayPages = GameplayPageRoot.GetComponentsInChildren<Transform>().Where(t => t.parent == GameplayPageRoot).ToArray();
             _tutorialPages = TutorialPageRoot.GetComponentsInChildren<Transform>().Where(t => t.parent == TutorialPageRoot).ToArray();
 
+            OldPressHForHintTextPos = PressHForHintText.transform.localPosition;
+            
             MessageDispatcher.AddListener(WorldEvent.ToggleHintUIUpEvent, ToggleHintUIUpEventHandler);
             MessageDispatcher.AddListener(WorldEvent.ToggleHintUIDownEvent, ToggleHintUIDownEventHandler);
-            MessageDispatcher.AddListener(WorldEvent.HintPageChangedEvent, HintPageChangedEventHandler);
+            MessageDispatcher.AddListener(WorldEvent.HintScreenChangedEvent, HintPageChangedEventHandler);
+            MessageDispatcher.AddListener(WorldEvent.HelpScreenShouldAlertEvent, HelpScreenShouldAlertHandler);
             Debug.Log("_gameplayPageCount=" + _gameplayPageCount);
             Debug.Log("_tutorialPageCount=" + _tutorialPageCount);
         }
 
         private void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.HintPageChangedEvent,HintPageChangedEventHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.HelpScreenShouldAlertEvent,HelpScreenShouldAlertHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.HintScreenChangedEvent,HintPageChangedEventHandler);
             MessageDispatcher.RemoveListener(WorldEvent.ToggleHintUIDownEvent,ToggleHintUIDownEventHandler);
             MessageDispatcher.RemoveListener(WorldEvent.ToggleHintUIUpEvent,ToggleHintUIUpEventHandler);
         }

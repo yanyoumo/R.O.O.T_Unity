@@ -37,6 +37,14 @@ MonoBehaviour:
   Endless: 0
   BossStage: 0
   RoundLib: []
+  BossSetup:
+    BossStageTypeVal: 0
+    BossLength: 0
+    DestoryerCount: 0
+    InfoCount: 0
+    InfoVariantRatio: 0
+    InfoTargetRatio: 0
+    AcquiringTarget: 0
   Actions:
   - ActionIdx: 0
     ActionSubIdx: 0
@@ -53,6 +61,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -81,6 +90,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -109,6 +119,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -137,6 +148,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -165,6 +177,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -193,6 +206,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: "\u6D4B\u8BD5\u4EFB\u52A1"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -221,6 +235,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -249,6 +264,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -277,6 +293,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: "\u6D4B\u8BD5\u4EFB\u52A1-2"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -305,6 +322,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: "\u5C06\u5149\u6807\u79FB\u52A8\u5230\u4FE1\u53F7\u5E73\u53F0\u6700\u53F3\u4E0A\u89D2\u57FA\u7840\u683C\u4E0A"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -333,6 +351,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -361,6 +380,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -389,6 +409,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -417,6 +438,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -445,6 +467,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -473,6 +496,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -501,6 +525,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -529,6 +554,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -557,6 +583,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 1
     HandOnMission: "\u5C06\u4E09\u4E2A\u5355\u5143\u6A2A\u5750\u6807\u79FB\u5230\u76F8\u540C\u7684\u4E00\u6392"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -585,6 +612,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -613,6 +641,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -641,6 +670,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -669,6 +699,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -697,6 +728,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 2
     HandOnMission: "\u8BF7\u65CB\u8F6C\u5E76\u79FB\u52A8\u5355\u5143\u4F7F\u5176\u63A5\u53E3\u53EF\u4EE5\u76F8\u8FDE"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -725,6 +757,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -753,6 +786,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -781,6 +815,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -809,6 +844,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -837,6 +873,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -865,6 +902,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -893,6 +931,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -907,12 +946,4 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
   CSVFileName: TutorialLevel0_Text
-  BossSetup:
-    BossStageTypeVal: 0
-    BossLength: 0
-    DestoryerCount: 0
-    InfoCount: 0
-    InfoVariantRatio: 0
-    InfoTargetRatio: 0
-    AcquiringTarget: 0
   ExcludedShop: 0

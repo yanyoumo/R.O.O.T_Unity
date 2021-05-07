@@ -195,6 +195,11 @@ namespace ROOT
                 Cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(Cursor.LerpingBoardPosition));
             }
 
+            PostAnimateUpdate();
+        }
+
+        private void PostAnimateUpdate()
+        {
             LevelAsset.AnimationPendingObj.ForEach(PostAnimationUpdate);
 
             if (LevelAsset.MovedTileAni)

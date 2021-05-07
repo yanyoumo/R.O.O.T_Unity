@@ -37,6 +37,14 @@ MonoBehaviour:
   Endless: 0
   BossStage: 0
   RoundLib: []
+  BossSetup:
+    BossStageTypeVal: 0
+    BossLength: 0
+    DestoryerCount: 0
+    InfoCount: 0
+    InfoVariantRatio: 0
+    InfoTargetRatio: 0
+    AcquiringTarget: 0
   Actions:
   - ActionIdx: 0
     ActionSubIdx: 0
@@ -53,6 +61,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -65,6 +74,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 0
     ActionSubIdx: 1
     ActionType: 3
@@ -80,6 +90,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -92,6 +103,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 1
     ActionSubIdx: 0
     ActionType: 0
@@ -107,6 +119,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -119,6 +132,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 2
     ActionSubIdx: 0
     ActionType: 2
@@ -134,6 +148,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -146,6 +161,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 2
     ActionSubIdx: 1
     ActionType: 1
@@ -161,6 +177,7 @@ MonoBehaviour:
     Tag: 2048
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -173,6 +190,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 2
     ActionSubIdx: 2
     ActionType: 1
@@ -188,6 +206,7 @@ MonoBehaviour:
     Tag: 16
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -200,6 +219,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 2
     ActionSubIdx: 3
     ActionType: 11
@@ -215,6 +235,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -227,6 +248,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 2
     ActionSubIdx: 3
     ActionType: 0
@@ -242,6 +264,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -254,6 +277,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 3
     ActionSubIdx: 0
     ActionType: 0
@@ -270,6 +294,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -282,6 +307,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 4
     ActionSubIdx: 0
     ActionType: 0
@@ -297,6 +323,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -309,6 +336,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 5
     ActionSubIdx: 0
     ActionType: 0
@@ -324,6 +352,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -336,6 +365,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 6
     ActionSubIdx: 0
     ActionType: 8
@@ -351,6 +381,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 10
     HandOnMission: "\u5C06\u77E9\u9635\u6838\u5FC3\u548C\u77E9\u9635\u5355\u5143\u8FDE\u63A5\u8D77\u6765"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -363,6 +394,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 7
     ActionSubIdx: 0
     ActionType: 3
@@ -378,6 +410,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -390,6 +423,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 7
     ActionSubIdx: 1
     ActionType: 0
@@ -405,6 +439,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -417,6 +452,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 8
     ActionSubIdx: 0
     ActionType: 12
@@ -432,6 +468,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 1
@@ -444,6 +481,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 8
     ActionSubIdx: 1
     ActionType: 0
@@ -459,6 +497,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -471,6 +510,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 8
     ActionSubIdx: 2
     ActionType: 18
@@ -486,6 +526,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 1
     HLSet: 0
@@ -498,6 +539,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 8
     ActionSubIdx: 3
     ActionType: 10
@@ -513,6 +555,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 1
     HLSet: 0
@@ -525,6 +568,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 9
     ActionSubIdx: 0
     ActionType: 12
@@ -540,6 +584,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -552,6 +597,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 9
     ActionSubIdx: 1
     ActionType: 0
@@ -567,6 +613,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -579,6 +626,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 10
     ActionSubIdx: 0
     ActionType: 0
@@ -594,6 +642,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -606,6 +655,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 11
     ActionSubIdx: 0
     ActionType: 1
@@ -621,6 +671,7 @@ MonoBehaviour:
     Tag: 16
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 1
@@ -633,6 +684,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 11
     ActionSubIdx: 1
     ActionType: 0
@@ -648,6 +700,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -660,6 +713,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 12
     ActionSubIdx: 0
     ActionType: 0
@@ -675,6 +729,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -687,6 +742,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 13
     ActionSubIdx: 0
     ActionType: 0
@@ -702,6 +758,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -714,6 +771,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 14
     ActionSubIdx: 0
     ActionType: 0
@@ -729,6 +787,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -741,6 +800,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 15
     ActionSubIdx: 0
     ActionType: 0
@@ -756,6 +816,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -768,6 +829,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 16
     ActionSubIdx: 0
     ActionType: 8
@@ -783,6 +845,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 11
     HandOnMission: "\u5C06\u65B0\u751F\u6210\u7684\u5355\u5143\u548C\u5DF2\u7ECF\u6FC0\u6D3B\u7684\u77E9\u9635\u5355\u5143\u8FDE\u63A5\u8D77\u6765"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -795,6 +858,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 17
     ActionSubIdx: 0
     ActionType: 3
@@ -810,6 +874,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -822,6 +887,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 17
     ActionSubIdx: 1
     ActionType: 12
@@ -837,6 +903,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 1
@@ -849,6 +916,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 17
     ActionSubIdx: 2
     ActionType: 0
@@ -864,6 +932,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -876,6 +945,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 18
     ActionSubIdx: 0
     ActionType: 0
@@ -891,6 +961,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -903,6 +974,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 18
     ActionSubIdx: 1
     ActionType: 12
@@ -918,6 +990,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -930,6 +1003,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 19
     ActionSubIdx: 0
     ActionType: 0
@@ -945,6 +1019,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -957,6 +1032,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 20
     ActionSubIdx: 0
     ActionType: 1
@@ -972,6 +1048,7 @@ MonoBehaviour:
     Tag: 16
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -984,6 +1061,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 20
     ActionSubIdx: 1
     ActionType: 1
@@ -999,6 +1077,7 @@ MonoBehaviour:
     Tag: 16
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1011,6 +1090,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 20
     ActionSubIdx: 2
     ActionType: 1
@@ -1026,6 +1106,7 @@ MonoBehaviour:
     Tag: 16
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1038,6 +1119,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 21
     ActionSubIdx: 0
     ActionType: 0
@@ -1053,6 +1135,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1065,6 +1148,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 22
     ActionSubIdx: 0
     ActionType: 8
@@ -1080,6 +1164,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 12
     HandOnMission: "\u5C06\u65B0\u751F\u6210\u7684\u77E9\u9635\u5355\u5143\u5168\u90E8\u8FDE\u63A5\u5E76\u4E14\u6B63\u786E\u6FC0\u6D3B\u3002 "
+    TimeOutSec: 0
     TargetTag: 16
     Set: 0
     HLSet: 0
@@ -1092,6 +1177,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 23
     ActionSubIdx: 0
     ActionType: 3
@@ -1107,6 +1193,7 @@ MonoBehaviour:
     Tag: 2048
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1119,6 +1206,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 23
     ActionSubIdx: 1
     ActionType: 0
@@ -1134,6 +1222,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1146,6 +1235,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 24
     ActionSubIdx: 0
     ActionType: 0
@@ -1161,6 +1251,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1173,6 +1264,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 24
     ActionSubIdx: 0
     ActionType: 0
@@ -1188,6 +1280,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1200,6 +1293,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 25
     ActionSubIdx: 0
     ActionType: 19
@@ -1215,6 +1309,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 16
     Set: 0
     HLSet: 0
@@ -1227,6 +1322,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 25
     ActionSubIdx: 1
     ActionType: 1
@@ -1242,6 +1338,7 @@ MonoBehaviour:
     Tag: 512
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1254,6 +1351,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 25
     ActionSubIdx: 2
     ActionType: 1
@@ -1269,6 +1367,7 @@ MonoBehaviour:
     Tag: 1
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1281,6 +1380,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 25
     ActionSubIdx: 3
     ActionType: 13
@@ -1296,6 +1396,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1308,6 +1409,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 26
     ActionSubIdx: 0
     ActionType: 0
@@ -1323,6 +1425,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1335,6 +1438,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 27
     ActionSubIdx: 0
     ActionType: 0
@@ -1351,6 +1455,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1363,6 +1468,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 28
     ActionSubIdx: 0
     ActionType: 0
@@ -1378,6 +1484,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1390,6 +1497,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 29
     ActionSubIdx: 0
     ActionType: 8
@@ -1405,6 +1513,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 13
     HandOnMission: "\u5C06\u70ED\u529B\u6838\u5FC3\u548C\u70ED\u529B\u5355\u5143\u6B63\u786E\u5BF9\u5E94\u8FDE\u63A5\u5230\u4E00\u8D77"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1417,6 +1526,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 30
     ActionSubIdx: 0
     ActionType: 0
@@ -1432,6 +1542,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1444,6 +1555,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 30
     ActionSubIdx: 1
     ActionType: 3
@@ -1459,6 +1571,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1471,6 +1584,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 31
     ActionSubIdx: 0
     ActionType: 0
@@ -1486,6 +1600,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1498,6 +1613,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 32
     ActionSubIdx: 0
     ActionType: 0
@@ -1513,6 +1629,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1525,6 +1642,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 33
     ActionSubIdx: 0
     ActionType: 1
@@ -1540,6 +1658,7 @@ MonoBehaviour:
     Tag: 1
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1552,6 +1671,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 33
     ActionSubIdx: 1
     ActionType: 1
@@ -1567,6 +1687,7 @@ MonoBehaviour:
     Tag: 1
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1579,6 +1700,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 33
     ActionSubIdx: 2
     ActionType: 1
@@ -1594,6 +1716,7 @@ MonoBehaviour:
     Tag: 1
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1606,6 +1729,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 34
     ActionSubIdx: 0
     ActionType: 0
@@ -1621,6 +1745,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1633,6 +1758,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 35
     ActionSubIdx: 0
     ActionType: 0
@@ -1648,6 +1774,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1660,6 +1787,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 36
     ActionSubIdx: 0
     ActionType: 8
@@ -1675,6 +1803,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 14
     HandOnMission: "\u8BF7\u60A8\u5C06\u4FE1\u53F7\u5E73\u53F0\u4E0A\u6240\u6709\u7684\u70ED\u529B\u5355\u5143\u6B63\u786E\u8FDE\u63A5\u8D77\u6765"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1687,6 +1816,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 37
     ActionSubIdx: 0
     ActionType: 3
@@ -1702,6 +1832,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1714,6 +1845,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 37
     ActionSubIdx: 1
     ActionType: 0
@@ -1729,6 +1861,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1741,6 +1874,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 38
     ActionSubIdx: 0
     ActionType: 19
@@ -1756,6 +1890,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 1
     Set: 0
     HLSet: 0
@@ -1768,6 +1903,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 38
     ActionSubIdx: 1
     ActionType: 1
@@ -1783,6 +1919,7 @@ MonoBehaviour:
     Tag: 512
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1795,6 +1932,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 38
     ActionSubIdx: 2
     ActionType: 1
@@ -1810,6 +1948,7 @@ MonoBehaviour:
     Tag: 512
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1822,6 +1961,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 38
     ActionSubIdx: 3
     ActionType: 0
@@ -1837,6 +1977,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1849,6 +1990,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 39
     ActionSubIdx: 0
     ActionType: 0
@@ -1864,6 +2006,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1876,6 +2019,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 40
     ActionSubIdx: 0
     ActionType: 8
@@ -1891,6 +2035,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 15
     HandOnMission: "\u628A\u70ED\u529B\u5355\u5143\u4E0E\u77E9\u9635\u6838\u5FC3\u76F8\u8FDE\uFF0C\u628A\u77E9\u9635\u5355\u5143\u4E0E\u70ED\u529B\u6838\u5FC3\u76F8\u8FDE"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1903,6 +2048,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 41
     ActionSubIdx: 0
     ActionType: 3
@@ -1918,6 +2064,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1930,6 +2077,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 41
     ActionSubIdx: 1
     ActionType: 0
@@ -1945,6 +2093,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1957,6 +2106,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 42
     ActionSubIdx: 0
     ActionType: 0
@@ -1972,6 +2122,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -1984,6 +2135,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 43
     ActionSubIdx: 0
     ActionType: 0
@@ -1999,6 +2151,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2011,6 +2164,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 44
     ActionSubIdx: 0
     ActionType: 19
@@ -2026,6 +2180,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 512
     Set: 0
     HLSet: 0
@@ -2038,6 +2193,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 44
     ActionSubIdx: 1
     ActionType: 1
@@ -2053,6 +2209,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2065,6 +2222,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 44
     ActionSubIdx: 2
     ActionType: 1
@@ -2080,6 +2238,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2092,6 +2251,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 44
     ActionSubIdx: 3
     ActionType: 1
@@ -2107,6 +2267,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2119,6 +2280,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 44
     ActionSubIdx: 4
     ActionType: 1
@@ -2134,6 +2296,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2146,6 +2309,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 44
     ActionSubIdx: 5
     ActionType: 1
@@ -2161,6 +2325,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2173,6 +2338,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 45
     ActionSubIdx: 0
     ActionType: 0
@@ -2188,6 +2354,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2200,6 +2367,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 46
     ActionSubIdx: 0
     ActionType: 0
@@ -2215,6 +2383,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2227,6 +2396,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 47
     ActionSubIdx: 0
     ActionType: 0
@@ -2242,6 +2412,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2254,6 +2425,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 48
     ActionSubIdx: 0
     ActionType: 0
@@ -2269,6 +2441,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2281,6 +2454,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 48
     ActionSubIdx: 1
     ActionType: 17
@@ -2296,6 +2470,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 1
     HLSet: 0
@@ -2311,6 +2486,7 @@ MonoBehaviour:
     - {x: 2, y: 5}
     - {x: 2, y: 4}
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 48
     ActionSubIdx: 2
     ActionType: 17
@@ -2326,6 +2502,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 1
     HLSet: 0
@@ -2340,6 +2517,7 @@ MonoBehaviour:
     - {x: 2, y: 3}
     - {x: 2, y: 2}
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 49
     ActionSubIdx: 0
     ActionType: 8
@@ -2355,6 +2533,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 16
     HandOnMission: "\u8BF7\u60A8\u5C06\u5BF9\u5E94\u7C7B\u578B\u5355\u5143\u79FB\u52A8\u5230\u5BF9\u5E94\u53D1\u5149\u7684\u57FA\u7840\u683C\u4E0A"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2367,6 +2546,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 50
     ActionSubIdx: 0
     ActionType: 3
@@ -2382,6 +2562,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2394,6 +2575,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 50
     ActionSubIdx: 1
     ActionType: 0
@@ -2409,6 +2591,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2421,6 +2604,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 50
     ActionSubIdx: 2
     ActionType: 17
@@ -2436,6 +2620,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2453,6 +2638,7 @@ MonoBehaviour:
     - {x: 2, y: 3}
     - {x: 2, y: 2}
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 51
     ActionSubIdx: 0
     ActionType: 1
@@ -2468,6 +2654,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2480,6 +2667,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 51
     ActionSubIdx: 1
     ActionType: 17
@@ -2495,6 +2683,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 1
     HLSet: 0
@@ -2508,6 +2697,7 @@ MonoBehaviour:
     poses:
     - {x: 2, y: 1}
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 51
     ActionSubIdx: 2
     ActionType: 0
@@ -2523,6 +2713,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2535,6 +2726,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 52
     ActionSubIdx: 0
     ActionType: 8
@@ -2550,6 +2742,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 17
     HandOnMission: "\u5C06\u4E00\u4E2A\u77E9\u9635\u5355\u5143\u79FB\u52A8\u5230\u53D1\u5149\u57FA\u7840\u683C\u4E0A\uFF0C\u5E76\u89C2\u5BDF\u63A5\u53E3\u4E0A\u4FE1\u53F7\u7684\u6D41\u52A8\u8303\u56F4"
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2562,6 +2755,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 53
     ActionSubIdx: 0
     ActionType: 3
@@ -2577,6 +2771,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2589,6 +2784,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 53
     ActionSubIdx: 1
     ActionType: 0
@@ -2604,6 +2800,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2616,6 +2813,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 54
     ActionSubIdx: 0
     ActionType: 0
@@ -2631,6 +2829,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2643,6 +2842,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 55
     ActionSubIdx: 0
     ActionType: 0
@@ -2658,6 +2858,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2670,6 +2871,7 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
+    Numpage: 0
   - ActionIdx: 56
     ActionSubIdx: 0
     ActionType: 0
@@ -2685,6 +2887,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -2697,12 +2900,6 @@ MonoBehaviour:
     HighLightType: 0
     poses: []
     FSMCoreFeat: 0
-  BossSetup:
-    BossStageTypeVal: 0
-    BossLength: 0
-    DestoryerCount: 0
-    InfoCount: 0
-    InfoVariantRatio: 0
-    InfoTargetRatio: 0
-    AcquiringTarget: 0
+    Numpage: 0
+  CSVFileName: TutorialLevel1_Text
   ExcludedShop: 0

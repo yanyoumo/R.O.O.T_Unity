@@ -2,6 +2,7 @@ using System;
 using ROOT.Common;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Internal;
 
 namespace ROOT.SetupAsset
 {
@@ -55,6 +56,9 @@ namespace ROOT.SetupAsset
         [VerticalGroup("DetailedData"), ShowIf("ActionType", TutorialActionType.HandOn)]
         public String HandOnMission;
 
+        [VerticalGroup("DetailedData"), ShowIf("ActionType", TutorialActionType.HandOn)]
+        public int TimeOutSec;//0的话就强制60sec
+        
         [VerticalGroup("DetailedData"), ShowIf("@this.ShowUnitTag()")]
         public UnitTag TargetTag;
 
