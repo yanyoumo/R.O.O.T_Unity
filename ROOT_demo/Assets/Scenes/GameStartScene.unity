@@ -2928,11 +2928,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c62cd640f24084498390fd696cba2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UnitActivationLED_Colors:
-  - {r: 0.8235294, g: 0.029849496, b: 0, a: 1}
-  - {r: 1, g: 0.86275464, b: 0.25157225, a: 1}
-  - {r: 0.43255687, g: 0.84199995, b: 0.34010196, a: 1}
-  - {r: 0.32704395, g: 0.89157176, b: 1, a: 1}
 --- !u!1 &474828532
 GameObject:
   m_ObjectHideFlags: 0

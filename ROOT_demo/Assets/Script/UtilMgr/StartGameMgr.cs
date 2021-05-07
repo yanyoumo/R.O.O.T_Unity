@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using DG.Tweening;
 using ROOT.Consts;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
@@ -102,6 +103,7 @@ namespace ROOT
 
         void Awake()
         {
+            DOTween.Init();
             CheckPlayerPrefs();
             //这里不能用Time.time，因为Awake和游戏运行时间差距一般很小且固定。所以这里要去调系统时间
             //RISK 这里可能需要去测试iOS的系统，目前没有测，测了后删掉。

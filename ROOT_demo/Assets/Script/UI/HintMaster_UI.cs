@@ -60,16 +60,20 @@ namespace ROOT.UI
         }
         
         Vector3 handsOffOldPos;
-        private void OnCompleteTest()
-        {
-            TutorialHandOff.transform.localPosition = handsOffOldPos;
-        }
+        Vector3 nextTextOldPos;
+        Vector3 altNextTextOldPos;
+        private void HandOnShakeComplete() => TutorialHandOff.transform.localPosition = handsOffOldPos;
+        private void nextTextShakeComplete() => TutorialNextContent.transform.localPosition = nextTextOldPos;
+        private void altNextTextShakeComplete() => TutorialNextContent_Alter.transform.localPosition = altNextTextOldPos;
+
         private void BlinkControllerBlockedAlert()
         {
-            TutorialHandOff.transform.DOShakePosition(0.3f, 12.5f, 15).OnComplete(OnCompleteTest);
-            
+            //从技术上讲、DOShakePosition是会回到原点、但是这里像我们这种情况：短时间+高幅度、似乎就会有不回原点的问题。先这么处理一下。
+            TutorialHandOff.transform.DOShakePosition(0.3f, 12.5f, 15).OnComplete(HandOnShakeComplete);
+            TutorialNextContent.transform.DOShakePosition(0.3f, Vector3.left * 17f, 15).OnComplete(nextTextShakeComplete);
+            TutorialNextContent_Alter.transform.DOShakePosition(0.3f, Vector3.right * 17f, 15).OnComplete(altNextTextShakeComplete);
         }
-        
+
         private void HintEventHandler(IMessage rMessge)
         {
             if (rMessge is HintEventInfo info)
@@ -140,18 +144,19 @@ namespace ROOT.UI
         private void Awake()
         {
             MessageDispatcher.AddListener(WorldEvent.HintRelatedEvent, HintEventHandler);
-            DOTween.Init();
             TutorialCheckListCore.SetupSecondaryGoalContent("");
             handsOffOldPos = TutorialHandOff.transform.localPosition;
+            nextTextOldPos = TutorialNextContent.transform.localPosition;
+            altNextTextOldPos = TutorialNextContent_Alter.transform.localPosition;
         }
 
-        private void Update()
+        /*private void Update()
         {
-            /*if (Input.GetKeyDown(KeyCode.O))
+            if (Input.GetKeyDown(KeyCode.O))
             {
                 BlinkControllerBlockedAlert();
-            }*/
-        }
+            }
+        }*/
 
         private void OnDestroy()
         {
