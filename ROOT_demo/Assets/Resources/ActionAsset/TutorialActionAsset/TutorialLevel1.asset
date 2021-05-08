@@ -1132,7 +1132,7 @@ MonoBehaviour:
     Sides: 01000000000000000000000000000000
     Tier: 1
     IsStationary: 0
-    Tag: 16
+    Tag: 1
     HandOnCheckType: 0
     HandOnMission: 
     TimeOutSec: 0
@@ -1161,7 +1161,7 @@ MonoBehaviour:
     Sides: 00000000010000000000000000000000
     Tier: 1
     IsStationary: 0
-    Tag: 16
+    Tag: 1
     HandOnCheckType: 0
     HandOnMission: 
     TimeOutSec: 0
@@ -1190,7 +1190,7 @@ MonoBehaviour:
     Sides: 01000000010000000100000000000000
     Tier: 1
     IsStationary: 0
-    Tag: 16
+    Tag: 1
     HandOnCheckType: 0
     HandOnMission: 
     TimeOutSec: 0
@@ -1441,6 +1441,35 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 28
     ActionSubIdx: 1
+    ActionType: 19
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 1
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 28
+    ActionSubIdx: 2
     ActionType: 1
     Text: "\u4F46\u4E0D\u540C\u7684\u662F\u70ED\u529B\u5355\u5143\u7684\u76C8\u5229\u89C4\u5219\uFF0C\u5F53\u70ED\u529B\u5355\u5143\u5468\u56F4\u7684\u5355\u5143\u6570\u91CF\u8D8A\u591A\uFF0C\u589E\u52A0\u7684\u76C8\u5229\u4E5F\u5C31\u8D8A\u5C11\u3002"
     DoppelgangerToggle: 0
@@ -1469,7 +1498,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
   - ActionIdx: 28
-    ActionSubIdx: 2
+    ActionSubIdx: 3
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
@@ -1498,7 +1527,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
   - ActionIdx: 28
-    ActionSubIdx: 3
+    ActionSubIdx: 4
     ActionType: 13
     Text: 
     DoppelgangerToggle: 0
@@ -3017,7 +3046,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  mainIDXToinsert: 5
-  subIDXToinsert: 0
+  mainIDXToinsert: 28
+  subIDXToinsert: 4
   CSVFileName: TutorialLevel1_Text
   ExcludedShop: 0

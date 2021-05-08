@@ -22,6 +22,6 @@ namespace ROOT.Signal
         
         private const int perMatrixFieldUnitPrice = 1;
         //Core不计分。
-        public override float SingleUnitScore => (IsUnitActive && Owner.UnitHardware == HardwareType.Field) ? perMatrixFieldUnitPrice : 0.0f;
+        public override float SingleUnitScore => (IsUnitActive && Owner.UnitHardware == HardwareType.Field) ? perMatrixFieldUnitPrice * Owner.Tier : 0.0f;
     }
 }
