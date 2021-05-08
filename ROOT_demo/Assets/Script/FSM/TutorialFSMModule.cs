@@ -126,7 +126,7 @@ namespace ROOT.FSM
             ShowCheckListFunc(true);
             ShowTextFunc(false);
             CurrentHandOnCheckMet = PendingHandOnChecking(owner, LevelAsset.GameBoard);//这边就就地测一下
-            handOnTimeOutThreadholdSec = data.TimeOutSec <= 0 ? 60 : data.TimeOutSec;//RISK
+            handOnTimeOutThreadholdSec = data.TimeOutSec == 0 ? 60 : data.TimeOutSec;//RISK
             handOnTimeOutTimer = 0.0f;
             MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet });
         }
@@ -338,7 +338,7 @@ namespace ROOT.FSM
             };
         }
 
-        internal void TutorialMajorUpkeep(Func<ControllingPack> CtrlPack)
+        internal void TutorialMajorUpkeep()
         {
             TutorialInit();
             if (TutorialOnHand)
@@ -366,7 +366,8 @@ namespace ROOT.FSM
             }
             else
             {
-                if (Input.anyKeyDown && !CtrlPack().HasFlag(ControllingCommand.Confirm))
+                var validKeyInTutorial = Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Tab);
+                if (Input.anyKeyDown && !validKeyInTutorial)
                 {
                     //现在这个执行还稍稍有些半吊子，还是需要优化一下。
                     MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ControllerBlockedAlert});

@@ -98,6 +98,10 @@ namespace ROOT
                 BoardCouldIOCurrencyData = true,
                 UnitCouldGenerateIncomeData = true,
             });
+            UpdateBoardData_Instantly();
+            //手动弄一下。
+            LevelAsset.BaseDeltaCurrency = GetBaseInCome();
+            LevelAsset.BonusDeltaCurrency = 0;
             SendCurrencyMessage(LevelAsset);
         }
 
