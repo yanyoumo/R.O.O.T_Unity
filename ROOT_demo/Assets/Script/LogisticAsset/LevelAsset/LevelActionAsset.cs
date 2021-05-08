@@ -14,13 +14,17 @@ namespace ROOT.SetupAsset
     {
         [Header("Basic Data"),PropertyOrder(-99)] public string TitleTerm;
 
-        [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-98)]
+        [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-99)]
         public Sprite Thumbnail;
 
-        [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab"),PropertyOrder(-97)]
+        [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab"),PropertyOrder(-98)]
         public GameObject LevelLogic;
 
-        [Range(0, 100),PropertyOrder(-96)] public int InitialCurrency = 36;
+        [PropertyOrder(-97)] 
+        public int AcessID = -1;
+        
+        [Range(0, 100),PropertyOrder(-96)] 
+        public int InitialCurrency = 36;
 
         [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [LabelText("Shop has cost")][PropertyOrder(-95)]
         public bool ShopCost = true;
@@ -33,7 +37,7 @@ namespace ROOT.SetupAsset
         [Header("Detail")][PropertyOrder(1)]
         public AdditionalGameSetup AdditionalGameSetup;
 
-        [ShowIf("levelType", LevelType.Career)][PropertyOrder(2)]
+        [PropertyOrder(2)]
         public UnitGist[] InitalBoard;
 
         [ShowIf("levelType", LevelType.Career)] [OnValueChanged("HasBossChanged")][PropertyOrder(3)]

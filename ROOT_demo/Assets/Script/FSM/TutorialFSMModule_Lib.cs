@@ -20,7 +20,12 @@ namespace ROOT.FSM
             {TutorialCheckType.MoveThreeMatrixAndTwoThermalToPlace, TutorialCheckFunctionList.MoveThreeMatrixAndTwoThermalToPlace},
             {TutorialCheckType.MoveOneMatrixToPlace, TutorialCheckFunctionList.MoveOneMatrixToPlace},
             {TutorialCheckType.Buy3UnitsOrNotEnoughMoney, TutorialCheckFunctionList.Buy3UnitsOrNotEnoughMoney},
-            {TutorialCheckType.FourWarningGridOneHeatSink, TutorialCheckFunctionList.FourWarningGridOneHeatSink}
+            {TutorialCheckType.FourWarningGridOneHeatSink, TutorialCheckFunctionList.FourWarningGridOneHeatSink},
+            {TutorialCheckType.CustomCheck_Gameplay_0, GameplayCheckFunctionList.GameplayCheck0},
+            {TutorialCheckType.CustomCheck_Gameplay_1, GameplayCheckFunctionList.GameplayCheck1},
+            {TutorialCheckType.CustomCheck_Gameplay_2, GameplayCheckFunctionList.GameplayCheck2},
+            {TutorialCheckType.CustomCheck_Gameplay_3, GameplayCheckFunctionList.GameplayCheck3},
+            {TutorialCheckType.CustomCheck_Gameplay_4, GameplayCheckFunctionList.GameplayCheck4},
         };
     }
 }

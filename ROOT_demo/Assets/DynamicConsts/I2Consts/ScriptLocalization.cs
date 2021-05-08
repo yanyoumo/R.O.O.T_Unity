@@ -34,6 +34,10 @@ namespace I2.Loc
 		public static string KMEnterToReturn 		{ get{ return LocalizationManager.GetTranslation ("KMEnterToReturn"); } }
 		public static string KMHintCollapsed 		{ get{ return LocalizationManager.GetTranslation ("KMHintCollapsed"); } }
 		public static string KMHintExtend 		{ get{ return LocalizationManager.GetTranslation ("KMHintExtend"); } }
+		public static string LevelName_GL0 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL0"); } }
+		public static string LevelName_GL1 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL1"); } }
+		public static string LevelName_TL0 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL0"); } }
+		public static string LevelName_TL1 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL1"); } }
 		public static string Level_1 		{ get{ return LocalizationManager.GetTranslation ("Level_1"); } }
 		public static string Level_2 		{ get{ return LocalizationManager.GetTranslation ("Level_2"); } }
 		public static string Level_3 		{ get{ return LocalizationManager.GetTranslation ("Level_3"); } }
@@ -109,6 +113,10 @@ namespace I2.Loc
 		public const string KMEnterToReturn = "KMEnterToReturn";
 		public const string KMHintCollapsed = "KMHintCollapsed";
 		public const string KMHintExtend = "KMHintExtend";
+		public const string LevelName_GL0 = "LevelName_GL0";
+		public const string LevelName_GL1 = "LevelName_GL1";
+		public const string LevelName_TL0 = "LevelName_TL0";
+		public const string LevelName_TL1 = "LevelName_TL1";
 		public const string Level_1 = "Level_1";
 		public const string Level_2 = "Level_2";
 		public const string Level_3 = "Level_3";

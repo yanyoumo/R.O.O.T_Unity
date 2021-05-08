@@ -125,6 +125,7 @@ namespace ROOT
             //就先这么Sealed、急了的话、所有需要"关掉"的可以在AdditionalInit里面再关掉。
             Debug.Assert(ReferenceOk); //意外的有确定Reference的……还行……
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_ADDTIVELOGIC));
+            SendHintData(HintEventType.SetGoalCheckListShow, false);
 
             LevelAsset.BaseDeltaCurrency = 0.0f;
             LevelAsset.GameCurrencyMgr = new GameCurrencyMgr();
@@ -141,8 +142,6 @@ namespace ROOT
 
             AdditionalInitLevel();
             ReadyToGo = true;
-
-            SendHintData(HintEventType.SetGoalCheckListShow, false);
         }
 
         protected override void createDriver()

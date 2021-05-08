@@ -599,6 +599,38 @@ MonoBehaviour:
       - Ending
       Flags: 0000
       Languages_Touch: []
+    - Term: LevelName_GL0
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E0A\u624B\u8BD5\u8BD5"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_GL1
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E0A\u624B\u8BD5\u8BD5-2"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_TL0
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u57FA\u7840\u64CD\u4F5C"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_TL1
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u5355\u5143\u57FA\u7840"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 

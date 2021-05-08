@@ -85,3 +85,7 @@ Shop,Text,,商店,Shop
 Require,Text,,任务,Require
 Destoryer,Text,,天灾,Destoryer
 Ending,Text,,结束,Ending
+LevelName_GL0,Text,,上手试试,Pending
+LevelName_GL1,Text,,上手试试-2,Pending
+LevelName_TL0,Text,,基础操作,Pending
+LevelName_TL1,Text,,单元基础,Pending

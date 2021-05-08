@@ -19,6 +19,13 @@ namespace ROOT
         MoveOneMatrixToPlace = 17,
         Buy3UnitsOrNotEnoughMoney = 99,
         FourWarningGridOneHeatSink = 100,
+        
+        //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
+        CustomCheck_Gameplay_0 = 250,
+        CustomCheck_Gameplay_1 = 251,
+        CustomCheck_Gameplay_2 = 252,
+        CustomCheck_Gameplay_3 = 253,
+        CustomCheck_Gameplay_4 = 254,
     }
 
     public static class TutorialCheckFunctionList
