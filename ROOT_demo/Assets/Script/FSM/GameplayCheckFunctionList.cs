@@ -9,7 +9,7 @@ namespace ROOT
     {
         public static bool GameplayCheck0(FSMLevelLogic fsm, Board board)
         {
-            throw new NotImplementedException();
+            return fsm.LevelAsset.GameCurrencyMgr.Currency >= 40;
         }
 
         public static bool GameplayCheck1(FSMLevelLogic fsm, Board board)

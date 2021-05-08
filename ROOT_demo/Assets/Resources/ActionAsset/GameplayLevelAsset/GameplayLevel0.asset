@@ -183,7 +183,7 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 250
-    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u5230XXX\u5143"
+    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523040\u5143"
     TimeOutSec: -1
     TargetTag: 0
     Set: 0

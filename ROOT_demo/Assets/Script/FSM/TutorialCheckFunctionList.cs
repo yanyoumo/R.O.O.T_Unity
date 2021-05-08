@@ -21,11 +21,11 @@ namespace ROOT
         FourWarningGridOneHeatSink = 100,
         
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
-        CustomCheck_Gameplay_0 = 250,
-        CustomCheck_Gameplay_1 = 251,
-        CustomCheck_Gameplay_2 = 252,
-        CustomCheck_Gameplay_3 = 253,
-        CustomCheck_Gameplay_4 = 254,
+        CustomCheckGameplay0 = 250,
+        CustomCheckGameplay1 = 251,
+        CustomCheckGameplay2 = 252,
+        CustomCheckGameplay3 = 253,
+        CustomCheckGameplay4 = 254,
     }
 
     public static class TutorialCheckFunctionList

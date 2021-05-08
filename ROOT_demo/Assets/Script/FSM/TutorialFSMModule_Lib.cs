@@ -21,11 +21,11 @@ namespace ROOT.FSM
             {TutorialCheckType.MoveOneMatrixToPlace, TutorialCheckFunctionList.MoveOneMatrixToPlace},
             {TutorialCheckType.Buy3UnitsOrNotEnoughMoney, TutorialCheckFunctionList.Buy3UnitsOrNotEnoughMoney},
             {TutorialCheckType.FourWarningGridOneHeatSink, TutorialCheckFunctionList.FourWarningGridOneHeatSink},
-            {TutorialCheckType.CustomCheck_Gameplay_0, GameplayCheckFunctionList.GameplayCheck0},
-            {TutorialCheckType.CustomCheck_Gameplay_1, GameplayCheckFunctionList.GameplayCheck1},
-            {TutorialCheckType.CustomCheck_Gameplay_2, GameplayCheckFunctionList.GameplayCheck2},
-            {TutorialCheckType.CustomCheck_Gameplay_3, GameplayCheckFunctionList.GameplayCheck3},
-            {TutorialCheckType.CustomCheck_Gameplay_4, GameplayCheckFunctionList.GameplayCheck4},
+            {TutorialCheckType.CustomCheckGameplay0, GameplayCheckFunctionList.GameplayCheck0},
+            {TutorialCheckType.CustomCheckGameplay1, GameplayCheckFunctionList.GameplayCheck1},
+            {TutorialCheckType.CustomCheckGameplay2, GameplayCheckFunctionList.GameplayCheck2},
+            {TutorialCheckType.CustomCheckGameplay3, GameplayCheckFunctionList.GameplayCheck3},
+            {TutorialCheckType.CustomCheckGameplay4, GameplayCheckFunctionList.GameplayCheck4},
         };
     }
 }
