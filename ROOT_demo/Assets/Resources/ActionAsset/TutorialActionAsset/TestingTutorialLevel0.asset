@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1aed29c8465fad741915b17b2c88112d, type: 3}
-  m_Name: TutorialLevel2
+  m_Name: TestingTutorialLevel0
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -43,8 +43,74 @@ MonoBehaviour:
     TypeARequirement: 16
     TypeBRequirement: 11
     HeatSinkLength: 9
+  BossSetup:
+    BossStageTypeVal: 0
+    BossLength: 0
+    DestoryerCount: 0
+    InfoCount: 0
+    InfoVariantRatio: 0
+    InfoTargetRatio: 0
+    AcquiringTarget: 0
   Actions:
   - ActionIdx: 0
+    ActionSubIdx: 1
+    ActionType: 0
+    Text: Aiubwevo;uberwvi;uobwsbuoi;ao;buhi;buooi;bhewsoi;hus
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 0
+    ActionSubIdx: 2
+    ActionType: 20
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 1
+  - ActionIdx: 1
     ActionSubIdx: 0
     ActionType: 17
     Text: 
@@ -59,6 +125,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 1
     HLSet: 0
@@ -78,7 +145,7 @@ MonoBehaviour:
     - {x: 5, y: 5}
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 0
+  - ActionIdx: 2
     ActionSubIdx: 1
     ActionType: 18
     Text: 
@@ -93,6 +160,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -106,7 +174,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 1
+  - ActionIdx: 3
     ActionSubIdx: 0
     ActionType: 17
     Text: 
@@ -121,6 +189,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 1
     HLSet: 0
@@ -140,7 +209,7 @@ MonoBehaviour:
     - {x: 0, y: 5}
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 1
+  - ActionIdx: 4
     ActionSubIdx: 1
     ActionType: 2
     Text: 
@@ -155,6 +224,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -168,7 +238,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 2
+  - ActionIdx: 5
     ActionSubIdx: 0
     ActionType: 10
     Text: 
@@ -183,6 +253,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 1
     HLSet: 0
@@ -196,7 +267,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 1
     Numpage: 0
-  - ActionIdx: 2
+  - ActionIdx: 6
     ActionSubIdx: 1
     ActionType: 12
     Text: 
@@ -211,6 +282,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: ----------
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 1
@@ -224,35 +296,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 2
-    ActionSubIdx: 2
-    ActionType: 20
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TargetTag: 0
-    Set: 1
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 1
-  - ActionIdx: 3
+  - ActionIdx: 7
     ActionSubIdx: 0
     ActionType: 3
     Text: 
@@ -267,6 +311,7 @@ MonoBehaviour:
     Tag: 0
     HandOnCheckType: 0
     HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 0
     Set: 0
     HLSet: 0
@@ -280,41 +325,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 3
-    ActionSubIdx: 1
-    ActionType: 0
-    Text: Aiubwevo;uberwvi;uobwsbuoi;ao;buhi;buooi;bhewsoi;hus
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
+  mainIDXToinsert: 0
+  subIDXToinsert: 0
   CSVFileName: TutorialLevel2_Text
-  BossSetup:
-    BossStageTypeVal: 0
-    BossLength: 0
-    DestoryerCount: 0
-    InfoCount: 0
-    InfoVariantRatio: 0
-    InfoTargetRatio: 0
-    AcquiringTarget: 0
   ExcludedShop: 0

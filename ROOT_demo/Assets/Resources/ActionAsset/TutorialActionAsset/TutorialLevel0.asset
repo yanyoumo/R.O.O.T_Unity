@@ -946,5 +946,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+  mainIDXToinsert: 0
+  subIDXToinsert: 0
   CSVFileName: TutorialLevel0_Text
   ExcludedShop: 0

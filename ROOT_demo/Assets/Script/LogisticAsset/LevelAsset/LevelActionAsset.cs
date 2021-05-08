@@ -60,8 +60,65 @@ namespace ROOT.SetupAsset
         [PropertyOrder(8)]
         public TutorialActionData[] Actions;
 
+        [Space] 
+        [ShowIf("levelType", LevelType.Tutorial)]
+        [PropertyOrder(86)]
+        [LabelText("Main Index to Insert")]
+        public int mainIDXToinsert;
+        
+        [ShowIf("levelType", LevelType.Tutorial)]
+        [PropertyOrder(87)]
+        [LabelText("Sub Index to Insert")]
+        public int subIDXToinsert;
+
+        [ShowIf("levelType", LevelType.Tutorial)]
+        [Button("Insert Tutorial Action")]
+        [HorizontalGroup("Operation Buttons")]
+        [PropertyOrder(88)]
+        public void InsertTutorialActions()
+        {
+            if (Actions.Count(a => a.ActionIdx == mainIDXToinsert && a.ActionSubIdx == subIDXToinsert) > 0)
+            {
+                //Has pre-existing Action, push back then insert.
+                for (var i = 0; i < Actions.Length; i++)
+                {
+                    if (Actions[i].ActionIdx >= mainIDXToinsert)
+                    {
+                        Actions[i].ActionIdx++;
+                    }
+                }
+            }
+
+            Actions = Actions.Append(new TutorialActionData
+            {
+                ActionIdx = mainIDXToinsert,
+                ActionSubIdx = subIDXToinsert
+            }).ToArray();
+            
+            ReorderTutorialActions();
+        }
+
+        [ShowIf("levelType", LevelType.Tutorial)]
+        [Button("Shrink Tutorial Actions")]
+        [HorizontalGroup("Operation Buttons")]
+        [PropertyOrder(89)]
+        public void ShrinkTutorialActions()
+        {
+            ReorderTutorialActions();
+            var oldInx = Actions.Select(a => a.ActionIdx).OrderBy(i => i).ToArray();
+            var currentMissingIndCount = 0;
+            for (var i = 0; i < Actions.Length; i++)
+            {
+                var oldIndCVal = i - 1 >= 0 ? oldInx[i - 1] : oldInx[i];
+                var oldIndNVal = oldInx[i];
+                currentMissingIndCount += Mathf.Max((oldIndNVal - oldIndCVal) - 1, 0);
+                Actions[i].ActionIdx -= currentMissingIndCount;
+            }
+        }
+
         [ShowIf("levelType", LevelType.Tutorial)]
         [Button("Reorder Tutorial Actions")]
+        [HorizontalGroup("Operation Buttons")]
         [PropertyOrder(90)]
         public void ReorderTutorialActions() => Actions = Actions.OrderBy(GetOrderingKeyOfTutorialAction).ToArray();
 
@@ -69,7 +126,9 @@ namespace ROOT.SetupAsset
         [ShowIf("levelType", LevelType.Tutorial), PropertyOrder(91)]
         public string CSVFileName;
 
-        [ShowIf("levelType", LevelType.Tutorial), Button("Export Text To CSV")][PropertyOrder(92)]
+        [ShowIf("levelType", LevelType.Tutorial), Button("Export Text To CSV")]
+        [PropertyOrder(92)]
+        [HorizontalGroup("CSV Operation Buttons")]
         public void ExportTextToCSV()
         {
             var sw = new StreamWriter(@"Assets/" + CSVFileName + ".csv", false, Encoding.UTF8);
@@ -85,7 +144,9 @@ namespace ROOT.SetupAsset
             sw.Close();
         }
 
-        [ShowIf("levelType", LevelType.Tutorial), Button("Try Replace Text From CSV")][PropertyOrder(93)]
+        [ShowIf("levelType", LevelType.Tutorial), Button("Try Replace Text From CSV")]
+        [PropertyOrder(93)]
+        [HorizontalGroup("CSV Operation Buttons")]
         public void TryReplaceTextFromCSV()
         {
             var sw = new StreamReader(@"Assets/" + CSVFileName + ".csv", Encoding.UTF8);
