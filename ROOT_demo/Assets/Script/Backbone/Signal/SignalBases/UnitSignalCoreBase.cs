@@ -73,7 +73,7 @@ namespace ROOT.Signal
         [ShowInInspector]
         public bool InServerGrid; //for scoring purpose
 
-        void Awake()
+        protected virtual void Awake()
         {
             Visited = false;
             InServerGrid = false;

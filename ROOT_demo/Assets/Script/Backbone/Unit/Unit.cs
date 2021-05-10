@@ -9,7 +9,6 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace ROOT
 {
@@ -51,6 +50,12 @@ namespace ROOT
 
         public Transform ShopBackPlane;
         public Transform ShopDiscountRoot;
+        public Transform ThermoRangeIndicatorRoot;
+
+        public SpriteMask NorthThermoRangeIndicatorMask;
+        public SpriteMask SouthThermoRangeIndicatorMask;
+        public SpriteMask EastThermoRangeIndicatorMask;
+        public SpriteMask WestThermoRangeIndicatorMask;
         
         public Connector _localNorthConnector;
         public Connector _localEastConnector;
@@ -154,7 +159,22 @@ namespace ROOT
             }
             get => _hasDiscount;
         }
-        
+
+        public SpriteMask FindThermoRangeIndicatorByDirection(RotationDirection dir)
+        {
+            switch (dir)
+            {
+                case RotationDirection.North:
+                    return NorthThermoRangeIndicatorMask;
+                case RotationDirection.East:
+                    return EastThermoRangeIndicatorMask;
+                case RotationDirection.West:
+                    return WestThermoRangeIndicatorMask;
+                default:
+                    return SouthThermoRangeIndicatorMask;
+            }
+        }
+
         public void SetShop(int shopID, int retailPrice, int discountRate, int _cost, bool? showQuad)
         {
             ShopID = shopID;
@@ -474,7 +494,7 @@ namespace ROOT
         {
             Debug.Log("I'm clicked");
         }
-        
+
         protected void Awake()
         {
             ShopID = -1;
@@ -482,10 +502,14 @@ namespace ROOT
             UnitSides = new Dictionary<RotationDirection, SideType>();
             _unitRotation = RotationDirection.North;
 
+            var colorRaw = ColorLibManager.Instance.ColorLib.ROOT_MASTER_THERMO;
+            colorRaw.a = 0.35f;
+            ThermoRangeIndicatorRoot.GetComponentInChildren<SpriteRenderer>().color = colorRaw;
+            
             Immovable = false;
             ShopBackPlane.gameObject.SetActive(false);
         }
-        
+
         [Obsolete]
         private void UpdateDestConnectionSide(ConnectionMeshType connectionMeshType, ref Connector connector)
         {

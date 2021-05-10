@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using com.ootii.Messages;
 using UnityEngine;
 // ReSharper disable PossibleMultipleEnumeration
 
@@ -50,6 +51,45 @@ namespace ROOT.Signal
                 }
                 return 0.0f;
             }
+        }
+        
+        private bool ShowingThremoRange = false;
+
+        private void ThremoRangeToggle(IMessage rMessage)
+        {
+            ShowingThremoRange = !ShowingThremoRange;
+            UpdateRangeDisplay();
+        }
+
+        private void UpdateRangeDisplay()
+        {
+            if (Owner != null && Owner.UnitHardware == HardwareType.Field && Owner.ShopID == -1)
+            {
+                Owner.ThermoRangeIndicatorRoot.gameObject.SetActive(ShowingThremoRange && IsUnitActive);
+                foreach (var rotationDirection in Common.Utils.ROTATION_LIST)
+                {
+                    var otherpos = Owner.CurrentBoardPosition + Common.Utils.ConvertDirectionToBoardPosOffset(rotationDirection);
+                    Owner.FindThermoRangeIndicatorByDirection(rotationDirection).enabled = !Owner.GameBoard.CheckBoardPosValid(otherpos);
+                }
+            }
+        }
+
+        private void BoardSignalUpdatedHandler(IMessage rMessage)
+        {
+            UpdateRangeDisplay();
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, ThremoRangeToggle);
+            MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
+        }
+        
+        private void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.InGameOverlayToggleEvent, ThremoRangeToggle);
+            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
         }
     }
 }

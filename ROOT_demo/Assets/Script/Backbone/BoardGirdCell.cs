@@ -344,7 +344,8 @@ namespace ROOT
             //就相当浪费、但是目前也没有很好的办法。
             CashingText.enabled = !CashingText.enabled;
             SetText(GetCashIO());
-            showingThremoBoarder = !showingThremoBoarder;
+            //showingThremoBoarder = !showingThremoBoarder;
+            showingThremoBoarder = false;//先把这个流程关了。
             if (showingThremoBoarder)
             {
                 var data = new BoardGridThermoZoneInquiry { BoardGridThermoZoneInquiryCallBack = BoardGridThermoZoneInquiry};
