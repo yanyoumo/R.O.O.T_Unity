@@ -8,6 +8,7 @@ namespace ROOT
     {
         public Sprite UnSelectableThumbnail;
 
+        public int LevelAccessID = -1;
         public Button StartTutorialButton;
         public Image TutorialThumbnail;
         public Localize ButtonLocalize;
@@ -23,22 +24,10 @@ namespace ROOT
         {
             set
             {
-                _levelSelectable = value;
+                _levelSelectable = LevelAccessID == -1 || value;
                 UpdateSelectable();
             }
         }
-
-        /*[Sirenix.OdinInspector.Button]
-        public void TestEnable()
-        {
-            LevelSelectable = true;
-        }
-        
-        [Sirenix.OdinInspector.Button]
-        public void TestDisable()
-        {
-            LevelSelectable = false;
-        }*/
 
         private void UpdateSelectable()
         {
@@ -68,6 +57,7 @@ namespace ROOT
             TutorialThumbnail.sprite = cachedData.Thumbnail;
             TitleLocalize.SetTerm(cachedData.TitleTerm);
             ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
+            LevelAccessID = data.AccessID;
             return StartTutorialButton;
         }
     }

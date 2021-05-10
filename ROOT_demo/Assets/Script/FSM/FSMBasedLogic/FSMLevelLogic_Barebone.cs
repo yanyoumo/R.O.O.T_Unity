@@ -258,6 +258,7 @@ namespace ROOT
                     SuccessTerm = ScriptTerms.EndingMessageTutorial,
                     FailedTerm = ScriptTerms.EndingMessageTutorialFailed
                 };
+                return;
             }
             throw new Exception("This game mode could not end.");
         }

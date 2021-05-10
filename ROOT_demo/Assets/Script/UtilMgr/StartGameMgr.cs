@@ -87,14 +87,12 @@ namespace ROOT
             PlayerPrefs.Save(); 
         } 
         
-        private void CheckPlayerPrefs()
+        private void SetUpPlayerPrefs()
         {
             if (!PlayerPrefs.HasKey(PLAYER_ID)) PlayerPrefs.SetInt(PLAYER_ID, DateTime.UtcNow.Millisecond);
             if (!PlayerPrefs.HasKey(DEV_MODE)) PlayerPrefs.SetInt(DEV_MODE, 0);
             if (!PlayerPrefs.HasKey(MOUSE_DRAG_SENSITIVITY)) PlayerPrefs.SetInt(MOUSE_DRAG_SENSITIVITY, 50);
-
-            if (PlayerPrefs.HasKey(TUTORIAL_PROGRESS)) PlayerPrefs.SetInt(TUTORIAL_PROGRESS, 0);
-            if (PlayerPrefs.HasKey(GAMEPLAY_PROGRESS)) PlayerPrefs.SetInt(GAMEPLAY_PROGRESS, 0);
+            if (!PlayerPrefs.HasKey(GAME_PROGRESS)) PlayerPrefs.SetInt(GAME_PROGRESS, 0);
 
             PlayerPrefs.Save();
         }
@@ -104,7 +102,7 @@ namespace ROOT
         void Awake()
         {
             DOTween.Init();
-            CheckPlayerPrefs();
+            SetUpPlayerPrefs();
             //这里不能用Time.time，因为Awake和游戏运行时间差距一般很小且固定。所以这里要去调系统时间
             //RISK 这里可能需要去测试iOS的系统，目前没有测，测了后删掉。
             Random.InitState(DateTime.UtcNow.Millisecond);

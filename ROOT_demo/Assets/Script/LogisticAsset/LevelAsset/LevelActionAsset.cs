@@ -200,7 +200,7 @@ namespace ROOT.SetupAsset
             return data.ActionIdx * 10 + data.ActionSubIdx;
         }
 
-        public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(TitleTerm, "Play", Thumbnail);
+        public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(AcessID, TitleTerm, "Play", Thumbnail);
 
         public BossStageType? GetBossStage => HasBossRound ? BossStage : (BossStageType?) null;
 

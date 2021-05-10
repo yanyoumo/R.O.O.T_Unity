@@ -53,8 +53,8 @@ namespace ROOT
             
             if (!StartGameMgr.DevMode)
             {
-                GridMaster.TutorialGrid.SetSelectableLevels(PlayerPrefs.GetInt(StaticPlayerPrefName.TUTORIAL_PROGRESS));
-                GridMaster.MainPlayGrid.SetSelectableLevels(PlayerPrefs.GetInt(StaticPlayerPrefName.GAMEPLAY_PROGRESS));
+                GridMaster.TutorialGrid.SetSelectableLevels(PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS));
+                GridMaster.MainPlayGrid.SetSelectableLevels(PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS));
             }
         }
 

@@ -13,11 +13,11 @@ namespace ROOT.UI
 
         private int QuadCount = 20;
 
-        public void SetSelectableLevels(int idx)
+        public void SetSelectableLevels(int gameProgress)
         {
-            for (var i = 0; i < TutorialQuadS.Length; i++)
+            foreach (var t in TutorialQuadS)
             {
-                TutorialQuadS[i].LevelSelectable = (i <= idx);
+                t.LevelSelectable = (t.LevelAccessID <= gameProgress);
             }
         }
         

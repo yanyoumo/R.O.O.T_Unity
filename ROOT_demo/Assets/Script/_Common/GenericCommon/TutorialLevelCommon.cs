@@ -6,22 +6,25 @@ namespace ROOT
     [Serializable]
     public struct TutorialQuadDataPack
     {
+        public int AccessID;
         public string TitleTerm;
         public string ButtonTerm;
         public Sprite Thumbnail;
 
-        public TutorialQuadDataPack(string titleTerm, string _buttonTerm, string thumbnailName)
+        public TutorialQuadDataPack(int accessID,string titleTerm, string _buttonTerm, string thumbnailName)
         {
             TitleTerm = titleTerm;
             ButtonTerm = _buttonTerm;
             Thumbnail = Resources.Load<Sprite>("UIThumbnail/TutorialThumbnail/" + thumbnailName);
+            AccessID = accessID;
         }
 
-        public TutorialQuadDataPack(string titleTerm, string _buttonTerm, Sprite thumbnail)
+        public TutorialQuadDataPack(int accessID,string titleTerm, string _buttonTerm, Sprite thumbnail)
         {
             TitleTerm = titleTerm;
             ButtonTerm = _buttonTerm;
             Thumbnail = thumbnail;
+            AccessID = accessID;
         }
     }
 }

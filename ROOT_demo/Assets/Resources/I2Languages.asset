@@ -615,6 +615,14 @@ MonoBehaviour:
       - Pending
       Flags: 0000
       Languages_Touch: []
+    - Term: LevelName_GL2
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E0A\u624B\u8BD5\u8BD5-3"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
     - Term: LevelName_TL0
       TermType: 0
       Description: 
@@ -628,6 +636,22 @@ MonoBehaviour:
       Description: 
       Languages:
       - "\u5355\u5143\u57FA\u7840"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_TL2
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u5355\u5143\u57FA\u7840-2"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_TL3
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u5F85\u5B9A"
       - Pending
       Flags: 0000
       Languages_Touch: []

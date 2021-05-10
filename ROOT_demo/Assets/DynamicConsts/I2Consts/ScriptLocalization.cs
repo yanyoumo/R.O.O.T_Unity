@@ -36,8 +36,11 @@ namespace I2.Loc
 		public static string KMHintExtend 		{ get{ return LocalizationManager.GetTranslation ("KMHintExtend"); } }
 		public static string LevelName_GL0 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL0"); } }
 		public static string LevelName_GL1 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL1"); } }
+		public static string LevelName_GL2 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL2"); } }
 		public static string LevelName_TL0 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL0"); } }
 		public static string LevelName_TL1 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL1"); } }
+		public static string LevelName_TL2 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL2"); } }
+		public static string LevelName_TL3 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL3"); } }
 		public static string Level_1 		{ get{ return LocalizationManager.GetTranslation ("Level_1"); } }
 		public static string Level_2 		{ get{ return LocalizationManager.GetTranslation ("Level_2"); } }
 		public static string Level_3 		{ get{ return LocalizationManager.GetTranslation ("Level_3"); } }
@@ -115,8 +118,11 @@ namespace I2.Loc
 		public const string KMHintExtend = "KMHintExtend";
 		public const string LevelName_GL0 = "LevelName_GL0";
 		public const string LevelName_GL1 = "LevelName_GL1";
+		public const string LevelName_GL2 = "LevelName_GL2";
 		public const string LevelName_TL0 = "LevelName_TL0";
 		public const string LevelName_TL1 = "LevelName_TL1";
+		public const string LevelName_TL2 = "LevelName_TL2";
+		public const string LevelName_TL3 = "LevelName_TL3";
 		public const string Level_1 = "Level_1";
 		public const string Level_2 = "Level_2";
 		public const string Level_3 = "Level_3";
