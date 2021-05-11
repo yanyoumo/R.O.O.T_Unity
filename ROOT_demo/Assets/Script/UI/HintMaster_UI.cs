@@ -19,6 +19,7 @@ namespace ROOT.UI
     public class HintMaster_UI : MonoBehaviour
     {
         public UIView TutorialCheckList;
+        public UIView TutorialCheckList_Alter;
         public UIView TutorialMainTextFrame;
         public UIView TutorialMainTextFrame_Alter;
         public UIView TutorialHandOff;
@@ -26,6 +27,7 @@ namespace ROOT.UI
         public TextMeshProUGUI TutorialTextMainContent;
         public TextMeshProUGUI TutorialTextMainContent_Alter;
         public TutorialCheckList_Doozy TutorialCheckListCore;
+        public TutorialCheckList_Doozy TutorialCheckListCore_Alt;
 
         public TextMeshProUGUI TutorialNextContent;
         public TextMeshProUGUI TutorialNextContent_Alter;
@@ -42,23 +44,29 @@ namespace ROOT.UI
             }
         }
 
-        private bool _usingAlternateFrame;
-        
-        private bool _setUsingAlternateFrame
+        private bool _usingAlternateMainText;
+        private void setUsingAlternateMainText(bool toggle)
         {
-            set
+            _usingAlternateMainText = toggle;
+            if (TutorialMainTextFrame.IsVisible || TutorialMainTextFrame_Alter.IsVisible)
             {
-                _usingAlternateFrame = value;
-                //Debug.Log(" _usingAlternateFrame = value;");
-                if (TutorialMainTextFrame.IsVisible || TutorialMainTextFrame_Alter.IsVisible)//这个判断不靠谱？？
-                {
-                    //Debug.Log("TutorialMainTextFrame.IsShowing || TutorialMainTextFrame_Alter.IsShowing");
-                    TutorialMainTextFrame.Toggle();
-                    TutorialMainTextFrame_Alter.Toggle();
-                }
+                TutorialMainTextFrame.Toggle();
+                TutorialMainTextFrame_Alter.Toggle();
             }
         }
-        
+
+        private bool _usingAlternateGoalPanel;
+        private void setAlternateGoalPanel(bool toggle)
+        {
+            Debug.Log("setAlternateGoalPanel");
+            _usingAlternateGoalPanel = toggle;
+            if (TutorialCheckList.IsVisible || TutorialCheckList_Alter.IsVisible)
+            {
+                TutorialCheckList.Toggle();
+                TutorialCheckList_Alter.Toggle();
+            }
+        }
+
         Vector3 handsOffOldPos;
         Vector3 nextTextOldPos;
         Vector3 altNextTextOldPos;
@@ -83,7 +91,7 @@ namespace ROOT.UI
                 switch (info.HintEventType)
                 {
                     case HintEventType.SetGoalCheckListShow:
-                        UIViewToggleWrapper(ref TutorialCheckList, info.BoolData);
+                        SetTutorialCheckList(info);
                         break;
                     case HintEventType.SetTutorialTextShow:
                         SetTutorialText(info);
@@ -97,15 +105,18 @@ namespace ROOT.UI
                         break;
                     case HintEventType.SetGoalContent:
                         TutorialCheckListCore.SetupMainGoalContent(info.StringData);
+                        TutorialCheckListCore_Alt.SetupMainGoalContent(info.StringData);
                         return;
                     case HintEventType.GoalFailed:
                         TutorialCheckListCore.TutorialFailed = info.BoolData;
+                        TutorialCheckListCore_Alt.TutorialFailed = info.BoolData;
                         return;
                     case HintEventType.SetHelpScreenShow:
                         Debug.LogWarning("ShowHelpScreen Not yet implemented");
                         return;
                     case HintEventType.GoalComplete:
                         TutorialCheckListCore.MainGoalCompleted = info.BoolData;
+                        TutorialCheckListCore_Alt.MainGoalCompleted = info.BoolData;
                         break;
                     case HintEventType.NextIsEnding:
                         TutorialNextContent.text = "按[回车]以结束本关教程";
@@ -115,7 +126,10 @@ namespace ROOT.UI
                         UIViewToggleWrapper(ref TutorialHandOff, !info.BoolData);
                         break;
                     case HintEventType.ToggleAlternateTextPos:
-                        _setUsingAlternateFrame = !_usingAlternateFrame;
+                        setUsingAlternateMainText(!_usingAlternateMainText);
+                        break;
+                    case HintEventType.ToggleAlternateCheckGoal:
+                        setAlternateGoalPanel(!_usingAlternateGoalPanel);
                         break;
                     case HintEventType.ControllerBlockedAlert:
                         BlinkControllerBlockedAlert();
@@ -128,14 +142,27 @@ namespace ROOT.UI
             throw new ArgumentException("info type miss match");
         }
 
+        private void SetTutorialCheckList(HintEventInfo info)
+        {
+            if (!_usingAlternateGoalPanel || !info.BoolData)
+            {
+                UIViewToggleWrapper(ref TutorialCheckList, info.BoolData);
+            }
+
+            if (_usingAlternateGoalPanel || !info.BoolData)
+            {
+                UIViewToggleWrapper(ref TutorialCheckList_Alter, info.BoolData);
+            }
+        }
+        
         private void SetTutorialText(HintEventInfo info)
         {
-            if (!_usingAlternateFrame || !info.BoolData)
+            if (!_usingAlternateMainText || !info.BoolData)
             {
                 UIViewToggleWrapper(ref TutorialMainTextFrame, info.BoolData);
             }
 
-            if (_usingAlternateFrame || !info.BoolData)
+            if (_usingAlternateMainText || !info.BoolData)
             {
                 UIViewToggleWrapper(ref TutorialMainTextFrame_Alter, info.BoolData);
             }
@@ -145,6 +172,7 @@ namespace ROOT.UI
         {
             MessageDispatcher.AddListener(WorldEvent.HintRelatedEvent, HintEventHandler);
             TutorialCheckListCore.SetupSecondaryGoalContent("");
+            TutorialCheckListCore_Alt.SetupSecondaryGoalContent("");
             handsOffOldPos = TutorialHandOff.transform.localPosition;
             nextTextOldPos = TutorialNextContent.transform.localPosition;
             altNextTextOldPos = TutorialNextContent_Alter.transform.localPosition;

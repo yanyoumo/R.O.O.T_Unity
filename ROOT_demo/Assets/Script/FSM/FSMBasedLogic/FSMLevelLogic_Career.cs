@@ -148,8 +148,11 @@ namespace ROOT
         private void UseDynamicRoundLib()
         {
             //现在的设计是，用一次动态库之后就不设回去了。
-            RoundLibDriver.DynamicRoundLib = new List<RoundData>(LevelAsset.ActionAsset.RoundLib);//用静态Round初始化动态类。
-            RoundLibDriver.UseStaticLib = false;
+            if (RoundLibDriver.UseStaticLib)
+            {
+                RoundLibDriver.DynamicRoundLib = new List<RoundData>(LevelAsset.ActionAsset.RoundLib);//用静态Round初始化动态类。
+                RoundLibDriver.UseStaticLib = false;
+            }
         }
         
         protected virtual void SetUpRoundLock()

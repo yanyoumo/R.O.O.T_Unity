@@ -14,6 +14,7 @@ namespace ROOT
         NextIsEnding = 7,
         ToggleHandOnView = 8,
         ToggleAlternateTextPos = 9,
+        ToggleAlternateCheckGoal = 11,
         ControllerBlockedAlert = 10,
     }
 

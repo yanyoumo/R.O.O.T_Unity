@@ -344,6 +344,25 @@ namespace ROOT.FSM
                 Toggle = tutorialActionData.Set, TutorialOrGameplay = true, PageNum = tutorialActionData.Numpage
             });
         }
+
+        private void ToggleAlternateHandsOnGoalFunc(TutorialActionData tutorialActionData)
+        {
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleAlternateCheckGoal});
+        }
+
+        private void AutoProceedRoundFunc(TutorialActionData tutorialActionData)
+        {
+            if (tutorialActionData.RoundCount==0)
+            {
+                return;
+            }
+            if (tutorialActionData.RoundCount>0)
+            {
+                WorldCycler.ExpectedStepIncrement(tutorialActionData.RoundCount);
+                return;
+            }
+            WorldCycler.ExpectedStepDecrement(Math.Abs(tutorialActionData.RoundCount));
+        }
         
         public TutorialFSMModule(FSMLevelLogic _fsm)
         {
@@ -370,6 +389,8 @@ namespace ROOT.FSM
                 {ToggleGameplayUI, ToggleGameplayUIFunc},
                 {DeleteUnit, DeleteUnitFunc},
                 {ToggleTutorialHintPage, ToggleTutorialHintPageFunc},
+                {ToggleAlternateHandsOnGoal, ToggleAlternateHandsOnGoalFunc},
+                {AutoProceedRound, AutoProceedRoundFunc},
             };
         }
 

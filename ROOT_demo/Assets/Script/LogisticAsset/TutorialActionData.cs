@@ -110,6 +110,9 @@ namespace ROOT.SetupAsset
         [ShowIf("Set")]
         public int Numpage;
 
+        [VerticalGroup("DetailedData"), ShowIf("ActionType", TutorialActionType.AutoProceedRound)]
+        public int RoundCount;
+        
         bool ShowSet()
         {
             var IsToggleFSMCoreFeat = ActionType == TutorialActionType.ToggleFSMCoreFeat;
