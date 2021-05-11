@@ -25,6 +25,8 @@ namespace ROOT
         private Dictionary<FSMFeatures, bool> _interalToggles;
         private Dictionary<FSMFeatures, FSMFeatures[]> _externalToggles;
 
+        public bool CheckHasFeature(FSMFeatures feat) => _interalToggles.ContainsKey(feat);
+
         public void RegistFSMFeature(FSMFeatures feat, FSMFeatures[] dependingFeats, bool defaultVal)
         {
             _interalToggles.Add(feat, defaultVal);

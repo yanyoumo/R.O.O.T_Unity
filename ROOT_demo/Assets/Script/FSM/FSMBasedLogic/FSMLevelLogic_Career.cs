@@ -7,6 +7,7 @@ using ROOT.Common;
 using ROOT.Consts;
 using ROOT.Message;
 using ROOT.Message.Inquiry;
+using ROOT.SetupAsset;
 using UnityEngine;
 
 namespace ROOT
@@ -17,9 +18,7 @@ namespace ROOT
         protected virtual string FailedEndingTerm => ScriptTerms.EndingMessageNoBoss_NoEarnedMoney;
         
         protected override float LevelProgress => LevelAsset.StepCount / (float) RoundLibDriver.PlayableCount;
-        public override bool CouldHandleSkill => true;
-        public override bool CouldHandleBoss => false;
-        public override bool CouldHandleShop => true;
+        public override bool CouldHandleTimeLine => true;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
         public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_CAREER;
         protected override bool IsForwardCycle => AutoForward || MovedTile;
@@ -98,6 +97,18 @@ namespace ROOT
             {
                 LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
             }
+            if (UseTutorialVer)
+            {
+                if (!_roundLocked && TutorialModule.RoundLock)
+                {
+                    SetUpRoundLock();
+                }
+
+                if (!TutorialModule.RoundLock&&_roundLocked)
+                {
+                    UnSetRoundLock();
+                }
+            }
         }
 
         protected override void AdditionalInitLevel()
@@ -125,16 +136,39 @@ namespace ROOT
                 }
             }
             MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = false, SelectAll = false, UITag = UITag.Currency_BareBone});
+            
             if (UseTutorialVer)
             {
-                FeatureManager.RegistFSMFeature(FSMFeatures.Round,new []{FSMFeatures.Shop,FSMFeatures.Currency}, false);
-                FeatureManager.RegistFSMFeature(FSMFeatures.Skill,new []{FSMFeatures.Round,FSMFeatures.Shop,FSMFeatures.Currency}, false);
                 LevelAsset.TimeLine.CurrentStatus = TimeLineStatus.Disabled;
             }
         }
 
+        private bool _roundLocked = false;
+
+        private void UseDynamicRoundLib()
+        {
+            //现在的设计是，用一次动态库之后就不设回去了。
+            RoundLibDriver.DynamicRoundLib = new List<RoundData>(LevelAsset.ActionAsset.RoundLib);//用静态Round初始化动态类。
+            RoundLibDriver.UseStaticLib = false;
+        }
+        
+        protected virtual void SetUpRoundLock()
+        {
+            _roundLocked = true;
+            UseDynamicRoundLib();
+        }
+        
+        protected virtual void UnSetRoundLock()
+        {
+            _roundLocked = false;
+        }
+        
         protected virtual void UpdateRoundData_Stepped()
         {
+            if (_roundLocked)
+            {
+                RoundLibDriver.StretchCurrentRound(LevelAsset.StepCount);
+            }
             var roundGist = RoundLibDriver.CurrentRoundGist.Value;
             var tCount = RoundLibDriver.GetTruncatedStep(LevelAsset.StepCount);
             if (roundGist.SwitchHeatsink(tCount))
@@ -373,6 +407,11 @@ namespace ROOT
         {
             base.Awake();
             RoundLibDriver = new RoundLibDriver {owner = this};
+            if (UseTutorialVer)
+            {
+                FeatureManager.RegistFSMFeature(FSMFeatures.Round,new []{FSMFeatures.Shop,FSMFeatures.Currency}, false);
+                FeatureManager.RegistFSMFeature(FSMFeatures.Skill,new []{FSMFeatures.Round,FSMFeatures.Shop,FSMFeatures.Currency}, false);
+            }
         }
     }
 }

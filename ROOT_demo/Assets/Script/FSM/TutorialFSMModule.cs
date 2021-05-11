@@ -117,29 +117,67 @@ namespace ROOT.FSM
         private bool shouldInitTutorial = true;
         private bool TutorialOnHand = false;
 
-        private void SetHandOn(TutorialActionData data)
+        private void SetupHandOnTimer(TutorialActionData data)
         {
-            TutorialOnHand = true;
-            PendingHandOnChecking = CheckLib[data.HandOnCheckType];
-            MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission });
-            MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = true });
-            ShowCheckListFunc(true);
-            ShowTextFunc(false);
-            CurrentHandOnCheckMet = PendingHandOnChecking(owner, LevelAsset.GameBoard);//这边就就地测一下
             handOnTimeOutThreadholdSec = data.TimeOutSec == 0 ? 60 : data.TimeOutSec;//RISK
             handOnTimeOutTimer = 0.0f;
+        }
+        
+        private void ResetHandOnTimer()
+        {
+            handOnTimeOutThreadholdSec = -1;
+            handOnTimeOutTimer = 0.0f;
+        }
+
+        private bool _roundLock = false;
+        public bool RoundLock
+        {
+            get => _roundLock;
+            private set
+            {
+                if (owner.CouldHandleTimeLine)
+                {
+                    if (!owner.FeatureManager.CheckHasFeature(FSMFeatures.Round))
+                    {
+                        throw new ApplicationException("Round feature not registered");
+                    }
+                    _roundLock = value;
+                    return;
+                }
+                Debug.LogWarning("this FSM could not handle Timeline");
+            }
+        }
+        
+        private void SetHandOn(TutorialActionData data)
+        {
+            SetupHandOnTimer(data);
+            TutorialOnHand = true;
+            PendingHandOnChecking = CheckLib[data.HandOnCheckType];
+            CurrentHandOnCheckMet = PendingHandOnChecking(owner, LevelAsset.GameBoard);
+            
+            //TODO Failed部分逻辑也在这里做。
+
+            RoundLock = data.HandsOnLockRound;
+            
+            ShowCheckListFunc(true);
+            ShowTextFunc(false);
+            MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.SetGoalContent, StringData = data.HandOnMission });
+            MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = true });
             MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.GoalComplete, BoolData = CurrentHandOnCheckMet });
         }
 
         private void UnsetHandOn()
         {
-            handOnTimeOutThreadholdSec = -1;
-            handOnTimeOutTimer = 0.0f;
+            ResetHandOnTimer();
             TutorialOnHand = false;
             PendingHandOnChecking = (a, b) => false;
-            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
-            ShowCheckListFunc(false);
             CurrentHandOnCheckMet = false;
+
+            RoundLock = false;
+
+            ShowCheckListFunc(false);
+            MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleHandOnView, BoolData = false});
+            
             StepForward();
             DealStepMgr();
         }
@@ -180,9 +218,6 @@ namespace ROOT.FSM
             LevelAsset.Shop.OpenShop(false, 0);
             MessageDispatcher.SendMessage(new HintEventInfo { HintEventType = HintEventType.ToggleHandOnView, BoolData = false });
             MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = false, SelectAll = true,});
-            //下面两句话要最后做、要不然实质相当于初始化没做完。
-            StepForward();
-            DealStepMgr();
         }
 
         private void ToggleAlternateText(TutorialActionData data)
@@ -340,7 +375,6 @@ namespace ROOT.FSM
 
         internal void TutorialMajorUpkeep()
         {
-            TutorialInit();
             if (TutorialOnHand)
             {
                 CurrentHandOnCheckMet = PendingHandOnChecking(owner, LevelAsset.GameBoard);//这边就就地测一下
@@ -372,6 +406,11 @@ namespace ROOT.FSM
                     //现在这个执行还稍稍有些半吊子，还是需要优化一下。
                     MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ControllerBlockedAlert});
                 }
+            }
+            if (CurrentActionIndex == -1)//第一步自动执行。
+            {
+                StepForward();
+                DealStepMgr();
             }
         }
 

@@ -20,7 +20,6 @@ namespace ROOT
     {
         protected override string SucceedEndingTerm => ScriptTerms.EndingMessageTelemetry_Successed;
         protected override string FailedEndingTerm => ScriptTerms.EndingMessageTelemetry_Failed;
-        public override bool CouldHandleSkill => true;
         public override bool CouldHandleBoss => true;
         public override BossStageType HandleBossType => BossStageType.Telemetry;
         

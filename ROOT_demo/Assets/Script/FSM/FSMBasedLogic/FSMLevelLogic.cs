@@ -29,9 +29,8 @@ namespace ROOT
         public bool UseTutorialVer = false;
         protected bool MovedTile;
 
-        public abstract bool CouldHandleSkill { get; }
+        public abstract bool CouldHandleTimeLine { get; }
         public abstract bool CouldHandleBoss { get; }
-        public abstract bool CouldHandleShop { get; }
         public abstract BossStageType HandleBossType { get; }
 
         public abstract int LEVEL_ART_SCENE_ID { get; }

@@ -61,9 +61,8 @@ namespace ROOT
             //Base version, DoNothing.
         }
 
-        public override bool CouldHandleSkill => false;
         public override bool CouldHandleBoss => false;
-        public override bool CouldHandleShop => true;
+        public override bool CouldHandleTimeLine => false;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
 
         private bool HandlingCurrency => !UseTutorialVer || FeatureManager.GetExternalToggleVal(FSMFeatures.Currency);
@@ -78,7 +77,7 @@ namespace ROOT
             if (UseTutorialVer)
             {
                 //教程不自动切，完全交予Action。
-                TutorialModule.TutorialInit();
+                TutorialModule.TutorialInit();//BUG 坑在这儿、主要是在这儿太早地执行了一步。
             }
             else
             {

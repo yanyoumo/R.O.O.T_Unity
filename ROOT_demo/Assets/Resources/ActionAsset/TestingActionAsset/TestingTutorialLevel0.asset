@@ -25,6 +25,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: 8d879c0911826e84f8e6ddb6e4b95db5, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9d91410b0b8c8545b41feda51e82d76,
     type: 3}
+  AcessID: -1
   InitialCurrency: 36
   ShopCost: 1
   UnitCost: 1
@@ -66,6 +67,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -95,6 +98,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -124,6 +129,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -159,6 +166,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -188,6 +197,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -223,6 +234,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -252,6 +265,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -281,6 +296,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: ----------
     TimeOutSec: 0
     TargetTag: 0
@@ -310,6 +327,39 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 0
+    ActionSubIdx: 0
+    ActionType: 8
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0

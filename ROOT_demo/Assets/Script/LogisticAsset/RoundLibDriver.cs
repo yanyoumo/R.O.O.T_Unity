@@ -29,12 +29,12 @@ namespace ROOT
         public bool IsBossRound => CurrentStage == StageType.Boss;
 
         #region RoundData
-        //TODO 这里就是下一个硬骨头、主要是这个RoundLib一直被设置成"静态的"，下一个工作就是搞一个API把这个东西变成动态的。
+        //这里就是下一个硬骨头、主要是这个RoundLib一直被设置成"静态的"，下一个工作就是搞一个API把这个东西变成动态的。
         //这个东西本身估计没法直接硬拆、估计还是加一个夹层结构、有一个基础RoundLib，中间插一个可调整的东西。
         //其中一个比较有问题的就是需要下面相关读取代码提出来。有可能想办法把"静态"版注入Asset里面去、然后相关的处理直接放在FSM里面。
-        //TODO 对RoundData相关的调整实质是一种“非线性”编辑流程。感觉这个玩意儿还是先不要冲的太猛？
-        private bool UseStaticLib = true;
-        private List<RoundData> DynamicRoundLib;//主要是现有框架下能不能处理为空的RoundLib。
+        //对RoundData相关的调整实质是一种“非线性”编辑流程。感觉这个玩意儿还是先不要冲的太猛？
+        public bool UseStaticLib = true;
+        public List<RoundData> DynamicRoundLib;//主要是现有框架下能不能处理为空的RoundLib。
         private List<RoundData> RoundLib => UseStaticLib ? _ActionAsset.RoundLib : DynamicRoundLib;
         private bool HasBossRound => _ActionAsset.HasBossRound;
         private bool Endless => _ActionAsset.Endless;
@@ -78,6 +78,46 @@ namespace ROOT
             }
 
             throw new ArgumentException("Round should have Ended");
+        }
+
+        public void StretchCurrentRound(int step)
+        {
+            if (UseStaticLib)
+            {
+                Debug.LogError("Try to stretch static lib, operation abort!!!");
+                return;
+            }
+
+            var crtRound = GetCurrentRound(step, out var truncatedStep, out var normalRoundEnded);
+            var crtRoundGist = GetCurrentRoundGist(step);
+
+            //自己手动复制构造函数、因为是可序列化结构、这个东西不要在构造里面搞。
+            var newRound = new RoundData
+            {
+                ID = DynamicRoundLib[crtRound.ID].ID,
+                ShopLength = DynamicRoundLib[crtRound.ID].ShopLength,
+                RequireLength = DynamicRoundLib[crtRound.ID].RequireLength,
+                HeatSinkLength = DynamicRoundLib[crtRound.ID].HeatSinkLength,
+                TypeARequirement = DynamicRoundLib[crtRound.ID].TypeARequirement,
+                TypeBRequirement = DynamicRoundLib[crtRound.ID].TypeBRequirement,
+            };
+
+            switch (crtRoundGist.Type)
+            {
+                case StageType.Shop:
+                    newRound.ShopLength++;
+                    break;
+                case StageType.Require:
+                    newRound.RequireLength++;
+                    break;
+                case StageType.Destoryer:
+                    newRound.HeatSinkLength++;
+                    break;
+                default:
+                    Debug.LogError("Try to stretch non-stretchable round, operation abort!!!");
+                    return;
+            }
+            DynamicRoundLib[crtRound.ID] = newRound;
         }
 
         public RoundGist GetCurrentRoundGist(int step)

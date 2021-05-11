@@ -54,6 +54,12 @@ namespace ROOT.SetupAsset
         public TutorialCheckType HandOnCheckType;
 
         [VerticalGroup("DetailedData"), ShowIf("ActionType", TutorialActionType.HandOn)]
+        public TutorialFailedType HandOnFailedType;
+
+        [VerticalGroup("DetailedData"), ShowIf("ActionType", TutorialActionType.HandOn)]
+        public bool HandsOnLockRound;
+        
+        [VerticalGroup("DetailedData"), ShowIf("ActionType", TutorialActionType.HandOn)]
         public String HandOnMission;
 
         [VerticalGroup("DetailedData"), ShowIf("ActionType", TutorialActionType.HandOn)]
