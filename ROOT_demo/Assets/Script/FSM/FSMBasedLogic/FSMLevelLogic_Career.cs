@@ -23,7 +23,7 @@ namespace ROOT
         public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_CAREER;
         protected override bool IsForwardCycle => AutoForward || MovedTile;
         
-        protected RoundLibDriver RoundLibDriver;
+        public RoundLibDriver RoundLibDriver { get; private set; }
         private bool AutoForward => (AutoDrive.HasValue && AutoDrive.Value);
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
         protected bool IsSkillAllowed => !RoundLibDriver.IsShopRound;

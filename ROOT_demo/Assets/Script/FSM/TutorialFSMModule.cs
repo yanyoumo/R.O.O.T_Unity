@@ -350,18 +350,19 @@ namespace ROOT.FSM
             MessageDispatcher.SendMessage(new HintEventInfo {HintEventType = HintEventType.ToggleAlternateCheckGoal});
         }
 
-        private void AutoProceedRoundFunc(TutorialActionData tutorialActionData)
+        private void AutoProceedToNextStageFunc(TutorialActionData tutorialActionData)
         {
-            if (tutorialActionData.RoundCount==0)
+            if (!owner.CouldHandleTimeLine)
             {
+                Debug.Log("current fsm could not handle TimeLine");
                 return;
             }
-            if (tutorialActionData.RoundCount>0)
+            if (!(owner is FSMLevelLogic_Career owner_Career))
             {
-                WorldCycler.ExpectedStepIncrement(tutorialActionData.RoundCount);
-                return;
+                throw new ApplicationException("FSM should support TimeLine but no correct API");
             }
-            WorldCycler.ExpectedStepDecrement(Math.Abs(tutorialActionData.RoundCount));
+            var nextStep=owner_Career.RoundLibDriver.GetCurrentStageRemainingStep(owner.LevelAsset.StepCount);
+            WorldCycler.ExpectedStepIncrement(nextStep);
         }
         
         public TutorialFSMModule(FSMLevelLogic _fsm)
@@ -390,7 +391,7 @@ namespace ROOT.FSM
                 {DeleteUnit, DeleteUnitFunc},
                 {ToggleTutorialHintPage, ToggleTutorialHintPageFunc},
                 {ToggleAlternateHandsOnGoal, ToggleAlternateHandsOnGoalFunc},
-                {AutoProceedRound, AutoProceedRoundFunc},
+                {AutoProceedToNextStage, AutoProceedToNextStageFunc},
             };
         }
 

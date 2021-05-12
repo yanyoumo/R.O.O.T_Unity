@@ -84,7 +84,6 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 2
     Numpage: 0
-    RoundCount: 0
   - ActionIdx: 0
     ActionSubIdx: 1
     ActionType: 18
@@ -116,7 +115,6 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-    RoundCount: 0
   - ActionIdx: 0
     ActionSubIdx: 2
     ActionType: 2
@@ -148,7 +146,6 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-    RoundCount: 0
   - ActionIdx: 0
     ActionSubIdx: 3
     ActionType: 21
@@ -180,7 +177,6 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-    RoundCount: 0
   - ActionIdx: 0
     ActionSubIdx: 4
     ActionType: 8
@@ -212,7 +208,6 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-    RoundCount: 0
   - ActionIdx: 1
     ActionSubIdx: 0
     ActionType: 0
@@ -244,7 +239,6 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-    RoundCount: 0
   - ActionIdx: 1
     ActionSubIdx: 1
     ActionType: 3
@@ -276,8 +270,38 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-    RoundCount: 0
   - ActionIdx: 2
+    ActionSubIdx: 0
+    ActionType: 22
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 3
     ActionSubIdx: 0
     ActionType: 8
     Text: 
@@ -308,8 +332,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-    RoundCount: 0
-  - ActionIdx: 3
+  - ActionIdx: 4
     ActionSubIdx: 0
     ActionType: 0
     Text: sdvasdhusdsdghjooi;sdvhoi;asoihsdfoihpjoio
@@ -340,8 +363,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-    RoundCount: 0
-  - ActionIdx: 3
+  - ActionIdx: 4
     ActionSubIdx: 1
     ActionType: 3
     Text: 
@@ -372,8 +394,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-    RoundCount: 0
-  - ActionIdx: 4
+  - ActionIdx: 5
     ActionSubIdx: 0
     ActionType: 8
     Text: 
@@ -404,7 +425,6 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-    RoundCount: 0
   mainIDXToinsert: 2
   subIDXToinsert: 0
   CSVFileName: TutorialLevel2_Text

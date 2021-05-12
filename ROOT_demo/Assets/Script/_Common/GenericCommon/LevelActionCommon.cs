@@ -32,7 +32,7 @@ namespace ROOT
         DeleteUnit = 19,
         ToggleTutorialHintPage = 20,
         ToggleAlternateHandsOnGoal = 21,
-        AutoProceedRound = 22
+        AutoProceedToNextStage = 22
     }
 
     public enum BossStageType
