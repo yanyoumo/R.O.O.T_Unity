@@ -42,7 +42,20 @@ namespace ROOT
         {
             ShouldShow = false;
         }
-        
+
+        private void TogglePage_Additive(Transform[] targetingPages, HintPageChangedData data)
+        {
+            targetingPages[data.PageNum].gameObject.SetActive(data.Toggle);
+        }
+
+        private void TogglePage_Replace(Transform[] targetingPages, HintPageChangedData data)
+        {
+            for (var i = 0; i < targetingPages.Length; i++)
+            {
+                targetingPages[i].gameObject.SetActive(data.Toggle && (i == data.PageNum));
+            }
+        }
+
         void HintPageChangedEventHandler(IMessage rMessage)
         {
             if (rMessage is HintPageChangedData data)
@@ -54,9 +67,13 @@ namespace ROOT
                     Debug.LogWarning("Requesting page:"+data.PageNum+" for "+ (data.TutorialOrGameplay ? "Tutorial" : "Gameplay")+" is not valid, request ignored!");
                     return;
                 }
-                for (var i = 0; i < targetingPages.Length; i++)
+                if (data.AdditiveOrReplace)
                 {
-                    targetingPages[i].gameObject.SetActive(data.Toggle && (i == data.PageNum));
+                    TogglePage_Additive(targetingPages, data);
+                }
+                else
+                {
+                    TogglePage_Replace(targetingPages, data);
                 }
             }
         }

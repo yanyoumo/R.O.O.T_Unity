@@ -341,7 +341,10 @@ namespace ROOT.FSM
         {
             MessageDispatcher.SendMessage(new HintPageChangedData
             {
-                Toggle = tutorialActionData.Set, TutorialOrGameplay = true, PageNum = tutorialActionData.Numpage
+                Toggle = tutorialActionData.Set, 
+                TutorialOrGameplay = true, 
+                PageNum = tutorialActionData.Numpage,
+                AdditiveOrReplace = tutorialActionData.Set//这个没写错、是锁死：关掉肯定是Replace，打开是Additive
             });
         }
 
