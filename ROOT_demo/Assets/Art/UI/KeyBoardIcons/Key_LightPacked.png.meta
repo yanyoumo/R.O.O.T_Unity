@@ -1,0 +1,2388 @@
+fileFormatVersion: 2
+guid: e01396cf6a5e3fa45abf03c44a6db7f9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8960401725190669151
+    second: Key_LightPacked_0
+  - first:
+      213: -2172832788939605771
+    second: Key_LightPacked_1
+  - first:
+      213: 5810427412783044547
+    second: Key_LightPacked_2
+  - first:
+      213: -2094637620408716278
+    second: Key_LightPacked_3
+  - first:
+      213: -2883788526296206692
+    second: Key_LightPacked_4
+  - first:
+      213: 6901102818250266888
+    second: Key_LightPacked_5
+  - first:
+      213: -8491872235777990844
+    second: Key_LightPacked_6
+  - first:
+      213: 7578370028695705215
+    second: Key_LightPacked_7
+  - first:
+      213: 237204938496537639
+    second: Key_LightPacked_8
+  - first:
+      213: -3095434041679873648
+    second: Key_LightPacked_9
+  - first:
+      213: -5704282082492249119
+    second: Key_LightPacked_10
+  - first:
+      213: 8275908706257295348
+    second: Key_LightPacked_11
+  - first:
+      213: -519221976233055271
+    second: Key_LightPacked_12
+  - first:
+      213: -1144490217308224038
+    second: Key_LightPacked_13
+  - first:
+      213: 2680966194008123541
+    second: Key_LightPacked_14
+  - first:
+      213: -3579351938689933848
+    second: Key_LightPacked_15
+  - first:
+      213: -8989127228146149899
+    second: Key_LightPacked_16
+  - first:
+      213: 6290444939082755442
+    second: Key_LightPacked_17
+  - first:
+      213: -8668913225159638982
+    second: Key_LightPacked_18
+  - first:
+      213: -8620028833384446810
+    second: Key_LightPacked_19
+  - first:
+      213: 3745829344937239474
+    second: Key_LightPacked_20
+  - first:
+      213: -54023562851198493
+    second: Key_LightPacked_21
+  - first:
+      213: 7370368639459363253
+    second: Key_LightPacked_22
+  - first:
+      213: -6743943838764332813
+    second: Key_LightPacked_23
+  - first:
+      213: -4755637705144962519
+    second: Key_LightPacked_24
+  - first:
+      213: 7514755967070279101
+    second: Key_LightPacked_25
+  - first:
+      213: 4912650531713038399
+    second: Key_LightPacked_26
+  - first:
+      213: 5886757898563377525
+    second: Key_LightPacked_27
+  - first:
+      213: 2064510661303746863
+    second: Key_LightPacked_28
+  - first:
+      213: -7392145566728894104
+    second: Key_LightPacked_29
+  - first:
+      213: -3791165904380715322
+    second: Key_LightPacked_30
+  - first:
+      213: 5237482837641582995
+    second: Key_LightPacked_31
+  - first:
+      213: -418621879779338472
+    second: Key_LightPacked_32
+  - first:
+      213: -7099943804680954602
+    second: Key_LightPacked_33
+  - first:
+      213: -5253433226851973375
+    second: Key_LightPacked_34
+  - first:
+      213: 6337039669164858881
+    second: Key_LightPacked_35
+  - first:
+      213: 2858454425794213293
+    second: Key_LightPacked_36
+  - first:
+      213: -507008790086126759
+    second: Key_LightPacked_37
+  - first:
+      213: -6240068615159663135
+    second: Key_LightPacked_38
+  - first:
+      213: 1852196894954344751
+    second: Key_LightPacked_39
+  - first:
+      213: -1485895841590729829
+    second: Key_LightPacked_40
+  - first:
+      213: -1249137169897674206
+    second: Key_LightPacked_41
+  - first:
+      213: 3303979200596195345
+    second: Key_LightPacked_42
+  - first:
+      213: 1963105072587759301
+    second: Key_LightPacked_43
+  - first:
+      213: -8347404687964343322
+    second: Key_LightPacked_44
+  - first:
+      213: 883396647288256833
+    second: Key_LightPacked_45
+  - first:
+      213: -4242514575762571572
+    second: Key_LightPacked_46
+  - first:
+      213: 6844148850422862326
+    second: Key_LightPacked_47
+  - first:
+      213: 726246167580937239
+    second: Key_LightPacked_48
+  - first:
+      213: -180849688446656134
+    second: Key_LightPacked_49
+  - first:
+      213: -3114719036925060995
+    second: Key_LightPacked_50
+  - first:
+      213: 953666632088163923
+    second: Key_LightPacked_51
+  - first:
+      213: -6609053194595271932
+    second: Key_LightPacked_52
+  - first:
+      213: -9200528343505032050
+    second: Key_LightPacked_53
+  - first:
+      213: -9069519319354087455
+    second: Key_LightPacked_54
+  - first:
+      213: 962430089555716827
+    second: Key_LightPacked_55
+  - first:
+      213: 4231892230349886223
+    second: Key_LightPacked_56
+  - first:
+      213: 8431676203446752135
+    second: Key_LightPacked_57
+  - first:
+      213: 7921505628627637858
+    second: Key_LightPacked_58
+  - first:
+      213: -2841787942325949188
+    second: Key_LightPacked_59
+  - first:
+      213: 1791735567914254492
+    second: Key_LightPacked_60
+  - first:
+      213: -3558901021600730822
+    second: Key_LightPacked_61
+  - first:
+      213: 2423740124933756900
+    second: Key_LightPacked_62
+  - first:
+      213: -5160418892236767031
+    second: Key_LightPacked_63
+  - first:
+      213: -955503642973382790
+    second: Key_LightPacked_64
+  - first:
+      213: 5072811446385900872
+    second: Key_LightPacked_65
+  - first:
+      213: 6746709858022163735
+    second: Key_LightPacked_66
+  - first:
+      213: 7215606460739388882
+    second: Key_LightPacked_67
+  - first:
+      213: 6359999340958266672
+    second: Key_LightPacked_68
+  - first:
+      213: 1735509640108328430
+    second: Key_LightPacked_69
+  - first:
+      213: 2576544207468670190
+    second: Key_LightPacked_70
+  - first:
+      213: 810754141468709748
+    second: Key_LightPacked_71
+  - first:
+      213: 5949063633993596946
+    second: Key_LightPacked_72
+  - first:
+      213: -7340962536189704814
+    second: Key_LightPacked_73
+  - first:
+      213: -3109813921720762976
+    second: Key_LightPacked_74
+  - first:
+      213: 1280156103524002285
+    second: Key_LightPacked_75
+  - first:
+      213: 4828416686889287737
+    second: Key_LightPacked_76
+  - first:
+      213: 690690724739110078
+    second: Key_LightPacked_77
+  - first:
+      213: 7149914047796616331
+    second: Key_LightPacked_78
+  - first:
+      213: 7532548558289488181
+    second: Key_LightPacked_79
+  - first:
+      213: -2727365670930232162
+    second: Key_LightPacked_80
+  - first:
+      213: -5135428393922344116
+    second: Key_LightPacked_81
+  - first:
+      213: -2863580480928285967
+    second: Key_LightPacked_82
+  - first:
+      213: -5416801597147110062
+    second: Key_LightPacked_83
+  - first:
+      213: 4619352800522977116
+    second: Key_LightPacked_84
+  - first:
+      213: 3998624435975862805
+    second: Key_LightPacked_85
+  - first:
+      213: -2408818021455655673
+    second: Key_LightPacked_86
+  - first:
+      213: -1430936760972696128
+    second: Key_LightPacked_87
+  - first:
+      213: -5336693099778790150
+    second: Key_LightPacked_88
+  - first:
+      213: -712558345912840747
+    second: Key_LightPacked_89
+  - first:
+      213: -8599558054215032558
+    second: Key_LightPacked_90
+  - first:
+      213: 1637110920157594540
+    second: Key_LightPacked_91
+  - first:
+      213: -684855191678202420
+    second: Key_LightPacked_92
+  - first:
+      213: 101472605842769940
+    second: Key_LightPacked_93
+  - first:
+      213: -8554049327947894146
+    second: Key_LightPacked_94
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Key_LightPacked_0
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ac763dea1246a380800000000000000
+      internalID: -8960401725190669151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_1
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f8fee2371c88d1e0800000000000000
+      internalID: -2172832788939605771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_2
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c7102c62f8c2a050800000000000000
+      internalID: 5810427412783044547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_3
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a047e5e9e2a5ee2e0800000000000000
+      internalID: -2094637620408716278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_4
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9274c24d99baf7d0800000000000000
+      internalID: -2883788526296206692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_5
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80911481374a5cf50800000000000000
+      internalID: 6901102818250266888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_6
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44f5374813fc62a80800000000000000
+      internalID: -8491872235777990844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_7
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f76dfd0a367cb2960800000000000000
+      internalID: 7578370028695705215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_8
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 724fd0282a8ba4300800000000000000
+      internalID: 237204938496537639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_9
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 945
+        width: 96
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 099f400b32fca05d0800000000000000
+      internalID: -3095434041679873648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_10
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1eb8c662ba156d0b0800000000000000
+      internalID: -5704282082492249119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_11
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f75706ee1fe9d270800000000000000
+      internalID: 8275908706257295348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_12
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9db6d031d5a5bc8f0800000000000000
+      internalID: -519221976233055271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_13
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad50f6c0634fd10f0800000000000000
+      internalID: -1144490217308224038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_14
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5986fa09c84b43520800000000000000
+      internalID: 2680966194008123541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_15
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 836
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8edd7404066935ec0800000000000000
+      internalID: -3579351938689933848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_16
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f59e859964304380800000000000000
+      internalID: -8989127228146149899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_17
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27d6e2908562c4750800000000000000
+      internalID: 6290444939082755442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_18
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a308ca10a55d1b780800000000000000
+      internalID: -8668913225159638982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_19
+      rect:
+        serializedVersion: 2
+        x: 923
+        y: 836
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a4ce7862718f5880800000000000000
+      internalID: -8620028833384446810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_20
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b3e73661fbdbf330800000000000000
+      internalID: 3745829344937239474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_21
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e9d0c61bd1104ff0800000000000000
+      internalID: -54023562851198493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_22
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b987aa4a3fc84660800000000000000
+      internalID: 7370368639459363253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_23
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 734
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f884414fc2b862a0800000000000000
+      internalID: -6743943838764332813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_24
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 734
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 922716024b4900eb0800000000000000
+      internalID: -4755637705144962519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_25
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db598f6bcb6c94860800000000000000
+      internalID: 7514755967070279101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_26
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f38b36851ad3d2440800000000000000
+      internalID: 4912650531713038399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_27
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 579589e8e17f1b150800000000000000
+      internalID: 5886757898563377525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_28
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 734
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f21440a128d96ac10800000000000000
+      internalID: 2064510661303746863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_29
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8694527b5c2d96990800000000000000
+      internalID: -7392145566728894104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_30
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 627
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ce90d842b2136bc0800000000000000
+      internalID: -3791165904380715322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_31
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 632
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 399d4d634e64fa840800000000000000
+      internalID: 5237482837641582995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_32
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 627
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 817db884e91c03af0800000000000000
+      internalID: -418621879779338472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_33
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 627
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61d91cc0abee77d90800000000000000
+      internalID: -7099943804680954602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_34
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 627
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1070146605e0817b0800000000000000
+      internalID: -5253433226851973375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_35
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 627
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10e51280100b1f750800000000000000
+      internalID: 6337039669164858881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_36
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 622
+        width: 91
+        height: 85
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da57b10d7254ba720800000000000000
+      internalID: 2858454425794213293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_37
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 622
+        width: 91
+        height: 85
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9537ae0113eb6f8f0800000000000000
+      internalID: -507008790086126759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_38
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 616
+        width: 54
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e53853e7a2d669a0800000000000000
+      internalID: -6240068615159663135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_39
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 639
+        width: 96
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f21d5d9334354b910800000000000000
+      internalID: 1852196894954344751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_40
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9321ccca99016be0800000000000000
+      internalID: -1485895841590729829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_41
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22a2388bc5c2aaee0800000000000000
+      internalID: -1249137169897674206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_42
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 118b0d4e3971add20800000000000000
+      internalID: 3303979200596195345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_43
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ce5c5c99a95e3b10800000000000000
+      internalID: 1963105072587759301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_44
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e37479a9af082c80800000000000000
+      internalID: -8347404687964343322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_45
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 149336df194724c00800000000000000
+      internalID: 883396647288256833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_46
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cce314d987f8f15c0800000000000000
+      internalID: -4242514575762571572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_47
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f15a5b1e1d4bfe50800000000000000
+      internalID: 6844148850422862326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_48
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71c8626aa05241a00800000000000000
+      internalID: 726246167580937239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_49
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a71a562aa2e7d7df0800000000000000
+      internalID: -180849688446656134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_50
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d785fe4d98b46c4d0800000000000000
+      internalID: -3114719036925060995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_51
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35612c7cfba1c3d00800000000000000
+      internalID: 953666632088163923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_52
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40bfc72c22de744a0800000000000000
+      internalID: -6609053194595271932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_53
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8c2873d738215080800000000000000
+      internalID: -9200528343505032050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_54
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e76b5e3b38922280800000000000000
+      internalID: -9069519319354087455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_55
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bdaad19311d3b5d00800000000000000
+      internalID: 962430089555716827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_56
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f039dbddf83baba30800000000000000
+      internalID: 4231892230349886223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_57
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 783de8785d4530570800000000000000
+      internalID: 8431676203446752135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_58
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2669b983667deed60800000000000000
+      internalID: 7921505628627637858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_59
+      rect:
+        serializedVersion: 2
+        x: 923
+        y: 428
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfc6ca24ce0ff88d0800000000000000
+      internalID: -2841787942325949188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_60
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9046f881068dd810800000000000000
+      internalID: 1791735567914254492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_61
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a31b6b0706e3c9ec0800000000000000
+      internalID: -3558901021600730822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_62
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e799865dcad2a120800000000000000
+      internalID: 2423740124933756900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_63
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c0430ccb528268b0800000000000000
+      internalID: -5160418892236767031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_64
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a77dafacf7e5db2f0800000000000000
+      internalID: -955503642973382790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_65
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84dfd52322f366640800000000000000
+      internalID: 5072811446385900872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_66
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 715890aced021ad50800000000000000
+      internalID: 6746709858022163735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_67
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d5826b98dbf22460800000000000000
+      internalID: 7215606460739388882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_68
+      rect:
+        serializedVersion: 2
+        x: 833
+        y: 311
+        width: 68
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 035398134b1434850800000000000000
+      internalID: 6359999340958266672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_69
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee54ce292d4c51810800000000000000
+      internalID: 1735509640108328430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_70
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 209
+        width: 68
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eeca24a3e49b1c320800000000000000
+      internalID: 2576544207468670190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_71
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 209
+        width: 68
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4735b6a9890604b00800000000000000
+      internalID: 810754141468709748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_72
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 209
+        width: 68
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 210026a0bd15f8250800000000000000
+      internalID: 5949063633993596946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_73
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29546f8a779af1a90800000000000000
+      internalID: -7340962536189704814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_74
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0adf446f6b8b7d4d0800000000000000
+      internalID: -3109813921720762976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_75
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de9a89f813704c110800000000000000
+      internalID: 1280156103524002285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_76
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 930ca99056bf10340800000000000000
+      internalID: 4828416686889287737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_77
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb45bb10e83d59900800000000000000
+      internalID: 690690724739110078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_78
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8c1e71d1f8993360800000000000000
+      internalID: 7149914047796616331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_79
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 539c93e210df88860800000000000000
+      internalID: 7532548558289488181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_80
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9ccb9b5f53762ad0800000000000000
+      internalID: -2727365670930232162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_81
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 106
+        width: 54
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4bcdca951b4bb8b0800000000000000
+      internalID: -5135428393922344116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_82
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1faf68879b48248d0800000000000000
+      internalID: -2863580480928285967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_83
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 255274795a7a3d4b0800000000000000
+      internalID: -5416801597147110062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_84
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5fb06fc5ec3b1040800000000000000
+      internalID: 4619352800522977116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_85
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51ab9882db7fd7730800000000000000
+      internalID: 3998624435975862805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_86
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70d839e95c8229ed0800000000000000
+      internalID: -2408818021455655673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_87
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c5ac2ae89a442ce0800000000000000
+      internalID: -1430936760972696128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_88
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: afc286896e140f5b0800000000000000
+      internalID: -5336693099778790150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_89
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5dd002ea5fb7c16f0800000000000000
+      internalID: -712558345912840747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_90
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 15
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 211e929138b38a880800000000000000
+      internalID: -8599558054215032558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_91
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 15
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca308e545bf28b610800000000000000
+      internalID: 1637110920157594540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_92
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 15
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ccd4079e4d7ee76f0800000000000000
+      internalID: -684855191678202420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_93
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 15
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41801b12cc0886100800000000000000
+      internalID: 101472605842769940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_LightPacked_94
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 15
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e723f702579e94980800000000000000
+      internalID: -8554049327947894146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

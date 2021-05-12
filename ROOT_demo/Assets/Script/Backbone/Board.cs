@@ -336,7 +336,9 @@ namespace ROOT
         private void CreateUnitByGist(UnitGist unitGist, AdditionalGameSetup additionalGameSetup)
         {
             var signalType = SignalTypeFromAdditionalGameSetup(additionalGameSetup, unitGist.PlayingSignalSelector);
-            CreateUnit(unitGist.Pos, signalType, unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, unitGist.IsStation);
+            var pos = unitGist.Pos;
+            if (pos.x<0||pos.y<0) pos = FindRandomEmptyPlace();
+            CreateUnit(pos, signalType, unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, unitGist.IsStation);
         }
         public void CreateUnit(Vector2Int board_pos, SignalType signal, HardwareType genre, SideType[] sides, int Tier, bool IsStationary = false, UnitTag unitTag = UnitTag.NoTag)
         {

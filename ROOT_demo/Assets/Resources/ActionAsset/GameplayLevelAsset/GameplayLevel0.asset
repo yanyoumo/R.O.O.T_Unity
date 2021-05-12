@@ -27,8 +27,8 @@ MonoBehaviour:
     type: 3}
   AcessID: 2
   InitialCurrency: 0
-  ShopCost: 0
-  UnitCost: 0
+  ShopCost: 1
+  UnitCost: 1
   levelType: 0
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
@@ -38,7 +38,31 @@ MonoBehaviour:
     CoreGenre: 0
     Sides: 01000000010000000000000000000000
     Tier: 1
-    Pos: {x: 2, y: 2}
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 01000000000000000000000001000000
+    Tier: 1
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 00000000010000000000000000000000
+    Tier: 1
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 01000000010000000000000001000000
+    Tier: 1
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 00000000010000000000000001000000
+    Tier: 1
+    Pos: {x: -1, y: -1}
     IsStation: 0
   HasBossRound: 0
   Endless: 0
@@ -67,6 +91,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -96,6 +122,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -125,6 +153,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -154,6 +184,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -183,6 +215,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 250
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523040\u5143"
     TimeOutSec: -1
     TargetTag: 0
@@ -212,6 +246,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0

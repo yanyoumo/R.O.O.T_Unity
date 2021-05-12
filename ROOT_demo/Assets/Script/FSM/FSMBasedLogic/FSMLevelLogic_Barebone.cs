@@ -77,7 +77,7 @@ namespace ROOT
             if (UseTutorialVer)
             {
                 //教程不自动切，完全交予Action。
-                TutorialModule.TutorialInit();//BUG 坑在这儿、主要是在这儿太早地执行了一步。
+                TutorialModule.TutorialInit();
             }
             else
             {
@@ -206,7 +206,7 @@ namespace ROOT
 
             if (HandlingCurrency)
             {
-                //计分的大前提是根据Round的计算、但是barebone框架下就没有round相关数据。
+                Debug.Log("LevelAsset.GameCurrencyMgr.PerMove=" + LevelAsset.GameCurrencyMgr.Currency);
                 LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
                 SendCurrencyMessage(LevelAsset);
             }

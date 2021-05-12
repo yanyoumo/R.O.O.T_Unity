@@ -1,0 +1,2388 @@
+fileFormatVersion: 2
+guid: b64128b22075d1647800d780dd151d12
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8416241021927817861
+    second: Key_DarkPacked_0
+  - first:
+      213: 5917354903282898838
+    second: Key_DarkPacked_1
+  - first:
+      213: 5965334602490407038
+    second: Key_DarkPacked_2
+  - first:
+      213: -4199163873186520491
+    second: Key_DarkPacked_3
+  - first:
+      213: 5121430292403344930
+    second: Key_DarkPacked_4
+  - first:
+      213: -7541303236103378356
+    second: Key_DarkPacked_5
+  - first:
+      213: -7444208971847249596
+    second: Key_DarkPacked_6
+  - first:
+      213: 4328420550227448090
+    second: Key_DarkPacked_7
+  - first:
+      213: 416978044836228072
+    second: Key_DarkPacked_8
+  - first:
+      213: -3698685039569424610
+    second: Key_DarkPacked_9
+  - first:
+      213: 3924542374268434970
+    second: Key_DarkPacked_10
+  - first:
+      213: -2611640413165677340
+    second: Key_DarkPacked_11
+  - first:
+      213: 7637544554421696577
+    second: Key_DarkPacked_12
+  - first:
+      213: 1901300252699515366
+    second: Key_DarkPacked_13
+  - first:
+      213: -4804220949553910699
+    second: Key_DarkPacked_14
+  - first:
+      213: -7389950247657755677
+    second: Key_DarkPacked_15
+  - first:
+      213: 2539875809074290928
+    second: Key_DarkPacked_16
+  - first:
+      213: 4237057231162003349
+    second: Key_DarkPacked_17
+  - first:
+      213: -423769005124712011
+    second: Key_DarkPacked_18
+  - first:
+      213: -7145606014202600263
+    second: Key_DarkPacked_19
+  - first:
+      213: -7753202216598771947
+    second: Key_DarkPacked_20
+  - first:
+      213: 3283268870197214264
+    second: Key_DarkPacked_21
+  - first:
+      213: 480081260641453466
+    second: Key_DarkPacked_22
+  - first:
+      213: -3358224866146797678
+    second: Key_DarkPacked_23
+  - first:
+      213: -3760434159354078426
+    second: Key_DarkPacked_24
+  - first:
+      213: 1483485847216967241
+    second: Key_DarkPacked_25
+  - first:
+      213: 1597326191449342331
+    second: Key_DarkPacked_26
+  - first:
+      213: -3502495789710832352
+    second: Key_DarkPacked_27
+  - first:
+      213: -2542489759858709544
+    second: Key_DarkPacked_28
+  - first:
+      213: -222109020652677132
+    second: Key_DarkPacked_29
+  - first:
+      213: 1286861853144497295
+    second: Key_DarkPacked_30
+  - first:
+      213: 801109306385582577
+    second: Key_DarkPacked_31
+  - first:
+      213: -233260651621621362
+    second: Key_DarkPacked_32
+  - first:
+      213: 3438886665062974731
+    second: Key_DarkPacked_33
+  - first:
+      213: -5781307266195782846
+    second: Key_DarkPacked_34
+  - first:
+      213: 4545025790271517310
+    second: Key_DarkPacked_35
+  - first:
+      213: -336505096771322484
+    second: Key_DarkPacked_36
+  - first:
+      213: -1611127241385824450
+    second: Key_DarkPacked_37
+  - first:
+      213: -5221687076825683194
+    second: Key_DarkPacked_38
+  - first:
+      213: 4949696409839792182
+    second: Key_DarkPacked_39
+  - first:
+      213: -4682079180893802481
+    second: Key_DarkPacked_40
+  - first:
+      213: -8613384464177019885
+    second: Key_DarkPacked_41
+  - first:
+      213: -3462163926721004861
+    second: Key_DarkPacked_42
+  - first:
+      213: 874401211941008852
+    second: Key_DarkPacked_43
+  - first:
+      213: 6198363800530863013
+    second: Key_DarkPacked_44
+  - first:
+      213: -6261610684891813978
+    second: Key_DarkPacked_45
+  - first:
+      213: -3945262713676314435
+    second: Key_DarkPacked_46
+  - first:
+      213: -6462947386651012476
+    second: Key_DarkPacked_47
+  - first:
+      213: -7598744685661579012
+    second: Key_DarkPacked_48
+  - first:
+      213: 7002510521762741300
+    second: Key_DarkPacked_49
+  - first:
+      213: -3583605550275847262
+    second: Key_DarkPacked_50
+  - first:
+      213: 5410792039857505322
+    second: Key_DarkPacked_51
+  - first:
+      213: -2494912208539876264
+    second: Key_DarkPacked_52
+  - first:
+      213: 7002557461753872290
+    second: Key_DarkPacked_53
+  - first:
+      213: -2759069768816408689
+    second: Key_DarkPacked_54
+  - first:
+      213: -8781207379045010661
+    second: Key_DarkPacked_55
+  - first:
+      213: -7339757193106827862
+    second: Key_DarkPacked_56
+  - first:
+      213: -21760527536043106
+    second: Key_DarkPacked_57
+  - first:
+      213: -2624376343220275955
+    second: Key_DarkPacked_58
+  - first:
+      213: 7077085089739781790
+    second: Key_DarkPacked_59
+  - first:
+      213: -890775223902953606
+    second: Key_DarkPacked_60
+  - first:
+      213: -1122659920765021765
+    second: Key_DarkPacked_61
+  - first:
+      213: 260148204251941991
+    second: Key_DarkPacked_62
+  - first:
+      213: 4497193525195356150
+    second: Key_DarkPacked_63
+  - first:
+      213: 8193217980735409410
+    second: Key_DarkPacked_64
+  - first:
+      213: 3358234432725800739
+    second: Key_DarkPacked_65
+  - first:
+      213: 7681184776386147528
+    second: Key_DarkPacked_66
+  - first:
+      213: 3774312083376144445
+    second: Key_DarkPacked_67
+  - first:
+      213: 4537630502042635616
+    second: Key_DarkPacked_68
+  - first:
+      213: -5985800362440464999
+    second: Key_DarkPacked_69
+  - first:
+      213: 5042940126634626017
+    second: Key_DarkPacked_70
+  - first:
+      213: -954161216057805108
+    second: Key_DarkPacked_71
+  - first:
+      213: -1193087074497922987
+    second: Key_DarkPacked_72
+  - first:
+      213: 9072738791305199179
+    second: Key_DarkPacked_73
+  - first:
+      213: 727585122888126054
+    second: Key_DarkPacked_74
+  - first:
+      213: 2267596398275626503
+    second: Key_DarkPacked_75
+  - first:
+      213: -2800461402544197908
+    second: Key_DarkPacked_76
+  - first:
+      213: 5522075651104587833
+    second: Key_DarkPacked_77
+  - first:
+      213: 1574120741906778871
+    second: Key_DarkPacked_78
+  - first:
+      213: -806441918386890624
+    second: Key_DarkPacked_79
+  - first:
+      213: -1785424956842239279
+    second: Key_DarkPacked_80
+  - first:
+      213: -3290559873939950936
+    second: Key_DarkPacked_81
+  - first:
+      213: -1815438253896204003
+    second: Key_DarkPacked_82
+  - first:
+      213: -6686308922883647225
+    second: Key_DarkPacked_83
+  - first:
+      213: -2300512567586008928
+    second: Key_DarkPacked_84
+  - first:
+      213: -3201666031183197166
+    second: Key_DarkPacked_85
+  - first:
+      213: 5369463060432722104
+    second: Key_DarkPacked_86
+  - first:
+      213: -8146184245991981163
+    second: Key_DarkPacked_87
+  - first:
+      213: 1769004609744068079
+    second: Key_DarkPacked_88
+  - first:
+      213: 7715158918030102871
+    second: Key_DarkPacked_89
+  - first:
+      213: -1997909450235297152
+    second: Key_DarkPacked_90
+  - first:
+      213: -5221093489876184084
+    second: Key_DarkPacked_91
+  - first:
+      213: 3309386751653671872
+    second: Key_DarkPacked_92
+  - first:
+      213: -7633499943170308448
+    second: Key_DarkPacked_93
+  - first:
+      213: -1578129373169944253
+    second: Key_DarkPacked_94
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Key_DarkPacked_0
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58204184e9e7cc470800000000000000
+      internalID: 8416241021927817861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_1
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 697d71cdeeaae1250800000000000000
+      internalID: 5917354903282898838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_2
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7869cb173029c250800000000000000
+      internalID: 5965334602490407038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_3
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 552601994b299b5c0800000000000000
+      internalID: -4199163873186520491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_4
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22650a867b9f21740800000000000000
+      internalID: 5121430292403344930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_5
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4aed8c89a8e75790800000000000000
+      internalID: -7541303236103378356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_6
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 441d447916bd0b890800000000000000
+      internalID: -7444208971847249596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_7
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a11dec6be83a11c30800000000000000
+      internalID: 4328420550227448090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_8
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 933
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8eba991925769c500800000000000000
+      internalID: 416978044836228072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_9
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 945
+        width: 96
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1fa9609d81abacc0800000000000000
+      internalID: -3698685039569424610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_10
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1afc3c0f76c67630800000000000000
+      internalID: 3924542374268434970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_11
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e4943c91e691cbd0800000000000000
+      internalID: -2611640413165677340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_12
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 148368a8e420ef960800000000000000
+      internalID: 7637544554421696577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_13
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e9d38d9186c26a10800000000000000
+      internalID: 1901300252699515366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_14
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55c695f008af35db0800000000000000
+      internalID: -4804220949553910699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_15
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 836
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ebac84476f917990800000000000000
+      internalID: -7389950247657755677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_16
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f02b7d67937f3320800000000000000
+      internalID: 2539875809074290928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_17
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59f49645a1d0dca30800000000000000
+      internalID: 4237057231162003349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_18
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 831
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b988b6c5587e1af0800000000000000
+      internalID: -423769005124712011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_19
+      rect:
+        serializedVersion: 2
+        x: 923
+        y: 836
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b42f8a6035b5dc90800000000000000
+      internalID: -7145606014202600263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_20
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 517ebd789a7176490800000000000000
+      internalID: -7753202216598771947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_21
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83cf33654a3809d20800000000000000
+      internalID: 3283268870197214264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_22
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a950bdbec5799a600800000000000000
+      internalID: 480081260641453466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_23
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 734
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 297bf61e6403561d0800000000000000
+      internalID: -3358224866146797678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_24
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 734
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62b94724e0140dbc0800000000000000
+      internalID: -3760434159354078426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_25
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94ecfa8a486669410800000000000000
+      internalID: 1483485847216967241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_26
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7104c745b7da2610800000000000000
+      internalID: 1597326191449342331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_27
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02d0cf2e2a2a46fc0800000000000000
+      internalID: -3502495789710832352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_28
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 734
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8dbad8ab80347bcd0800000000000000
+      internalID: -2542489759858709544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_29
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 729
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f75692c509eaecf0800000000000000
+      internalID: -222109020652677132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_30
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 627
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8cbdaf890adbd110800000000000000
+      internalID: 1286861853144497295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_31
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 632
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f94f517bac1e1b00800000000000000
+      internalID: 801109306385582577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_32
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 627
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8164085caa43ccf0800000000000000
+      internalID: -233260651621621362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_33
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 627
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0508eda33169bf20800000000000000
+      internalID: 3438886665062974731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_34
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 627
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 243040d0caba4cfa0800000000000000
+      internalID: -5781307266195782846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_35
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 627
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e727f1c20ec231f30800000000000000
+      internalID: 4545025790271517310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_36
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 622
+        width: 91
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8d36d9b56e745bf0800000000000000
+      internalID: -336505096771322484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_37
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 622
+        width: 91
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3f2e316f4024a9e0800000000000000
+      internalID: -1611127241385824450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_38
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 616
+        width: 54
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60bae81f447d887b0800000000000000
+      internalID: -5221687076825683194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_39
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 639
+        width: 96
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 630f68ef8aad0b440800000000000000
+      internalID: 4949696409839792182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_40
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f00b29caac9e50fb0800000000000000
+      internalID: -4682079180893802481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_41
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3144cda277c177880800000000000000
+      internalID: -8613384464177019885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_42
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ca7f91804ce3ffc0800000000000000
+      internalID: -3462163926721004861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_43
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d53aecf44f722c00800000000000000
+      internalID: 874401211941008852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_44
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a348474903050650800000000000000
+      internalID: 6198363800530863013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_45
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a7ab3de14a4a19a0800000000000000
+      internalID: -6261610684891813978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_46
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db8cabdf67c9f39c0800000000000000
+      internalID: -3945262713676314435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_47
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48290a0189ffe46a0800000000000000
+      internalID: -6462947386651012476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_48
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf81140e7f5db8690800000000000000
+      internalID: -7598744685661579012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_49
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 525
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43c7a99f73aed2160800000000000000
+      internalID: 7002510521762741300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_50
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ab90b02db9744ec0800000000000000
+      internalID: -3583605550275847262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_51
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a24c73151bef61b40800000000000000
+      internalID: 5410792039857505322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_52
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8540230a09a406dd0800000000000000
+      internalID: -2494912208539876264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_53
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2afb91b09e41e2160800000000000000
+      internalID: 7002557461753872290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_54
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f87cd27d9a0d5b9d0800000000000000
+      internalID: -2759069768816408689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_55
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b13bbf0e962e22680800000000000000
+      internalID: -8781207379045010661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_56
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa5df3778b1f32a90800000000000000
+      internalID: -7339757193106827862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_57
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9bc61e5ae0b2bff0800000000000000
+      internalID: -21760527536043106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_58
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 423
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d05ba61de97549bd0800000000000000
+      internalID: -2624376343220275955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_59
+      rect:
+        serializedVersion: 2
+        x: 923
+        y: 428
+        width: 91
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e963723a46bd63260800000000000000
+      internalID: 7077085089739781790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_60
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7f9b8447a453a3f0800000000000000
+      internalID: -890775223902953606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_61
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb19b3b00c28b60f0800000000000000
+      internalID: -1122659920765021765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_62
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76c8467d96b3c9300800000000000000
+      internalID: 260148204251941991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_63
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f7b47b1fad396e30800000000000000
+      internalID: 4497193525195356150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_64
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20dc31d085824b170800000000000000
+      internalID: 8193217980735409410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_65
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3275b138c68da9e20800000000000000
+      internalID: 3358234432725800739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_66
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c472a28bdc099a60800000000000000
+      internalID: 7681184776386147528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_67
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d308919b7dc016430800000000000000
+      internalID: 3774312083376144445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_68
+      rect:
+        serializedVersion: 2
+        x: 833
+        y: 311
+        width: 68
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06d8a3476e6e8fe30800000000000000
+      internalID: 4537630502042635616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_69
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 321
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 995e454d84a2eeca0800000000000000
+      internalID: -5985800362440464999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_70
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 209
+        width: 68
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ebce97935f1cf540800000000000000
+      internalID: 5042940126634626017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_71
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 209
+        width: 68
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc67b6aed6322c2f0800000000000000
+      internalID: -954161216057805108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_72
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 209
+        width: 68
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 558f07280ad417fe0800000000000000
+      internalID: -1193087074497922987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_73
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4e37ab7cd7d8ed70800000000000000
+      internalID: 9072738791305199179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_74
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66e0b9970d6e81a00800000000000000
+      internalID: 727585122888126054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_75
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7068c25f8ee187f10800000000000000
+      internalID: 2267596398275626503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_76
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cee292e1133c229d0800000000000000
+      internalID: -2800461402544197908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_77
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9304ce62c8a52ac40800000000000000
+      internalID: 5522075651104587833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_78
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fa8de6897668d510800000000000000
+      internalID: 1574120741906778871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_79
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 219
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08890921951fec4f0800000000000000
+      internalID: -806441918386890624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_80
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1da1d4a1675e837e0800000000000000
+      internalID: -1785424956842239279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_81
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 106
+        width: 54
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a2b7a19a359552d0800000000000000
+      internalID: -3290559873939950936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_82
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d118cd4d6844ec6e0800000000000000
+      internalID: -1815438253896204003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_83
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 709def0d5757533a0800000000000000
+      internalID: -6686308922883647225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_84
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a0d6b72200f210e0800000000000000
+      internalID: -2300512567586008928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_85
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21c04e135b56193d0800000000000000
+      internalID: -3201666031183197166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_86
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b89caf643a248a40800000000000000
+      internalID: 5369463060432722104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_87
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59fb3cea690f2fe80800000000000000
+      internalID: -8146184245991981163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_88
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fedd2d9e154cc8810800000000000000
+      internalID: 1769004609744068079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_89
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 117
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7511fd6c820c11b60800000000000000
+      internalID: 7715158918030102871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_90
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 15
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 082445db0fff544e0800000000000000
+      internalID: -1997909450235297152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_91
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 15
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce353dc2223fa87b0800000000000000
+      internalID: -5221093489876184084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_92
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 15
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c373bc77bd4ded20800000000000000
+      internalID: 3309386751653671872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_93
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 15
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a68e56ee3c501690800000000000000
+      internalID: -7633499943170308448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Key_DarkPacked_94
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 15
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 349789642bb591ae0800000000000000
+      internalID: -1578129373169944253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: faad08773228bb44b8bd0cf252030ce0
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
