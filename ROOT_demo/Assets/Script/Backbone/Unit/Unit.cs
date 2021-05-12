@@ -52,6 +52,7 @@ namespace ROOT
         public Transform ShopDiscountRoot;
         public Transform ThermoRangeIndicatorRoot;
 
+        public SpriteRenderer ThermoRangeIndicatorRenderer;
         public SpriteMask NorthThermoRangeIndicatorMask;
         public SpriteMask SouthThermoRangeIndicatorMask;
         public SpriteMask EastThermoRangeIndicatorMask;
@@ -502,9 +503,9 @@ namespace ROOT
             UnitSides = new Dictionary<RotationDirection, SideType>();
             _unitRotation = RotationDirection.North;
 
-            var colorRaw = ColorLibManager.Instance.ColorLib.ROOT_MASTER_THERMO;
+            /*var colorRaw = ColorLibManager.Instance.ColorLib.ROOT_MASTER_THERMO;
             colorRaw.a = 0.35f;
-            ThermoRangeIndicatorRoot.GetComponentInChildren<SpriteRenderer>().color = colorRaw;
+            ThermoRangeIndicatorRoot.GetComponentInChildren<SpriteRenderer>().color = colorRaw;*/
             
             Immovable = false;
             ShopBackPlane.gameObject.SetActive(false);

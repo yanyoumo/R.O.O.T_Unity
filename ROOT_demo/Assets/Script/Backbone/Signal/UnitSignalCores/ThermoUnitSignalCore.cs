@@ -39,15 +39,20 @@ namespace ROOT.Signal
 
         public override List<Vector2Int> SingleInfoCollectorZone => ExpellingPatternList;
         
+        private IEnumerable<Vector2Int> GetEmptyExpellingPos()
+        {
+            var validPattern = ExpellingPatternList.Where(Board.CheckBoardPosValidStatic);
+            var emptyPos = validPattern.Where(Owner.GameBoard.CheckBoardPosValidAndEmpty);
+            return emptyPos;
+        }
+        
         public override float SingleUnitScore
         {
             get
             {
                 if (IsUnitActive && Owner.UnitHardware == HardwareType.Field)
                 {
-                    var validPattern = ExpellingPatternList.Where(Board.CheckBoardPosValidStatic);
-                    var emptyPos = validPattern.Where(Owner.GameBoard.CheckBoardPosValidAndEmpty);
-                    return Mathf.Round(emptyPos.Count() * PerGridScoreByTier[Owner.Tier - 1] * ThermoScoreMultiplier);
+                    return Mathf.Round(GetEmptyExpellingPos().Count() * PerGridScoreByTier[Owner.Tier - 1] * ThermoScoreMultiplier);
                 }
                 return 0.0f;
             }
@@ -61,10 +66,18 @@ namespace ROOT.Signal
             UpdateRangeDisplay();
         }
 
+        private Color totalemptyColor = new Color(0.0f, 1.0f, 0.0f);
+        private Color totalBlockedColor =new Color(1.0f, 0.0f, 0.0f);
+        private float ColorLerpingIdx => (8 - GetEmptyExpellingPos().Count()) / 8.0f;
+        
         private void UpdateRangeDisplay()
         {
             if (Owner != null && Owner.UnitHardware == HardwareType.Field && Owner.ShopID == -1)
             {
+                //这个颜色机制远不够更好，但总比没有强（一点儿）。
+                var rawCol = Color.Lerp(totalemptyColor,totalBlockedColor,  ColorLerpingIdx);
+                rawCol.a = ColorLerpingIdx;
+                Owner.ThermoRangeIndicatorRenderer.color = rawCol;
                 Owner.ThermoRangeIndicatorRoot.gameObject.SetActive(ShowingThremoRange && IsUnitActive);
                 foreach (var rotationDirection in Common.Utils.ROTATION_LIST)
                 {
@@ -88,8 +101,8 @@ namespace ROOT.Signal
         
         private void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.InGameOverlayToggleEvent, ThremoRangeToggle);
             MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.InGameOverlayToggleEvent, ThremoRangeToggle);
         }
     }
 }

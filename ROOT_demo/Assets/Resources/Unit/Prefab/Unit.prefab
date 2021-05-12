@@ -1725,6 +1725,7 @@ MonoBehaviour:
   ShopBackPlane: {fileID: 3879975519063178855}
   ShopDiscountRoot: {fileID: 3146945582300183988}
   ThermoRangeIndicatorRoot: {fileID: 8808140154013189069}
+  ThermoRangeIndicatorRenderer: {fileID: 9189451924365091149}
   NorthThermoRangeIndicatorMask: {fileID: 7163182527511294248}
   SouthThermoRangeIndicatorMask: {fileID: 8220453417315712594}
   EastThermoRangeIndicatorMask: {fileID: 5984887901205982608}
