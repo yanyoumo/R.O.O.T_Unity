@@ -14,3 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActionAssetList:
   - {fileID: 11400000, guid: c78736a0910a54c449fb783cf163be7c, type: 2}
+  - {fileID: 11400000, guid: a3112df217681124fa0f8e89d9203781, type: 2}
+  - {fileID: 11400000, guid: 7284d2892605e96489ef41922efd983a, type: 2}
+  - {fileID: 11400000, guid: cb986f21946665d4e890ec4fda4ad9f8, type: 2}
+  - {fileID: 11400000, guid: d55d4232f574feb40a546373641be983, type: 2}
+  - {fileID: 11400000, guid: 38400553e9381454583e4d1bcb27ee35, type: 2}

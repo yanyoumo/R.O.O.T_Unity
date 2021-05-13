@@ -33,37 +33,7 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
-  InitalBoard:
-  - PlayingSignalSelector: 0
-    CoreGenre: 0
-    Sides: 01000000010000000000000000000000
-    Tier: 1
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 0
-    CoreGenre: 1
-    Sides: 01000000000000000000000001000000
-    Tier: 1
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 0
-    CoreGenre: 1
-    Sides: 00000000010000000000000000000000
-    Tier: 1
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 0
-    CoreGenre: 1
-    Sides: 01000000010000000000000001000000
-    Tier: 1
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 0
-    CoreGenre: 1
-    Sides: 00000000010000000000000001000000
-    Tier: 1
-    Pos: {x: -1, y: -1}
-    IsStation: 0
+  InitalBoard: []
   HasBossRound: 0
   Endless: 0
   BossStage: 0
@@ -264,6 +234,6 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
   mainIDXToinsert: 0
-  subIDXToinsert: 4
+  subIDXToinsert: 0
   CSVFileName: 
   ExcludedShop: 0
