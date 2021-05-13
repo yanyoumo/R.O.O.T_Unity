@@ -32,7 +32,7 @@ MonoBehaviour:
   levelType: 0
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 0
+    PlayingSignalTypeB: 1
   InitalBoard: []
   HasBossRound: 0
   Endless: 0

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1273174, g: 0.13414761, b: 0.12107885, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4116,6 +4116,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadingProgressor: {fileID: 1054636078}
   LoadingLabel: {fileID: 296107902}
+  matrixToggle: {fileID: 1440477541}
+  scanToggle: {fileID: 2057518544}
+  ThermalToggle: {fileID: 90814182}
+  uiPopup: {fileID: 1035412350}
+  SignalSelectionPanel: {fileID: 1126789953}
 --- !u!1 &497791952
 GameObject:
   m_ObjectHideFlags: 0

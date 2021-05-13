@@ -14,58 +14,41 @@ namespace ROOT.UI
     public class CareerSetupManger : MonoBehaviour
     {
         public static int levelId;
-        AdditionalGameSetup additionalGameSetup = new AdditionalGameSetup();
 
         public Progressor LoadingProgressor;
         public GameObject LoadingLabel;
-        private static UIToggle matrixToggle = new UIToggle();
-        private static UIToggle scanToggle = new UIToggle();
-        private static UIToggle ThermalToggle= new UIToggle();
-        private bool isTutorial;
+        public UIToggle matrixToggle;
+        public UIToggle scanToggle;
+        public UIToggle ThermalToggle;
+        public UIPopup uiPopup;
+        public UIView SignalSelectionPanel;
+        
+        private AdditionalGameSetup _additionalGameSetup = new AdditionalGameSetup();
 
-        static Dictionary<string, SignalType> _dict = new Dictionary<string, SignalType>
+        private LevelActionAsset actionAsset => LevelLib.Instance.ActionAsset(levelId);
+        private bool LevelIsTutorial => (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
+
+        private readonly Dictionary<string, SignalType> _dict = new Dictionary<string, SignalType>
         {
             {"MatrixCoreUIToggle", SignalType.Matrix},
             {"ThermalCoreUIToggle", SignalType.Thermo},
             {"ScanCoreUIToggle", SignalType.Scan}
         };
 
-        private UIPopup uiPopup;
-
-        // Start is called before the first frame update
-        void Awake()
-        {
-            //TODO 需要在这里判断；如果是Tutorial的话、就不显示已有的框架了。
-            matrixToggle = GameObject.Find("MatrixCoreUIToggle").GetComponent<UIToggle>();
-            scanToggle = GameObject.Find("ScanCoreUIToggle").GetComponent<UIToggle>();
-            ThermalToggle = GameObject.Find("ThermalCoreUIToggle").GetComponent<UIToggle>();
-            uiPopup = GameObject.Find("UIPopup").GetComponent<UIPopup>();
-            var actionAsset = LevelLib.Instance.ActionAsset(levelId);
-            isTutorial = (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
-            if (isTutorial)
-            {
-                GameObject.Find("View - CareerSetup_CoreSelection").GetComponent<UIView>().Hide();
-            }
-        }
-
-        private void OnGUI()
-        {
-            //这里的函数到时候写在这里、这个和Update等效的；只不过是跟UI的更新更加相关。
-        }
-
+        
         public void triggerToggleOn(String name)
         {
             RootDebug.Log("clicked " + name + " on.", NameID.SuYuxuan_Log);
-            addToSignalTypeQueue(_dict[name], additionalGameSetup.toggleQueue);
+            addToSignalTypeQueue(_dict[name], _additionalGameSetup.toggleQueue);
         }
 
         public void triggerToggleOff(String name)
         {
-            if (additionalGameSetup.toggleQueue.Count != 0)
+            if (_additionalGameSetup.toggleQueue.Count != 0)
             {
                 RootDebug.Log("clicked " + name + " off.", NameID.SuYuxuan_Log);
 
-                removeFromSignalTypeQueue(_dict[name], additionalGameSetup.toggleQueue);
+                removeFromSignalTypeQueue(_dict[name], _additionalGameSetup.toggleQueue);
             }
         }
 
@@ -133,6 +116,29 @@ namespace ROOT.UI
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
         }
 
+        public void Continue()
+        {
+            var actionAsset = LevelLib.Instance.ActionAsset(levelId);
+            _additionalGameSetup.updateSignal();
+            RootDebug.Log("the PlayingSignalType is " + _additionalGameSetup.PlayingSignalTypeA + ", and " + _additionalGameSetup.PlayingSignalTypeB, NameID.SuYuxuan_Log);
+            if (!_additionalGameSetup.PlayingSignalTypeA.Equals(_additionalGameSetup.PlayingSignalTypeB) || LevelIsTutorial)
+            {
+                loadingProgressorCallBack(0.1f);
+                _additionalGameSetup.OrderingSignal();
+                //如果是Tutorial那么就无视玩家选择、只使用内部数据。
+                if (!LevelIsTutorial) actionAsset.AdditionalGameSetup = _additionalGameSetup;
+                LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset, null, loadingProgressorCallBack);
+                //这个卸载函数现在放到那个回调函数里面去了。-youmo
+            }
+            else
+            {
+                RootDebug.Log("additionalGameSetup is not properly setup, player hasn't selected two cores", NameID.SuYuxuan_Log);
+                //need to add an animation or pop up in the UI to tell the player to correctly select cores
+                //Otherwise, the game should not proceed
+                uiPopup.Show();
+            }
+        }
+        
         public void uiPopUpDisappear()
         {
             uiPopup.Hide();
@@ -151,27 +157,12 @@ namespace ROOT.UI
             StartCoroutine(Pendingkill());
             return true;
         }
-
-        public void Continue()
+        
+        void Awake()
         {
-            var actionAsset = LevelLib.Instance.ActionAsset(levelId);
-            additionalGameSetup.updateSignal();
-            RootDebug.Log("the PlayingSignalType is " + additionalGameSetup.PlayingSignalTypeA + ", and " + additionalGameSetup.PlayingSignalTypeB, NameID.SuYuxuan_Log);
-            if (!additionalGameSetup.PlayingSignalTypeA.Equals(additionalGameSetup.PlayingSignalTypeB) || isTutorial)
+            if (LevelIsTutorial)
             {
-                loadingProgressorCallBack(0.1f);
-                additionalGameSetup.OrderingSignal();
-                //如果是Tutorial那么就无视玩家选择、只使用内部数据。
-                if (!isTutorial) actionAsset.AdditionalGameSetup = additionalGameSetup;
-                LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset, null, loadingProgressorCallBack);
-                //这个卸载函数现在放到那个回调函数里面去了。-youmo
-            }
-            else
-            {
-                RootDebug.Log("additionalGameSetup is not properly setup, player hasn't selected two cores", NameID.SuYuxuan_Log);
-                //need to add an animation or pop up in the UI to tell the player to correctly select cores
-                //Otherwise, the game should not proceed
-                uiPopup.Show();
+                SignalSelectionPanel.Hide();
             }
         }
     }
