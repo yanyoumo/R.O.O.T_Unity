@@ -278,6 +278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurtainImage: {fileID: 2098458122}
+  CarveOutStoke: {fileID: 3120400936241733338}
   CarveOut: {fileID: 1844470426}
 --- !u!4 &1844470426 stripped
 Transform:
@@ -372,6 +373,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3120400934546436307, guid: 82e75d872df82bf4b81fece7a40d9a53,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.9411765
+      objectReference: {fileID: 0}
     - target: {fileID: 3120400934546436307, guid: 82e75d872df82bf4b81fece7a40d9a53,
         type: 3}
       propertyPath: m_Enabled
@@ -469,6 +475,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82e75d872df82bf4b81fece7a40d9a53, type: 3}
+--- !u!212 &3120400936241733338 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7351464846374755682, guid: 82e75d872df82bf4b81fece7a40d9a53,
+    type: 3}
+  m_PrefabInstance: {fileID: 3120400936241733337}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6325135168414778237
 PrefabInstance:
   m_ObjectHideFlags: 0

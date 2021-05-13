@@ -108,8 +108,6 @@ namespace ROOT
             MessageDispatcher.AddListener(WorldEvent.ToggleHintUIDownEvent, ToggleHintUIDownEventHandler);
             MessageDispatcher.AddListener(WorldEvent.HintScreenChangedEvent, HintPageChangedEventHandler);
             MessageDispatcher.AddListener(WorldEvent.HelpScreenShouldAlertEvent, HelpScreenShouldAlertHandler);
-            Debug.Log("_gameplayPageCount=" + _gameplayPageCount);
-            Debug.Log("_tutorialPageCount=" + _tutorialPageCount);
         }
 
         private void OnDestroy()

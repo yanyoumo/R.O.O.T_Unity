@@ -404,7 +404,7 @@ MonoBehaviour:
     HandOnCheckType: 0
     HandOnFailedType: 0
     HandsOnLockRound: 0
-    HandOnMission: "\u6D4B\u8BD5\u4EFB\u52A1-2"
+    HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
     Set: 0
@@ -419,8 +419,39 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 5
-    ActionSubIdx: 1
+  - ActionIdx: 6
+    ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u987A\u5E26\u8BF4\u3001\u5728\u4E4B\u540E\u7684\u548C\u6559\u7A0B\u4E2D\u6E38\u620F\u968F\u65F6\u53EF\u4EE5\u6309<sprite=17>\u6765\u663E\u793A\u8BE6\u7EC6\u8BF4\u660E\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 7
+    ActionSubIdx: 0
     ActionType: 17
     Text: 
     DoppelgangerToggle: 0
@@ -451,8 +482,8 @@ MonoBehaviour:
     - {x: 5, y: 5}
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 5
-    ActionSubIdx: 2
+  - ActionIdx: 7
+    ActionSubIdx: 1
     ActionType: 8
     Text: "\u6D4B\u8BD5C"
     DoppelgangerToggle: 0
@@ -482,7 +513,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 6
+  - ActionIdx: 8
     ActionSubIdx: 0
     ActionType: 3
     Text: 
@@ -513,7 +544,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 6
+  - ActionIdx: 8
     ActionSubIdx: 1
     ActionType: 0
     Text: "\u8FD9\u5C31\u662F\u5149\u6807\u7684\u57FA\u672C\u64CD\u4F5C\u3002"
@@ -544,7 +575,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 6
+  - ActionIdx: 8
     ActionSubIdx: 2
     ActionType: 17
     Text: 
@@ -575,7 +606,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 7
+  - ActionIdx: 9
     ActionSubIdx: 0
     ActionType: 0
     Text: "\u73B0\u5728\u7CFB\u7EDF\u5728\u4FE1\u53F7\u5E73\u53F0\u4E2D\u751F\u6210\u4E86\u4E09\u4E2A\u5355\u5143\uFF0C<b>\u3010\u5355\u5143\u3011</b>\u662FROOT\u7684\u57FA\u7840\u539F\u4EF6\u3002"
@@ -606,7 +637,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 7
+  - ActionIdx: 9
     ActionSubIdx: 1
     ActionType: 1
     Text: 
@@ -637,7 +668,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 7
+  - ActionIdx: 9
     ActionSubIdx: 2
     ActionType: 1
     Text: 
@@ -668,7 +699,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 7
+  - ActionIdx: 9
     ActionSubIdx: 3
     ActionType: 1
     Text: 
@@ -699,7 +730,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 7
+  - ActionIdx: 9
     ActionSubIdx: 4
     ActionType: 0
     Text: "\u8FD9\u4E09\u4E2A\u5355\u5143\u90FD\u5404\u6709\u4E24\u4E2A\u63A5\u53E3\uFF1B"
@@ -730,10 +761,11 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 8
+  - ActionIdx: 10
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u4F7F\u7528\u5149\u6807\u548C\u6309\u4F4F\u7A7A\u683C\u952E\u62D6\u52A8\u6765\u79FB\u52A8\u5355\u5143\u3002"
+    Text: "\u4F7F\u7528\u5149\u6807\u548C\u6309\u4F4F<sprite=\"FunctionKeyPacked_Lite\"
+      index=0>\u62D6\u52A8\u6765\u79FB\u52A8\u5355\u5143\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -761,7 +793,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 9
+  - ActionIdx: 11
     ActionSubIdx: 0
     ActionType: 0
     Text: "\u8BF7\u5148\u79FB\u52A8\u8FD9\u4E09\u4E2A\u5355\u5143\u79FB\u52A8\u81F3\u540C\u4E00\u6A2A\u6392\u3002"
@@ -792,7 +824,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 9
+  - ActionIdx: 11
     ActionSubIdx: 1
     ActionType: 20
     Text: 
@@ -823,7 +855,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 1
-  - ActionIdx: 10
+  - ActionIdx: 12
     ActionSubIdx: 0
     ActionType: 8
     Text: 
@@ -854,7 +886,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 11
+  - ActionIdx: 13
     ActionSubIdx: 0
     ActionType: 3
     Text: 
@@ -885,7 +917,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 11
+  - ActionIdx: 13
     ActionSubIdx: 1
     ActionType: 0
     Text: "\u5728ROOT\u4E2D\uFF0C\u53EA\u6709\u5F53\u5355\u5143\u95F4\u63A5\u53E3\u76F8\u8FDE\uFF0C\u5355\u5143\u624D\u4F1A\u6FC0\u53D1\u4ED6\u4EEC\u7684\u4F5C\u7528\u3002"
@@ -916,7 +948,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 12
+  - ActionIdx: 14
     ActionSubIdx: 0
     ActionType: 0
     Text: "\u5982\u60A8\u6240\u89C1\uFF0C\u73B0\u5728\u4FE1\u53F7\u5E73\u53F0\u4E0A\u7684\u5355\u5143\u6BCF\u4E2A\u90FD\u6709\u4E24\u4E2A\u63A5\u53E3\uFF0C\u4F46\u73B0\u5728\u7684\u4ED6\u4EEC\u5F7C\u6B64\u4E4B\u95F4\u5E76\u672A\u94FE\u63A5\u3002"
@@ -947,10 +979,11 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 13
+  - ActionIdx: 15
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u8BF7\u5C06\u5149\u6807\u79FB\u52A8\u5230\u60F3\u8981\u65CB\u8F6C\u7684\u5355\u5143\uFF0C\u6309\u5DE6SHIFT\u952E\u6765\u65CB\u8F6C\u5355\u5143\uFF0C\u7136\u540E\u5C06\u4ED6\u4EEC\u7684\u63A5\u53E3\u76F8\u8FDE\u3002"
+    Text: "\u8BF7\u5C06\u5149\u6807\u79FB\u52A8\u5230\u60F3\u8981\u65CB\u8F6C\u7684\u5355\u5143\uFF0C\u6309<sprite=\"FunctionKeyPacked_Lite\"
+      index=4>\u6765\u65CB\u8F6C\u5355\u5143\uFF0C\u7136\u540E\u5C06\u4ED6\u4EEC\u7684\u63A5\u53E3\u76F8\u8FDE\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -978,7 +1011,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 13
+  - ActionIdx: 15
     ActionSubIdx: 1
     ActionType: 20
     Text: 
@@ -1009,7 +1042,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 2
-  - ActionIdx: 14
+  - ActionIdx: 16
     ActionSubIdx: 0
     ActionType: 8
     Text: 
@@ -1040,7 +1073,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 15
+  - ActionIdx: 17
     ActionSubIdx: 0
     ActionType: 3
     Text: 
@@ -1071,7 +1104,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 15
+  - ActionIdx: 17
     ActionSubIdx: 1
     ActionType: 0
     Text: "\u8FD9\u6837\u8FD9\u4E09\u4E2A\u5355\u5143\u5C31\u6B63\u786E\u8FDE\u63A5\u4E86\u3002"
@@ -1102,7 +1135,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 16
+  - ActionIdx: 18
     ActionSubIdx: 0
     ActionType: 0
     Text: "\u8FD9\u5C31\u662FROOT\u7684\u57FA\u7840\u64CD\u4F5C\uFF0C\u53EF\u4EE5\u7EE7\u7EED\u5230\u4E0B\u4E00\u5173"
@@ -1133,7 +1166,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 17
+  - ActionIdx: 19
     ActionSubIdx: 0
     ActionType: 5
     Text: 
@@ -1164,7 +1197,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  mainIDXToinsert: 13
-  subIDXToinsert: 1
+  mainIDXToinsert: 6
+  subIDXToinsert: 0
   CSVFileName: TutorialLevel0_Text
   ExcludedShop: 0

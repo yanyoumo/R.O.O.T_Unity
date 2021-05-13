@@ -61,6 +61,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -90,6 +92,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -105,10 +109,10 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 1
-    ActionSubIdx: 0
-    ActionType: 0
-    Text: "\u6211\u4EEC\u5148\u7528\u4E00\u79CD\u5355\u5143\uFF1A<b>\u77E9\u9635</b>\u7C7B\u5355\u5143\uFF1B\u4F5C\u4E3A\u4F8B\u5B50\u6765\u8BB2\u89E3\u5355\u5143\u7684\u4FE1\u53F7\u4F20\u9012\u89C4\u5219\u548C\u6FC0\u6D3B\u89C4\u5219~"
+  - ActionIdx: 0
+    ActionSubIdx: 2
+    ActionType: 20
+    Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -119,6 +123,101 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 0
+    ActionSubIdx: 3
+    ActionType: 20
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 1
+  - ActionIdx: 0
+    ActionSubIdx: 4
+    ActionType: 20
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 2
+  - ActionIdx: 1
+    ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u6211\u4EEC\u5148\u7528\u4E00\u79CD\u5355\u5143\uFF1A<b>\u77E9\u9635</b>\u7C7B\u5355\u5143\uFF1B\u4F5C\u4E3A\u4F8B\u5B50\u6765\u8BB2\u89E3\u5355\u5143\u7684\u4FE1\u53F7\u4F20\u9012\u89C4\u5219\u548C\u6FC0\u6D3B\u89C4\u5219~"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -148,6 +247,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -177,6 +278,8 @@ MonoBehaviour:
     IsStationary: 1
     Tag: 2048
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -198,7 +301,7 @@ MonoBehaviour:
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
-    Pos: {x: -1, y: -1}
+    Pos: {x: 3, y: 2}
     Core: 0
     HardwareType: 1
     Sides: 01000000010000000000000000000000
@@ -206,6 +309,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 16
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -235,6 +340,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -253,7 +360,7 @@ MonoBehaviour:
   - ActionIdx: 2
     ActionSubIdx: 3
     ActionType: 0
-    Text: "\u5728ROOT\u4E2D\u3001\u6240\u6709\u7C7B\u578B\u7684\u5355\u5143\u90FD\u6709\u4E24\u79CD\u53D8\u4F53\u2014\u2014\u573A\u548C\u6838\u5FC3\uFF1B\u8FD9\u4E9B\u53D8\u4F53\u9700\u8981\u6210\u5BF9\u513F\u5DE5\u4F5C\uFF0C\u5E73\u53F0\u4E0A\u5C31\u662F\u77E9\u9635\u7C7B\u5355\u5143\u7684\u4E24\u79CD\u53D8\u4F53\u3002"
+    Text: "\u5728ROOT\u4E2D\u3001\u6240\u6709\u7C7B\u578B\u7684\u5355\u5143\u90FD\u6709\u4E24\u79CD\u53D8\u4F53\u2014\u2014<b>\u573A</b>\u548C<b>\u6838\u5FC3</b>\uFF1B\u8FD9\u4E9B\u53D8\u4F53\u9700\u8981<b>\u914D\u5BF9\u5DE5\u4F5C</b>\uFF0C\u5E73\u53F0\u4E0A\u5C31\u662F\u77E9\u9635\u7C7B\u5355\u5143\u7684\u4E24\u79CD\u53D8\u4F53\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -264,6 +371,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -293,6 +402,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -311,7 +422,7 @@ MonoBehaviour:
   - ActionIdx: 4
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5355\u5143\u4E0A\u6709\u4E00\u4E2ALED\u6765\u8868\u793A\u5B83\u7684\u6FC0\u6D3B\u72B6\u6001\uFF0C\u7EA2\u8272\u8868\u793A\u573A\u5355\u5143\u6CA1\u6709\u88AB\u6FC0\u6D3B\uFF1B\u5F53\u7136\u3001\u6838\u5FC3\u53D8\u4F53\u662F\u4E00\u76F4\u88AB\u6FC0\u6D3B\u7684\u3002"
+    Text: "\u987A\u5E26\u8BF4\u3001\u6240\u6709\u7684<b>\u6838\u5FC3</b>\u5355\u5143\u90FD\u662F<b>\u65B9\u5F62</b>\u7684\u3001\u800C<b>\u573A</b>\u5355\u5143\u90FD\u662F<b>\u5706\u5F62</b>\u7684\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -322,6 +433,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -340,6 +453,68 @@ MonoBehaviour:
   - ActionIdx: 5
     ActionSubIdx: 0
     ActionType: 0
+    Text: "\u5355\u5143\u4E0A\u6709\u4E00\u4E2ALED\u6765\u8868\u793A\u5B83\u7684\u6FC0\u6D3B\u72B6\u6001\uFF0C\u7EA2\u8272\u8868\u793A\u5355\u5143\u6CA1\u6709\u88AB\u6FC0\u6D3B\uFF1B\u5F53\u7136\u3001\u6838\u5FC3\u53D8\u4F53\u662F\u4E00\u76F4\u88AB\u6FC0\u6D3B\u7684\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 5
+    ActionSubIdx: 1
+    ActionType: 12
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 1
+    HLCustomPos: 1
+    HighLightingPos: {x: 0.1883, y: 0.6049}
+    HighLightingScale: {x: 0.9321266, y: 0.6712506}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 6
+    ActionSubIdx: 0
+    ActionType: 0
     Text: "\u63A5\u4E0B\u6765\u8BF7\u60A8\u5C06\u77E9\u9635\u6838\u5FC3\u548C\u77E9\u9635\u5355\u5143\u8FDE\u63A5\u8D77\u6765\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
@@ -351,6 +526,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -367,9 +544,9 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
   - ActionIdx: 6
-    ActionSubIdx: 0
-    ActionType: 0
-    Text: "\u5F53\u7136\uFF0C\u4E3A\u4E86\u65B9\u4FBF\u6559\u7A0B\u7684\u7B80\u6613\u6027\uFF1B\u6211\u4EEC\u4F1A\u653E\u7F6E\u4E00\u4E9B\u88AB\u7D2B\u8272\u6846\u6846\u4F4F\u7684\u5355\u5143\uFF0C\u5B83\u4EEC\u4E0D\u80FD\u88AB\u79FB\u52A8\u4E5F\u4E0D\u80FD\u88AB\u65CB\u8F6C\u3002"
+    ActionSubIdx: 1
+    ActionType: 12
+    Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -380,6 +557,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -397,6 +576,37 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 7
     ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u5F53\u7136\uFF0C\u4E3A\u4E86\u65B9\u4FBF\u6559\u7A0B\u7684\u53D9\u8FF0\uFF1B\u6211\u4EEC\u4F1A\u653E\u7F6E\u4E00\u4E9B\u88AB<b>\u7D2B\u8272\u6846</b>\u6846\u4F4F\u7684\u5355\u5143\uFF0C\u5B83\u4EEC\u4E0D\u80FD\u88AB\u79FB\u52A8\u4E5F\u4E0D\u80FD\u88AB\u65CB\u8F6C\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 8
+    ActionSubIdx: 0
     ActionType: 8
     Text: 
     DoppelgangerToggle: 0
@@ -409,6 +619,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 10
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: "\u5C06\u77E9\u9635\u6838\u5FC3\u548C\u77E9\u9635\u5355\u5143\u8FDE\u63A5\u8D77\u6765"
     TimeOutSec: 0
     TargetTag: 0
@@ -424,7 +636,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 8
+  - ActionIdx: 9
     ActionSubIdx: 0
     ActionType: 3
     Text: 
@@ -438,6 +650,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -453,7 +667,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 8
+  - ActionIdx: 9
     ActionSubIdx: 1
     ActionType: 0
     Text: "\u5728ROOT\u4E2D\uFF0C\u5F53\u4FE1\u53F7\u4ECE\u76F8\u540C\u7C7B\u578B\u6838\u5FC3\u88AB\u4F20\u9012\u5230\u5BF9\u5E94\u7C7B\u578B\u7684\u573A\u5355\u5143\u4E0A\u65F6\uFF0C\u90A3\u4E48\u8FD9\u4E2A\u573A\u5355\u5143\u5C31\u88AB\u6FC0\u6D3B\u4E86\uFF0C\u5E76\u4E14\u53EF\u4EE5\u4EA7\u751F\u76C8\u5229\u3002"
@@ -467,122 +681,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-  - ActionIdx: 9
-    ActionSubIdx: 0
-    ActionType: 10
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 1
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-  - ActionIdx: 9
-    ActionSubIdx: 1
-    ActionType: 18
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 1
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: -1
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-  - ActionIdx: 9
-    ActionSubIdx: 2
-    ActionType: 12
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 1
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: -1
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-  - ActionIdx: 9
-    ActionSubIdx: 3
-    ActionType: 0
-    Text: "\u5DE6\u4E0A\u89D2\u8F83\u5C0F\u7684\u6570\u5B57\uFF0C\u663E\u793A\u7684\u662F\u5F53\u524D\u6240\u6709\u6FC0\u6D3B\u5355\u5143\u4EA7\u751F\u76C8\u5229\u7684\u603B\u548C\u3002"
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -600,8 +700,8 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 10
     ActionSubIdx: 0
-    ActionType: 0
-    Text: "\u5F53\u7136\uFF0C\u8F83\u5927\u6570\u5B57\u663E\u793A\u7684\u662F\u60A8\u73B0\u5728\u62E5\u6709\u7684\u91D1\u94B1\uFF1B\u6BCF\u79FB\u52A8\u4E00\u6B21\u5355\u5143\u5C31\u4F1A\u628A\u76C8\u5229\u7ED3\u7B97\u4E00\u6B21\u3002"
+    ActionType: 10
+    Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -612,6 +712,101 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 10
+    ActionSubIdx: 1
+    ActionType: 18
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: -1
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 10
+    ActionSubIdx: 2
+    ActionType: 12
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 1
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: -1
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 10
+    ActionSubIdx: 3
+    ActionType: 0
+    Text: "\u5DE6\u4E0A\u89D2\u8F83\u5C0F\u7684\u6570\u5B57\uFF0C\u663E\u793A\u7684\u662F\u5F53\u524D\u6240\u6709\u6FC0\u6D3B\u5355\u5143\u4EA7\u751F\u76C8\u5229\u7684\u603B\u548C\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -630,7 +825,7 @@ MonoBehaviour:
   - ActionIdx: 11
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u81F3\u4E8E\u91D1\u94B1\u6709\u4EC0\u4E48\u7684\u5B9E\u9645\u7684\u4F5C\u7528\u548C\u7ED3\u7B97\u7684\u4E00\u4E9B\u7EC6\u8282\u3001\u6211\u4EEC\u5C06\u4F1A\u5728\u540E\u9762\u7684\u6559\u7A0B\u4E2D\u518D\u8BE6\u7EC6\u4ECB\u7ECD~"
+    Text: "\u5F53\u7136\uFF0C\u8F83\u5927\u6570\u5B57\u663E\u793A\u7684\u662F\u60A8\u73B0\u5728\u62E5\u6709\u7684\u91D1\u94B1\uFF1B\u6BCF\u79FB\u52A8\u4E00\u6B21\u5355\u5143\u5C31\u4F1A\u628A\u76C8\u5229\u7ED3\u7B97\u4E00\u6B21\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -641,6 +836,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -658,37 +855,8 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 12
     ActionSubIdx: 0
-    ActionType: 12
-    Text: "\u5F53\u5355\u5143\u6B63\u786E\u6FC0\u6D3B\u65F6,\u5355\u5143\u4E0A\u7684\u89D2\u843D\u4E0A\u7684\u5927\u7684LED\u4F1A\u663E\u793A\u4E3A\u7EFF\u8272, "
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-  - ActionIdx: 12
-    ActionSubIdx: 1
     ActionType: 0
-    Text: "\u5F53\u5355\u5143\u6B63\u786E\u6FC0\u6D3B\u65F6,\u5355\u5143\u4E0A\u7684\u89D2\u843D\u4E0A\u7684\u6FC0\u6D3BLED\u4F1A\u663E\u793A\u4E3A\u7EFF\u8272\u3002"
+    Text: "\u81F3\u4E8E\u91D1\u94B1\u6709\u4EC0\u4E48\u7684\u5B9E\u9645\u7684\u4F5C\u7528\u548C\u7ED3\u7B97\u7684\u4E00\u4E9B\u7EC6\u8282\u3001\u6211\u4EEC\u5C06\u4F1A\u5728\u540E\u9762\u7684\u6559\u7A0B\u4E2D\u518D\u8BE6\u7EC6\u4ECB\u7ECD~"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -699,6 +867,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -716,8 +886,8 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 13
     ActionSubIdx: 0
-    ActionType: 0
-    Text: "\u5728\u5355\u5143\u4F20\u9012\u4FE1\u53F7\u65F6\uFF0C\u5355\u5143\u95F4\u7684\u63A5\u53E3\u4E0A\u53EF\u4EE5\u770B\u5230\u4FE1\u53F7\u7684\u6D41\u5411\u3002"
+    ActionType: 12
+    Text: "\u5F53\u5355\u5143\u6B63\u786E\u6FC0\u6D3B\u65F6,\u5355\u5143\u4E0A\u7684\u89D2\u843D\u4E0A\u7684\u5927\u7684LED\u4F1A\u663E\u793A\u4E3A\u7EFF\u8272, "
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -728,6 +898,39 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 13
+    ActionSubIdx: 1
+    ActionType: 0
+    Text: "\u5F53\u5355\u5143\u6B63\u786E\u6FC0\u6D3B\u65F6,\u5355\u5143\u4E0A\u7684\u89D2\u843D\u4E0A\u7684\u6FC0\u6D3BLED\u4F1A\u663E\u793A\u4E3A\u7EFF\u8272\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -745,47 +948,20 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 14
     ActionSubIdx: 0
-    ActionType: 1
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: -1, y: -1}
-    Core: 0
-    HardwareType: 1
-    Sides: 00000000000000000100000001000000
-    Tier: 2
-    IsStationary: 0
-    Tag: 16
-    HandOnCheckType: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 1
-    HLCustomPos: 1
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-  - ActionIdx: 14
-    ActionSubIdx: 1
     ActionType: 0
-    Text: "ROOT\u4E2D\uFF0C\u573A\u5355\u5143\u6709\u7B49\u7EA7\u4E4B\u5206\uFF0C\u65B0\u751F\u6210\u7684\u77E9\u9635\u5355\u5143\u5E95\u90E8\u6709\u4E24\u4E2A\u70B9\u4EAE\u7684LED\uFF0C\u8FD9\u4EE3\u8868\u8FD9\u4E2A\u5355\u5143\u7684\u7B49\u7EA7\u662F2\u3002"
+    Text: "\u5728\u5355\u5143\u4F20\u9012\u4FE1\u53F7\u65F6\uFF0C\u5355\u5143\u95F4\u7684\u63A5\u53E3\u4E0A\u53EF\u4EE5\u770B\u5230\u4FE1\u53F7\u7684\u6D41\u5411\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -803,6 +979,99 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 15
     ActionSubIdx: 0
+    ActionType: 1
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 3, y: 4}
+    Core: 0
+    HardwareType: 1
+    Sides: 00000000000000000100000001000000
+    Tier: 2
+    IsStationary: 0
+    Tag: 16
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 1
+    HLCustomPos: 1
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 15
+    ActionSubIdx: 1
+    ActionType: 0
+    Text: "ROOT\u4E2D\uFF0C\u573A\u5355\u5143\u6709\u7B49\u7EA7\u4E4B\u5206\uFF0C\u65B0\u751F\u6210\u7684\u77E9\u9635\u5355\u5143\u5E95\u90E8\u6709\u4E24\u4E2A\u70B9\u4EAE\u7684LED\uFF0C\u8FD9\u4EE3\u8868\u8FD9\u4E2A\u5355\u5143\u7684\u7B49\u7EA7\u662F2\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 15
+    ActionSubIdx: 2
+    ActionType: 12
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 1
+    HLCustomPos: 1
+    HighLightingPos: {x: -0.035, y: 2.38}
+    HighLightingScale: {x: 1.275538, y: 0.4171866}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 16
+    ActionSubIdx: 0
     ActionType: 0
     Text: "\u4E4B\u524D\u5DF2\u7ECF\u8FDE\u63A5\u7684\u77E9\u9635\u5355\u5143\u5E95\u90E8\u53EA\u6709\u4E00\u4E2A\u5C0F\u706F\uFF0C\u8FD9\u4EE3\u8868\u4ED6\u7684\u7B49\u7EA7\u662F1\u3002"
     DoppelgangerToggle: 0
@@ -815,6 +1084,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -831,9 +1102,9 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
   - ActionIdx: 16
-    ActionSubIdx: 0
-    ActionType: 0
-    Text: "ROOT\u4E2D\uFF0C\u5355\u5143\u7684\u7B49\u7EA7\u6700\u9AD8\u52305\u7EA7\u3002"
+    ActionSubIdx: 1
+    ActionType: 12
+    Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -844,6 +1115,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -862,7 +1135,7 @@ MonoBehaviour:
   - ActionIdx: 17
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5F53\u5355\u5143\u7B49\u7EA7\u8D8A\u9AD8\u7684\u5355\u5143\u88AB\u6FC0\u6D3B\u65F6\uFF0C\u4ED6\u80FD\u4EA7\u751F\u7684\u76C8\u5229\u5C31\u4F1A\u8D8A\u591A\u3002"
+    Text: "ROOT\u4E2D\uFF0C\u5355\u5143\u7684\u7B49\u7EA7\u6700\u9AD8\u52305\u7EA7\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -873,6 +1146,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -891,7 +1166,7 @@ MonoBehaviour:
   - ActionIdx: 18
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u63A5\u4E0B\u6765\u8BF7\u5C06\u65B0\u751F\u6210\u7684\u5355\u5143\u548C\u5DF2\u7ECF\u6FC0\u6D3B\u7684\u77E9\u9635\u5355\u5143\u8FDE\u63A5\u8D77\u6765\u3002"
+    Text: "\u5F53\u5355\u5143\u7B49\u7EA7\u8D8A\u9AD8\u7684\u5355\u5143\u88AB\u6FC0\u6D3B\u65F6\uFF0C\u4ED6\u80FD\u4EA7\u751F\u7684\u76C8\u5229\u5C31\u4F1A\u8D8A\u591A\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -902,6 +1177,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -919,6 +1196,37 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 19
     ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u63A5\u4E0B\u6765\u8BF7\u5C06\u65B0\u751F\u6210\u7684\u5355\u5143\u548C\u5DF2\u7ECF\u6FC0\u6D3B\u7684\u77E9\u9635\u5355\u5143\u8FDE\u63A5\u8D77\u6765\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 20
+    ActionSubIdx: 0
     ActionType: 8
     Text: 
     DoppelgangerToggle: 0
@@ -931,6 +1239,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 11
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: "\u5C06\u65B0\u5355\u5143\u548C\u5DF2\u6FC0\u6D3B\u7684\u5355\u5143\u8FDE\u63A5\u8D77\u6765"
     TimeOutSec: 45
     TargetTag: 0
@@ -946,7 +1256,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 20
+  - ActionIdx: 21
     ActionSubIdx: 0
     ActionType: 3
     Text: 
@@ -960,6 +1270,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -975,7 +1287,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 20
+  - ActionIdx: 21
     ActionSubIdx: 1
     ActionType: 12
     Text: 
@@ -989,6 +1301,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1004,10 +1318,11 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 20
+  - ActionIdx: 21
     ActionSubIdx: 2
     ActionType: 0
-    Text: "\u6B64\u65F6\u53EF\u4EE5\u4F7F\u7528<b>[TAB]</b>\u952E\u6765\u5207\u6362\u67E5\u770B\u67D0\u4E2A\u5355\u5143\u76C8\u5229\u7684\u5177\u4F53\u6570\u636E\uFF1B\u5BF9\u4E8E\u77E9\u9635\u7C7B\u578B\u7684\u5355\u5143\uFF0C\u7B49\u7EA7\u5BF9\u76C8\u5229\u7684\u589E\u52A0\u662F\u5448\u500D\u6570\u7684\u5173\u7CFB\u7684\u3002"
+    Text: "\u6B64\u65F6\u53EF\u4EE5\u4F7F\u7528<sprite=\"FunctionKeyPacked_Lite\"
+      index=9>\u952E\u6765\u5207\u6362\u67E5\u770B\u67D0\u4E2A\u5355\u5143\u76C8\u5229\u7684\u5177\u4F53\u6570\u636E\uFF1B\u5BF9\u4E8E\u77E9\u9635\u7C7B\u578B\u7684\u5355\u5143\uFF0C\u7B49\u7EA7\u5BF9\u76C8\u5229\u7684\u589E\u52A0\u662F\u5448\u500D\u6570\u7684\u5173\u7CFB\u7684\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1018,64 +1333,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-  - ActionIdx: 21
-    ActionSubIdx: 0
-    ActionType: 12
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-  - ActionIdx: 21
-    ActionSubIdx: 1
-    ActionType: 0
-    Text: "\u540C\u65F6\u4FE1\u53F7\u4F1A\u4F20\u9012\u7ED9\u65B0\u8FDE\u63A5\u7684\u5355\u5143\uFF0C\u5982\u679C\u4FE1\u53F7\u7C7B\u578B\u5339\u914D\uFF0C\u90A3\u4E48\u5C31\u4F1A\u6FC0\u6D3B\u65B0\u7684\u5355\u5143\u3002"
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1093,18 +1352,51 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 22
     ActionSubIdx: 0
-    ActionType: 0
-    Text: "\u73B0\u5728\u8FDE\u63A5\u7684\u5355\u5143\u4EEC\u662F\u4E00\u6761\u7EBF\uFF0C\u90A3\u4E48\u5F53\u5355\u5143\u63A5\u53E3\u6570\u76EE\u589E\u591A\u7684\u65F6\u5019\uFF0C\u4FE1\u53F7\u7684\u4F20\u9012\u53C8\u4F1A\u6709\u4EC0\u4E48\u53D8\u5316\u5462\uFF1F"
+    ActionType: 12
+    Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 22
+    ActionSubIdx: 1
+    ActionType: 0
+    Text: "\u540C\u65F6\u4FE1\u53F7\u4F1A\u4F20\u9012\u7ED9\u65B0\u8FDE\u63A5\u7684\u5355\u5143\uFF0C\u5982\u679C\u4FE1\u53F7\u7C7B\u578B\u5339\u914D\uFF0C\u90A3\u4E48\u5C31\u4F1A\u6FC0\u6D3B\u65B0\u7684\u5355\u5143\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1121,6 +1413,37 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
   - ActionIdx: 23
+    ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u73B0\u5728\u8FDE\u63A5\u7684\u5355\u5143\u4EEC\u662F\u4E00\u6761\u7EBF\uFF0C\u90A3\u4E48\u5F53\u5355\u5143\u63A5\u53E3\u6570\u76EE\u589E\u591A\u7684\u65F6\u5019\uFF0C\u4FE1\u53F7\u7684\u4F20\u9012\u53C8\u4F1A\u6709\u4EC0\u4E48\u53D8\u5316\u5462\uFF1F"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 24
     ActionSubIdx: 0
     ActionType: 1
     Text: 
@@ -1134,6 +1457,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 1
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1149,7 +1474,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 23
+  - ActionIdx: 24
     ActionSubIdx: 1
     ActionType: 1
     Text: 
@@ -1163,6 +1488,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 1
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1178,7 +1505,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 23
+  - ActionIdx: 24
     ActionSubIdx: 2
     ActionType: 1
     Text: 
@@ -1192,64 +1519,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 1
     HandOnCheckType: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-  - ActionIdx: 24
-    ActionSubIdx: 0
-    ActionType: 9
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 16
-    Set: 1
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-  - ActionIdx: 24
-    ActionSubIdx: 1
-    ActionType: 0
-    Text: "\u6211\u4EEC\u628A\u5DF2\u6FC0\u6D3B\u77E9\u9635\u5355\u5143\u4F4D\u7F6E\u9501\u5B9A\u4E86\uFF0C\u4F46\u662F\u65B0\u751F\u6210\u7684\u77E9\u9635\u5355\u5143\u4ECD\u7136\u53EF\u4EE5\u88AB\u6B63\u786E\u5168\u90E8\u8FDE\u63A5\u5E76\u4E14\u6FC0\u6D3B\u3002 "
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1267,7 +1538,7 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 25
     ActionSubIdx: 0
-    ActionType: 8
+    ActionType: 9
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
@@ -1278,11 +1549,13 @@ MonoBehaviour:
     Tier: 0
     IsStationary: 0
     Tag: 0
-    HandOnCheckType: 12
-    HandOnMission: "\u5C06\u65B0\u751F\u6210\u7684\u77E9\u9635\u5355\u5143\u5168\u90E8\u8FDE\u63A5\u5E76\u4E14\u6B63\u786E\u6FC0\u6D3B\u3002 "
-    TimeOutSec: 50
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
     TargetTag: 16
-    Set: 0
+    Set: 1
     HLSet: 0
     HLCustomPos: 0
     HighLightingPos: {x: 0, y: 0}
@@ -1294,20 +1567,22 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  - ActionIdx: 26
-    ActionSubIdx: 0
-    ActionType: 3
-    Text: 
+  - ActionIdx: 25
+    ActionSubIdx: 1
+    ActionType: 0
+    Text: "\u6211\u4EEC\u628A\u5DF2\u6FC0\u6D3B\u77E9\u9635\u5355\u5143\u4F4D\u7F6E\u9501\u5B9A\u4E86\uFF0C\u4F46\u662F\u65B0\u751F\u6210\u7684\u77E9\u9635\u5355\u5143\u4ECD\u7136\u53EF\u4EE5\u88AB\u6B63\u786E\u5168\u90E8\u8FDE\u63A5\u5E76\u4E14\u6FC0\u6D3B\u3002 "
     DoppelgangerToggle: 0
     DoppelgangerText: 
-    Pos: {x: 5, y: 0}
-    Core: 1
+    Pos: {x: 0, y: 0}
+    Core: 0
     HardwareType: 0
-    Sides: 00000000010000000000000000000000
-    Tier: 1
-    IsStationary: 1
-    Tag: 2048
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1324,19 +1599,52 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
   - ActionIdx: 26
-    ActionSubIdx: 1
-    ActionType: 0
-    Text: "\u5F53\u5355\u5143\u4E0E\u6709\u4E09\u4E2A\u63A5\u53E3\u7684\u5355\u5143\u76F8\u8FDE\u65F6\uFF0C\u77E9\u9635\u4FE1\u53F7\u4F1A\u5206\u53C9\u5206\u522B\u6D41\u5411\u53E6\u4E24\u4E2A\u8FDE\u63A5\u7684\u5355\u5143\uFF0C\u5E76\u5206\u522B\u6FC0\u6D3B\u4ED6\u4EEC"
+    ActionSubIdx: 0
+    ActionType: 8
+    Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
-    Pos: {x: 0, y: 5}
+    Pos: {x: 0, y: 0}
     Core: 0
     HardwareType: 0
     Sides: 
     Tier: 0
     IsStationary: 0
     Tag: 0
+    HandOnCheckType: 12
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: "\u5C06\u65B0\u751F\u6210\u7684\u77E9\u9635\u5355\u5143\u5168\u90E8\u8FDE\u63A5\u5E76\u4E14\u6B63\u786E\u6FC0\u6D3B\u3002 "
+    TimeOutSec: 50
+    TargetTag: 16
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  - ActionIdx: 27
+    ActionSubIdx: 0
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 5, y: 0}
+    Core: 1
+    HardwareType: 0
+    Sides: 00000000010000000000000000000000
+    Tier: 1
+    IsStationary: 1
+    Tag: 2048
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1353,12 +1661,12 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
   - ActionIdx: 27
-    ActionSubIdx: 0
+    ActionSubIdx: 1
     ActionType: 0
-    Text: "\u77E9\u9635\u4FE1\u53F7\u5206\u53C9\u4E0D\u4F1A\u5F71\u54CD\u6FC0\u6D3B\u7684\u77E9\u9635\u5355\u5143\u76C8\u5229\uFF0C\u77E9\u9635\u5355\u5143\u7684\u76C8\u5229\u53EA\u4E0E\u6FC0\u6D3B\u7684\u77E9\u9635\u5355\u5143\u6570\u91CF\u548C\u5355\u5143\u7B49\u7EA7\u76F8\u5173\u3002\u8FDE\u63A5\u7684\u8D8A\u591A\uFF0C\u589E\u52A0\u7684\u76C8\u5229\u662F\u76F8\u540C\u7684"
+    Text: "\u5F53\u5355\u5143\u4E0E\u6709\u4E09\u4E2A\u63A5\u53E3\u7684\u5355\u5143\u76F8\u8FDE\u65F6\uFF0C\u77E9\u9635\u4FE1\u53F7\u4F1A\u5206\u53C9\u5206\u522B\u6D41\u5411\u53E6\u4E24\u4E2A\u8FDE\u63A5\u7684\u5355\u5143\uFF0C\u5E76\u5206\u522B\u6FC0\u6D3B\u4ED6\u4EEC"
     DoppelgangerToggle: 0
     DoppelgangerText: 
-    Pos: {x: 0, y: 0}
+    Pos: {x: 0, y: 5}
     Core: 0
     HardwareType: 0
     Sides: 
@@ -1366,6 +1674,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1384,7 +1694,7 @@ MonoBehaviour:
   - ActionIdx: 28
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u73B0\u5728\u6211\u4EEC\u5DF2\u7ECF\u4ECB\u7ECD\u5B8C\u5355\u5143\u4FE1\u53F7\u4F20\u9012\u7684\u57FA\u672C\u89C4\u5219\uFF0C\u63A5\u4E0B\u6765\u8BA9\u6211\u4EEC\u6765\u770B\u53E6\u4E00\u79CD\u5355\u5143\u7C7B\u578B\uFF1A\u70ED\u529B\u5355\u5143\n\u8BF7\u9009\u62E9\u7EE7\u7EED\u6E38\u620F\u8FDB\u5165\u4E0B\u4E00\u6559\u7A0B\u3002 "
+    Text: "\u77E9\u9635\u4FE1\u53F7\u5206\u53C9\u4E0D\u4F1A\u5F71\u54CD\u6FC0\u6D3B\u7684\u77E9\u9635\u5355\u5143\u76C8\u5229\uFF0C\u77E9\u9635\u5355\u5143\u7684\u76C8\u5229\u53EA\u4E0E\u6FC0\u6D3B\u7684\u77E9\u9635\u5355\u5143\u6570\u91CF\u548C\u5355\u5143\u7B49\u7EA7\u76F8\u5173\u3002\u8FDE\u63A5\u7684\u8D8A\u591A\uFF0C\u589E\u52A0\u7684\u76C8\u5229\u662F\u76F8\u540C\u7684"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1395,6 +1705,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1412,8 +1724,8 @@ MonoBehaviour:
     Numpage: 0
   - ActionIdx: 29
     ActionSubIdx: 0
-    ActionType: 5
-    Text: 
+    ActionType: 0
+    Text: "\u73B0\u5728\u6211\u4EEC\u5DF2\u7ECF\u4ECB\u7ECD\u5B8C\u5355\u5143\u4FE1\u53F7\u4F20\u9012\u7684\u57FA\u672C\u89C4\u5219\uFF0C\u63A5\u4E0B\u6765\u8BA9\u6211\u4EEC\u6765\u770B\u53E6\u4E00\u79CD\u5355\u5143\u7C7B\u578B\uFF1A\u70ED\u529B\u5355\u5143\n\u8BF7\u9009\u62E9\u7EE7\u7EED\u6E38\u620F\u8FDB\u5165\u4E0B\u4E00\u6559\u7A0B\u3002 "
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1424,6 +1736,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1439,7 +1753,38 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
-  mainIDXToinsert: 27
-  subIDXToinsert: 0
+  - ActionIdx: 30
+    ActionSubIdx: 0
+    ActionType: 5
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+  mainIDXToinsert: 16
+  subIDXToinsert: 2
   CSVFileName: TutorialLevel1_Text
   ExcludedShop: 0

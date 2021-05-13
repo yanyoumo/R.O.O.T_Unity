@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using com.ootii.Messages;
 using DG.Tweening;
 using Doozy.Engine.UI;
@@ -23,6 +25,8 @@ namespace ROOT.UI
         public UIView TutorialMainTextFrame;
         public UIView TutorialMainTextFrame_Alter;
         public UIView TutorialHandOff;
+
+        private Dictionary<UIView, bool> tmpHideStatusBuffer;
         
         public TextMeshProUGUI TutorialTextMainContent;
         public TextMeshProUGUI TutorialTextMainContent_Alter;
@@ -119,8 +123,8 @@ namespace ROOT.UI
                         TutorialCheckListCore_Alt.MainGoalCompleted = info.BoolData;
                         break;
                     case HintEventType.NextIsEnding:
-                        TutorialNextContent.text = "按[回车]以结束本关教程";
-                        TutorialNextContent_Alter.text = "按[回车]以结束本关教程";
+                        TutorialNextContent.text = "按<sprite=\"FunctionKeyPacked_Lite\" index=2>以结束本关教程";
+                        TutorialNextContent_Alter.text = "按<sprite=\"FunctionKeyPacked_Lite\" index=2>以结束本关教程";
                         break;
                     case HintEventType.ToggleHandOnView:
                         UIViewToggleWrapper(ref TutorialHandOff, !info.BoolData);
@@ -168,18 +172,58 @@ namespace ROOT.UI
             }
         }
 
+        private void ToggleHintUIUpEventHandler(IMessage rMessge)
+        {
+            foreach (var key in tmpHideStatusBuffer.Keys.ToArray())
+            {
+                tmpHideStatusBuffer[key] = key.IsVisible;
+            }
+
+            foreach (var uiView in tmpHideStatusBuffer.Keys)
+            {
+                uiView.Hide();
+            }
+        }
+
+        private void ToggleHintUIDownEventHandler(IMessage rMessge)
+        {
+            foreach (var keyValuePair in tmpHideStatusBuffer)
+            {
+                if (keyValuePair.Value)
+                {
+                    keyValuePair.Key.Show();
+                }
+                else
+                {
+                    keyValuePair.Key.Hide();
+                }
+            }
+        }
+        
         private void Awake()
         {
-            MessageDispatcher.AddListener(WorldEvent.HintRelatedEvent, HintEventHandler);
             TutorialCheckListCore.SetupSecondaryGoalContent("");
             TutorialCheckListCore_Alt.SetupSecondaryGoalContent("");
             handsOffOldPos = TutorialHandOff.transform.localPosition;
             nextTextOldPos = TutorialNextContent.transform.localPosition;
             altNextTextOldPos = TutorialNextContent_Alter.transform.localPosition;
+            tmpHideStatusBuffer = new Dictionary<UIView, bool>
+            {
+                {TutorialCheckList, false},
+                {TutorialCheckList_Alter, false},
+                {TutorialMainTextFrame, false},
+                {TutorialMainTextFrame_Alter, false},
+                {TutorialHandOff, false},
+            };
+            MessageDispatcher.AddListener(WorldEvent.HintRelatedEvent, HintEventHandler);
+            MessageDispatcher.AddListener(WorldEvent.ToggleHintUIUpEvent, ToggleHintUIUpEventHandler);
+            MessageDispatcher.AddListener(WorldEvent.ToggleHintUIDownEvent, ToggleHintUIDownEventHandler);
         }
 
         private void OnDestroy()
         {
+            MessageDispatcher.RemoveListener(WorldEvent.ToggleHintUIDownEvent,ToggleHintUIDownEventHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.ToggleHintUIUpEvent,ToggleHintUIUpEventHandler);
             MessageDispatcher.RemoveListener(WorldEvent.HintRelatedEvent, HintEventHandler);
         }
     }

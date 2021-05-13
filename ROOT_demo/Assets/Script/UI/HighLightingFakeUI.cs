@@ -23,6 +23,7 @@ namespace ROOT.UI
         };
             
         public SpriteRenderer CurtainImage;
+        public SpriteRenderer CarveOutStoke;
         public Transform CarveOut;
 
         private void HighLightingUIChangedHandler(IMessage rMessage)
@@ -48,12 +49,14 @@ namespace ROOT.UI
                 }
 
                 CurtainImage.enabled = data.Toggle;
+                CarveOutStoke.enabled = data.Toggle;
             }
         }
 
         private void Awake()
         {
             CurtainImage.enabled = false;
+            CarveOutStoke.enabled = false;
             MessageDispatcher.AddListener(WorldEvent.HighLightingUIChangedEvent,HighLightingUIChangedHandler);
         }
 
