@@ -203,7 +203,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u6309\u4F4F<sprite=17>\u67E5\u770B\u64CD\u4F5C\u8BF4\u660E"
+      - "\u6309\u4F4F<b>[H]</b>\u952E\u67E5\u770B\u64CD\u4F5C\u8BF4\u660E"
       - Hold <b>[H]</b> for controlling
       Flags: 0000
       Languages_Touch: []
@@ -597,6 +597,30 @@ MonoBehaviour:
       Languages:
       - "\u7ED3\u675F"
       - Ending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Signal_Name_Matrix
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u77E9\u9635"
+      - Matrix
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Signal_Name_Scan
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u626B\u63CF"
+      - Scan
+      Flags: 0000
+      Languages_Touch: []
+    - Term: Signal_Name_Thermo
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u70ED\u529B"
+      - Thermo
       Flags: 0000
       Languages_Touch: []
     - Term: LevelName_GL0

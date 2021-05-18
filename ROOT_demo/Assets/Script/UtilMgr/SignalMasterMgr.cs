@@ -326,14 +326,14 @@ namespace ROOT.Signal
             return GetUnitAssetByUnitType(signalType, genre).UnitPrice;
         }
 
-        /*public SignalType SignalTypeFromUnit(CoreType unitType)
-        {
-            return GetSignalAssetByUnitType(unitType).Type;
-        }*/
-
         public Material GetMatByUnitType(SignalType signalType, HardwareType genre)
         {
             return GetUnitAssetByUnitType(signalType, genre).UnitMat;
+        }
+
+        public String GetSignalNameTerm(SignalType signalType)
+        {
+            return signalAssetLib[signalType].SignalNameTerm;
         }
 
         #endregion
@@ -377,7 +377,6 @@ namespace ROOT.Signal
         }
 
         public SignalPathLib Paths => _paths == null ? new SignalPathLib() : _paths;
-        
         private SignalPathLib _paths;
 
         private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)

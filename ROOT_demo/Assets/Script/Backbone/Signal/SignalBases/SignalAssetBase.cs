@@ -10,6 +10,8 @@ namespace ROOT.Signal
 
     public abstract class SignalAssetBase : MonoBehaviour
     {
+        public String SignalNameTerm;
+        
         public Type UnitSignalCoreType { protected set; get; }
 
         public abstract SignalType SignalType { get; }
