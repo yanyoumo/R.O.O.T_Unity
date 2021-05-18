@@ -81,6 +81,7 @@ namespace ROOT.SetupAsset
         [PropertyOrder(88)]
         public void InsertTutorialActions()
         {
+            ReorderTutorialActions();//得考虑到在插入前本身顺序不齐的情况。
             if (Actions.Count(a => a.ActionIdx == mainIDXToinsert && a.ActionSubIdx == subIDXToinsert) > 0)
             {
                 //Has pre-existing Action, push back then insert.
