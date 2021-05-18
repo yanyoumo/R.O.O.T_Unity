@@ -30,8 +30,8 @@ namespace ROOT.UI
         private LevelActionAsset actionAsset => LevelLib.Instance.ActionAsset(levelId);
         private bool LevelIsTutorial => (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
 
-        private SignalType[] SelectingSignals => toggles.Where(v => v.Value.CoreToggle.isOn).Select(v1 => v1.Key).ToArray();
-        private int SelectingSignalCount => SelectingSignals.Length;
+        private SignalType[] SelectingSignals => toggles?.Where(v => v.Value.CoreToggle.isOn).Select(v1 => v1.Key).ToArray();
+        private int SelectingSignalCount => SelectingSignals?.Length ?? 0;
         
         public void Back()
         {
@@ -44,12 +44,16 @@ namespace ROOT.UI
             var actionAsset = LevelLib.Instance.ActionAsset(levelId);
             if (SelectingSignalCount == 2 || LevelIsTutorial)
             {
-                _additionalGameSetup.PlayingSignalTypeA = SelectingSignals[0];
-                _additionalGameSetup.PlayingSignalTypeB = SelectingSignals[1];
+                if (!LevelIsTutorial)
+                {
+                    //如果是Tutorial那么就无视玩家选择、只使用内部数据。
+                    _additionalGameSetup.PlayingSignalTypeA = SelectingSignals[0];
+                    _additionalGameSetup.PlayingSignalTypeB = SelectingSignals[1];
+                    _additionalGameSetup.OrderingSignal();
+                    actionAsset.AdditionalGameSetup = _additionalGameSetup;
+                }
+                
                 loadingProgressorCallBack(0.1f);
-                _additionalGameSetup.OrderingSignal();
-                //如果是Tutorial那么就无视玩家选择、只使用内部数据。
-                if (!LevelIsTutorial) actionAsset.AdditionalGameSetup = _additionalGameSetup;
                 LevelMasterManager.Instance.LoadLevelThenPlay(actionAsset, null, loadingProgressorCallBack);
                 //这个卸载函数现在放到那个回调函数里面去了。-youmo
             }
