@@ -109,11 +109,14 @@ namespace ROOT
         public int GetUnitCount => _unitsGameObjects.Count;
         public int GetCountByType(SignalType signal, HardwareType genre) => FindUnitWithCoreType(signal, genre).Length;
         public int GetTotalTierCountByType(SignalType signal, HardwareType genre) => Units.Where(unit => unit.UnitSignal == signal && unit.UnitHardware == genre).Sum(unit => unit.Tier);
+
         public List<Vector2Int> GetInfoCollectorZone()
         {
             //这里保证前面调过一次计分函数，实在不行在这儿再调一遍。
             var res = new List<Vector2Int>();
-            Units.Select(u => u.SignalCore).Where(s => s.IsUnitActive).ForEach(s => res.AddRange(s.SingleInfoCollectorZone));
+            Units.Where(u => u.UnitHardware == HardwareType.Field)
+                .Select(u => u.SignalCore)
+                .Where(s => s.IsUnitActive).ForEach(s => res.AddRange(s.SingleInfoCollectorZone));
             return res.Where(CheckBoardPosValid).Distinct().ToList();
         }
 

@@ -61,6 +61,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -90,6 +92,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -119,6 +123,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -148,6 +154,8 @@ MonoBehaviour:
     IsStationary: 1
     Tag: 512
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -177,6 +185,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 1
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -206,6 +216,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -235,6 +247,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -264,6 +278,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -293,6 +309,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -322,6 +340,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 13
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: "\u5C06\u6838\u5FC3\u548C\u573A\u5355\u5143\u8FDE\u63A5\u5230\u4E00\u8D77\u3002"
     TimeOutSec: 30
     TargetTag: 0
@@ -351,6 +371,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -380,6 +402,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -409,6 +433,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -438,6 +464,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -467,6 +495,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 1
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -496,6 +526,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 1
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -525,6 +557,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 1
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -554,6 +588,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -583,6 +619,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -612,6 +650,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 14
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: "\u5C06\u4FE1\u53F7\u5E73\u53F0\u4E0A\u6240\u6709\u7684\u70ED\u529B\u5355\u5143\u8FDE\u63A5\u8D77\u6765\u3002"
     TimeOutSec: 45
     TargetTag: 0
@@ -641,6 +681,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -670,6 +712,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -699,6 +743,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 1
@@ -728,6 +774,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 512
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -757,6 +805,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 512
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -786,6 +836,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -815,6 +867,8 @@ MonoBehaviour:
     IsStationary: 1
     Tag: 2048
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -844,6 +898,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -873,6 +929,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 15
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: "\u628A\u70ED\u529B\u5355\u5143\u4E0E\u77E9\u9635\u6838\u5FC3\u76F8\u8FDE\uFF0C\u628A\u77E9\u9635\u5355\u5143\u4E0E\u70ED\u529B\u6838\u5FC3\u76F8\u8FDE"
     TimeOutSec: 0
     TargetTag: 0
@@ -902,6 +960,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -931,6 +991,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -960,6 +1022,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -989,6 +1053,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1018,6 +1084,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 512
@@ -1047,6 +1115,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1076,6 +1146,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1105,6 +1177,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1134,6 +1208,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1163,6 +1239,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1192,6 +1270,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1221,6 +1301,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1250,6 +1332,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1279,6 +1363,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1308,6 +1394,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1340,6 +1428,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1371,6 +1461,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 16
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: "\u8BF7\u60A8\u5C06\u5BF9\u5E94\u7C7B\u578B\u5355\u5143\u79FB\u52A8\u5230\u5BF9\u5E94\u53D1\u5149\u7684\u57FA\u7840\u683C\u4E0A"
     TimeOutSec: 0
     TargetTag: 0
@@ -1400,6 +1492,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1429,6 +1523,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1458,6 +1554,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1492,6 +1590,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1521,6 +1621,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1551,6 +1653,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1580,6 +1684,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 17
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: "\u5C06\u4E00\u4E2A\u77E9\u9635\u5355\u5143\u79FB\u52A8\u5230\u53D1\u5149\u57FA\u7840\u683C\u4E0A\uFF0C\u5E76\u89C2\u5BDF\u63A5\u53E3\u4E0A\u4FE1\u53F7\u7684\u6D41\u52A8\u8303\u56F4"
     TimeOutSec: 0
     TargetTag: 0
@@ -1609,6 +1715,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1638,6 +1746,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1667,6 +1777,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1696,6 +1808,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1725,6 +1839,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
@@ -1754,6 +1870,8 @@ MonoBehaviour:
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
