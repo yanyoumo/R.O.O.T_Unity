@@ -36,25 +36,25 @@ MonoBehaviour:
   InitalBoard:
   - PlayingSignalSelector: 0
     CoreGenre: 0
-    Sides: 
+    Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: -1, y: -1}
     IsStation: 0
   - PlayingSignalSelector: 0
     CoreGenre: 1
-    Sides: 01000000010000000000000000000000
+    Sides: 01000000010000000100000001000000
     Tier: 3
     Pos: {x: -1, y: -1}
     IsStation: 0
   - PlayingSignalSelector: 0
-    CoreGenre: 0
+    CoreGenre: 1
     Sides: 01000000000000000100000000000000
     Tier: 2
     Pos: {x: -1, y: -1}
     IsStation: 0
   - PlayingSignalSelector: 0
     CoreGenre: 1
-    Sides: 00000000000000000000000000000000
+    Sides: 01000000010000000000000000000000
     Tier: 4
     Pos: {x: -1, y: -1}
     IsStation: 0
