@@ -24,12 +24,12 @@ namespace ROOT
 
         private bool ActionAssetIsTutorial(int i) => i < TutorialActionAssetList.Length;
         
-        private TutorialQuadDataPack[] QuadDataPacksFromActionAssetList(LevelActionAsset[] list)
+        private LevelQuadDataPack[] QuadDataPacksFromActionAssetList(LevelActionAsset[] list)
         {
-            var res = new TutorialQuadDataPack[list.Length];
+            var res = new LevelQuadDataPack[list.Length];
             for (var i = 0; i < list.Length; i++)
             {
-                res[i] = list[i].TutorialQuadDataPack;
+                res[i] = list[i].LevelQuadDataPack;
             }
             return res;
         }

@@ -4,14 +4,14 @@ using UnityEngine;
 namespace ROOT
 {
     [Serializable]
-    public struct TutorialQuadDataPack
+    public struct LevelQuadDataPack
     {
         public int AccessID;
         public string TitleTerm;
         public string ButtonTerm;
         public Sprite Thumbnail;
 
-        public TutorialQuadDataPack(int accessID,string titleTerm, string _buttonTerm, string thumbnailName)
+        public LevelQuadDataPack(int accessID,string titleTerm, string _buttonTerm, string thumbnailName)
         {
             TitleTerm = titleTerm;
             ButtonTerm = _buttonTerm;
@@ -19,7 +19,7 @@ namespace ROOT
             AccessID = accessID;
         }
 
-        public TutorialQuadDataPack(int accessID,string titleTerm, string _buttonTerm, Sprite thumbnail)
+        public LevelQuadDataPack(int accessID,string titleTerm, string _buttonTerm, Sprite thumbnail)
         {
             TitleTerm = titleTerm;
             ButtonTerm = _buttonTerm;

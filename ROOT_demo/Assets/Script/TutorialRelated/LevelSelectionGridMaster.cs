@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using ROOT.Consts;
 using UnityEngine;
@@ -7,47 +8,53 @@ using UnityEngine.UI;
 
 namespace ROOT.UI
 {
+    public class LevelSelectionRowPack
+    {
+        public string Title;
+        public LevelQuadDataPack[] TutorialData;
+        public bool DevOnly = false;
+    }
+    
     public class LevelSelectionGridMaster : MonoBehaviour
     {
-        /*public LevelSelectionGrid TutorialGrid;
-        public LevelSelectionGrid MainPlayGrid;
-        public LevelSelectionGrid ConstructionGrid;*/
-
         public Transform LevelSelectionPanel;
         public GameObject LevelQuadTemplate;
         public GameObject LevelSelectionRowTemplate;
 
-        /*public GameObject TestingTitle;
-        public GameObject TestingGridRoot;*/
-        
-        private void Awake()
+        public Button[] InitLevelSelectionMainMenu(LevelSelectionRowPack[] dataPacks)
         {
-            /*TutorialGrid.LevelQuadTemplate = LevelQuadTemplate;
-            MainPlayGrid.LevelQuadTemplate = LevelQuadTemplate;
-            ConstructionGrid.LevelQuadTemplate = LevelQuadTemplate;
-            
-            if (!StartGameMgr.DevMode)
+            var buttons = new List<Button>();
+            foreach (var levelSelectionRowPack in dataPacks)
             {
-                TestingTitle.SetActive(false);
-                TestingGridRoot.SetActive(false);
-            }*/
+                if (!StartGameMgr.DevMode && levelSelectionRowPack.DevOnly) continue;
+                var row = Instantiate(LevelSelectionRowTemplate);
+                var script = row.GetComponent<LevelSelectionRow>();
+                script.SelectionGrid.LevelQuadTemplate = LevelQuadTemplate;
+                var button = script.SelectionGrid.InitTutorialLevelSelectionMainMenu(levelSelectionRowPack.TutorialData);
+                script.TitleText = levelSelectionRowPack.Title;
+                row.transform.parent = LevelSelectionPanel;
+                buttons.AddRange(button);
+            }
+            return buttons.ToArray();
         }
-
+        
         public Button[] InitLevelSelectionMainMenu(
-            TutorialQuadDataPack[] TutorialData,
-            TutorialQuadDataPack[] CareerData,
-            TutorialQuadDataPack[] TestingData)
+            LevelQuadDataPack[] TutorialData,
+            LevelQuadDataPack[] CareerData,
+            LevelQuadDataPack[] TestingData)
         {
             var bARow = Instantiate(LevelSelectionRowTemplate);
             var bAScript = bARow.GetComponent<LevelSelectionRow>();
             bAScript.SelectionGrid.LevelQuadTemplate = LevelQuadTemplate;
             var bA = bAScript.SelectionGrid.InitTutorialLevelSelectionMainMenu(TutorialData);
+            bAScript.TitleText = "教程关卡";
             bARow.transform.parent = LevelSelectionPanel;
             
             var bBRow = Instantiate(LevelSelectionRowTemplate);
             var bBScript = bBRow.GetComponent<LevelSelectionRow>();
             bBScript.SelectionGrid.LevelQuadTemplate = LevelQuadTemplate;
             var bB = bBScript.SelectionGrid.InitTutorialLevelSelectionMainMenu(CareerData);
+            bBScript.TitleText = "正式关卡";
             bBRow.transform.parent = LevelSelectionPanel;
 
             //TODO DevMode 还要补，还有抽象化流程。

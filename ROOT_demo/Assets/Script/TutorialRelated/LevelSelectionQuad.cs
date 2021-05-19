@@ -49,9 +49,9 @@ namespace ROOT
             }
         }
 
-        private TutorialQuadDataPack cachedData;
+        private LevelQuadDataPack cachedData;
         
-        public Button InitTutorialLevelSelectionQuad(TutorialQuadDataPack data)
+        public Button InitTutorialLevelSelectionQuad(LevelQuadDataPack data)
         {
             cachedData = data;
             TutorialThumbnail.sprite = cachedData.Thumbnail;
