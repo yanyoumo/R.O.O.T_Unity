@@ -121,11 +121,25 @@ namespace ROOT.SetupAsset
             }
         }
 
+        private class TutorialActionComparer : IComparer<TutorialActionData>
+        {
+            public int Compare(TutorialActionData x, TutorialActionData y) => (x.ActionIdx != y.ActionIdx) ? (x.ActionIdx - y.ActionIdx) : (x.ActionSubIdx - y.ActionSubIdx);
+        }
+
+        private class TutorialTextActionComparer : IComparer<Tuple<int, int, string>>
+        {
+            public int Compare(Tuple<int, int, string> x, Tuple<int, int, string> y)
+            {
+                if (x==null||y==null) return 0;
+                return (x.Item1 != y.Item1) ? (x.Item1 - y.Item1) : (x.Item2 - y.Item2);
+            }
+        }
+        
         [ShowIf("levelType", LevelType.Tutorial)]
         [Button("Reorder Tutorial Actions")]
         [HorizontalGroup("Operation Buttons")]
         [PropertyOrder(90)]
-        public void ReorderTutorialActions() => Actions = Actions.OrderBy(GetOrderingKeyOfTutorialAction).ToArray();
+        public void ReorderTutorialActions() => Actions = Actions.OrderBy(a => a, new TutorialActionComparer()).ToArray();
 
         [Space]
         [ShowIf("levelType", LevelType.Tutorial), PropertyOrder(91)]
@@ -137,15 +151,16 @@ namespace ROOT.SetupAsset
         public void ExportTextToCSV()
         {
             var sw = new StreamWriter(@"Assets/" + CSVFileName + ".csv", false, Encoding.UTF8);
-            var title = string.Join(",", new[] {"MainIdx", "SubIdx", "Content"});
+            var title = string.Join(",", "MainIdx", "SubIdx", "Content");
             sw.WriteLine(title);
             var contents = Actions.Where(a => a.ActionType == TutorialActionType.Text).Select(a => new Tuple<int, int, string>(a.ActionIdx, a.ActionSubIdx, a.Text));
-            contents = contents.OrderBy(t => t.Item1 * 100 + t.Item2).ToArray();//RISK 100现在是个magicNumber，假设subindex不超过100。
+            contents = contents.OrderBy(t => t, new TutorialTextActionComparer()).ToArray();
             foreach (var content in contents)
             {
                 var contentStr = string.Join(",", content.Item1, content.Item2, "\"" + content.Item3 + "\"");
                 sw.WriteLine(contentStr);
             }
+
             sw.Close();
         }
 
@@ -155,13 +170,11 @@ namespace ROOT.SetupAsset
         public void TryReplaceTextFromCSV()
         {
             var sw = new StreamReader(@"Assets/" + CSVFileName + ".csv", Encoding.UTF8);
-            sw.ReadLine();//SkipTileLine
+            sw.ReadLine();//SkipTitleLine
             var contentBuffer = new List<Tuple<int, int, string>>();
             do
             {
-                //Debug.Log(sw.ReadLine());
                 var contents = sw.ReadLine().Split(',');
-                //Debug.Log(contents[2]);
                 var mainIdx = -1;
                 var subIdx = -1;
                 try
@@ -194,11 +207,6 @@ namespace ROOT.SetupAsset
                     Actions[i].Text =rawStr.Substring(1, rawStr.Length - 2);
                 }
             }
-        }
-
-        private int GetOrderingKeyOfTutorialAction(TutorialActionData data)
-        {
-            return data.ActionIdx * 10 + data.ActionSubIdx;
         }
 
         public TutorialQuadDataPack TutorialQuadDataPack => new TutorialQuadDataPack(AcessID, TitleTerm, "Play", Thumbnail);
@@ -240,6 +248,6 @@ namespace ROOT.SetupAsset
 
         [Obsolete("Why?")] public List<SignalType> ShopExcludedType => null;
 
-        [Obsolete("Why?")] [HideInInspector] public bool ExcludedShop = false;
+        [Obsolete("Why?")] [HideInInspector] public bool ExcludedShop;
     }
 }
