@@ -4502,7 +4502,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &746154741
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5149,7 +5149,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &838149881
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5409,6 +5409,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 913865486}
+  - component: {fileID: 913865487}
+  - component: {fileID: 913865488}
   m_Layer: 0
   m_Name: LevelSelectionContent
   m_TagString: Untagged
@@ -5440,8 +5442,48 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.000091552734}
-  m_SizeDelta: {x: 0, y: 1147.575}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &913865487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913865485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
+--- !u!114 &913865488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913865485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 1
+  m_VerticalFit: 1
 --- !u!114 &954448293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5754,15 +5796,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550c02da8db849442b9fbb1bba1a0634, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TutorialGrid: {fileID: 746154743}
-  MainPlayGrid: {fileID: 1241277883}
-  ConstructionGrid: {fileID: 1677919448}
+  LevelSelectionPanel: {fileID: 913865486}
   LevelQuadTemplate: {fileID: 6553303017857089955, guid: 017e651ee836e924a9c001565f6d56a9,
     type: 3}
-  LevelSelectionRowTemplate: {fileID: 2244473085337404199, guid: 010a65e47b9f85744bfcbd0f063b5785,
+  LevelSelectionRowTemplate: {fileID: 1789143569795323939, guid: 1038f2fa4ec749d4c8e18e5edc74cfe1,
     type: 3}
-  TestingTitle: {fileID: 1876373262}
-  TestingGridRoot: {fileID: 1677919445}
 --- !u!1 &1118718723
 GameObject:
   m_ObjectHideFlags: 0
@@ -5855,7 +5893,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1123548399
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5990,7 +6028,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1241277881
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6455,8 +6493,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1649100801}
   m_HandleRect: {fileID: 1649100800}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.6947938
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6861,7 +6899,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1677919446
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7000,7 +7038,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1431708423}
   m_HandleRect: {fileID: 1431708422}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -7127,7 +7165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1876373263
 RectTransform:
   m_ObjectHideFlags: 0
