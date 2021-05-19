@@ -46,7 +46,8 @@ namespace ROOT
             AnimationTimerOrigin = Time.timeSinceLevelLoad;
             LevelAsset.MovedTileAni = MovedTile;
             LevelAsset.MovedCursorAni = movedCursor;
-            animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
+            //animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
+            Animate_DOTween();//DOTween版的Animate。
         }
         
         #endregion

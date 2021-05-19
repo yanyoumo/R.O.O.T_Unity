@@ -298,13 +298,7 @@ namespace ROOT
                 unit.UpdateWorldRotationTransform();
             }
         }
-        public void UpdateBoardPostAnimation()
-        {
-            /*foreach (var unit in Units)
-            {
-                unit.UpdateNeighboringDataAndSideMesh();
-            }*/
-        }
+
         public void UpdateUnitBoardPosAnimation(Vector2Int oldKey)
         {
             _unitsGameObjects.TryGetValue(oldKey, out var unit);//这里get出来和上面拿到的Unit不是一个？？

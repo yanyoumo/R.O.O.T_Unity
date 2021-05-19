@@ -9,6 +9,7 @@ namespace ROOT
     {
         protected bool _immovable = false;
         public abstract bool Immovable { set; get; }
+        public abstract Transform AnimatingRoot { get; }
         public Vector2Int CurrentBoardPosition { get;protected set; }
         public Vector2Int NextBoardPosition { get; protected set; }
         public Vector2 LerpingBoardPosition { get; set; }

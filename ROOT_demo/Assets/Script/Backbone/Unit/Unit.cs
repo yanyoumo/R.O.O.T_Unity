@@ -143,6 +143,7 @@ namespace ROOT
         }
         private bool _hasDiscount = false;
         private MeshRenderer _coreMeshRenderer;
+        public override Transform AnimatingRoot => _rootTransform;
         private Transform _rootTransform => transform.parent;
         private Material _coreMat;
         private Transform _sideRootTransform;
