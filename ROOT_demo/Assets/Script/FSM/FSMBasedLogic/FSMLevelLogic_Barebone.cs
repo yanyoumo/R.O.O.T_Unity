@@ -226,7 +226,7 @@ namespace ROOT
         private void AnimateAction()
         {
             //目前这里基本空的，到时候可能把Animate的CoRoutine里面的东西弄出来。
-            Debug.Assert(animate_Co != null);
+            //Debug.Assert(animate_Co != null);
             UpdateBoardData_Stepped(ref LevelAsset);
         }
 

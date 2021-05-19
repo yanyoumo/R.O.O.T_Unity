@@ -178,21 +178,17 @@ namespace ROOT
             moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
         }
 
-        protected void Animate_DOTween_Complete()
-        {
-            PostAnimateUpdate();
-        }
-        
         protected void Animate_DOTween()
         {
             var animatingSeq = DOTween.Sequence();
+            animatingSeq.PrependInterval(AnimationDuration);//是为了干挪时间轴的时候也等一个AnimationDuration的时长。
             foreach (var moveableBase in LevelAsset.AnimationPendingObj)
             {
                 var actualNextPos = LevelAsset.GameBoard.GetFloatTransformAnimation(moveableBase.NextBoardPosition);
                 actualNextPos.y = moveableBase.AnimatingRoot.transform.position.y;//保证所有物体移动时对于棋盘的垂直高度不变。
                 animatingSeq.Insert(0, moveableBase.AnimatingRoot.DOMove(actualNextPos, AnimationDuration));
             }
-            animatingSeq.OnComplete(Animate_DOTween_Complete);
+            animatingSeq.OnComplete(PostAnimateUpdate);
         }
         
         protected IEnumerator Animate()
