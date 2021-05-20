@@ -230,7 +230,7 @@ namespace ROOT
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString("F5"));
             var unit = go.GetComponentInChildren<Unit>();
-            unit.InitPosWithAnimation(Vector2.zero);
+            unit.SetCurrentAndNextPos(Vector2.zero);
             unit.InitUnit(signal, genre, sides,  tier);
             return go;
         }

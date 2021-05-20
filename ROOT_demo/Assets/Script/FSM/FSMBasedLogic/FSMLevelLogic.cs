@@ -161,9 +161,9 @@ namespace ROOT
             }
         }
 
-        protected Coroutine animate_Co;
+        //protected Coroutine animate_Co;
 
-        private void AnimatingUpdate(MoveableBase moveableBase)
+        /*private void AnimatingUpdate(MoveableBase moveableBase)
         {
             if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
             {
@@ -173,11 +173,11 @@ namespace ROOT
             {
                 moveableBase.LerpingBoardPosition = moveableBase.LerpBoardPos(AnimationLerper);
             }
-        }
+        }*/
 
         private void PostAnimationUpdate(MoveableBase moveableBase)
         {
-            moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
+            moveableBase.SetCurrentAndNextPos(moveableBase.NextBoardPosition);
             moveableBase.PingPongRotationDirection();
             if (moveableBase is Unit u)
             {
@@ -206,7 +206,7 @@ namespace ROOT
             animatingSeq.OnComplete(PostAnimateUpdate);
         }
         
-        protected IEnumerator Animate()
+        /*protected IEnumerator Animate()
         {
             while (AnimationLerper < 1.0f)
             {
@@ -224,7 +224,7 @@ namespace ROOT
             }
 
             PostAnimateUpdate();
-        }
+        }*/
 
         private void PostAnimateUpdate()
         {

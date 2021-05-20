@@ -32,17 +32,14 @@ namespace ROOT
         TouchScreen,
     }
 
-    [Flags]
+    /*[Flags]
     public enum PosSetFlag
     {
         NONE = 0,
         Current = 1 << 0,
         Next = 1 << 1,
-        Lerping = 1 << 2,
-        NextAndLerping = Next | Lerping,
-        CurrentAndLerping = Current | Lerping,
-        CurrentAndNext = Current | Next,
-        All = Current | Next | Lerping,
+        //Lerping = 1 << 2,
+        All = Current | Next ,
     }
 
     public enum RotateCommand
@@ -50,7 +47,7 @@ namespace ROOT
         NOP,
         Clockwise,
         CounterClockwise,
-    }
+    }*/
     
     public interface IClickable
     {

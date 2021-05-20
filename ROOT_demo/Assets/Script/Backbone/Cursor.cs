@@ -110,6 +110,12 @@ namespace ROOT
             _meshFilter.mesh = IndicatorMesh;
         }
 
+        public void ClampPosesInBoard()
+        {
+            CurrentBoardPosition = Board.ClampPosInBoard(CurrentBoardPosition);
+            NextBoardPosition = Board.ClampPosInBoard(NextBoardPosition);
+        }
+        
         //因为光标实质无向，就是这两个把这个放在儿简单弄一下就行。
         public override void PingPongRotationDirection()
         {

@@ -946,8 +946,8 @@ namespace ROOT
         {
             currentLevelAsset.GameCursor = Object.Instantiate(currentLevelAsset.CursorTemplate);
             Cursor cursor = currentLevelAsset.GameCursor.GetComponent<Cursor>();
-            cursor.InitPosWithAnimation(pos);
-            cursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransformAnimation(cursor.LerpingBoardPosition));
+            cursor.SetCurrentAndNextPos(pos);
+            cursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransformAnimation(cursor.CurrentBoardPosition));
         }
 
         public static void InitDestoryer(ref GameAssets LevelAsset)
@@ -1050,7 +1050,7 @@ namespace ROOT
             if (currentLevelAsset.CursorEnabled && movedCursor)
             {
                 currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
-                UpdateCursorPos(currentLevelAsset);
+                currentLevelAsset.Cursor.ClampPosesInBoard();
                 movedCursor = true;
             }
 
@@ -1141,20 +1141,14 @@ namespace ROOT
             var indicator = Object.Instantiate(currentLevelAsset.CursorTemplate);
             var indicatorCursor = indicator.GetComponent<Cursor>();
             indicatorCursor.SetIndMesh();
-            indicatorCursor.InitPosWithAnimation(pos);
+            indicatorCursor.SetCurrentAndNextPos(pos);
             if (playerCursor)
             {
-                UpdateCursorPos(currentLevelAsset);
+                currentLevelAsset.Cursor.ClampPosesInBoard();
             }
             indicatorCursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransform(indicatorCursor.CurrentBoardPosition));
             indicatorCursor.CursorColor = col;
             return indicator;
-        }
-
-        private static void UpdateCursorPos(GameAssets currentLevelAsset)
-        {
-            currentLevelAsset.Cursor.SetPosWithAnimation(Board.ClampPosInBoard(currentLevelAsset.Cursor.CurrentBoardPosition), PosSetFlag.Current);
-            currentLevelAsset.Cursor.SetPosWithAnimation(Board.ClampPosInBoard(currentLevelAsset.Cursor.NextBoardPosition), PosSetFlag.Next);
         }
 
         public static void UpdateDestoryer(GameAssets currentLevelAsset)

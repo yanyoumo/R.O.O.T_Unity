@@ -270,6 +270,12 @@ namespace ROOT
             return new Vector3(_boardPhysicalOriginX + boardPos.x * this._boardPhysicalLength, 0,
                 this._boardPhysicalOriginY + boardPos.y * this._boardPhysicalLength);
         }
+        
+        public Vector3 GetFloatTransformAnimation(Vector2Int boardPos)
+        {
+            return GetFloatTransformAnimation(new Vector2(boardPos.x, boardPos.y));
+        }
+        
         public Vector3 GetFloatTransformAnimation(Vector2 boardPos)
         {
             return new Vector3(_boardPhysicalOriginX + boardPos.x * _boardPhysicalLength, 0, _boardPhysicalOriginY + boardPos.y * _boardPhysicalLength);
@@ -290,14 +296,14 @@ namespace ROOT
                 unit.UpdateWorldRotationTransform();
             }
         }*/
-        public void UpdateBoardAnimation()
+        /*public void UpdateBoardAnimation()
         {
             foreach (var unit in Units)
             {
                 unit.UpdateTransform(GetFloatTransformAnimation(unit.LerpingBoardPosition));
                 unit.UpdateWorldRotationTransform();
             }
-        }
+        }*/
 
         public void UpdateUnitBoardPosAnimation(Vector2Int oldKey)
         {
@@ -342,7 +348,7 @@ namespace ROOT
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(board_pos.ToString());
             var unit = go.GetComponentInChildren<Unit>();
-            unit.InitPosWithAnimation(board_pos);
+            unit.SetCurrentAndNextPos(board_pos);
             _unitsGameObjects.Add(board_pos, go);
             unit.InitUnit(signal, genre, sides, Tier, this, unitTag);
             if (IsStationary)
@@ -375,7 +381,7 @@ namespace ROOT
         {
             if (CheckBoardPosValidAndEmpty(AssignedPos))
             {
-                unit.GetComponentInChildren<Unit>().InitPosWithAnimation(AssignedPos);
+                unit.GetComponentInChildren<Unit>().SetCurrentAndNextPos(AssignedPos);
                 unit.GetComponentInChildren<Unit>().GameBoard = this;
                 _unitsGameObjects.Add(AssignedPos, unit);
                 UpdateBoardUnit();

@@ -136,7 +136,7 @@ namespace ROOT
             
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
-            LevelAsset.GameBoard.UpdateBoardAnimation();
+            LevelAsset.GameBoard.UpdateBoardUnit();
 
             if (!UseTutorialVer)
             {
@@ -216,7 +216,7 @@ namespace ROOT
         {
             MovedTile = false;
             MovedCursor = false;
-            animate_Co = null;
+            //animate_Co = null;
             LevelAsset.BoughtOnce = false;
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
             LevelAsset.LevelProgress = LevelProgress;
