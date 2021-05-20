@@ -150,31 +150,6 @@ namespace ROOT
 
         #region Animate
 
-        private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
-
-        private float AnimationLerper
-        {
-            get
-            {
-                float res = animationTimer / AnimationDuration;
-                return Mathf.Min(res, 1.0f);
-            }
-        }
-
-        //protected Coroutine animate_Co;
-
-        /*private void AnimatingUpdate(MoveableBase moveableBase)
-        {
-            if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
-            {
-                moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.CurrentAndLerping);
-            }
-            else
-            {
-                moveableBase.LerpingBoardPosition = moveableBase.LerpBoardPos(AnimationLerper);
-            }
-        }*/
-
         private void PostAnimationUpdate(MoveableBase moveableBase)
         {
             moveableBase.SetCurrentAndNextPos(moveableBase.NextBoardPosition);
@@ -205,26 +180,6 @@ namespace ROOT
             }
             animatingSeq.OnComplete(PostAnimateUpdate);
         }
-        
-        /*protected IEnumerator Animate()
-        {
-            while (AnimationLerper < 1.0f)
-            {
-                yield return 0;
-                LevelAsset.AnimationPendingObj.ForEach(AnimatingUpdate);
-
-                //加上允许手动步进后，这个逻辑就应该独立出来了。
-                if (LevelAsset.MovedTileAni && LevelAsset.Shop && LevelAsset.Shop is IAnimatableShop shop)
-                {
-                    shop.ShopUpdateAnimation(AnimationLerper);
-                }
-
-                LevelAsset.GameBoard.UpdateBoardAnimation();
-                Cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(Cursor.LerpingBoardPosition));
-            }
-
-            PostAnimateUpdate();
-        }*/
 
         private void PostAnimateUpdate()
         {
