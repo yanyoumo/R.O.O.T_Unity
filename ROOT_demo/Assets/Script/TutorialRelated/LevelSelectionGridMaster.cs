@@ -13,6 +13,7 @@ namespace ROOT.UI
         public LevelSelectionGrid ConstructionGrid;
         
         public GameObject LevelQuadTemplate;
+        public GameObject LevelSelectionRowTemplate;
 
         public GameObject TestingTitle;
         public GameObject TestingGridRoot;

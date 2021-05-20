@@ -225,7 +225,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &10344378
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5759,6 +5759,8 @@ MonoBehaviour:
   ConstructionGrid: {fileID: 1677919448}
   LevelQuadTemplate: {fileID: 6553303017857089955, guid: 017e651ee836e924a9c001565f6d56a9,
     type: 3}
+  LevelSelectionRowTemplate: {fileID: 2244473085337404199, guid: 010a65e47b9f85744bfcbd0f063b5785,
+    type: 3}
   TestingTitle: {fileID: 1876373262}
   TestingGridRoot: {fileID: 1677919445}
 --- !u!1 &1118718723
@@ -6453,8 +6455,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1649100801}
   m_HandleRect: {fileID: 1649100800}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.69272304
+  m_Value: 1.0000004
+  m_Size: 0.6947938
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6998,7 +7000,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1431708423}
   m_HandleRect: {fileID: 1431708422}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
