@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using com.ootii.Messages;
+using DG.Tweening;
 using ROOT.Common;
 using ROOT.SetupAsset;
 using Sirenix.Utilities;
@@ -59,20 +60,7 @@ namespace ROOT
         private int TotalCount;
 
         public int StepCount => _currentRoundLibDriver.StepCount;
-
-        private float _animationTimerOrigin = 0.0f; //都是秒
-        private float AnimationTimer => Time.time - _animationTimerOrigin;
-
-        private float AnimationLerper
-        {
-            get
-            {
-                var res = AnimationTimer / FSMLevelLogic.AnimationDuration;
-                res = Mathf.Clamp01(res);
-                return Utils.EaseInOutCubic(res);
-            }
-        }
-
+        
         private TimeLineStatus _currentStatus;
         public TimeLineStatus CurrentStatus
         {
@@ -190,15 +178,15 @@ namespace ROOT
             }
         }
 
-        IEnumerator Animate(bool Forward)
+        private void Animate(bool Forward)
         {
-            _animationTimerOrigin = Time.time;
-            while (AnimationLerper < 1.0f)
-            {
-                yield return 0;
-                TimeLineMarkerRoot.transform.localPosition = (Forward ? -1 : 1) * new Vector3(UnitLength / SubDivision, 0, 0) * AnimationLerper;
-            }
-
+            TimeLineMarkerRoot.transform
+                .DOLocalMoveX((Forward ? -1 : 1) * UnitLength / SubDivision, FSMLevelLogic.AnimationDuration)
+                .OnComplete(AnimationComplete);
+        }
+        
+        private void AnimationComplete()
+        {
             TimeLineMarkerRoot.transform.localPosition = Vector3.zero;
             UpdateTimeLine();
         }
@@ -207,12 +195,12 @@ namespace ROOT
         
         public void Step()
         {
-            StartCoroutine(Animate(true));
+            Animate(true);
         }
 
         public void Reverse()
         {
-            StartCoroutine(Animate(false));
+            Animate(false);
         }
 
         private uint HeadingCount = 2;
