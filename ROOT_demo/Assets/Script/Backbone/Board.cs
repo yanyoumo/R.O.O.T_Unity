@@ -283,13 +283,13 @@ namespace ROOT
                 unit.UpdateWorldRotationTransform();
             }
         }
-        public void UpdateBoardRotate()
+        /*public void UpdateBoardRotate()
         {
             foreach (var unit in Units)
             {
                 unit.UpdateWorldRotationTransform();
             }
-        }
+        }*/
         public void UpdateBoardAnimation()
         {
             foreach (var unit in Units)

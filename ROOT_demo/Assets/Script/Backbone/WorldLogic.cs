@@ -972,10 +972,15 @@ namespace ROOT
             }
         }
 
-        public static void UpdateRotate(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack)
+        public static void UpdateRotate(ref GameAssets currentLevelAsset, in ControllingPack ctrlPack, out bool rotatedTile, out bool rotatedCursor)
         {
+            rotatedCursor = false;
+            rotatedTile = false;
             if (ctrlPack.HasFlag(ControllingCommand.Rotate))
             {
+                currentLevelAsset.Cursor.RotateCw();
+                currentLevelAsset.AnimationPendingObj.Add(currentLevelAsset.Cursor);
+                rotatedCursor = true;
                 if (currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(ctrlPack.CurrentPos))
                 {
                     var unit = currentLevelAsset.GameBoard.FindUnitByPos(ctrlPack.CurrentPos);
@@ -983,7 +988,8 @@ namespace ROOT
                     //RISK 但是、如果这个feature要放到实际玩法框架中、可能还要移动、旋转细分。
                     if (unit == null || unit.StationUnit) return;
                     unit.UnitRotateCw();
-                    //currentLevelAsset.GameBoard.UpdateBoard();
+                    currentLevelAsset.AnimationPendingObj.Add(unit);
+                    rotatedTile = true;
                 }
             }
         }

@@ -14,27 +14,13 @@ namespace ROOT
         public Vector2Int NextBoardPosition { get; protected set; }
         public Vector2 LerpingBoardPosition { get; set; }
 
-        protected RotationDirection ApparentRotationDirection
-        {
-            get => CurrentRotationDirection;
-            set => CurrentRotationDirection = value;
-        }
-
-        private RotationDirection CurrentRotationDirection;
-        private float RotationDirectionLerper;
-        private RotationDirection NextRotationDirection;
+        public RotationDirection CurrentRotationDirection { get; protected set; } = RotationDirection.North;
+        public RotationDirection NextRotationDirection { get; protected set; } = RotationDirection.North;
+        //private float RotationDirectionLerper;
         public abstract void UpdateTransform(Vector3 pos);
 
-        private Quaternion QuaternionApparentRotation
-        {
-            get
-            {
-                var currentQuaternion = Utils.RotationToQuaternion(CurrentRotationDirection);
-                var nextQuaternion = Utils.RotationToQuaternion(NextRotationDirection);
-                return Quaternion.Slerp(currentQuaternion, nextQuaternion, RotationDirectionLerper);
-            }
-        }
-        
+        public abstract void PingPongRotationDirection();
+
         public Vector2 LerpBoardPos(float lerp)
         {
             var x = Mathf.Lerp((CurrentBoardPosition.x), (NextBoardPosition.x), lerp);

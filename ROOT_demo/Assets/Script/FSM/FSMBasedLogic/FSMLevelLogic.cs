@@ -28,14 +28,16 @@ namespace ROOT
         [HideInInspector] public bool ReferenceOk = false;
         [HideInInspector] public bool PendingCleanUp;
         public bool UseTutorialVer = false;
-        protected bool MovedTile;
 
         public abstract bool CouldHandleTimeLine { get; }
         public abstract bool CouldHandleBoss { get; }
         public abstract BossStageType HandleBossType { get; }
 
         public abstract int LEVEL_ART_SCENE_ID { get; }
-        protected bool movedCursor = false;
+        protected bool MovedTile = false;
+        protected bool MovedCursor = false;
+        protected bool RotatedTile = false;
+        protected bool RotatedCursor = false;
 
         protected internal GameAssets LevelAsset;
         private Cursor Cursor => LevelAsset.Cursor;
@@ -68,7 +70,7 @@ namespace ROOT
 
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
 
-        private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in movedCursor);
+        private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in MovedCursor);
 
         private bool ShouldCycleFunc(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
         {
@@ -90,7 +92,7 @@ namespace ROOT
             return shouldCycleTMP;
         }
 
-        protected bool ShouldStartAnimate => ShouldCycle;
+        protected bool ShouldStartAnimate => ShouldCycle || (RotatedCursor || RotatedTile);
         protected virtual bool IsForwardCycle => MovedTile;
         protected abstract float LevelProgress { get; }
 
@@ -176,6 +178,11 @@ namespace ROOT
         private void PostAnimationUpdate(MoveableBase moveableBase)
         {
             moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
+            moveableBase.PingPongRotationDirection();
+            if (moveableBase is Unit u)
+            {
+                u.UpdateWorldRotationTransform();
+            }
         }
 
         protected void Animate_DOTween()
@@ -184,9 +191,17 @@ namespace ROOT
             animatingSeq.PrependInterval(AnimationDuration);//是为了干挪时间轴的时候也等一个AnimationDuration的时长。
             foreach (var moveableBase in LevelAsset.AnimationPendingObj)
             {
-                var actualNextPos = LevelAsset.GameBoard.GetFloatTransformAnimation(moveableBase.NextBoardPosition);
-                actualNextPos.y = moveableBase.AnimatingRoot.transform.position.y;//保证所有物体移动时对于棋盘的垂直高度不变。
-                animatingSeq.Insert(0, moveableBase.AnimatingRoot.DOMove(actualNextPos, AnimationDuration));
+                if (moveableBase.NextBoardPosition != moveableBase.CurrentBoardPosition)
+                {
+                    var actualNextPos = LevelAsset.GameBoard.GetFloatTransformAnimation(moveableBase.NextBoardPosition);
+                    actualNextPos.y = moveableBase.AnimatingRoot.transform.position.y; //保证所有物体移动时对于棋盘的垂直高度不变。
+                    animatingSeq.Insert(0, moveableBase.AnimatingRoot.DOMove(actualNextPos, AnimationDuration));
+                }
+                if (moveableBase.NextRotationDirection != moveableBase.CurrentRotationDirection)
+                {
+                    var actualNextRotEuler = Common.Utils.RotationToEuler(moveableBase.NextRotationDirection);
+                    animatingSeq.Insert(0, moveableBase.AnimatingRoot.DORotate(actualNextRotEuler, AnimationDuration));
+                }
             }
             animatingSeq.OnComplete(PostAnimateUpdate);
         }

@@ -109,5 +109,18 @@ namespace ROOT
             }
             _meshFilter.mesh = IndicatorMesh;
         }
+
+        //因为光标实质无向，就是这两个把这个放在儿简单弄一下就行。
+        public override void PingPongRotationDirection()
+        {
+            transform.rotation = Quaternion.identity;
+            CurrentRotationDirection = RotationDirection.North;
+            NextRotationDirection = RotationDirection.North;
+        }
+        
+        public void RotateCw()
+        {
+            NextRotationDirection = RotationDirection.East;
+        }
     }
 }

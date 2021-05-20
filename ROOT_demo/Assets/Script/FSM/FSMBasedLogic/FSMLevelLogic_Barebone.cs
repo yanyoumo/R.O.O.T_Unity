@@ -45,7 +45,7 @@ namespace ROOT
             //SOLVED-还是先把“空动画”这个设计弄回来了；先从新整理一下再弄。
             AnimationTimerOrigin = Time.timeSinceLevelLoad;
             LevelAsset.MovedTileAni = MovedTile;
-            LevelAsset.MovedCursorAni = movedCursor;
+            LevelAsset.MovedCursorAni = MovedCursor;
             //animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
             Animate_DOTween();//DOTween版的Animate。
         }
@@ -215,7 +215,7 @@ namespace ROOT
         private void CleanUp()
         {
             MovedTile = false;
-            movedCursor = false;
+            MovedCursor = false;
             animate_Co = null;
             LevelAsset.BoughtOnce = false;
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
@@ -232,9 +232,9 @@ namespace ROOT
         private void ReactIO()
         {
             //这整个React to IO框架有可能都要模块化。
-            WorldExecutor.UpdateCursor_Unit(ref LevelAsset, in _ctrlPack, out MovedTile, out movedCursor);
-            WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack);
-            LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
+            WorldExecutor.UpdateCursor_Unit(ref LevelAsset, in _ctrlPack, out MovedTile, out MovedCursor);
+            WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack, out RotatedTile, out RotatedCursor);
+            //LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。终于要做了！！！
             MovedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
             if (HandlingShop)
             {
