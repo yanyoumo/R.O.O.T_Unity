@@ -45,8 +45,9 @@ namespace ROOT
             //SOLVED-还是先把“空动画”这个设计弄回来了；先从新整理一下再弄。
             AnimationTimerOrigin = Time.timeSinceLevelLoad;
             LevelAsset.MovedTileAni = MovedTile;
-            LevelAsset.MovedCursorAni = movedCursor;
-            animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
+            LevelAsset.MovedCursorAni = MovedCursor;
+            //animate_Co = StartCoroutine(Animate()); //这里完成后会把Animating设回来。
+            Animate_DOTween();//DOTween版的Animate。
         }
         
         #endregion
@@ -88,7 +89,7 @@ namespace ROOT
             }
         }
 
-        private void SetUpHandlingCurrency()
+        protected virtual void SetUpHandlingCurrency()
         {
             MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = true, SelectAll = false, UITag = UITag.Currency_BareBone});
             MessageDispatcher.SendMessage(new TimingEventInfo
@@ -98,7 +99,6 @@ namespace ROOT
                 UnitCouldGenerateIncomeData = true,
             });
             UpdateBoardData_Instantly();
-            //手动弄一下。
             LevelAsset.BaseDeltaCurrency = GetBaseInCome();
             LevelAsset.BonusDeltaCurrency = 0;
             SendCurrencyMessage(LevelAsset);
@@ -136,7 +136,7 @@ namespace ROOT
             
             LevelAsset.EnableAllCoreFunctionAndFeature();
             LevelAsset.GameBoard.InitBoardWAsset(LevelAsset.ActionAsset);
-            LevelAsset.GameBoard.UpdateBoardAnimation();
+            LevelAsset.GameBoard.UpdateBoardUnit();
 
             if (!UseTutorialVer)
             {
@@ -215,8 +215,8 @@ namespace ROOT
         private void CleanUp()
         {
             MovedTile = false;
-            movedCursor = false;
-            animate_Co = null;
+            MovedCursor = false;
+            //animate_Co = null;
             LevelAsset.BoughtOnce = false;
             LevelAsset.AnimationPendingObj = new List<MoveableBase>();
             LevelAsset.LevelProgress = LevelProgress;
@@ -225,16 +225,16 @@ namespace ROOT
         private void AnimateAction()
         {
             //目前这里基本空的，到时候可能把Animate的CoRoutine里面的东西弄出来。
-            Debug.Assert(animate_Co != null);
+            //Debug.Assert(animate_Co != null);
             UpdateBoardData_Stepped(ref LevelAsset);
         }
 
         private void ReactIO()
         {
             //这整个React to IO框架有可能都要模块化。
-            WorldExecutor.UpdateCursor_Unit(ref LevelAsset, in _ctrlPack, out MovedTile, out movedCursor);
-            WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack);
-            LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。
+            WorldExecutor.UpdateCursor_Unit(ref LevelAsset, in _ctrlPack, out MovedTile, out MovedCursor);
+            WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack, out RotatedTile, out RotatedCursor);
+            //LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。终于要做了！！！
             MovedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
             if (HandlingShop)
             {

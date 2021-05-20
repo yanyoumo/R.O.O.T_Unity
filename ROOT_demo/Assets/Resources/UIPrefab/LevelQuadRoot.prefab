@@ -396,6 +396,7 @@ GameObject:
   - component: {fileID: 6553303017857089958}
   - component: {fileID: 6553303017857089957}
   - component: {fileID: 1028432673756000295}
+  - component: {fileID: 4263425963077674317}
   m_Layer: 5
   m_Name: LevelQuadRoot
   m_TagString: Untagged
@@ -477,11 +478,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UnSelectableThumbnail: {fileID: 21300000, guid: eb0db7495ce517c4ebe0d3e4e3e8bf9b,
     type: 3}
+  LevelAccessID: -1
   StartTutorialButton: {fileID: 6553303017856328277}
   TutorialThumbnail: {fileID: 6553303018811257597}
   ButtonLocalize: {fileID: 1493171874861717145}
   TitleLocalize: {fileID: 3315755744154712382}
   QuadBackGround: {fileID: 6553303017857089957}
+--- !u!114 &4263425963077674317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553303017857089955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: 1
+  m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!1 &6553303018805662385
 GameObject:
   m_ObjectHideFlags: 0

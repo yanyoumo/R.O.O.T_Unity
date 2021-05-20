@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
+using DG.Tweening;
 using ROOT.Common;
 using ROOT.Consts;
 using ROOT.FSM;
@@ -27,14 +28,16 @@ namespace ROOT
         [HideInInspector] public bool ReferenceOk = false;
         [HideInInspector] public bool PendingCleanUp;
         public bool UseTutorialVer = false;
-        protected bool MovedTile;
 
         public abstract bool CouldHandleTimeLine { get; }
         public abstract bool CouldHandleBoss { get; }
         public abstract BossStageType HandleBossType { get; }
 
         public abstract int LEVEL_ART_SCENE_ID { get; }
-        protected bool movedCursor = false;
+        protected bool MovedTile = false;
+        protected bool MovedCursor = false;
+        protected bool RotatedTile = false;
+        protected bool RotatedCursor = false;
 
         protected internal GameAssets LevelAsset;
         private Cursor Cursor => LevelAsset.Cursor;
@@ -67,7 +70,7 @@ namespace ROOT
 
         protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
 
-        private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in movedCursor);
+        private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in MovedCursor);
 
         private bool ShouldCycleFunc(in ControllingPack ctrlPack, in bool pressedAny, in bool movedTile, in bool movedCursor)
         {
@@ -89,7 +92,7 @@ namespace ROOT
             return shouldCycleTMP;
         }
 
-        protected bool ShouldStartAnimate => ShouldCycle;
+        protected bool ShouldStartAnimate => ShouldCycle || (RotatedCursor || RotatedTile);
         protected virtual bool IsForwardCycle => MovedTile;
         protected abstract float LevelProgress { get; }
 
@@ -147,54 +150,35 @@ namespace ROOT
 
         #region Animate
 
-        private float animationTimer => Time.timeSinceLevelLoad - AnimationTimerOrigin;
-
-        private float AnimationLerper
-        {
-            get
-            {
-                float res = animationTimer / AnimationDuration;
-                return Mathf.Min(res, 1.0f);
-            }
-        }
-
-        protected Coroutine animate_Co;
-
-        private void AnimatingUpdate(MoveableBase moveableBase)
-        {
-            if (moveableBase.NextBoardPosition == moveableBase.CurrentBoardPosition)
-            {
-                moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.CurrentAndLerping);
-            }
-            else
-            {
-                moveableBase.LerpingBoardPosition = moveableBase.LerpBoardPos(AnimationLerper);
-            }
-        }
-
         private void PostAnimationUpdate(MoveableBase moveableBase)
         {
-            moveableBase.SetPosWithAnimation(moveableBase.NextBoardPosition, PosSetFlag.All);
+            moveableBase.SetCurrentAndNextPos(moveableBase.NextBoardPosition);
+            moveableBase.PingPongRotationDirection();
+            if (moveableBase is Unit u)
+            {
+                u.UpdateWorldRotationTransform();
+            }
         }
 
-        protected IEnumerator Animate()
+        protected void Animate_DOTween()
         {
-            while (AnimationLerper < 1.0f)
+            var animatingSeq = DOTween.Sequence();
+            animatingSeq.PrependInterval(AnimationDuration);//是为了干挪时间轴的时候也等一个AnimationDuration的时长。
+            foreach (var moveableBase in LevelAsset.AnimationPendingObj)
             {
-                yield return 0;
-                LevelAsset.AnimationPendingObj.ForEach(AnimatingUpdate);
-
-                //加上允许手动步进后，这个逻辑就应该独立出来了。
-                if (LevelAsset.MovedTileAni && LevelAsset.Shop && LevelAsset.Shop is IAnimatableShop shop)
+                if (moveableBase.NextBoardPosition != moveableBase.CurrentBoardPosition)
                 {
-                    shop.ShopUpdateAnimation(AnimationLerper);
+                    var actualNextPos = LevelAsset.GameBoard.GetFloatTransformAnimation(moveableBase.NextBoardPosition);
+                    actualNextPos.y = moveableBase.AnimatingRoot.transform.position.y; //保证所有物体移动时对于棋盘的垂直高度不变。
+                    animatingSeq.Insert(0, moveableBase.AnimatingRoot.DOMove(actualNextPos, AnimationDuration));
                 }
-
-                LevelAsset.GameBoard.UpdateBoardAnimation();
-                Cursor.UpdateTransform(LevelAsset.GameBoard.GetFloatTransformAnimation(Cursor.LerpingBoardPosition));
+                if (moveableBase.NextRotationDirection != moveableBase.CurrentRotationDirection)
+                {
+                    var actualNextRotEuler = Common.Utils.RotationToEuler(moveableBase.NextRotationDirection);
+                    animatingSeq.Insert(0, moveableBase.AnimatingRoot.DORotate(actualNextRotEuler, AnimationDuration));
+                }
             }
-
-            PostAnimateUpdate();
+            animatingSeq.OnComplete(PostAnimateUpdate);
         }
 
         private void PostAnimateUpdate()
@@ -203,11 +187,6 @@ namespace ROOT
 
             if (LevelAsset.MovedTileAni)
             {
-                if (LevelAsset.GameBoard != null)
-                {
-                    LevelAsset.GameBoard.UpdateBoardPostAnimation();
-                }
-
                 if (LevelAsset.Shop && LevelAsset.Shop is IAnimatableShop shop)
                 {
                     shop.ShopPostAnimationUpdate();

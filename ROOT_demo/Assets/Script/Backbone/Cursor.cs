@@ -88,6 +88,8 @@ namespace ROOT
 
         public override bool Immovable { get; set; }
 
+        public override Transform AnimatingRoot => RootTransform;
+
         public override void UpdateTransform(Vector3 pos)
         {
             Vector3 cursorPos=new Vector3(pos.x,0.26f,pos.z);
@@ -108,10 +110,23 @@ namespace ROOT
             _meshFilter.mesh = IndicatorMesh;
         }
 
-        /*public void Update()
+        public void ClampPosesInBoard()
         {
-            //RISK 这个到时候改成基于事件的、因为这个东西的引用不好搞，就先轮询吧。
-            //TODO 这个逻辑意外地的不好弄，试图立刻搞了；等有时间把时序舔明白再弄吧。
-        }*/
+            CurrentBoardPosition = Board.ClampPosInBoard(CurrentBoardPosition);
+            NextBoardPosition = Board.ClampPosInBoard(NextBoardPosition);
+        }
+        
+        //因为光标实质无向，就是这两个把这个放在儿简单弄一下就行。
+        public override void PingPongRotationDirection()
+        {
+            transform.rotation = Quaternion.identity;
+            CurrentRotationDirection = RotationDirection.North;
+            NextRotationDirection = RotationDirection.North;
+        }
+        
+        public void RotateCw()
+        {
+            NextRotationDirection = RotationDirection.East;
+        }
     }
 }

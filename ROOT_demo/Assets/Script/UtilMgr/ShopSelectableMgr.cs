@@ -181,7 +181,7 @@ namespace ROOT
             }
             else
             {
-                //hmmmmm这里先这样吧…………
+                //TODO hmmmmm这里先这样吧…………
                 core = Random.value > 0.5 ? TypeACore :TypeBCore;
             }
 
@@ -193,10 +193,14 @@ namespace ROOT
             go.transform.localPosition = new Vector3(j * Offset, YOffset, i * OffsetX);
         }
         
+        private bool ShopStarted = false;
+
         public void ShopStart()
         {
+            if (ShopStarted) return;
             CreateSelfUnit();
             ShopTierMultiplierText.text = "1";
+            ShopStarted = true;
         }
 
         public void OpenShop(bool Opening, int discount)
@@ -226,7 +230,7 @@ namespace ROOT
             var go = Instantiate(UnitTemplate);
             go.name = "Unit_" + Hash128.Compute(Utils.LastRandom.ToString("F5"));
             var unit = go.GetComponentInChildren<Unit>();
-            unit.InitPosWithAnimation(Vector2.zero);
+            unit.SetCurrentAndNextPos(Vector2.zero);
             unit.InitUnit(signal, genre, sides,  tier);
             return go;
         }

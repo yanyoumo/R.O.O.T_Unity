@@ -123,8 +123,8 @@ namespace ROOT
         
         private RotationDirection _unitRotation
         {
-            get => ApparentRotationDirection;
-            set => ApparentRotationDirection = value;
+            get => CurrentRotationDirection;
+            set => CurrentRotationDirection = value;
         }
         private int _cost = 0;
         private int _tier = 0;
@@ -143,6 +143,7 @@ namespace ROOT
         }
         private bool _hasDiscount = false;
         private MeshRenderer _coreMeshRenderer;
+        public override Transform AnimatingRoot => _rootTransform;
         private Transform _rootTransform => transform.parent;
         private Material _coreMat;
         private Transform _sideRootTransform;
@@ -355,12 +356,9 @@ namespace ROOT
 
         public void UnitRotateCw()
         {
-            _unitRotation = Common.Utils.GetCWDirection(_unitRotation);
+            NextRotationDirection = Common.Utils.GetCWDirection(_unitRotation);
         }
-        public void UnitRotateCcw()
-        {
-            _unitRotation = Common.Utils.GetCCWDirection(_unitRotation);
-        }
+
         public void UpdateWorldRotationTransform()
         {
             _rootTransform.rotation = Common.Utils.RotationToQuaternion(_unitRotation);
@@ -511,6 +509,11 @@ namespace ROOT
             ShopBackPlane.gameObject.SetActive(false);
         }
 
+        public override void PingPongRotationDirection()
+        {
+            CurrentRotationDirection = NextRotationDirection;
+        }
+        
         [Obsolete]
         private void UpdateDestConnectionSide(ConnectionMeshType connectionMeshType, ref Connector connector)
         {
