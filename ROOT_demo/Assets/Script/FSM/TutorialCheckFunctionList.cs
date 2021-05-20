@@ -17,8 +17,8 @@ namespace ROOT
         ConnectDifferentCoreAndField = 15,
         MoveThreeMatrixAndTwoThermalToPlace = 16,
         MoveOneMatrixToPlace = 17,
-        Buy3UnitsOrNotEnoughMoney = 99,
-        FourWarningGridOneHeatSink = 100,
+        ContinueWhenOneUnitIsBought = 20,
+        AchieveThreeHundredProfit = 21,
         
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
         CustomCheckGameplay0 = 250,
@@ -132,15 +132,14 @@ namespace ROOT
             return unit.UnitSignal == SignalType.Matrix && board.GetUnitsConnectedIsland() == 1;
         }
 
-        public static bool Buy3UnitsOrNotEnoughMoney(FSMLevelLogic fsm, Board board)
+        public static bool ContinueWhenOneUnitIsBought(FSMLevelLogic fsm, Board board)
         {
-            return board.Units.Length >= 3 || Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) < 4;
+            return Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) < Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.StartingMoney);
         }
 
-        public static bool FourWarningGridOneHeatSink(FSMLevelLogic fsm, Board board)
+        public static bool AchieveThreeHundredProfit(FSMLevelLogic fsm, Board board)
         {
-            return board.BoardGirdDriver.BoardGirds.Values.Count(cell => cell.CellStatus == CellStatus.Warning) >= 4 &&
-                   board.BoardGirdDriver.BoardGirds.Values.Any(cell => cell.CellStatus == CellStatus.Sink);
+            return Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) >= 300;
         }
     }
 }
