@@ -164,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6094702ec27bd43b2508232f436450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LEDColor: {r: 1, g: 0.54386824, b: 0, a: 0}
+  LEDColor: {r: 1, g: 0.807584, b: 0.21383637, a: 0}
   _LEDArray:
   - {fileID: 257226855241056173}
   - {fileID: 63229381388948871}
