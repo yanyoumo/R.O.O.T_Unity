@@ -284,6 +284,21 @@ namespace ROOT
             }
         }
 
+        protected override void SetUpHandlingCurrency()
+        {
+            MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = true, SelectAll = false, UITag = UITag.Currency_BareBone});
+            MessageDispatcher.SendMessage(new TimingEventInfo
+            {
+                Type = WorldEvent.CurrencyIOStatusChangedEvent,
+                BoardCouldIOCurrencyData = true,
+                UnitCouldGenerateIncomeData = true,
+            });
+            UpdateBoardData_Instantly();
+            LevelAsset.BaseDeltaCurrency = !HandlingRound || RoundLibDriver.IsRequireRound ? GetBaseInCome() : 0;
+            LevelAsset.BonusDeltaCurrency = 0;
+            SendCurrencyMessage(LevelAsset);
+        }
+
         protected override bool NormalCheckGameOver
         {
             get

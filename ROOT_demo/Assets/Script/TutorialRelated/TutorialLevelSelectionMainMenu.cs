@@ -34,7 +34,7 @@ namespace ROOT
             }
         }
 
-        public Button[] InitTutorialLevelSelectionMainMenu(TutorialQuadDataPack[] data)
+        public Button[] InitTutorialLevelSelectionMainMenu(LevelQuadDataPack[] data)
         {
             //Debug.Assert(data.Length < 19);
             Button[] res = new Button[data.Length];

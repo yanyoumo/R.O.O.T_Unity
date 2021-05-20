@@ -1,49 +1,44 @@
+using System.Collections.Generic;
 using System.Linq;
 using ROOT.Consts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+// ReSharper disable Unity.InstantiateWithoutParent
 
 namespace ROOT.UI
 {
+    public struct LevelSelectionRowPack
+    {
+        public string Title;
+        public LevelQuadDataPack[] TutorialData;
+        public bool DevOnly;
+        public int AccessID;
+    }
+    
     public class LevelSelectionGridMaster : MonoBehaviour
     {
-        public LevelSelectionGrid TutorialGrid;
-        public LevelSelectionGrid MainPlayGrid;
-        public LevelSelectionGrid ConstructionGrid;
-        
+        public Transform LevelSelectionPanel;
         public GameObject LevelQuadTemplate;
         public GameObject LevelSelectionRowTemplate;
 
-        public GameObject TestingTitle;
-        public GameObject TestingGridRoot;
-        
-        private void Awake()
+        public Button[] InitLevelSelectionMainMenu(LevelSelectionRowPack[] dataPacks)
         {
-            TutorialGrid.LevelQuadTemplate = LevelQuadTemplate;
-            MainPlayGrid.LevelQuadTemplate = LevelQuadTemplate;
-            ConstructionGrid.LevelQuadTemplate = LevelQuadTemplate;
-            
-            if (!StartGameMgr.DevMode)
+            var buttons = new List<Button>();
+            foreach (var pack in dataPacks)
             {
-                TestingTitle.SetActive(false);
-                TestingGridRoot.SetActive(false);
+                if (!StartGameMgr.DevMode && pack.DevOnly) continue;
+                var row = Instantiate(LevelSelectionRowTemplate);
+                var script = row.GetComponent<LevelSelectionRow>();
+                script.SelectionGrid.LevelQuadTemplate = LevelQuadTemplate;
+                var button = script.SelectionGrid.InitTutorialLevelSelectionMainMenu(pack.TutorialData);
+                script.TitleText = pack.Title;
+                if (!StartGameMgr.DevMode && !pack.DevOnly) script.SelectionGrid.SetSelectableLevels(pack.AccessID);
+                row.transform.parent = LevelSelectionPanel;
+                row.transform.localScale = Vector3.one;
+                buttons.AddRange(button);
             }
-        }
-
-        public Button[] InitLevelSelectionMainMenu(
-            TutorialQuadDataPack[] TutorialData,
-            TutorialQuadDataPack[] CareerData,
-            TutorialQuadDataPack[] TestingData)
-        {
-            var bA = TutorialGrid.InitTutorialLevelSelectionMainMenu(TutorialData);
-            var bB = MainPlayGrid.InitTutorialLevelSelectionMainMenu(CareerData);
-            if (StartGameMgr.DevMode)
-            {
-                var bC = ConstructionGrid.InitTutorialLevelSelectionMainMenu(TestingData);
-                return bA.Concat(bB).Concat(bC).ToArray();
-            }
-            return bA.Concat(bB).ToArray();
+            return buttons.ToArray();
         }
 
         public void BackToMenu()

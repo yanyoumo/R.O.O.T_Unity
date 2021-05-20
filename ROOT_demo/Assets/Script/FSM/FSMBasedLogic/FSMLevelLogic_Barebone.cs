@@ -89,7 +89,7 @@ namespace ROOT
             }
         }
 
-        private void SetUpHandlingCurrency()
+        protected virtual void SetUpHandlingCurrency()
         {
             MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = true, SelectAll = false, UITag = UITag.Currency_BareBone});
             MessageDispatcher.SendMessage(new TimingEventInfo
@@ -99,7 +99,6 @@ namespace ROOT
                 UnitCouldGenerateIncomeData = true,
             });
             UpdateBoardData_Instantly();
-            //手动弄一下。
             LevelAsset.BaseDeltaCurrency = GetBaseInCome();
             LevelAsset.BonusDeltaCurrency = 0;
             SendCurrencyMessage(LevelAsset);

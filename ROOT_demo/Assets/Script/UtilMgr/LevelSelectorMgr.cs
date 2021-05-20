@@ -24,12 +24,12 @@ namespace ROOT
 
         private bool ActionAssetIsTutorial(int i) => i < TutorialActionAssetList.Length;
         
-        private TutorialQuadDataPack[] QuadDataPacksFromActionAssetList(LevelActionAsset[] list)
+        private LevelQuadDataPack[] QuadDataPacksFromActionAssetList(LevelActionAsset[] list)
         {
-            var res = new TutorialQuadDataPack[list.Length];
+            var res = new LevelQuadDataPack[list.Length];
             for (var i = 0; i < list.Length; i++)
             {
-                res[i] = list[i].TutorialQuadDataPack;
+                res[i] = list[i].LevelQuadDataPack;
             }
             return res;
         }
@@ -43,18 +43,37 @@ namespace ROOT
             var _testing_dataS = QuadDataPacksFromActionAssetList(TestingActionAssetList);
 
             GridMaster = DozzyLevelSelectionCanvas.GetComponentInChildren<LevelSelectionGridMaster>();
-            var buttons = GridMaster.InitLevelSelectionMainMenu(_tutorial_dataS,_career_dataS,_testing_dataS);
+
+            var tutorialRowData = new LevelSelectionRowPack
+            {
+                TutorialData=_tutorial_dataS,
+                Title = "教程关卡",
+                DevOnly = false,
+                AccessID = PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS),
+            };
+            
+            var gameplayRowData = new LevelSelectionRowPack
+            {
+                TutorialData=_career_dataS,
+                Title = "正式关卡",
+                DevOnly = false,
+                AccessID = PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS),
+            };
+            
+            var testingRowData = new LevelSelectionRowPack
+            {
+                TutorialData=_testing_dataS,
+                Title = "测试关卡",
+                DevOnly = true,
+                AccessID = -1,
+            };
+            
+            var buttons = GridMaster.InitLevelSelectionMainMenu(new [] {tutorialRowData,gameplayRowData,testingRowData});
 
             for (var i = 0; i < buttons.Length; i++)
             {
                 var buttonId = i; var tmp = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
                 buttons[i].onClick.AddListener(() => { ButtonsListener(buttonId, tmp); });
-            }
-            
-            if (!StartGameMgr.DevMode)
-            {
-                GridMaster.TutorialGrid.SetSelectableLevels(PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS));
-                GridMaster.MainPlayGrid.SetSelectableLevels(PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS));
             }
         }
 
