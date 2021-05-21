@@ -288,6 +288,7 @@ namespace ROOT.FSM
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+                return;
             }
             Debug.LogWarning("need use at least career level of fsm or deeper");
         }

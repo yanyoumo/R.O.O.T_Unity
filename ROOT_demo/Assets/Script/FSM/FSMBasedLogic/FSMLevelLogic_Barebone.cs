@@ -206,7 +206,7 @@ namespace ROOT
 
             if (HandlingCurrency)
             {
-                Debug.Log("LevelAsset.GameCurrencyMgr.PerMove=" + LevelAsset.GameCurrencyMgr.Currency);
+                //Debug.Log("LevelAsset.GameCurrencyMgr.PerMove=" + LevelAsset.GameCurrencyMgr.Currency);
                 LevelAsset.GameCurrencyMgr.PerMove(LevelAsset.DeltaCurrency);
                 SendCurrencyMessage(LevelAsset);
             }

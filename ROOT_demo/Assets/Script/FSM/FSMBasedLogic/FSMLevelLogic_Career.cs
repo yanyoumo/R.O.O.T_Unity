@@ -35,31 +35,6 @@ namespace ROOT
         private bool CheckAutoR() => IsReverseCycle;
 
         #region FeatureSet_TutorialOnly.
-        
-        //这个基于教程的功能开关逻辑有两种实现逻辑。
-        //1、有一层外显开关和内生开关；外显开关是所有内生开关共同作用的结果。
-        //  各个内生开关互相独立、外显-内生开关间的转义关系静态且固定。
-        //2、只有一层开关；开关间由内部单播事件同步和调整。
-        //  各个开关间通过各个事件耦合。
-        
-        //缺点：
-        //1的：无法得知除自己以外开关变化的时刻。(艹，外显开关的变化时刻意外地很重要。)
-        //2的：无法将内生或“试图”的开关状态进行记录。
-        
-        //需要一个独立系统把两个设计的机制结合起来。
-        
-        //1有较大的循环依赖的风险。设：有内生开关a,b; f(a)=a&f(b),f(b)=b&f(a);
-        //a=true;b=true;f(a)=true;f(b)=true;
-        //设a=false;
-        //则：a=false;b=true;f(a)=false;f(b)=false;
-        //设b=false;
-        //则：a=false;b=false;f(a)=false;f(b)=false;
-        //设a=true;
-        //则：a=true;b=false;f(a)=false;f(b)=false;
-        //设b=true;
-        //则：a=true;b=true;f(a)=false;f(b)=false;//此时、无论单独考察哪个f都永远是false。
-        
-        //仍然考虑使用1方式、但是需要严控层级依赖和杜绝循环依赖。
 
         protected bool HandlingRound => (!UseTutorialVer || FeatureManager.GetExternalToggleVal(FSMFeatures.Round));
         protected bool HandlingSkill => (!UseTutorialVer || FeatureManager.GetExternalToggleVal(FSMFeatures.Skill));

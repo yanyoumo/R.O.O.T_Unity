@@ -1,5 +1,6 @@
 using System;
 using com.ootii.Messages;
+using UnityEngine;
 
 namespace ROOT
 {
@@ -60,13 +61,14 @@ namespace ROOT
         public static int ExpectedStep { private set; get; }
         public static int ApparentStep
         {
-            set => RawStep = value;
+            set => RawStep = value - ApparentOffset;
             get => RawStep + ApparentOffset;
         }
 
 
         public static void InitCycler()
         {
+            Debug.Log("RawStep = 0;");
             RawStep = 0;
             ApparentOffset = 0;
             ExpectedStep = 0;
@@ -119,6 +121,7 @@ namespace ROOT
         public static void ResetApparentStep()
         {
             ApparentOffset = -RawStep;
+            ExpectedStep = 0;
             MessageDispatcher.SendMessage(WorldEvent.ApparentStepResetedEvent);
         }
     }
