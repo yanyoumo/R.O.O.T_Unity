@@ -21,6 +21,7 @@ namespace ROOT.FSM
             {TutorialCheckType.MoveOneMatrixToPlace, TutorialCheckFunctionList.MoveOneMatrixToPlace},
             {TutorialCheckType.ContinueWhenOneUnitIsBought, TutorialCheckFunctionList.ContinueWhenOneUnitIsBought},
             {TutorialCheckType.AchieveThreeHundredProfit, TutorialCheckFunctionList.AchieveThreeHundredProfit},
+            {TutorialCheckType.Proceed5TimeTick, TutorialCheckFunctionList.Proceed5TimeTick},
             {TutorialCheckType.CustomCheckGameplay0, GameplayCheckFunctionList.GameplayCheck0},
             {TutorialCheckType.CustomCheckGameplay1, GameplayCheckFunctionList.GameplayCheck1},
             {TutorialCheckType.CustomCheckGameplay2, GameplayCheckFunctionList.GameplayCheck2},

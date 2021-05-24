@@ -47,8 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UnitTemplate: {fileID: 4688034594746405584, guid: 44794b1f4e158b24791064bd426e575e,
     type: 3}
-  GameBoard: {fileID: 0}
-  excludedTypes: 
+  _fsmLevelLogic: {fileID: 0}
   DisplayRoot: {fileID: 3090325307244081189}
   StaticContent: {fileID: 4824936363357354827}
   ShopTierMultiplierText: {fileID: 5980378754526016263}
@@ -78,7 +77,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4400838972946463472}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -2.564}
+  m_LocalPosition: {x: 0, y: 0, z: -2.548}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4824936363357354827}
@@ -86,8 +85,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.039, y: 0.03}
-  m_SizeDelta: {x: 1.1671045, y: 0.61619973}
+  m_AnchoredPosition: {x: -0.99, y: 0.03}
+  m_SizeDelta: {x: 1.2336, y: 0.601}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &961524928070107698
 MeshRenderer:
@@ -100,6 +99,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '[9][0]'
+  m_text: <sprite=9><sprite=0>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -217,12 +217,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 961524928070107698}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 961524928070107698}
+  m_maskType: 0
 --- !u!1 &5895918066989374896
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,7 +238,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4824936363357354827
 Transform:
   m_ObjectHideFlags: 0
@@ -281,7 +281,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6746744943345965467}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -1.6921}
+  m_LocalPosition: {x: 0, y: 0, z: -1.699}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4824936363357354827}
@@ -289,8 +289,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.624, y: 0.03}
-  m_SizeDelta: {x: 2.2911658, y: 1.1916068}
+  m_AnchoredPosition: {x: -1.587, y: 0.03}
+  m_SizeDelta: {x: 2.4792, y: 1.2254}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &8922314443003306774
 MeshRenderer:
@@ -303,6 +303,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -353,9 +354,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '[1][2][3][4]
+  m_text: '<sprite=1><sprite=2><sprite=3><sprite=4>
 
-    [5][6][7][8]'
+    <sprite=5><sprite=6><sprite=7><sprite=8>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -422,12 +423,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 8922314443003306774}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 8922314443003306774}
+  m_maskType: 0
 --- !u!1 &7082537570884680884
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,6 +477,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -593,12 +595,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 3852452401922733770}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 3852452401922733770}
+  m_maskType: 0
 --- !u!1 &7201771185814049221
 GameObject:
   m_ObjectHideFlags: 0

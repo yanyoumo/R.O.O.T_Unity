@@ -19,6 +19,7 @@ namespace ROOT
         MoveOneMatrixToPlace = 17,
         ContinueWhenOneUnitIsBought = 20,
         AchieveThreeHundredProfit = 21,
+        Proceed5TimeTick = 22,
         
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
         CustomCheckGameplay0 = 250,
@@ -140,6 +141,11 @@ namespace ROOT
         public static bool AchieveThreeHundredProfit(FSMLevelLogic fsm, Board board)
         {
             return Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) >= 300;
+        }
+
+        public static bool Proceed5TimeTick(FSMLevelLogic fsm, Board board)
+        {
+            return fsm.LevelAsset.StepCount > 4;
         }
     }
 }
