@@ -111,6 +111,9 @@ namespace ROOT
                 }
             }
             MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = false, SelectAll = false, UITag = UITag.Currency_BareBone});
+
+            LevelAsset.SkillMgr.SkillEnabled = false;
+            LevelAsset.Shop.OpenShop(false, 0);
             
             if (UseTutorialVer)
             {

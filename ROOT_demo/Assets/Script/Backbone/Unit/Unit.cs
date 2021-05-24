@@ -41,6 +41,7 @@ namespace ROOT
         public TextMeshPro PriceTag;
         public TextMeshPro DiscountedPriceTag;
         public TextMeshPro BillBoardText;
+        public TextMeshPro ShopIconSprite;
 
         public MeshRenderer UnitActivationLEDMat;
         public MeshRenderer BackQuadRenderer;
@@ -69,9 +70,9 @@ namespace ROOT
 
         public SimpleLEDArray TierLEDs;
 
-        public Board GameBoard;
+        [ReadOnly]public Board GameBoard;
         
-        public UnitSignalCoreBase SignalCore;
+        [ReadOnly]public UnitSignalCoreBase SignalCore;
         public Dictionary<SignalType, SignalData> SignalDataPackList => SignalCore.SignalDataPackList;
         
         public int Tier
@@ -209,6 +210,8 @@ namespace ROOT
             {
                 HasDiscount = false;
             }
+
+            ShopIconSprite.text = "<sprite=" + (ShopID + 1) % 10 + ">";
         }
         public void UnsetShop()
         {
@@ -501,10 +504,6 @@ namespace ROOT
             UnitSides = new Dictionary<RotationDirection, SideType>();
             _unitRotation = RotationDirection.North;
 
-            /*var colorRaw = ColorLibManager.Instance.ColorLib.ROOT_MASTER_THERMO;
-            colorRaw.a = 0.35f;
-            ThermoRangeIndicatorRoot.GetComponentInChildren<SpriteRenderer>().color = colorRaw;*/
-            
             Immovable = false;
             ShopBackPlane.gameObject.SetActive(false);
         }
@@ -514,7 +513,7 @@ namespace ROOT
             CurrentRotationDirection = NextRotationDirection;
         }
         
-        [Obsolete]
+        /*[Obsolete]
         private void UpdateDestConnectionSide(ConnectionMeshType connectionMeshType, ref Connector connector)
         {
             if (connectionMeshType == ConnectionMeshType.NoChange) return;
@@ -551,6 +550,6 @@ namespace ROOT
             {
                 meshRenderer.enabled = false;
             }
-        }//North,South,West,East
+        }//North,South,West,East*/
     }
 }
