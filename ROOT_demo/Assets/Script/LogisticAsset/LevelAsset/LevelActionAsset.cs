@@ -209,7 +209,7 @@ namespace ROOT.SetupAsset
             }
         }
 
-        public LevelQuadDataPack LevelQuadDataPack => new LevelQuadDataPack(AcessID, TitleTerm, "Play", Thumbnail);
+        //public LevelQuadDataPack LevelQuadDataPack => new LevelQuadDataPack(AcessID, TitleTerm, "Play", Thumbnail);
 
         public BossStageType? GetBossStage => HasBossRound ? BossStage : (BossStageType?) null;
 

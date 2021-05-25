@@ -1,4 +1,7 @@
-﻿using I2.Loc;
+﻿using System;
+using I2.Loc;
+using ROOT.SetupAsset;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,8 +36,8 @@ namespace ROOT
         {
             if (_levelSelectable)
             {
-                TutorialThumbnail.sprite = cachedData.Thumbnail;
-                TitleLocalize.SetTerm(cachedData.TitleTerm);
+                TutorialThumbnail.sprite = cachedActionAsset.Thumbnail;
+                TitleLocalize.SetTerm(cachedActionAsset.TitleTerm);
                 ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
                 QuadBackGround.color = SelectableColor;
                 StartTutorialButton.interactable = true;
@@ -49,9 +52,9 @@ namespace ROOT
             }
         }
 
-        private LevelQuadDataPack cachedData;
+        /*private LevelQuadDataPack cachedData;
         
-        public Button InitTutorialLevelSelectionQuad(LevelQuadDataPack data)
+        public Button InitLevelSelectionQuad(LevelQuadDataPack data)
         {
             cachedData = data;
             TutorialThumbnail.sprite = cachedData.Thumbnail;
@@ -59,6 +62,21 @@ namespace ROOT
             ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
             LevelAccessID = data.AccessID;
             return StartTutorialButton;
+        }*/
+
+        private LevelActionAsset cachedActionAsset;
+
+        public void InitLevelSelectionQuad(LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
+        {
+            cachedActionAsset = actionAsset;
+            TutorialThumbnail.sprite = actionAsset.Thumbnail;
+            TitleLocalize.SetTerm(cachedActionAsset.TitleTerm);
+            ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
+            LevelAccessID = cachedActionAsset.AcessID;
+            StartTutorialButton.onClick.AddListener(() =>
+            {
+                buttonCallBack(cachedActionAsset, StartTutorialButton.GetComponentInChildren<TextMeshProUGUI>());
+            });
         }
     }
 }

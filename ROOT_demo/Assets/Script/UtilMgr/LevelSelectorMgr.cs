@@ -22,31 +22,15 @@ namespace ROOT
         private LevelActionAsset[] CareerActionAssetList => LevelLib.Instance.CareerActionAssetList;
         private LevelActionAsset[] TestingActionAssetList => LevelLib.Instance.TestingActionAssetList;
 
-        private bool ActionAssetIsTutorial(int i) => i < TutorialActionAssetList.Length;
-        
-        private LevelQuadDataPack[] QuadDataPacksFromActionAssetList(LevelActionAsset[] list)
-        {
-            var res = new LevelQuadDataPack[list.Length];
-            for (var i = 0; i < list.Length; i++)
-            {
-                res[i] = list[i].LevelQuadDataPack;
-            }
-            return res;
-        }
-
         private LevelSelectionGridMaster GridMaster;
         
         void Start()
         {
-            var _tutorial_dataS = QuadDataPacksFromActionAssetList(TutorialActionAssetList);
-            var _career_dataS = QuadDataPacksFromActionAssetList(CareerActionAssetList);
-            var _testing_dataS = QuadDataPacksFromActionAssetList(TestingActionAssetList);
-
             GridMaster = DozzyLevelSelectionCanvas.GetComponentInChildren<LevelSelectionGridMaster>();
 
             var tutorialRowData = new LevelSelectionRowPack
             {
-                TutorialData=_tutorial_dataS,
+                ActionAssets= TutorialActionAssetList,
                 Title = "教程关卡",
                 DevOnly = false,
                 AccessID = PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS),
@@ -54,7 +38,7 @@ namespace ROOT
             
             var gameplayRowData = new LevelSelectionRowPack
             {
-                TutorialData=_career_dataS,
+                ActionAssets= CareerActionAssetList,
                 Title = "正式关卡",
                 DevOnly = false,
                 AccessID = PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS),
@@ -62,33 +46,32 @@ namespace ROOT
             
             var testingRowData = new LevelSelectionRowPack
             {
-                TutorialData=_testing_dataS,
+                ActionAssets= TestingActionAssetList,
                 Title = "测试关卡",
                 DevOnly = true,
                 AccessID = -1,
             };
-            
-            var buttons = GridMaster.InitLevelSelectionMainMenu(new [] {tutorialRowData,gameplayRowData,testingRowData});
 
-            for (var i = 0; i < buttons.Length; i++)
-            {
-                var buttonId = i; var tmp = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
-                buttons[i].onClick.AddListener(() => { ButtonsListener(buttonId, tmp); });
-            }
+            GridMaster.InitLevelSelectionMainMenu(
+                new[]
+                {
+                    tutorialRowData, gameplayRowData, testingRowData
+                }, ButtonsListener
+            );
         }
 
-        IEnumerator DoLoading(int buttonId)
+        IEnumerator DoLoading(LevelActionAsset _currentUsingAsset)
         {
-            LevelMasterManager.Instance.LoadCareerSetup(buttonId);
+            LevelMasterManager.Instance.LoadCareerSetup(_currentUsingAsset);
             yield return 0;
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREER);
         }
 
-        public void ButtonsListener(int buttonId, TextMeshProUGUI _content)
+        public void ButtonsListener(LevelActionAsset _currentUsingAsset, TextMeshProUGUI _content)
         {
             Loading = true;
             content = _content;
-            StartCoroutine(DoLoading(buttonId));
+            StartCoroutine(DoLoading(_currentUsingAsset));
         }
     }
 }
