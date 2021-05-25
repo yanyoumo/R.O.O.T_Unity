@@ -384,7 +384,7 @@ namespace ROOT
         {
             if (rmessage is BoardGridHighLightSetData info)
             {
-                Debug.Log("(rmessage is BoardGridHighLightSetData info)");
+                //Debug.Log("(rmessage is BoardGridHighLightSetData info)");
                 if (!info.Set)
                 {
                     if (info.AllClear || info.Poses.Contains(OnboardPos))

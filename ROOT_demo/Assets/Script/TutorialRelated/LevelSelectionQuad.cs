@@ -1,4 +1,7 @@
-﻿using I2.Loc;
+﻿using System;
+using I2.Loc;
+using ROOT.SetupAsset;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +12,7 @@ namespace ROOT
         public Sprite UnSelectableThumbnail;
 
         public int LevelAccessID = -1;
-        public Button StartTutorialButton;
+        public Button StartLevelButton;
         public Image TutorialThumbnail;
         public Localize ButtonLocalize;
         public Localize TitleLocalize;
@@ -33,11 +36,11 @@ namespace ROOT
         {
             if (_levelSelectable)
             {
-                TutorialThumbnail.sprite = cachedData.Thumbnail;
-                TitleLocalize.SetTerm(cachedData.TitleTerm);
+                TutorialThumbnail.sprite = cachedActionAsset.Thumbnail;
+                TitleLocalize.SetTerm(cachedActionAsset.TitleTerm);
                 ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
                 QuadBackGround.color = SelectableColor;
-                StartTutorialButton.interactable = true;
+                StartLevelButton.interactable = true;
             }
             else
             {
@@ -45,20 +48,23 @@ namespace ROOT
                 TitleLocalize.SetTerm(ScriptTerms.Locked);
                 ButtonLocalize.SetTerm(ScriptTerms.Locked);
                 QuadBackGround.color = UnSelectableColor;
-                StartTutorialButton.interactable = false;
+                StartLevelButton.interactable = false;
             }
         }
 
-        private LevelQuadDataPack cachedData;
-        
-        public Button InitTutorialLevelSelectionQuad(LevelQuadDataPack data)
+        private LevelActionAsset cachedActionAsset;
+
+        public void InitLevelSelectionQuad(LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
         {
-            cachedData = data;
-            TutorialThumbnail.sprite = cachedData.Thumbnail;
-            TitleLocalize.SetTerm(cachedData.TitleTerm);
+            cachedActionAsset = actionAsset;
+            TutorialThumbnail.sprite = actionAsset.Thumbnail;
+            TitleLocalize.SetTerm(cachedActionAsset.TitleTerm);
             ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
-            LevelAccessID = data.AccessID;
-            return StartTutorialButton;
+            LevelAccessID = cachedActionAsset.AcessID;
+            StartLevelButton.onClick.AddListener(() =>
+            {
+                buttonCallBack(cachedActionAsset, StartLevelButton.GetComponentInChildren<TextMeshProUGUI>());
+            });
         }
     }
 }

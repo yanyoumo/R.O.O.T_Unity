@@ -17,7 +17,8 @@ namespace ROOT.UI
 {
     public class CareerSetupManger : MonoBehaviour
     {
-        public static int levelId;
+        //public static int levelId;
+        public static LevelActionAsset currentUsingAsset;
 
         public Progressor LoadingProgressor;
         public GameObject LoadingLabel;
@@ -27,7 +28,8 @@ namespace ROOT.UI
         public TextMeshProUGUI SignalSelectionHint;
         private AdditionalGameSetup _additionalGameSetup = new AdditionalGameSetup();
 
-        private LevelActionAsset actionAsset => LevelLib.Instance.ActionAsset(levelId);
+        //private LevelActionAsset actionAsset => LevelLib.Instance.ActionAsset(levelId);
+        private LevelActionAsset actionAsset => currentUsingAsset;
         private bool LevelIsTutorial => (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
 
         private SignalType[] SelectingSignals => toggles?.Where(v => v.Value.CoreToggle.isOn).Select(v1 => v1.Key).ToArray();
@@ -41,7 +43,6 @@ namespace ROOT.UI
 
         public void Continue()
         {
-            var actionAsset = LevelLib.Instance.ActionAsset(levelId);
             if (SelectingSignalCount == 2 || LevelIsTutorial)
             {
                 if (!LevelIsTutorial)

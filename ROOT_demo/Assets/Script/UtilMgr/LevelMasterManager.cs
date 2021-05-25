@@ -95,12 +95,18 @@ namespace ROOT
             StartCoroutine(LoadGamePlay_Coroutine(actionAsset, loadingProgressorCallBack));
         }
 
-        public void LoadCareerSetup(int buttonId)
+        /*public void LoadCareerSetup(int buttonId)
         {
             CareerSetupManger.levelId = buttonId;//RISK 从理论上讲、如果那个的加载用个Coroutine、这个数据就能直接传进去了。但是先这样吧。
             SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
-        }
+        }*/
 
+        public void LoadCareerSetup(LevelActionAsset _currentUsingAsset)
+        {
+            CareerSetupManger.currentUsingAsset = _currentUsingAsset;//RISK 从理论上讲、如果那个的加载用个Coroutine、这个数据就能直接传进去了。但是先这样吧。
+            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
+        }
+        
         private GameOverMgr _gameOverMgr;
 
         private IEnumerator FindGameOverMgrAfterLoad()

@@ -1,3 +1,6 @@
+using System;
+using ROOT.SetupAsset;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,17 +36,14 @@ namespace ROOT.UI
             }*/
         }
 
-        public Button[] InitTutorialLevelSelectionMainMenu(LevelQuadDataPack[] data)
+        public void InitLevelSelectionMainMenu(LevelActionAsset[] data, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
         {
-            Button[] res = new Button[data.Length];
             TutorialQuadS = new LevelSelectionQuad[data.Length];
             for (var i = 0; i < data.Length; i++)
             {
                 TutorialQuadS[i] = Instantiate(LevelQuadTemplate, transform).GetComponentInChildren<LevelSelectionQuad>();
-                res[i] = TutorialQuadS[i].InitTutorialLevelSelectionQuad(data[i]);
+                TutorialQuadS[i].InitLevelSelectionQuad(data[i], buttonCallBack);
             }
-
-            return res;
         }
     }
 }

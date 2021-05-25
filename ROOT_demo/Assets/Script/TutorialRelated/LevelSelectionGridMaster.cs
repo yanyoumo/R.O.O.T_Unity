@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ROOT.Consts;
+using ROOT.SetupAsset;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,7 +14,8 @@ namespace ROOT.UI
     public struct LevelSelectionRowPack
     {
         public string Title;
-        public LevelQuadDataPack[] TutorialData;
+        //public LevelQuadDataPack[] TutorialData;
+        public LevelActionAsset[] ActionAssets;
         public bool DevOnly;
         public int AccessID;
     }
@@ -22,23 +26,20 @@ namespace ROOT.UI
         public GameObject LevelQuadTemplate;
         public GameObject LevelSelectionRowTemplate;
 
-        public Button[] InitLevelSelectionMainMenu(LevelSelectionRowPack[] dataPacks)
+        public void InitLevelSelectionMainMenu(LevelSelectionRowPack[] dataPacks, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
         {
-            var buttons = new List<Button>();
             foreach (var pack in dataPacks)
             {
                 if (!StartGameMgr.DevMode && pack.DevOnly) continue;
                 var row = Instantiate(LevelSelectionRowTemplate);
                 var script = row.GetComponent<LevelSelectionRow>();
                 script.SelectionGrid.LevelQuadTemplate = LevelQuadTemplate;
-                var button = script.SelectionGrid.InitTutorialLevelSelectionMainMenu(pack.TutorialData);
+                script.SelectionGrid.InitLevelSelectionMainMenu(pack.ActionAssets, buttonCallBack);
                 script.TitleText = pack.Title;
                 if (!StartGameMgr.DevMode && !pack.DevOnly) script.SelectionGrid.SetSelectableLevels(pack.AccessID);
                 row.transform.parent = LevelSelectionPanel;
                 row.transform.localScale = Vector3.one;
-                buttons.AddRange(button);
             }
-            return buttons.ToArray();
         }
 
         public void BackToMenu()
