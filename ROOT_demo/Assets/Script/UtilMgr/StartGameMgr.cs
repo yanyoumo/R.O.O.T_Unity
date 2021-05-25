@@ -137,7 +137,7 @@ namespace ROOT
         {
             if (!OnceGuard)
             {
-                SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREER, LoadSceneMode.Additive);
+                SceneManager.LoadSceneAsync(StaticName.SCENE_ID_BST_CAREER, LoadSceneMode.Additive);
                 SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
                 OnceGuard = true;
             }
