@@ -164,8 +164,8 @@ namespace ROOT.Consts
         public static readonly int SCENE_ID_ADDITIONAL_VISUAL_TUTORIAL = 9;
         public static readonly int SCENE_ID_ADDITIONAL_GAMEPLAY_UI = 10;
         public static readonly int SCENE_ID_ADDITIONAL_VISUAL_ACQUIRING = 11;
-        public static readonly int SCENE_ID_BST_CAREER = 12;
-
+        public static readonly int SCENE_ID_ADDITIONAL_VISUAL_TELEM = 12;
+        public static readonly int SCENE_ID_BST_CAREER = 13;
 
         public static readonly string SOURCE_CORE_NODE_NAME = "SourceCore";
         public static readonly string DEST_CORE_NODE_NAME = "DestCore";
