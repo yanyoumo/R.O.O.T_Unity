@@ -12,7 +12,7 @@ namespace ROOT
         public Sprite UnSelectableThumbnail;
 
         public int LevelAccessID = -1;
-        public Button StartTutorialButton;
+        public Button StartLevelButton;
         public Image TutorialThumbnail;
         public Localize ButtonLocalize;
         public Localize TitleLocalize;
@@ -40,7 +40,7 @@ namespace ROOT
                 TitleLocalize.SetTerm(cachedActionAsset.TitleTerm);
                 ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
                 QuadBackGround.color = SelectableColor;
-                StartTutorialButton.interactable = true;
+                StartLevelButton.interactable = true;
             }
             else
             {
@@ -48,21 +48,9 @@ namespace ROOT
                 TitleLocalize.SetTerm(ScriptTerms.Locked);
                 ButtonLocalize.SetTerm(ScriptTerms.Locked);
                 QuadBackGround.color = UnSelectableColor;
-                StartTutorialButton.interactable = false;
+                StartLevelButton.interactable = false;
             }
         }
-
-        /*private LevelQuadDataPack cachedData;
-        
-        public Button InitLevelSelectionQuad(LevelQuadDataPack data)
-        {
-            cachedData = data;
-            TutorialThumbnail.sprite = cachedData.Thumbnail;
-            TitleLocalize.SetTerm(cachedData.TitleTerm);
-            ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
-            LevelAccessID = data.AccessID;
-            return StartTutorialButton;
-        }*/
 
         private LevelActionAsset cachedActionAsset;
 
@@ -73,9 +61,9 @@ namespace ROOT
             TitleLocalize.SetTerm(cachedActionAsset.TitleTerm);
             ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
             LevelAccessID = cachedActionAsset.AcessID;
-            StartTutorialButton.onClick.AddListener(() =>
+            StartLevelButton.onClick.AddListener(() =>
             {
-                buttonCallBack(cachedActionAsset, StartTutorialButton.GetComponentInChildren<TextMeshProUGUI>());
+                buttonCallBack(cachedActionAsset, StartLevelButton.GetComponentInChildren<TextMeshProUGUI>());
             });
         }
     }
