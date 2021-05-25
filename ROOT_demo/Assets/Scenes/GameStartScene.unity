@@ -10344,6 +10344,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}
+      propertyPath: RootLevelAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 1a303f4b6db6125408117a8d2dfb9782,
+        type: 2}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
       propertyPath: SignalMasterRoot
       value: 
       objectReference: {fileID: 326358482}
