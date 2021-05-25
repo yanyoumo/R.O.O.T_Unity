@@ -244,6 +244,9 @@ namespace ROOT.SetupAsset
 
         public (int, bool, bool) GameStartingData => (InitialCurrency, ShopCost, UnitCost);
 
+        [PropertyOrder(200)] [Header("Unlocking Level")]
+        public LevelActionAsset[] UnlockingLevel;
+
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;
 
         [Obsolete("Why?")] public List<SignalType> ShopExcludedType => null;
