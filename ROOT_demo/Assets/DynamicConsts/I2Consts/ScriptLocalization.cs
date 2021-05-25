@@ -41,6 +41,8 @@ namespace I2.Loc
 		public static string LevelName_TL1 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL1"); } }
 		public static string LevelName_TL2 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL2"); } }
 		public static string LevelName_TL3 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL3"); } }
+		public static string LevelName_TL4 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL4"); } }
+		public static string LevelName_TL5 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL5"); } }
 		public static string Level_1 		{ get{ return LocalizationManager.GetTranslation ("Level_1"); } }
 		public static string Level_2 		{ get{ return LocalizationManager.GetTranslation ("Level_2"); } }
 		public static string Level_3 		{ get{ return LocalizationManager.GetTranslation ("Level_3"); } }
@@ -126,6 +128,8 @@ namespace I2.Loc
 		public const string LevelName_TL1 = "LevelName_TL1";
 		public const string LevelName_TL2 = "LevelName_TL2";
 		public const string LevelName_TL3 = "LevelName_TL3";
+		public const string LevelName_TL4 = "LevelName_TL4";
+		public const string LevelName_TL5 = "LevelName_TL5";
 		public const string Level_1 = "Level_1";
 		public const string Level_2 = "Level_2";
 		public const string Level_3 = "Level_3";

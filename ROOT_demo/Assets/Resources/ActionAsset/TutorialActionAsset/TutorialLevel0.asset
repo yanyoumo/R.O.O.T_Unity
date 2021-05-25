@@ -1202,4 +1202,7 @@ MonoBehaviour:
   CSVFileName: TutorialLevel0_Text
   UnlockingLevel:
   - {fileID: 11400000, guid: 9585b924b0badf0408d5f16f08549dcf, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: dad89a38092ca7d4796ebd3a6d640922, type: 2}
   ExcludedShop: 0

@@ -42,6 +42,7 @@ namespace ROOT.UI
         private void GenerateActionAssetQuadAndIter(Vector2Int nodePOS,Vector2Int lastNodePOS, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
         {
             GenerateSignalQuad(nodePOS, actionAsset, buttonCallBack);
+
             if (lastNodePOS.x>=0)
             {
                 var lineObj = Instantiate(BSTLineTemplate, TreeBranchLineRoot);
@@ -58,7 +59,11 @@ namespace ROOT.UI
             nodePOS.x++;
             for (var i = 0; i < actionAsset.UnlockingLevel.Length; i++)
             {
-                GenerateActionAssetQuadAndIter(nodePOS + Vector2Int.down * i, lastNodePos,actionAsset.UnlockingLevel[i], buttonCallBack);
+                if (!StartGameMgr.DevMode && lastNodePos == Vector2Int.zero && i>0) break; //除掉TestLevels。
+                if (actionAsset.UnlockingLevel[i] != null)//这是允许放一个NULL就可以手动往下挪一行这件事儿。
+                {
+                    GenerateActionAssetQuadAndIter(nodePOS + Vector2Int.down * i, lastNodePos,actionAsset.UnlockingLevel[i], buttonCallBack);
+                }
             }
         }
 
@@ -68,9 +73,9 @@ namespace ROOT.UI
             
             var quadRects = LevelSelectionPanel.GetComponentsInChildren<RectTransform>().Where(t => t.parent == LevelSelectionPanel.transform);
             var maxX = quadRects.Max(r => r.anchoredPosition.x);
-            var maxY = quadRects.Max(r => r.anchoredPosition.y);
-            LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxX + 150);
-            LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, maxY + 75);
+            var maxY = quadRects.Max(r => Mathf.Abs(r.anchoredPosition.y));
+            LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxX + 125);
+            LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, maxY + 175);
         }
     }
 }

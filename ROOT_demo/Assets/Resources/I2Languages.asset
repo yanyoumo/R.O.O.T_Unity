@@ -679,6 +679,22 @@ MonoBehaviour:
       - Pending
       Flags: 0000
       Languages_Touch: []
+    - Term: LevelName_TL4
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u65F6\u6BB5\u7EFC\u5408"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_TL5
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u5173\u4E8E\u6280\u80FD"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
