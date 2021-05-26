@@ -469,9 +469,14 @@ namespace ROOT
 
             UpdateSideMesh();
 
-            UnitActivationLEDMat.material.color = UnitHardware == HardwareType.Core
-                ? UnitActivationLEDMat_Colors[(int)UnitActivationLEDColor.Activated]
-                : UnitActivationLEDMat_Colors[(int)UnitActivationLEDColor.Deactivated];
+            if (UnitHardware == HardwareType.Core)
+            {
+                UnitActivationLEDMat.enabled = false;
+            }
+            else
+            {
+                UnitActivationLEDMat.material.color = UnitActivationLEDMat_Colors[(int) UnitActivationLEDColor.Deactivated];
+            }
 
             if (SignalCore == null)
             {
@@ -512,44 +517,5 @@ namespace ROOT
         {
             CurrentRotationDirection = NextRotationDirection;
         }
-        
-        /*[Obsolete]
-        private void UpdateDestConnectionSide(ConnectionMeshType connectionMeshType, ref Connector connector)
-        {
-            if (connectionMeshType == ConnectionMeshType.NoChange) return;
-            switch (connectionMeshType)
-            {
-                case ConnectionMeshType.NoConnectionMesh:
-                    connector.Connected = false;
-                    break;
-                case ConnectionMeshType.DtoDConnectedMesh:
-                case ConnectionMeshType.DtSConnectedMesh:
-                case ConnectionMeshType.StDConnectedMesh:
-                    connector.Connected = true;
-                    break;
-                case ConnectionMeshType.StSConnectedMesh:
-                    throw new NotImplementedException();
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-        [Obsolete]
-        public void SetCoreEmissive(Color color)
-        {
-            _coreMeshRenderer.material.EnableKeyword("_EMISSION"); //还是不懂，为什么每次设置前得Enable一下。
-            _coreMeshRenderer.material.SetColor("_EmissionColor", color);
-        }
-        [Obsolete]
-        protected void InitSide(MeshRenderer meshRenderer, SideType sideType)
-        {
-            if (sideType == SideType.Connection)
-            {
-                meshRenderer.material.SetColor("_Color", Color.green * 0.55f);
-            }
-            else if (sideType == SideType.NoConnection)
-            {
-                meshRenderer.enabled = false;
-            }
-        }//North,South,West,East*/
     }
 }
