@@ -4,7 +4,7 @@ namespace ROOT
 {
     public abstract class SingleLED : MonoBehaviour
     {
-        public Color TurnOnColor;
+        [HideInInspector] public Color TurnOnColor = Color.white;
         protected readonly Color _turnOffColor = Color.gray * 0.2f;
         public abstract void TurnOn();
         public abstract void TurnOff();
