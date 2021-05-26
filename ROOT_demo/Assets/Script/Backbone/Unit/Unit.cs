@@ -513,6 +513,15 @@ namespace ROOT
             ShopBackPlane.gameObject.SetActive(false);
         }
 
+        private void Update()
+        {
+            //RISK 这个流程太费了，但是这个玩意儿一时半会儿改不了。
+            if (TierLEDs.transform.rotation != Quaternion.identity)
+            {
+                TierLEDs.transform.rotation = Quaternion.identity;
+            }
+        }
+
         public override void PingPongRotationDirection()
         {
             CurrentRotationDirection = NextRotationDirection;
