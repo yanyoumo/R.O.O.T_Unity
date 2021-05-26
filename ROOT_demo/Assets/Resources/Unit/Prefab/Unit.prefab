@@ -4602,6 +4602,11 @@ PrefabInstance:
       propertyPath: LEDColor.g
       value: 0.807584
       objectReference: {fileID: 0}
+    - target: {fileID: 4440035752923843977, guid: 5bb72f72492bfc541979634937975c26,
+        type: 3}
+      propertyPath: LEDColor.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5bb72f72492bfc541979634937975c26, type: 3}
 --- !u!4 &3028937098030618429 stripped
