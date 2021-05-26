@@ -11,12 +11,15 @@ namespace ROOT
     {
         public Sprite UnSelectableThumbnail;
 
-        public int LevelAccessID = -1;
+        //public int LevelAccessID = -1;
         public Button StartLevelButton;
         public Image TutorialThumbnail;
         public Localize ButtonLocalize;
         public Localize TitleLocalize;
         public Image QuadBackGround;
+
+        public Image TutorialIcon;
+        public Image GameplayIcon;
 
         public Color SelectableColor => ColorUtilityWrapper.ParseHtmlStringNotNull("#B7E6FD");
         public Color UnSelectableColor => ColorUtilityWrapper.ParseHtmlStringNotNull("#8C8C8C");
@@ -27,7 +30,7 @@ namespace ROOT
         {
             set
             {
-                _levelSelectable = LevelAccessID == -1 || value;
+                _levelSelectable = value;
                 UpdateSelectable();
             }
         }
@@ -60,11 +63,14 @@ namespace ROOT
             TutorialThumbnail.sprite = actionAsset.Thumbnail;
             TitleLocalize.SetTerm(cachedActionAsset.TitleTerm);
             ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
-            LevelAccessID = cachedActionAsset.AcessID;
+            //LevelAccessID = cachedActionAsset.AcessID;
             StartLevelButton.onClick.AddListener(() =>
             {
                 buttonCallBack(cachedActionAsset, StartLevelButton.GetComponentInChildren<TextMeshProUGUI>());
             });
+            
+            TutorialIcon.enabled = actionAsset.levelType == LevelType.Tutorial;
+            GameplayIcon.enabled = actionAsset.levelType != LevelType.Tutorial;
         }
     }
 }

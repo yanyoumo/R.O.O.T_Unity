@@ -55,12 +55,8 @@ namespace ROOT
                 EndingTitleLocalize.Term = ScriptTerms.TutorialSectionOver;
                 if (tutorialCompleted)
                 {
-                    if (!PlayerPrefs.HasKey(StaticPlayerPrefName.GAME_PROGRESS)) throw new ApplicationException("GAME_PROGRESS player pref not found internal Error!!");
-                    
-                    var currentGameProgress = PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS);
-                    currentGameProgress++;
-                    PlayerPrefs.SetInt(StaticPlayerPrefName.GAME_PROGRESS, currentGameProgress);
-                    //TODO 这里识别一下如果解锁了新关卡，多显示个字儿什么的。
+                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, 1);
+                    PlayerPrefs.Save();
                     if (LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset) == null)
                     {
                         OtherButton.interactable = false;//没有下一关了。

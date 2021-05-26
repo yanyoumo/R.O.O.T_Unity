@@ -18,10 +18,10 @@ namespace ROOT.UI
 
         public void SetSelectableLevels(int gameProgress)
         {
-            foreach (var t in TutorialQuadS)
+            /*foreach (var t in TutorialQuadS)
             {
                 t.LevelSelectable = (t.LevelAccessID <= gameProgress);
-            }
+            }*/
         }
         
         void Awake()

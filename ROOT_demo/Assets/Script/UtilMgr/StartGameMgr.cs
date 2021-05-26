@@ -94,7 +94,7 @@ namespace ROOT
             if (!PlayerPrefs.HasKey(PLAYER_ID)) PlayerPrefs.SetInt(PLAYER_ID, DateTime.UtcNow.Millisecond);
             if (!PlayerPrefs.HasKey(DEV_MODE)) PlayerPrefs.SetInt(DEV_MODE, 0);
             if (!PlayerPrefs.HasKey(MOUSE_DRAG_SENSITIVITY)) PlayerPrefs.SetInt(MOUSE_DRAG_SENSITIVITY, 50);
-            if (!PlayerPrefs.HasKey(GAME_PROGRESS)) PlayerPrefs.SetInt(GAME_PROGRESS, 0);
+            //if (!PlayerPrefs.HasKey(GAME_PROGRESS)) PlayerPrefs.SetInt(GAME_PROGRESS, 0);
 
             PlayerPrefs.Save();
         }

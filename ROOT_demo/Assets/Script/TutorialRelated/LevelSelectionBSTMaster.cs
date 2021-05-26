@@ -19,7 +19,7 @@ namespace ROOT.UI
 
         private readonly float SpaceX = 350.0f;
         private readonly float SpaceY = 330.0f;
-        private readonly Vector2 _treeRootPos = new Vector2(150, -160f);
+        private readonly Vector2 _treeRootPos = new Vector2(150, -175f);
         
         public void BackToMenu()
         {
@@ -28,7 +28,7 @@ namespace ROOT.UI
 
         private Vector2 PosIDToPos(Vector2Int v2Int)=>_treeRootPos + new Vector2(v2Int.x * SpaceX, v2Int.y * SpaceY);
         
-        private void GenerateSignalQuad(Vector2Int Pos, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
+        private void GenerateSignalQuad(Vector2Int Pos, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack,bool _selectable)
         {
             var quadObj = Instantiate(LevelQuadTemplate, LevelSelectionPanel);
             var rectTransform = quadObj.GetComponent<RectTransform>();
@@ -37,11 +37,12 @@ namespace ROOT.UI
             rectTransform.anchorMin = Vector2.up;
             rectTransform.anchoredPosition = PosIDToPos(Pos);
             quad.InitLevelSelectionQuad(actionAsset, buttonCallBack);
+            quad.LevelSelectable = _selectable;
         }
 
-        private void GenerateActionAssetQuadAndIter(Vector2Int nodePOS,Vector2Int lastNodePOS, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
+        private void GenerateActionAssetQuadAndIter(Vector2Int nodePOS,Vector2Int lastNodePOS, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack,bool terminatingLevel)
         {
-            GenerateSignalQuad(nodePOS, actionAsset, buttonCallBack);
+            GenerateSignalQuad(nodePOS, actionAsset, buttonCallBack, !terminatingLevel);
 
             if (lastNodePOS.x>=0)
             {
@@ -51,6 +52,18 @@ namespace ROOT.UI
                 line.B.anchoredPosition = PosIDToPos(nodePOS);
                 line.UpdateLine();
             }
+            
+            if (terminatingLevel)
+            {
+                return;
+            }
+
+            var nextIsTerminatingLevel = false;
+            if (!StartGameMgr.DevMode)
+            {
+                nextIsTerminatingLevel = !PlayerPrefs.HasKey(actionAsset.TitleTerm);
+            }
+            
             var lastNodePos = nodePOS;
             if (actionAsset.UnlockingLevel.Length == 0)
             {
@@ -62,14 +75,14 @@ namespace ROOT.UI
                 if (!StartGameMgr.DevMode && lastNodePos == Vector2Int.zero && i>0) break; //除掉TestLevels。
                 if (actionAsset.UnlockingLevel[i] != null)//这是允许放一个NULL就可以手动往下挪一行这件事儿。
                 {
-                    GenerateActionAssetQuadAndIter(nodePOS + Vector2Int.down * i, lastNodePos,actionAsset.UnlockingLevel[i], buttonCallBack);
+                    GenerateActionAssetQuadAndIter(nodePOS + Vector2Int.down * i, lastNodePos, actionAsset.UnlockingLevel[i], buttonCallBack, nextIsTerminatingLevel);
                 }
             }
         }
 
         public void InitBSTTree(LevelActionAsset rootActionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
         {
-            GenerateActionAssetQuadAndIter(Vector2Int.zero,-Vector2Int.one, rootActionAsset, buttonCallBack);
+            GenerateActionAssetQuadAndIter(Vector2Int.zero, -Vector2Int.one, rootActionAsset, buttonCallBack, false);
             
             var quadRects = LevelSelectionPanel.GetComponentsInChildren<RectTransform>().Where(t => t.parent == LevelSelectionPanel.transform);
             var maxX = quadRects.Max(r => r.anchoredPosition.x);
