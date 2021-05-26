@@ -34,7 +34,7 @@ namespace ROOT
             }
         }
 
-        public Button[] InitTutorialLevelSelectionMainMenu(LevelQuadDataPack[] data)
+        /*public Button[] InitTutorialLevelSelectionMainMenu(LevelQuadDataPack[] data)
         {
             //Debug.Assert(data.Length < 19);
             Button[] res = new Button[data.Length];
@@ -42,10 +42,10 @@ namespace ROOT
             for (var i = 0; i < data.Length; i++)
             {
                 TutorialQuadS[i]=Instantiate(TutorialQuadTemplate, TutorialQuadPosS[i]).GetComponentInChildren<LevelSelectionQuad>();
-                res[i] = TutorialQuadS[i].InitTutorialLevelSelectionQuad(data[i]);
+                res[i] = TutorialQuadS[i].InitLevelSelectionQuad(data[i]);
             }
             return res;
-        }
+        }*/
 
         public void BackToMenu()
         {
