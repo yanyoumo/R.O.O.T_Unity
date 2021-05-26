@@ -69,8 +69,8 @@ namespace ROOT
                 buttonCallBack(cachedActionAsset, StartLevelButton.GetComponentInChildren<TextMeshProUGUI>());
             });
             
-            TutorialIcon.enabled = actionAsset.levelType == LevelType.Tutorial;
-            GameplayIcon.enabled = actionAsset.levelType != LevelType.Tutorial;
+            TutorialIcon.enabled = actionAsset.DisplayedlevelType == LevelType.Tutorial;
+            GameplayIcon.enabled = actionAsset.DisplayedlevelType != LevelType.Tutorial;
         }
     }
 }

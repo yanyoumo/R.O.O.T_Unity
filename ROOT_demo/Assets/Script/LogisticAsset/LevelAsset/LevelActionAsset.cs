@@ -32,7 +32,9 @@ namespace ROOT.SetupAsset
         [VerticalGroup("Split/Right")] [LabelText("Unit could cost")][PropertyOrder(-94)]
         public bool UnitCost = true;
 
-        [Space][PropertyOrder(0)] public LevelType levelType;
+        [Space][PropertyOrder(-1)] public LevelType levelType;
+
+        [PropertyOrder(0)]public LevelType DisplayedlevelType;
 
         [Header("Detail")][PropertyOrder(1)]
         public AdditionalGameSetup AdditionalGameSetup;

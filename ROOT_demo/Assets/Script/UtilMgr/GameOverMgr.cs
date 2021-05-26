@@ -55,7 +55,7 @@ namespace ROOT
                 EndingTitleLocalize.Term = ScriptTerms.TutorialSectionOver;
                 if (tutorialCompleted)
                 {
-                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, 1);
+                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, 0);
                     PlayerPrefs.Save();
                     if (LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset) == null)
                     {

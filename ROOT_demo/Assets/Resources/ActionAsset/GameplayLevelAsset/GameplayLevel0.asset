@@ -30,6 +30,7 @@ MonoBehaviour:
   ShopCost: 1
   UnitCost: 1
   levelType: 0
+  DisplayedlevelType: 1
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
