@@ -18,7 +18,7 @@ namespace ROOT
         MoveThreeMatrixAndTwoThermalToPlace = 16,
         MoveOneMatrixToPlace = 17,
         ContinueWhenOneUnitIsBought = 20,
-        AchieveThreeHundredProfit = 21,
+        Achieve150ProfitOrTimeOut = 21,
         Proceed5TimeTick = 22,
         
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
@@ -138,9 +138,16 @@ namespace ROOT
             return Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) < Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.StartingMoney);
         }
 
-        public static bool AchieveThreeHundredProfit(FSMLevelLogic fsm, Board board)
+        public static bool Achieve150ProfitOrTimeOut(FSMLevelLogic fsm, Board board)
         {
-            return Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) >= 300;
+            var timeOut = false;
+            if (fsm is FSMLevelLogic_Career career)
+            {
+                var gist = career.RoundLibDriver.GetCurrentRoundGist(career.RoundLibDriver.StepCount);
+                var truncatedStep = career.RoundLibDriver.GetTruncatedStep(career.RoundLibDriver.StepCount);
+                timeOut = truncatedStep - gist.shopLength >= 35;
+            }
+            return Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) >= 150 || timeOut;
         }
 
         public static bool Proceed5TimeTick(FSMLevelLogic fsm, Board board)
