@@ -89,6 +89,12 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: -1, y: -1}
     IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 01000000010000000000000000000000
+    Tier: 1
+    Pos: {x: 4, y: 1}
+    IsStation: 1
   HasBossRound: 0
   Endless: 0
   BossStage: 0
