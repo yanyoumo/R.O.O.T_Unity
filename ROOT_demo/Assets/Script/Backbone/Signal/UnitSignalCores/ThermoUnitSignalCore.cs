@@ -57,52 +57,5 @@ namespace ROOT.Signal
                 return 0.0f;
             }
         }
-        
-        private bool ShowingThremoRange = false;
-
-        private void ThremoRangeToggle(IMessage rMessage)
-        {
-            ShowingThremoRange = !ShowingThremoRange;
-            UpdateRangeDisplay();
-        }
-
-        private Color totalemptyColor = new Color(0.0f, 1.0f, 0.0f);
-        private Color totalBlockedColor =new Color(1.0f, 0.0f, 0.0f);
-        private float ColorLerpingIdx => (8 - GetEmptyExpellingPos().Count()) / 8.0f;
-        
-        private void UpdateRangeDisplay()
-        {
-            if (Owner != null && Owner.UnitHardware == HardwareType.Field && Owner.ShopID == -1)
-            {
-                //这个颜色机制远不够更好，但总比没有强（一点儿）。
-                var rawCol = Color.Lerp(totalemptyColor,totalBlockedColor,  ColorLerpingIdx);
-                rawCol.a = ColorLerpingIdx;
-                Owner.ThermoRangeIndicatorRenderer.color = rawCol;
-                Owner.ThermoRangeIndicatorRoot.gameObject.SetActive(ShowingThremoRange && IsUnitActive);
-                foreach (var rotationDirection in Common.Utils.ROTATION_LIST)
-                {
-                    var otherpos = Owner.CurrentBoardPosition + Common.Utils.ConvertDirectionToBoardPosOffset(rotationDirection);
-                    Owner.FindThermoRangeIndicatorByDirection(rotationDirection).enabled = !Owner.GameBoard.CheckBoardPosValid(otherpos);
-                }
-            }
-        }
-
-        private void BoardSignalUpdatedHandler(IMessage rMessage)
-        {
-            UpdateRangeDisplay();
-        }
-
-        protected override void Awake()
-        {
-            base.Awake();
-            MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, ThremoRangeToggle);
-            MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
-        }
-        
-        private void OnDestroy()
-        {
-            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
-            MessageDispatcher.RemoveListener(WorldEvent.InGameOverlayToggleEvent, ThremoRangeToggle);
-        }
     }
 }

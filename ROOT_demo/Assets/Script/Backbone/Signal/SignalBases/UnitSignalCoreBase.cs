@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using com.ootii.Messages;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -77,8 +78,6 @@ namespace ROOT.Signal
         {
             Visited = false;
             InServerGrid = false;
-            //IsMatrixFieldAndHasMatrixSignal = false;
-            //SignalStrength = new Dictionary<SignalType, int>();
             SignalDataPackList = new SignalDataPack();
             try
             {
@@ -86,6 +85,8 @@ namespace ROOT.Signal
                 {
                     SignalDataPackList.Add(signalType, new SignalData());
                 }
+                MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, NeighbouringLinkageToggle);
+                MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
             }
             catch (NullReferenceException)
             {
@@ -114,5 +115,87 @@ namespace ROOT.Signal
         public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
 
         public abstract float SingleUnitScore { get; }
+        
+                
+        private bool ShowingNeighbouringLinkage = false;
+
+        private void NeighbouringLinkageToggle(IMessage rMessage)
+        {
+            ShowingNeighbouringLinkage = !ShowingNeighbouringLinkage;
+            NeighbouringLinkageDisplay();
+        }
+
+        /*private Color totalemptyColor = new Color(0.0f, 1.0f, 0.0f);
+        private Color totalBlockedColor =new Color(1.0f, 0.0f, 0.0f);
+        private float ColorLerpingIdx => (8 - GetEmptyExpellingPos().Count()) / 8.0f;*/
+        
+        //N/E/W/S/NE/NW/SE/SW
+
+        private readonly Vector2Int[] neighbouringOffsetList =
+        {
+            Vector2Int.up,
+            Vector2Int.right,
+            Vector2Int.left,
+            Vector2Int.down,
+            Vector2Int.up + Vector2Int.right,
+            Vector2Int.up + Vector2Int.left,
+            Vector2Int.down + Vector2Int.right,
+            Vector2Int.down + Vector2Int.left
+        };
+
+        private void NeighbouringLinkageDisplay()
+        {
+            //TODO 这个玩意儿互相的显示怎么弄？//可以“反查询”
+            //TODO 有两个Icon的情况下怎么弄？//Icon可以45°角切半。
+            var unitAsset = SignalMasterMgr.Instance.GetUnitAssetByUnitType(SignalType, Owner.UnitHardware);
+            if (unitAsset.NeighbouringData.Length > 0)
+            {
+                foreach (var dataAsset in unitAsset.NeighbouringData)
+                {
+                    for (var i = 0; i < neighbouringOffsetList.Length; i++)
+                    {
+                        var inquiryBoardPos = Owner.CurrentBoardPosition + neighbouringOffsetList[i];
+                        var displayIcon = false;
+                        if (IsUnitActive)
+                        {
+                            if (i < 4 || !dataAsset.FourDirOrEightDir)
+                            {
+                                if (GameBoard != null)
+                                {
+                                    if (GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos))
+                                    {
+                                        displayIcon = true;
+                                        var otherUnit = Owner.GameBoard.FindUnitByPos(inquiryBoardPos);
+                                        if (dataAsset.FliteringSignalType && otherUnit.UnitSignal != dataAsset.TargetingSignalType)
+                                        {
+                                            displayIcon = false;
+                                        }
+
+                                        if (dataAsset.FliteringHardwareType && otherUnit.UnitHardware != dataAsset.TargetingHardwareType)
+                                        {
+                                            displayIcon = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Owner.UnitNeighbouringRendererRoot.LinkageIcons[i].material.mainTexture = dataAsset.NeighbouringSprite;
+                        Owner.UnitNeighbouringRendererRoot.LinkageIcons[i].material.color = dataAsset.ColorTint;
+                        Owner.UnitNeighbouringRendererRoot.LinkageIcons[i].gameObject.SetActive(displayIcon && ShowingNeighbouringLinkage);
+                    }
+                }
+            }
+        }
+
+        private void BoardSignalUpdatedHandler(IMessage rMessage)
+        {
+            NeighbouringLinkageDisplay();
+        }
+
+        private void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.InGameOverlayToggleEvent, NeighbouringLinkageToggle);
+        }
     }
 }
