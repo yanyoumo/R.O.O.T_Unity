@@ -24,5 +24,7 @@ namespace ROOT
         public int AdditionalPortRate;
         [Title("Aesthetic Data")]
         public Material UnitMat;
+        [Title("Neighbouring DataAsset")]
+        public UnitNeighbouringDataAsset[] NeighbouringData;
     }
 }

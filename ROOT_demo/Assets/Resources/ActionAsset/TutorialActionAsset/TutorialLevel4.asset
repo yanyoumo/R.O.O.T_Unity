@@ -428,4 +428,6 @@ MonoBehaviour:
   mainIDXToinsert: 0
   subIDXToinsert: 3
   CSVFileName: 
+  UnlockingLevel:
+  - {fileID: 11400000, guid: f7fa5c3e0845bdd4eacaf7f98b4236a3, type: 2}
   ExcludedShop: 0

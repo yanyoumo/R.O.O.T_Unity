@@ -44,4 +44,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GamePlayAdditionalVisualScene_Telemetry.unity
     guid: 94c0f81d6ac88894894e8d8b6f452986
+  - enabled: 1
+    path: Assets/Scenes/BSTCareerScene.unity
+    guid: 164e8717517a7914188a2cd894331d88
   m_configObjects: {}

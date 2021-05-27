@@ -52,12 +52,15 @@ namespace ROOT
         public Transform ShopBackPlane;
         public Transform ShopDiscountRoot;
         public Transform ThermoRangeIndicatorRoot;
+        public Transform NonrotatingRoot;
 
         public SpriteRenderer ThermoRangeIndicatorRenderer;
         public SpriteMask NorthThermoRangeIndicatorMask;
         public SpriteMask SouthThermoRangeIndicatorMask;
         public SpriteMask EastThermoRangeIndicatorMask;
         public SpriteMask WestThermoRangeIndicatorMask;
+
+        public UnitNeighbouring UnitNeighbouringRendererRoot;
         
         public Connector _localNorthConnector;
         public Connector _localEastConnector;
@@ -516,9 +519,9 @@ namespace ROOT
         private void Update()
         {
             //RISK 这个流程太费了，但是这个玩意儿一时半会儿改不了。
-            if (TierLEDs.transform.rotation != Quaternion.identity)
+            if (NonrotatingRoot.rotation != Quaternion.identity)
             {
-                TierLEDs.transform.rotation = Quaternion.identity;
+                NonrotatingRoot.rotation = Quaternion.identity;
             }
         }
 

@@ -378,4 +378,6 @@ MonoBehaviour:
   mainIDXToinsert: 0
   subIDXToinsert: 0
   CSVFileName: TutorialLevel2_Text
+  UnlockingLevel:
+  - {fileID: 11400000, guid: 016cb06831437bd4694c4157e352f873, type: 2}
   ExcludedShop: 0

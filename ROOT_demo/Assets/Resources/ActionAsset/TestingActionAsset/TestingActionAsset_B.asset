@@ -25,6 +25,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: 8d879c0911826e84f8e6ddb6e4b95db5, type: 3}
   LevelLogic: {fileID: 3570565215639393926, guid: 9204f8a28578e7240af04e8eeb66f19c,
     type: 3}
+  AcessID: -1
   InitialCurrency: 36
   ShopCost: 1
   UnitCost: 1
@@ -55,7 +56,6 @@ MonoBehaviour:
     TypeARequirement: 4
     TypeBRequirement: 6
     HeatSinkLength: 5
-  Actions: []
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 0
@@ -64,4 +64,10 @@ MonoBehaviour:
     InfoVariantRatio: 0
     InfoTargetRatio: 0
     AcquiringTarget: 0
+  Actions: []
+  mainIDXToinsert: 0
+  subIDXToinsert: 0
+  CSVFileName: 
+  UnlockingLevel:
+  - {fileID: 11400000, guid: 89172602d7319e34bb1be01e01ca32ae, type: 2}
   ExcludedShop: 0

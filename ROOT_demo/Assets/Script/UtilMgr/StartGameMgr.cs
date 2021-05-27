@@ -3,6 +3,7 @@ using System.Collections;
 using DG.Tweening;
 using ROOT.Consts;
 using ROOT.SetupAsset;
+using ROOT.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,9 +28,10 @@ namespace ROOT
         }*/
 
         public GameObject SignalMasterRoot;
-        public LevelActionAssetLib TutorialActionAssetLib;
+        public LevelActionAsset RootLevelAsset;
+        /*public LevelActionAssetLib TutorialActionAssetLib;
         public LevelActionAssetLib CareerGameActionAssetLib;
-        public LevelActionAssetLib TestingGameActionAssetLib;
+        public LevelActionAssetLib TestingGameActionAssetLib;*/
         
         public SupportedScreenRatio PCSimulateDevice;
         public InputScheme EditorInputScheme;
@@ -92,7 +94,7 @@ namespace ROOT
             if (!PlayerPrefs.HasKey(PLAYER_ID)) PlayerPrefs.SetInt(PLAYER_ID, DateTime.UtcNow.Millisecond);
             if (!PlayerPrefs.HasKey(DEV_MODE)) PlayerPrefs.SetInt(DEV_MODE, 0);
             if (!PlayerPrefs.HasKey(MOUSE_DRAG_SENSITIVITY)) PlayerPrefs.SetInt(MOUSE_DRAG_SENSITIVITY, 50);
-            if (!PlayerPrefs.HasKey(GAME_PROGRESS)) PlayerPrefs.SetInt(GAME_PROGRESS, 0);
+            //if (!PlayerPrefs.HasKey(GAME_PROGRESS)) PlayerPrefs.SetInt(GAME_PROGRESS, 0);
 
             PlayerPrefs.Save();
         }
@@ -126,9 +128,9 @@ namespace ROOT
 
             Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
             StartCoroutine(LoadLevelMasterSceneAndSetActive());
-            LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
+            /*LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
             LevelLib.Instance.CareerLevelActionAssetLib = CareerGameActionAssetLib;
-            LevelLib.Instance.TestingLevelActionAssetLib = TestingGameActionAssetLib;
+            LevelLib.Instance.TestingLevelActionAssetLib = TestingGameActionAssetLib;*/
             LevelLib.Instance.LockInLib();
         }
 
@@ -137,7 +139,8 @@ namespace ROOT
         {
             if (!OnceGuard)
             {
-                SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREER, LoadSceneMode.Additive);
+                BSTLevelSelectorMgr.RootLevelAsset = RootLevelAsset;
+                SceneManager.LoadSceneAsync(StaticName.SCENE_ID_BST_CAREER, LoadSceneMode.Additive);
                 SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_START));
                 OnceGuard = true;
             }

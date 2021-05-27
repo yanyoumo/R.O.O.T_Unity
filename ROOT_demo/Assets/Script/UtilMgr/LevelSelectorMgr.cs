@@ -33,7 +33,7 @@ namespace ROOT
                 ActionAssets= TutorialActionAssetList,
                 Title = "教程关卡",
                 DevOnly = false,
-                AccessID = PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS),
+                //AccessID = PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS),
             };
             
             var gameplayRowData = new LevelSelectionRowPack
@@ -41,7 +41,7 @@ namespace ROOT
                 ActionAssets= CareerActionAssetList,
                 Title = "正式关卡",
                 DevOnly = false,
-                AccessID = PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS),
+                //AccessID = PlayerPrefs.GetInt(StaticPlayerPrefName.GAME_PROGRESS),
             };
             
             var testingRowData = new LevelSelectionRowPack

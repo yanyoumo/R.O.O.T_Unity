@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using ROOT.Consts;
 using ROOT.SetupAsset;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
 // ReSharper disable Unity.InstantiateWithoutParent
 
 namespace ROOT.UI
