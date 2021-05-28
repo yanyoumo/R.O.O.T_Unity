@@ -31,6 +31,7 @@ namespace ROOT
         public static string ControllingEvent = "ControllingEvent";
         public static string ShopTierOffsetChangedEvent = "ShopTierOffsetChangedEvent";
         public static string HighLightingUIChangedEvent = "TutorialHighLightingStatusChangedEvent";
-    }
 
+        public static string CursorMovedEvent = "CursorMovedEvent";
+    }
 }

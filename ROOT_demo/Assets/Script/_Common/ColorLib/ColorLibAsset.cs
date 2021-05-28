@@ -153,5 +153,14 @@ namespace ROOT.SetupAsset
         public Color ROOT_UNIT_ACTIVATION_LED_2;
         [PropertyOrder(34)]
         public Color ROOT_UNIT_ACTIVATION_LED_3;
+
+        [PropertySpace] 
+        [Title("Cursor")]
+        [PropertyOrder(35)]
+        public Color ROOT_CURSOR_DEFAULT;
+        [PropertyOrder(36)]
+        public Color ROOT_CURSOR_INFOMODE;
+        [PropertyOrder(37)]
+        public Color ROOT_CURSOR_BLINK;
     }
 }

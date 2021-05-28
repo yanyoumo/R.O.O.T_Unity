@@ -26,7 +26,7 @@ namespace ROOT
         
         #endregion
 
-        public void SetCurrentAndNextPos(Vector2 pos)
+        public virtual void SetCurrentAndNextPos(Vector2 pos)
         {
             CurrentBoardPosition = Utils._V2ToV2Int(pos);
             NextBoardPosition = Utils._V2ToV2Int(pos);

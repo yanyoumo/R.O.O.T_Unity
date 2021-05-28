@@ -1,5 +1,6 @@
 using com.ootii.Messages;
 using ROOT.Common;
+using ROOT.Message;
 using ROOT.Message.Inquiry;
 using UnityEngine;
 using static ROOT.WorldEvent;

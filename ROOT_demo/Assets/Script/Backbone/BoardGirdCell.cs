@@ -78,6 +78,8 @@ namespace ROOT
         public TextMeshPro FloatingText;
         public TextMeshPro CashingText;
 
+        public Transform CashingTextRoot;
+        
         public Color NegativeCashColoring;
         public Color PositiveCashColoring;
         public Color NeutralCashColoring;
@@ -336,25 +338,27 @@ namespace ROOT
             }
             SetEdge(ThermoZone, EdgeStatus.ThermoZone);
         }
-        
+
+        private bool showTextEnabled=false;
+
+        private bool hardwareToggle
+        {
+            get
+            {
+                if (!owner.CheckBoardPosValidAndFilled(OnboardPos)) return false;
+                var unit = owner.FindUnitByPos(OnboardPos);
+                return unit != null && unit.UnitHardware == HardwareType.Field;
+            }
+        }
+
         private void HintToggle(IMessage rMessage)
         {
             //RISK 如果真是Toggle的话、那么还针对随着单元移动而修改位置。到是姑且可以写在Update里面。
             //现在认为_stageType状态是能够正常更新了。
             //就相当浪费、但是目前也没有很好的办法。
-            CashingText.enabled = !CashingText.enabled;
+            showTextEnabled = !showTextEnabled;
+            CashingTextRoot.gameObject.SetActive(showTextEnabled && hardwareToggle);
             SetText(GetCashIO());
-            //showingThremoBoarder = !showingThremoBoarder;
-            showingThremoBoarder = false;//先把这个流程关了。
-            if (showingThremoBoarder)
-            {
-                var data = new BoardGridThermoZoneInquiry { BoardGridThermoZoneInquiryCallBack = BoardGridThermoZoneInquiry};
-                MessageDispatcher.SendMessage(data);
-            }
-            else
-            {
-                ClearEdge(EdgeStatus.ThermoZone);
-            }
         }
 
         private bool _boardCouldIOCurrency;
@@ -371,13 +375,7 @@ namespace ROOT
         
         private void BoardSignalUpdatedHandler(IMessage rmessage)
         {
-            //这个果然有竞争冒险效应、有时候好使有时候不好使。
-            //把事件的时序调整了一下、现在可以用了。
-            if (showingThremoBoarder)
-            {
-                var data = new BoardGridThermoZoneInquiry { BoardGridThermoZoneInquiryCallBack = BoardGridThermoZoneInquiry};
-                MessageDispatcher.SendMessage(data);
-            }
+            CashingTextRoot.gameObject.SetActive(showTextEnabled && hardwareToggle);
         }
 
         private void BoardGridHighLightSetHandler(IMessage rmessage)
@@ -433,7 +431,8 @@ namespace ROOT
             UpdateEdge(new List<Vector2Int>(), false);
             
             CashingText.color = NeutralCashColoring;
-            CashingText.enabled = false;
+            //CashingText.enabled = false;
+            CashingTextRoot.gameObject.SetActive(false);
             
             MessageDispatcher.AddListener(InGameOverlayToggleEvent, HintToggle);
             MessageDispatcher.AddListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);

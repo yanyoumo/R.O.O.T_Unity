@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using com.ootii.Messages;
+using ROOT.Message;
+using ROOT.Message.Inquiry;
+using ROOT.SetupAsset;
 using UnityEngine;
 
 namespace ROOT
@@ -8,8 +13,11 @@ namespace ROOT
         protected Transform RootTransform;
         private MeshFilter _meshFilter;
         public Material tm;
-        private string defaultColor = "#5FD2D6";
-
+        //private string defaultColor = "#5FD2D6";
+        private Color defaultColor => ColorLibManager.Instance.ColorLib.ROOT_CURSOR_DEFAULT;
+        private Color blinkingColor => ColorLibManager.Instance.ColorLib.ROOT_CURSOR_DEFAULT;
+        private Color infoColor => ColorLibManager.Instance.ColorLib.ROOT_CURSOR_INFOMODE;
+        
         public Color CursorColor
         {
             set => tm.color = value;
@@ -48,8 +56,7 @@ namespace ROOT
                 if (BlinkingCoroutine != null)
                 {
                     StopCoroutine(BlinkingCoroutine);
-                    ColorUtility.TryParseHtmlString(defaultColor, out var colB);
-                    tm.color = colB;
+                    tm.color = defaultColor;
                     BlinkingCoroutine = null;
                 }
             }
@@ -60,9 +67,8 @@ namespace ROOT
             while (true)
             {
                 yield return 0;
-                ColorUtility.TryParseHtmlString(defaultColor, out var colB);
                 var val = 0.5f * (Mathf.Sin(Time.time * 9.0f) + 1);
-                tm.color = Color.Lerp(Color.green, colB, val);
+                tm.color = Color.Lerp(Color.green, defaultColor, val);
             }
         }
 
@@ -70,6 +76,14 @@ namespace ROOT
         {
             get => GetComponentInChildren<MeshRenderer>().enabled;
             set => GetComponentInChildren<MeshRenderer>().enabled = value;
+        }
+
+        private bool infoCursor = false;
+
+        private void HintToggle(IMessage rMessage)
+        {
+            infoCursor = !infoCursor;
+            tm.color = infoCursor ? infoColor : defaultColor;
         }
 
         void Awake()
@@ -84,6 +98,12 @@ namespace ROOT
             {
                 ShowMesh = false;
             }
+            MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, HintToggle);
+        }
+
+        private void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.InGameOverlayToggleEvent, HintToggle);
         }
 
         public override bool Immovable { get; set; }
@@ -114,6 +134,16 @@ namespace ROOT
         {
             CurrentBoardPosition = Board.ClampPosInBoard(CurrentBoardPosition);
             NextBoardPosition = Board.ClampPosInBoard(NextBoardPosition);
+        }
+        
+        public override void SetCurrentAndNextPos(Vector2 pos)
+        {
+            CurrentBoardPosition = Common.Utils._V2ToV2Int(pos);
+            NextBoardPosition = Common.Utils._V2ToV2Int(pos);
+            MessageDispatcher.SendMessage(new CursorMovedEventData
+            {
+                CurrentPosition = CurrentBoardPosition
+            });
         }
         
         //因为光标实质无向，就是这两个把这个放在儿简单弄一下就行。

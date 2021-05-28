@@ -61,6 +61,29 @@ namespace ROOT.Message
         public override string Type => WorldEvent.HintScreenChangedEvent;
     }
     
+    public class BoardGridHighLightSetData : RootMessageBase
+    {
+        public bool Set;
+        public GridHighLightType HLType;
+        public bool AllClear;
+        public Vector2Int[] Poses;
+        public override string Type => WorldEvent.BoardGridHighLightSetEvent;
+    }
+
+    public class ToggleGameplayUIData : RootMessageBase
+    {
+        public bool Set;
+        public bool SelectAll;
+        public UITag UITag;
+        public override string Type => WorldEvent.ToggleGamePlayUIEvent;
+    }
+        
+    public class CursorMovedEventData : RootMessageBase
+    {
+        public Vector2Int CurrentPosition;
+        public override string Type => WorldEvent.CursorMovedEvent;
+    }
+    
     namespace Inquiry
     {
         public class BalancingSignalSetupInquiry : RootMessageBase
@@ -79,23 +102,6 @@ namespace ROOT.Message
         {
             public Action<List<Vector2Int>> BoardGridThermoZoneInquiryCallBack;
             public override string Type => WorldEvent.BoardGridThermoZoneInquiry;
-        }
-
-        public class BoardGridHighLightSetData : RootMessageBase
-        {
-            public bool Set;
-            public GridHighLightType HLType;
-            public bool AllClear;
-            public Vector2Int[] Poses;
-            public override string Type => WorldEvent.BoardGridHighLightSetEvent;
-        }
-
-        public class ToggleGameplayUIData : RootMessageBase
-        {
-            public bool Set;
-            public bool SelectAll;
-            public UITag UITag;
-            public override string Type => WorldEvent.ToggleGamePlayUIEvent;
         }
     }
 }
