@@ -499,6 +499,7 @@ namespace ROOT
             for (var i = 0; i < SkillPalettes.Count; i++)
             {
                 SkillPalettes[i].SkillID = i;
+                SkillPalettes[i].SkillKeyIconID = (i + 1) % 10;
                 SkillPalettes[i].SklType = InstancedSkillData[i].SklType;
                 SkillPalettes[i].SkillTagText = SkillTagText(InstancedSkillData[i]);
                 SkillPalettes[i].SkillIconSprite = InstancedSkillData[i].SkillIcon;

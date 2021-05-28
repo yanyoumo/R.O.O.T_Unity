@@ -1,27 +1,36 @@
 ﻿using System;
-using ROOT;
 using TMPro;
 using UnityEngine;
 
-public class SkillPalette : MonoBehaviour
+namespace ROOT
 {
-    public int SkillID;
-    public SkillType SklType;
-    public TextMeshPro SkillTag;
-    public SpriteRenderer SkillIcon;
-
-    public String SkillTagText
+    public class SkillPalette : MonoBehaviour
     {
-        set => SkillTag.text = value;
+        public int SkillID;
+        public SkillType SklType;
+        public TextMeshPro SkillTag;
+        public TextMeshPro SkillKeyText;
+        public SpriteRenderer SkillIcon;
+
+        public String SkillTagText
+        {
+            set => SkillTag.text = value;
+        }
+
+        public int SkillKeyIconID
+        {
+            set => SkillKeyText.text = "<sprite=" + value + ">";
+        }
+        
+        public Sprite SkillIconSprite
+        {
+            set => SkillIcon.sprite = value;
+        }
+
+        public bool SkillEnabled
+        {
+            set => SkillIcon.color = value ? Color.white : Color.grey;
+        }
     }
 
-    public Sprite SkillIconSprite
-    {
-        set => SkillIcon.sprite = value;
-    }
-
-    public bool SkillEnabled
-    {
-        set => SkillIcon.color = value ? Color.white : Color.grey;
-    }
 }
