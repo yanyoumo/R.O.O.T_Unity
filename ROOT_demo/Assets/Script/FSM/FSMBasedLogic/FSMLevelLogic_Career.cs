@@ -215,6 +215,7 @@ namespace ROOT
             
             if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
+                //BUG 需要把Swap的Tick流程绕开。
                 UpdateRoundData_Stepped();
                 var currentStageType=RoundLibDriver.CurrentRoundGist.Value.Type;
                 if (lastStageType == null || lastStageType.Value != currentStageType)

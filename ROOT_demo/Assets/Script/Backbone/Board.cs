@@ -211,6 +211,11 @@ namespace ROOT
         public bool CheckBoardPosValidAndEmpty(Vector2Int mVector2Int) => (!_unitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
         public bool CheckBoardPosValidAndFilled(Vector2Int mVector2Int) => (_unitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
 
+        public bool CheckHasUnitAndStationary(Vector2Int mVector2Int)
+        {
+            return CheckBoardPosValidAndFilled(mVector2Int) && FindUnitByPos(mVector2Int).Immovable;
+        }
+        
         public bool CheckAllActive()
         {
             return Units.All(unit => unit.SignalCore.IsUnitActive);

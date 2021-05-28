@@ -120,13 +120,12 @@ namespace ROOT
             //考虑想辙把possibility也传出来？
             if (radius == 0)
             {
-                var res0 = new List<Vector2Int>();
-                res0.Add(center);
+                var res0 = new List<Vector2Int> {center};
                 selected = 0;
                 return res0;
             }
 
-            int[][] mask = PixelCircleMask.GenerateMask(radius);
+            var mask = PixelCircleMask.GenerateMask(radius);
             var len = 2 * radius + 1;
             var possibility = new Dictionary<int, float>();
             var res = new List<Vector2Int>();
@@ -148,7 +147,7 @@ namespace ROOT
                 }
             }
             //normalize
-            for (int i = 0; i < res.Count; ++i)
+            for (var i = 0; i < res.Count; ++i)
             {
                 possibility[i] *= 1 / sum;
             }

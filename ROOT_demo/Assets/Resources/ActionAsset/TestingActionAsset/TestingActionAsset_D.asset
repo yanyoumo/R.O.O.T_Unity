@@ -30,6 +30,7 @@ MonoBehaviour:
   ShopCost: 1
   UnitCost: 1
   levelType: 1
+  DisplayedlevelType: 0
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
@@ -45,7 +46,7 @@ MonoBehaviour:
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 2, y: 3}
-    IsStation: 0
+    IsStation: 1
   - PlayingSignalSelector: 1
     CoreGenre: 1
     Sides: 01000000010000000100000001000000

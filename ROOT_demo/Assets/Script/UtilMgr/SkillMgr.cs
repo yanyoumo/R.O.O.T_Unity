@@ -269,17 +269,10 @@ namespace ROOT
         public void SwapTick_FSM(GameAssets currentLevelAsset, ControllingPack ctrlPack)
         {
             Debug.Log("SwapTicking");
-            //RISK 这里键盘⌨和鼠标🖱只能是两种逻辑，但是就是中间切了输入怎么办？
-            //⌨=>🖱理论上哈可以，但是反过来是干脆缺一个阶段……
-            //有两大解决方案：
-            //1、给键盘强制多加一个阶段以和鼠标匹配。（可能还得这么搞，但是现在先不
-            //   目前是在swap过程中不识别切换
-            //2、干脆不允许局中切换……
             Debug.Assert(_swapRadius != -1);
 
             var crtPos = currentLevelAsset.Cursor.NextBoardPosition;//是因为时序上、这个和动画是同一帧了。
 
-            //RISK 这里切换的时候会出问题……
             var res = Utils.PositionRandomization_NormalDistro(
                 crtPos, _swapRadius, 0.65f, Board.BoardLength,
                 out var selected);
@@ -306,10 +299,33 @@ namespace ROOT
                 Debug.Assert(hasConfirm ^ hasCancel);
 
                 var swapSuccess = false;
-                
+
                 if (hasConfirm)
                 {
-                    swapSuccess = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, res[selected]);
+                    //保证A单元不是静态的。
+                    var aisAStationaryUnit = currentLevelAsset.GameBoard.CheckHasUnitAndStationary(unitAPosition);
+
+                    //保证可能范围内不都是Stationary单元。
+                    var bisAllStationary = false;
+                    if (res.All(r => currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(r)))
+                    {
+                        bisAllStationary = res.Select(r => currentLevelAsset.GameBoard.FindUnitByPos(r)).All(u => u != null && u.Immovable);
+                    }
+
+                    if (!aisAStationaryUnit && !bisAllStationary)
+                    {
+                        bool notValidBPos;
+                        Vector2Int unitBPosition;
+                        do
+                        {
+                            //RISK 为了静态单元、这里数据重选的流程可以拆开的；现在重新调很费。
+                            var resAlt = Utils.PositionRandomization_NormalDistro(crtPos, _swapRadius, 0.65f, Board.BoardLength, out var selectedAlt);
+                            unitBPosition = resAlt[selectedAlt];
+                            notValidBPos = currentLevelAsset.GameBoard.CheckHasUnitAndStationary(unitBPosition);
+                        } while (notValidBPos);
+
+                        swapSuccess = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
+                    }
                 }
 
                 if (hasCancel||(!swapSuccess))
