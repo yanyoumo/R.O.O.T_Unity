@@ -298,32 +298,39 @@ namespace ROOT
 
             if (CurrentSkillType == SkillType.Swap)
             {
-                if (ctrlPack.HasFlag(ControllingCommand.Confirm))
+                var hasConfirm = ctrlPack.HasFlag(ControllingCommand.Confirm);
+                var hasCancel = ctrlPack.HasFlag(ControllingCommand.Cancel);
+
+                if (hasConfirm && hasCancel) hasConfirm = false; //防止某些不是人的玩家真把确定和取消同时按下去了、把取消优先级提上去。
+
+                Debug.Assert(hasConfirm ^ hasCancel);
+
+                var swapSuccess = false;
+                
+                if (hasConfirm)
                 {
-                    var unitBPosition = res[selected];
-                    if (unitAPosition != unitBPosition)
-                    {
-                        var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
-                        if (!res1)
-                        {
-                            Debug.LogWarning("swap nothing to nothing!!");
-                        }
-                    }
+                    swapSuccess = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, res[selected]);
                 }
-                else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
+
+                if (hasCancel||(!swapSuccess))
                 {
                     currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
                     swapAlipay = 0;
                     UpdateUICurrencyVal(currentLevelAsset);
                 }
 
+                if (!swapSuccess)
+                {
+                    Debug.LogWarning("swap failed!!");
+                }
+                
                 CleanIndicator(currentLevelAsset);
                 CurrentSkillType = null;
             }
         }
 
 
-        public void SwapTick(GameAssets currentLevelAsset, ControllingPack ctrlPack)
+        /*public void SwapTick(GameAssets currentLevelAsset, ControllingPack ctrlPack)
         {
             Debug.Log("SwapTicking");
             //RISK 这里键盘⌨和鼠标🖱只能是两种逻辑，但是就是中间切了输入怎么办？
@@ -451,7 +458,7 @@ namespace ROOT
                     }
                 }
             }
-        }
+        }*/
 
         #endregion
 
