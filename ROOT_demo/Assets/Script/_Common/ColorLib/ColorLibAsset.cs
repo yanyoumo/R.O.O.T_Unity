@@ -137,30 +137,36 @@ namespace ROOT.SetupAsset
         [PropertySpace]
         [Title("Skill")]
         [PropertyOrder(28)]
-        public Color ROOT_SKILL_SWAP_UNITA;
+        public Color ROOT_SKILL_NAME_MAIN;
         [PropertyOrder(29)]
-        public Color ROOT_SKILL_SWAP_UNITB;
+        public Color ROOT_SKILL_NAME_SUB;
         [PropertyOrder(30)]
+        public Color ROOT_SKILL_NAME_RMN;
+        [PropertyOrder(31)]
+        public Color ROOT_SKILL_SWAP_UNITA;
+        [PropertyOrder(32)]
+        public Color ROOT_SKILL_SWAP_UNITB;
+        [PropertyOrder(33)]
         public Color ROOT_SHOP_CHEAP_PURPLE;
         
         [PropertySpace]
         [Title("Unit Activation LED")]
-        [PropertyOrder(31)]
-        public Color ROOT_UNIT_ACTIVATION_LED_0;
-        [PropertyOrder(32)]
-        public Color ROOT_UNIT_ACTIVATION_LED_1;
-        [PropertyOrder(33)]
-        public Color ROOT_UNIT_ACTIVATION_LED_2;
         [PropertyOrder(34)]
+        public Color ROOT_UNIT_ACTIVATION_LED_0;
+        [PropertyOrder(35)]
+        public Color ROOT_UNIT_ACTIVATION_LED_1;
+        [PropertyOrder(36)]
+        public Color ROOT_UNIT_ACTIVATION_LED_2;
+        [PropertyOrder(37)]
         public Color ROOT_UNIT_ACTIVATION_LED_3;
 
         [PropertySpace] 
         [Title("Cursor")]
-        [PropertyOrder(35)]
+        [PropertyOrder(38)]
         public Color ROOT_CURSOR_DEFAULT;
-        [PropertyOrder(36)]
+        [PropertyOrder(39)]
         public Color ROOT_CURSOR_INFOMODE;
-        [PropertyOrder(37)]
+        [PropertyOrder(40)]
         public Color ROOT_CURSOR_BLINK;
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using com.ootii.Messages;
 using ROOT.Message;
 using ROOT.SetupAsset;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -328,24 +329,40 @@ namespace ROOT
             UpdateSkillPalettes();
         }
 
+        private readonly string MainColorHEX = "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_MAIN);
+        private readonly string SubColorHEX = "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_SUB);
+        private readonly string RemainColorHEX = "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_RMN);
+
+        private string ColorTextPostFix => "</color>";
+
+        private string ColorTextPrefix(string colorHex)
+        {
+            return "<color=" + colorHex + ">";
+        }
+
+        private string ColoredText(string content,string colorHex)
+        {
+            return ColorTextPrefix(colorHex) + content + ColorTextPostFix;
+        }
+        
         private string SkillTagText(InstancedSkillData skill)
         {
             switch (skill.SklType)
             {
                 case SkillType.TimeFromMoney when skill.CountLimit != -1:
-                    return "<color=#003663>RMN=" + skill.RemainingCount + "</color> <color=#00b35c>" + skill.TimeGain + "<<</color>";
+                    return ColoredText("RMN=" + skill.RemainingCount, RemainColorHEX) + " " + ColoredText(skill.TimeGain + "<<", SubColorHEX);
                 case SkillType.TimeFromMoney:
-                    return "<color=#00b35c>" + skill.TimeGain + "<<</color>";
+                    return ColoredText(skill.TimeGain + "<<", SubColorHEX);
                 case SkillType.FastForward:
-                    return "<color=#8a0b00>>>" + skill.FastForwardCount + "</color> <color=#00b35c>+" + skill.AdditionalIncome + "%</color>";
+                    return ColoredText(">>>" + skill.FastForwardCount, MainColorHEX) + " " + ColoredText("+" + skill.AdditionalIncome + "%", SubColorHEX);
                 case SkillType.Swap:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>R=" + skill.radius + "</color>";
+                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("R=" + skill.radius, SubColorHEX);
                 case SkillType.RefreshHeatSink:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color><color=#00b35c>Refresh</color>";
+                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("Refresh", SubColorHEX);
                 case SkillType.Discount:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>-" + skill.Discount + "%</color>";
+                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("-" + skill.Discount + "%", SubColorHEX);
                 case SkillType.ResetHeatSink:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color><color=#00b35c>Reset</color>";
+                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("Reset", SubColorHEX);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
