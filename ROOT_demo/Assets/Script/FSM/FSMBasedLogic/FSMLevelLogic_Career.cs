@@ -118,6 +118,10 @@ namespace ROOT
             if (UseTutorialVer)
             {
                 LevelAsset.TimeLine.CurrentStatus = TimeLineStatus.Disabled;
+                for (var i = 0; i < LevelAsset.SkillMgr.SkillPalettes.Count; i++)
+                {
+                    LevelAsset.SkillMgr.SkillSystemSet(i, false);
+                }
             }
         }
 

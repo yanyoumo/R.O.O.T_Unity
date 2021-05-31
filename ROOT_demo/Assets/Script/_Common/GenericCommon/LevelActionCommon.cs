@@ -9,7 +9,7 @@ namespace ROOT
 
     public enum TutorialActionType
     {
-        //这个的顺序不能变！
+        //这个的顺序不能变！也不完全是了、现在后面放一个int，这个对应就好了。
         Text = 0,
         CreateUnit = 1,
         CreateCursor = 2,
@@ -32,7 +32,8 @@ namespace ROOT
         DeleteUnit = 19,
         ToggleTutorialHintPage = 20,
         ToggleAlternateHandsOnGoal = 21,
-        AutoProceedToNextStage = 22
+        AutoProceedToNextStage = 22,
+        SetSkillEnabling = 23
     }
 
     public enum BossStageType

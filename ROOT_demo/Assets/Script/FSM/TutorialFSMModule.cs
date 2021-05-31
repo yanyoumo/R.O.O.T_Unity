@@ -368,7 +368,21 @@ namespace ROOT.FSM
             var nextStep=owner_Career.RoundLibDriver.GetCurrentStageRemainingStep(owner.LevelAsset.StepCount);
             WorldCycler.ExpectedStepIncrement(nextStep);
         }
-        
+
+        private void SetSkillEnablingFunc(TutorialActionData tutorialActionData)
+        {
+            if (!(owner is FSMLevelLogic_Career owner_Career))
+            {
+                throw new ApplicationException("FSM should support Skill but no correct API");
+            }
+            if (!owner_Career.FeatureManager.CheckHasFeature(FSMFeatures.Skill))
+            {
+                Debug.LogError("Skill feature is not enabled");
+                return;
+            }
+            owner_Career.LevelAsset.SkillMgr.SkillSystemSet(tutorialActionData.SkillID, tutorialActionData.Set);
+        }
+
         public TutorialFSMModule(FSMLevelLogic _fsm)
         {
             owner = _fsm;
@@ -396,6 +410,7 @@ namespace ROOT.FSM
                 {ToggleTutorialHintPage, ToggleTutorialHintPageFunc},
                 {ToggleAlternateHandsOnGoal, ToggleAlternateHandsOnGoalFunc},
                 {AutoProceedToNextStage, AutoProceedToNextStageFunc},
+                {SetSkillEnabling, SetSkillEnablingFunc},
             };
         }
 
