@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using I2.Loc;
 using ROOT.Consts;
 using ROOT.SetupAsset;
@@ -55,7 +56,12 @@ namespace ROOT
                 EndingTitleLocalize.Term = ScriptTerms.TutorialSectionOver;
                 if (tutorialCompleted)
                 {
-                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, 0);
+                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, 3);
+                    foreach (var s in _lastGameAssets.ActionAsset.UnlockingLevel.Where(l => l != null).Select(l => l.TitleTerm)) //这里会报个错？
+                    {
+                        PlayerPrefs.SetInt(s, 1);
+                    }
+
                     PlayerPrefs.Save();
                     if (LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset) == null)
                     {
@@ -67,6 +73,9 @@ namespace ROOT
                 }
                 else
                 {
+                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, 2);
+                    PlayerPrefs.Save();
+
                     OtherButton.interactable = false;
                     OtherButtonLocalize.Term = ScriptTerms.NextTutorialFailed;
                     EndingMessageLocalize.Term = ScriptTerms.EndingMessageTutorialFailed;

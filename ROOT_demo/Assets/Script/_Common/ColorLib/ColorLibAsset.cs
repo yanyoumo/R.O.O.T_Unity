@@ -168,5 +168,12 @@ namespace ROOT.SetupAsset
         public Color ROOT_CURSOR_INFOMODE;
         [PropertyOrder(40)]
         public Color ROOT_CURSOR_BLINK;
+        
+        [PropertySpace] 
+        [Title("BST Level Selection")]
+        [PropertyOrder(41)]
+        public Color ROOT_SELECTIONQUAD_SELECTABLE;
+        [PropertyOrder(42)]
+        public Color ROOT_SELECTIONQUAD_UNSELECTABLE;
     }
 }

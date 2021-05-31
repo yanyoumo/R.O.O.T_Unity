@@ -21,11 +21,12 @@ namespace ROOT
         public Image TutorialIcon;
         public Image GameplayIcon;
 
-        public Color SelectableColor => ColorUtilityWrapper.ParseHtmlStringNotNull("#B7E6FD");
-        public Color UnSelectableColor => ColorUtilityWrapper.ParseHtmlStringNotNull("#8C8C8C");
+        public Transform NewLevelIconRoot;
+
+        private Color SelectableColor => ColorLibManager.Instance.ColorLib.ROOT_SELECTIONQUAD_SELECTABLE;
+        private Color UnSelectableColor => ColorLibManager.Instance.ColorLib.ROOT_SELECTIONQUAD_UNSELECTABLE;
         
         private bool _levelSelectable=true;
-
         public bool LevelSelectable
         {
             set
@@ -35,24 +36,24 @@ namespace ROOT
             }
         }
 
+        private bool _newLevel = false;
+
+        public bool SetNewLevel
+        {
+            set
+            {
+                _newLevel = value;
+                NewLevelIconRoot.gameObject.SetActive(_newLevel);
+            }
+        }
+        
         private void UpdateSelectable()
         {
-            if (_levelSelectable)
-            {
-                TutorialThumbnail.sprite = cachedActionAsset.Thumbnail;
-                TitleLocalize.SetTerm(cachedActionAsset.TitleTerm);
-                ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
-                QuadBackGround.color = SelectableColor;
-                StartLevelButton.interactable = true;
-            }
-            else
-            {
-                TutorialThumbnail.sprite = UnSelectableThumbnail;
-                TitleLocalize.SetTerm(ScriptTerms.Locked);
-                ButtonLocalize.SetTerm(ScriptTerms.Locked);
-                QuadBackGround.color = UnSelectableColor;
-                StartLevelButton.interactable = false;
-            }
+            TutorialThumbnail.sprite = _levelSelectable ? cachedActionAsset.Thumbnail : UnSelectableThumbnail;
+            TitleLocalize.SetTerm(_levelSelectable ? cachedActionAsset.TitleTerm : ScriptTerms.Locked);
+            ButtonLocalize.SetTerm(_levelSelectable ? ScriptTerms.PlayLevel : ScriptTerms.Locked);
+            QuadBackGround.color = _levelSelectable ? SelectableColor : UnSelectableColor;
+            StartLevelButton.interactable = _levelSelectable;
         }
 
         private LevelActionAsset cachedActionAsset;

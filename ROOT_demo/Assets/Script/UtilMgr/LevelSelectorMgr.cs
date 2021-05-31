@@ -10,7 +10,7 @@ namespace ROOT
 {
     public sealed partial class LevelSelectorMgr : MonoBehaviour
     {
-        public GameObject TutorialCanvas;
+        /*public GameObject TutorialCanvas;
         public GameObject DozzyLevelSelectionCanvas;
         //TutorialQuadDataPack[] _tutorial_dataS;
         private TextMeshProUGUI content;
@@ -72,6 +72,6 @@ namespace ROOT
             Loading = true;
             content = _content;
             StartCoroutine(DoLoading(_currentUsingAsset));
-        }
+        }*/
     }
 }

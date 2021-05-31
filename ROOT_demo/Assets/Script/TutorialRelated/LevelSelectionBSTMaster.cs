@@ -28,7 +28,8 @@ namespace ROOT.UI
 
         private Vector2 PosIDToPos(Vector2Int v2Int)=>_treeRootPos + new Vector2(v2Int.x * SpaceX, v2Int.y * SpaceY);
         
-        private void GenerateSignalQuad(Vector2Int Pos, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack,bool _selectable)
+        private void GenerateSignalQuad(Vector2Int Pos, LevelActionAsset actionAsset, 
+            Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack,bool _selectable,bool _newLevel)
         {
             var quadObj = Instantiate(LevelQuadTemplate, LevelSelectionPanel);
             var rectTransform = quadObj.GetComponent<RectTransform>();
@@ -38,11 +39,28 @@ namespace ROOT.UI
             rectTransform.anchoredPosition = PosIDToPos(Pos);
             quad.InitLevelSelectionQuad(actionAsset, buttonCallBack);
             quad.LevelSelectable = _selectable;
+            quad.SetNewLevel = _newLevel;
         }
 
         private void GenerateActionAssetQuadAndIter(Vector2Int nodePOS,Vector2Int lastNodePOS, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack,bool terminatingLevel)
         {
-            GenerateSignalQuad(nodePOS, actionAsset, buttonCallBack, !terminatingLevel);
+            var isNewLevel = false;
+            var nextIsTerminatingLevel = false;
+            if (!StartGameMgr.DevMode)
+            {
+                if (PlayerPrefs.HasKey(actionAsset.TitleTerm))
+                {
+                    nextIsTerminatingLevel = PlayerPrefs.GetInt(actionAsset.TitleTerm) <= 1;
+                    isNewLevel = PlayerPrefs.GetInt(actionAsset.TitleTerm) == 1;
+                }
+                else
+                {
+                    PlayerPrefs.SetInt(actionAsset.TitleTerm, 0);
+                    PlayerPrefs.Save();
+                }
+            }
+            
+            GenerateSignalQuad(nodePOS, actionAsset, buttonCallBack, !terminatingLevel, isNewLevel);
 
             if (lastNodePOS.x>=0)
             {
@@ -58,12 +76,6 @@ namespace ROOT.UI
                 return;
             }
 
-            var nextIsTerminatingLevel = false;
-            if (!StartGameMgr.DevMode)
-            {
-                nextIsTerminatingLevel = !PlayerPrefs.HasKey(actionAsset.TitleTerm);
-            }
-            
             var lastNodePos = nodePOS;
             if (actionAsset.UnlockingLevel.Length == 0)
             {
