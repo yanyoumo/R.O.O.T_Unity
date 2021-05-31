@@ -199,6 +199,54 @@ namespace ROOT
             }
         }
         
+        private void UpdateRoundTimingData_Stepped()
+        {
+            var currentStageType = RoundLibDriver.CurrentRoundGist.Value.Type;
+            if (lastStageType == null || lastStageType.Value != currentStageType)
+            {
+                //RISK 这个变成每个时刻都改了、想着加一个Guard
+                MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent); //为了令使和Round相关的数据强制更新。
+                var timingEvent = new TimingEventInfo
+                {
+                    Type = WorldEvent.InGameStageChangedEvent,
+                    CurrentStageType = RoundLibDriver.CurrentRoundGist.Value.Type,
+                };
+                var timingEvent2 = new TimingEventInfo
+                {
+                    Type = WorldEvent.CurrencyIOStatusChangedEvent,
+                    BoardCouldIOCurrencyData = BoardCouldIOCurrency,
+                    UnitCouldGenerateIncomeData = RoundLibDriver.IsRequireRound,
+                };
+                MessageDispatcher.SendMessage(timingEvent);
+                MessageDispatcher.SendMessage(timingEvent2);
+                lastStageType = RoundLibDriver.CurrentRoundGist.Value.Type;
+            }
+
+            if (RoundLibDriver.PreCheckRoundGist.HasValue)
+            {
+                var preCheckStageType = RoundLibDriver.PreCheckRoundGist.Value.Type;
+                if (!StageAlertSuppressFlag)
+                {
+                    if (currentStageType != preCheckStageType)
+                    {
+                        var timingEvent = new TimingEventInfo
+                        {
+                            Type = WorldEvent.InGameStageWarningEvent,
+                            CurrentStageType = currentStageType,
+                            NextStageType = preCheckStageType,
+                        };
+                        MessageDispatcher.SendMessage(timingEvent);
+                        StageAlertSuppressFlag = true;
+                    }
+                }
+                else
+                {
+                    if (currentStageType == preCheckStageType) StageAlertSuppressFlag = false;
+                }
+            }
+        }
+
+        
         private void CareerCycle()
         {
             if (!HandlingRound) return;
@@ -212,57 +260,14 @@ namespace ROOT
                     LevelAsset.DestoryedCoreType = outCore;
                 }
             }
-            
-            if (RoundLibDriver.CurrentRoundGist.HasValue)
-            {
-                //BUG 需要把Swap的Tick流程绕开。
-                UpdateRoundData_Stepped();
-                var currentStageType=RoundLibDriver.CurrentRoundGist.Value.Type;
-                if (lastStageType == null || lastStageType.Value != currentStageType)
-                {
-                    //RISK 这个变成每个时刻都改了、想着加一个Guard
-                    MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent); //为了令使和Round相关的数据强制更新。
-                    var timingEvent = new TimingEventInfo
-                    {
-                        Type = WorldEvent.InGameStageChangedEvent,
-                        CurrentStageType = RoundLibDriver.CurrentRoundGist.Value.Type,
-                    };
-                    var timingEvent2 = new TimingEventInfo
-                    {
-                        Type = WorldEvent.CurrencyIOStatusChangedEvent,
-                        BoardCouldIOCurrencyData = BoardCouldIOCurrency,
-                        UnitCouldGenerateIncomeData = RoundLibDriver.IsRequireRound,
-                    };
-                    MessageDispatcher.SendMessage(timingEvent);
-                    MessageDispatcher.SendMessage(timingEvent2);
-                    lastStageType = RoundLibDriver.CurrentRoundGist.Value.Type;
-                }
 
-                if (RoundLibDriver.PreCheckRoundGist.HasValue)
-                {
-                    var preCheckStageType = RoundLibDriver.PreCheckRoundGist.Value.Type;
-                    if (!StageAlertSuppressFlag)
-                    {
-                        if (currentStageType != preCheckStageType)
-                        {
-                            var timingEvent = new TimingEventInfo
-                            {
-                                Type = WorldEvent.InGameStageWarningEvent,
-                                CurrentStageType = currentStageType,
-                                NextStageType = preCheckStageType,
-                            };
-                            MessageDispatcher.SendMessage(timingEvent);
-                            StageAlertSuppressFlag = true;
-                        }
-                    }
-                    else
-                    {
-                        if (currentStageType == preCheckStageType) StageAlertSuppressFlag = false;
-                    }
-                }
+            if (RoundLibDriver.CurrentRoundGist.HasValue && !CheckIsSkill())//RISK 这里放了一个技能操作的guard，但是这个东西不清楚是不是应该直接改FSM框架。
+            {
+                UpdateRoundData_Stepped();
+                UpdateRoundTimingData_Stepped();
             }
         }
-
+        
         protected override void SetUpHandlingCurrency()
         {
             MessageDispatcher.SendMessage(new ToggleGameplayUIData {Set = true, SelectAll = false, UITag = UITag.Currency_BareBone});
