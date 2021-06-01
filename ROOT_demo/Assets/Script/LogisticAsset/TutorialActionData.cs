@@ -3,6 +3,7 @@ using ROOT.Common;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Internal;
+// ReSharper disable InconsistentNaming
 
 namespace ROOT.SetupAsset
 {
@@ -110,6 +111,11 @@ namespace ROOT.SetupAsset
         [ShowIf("Set")]
         public int Numpage;
 
+        [VerticalGroup("DetailedData")] 
+        [ShowIf("ActionType", TutorialActionType.SetSkillEnabling)]
+        [Range(0,9)]
+        public int SkillID;
+        
         bool ShowSet()
         {
             var IsToggleFSMCoreFeat = ActionType == TutorialActionType.ToggleFSMCoreFeat;
@@ -117,8 +123,9 @@ namespace ROOT.SetupAsset
             var IsSetUnitStationary = ActionType == TutorialActionType.SetUnitStationary;
             var HighLightGrid = ActionType == TutorialActionType.HighLightGrid;
             var ToggleTutorialHintPage = ActionType == TutorialActionType.ToggleTutorialHintPage;
+            var SetSkillEnabling = ActionType == TutorialActionType.SetSkillEnabling;
             return IsToggleFSMCoreFeat || IsToggleGameplayUI || IsSetUnitStationary || HighLightGrid ||
-                   ToggleTutorialHintPage;
+                   ToggleTutorialHintPage || SetSkillEnabling;
         }
 
         bool ShowUnitTag()

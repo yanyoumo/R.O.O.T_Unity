@@ -211,6 +211,11 @@ namespace ROOT
         public bool CheckBoardPosValidAndEmpty(Vector2Int mVector2Int) => (!_unitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
         public bool CheckBoardPosValidAndFilled(Vector2Int mVector2Int) => (_unitsGameObjects.ContainsKey(mVector2Int)) && CheckBoardPosValid(mVector2Int);
 
+        public bool CheckHasUnitAndStationary(Vector2Int mVector2Int)
+        {
+            return CheckBoardPosValidAndFilled(mVector2Int) && FindUnitByPos(mVector2Int).Immovable;
+        }
+        
         public bool CheckAllActive()
         {
             return Units.All(unit => unit.SignalCore.IsUnitActive);
@@ -377,15 +382,13 @@ namespace ROOT
 
         public bool SwapUnit(Vector2Int posA, Vector2Int posB)
         {
-            Debug.Assert(CheckBoardPosValid(posA));
-            Debug.Assert(CheckBoardPosValid(posB));
+            if (posA==posB) return false;
+            Debug.Assert(CheckBoardPosValid(posA) && CheckBoardPosValid(posB));
             var unitA = FindUnitByPos(posA);
             var unitB = FindUnitByPos(posB);
-            if (unitA == null && unitB == null)
-            {
-                return false;
-            }
-            else if (unitA != null && unitB != null)
+            if (unitA == null && unitB == null) return false;
+
+            if (unitA != null && unitB != null)
             {
                 _unitsGameObjects.TryGetValue(posA, out GameObject goA);
                 _unitsGameObjects.TryGetValue(posB, out GameObject goB);
@@ -395,12 +398,10 @@ namespace ROOT
                 var resB = DeliverUnitAssignedPlace(goB, posA);
                 return resA && resB;
             }
-            else
-            {
-                var fromPos = unitA == null ? posB : posA;
-                var toPos = unitA == null ? posA : posB;
-                return TransferUnitAssignedPlace(fromPos, toPos);
-            }
+
+            var fromPos = unitA == null ? posB : posA;
+            var toPos = unitA == null ? posA : posB;
+            return TransferUnitAssignedPlace(fromPos, toPos);
         }
         public bool TransferUnitAssignedPlace(Vector2Int From, Vector2Int To)
         {

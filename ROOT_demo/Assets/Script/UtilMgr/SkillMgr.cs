@@ -5,6 +5,7 @@ using System.Linq;
 using com.ootii.Messages;
 using ROOT.Message;
 using ROOT.SetupAsset;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -13,12 +14,13 @@ namespace ROOT
     public class SkillMgr : MonoBehaviour
     {
         public List<SkillPalette> SkillPalettes;
-        public List<InstancedSkillData> InstancedSkillData;
+        private List<InstancedSkillData> InstancedSkillData { get; set; }
         public Transform IconFramework;
         public SkillData SkillData;
-
-        public SkillType? CurrentSkillType { private set; get; } = null;
-
+        
+        private float _fastForwardRebate = -1.0f;
+        private int _swapRadius = -1;
+        
         private bool _skillEnabled;
         public bool SkillEnabled
         {
@@ -31,7 +33,6 @@ namespace ROOT
         }
 
         private int discount = 0;
-
         public int CheckDiscount()
         {
             var tempDiscount = discount;
@@ -40,10 +41,9 @@ namespace ROOT
             UpdateSkillPalettes();
             return tempDiscount;
         }
-
-        private float _fastForwardRebate = -1.0f;
-        private int _swapRadius = -1;
         
+        public SkillType? CurrentSkillType { private set; get; } = null;
+
         #region SkillTemporalFramework
 
         private void UpdateUICurrencyVal(GameAssets currentLevelAsset)
@@ -55,62 +55,45 @@ namespace ROOT
             };
             MessageDispatcher.SendMessage(message);
         }
-        
-        //就是整个技能框架还是要弄一套配置框架………………🤣
+
         private void ActiveSkill(GameAssets currentLevelAsset, int skillIndex)
         {
             var skill = InstancedSkillData[skillIndex];
             if (!skill.SkillEnabled) return;
             if (skill.CountLimit != -1 && skill.RemainingCount <= 0) return;
 
-            bool moneySpent = false, skillActived = false;
+            var moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
+            var skillActived = false;
             switch (skill.SklType)
             {
                 case SkillType.TimeFromMoney:
-                    //持续技能
-                    moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
                         skillActived = true;
                         CurrentSkillType = SkillType.TimeFromMoney;
                         WorldCycler.ExpectedStepDecrement(skill.TimeGain);
-                        UpdateUICurrencyVal(currentLevelAsset);//因为这个时间点后就AutoDrive了，所以就没机会调UpdateBoard了，所以先在这里调一下。
+                        UpdateUICurrencyVal(currentLevelAsset); //因为这个时间点后就AutoDrive了，所以就没机会调UpdateBoard了，所以先在这里调一下。
                     }
                     break;
                 case SkillType.FastForward:
-                    //持续技能
                     skillActived = true;
                     _fastForwardRebate = 1.00f + 0.01f * skill.AdditionalIncome;
                     WorldCycler.ExpectedStepIncrement(skill.FastForwardCount);
                     CurrentSkillType = SkillType.FastForward;
                     break;
                 case SkillType.Swap:
-                    //瞬时技能
-                    //RISK 日了，这里使用键盘和鼠标流程得变，但是还是有问题。
-                    moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
-                        skillActived = true; //这里的计数还可以取消。
+                        skillActived = true;
                         swapAlipay = skill.Cost;
                         CurrentSkillType = SkillType.Swap;
                         _swapRadius = skill.radius;
-                        if (StartGameMgr.UseKeyboard)
-                        {
-                            unitAPosition = currentLevelAsset.Cursor.CurrentBoardPosition;
-                            UpdateAIndicator(currentLevelAsset, unitAPosition);
-                            UpdateUICurrencyVal(currentLevelAsset);
-                        }
-                        else if (StartGameMgr.UseMouse)
-                        {
-                            _mouseWaitingUnitA = true;
-                            //throw new NotImplementedException();
-                        }
+                        unitAPosition = currentLevelAsset.Cursor.CurrentBoardPosition;
+                        UpdateAIndicator(currentLevelAsset, unitAPosition);
+                        UpdateUICurrencyVal(currentLevelAsset);
                     }
-
                     break;
                 case SkillType.Discount:
-                    //延迟技能
-                    moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
                         skillActived = true;
@@ -120,7 +103,6 @@ namespace ROOT
                     }
                     break;
                 case SkillType.RefreshHeatSink:
-                    moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
                         currentLevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
@@ -128,7 +110,6 @@ namespace ROOT
                     }
                     break;
                 case SkillType.ResetHeatSink:
-                    moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
                     if (moneySpent)
                     {
                         currentLevelAsset.GameBoard.BoardGirdDriver.ResetHeatSink();
@@ -138,12 +119,13 @@ namespace ROOT
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            if (skillActived&&skill.CountLimit!=-1)
+
+            if (skillActived && skill.CountLimit != -1)
             {
                 skill.RemainingCount--;
-                if (skill.RemainingCount<=0)
+                if (skill.RemainingCount <= 0)
                 {
-                    skill.SkillEnabled = false;
+                    skill.SkillEnabledInternal = false;
                 }
             }
             UpdateSkillPalettes();
@@ -153,7 +135,7 @@ namespace ROOT
         {
             //是在这儿，把Discount的enable数据清掉了。Discount的SkillCost还真是大于0.
             //蛋疼，那个实例化Skill里面再加一个coolDown
-            InstancedSkillData.Where(skill=>skill.Cost>0).ForEach(skill => skill.SkillEnabled = (skill.Cost <= currentLevelAsset.GameCurrencyMgr.Currency));
+            InstancedSkillData.Where(skill => skill.Cost > 0).ForEach(skill => skill.SkillEnabledInternal = (skill.Cost <= currentLevelAsset.GameCurrencyMgr.Currency));
             UpdateSkillPalettes();
         }
 
@@ -162,24 +144,18 @@ namespace ROOT
 
         public void UpKeepSkill(GameAssets currentLevelAsset)
         {
+            //这里为什么没有和Swap部分整合？因为这里的逻辑不会懂FSM运行状态、而Swap会。
             var autoDrive = WorldCycler.NeedAutoDriveStep;
             UpdateSkillActive(currentLevelAsset);
             if (!CurrentSkillType.HasValue) return;
             switch (CurrentSkillType.Value)
             {
-                case SkillType.Swap:
-                    break;
-                case SkillType.RefreshHeatSink:
-                    break;
                 case SkillType.FastForward:
                     currentLevelAsset.CurrencyRebate = 1.00f;
-
                     if (!autoDrive.HasValue)
                     {
                         _fastForwardRebate = -1.00f;
                         CurrentSkillType = null;
-                        //RISK 本质上是在乱搞flow，这个还是得想辙。而且这个函数也不能这么搞。
-                        //flow结构这个时候不要那么八股，还是先用上，需求多了，这个可能要改成基于监听的。
                         UpdateUICurrencyVal(currentLevelAsset);
                     }
 
@@ -189,13 +165,15 @@ namespace ROOT
                     }
 
                     break;
-                case SkillType.Discount:
-                    break;
                 case SkillType.TimeFromMoney:
                     if (!autoDrive.HasValue)
                     {
                         CurrentSkillType = null;
                     }
+                    break;
+                case SkillType.RefreshHeatSink:
+                case SkillType.Discount:
+                case SkillType.Swap:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -213,22 +191,17 @@ namespace ROOT
 
         #region IndicatorRelated
 
-        internal static void CleanIndicatorFrame(GameAssets currentLevelAsset)
+        private static void CleanIndicatorFrame(GameAssets currentLevelAsset)
         {
-            if (currentLevelAsset.SkillIndGoB != null)
+            if (currentLevelAsset.SkillIndGoB == null || currentLevelAsset.SkillIndGoB.Length <= 0) return;
+            foreach (var go in currentLevelAsset.SkillIndGoB)
             {
-                if (currentLevelAsset.SkillIndGoB.Length > 0)
-                {
-                    foreach (var go in currentLevelAsset.SkillIndGoB)
-                    {
-                        Destroy(go);
-                        currentLevelAsset.SkillIndGoB = null;
-                    }
-                }
+                Destroy(go);
+                currentLevelAsset.SkillIndGoB = null;
             }
         }
-        
-        internal static void CleanIndicator(GameAssets currentLevelAsset)
+
+        private static void CleanIndicator(GameAssets currentLevelAsset)
         {
             if (currentLevelAsset.SkillIndGoA != null)
             {
@@ -260,26 +233,14 @@ namespace ROOT
         private int swapAlipay = 0;
         private Vector2Int oldCurrentPos = new Vector2Int(-1, -1);
 
-        IEnumerator DelayedCheckMouseUnitB()
-        {
-            yield return new WaitForSeconds(0.01f);
-            _mouseWaitingUnitB = true;
-        }
-
         public void SwapTick_FSM(GameAssets currentLevelAsset, ControllingPack ctrlPack)
         {
             Debug.Log("SwapTicking");
-            //RISK 这里键盘⌨和鼠标🖱只能是两种逻辑，但是就是中间切了输入怎么办？
-            //⌨=>🖱理论上哈可以，但是反过来是干脆缺一个阶段……
-            //有两大解决方案：
-            //1、给键盘强制多加一个阶段以和鼠标匹配。（可能还得这么搞，但是现在先不
-            //   目前是在swap过程中不识别切换
-            //2、干脆不允许局中切换……
             Debug.Assert(_swapRadius != -1);
 
-            var crtPos = currentLevelAsset.Cursor.NextBoardPosition;//是因为时序上、这个和动画是同一帧了。
+            //在绘制相关标记的时候、是在Cursor已经标记移动、但是是在动画执行完毕前绘制；所以正确的光标位置已经在Next部分了。
+            var crtPos = currentLevelAsset.Cursor.NextBoardPosition;
 
-            //RISK 这里切换的时候会出问题……
             var res = Utils.PositionRandomization_NormalDistro(
                 crtPos, _swapRadius, 0.65f, Board.BoardLength,
                 out var selected);
@@ -298,181 +259,110 @@ namespace ROOT
 
             if (CurrentSkillType == SkillType.Swap)
             {
-                if (ctrlPack.HasFlag(ControllingCommand.Confirm))
+                var hasConfirm = ctrlPack.HasFlag(ControllingCommand.Confirm);
+                var hasCancel = ctrlPack.HasFlag(ControllingCommand.Cancel);
+
+                if (hasConfirm && hasCancel) hasConfirm = false; //防止某些不是人的玩家真把确定和取消同时按下去了、把取消优先级提上去。
+
+                Debug.Assert(hasConfirm ^ hasCancel);
+
+                var swapSuccess = false;
+
+                if (hasConfirm)
                 {
-                    var unitBPosition = res[selected];
-                    if (unitAPosition != unitBPosition)
+                    //保证A单元不是静态的。
+                    var aisAStationaryUnit = currentLevelAsset.GameBoard.CheckHasUnitAndStationary(unitAPosition);
+
+                    //保证可能范围内不都是Stationary单元。
+                    var bisAllStationary = false;
+                    if (res.All(r => currentLevelAsset.GameBoard.CheckBoardPosValidAndFilled(r)))
                     {
-                        var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
-                        if (!res1)
+                        bisAllStationary = res.Select(r => currentLevelAsset.GameBoard.FindUnitByPos(r)).All(u => u != null && u.Immovable);
+                    }
+
+                    if (!aisAStationaryUnit && !bisAllStationary)
+                    {
+                        bool notValidBPos;
+                        Vector2Int unitBPosition;
+                        do
                         {
-                            Debug.LogWarning("swap nothing to nothing!!");
-                        }
+                            //RISK 为了静态单元、这里数据重选的流程可以拆开的；现在重新调很费。
+                            var resAlt = Utils.PositionRandomization_NormalDistro(crtPos, _swapRadius, 0.65f, Board.BoardLength, out var selectedAlt);
+                            unitBPosition = resAlt[selectedAlt];
+                            notValidBPos = currentLevelAsset.GameBoard.CheckHasUnitAndStationary(unitBPosition);
+                        } while (notValidBPos);
+
+                        swapSuccess = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
                     }
                 }
-                else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
+
+                if (hasCancel||(!swapSuccess))
                 {
                     currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
                     swapAlipay = 0;
                     UpdateUICurrencyVal(currentLevelAsset);
                 }
 
+                if (!swapSuccess)
+                {
+                    Debug.LogWarning("swap failed!!");
+                }
+                
                 CleanIndicator(currentLevelAsset);
                 CurrentSkillType = null;
             }
         }
 
-
-        public void SwapTick(GameAssets currentLevelAsset, ControllingPack ctrlPack)
-        {
-            Debug.Log("SwapTicking");
-            //RISK 这里键盘⌨和鼠标🖱只能是两种逻辑，但是就是中间切了输入怎么办？
-            //⌨=>🖱理论上哈可以，但是反过来是干脆缺一个阶段……
-            //有两大解决方案：
-            //1、给键盘强制多加一个阶段以和鼠标匹配。（可能还得这么搞，但是现在先不
-            //   目前是在swap过程中不识别切换
-            //2、干脆不允许局中切换……
-            Debug.Assert(_swapRadius != -1);
-
-            if (StartGameMgr.UseKeyboard)
-            {
-                //RISK 这里切换的时候会出问题……
-                var res = Utils.PositionRandomization_NormalDistro(
-                    ctrlPack.CurrentPos, _swapRadius, 0.65f, Board.BoardLength,
-                    out var selected);
-
-                if (oldCurrentPos != ctrlPack.CurrentPos)
-                {
-                    //这个加个Anti-spam。
-                    CleanIndicatorFrame(currentLevelAsset);
-                    //这里根据res把所有的标记都画出来。
-                    UpdateBIndicator(currentLevelAsset, res);
-                    oldCurrentPos = ctrlPack.CurrentPos;
-                }
-
-                //Confirm Or Cancel Gate
-                if (!ctrlPack.HasFlag(ControllingCommand.Confirm) &&
-                    !ctrlPack.HasFlag(ControllingCommand.Cancel)) return;
-
-                if (CurrentSkillType == SkillType.Swap)
-                {
-                    if (ctrlPack.HasFlag(ControllingCommand.Confirm))
-                    {
-                        var unitBPosition = res[selected];
-                        if (unitAPosition != unitBPosition)
-                        {
-                            var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
-                            if (!res1)
-                            {
-                                Debug.LogWarning("swap nothing to nothing!!");
-                            }
-                        }
-                    }
-                    else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
-                    {
-                        currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
-                        swapAlipay = 0;
-                        UpdateUICurrencyVal(currentLevelAsset);
-                    }
-
-                    CleanIndicator(currentLevelAsset);
-                    CurrentSkillType = null;
-                }
-            }
-            else if (StartGameMgr.UseMouse)
-            {
-                //RISK 这里切换的时候会出问题……同上
-                if (_mouseWaitingUnitA)
-                {
-                    if (ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
-                    {
-                        unitAPosition = ctrlPack.CurrentPos;
-                        UpdateAIndicator(currentLevelAsset, unitAPosition);
-                        UpdateUICurrencyVal(currentLevelAsset);
-                        _mouseWaitingUnitA = false;
-                        StartCoroutine(DelayedCheckMouseUnitB()); //这里可能需要一个AntiSpam，可以加个协程延迟。
-                    }
-                    else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
-                    {
-                        currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
-                        swapAlipay = 0;
-                        UpdateUICurrencyVal(currentLevelAsset);
-                        _mouseWaitingUnitA = false;
-                        _mouseWaitingUnitB = false;
-                    }
-                }
-                else if (_mouseWaitingUnitB)
-                {
-                    List<Vector2Int> res = new List<Vector2Int>();
-                    int selected = -1;
-                    if (ctrlPack.HasFlag(ControllingCommand.FloatingOnGrid))
-                    {
-                        res = Utils.PositionRandomization_NormalDistro(
-                            ctrlPack.CurrentPos, _swapRadius, 0.65f, Board.BoardLength,
-                            out selected);
-
-                        if (oldCurrentPos != ctrlPack.CurrentPos)
-                        {
-                            //这个加个Anti-spam。
-                            CleanIndicatorFrame(currentLevelAsset);
-                            //这里根据res把所有的标记都画出来。
-                            UpdateBIndicator(currentLevelAsset, res);
-                            oldCurrentPos = ctrlPack.CurrentPos;
-                        }
-                    }
-
-                    if (ctrlPack.HasFlag(ControllingCommand.ClickOnGrid))
-                    {
-                        var unitBPosition = res[selected];
-                        if (unitAPosition != unitBPosition)
-                        {
-                            var res1 = currentLevelAsset.GameBoard.SwapUnit(unitAPosition, unitBPosition);
-                            if (!res1)
-                            {
-                                Debug.LogWarning("swap nothing to nothing!!");
-                            }
-                        }
-
-                        _mouseWaitingUnitA = false;
-                        _mouseWaitingUnitB = false;
-                        CleanIndicator(currentLevelAsset);
-                        CurrentSkillType = null;
-                    }
-                    else if (ctrlPack.HasFlag(ControllingCommand.Cancel))
-                    {
-                        currentLevelAsset.GameCurrencyMgr.AddCurrency(swapAlipay);
-                        swapAlipay = 0;
-                        UpdateUICurrencyVal(currentLevelAsset);
-
-                        _mouseWaitingUnitA = false;
-                        _mouseWaitingUnitB = false;
-                        CleanIndicator(currentLevelAsset);
-                        CurrentSkillType = null;
-                    }
-                }
-            }
-        }
-
         #endregion
 
+        public void SkillSystemSet(int skillID,bool setOrUnset)
+        {
+            try
+            {
+                InstancedSkillData[skillID].SkillEnabledSystem = setOrUnset;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Debug.LogError("skillID not present!!!");
+                return;
+            }
+            UpdateSkillPalettes();
+        }
+
+        private readonly string MainColorHEX = "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_MAIN);
+        private readonly string SubColorHEX = "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_SUB);
+        private readonly string RemainColorHEX = "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_RMN);
+
+        private string ColorTextPostFix => "</color>";
+
+        private string ColorTextPrefix(string colorHex)
+        {
+            return "<color=" + colorHex + ">";
+        }
+
+        private string ColoredText(string content,string colorHex)
+        {
+            return ColorTextPrefix(colorHex) + content + ColorTextPostFix;
+        }
+        
         private string SkillTagText(InstancedSkillData skill)
         {
             switch (skill.SklType)
             {
                 case SkillType.TimeFromMoney when skill.CountLimit != -1:
-                    return "<color=#003663>RMN=" + skill.RemainingCount + "</color> <color=#00b35c>" + skill.TimeGain + "<<</color>";
+                    return ColoredText("RMN=" + skill.RemainingCount, RemainColorHEX) + " " + ColoredText(skill.TimeGain + "<<", SubColorHEX);
                 case SkillType.TimeFromMoney:
-                    return "<color=#00b35c>" + skill.TimeGain + "<<</color>";
+                    return ColoredText(skill.TimeGain + "<<", SubColorHEX);
                 case SkillType.FastForward:
-                    return "<color=#8a0b00>>>" + skill.FastForwardCount + "</color> <color=#00b35c>+" + skill.AdditionalIncome + "%</color>";
+                    return ColoredText(">>>" + skill.FastForwardCount, MainColorHEX) + " " + ColoredText("+" + skill.AdditionalIncome + "%", SubColorHEX);
                 case SkillType.Swap:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>R=" + skill.radius + "</color>";
+                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("R=" + skill.radius, SubColorHEX);
                 case SkillType.RefreshHeatSink:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color><color=#00b35c>Refresh</color>";
+                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("Refresh", SubColorHEX);
                 case SkillType.Discount:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color> <color=#00b35c>-" + skill.Discount + "%</color>";
+                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("-" + skill.Discount + "%", SubColorHEX);
                 case SkillType.ResetHeatSink:
-                    return "<color=#8a0b00>-" + skill.Cost + "</color><color=#00b35c>Reset</color>";
+                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("Reset", SubColorHEX);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -492,6 +382,7 @@ namespace ROOT
             for (var i = 0; i < SkillPalettes.Count; i++)
             {
                 SkillPalettes[i].SkillID = i;
+                SkillPalettes[i].SkillKeyIconID = (i + 1) % 10;
                 SkillPalettes[i].SklType = InstancedSkillData[i].SklType;
                 SkillPalettes[i].SkillTagText = SkillTagText(InstancedSkillData[i]);
                 SkillPalettes[i].SkillIconSprite = InstancedSkillData[i].SkillIcon;

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
+using ROOT.Message;
+using ROOT.Message.Inquiry;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -73,27 +75,7 @@ namespace ROOT.Signal
         [ReadOnly]
         [ShowInInspector]
         public bool InServerGrid; //for scoring purpose
-
-        protected virtual void Awake()
-        {
-            Visited = false;
-            InServerGrid = false;
-            SignalDataPackList = new SignalDataPack();
-            try
-            {
-                foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
-                {
-                    SignalDataPackList.Add(signalType, new SignalData());
-                }
-                MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, NeighbouringLinkageToggle);
-                MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
-            }
-            catch (NullReferenceException)
-            {
-                RootDebug.Log("This is template Core, no need to set SignalStrength Dic.", NameID.YanYoumo_Log);
-            }
-        }
-
+        
         //0:no signal.
         //1:has signal but no active.
         //2:signal and active.
@@ -125,12 +107,7 @@ namespace ROOT.Signal
             NeighbouringLinkageDisplay();
         }
 
-        /*private Color totalemptyColor = new Color(0.0f, 1.0f, 0.0f);
-        private Color totalBlockedColor =new Color(1.0f, 0.0f, 0.0f);
-        private float ColorLerpingIdx => (8 - GetEmptyExpellingPos().Count()) / 8.0f;*/
-        
         //N/E/W/S/NE/NW/SE/SW
-
         private readonly Vector2Int[] neighbouringOffsetList =
         {
             Vector2Int.up,
@@ -143,8 +120,11 @@ namespace ROOT.Signal
             Vector2Int.down + Vector2Int.left
         };
 
+        private Vector2Int cachedCursorPos = -Vector2Int.one;
+        
         private void NeighbouringLinkageDisplay()
         {
+            //牛逼、现在只有Cursor所在的地方显示数据！下面两个数据就都没有了。
             //TODO 这个玩意儿互相的显示怎么弄？//可以“反查询”
             //TODO 有两个Icon的情况下怎么弄？//Icon可以45°角切半。
             var unitAsset = SignalMasterMgr.Instance.GetUnitAssetByUnitType(SignalType, Owner.UnitHardware);
@@ -156,25 +136,25 @@ namespace ROOT.Signal
                     {
                         var inquiryBoardPos = Owner.CurrentBoardPosition + neighbouringOffsetList[i];
                         var displayIcon = false;
-                        if (IsUnitActive)
-                        {
-                            if (i < 4 || !dataAsset.FourDirOrEightDir)
-                            {
-                                if (GameBoard != null)
-                                {
-                                    if (GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos))
-                                    {
-                                        displayIcon = true;
-                                        var otherUnit = Owner.GameBoard.FindUnitByPos(inquiryBoardPos);
-                                        if (dataAsset.FliteringSignalType && otherUnit.UnitSignal != dataAsset.TargetingSignalType)
-                                        {
-                                            displayIcon = false;
-                                        }
 
-                                        if (dataAsset.FliteringHardwareType && otherUnit.UnitHardware != dataAsset.TargetingHardwareType)
-                                        {
-                                            displayIcon = false;
-                                        }
+                        if (cachedCursorPos == Owner.CurrentBoardPosition)
+                        {
+                            if (IsUnitActive && (i < 4 || !dataAsset.FourDirOrEightDir))
+                            {
+                                if (GameBoard != null && GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos))
+                                {
+                                    displayIcon = true;
+                                    var otherUnit = Owner.GameBoard.FindUnitByPos(inquiryBoardPos);
+                                    if (dataAsset.FliteringSignalType &&
+                                        otherUnit.UnitSignal != dataAsset.TargetingSignalType)
+                                    {
+                                        displayIcon = false;
+                                    }
+
+                                    if (dataAsset.FliteringHardwareType &&
+                                        otherUnit.UnitHardware != dataAsset.TargetingHardwareType)
+                                    {
+                                        displayIcon = false;
                                     }
                                 }
                             }
@@ -187,14 +167,40 @@ namespace ROOT.Signal
             }
         }
 
-        private void BoardSignalUpdatedHandler(IMessage rMessage)
+        private void BoardDataUpdatedHandler(IMessage rMessage)
         {
+            if (rMessage is CursorMovedEventData data)
+            {
+                cachedCursorPos = data.CurrentPosition;
+            }
             NeighbouringLinkageDisplay();
+        }
+
+        protected virtual void Awake()
+        {
+            Visited = false;
+            InServerGrid = false;
+            SignalDataPackList = new SignalDataPack();
+            try
+            {
+                foreach (var signalType in SignalMasterMgr.Instance.SignalLib)
+                {
+                    SignalDataPackList.Add(signalType, new SignalData());
+                }
+                MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, NeighbouringLinkageToggle);
+                MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent, BoardDataUpdatedHandler);
+                MessageDispatcher.AddListener(WorldEvent.CursorMovedEvent, BoardDataUpdatedHandler);
+            }
+            catch (NullReferenceException)
+            {
+                RootDebug.Log("This is template Core, no need to set SignalStrength Dic.", NameID.YanYoumo_Log);
+            }
         }
 
         private void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.CursorMovedEvent, BoardDataUpdatedHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent, BoardDataUpdatedHandler);
             MessageDispatcher.RemoveListener(WorldEvent.InGameOverlayToggleEvent, NeighbouringLinkageToggle);
         }
     }

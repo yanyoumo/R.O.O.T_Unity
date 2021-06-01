@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Sirenix.OdinInspector;
 using UnityEngine;
+// ReSharper disable InconsistentNaming
 
 namespace ROOT.SetupAsset
 {

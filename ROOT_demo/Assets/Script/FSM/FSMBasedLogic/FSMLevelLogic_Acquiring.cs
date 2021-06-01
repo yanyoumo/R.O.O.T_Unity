@@ -4,6 +4,7 @@ using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Common;
 using ROOT.Consts;
+using ROOT.Message;
 using ROOT.Message.Inquiry;
 using ROOT.UI;
 using UnityEngine;
