@@ -89,6 +89,7 @@ namespace ROOT
         public bool SkillEnabledSystem { private get; set; } = true;
         public bool SkillEnabledInternal { private get; set; } = true;
         public bool SkillCoolDown = false;
+        public int UsedCount = 0;
         public int RemainingCount = -1;
 
         public readonly SkillType SklType;
