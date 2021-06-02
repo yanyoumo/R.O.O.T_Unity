@@ -94,7 +94,7 @@ namespace ROOT
             }
             OtherButtonLocalize.Term = ScriptTerms.Restart;
             OtherButton.onClick.AddListener(GameRestart);
-            OtherButton.interactable = _lastGameAssets.GameOverAsset.Succeed;
+            OtherButton.interactable = true;
         }
 
         void Awake()
@@ -112,7 +112,10 @@ namespace ROOT
 
         private void GameRestart()
         {
-            SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
+            LevelMasterManager.Instance.LoadCareerSetup(_lastGameAssets.ActionAsset).completed += a =>
+            {
+                SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
+            };
         }
 
         private void Back()

@@ -20,16 +20,12 @@ namespace ROOT
             BSTMaster.InitBSTTree(RootLevelAsset, ButtonsListener);
         }
 
-        IEnumerator DoLoading(LevelActionAsset _currentUsingAsset)
+        private void ButtonsListener(LevelActionAsset _currentUsingAsset, TextMeshProUGUI _content)
         {
-            LevelMasterManager.Instance.LoadCareerSetup(_currentUsingAsset);
-            yield return 0;
-            SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_BST_CAREER);
-        }
-
-        public void ButtonsListener(LevelActionAsset _currentUsingAsset, TextMeshProUGUI _content)
-        {
-            StartCoroutine(DoLoading(_currentUsingAsset));
+            LevelMasterManager.Instance.LoadCareerSetup(_currentUsingAsset).completed += a =>
+            {
+                SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_BST_CAREER);
+            };
         }
     }
 }
