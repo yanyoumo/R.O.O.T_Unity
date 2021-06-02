@@ -20,7 +20,10 @@ namespace ROOT
         ContinueWhenOneUnitIsBought = 20,
         Achieve150ProfitOrTimeOut = 21,
         Proceed5TimeTick = 22,
-        
+        AtLeastUseFastForwardOneTime = 30,
+        UseBackward = 31,
+        UseTransferToConnectUnits = 32,
+
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
         CustomCheckGameplay0 = 250,
         CustomCheckGameplay1 = 251,
@@ -153,6 +156,25 @@ namespace ROOT
         public static bool Proceed5TimeTick(FSMLevelLogic fsm, Board board)
         {
             return fsm.LevelAsset.StepCount > 4;
+        }
+
+        public static bool AtLeastUseFastForwardOneTime(FSMLevelLogic fsm, Board board)
+        {
+            return fsm.LevelAsset.SkillMgr.SkillUsedCountByID(0) + fsm.LevelAsset.SkillMgr.SkillUsedCountByID(1) >= 1;
+        }
+
+        public static bool UseBackward(FSMLevelLogic fsm, Board board)
+        {
+            return fsm.LevelAsset.SkillMgr.SkillUsedCountByID(2) + fsm.LevelAsset.SkillMgr.SkillUsedCountByID(3) >= 1;
+        }
+
+        public static bool UseTransferToConnectUnits(FSMLevelLogic fsm, Board board)
+        {
+            return fsm.LevelAsset.SkillMgr.SkillUsedCountByID(4) + fsm.LevelAsset.SkillMgr.SkillUsedCountByID(5) +
+                   fsm.LevelAsset.SkillMgr.SkillUsedCountByID(6) >= 1 &&
+                   board.Units.Where(unit => unit.CheckType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
+                       unit.GetConnectedOtherUnit.Count(tmp =>
+                           unit.CheckType(SignalType.Matrix, HardwareType.Field)) == 4);
         }
     }
 }
