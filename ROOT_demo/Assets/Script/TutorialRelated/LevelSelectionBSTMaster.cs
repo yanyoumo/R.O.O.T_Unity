@@ -17,7 +17,7 @@ namespace ROOT.UI
         public GameObject LevelQuadTemplate;
         public GameObject BSTLineTemplate;
 
-        private readonly float SpaceX = 350.0f;
+        private readonly float SpaceX = 325.0f;
         private readonly float SpaceY = 330.0f;
         private readonly Vector2 _treeRootPos = new Vector2(150, -175f);
         
@@ -29,7 +29,8 @@ namespace ROOT.UI
         private Vector2 PosIDToPos(Vector2Int v2Int)=>_treeRootPos + new Vector2(v2Int.x * SpaceX, v2Int.y * SpaceY);
         
         private void GenerateSignalQuad(Vector2Int Pos, LevelActionAsset actionAsset, 
-            Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack,bool _selectable,bool _newLevel)
+            Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack
+            ,bool _selectable,bool _newLevel,bool _levelCompleted)
         {
             var quadObj = Instantiate(LevelQuadTemplate, LevelSelectionPanel);
             var rectTransform = quadObj.GetComponent<RectTransform>();
@@ -40,27 +41,45 @@ namespace ROOT.UI
             quad.InitLevelSelectionQuad(actionAsset, buttonCallBack);
             quad.LevelSelectable = _selectable;
             quad.SetNewLevel = _newLevel;
+            quad.LevelCompleted = _levelCompleted;
         }
 
         private void GenerateActionAssetQuadAndIter(Vector2Int nodePOS,Vector2Int lastNodePOS, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack,bool terminatingLevel)
         {
             var isNewLevel = false;
+            var levelCompleted = false;
             var nextIsTerminatingLevel = false;
             if (!StartGameMgr.DevMode)
             {
                 if (PlayerPrefs.HasKey(actionAsset.TitleTerm))
                 {
-                    nextIsTerminatingLevel = PlayerPrefs.GetInt(actionAsset.TitleTerm) <= 1;
-                    isNewLevel = PlayerPrefs.GetInt(actionAsset.TitleTerm) == 1;
+                    var currentLevelStatus = (LevelStatus) PlayerPrefs.GetInt(actionAsset.TitleTerm);
+                    switch (currentLevelStatus)
+                    {
+                        case LevelStatus.Locked:
+                            nextIsTerminatingLevel = true;
+                            break;
+                        case LevelStatus.Unlocked:
+                            nextIsTerminatingLevel = true;
+                            isNewLevel = true;
+                            break;
+                        case LevelStatus.Played:
+                            break;
+                        case LevelStatus.Passed:
+                            levelCompleted = true;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
                 else
                 {
-                    PlayerPrefs.SetInt(actionAsset.TitleTerm, 0);
+                    PlayerPrefs.SetInt(actionAsset.TitleTerm, (int) LevelStatus.Locked);
                     PlayerPrefs.Save();
                 }
             }
-            
-            GenerateSignalQuad(nodePOS, actionAsset, buttonCallBack, !terminatingLevel, isNewLevel);
+
+            GenerateSignalQuad(nodePOS, actionAsset, buttonCallBack, !terminatingLevel, isNewLevel, levelCompleted);
 
             if (lastNodePOS.x>=0)
             {

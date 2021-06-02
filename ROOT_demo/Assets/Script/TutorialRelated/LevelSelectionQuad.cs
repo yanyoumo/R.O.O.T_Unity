@@ -22,6 +22,7 @@ namespace ROOT
         public Image GameplayIcon;
 
         public Transform NewLevelIconRoot;
+        public Transform LevelCompleteIconRoot;
 
         private Color SelectableColor => ColorLibManager.Instance.ColorLib.ROOT_SELECTIONQUAD_SELECTABLE;
         private Color UnSelectableColor => ColorLibManager.Instance.ColorLib.ROOT_SELECTIONQUAD_UNSELECTABLE;
@@ -37,13 +38,22 @@ namespace ROOT
         }
 
         private bool _newLevel = false;
-
         public bool SetNewLevel
         {
             set
             {
                 _newLevel = value;
                 NewLevelIconRoot.gameObject.SetActive(_newLevel);
+            }
+        }
+        
+        private bool _levelCompleted = false;
+        public bool LevelCompleted
+        {
+            set
+            {
+                _levelCompleted = value;
+                LevelCompleteIconRoot.gameObject.SetActive(_levelCompleted);
             }
         }
         

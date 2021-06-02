@@ -56,10 +56,10 @@ namespace ROOT
                 EndingTitleLocalize.Term = ScriptTerms.TutorialSectionOver;
                 if (tutorialCompleted)
                 {
-                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, 3);
-                    foreach (var s in _lastGameAssets.ActionAsset.UnlockingLevel.Where(l => l != null).Select(l => l.TitleTerm)) //这里会报个错？
+                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, (int)LevelStatus.Passed);
+                    foreach (var s in _lastGameAssets.ActionAsset.UnlockingLevel.Where(l => l != null).Select(l => l.TitleTerm))
                     {
-                        PlayerPrefs.SetInt(s, 1);
+                        PlayerPrefs.SetInt(s, (int) LevelStatus.Unlocked);
                     }
 
                     PlayerPrefs.Save();
@@ -73,7 +73,7 @@ namespace ROOT
                 }
                 else
                 {
-                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, 2);
+                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, (int) LevelStatus.Played);
                     PlayerPrefs.Save();
 
                     OtherButton.interactable = false;

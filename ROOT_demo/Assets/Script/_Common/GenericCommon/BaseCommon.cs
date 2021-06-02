@@ -36,7 +36,7 @@ namespace ROOT
     {
         void Clicked();
     }
-    
+
     public enum RotationDirection
     {
         //即所为当前状态的表示，也作为旋转动作的标识
@@ -45,5 +45,13 @@ namespace ROOT
         East,
         West,
         South
+    }
+
+    public enum LevelStatus
+    {
+        Locked = 0,
+        Unlocked = 1,
+        Played = 2,
+        Passed = 3,
     }
 }
