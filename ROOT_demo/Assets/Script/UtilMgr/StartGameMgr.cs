@@ -2,6 +2,7 @@
 using System.Collections;
 using DG.Tweening;
 using ROOT.Consts;
+using ROOT.LevelAccessMgr;
 using ROOT.SetupAsset;
 using ROOT.UI;
 using Sirenix.OdinInspector;
@@ -75,7 +76,7 @@ namespace ROOT
             if (!PlayerPrefs.HasKey(PLAYER_ID)) PlayerPrefs.SetInt(PLAYER_ID, DateTime.UtcNow.Millisecond);
             if (!PlayerPrefs.HasKey(DEV_MODE)) PlayerPrefs.SetInt(DEV_MODE, 0);
             if (!PlayerPrefs.HasKey(MOUSE_DRAG_SENSITIVITY)) PlayerPrefs.SetInt(MOUSE_DRAG_SENSITIVITY, 50);
-            if (!PlayerPrefs.HasKey(RootLevelAsset.TitleTerm)) PlayerPrefs.SetInt(RootLevelAsset.TitleTerm, (int) LevelStatus.Unlocked);
+            if (!PlayerPrefs.HasKey(RootLevelAsset.TitleTerm)) PlayerPrefsLevelMgr.SetUpRootLevelStatus(RootLevelAsset.TitleTerm);
 
             PlayerPrefs.Save();
         }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ROOT.Consts;
+using ROOT.LevelAccessMgr;
 using ROOT.SetupAsset;
 using TMPro;
 using UnityEngine;
@@ -51,31 +52,21 @@ namespace ROOT.UI
             var nextIsTerminatingLevel = false;
             if (!StartGameMgr.DevMode)
             {
-                if (PlayerPrefs.HasKey(actionAsset.TitleTerm))
+                var currentLevelStatus = PlayerPrefsLevelMgr.GetLevelStatus(actionAsset.TitleTerm);
+                switch (currentLevelStatus)
                 {
-                    var currentLevelStatus = (LevelStatus) PlayerPrefs.GetInt(actionAsset.TitleTerm);
-                    switch (currentLevelStatus)
-                    {
-                        case LevelStatus.Locked:
-                            nextIsTerminatingLevel = true;
-                            break;
-                        case LevelStatus.Unlocked:
-                            nextIsTerminatingLevel = true;
-                            isNewLevel = !terminatingLevel;
-                            break;
-                        case LevelStatus.Played:
-                            break;
-                        case LevelStatus.Passed:
-                            levelCompleted = !terminatingLevel;
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-                else
-                {
-                    PlayerPrefs.SetInt(actionAsset.TitleTerm, (int) LevelStatus.Locked);
-                    PlayerPrefs.Save();
+                    case LevelStatus.Locked:
+                        nextIsTerminatingLevel = true;
+                        break;
+                    case LevelStatus.Unlocked:
+                        nextIsTerminatingLevel = true;
+                        isNewLevel = !terminatingLevel;
+                        break;
+                    case LevelStatus.Played:
+                        break;
+                    case LevelStatus.Passed:
+                        levelCompleted = !terminatingLevel;
+                        break;
                 }
             }
 

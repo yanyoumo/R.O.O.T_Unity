@@ -2,6 +2,7 @@
 using System.Linq;
 using I2.Loc;
 using ROOT.Consts;
+using ROOT.LevelAccessMgr;
 using ROOT.SetupAsset;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -46,6 +47,12 @@ namespace ROOT
             }
         }
 
+        private void CompleteThisLevelAndUnlockFollowing(ref LevelActionAsset actionAsset)
+        {
+            var unlockingLevelTerms = actionAsset.UnlockingLevel.Where(lv => lv != null).Select(lv => lv.TitleTerm).ToArray();
+            PlayerPrefsLevelMgr.CompleteThisLevelAndUnlockFollowing(actionAsset.TitleTerm, unlockingLevelTerms);
+        }
+        
         //首先返回：要改成返回选择界面。重新开始就放在哪里。
             //GameOver界面其实很重要，主要是局间的游玩动力；现在实质机制上能展示的只有：解锁新关卡、这个只能尽量用了。
         void UpdateUIContent()
@@ -65,9 +72,7 @@ namespace ROOT
                 else
                 {
                     throw new NotImplementedException("教程的失败没有实质完成。");
-                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, (int) LevelStatus.Played);
-                    PlayerPrefs.Save();
-
+                    PlayerPrefsLevelMgr.PlayedThisLevel(_lastGameAssets.ActionAsset.TitleTerm);
                     OtherButton.interactable = false;
                     OtherButtonLocalize.Term = ScriptTerms.NextTutorialFailed;
                     EndingMessageLocalize.Term = ScriptTerms.EndingMessageTutorialFailed;
@@ -81,7 +86,7 @@ namespace ROOT
                 }
                 else
                 {
-                    PlayerThisLevelAndUnlockFollowing(ref _lastGameAssets.ActionAsset);
+                    PlayerPrefsLevelMgr.PlayedThisLevel(_lastGameAssets.ActionAsset.TitleTerm);
                 }
                 EndingTitleLocalize.Term = ScriptTerms.GameOver;
                 EndingMessageParam.SetParameterValue("VALUE", _lastGameAssets.GameOverAsset.ValueInt.ToString());
@@ -92,26 +97,6 @@ namespace ROOT
             OtherButton.interactable = _lastGameAssets.GameOverAsset.Succeed;
         }
 
-        //TODO 甚至是不是把整个修改真的封装一下？
-        //TODO RISK 这两个调整内容的还一定要搞一下别往回改、就是LevelStatus其实是有层级的。
-        private void CompleteThisLevelAndUnlockFollowing(ref LevelActionAsset completedLevel)
-        {
-            PlayerPrefs.SetInt(completedLevel.TitleTerm, (int) LevelStatus.Passed);
-            foreach (var s in completedLevel.UnlockingLevel.Where(lv => lv != null).Select(lv => lv.TitleTerm))
-            {
-                PlayerPrefs.SetInt(s, (int) LevelStatus.Unlocked);
-            }
-
-            PlayerPrefs.Save();
-        }
-
-        //TODO RISK 这两个调整内容的还一定要搞一下别往回改、就是LevelStatus其实是有层级的。
-        private void PlayerThisLevelAndUnlockFollowing(ref LevelActionAsset completedLevel)
-        {
-            PlayerPrefs.SetInt(completedLevel.TitleTerm, (int) LevelStatus.Played);
-            PlayerPrefs.Save();
-        }
-        
         void Awake()
         {
             SceneManager.sceneLoaded += GameOverSceneLoaded;

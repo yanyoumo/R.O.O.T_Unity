@@ -46,12 +46,4 @@ namespace ROOT
         West,
         South
     }
-
-    public enum LevelStatus
-    {
-        Locked = 0,
-        Unlocked = 1,
-        Played = 2,
-        Passed = 3,
-    }
 }
