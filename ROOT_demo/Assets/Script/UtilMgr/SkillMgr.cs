@@ -43,7 +43,8 @@ namespace ROOT
         }
         
         public SkillType? CurrentSkillType { private set; get; } = null;
-
+        private int _currentSkillID = -1;
+        
         #region SkillTemporalFramework
 
         private void UpdateUICurrencyVal(GameAssets currentLevelAsset)
@@ -64,6 +65,8 @@ namespace ROOT
 
             var moneySpent = currentLevelAsset.GameCurrencyMgr.SpendSkillCurrency(skill.Cost);
             var skillActived = false;
+            CurrentSkillType = null;
+            _currentSkillID = -1;
             switch (skill.SklType)
             {
                 case SkillType.TimeFromMoney:
@@ -71,6 +74,7 @@ namespace ROOT
                     {
                         skillActived = true;
                         CurrentSkillType = SkillType.TimeFromMoney;
+                        _currentSkillID = skillIndex;
                         WorldCycler.ExpectedStepDecrement(skill.TimeGain);
                         UpdateUICurrencyVal(currentLevelAsset); //因为这个时间点后就AutoDrive了，所以就没机会调UpdateBoard了，所以先在这里调一下。
                     }
@@ -80,6 +84,7 @@ namespace ROOT
                     _fastForwardRebate = 1.00f + 0.01f * skill.AdditionalIncome;
                     WorldCycler.ExpectedStepIncrement(skill.FastForwardCount);
                     CurrentSkillType = SkillType.FastForward;
+                    _currentSkillID = skillIndex;
                     break;
                 case SkillType.Swap:
                     if (moneySpent)
@@ -87,6 +92,7 @@ namespace ROOT
                         skillActived = true;
                         swapAlipay = skill.Cost;
                         CurrentSkillType = SkillType.Swap;
+                        _currentSkillID = skillIndex;
                         _swapRadius = skill.radius;
                         unitAPosition = currentLevelAsset.Cursor.CurrentBoardPosition;
                         UpdateAIndicator(currentLevelAsset, unitAPosition);
@@ -120,12 +126,22 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (skillActived && skill.CountLimit != -1)
+            
+            if (skillActived)
             {
-                skill.RemainingCount--;
-                if (skill.RemainingCount <= 0)
+                if (skill.SklType != SkillType.Swap)
                 {
-                    skill.SkillEnabledInternal = false;
+                    //这里是可以记录一般技能的使用次数、但是Swap的逻辑要完全独立做。
+                    skill.UsedCount++;
+                }
+
+                if (skill.CountLimit != -1)
+                {
+                    skill.RemainingCount--;
+                    if (skill.RemainingCount <= 0)
+                    {
+                        skill.SkillEnabledInternal = false;
+                    }
                 }
             }
             UpdateSkillPalettes();
@@ -233,6 +249,11 @@ namespace ROOT
         private int swapAlipay = 0;
         private Vector2Int oldCurrentPos = new Vector2Int(-1, -1);
 
+        private void SwapComplete(int skillID)
+        {
+            InstancedSkillData[skillID].UsedCount++;//记录Swap相关的次数只能在这里写。
+        }
+        
         public void SwapTick_FSM(GameAssets currentLevelAsset, ControllingPack ctrlPack)
         {
             Debug.Log("SwapTicking");
@@ -302,6 +323,10 @@ namespace ROOT
                     swapAlipay = 0;
                     UpdateUICurrencyVal(currentLevelAsset);
                 }
+                else
+                {
+                    SwapComplete(_currentSkillID);
+                }
 
                 if (!swapSuccess)
                 {
@@ -329,9 +354,22 @@ namespace ROOT
             UpdateSkillPalettes();
         }
 
-        private readonly string MainColorHEX = "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_MAIN);
-        private readonly string SubColorHEX = "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_SUB);
-        private readonly string RemainColorHEX = "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_RMN);
+        public int SkillUsedCountByID(int skillID)
+        {
+            try
+            {
+                return InstancedSkillData[skillID].UsedCount;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Debug.LogError("skillID not present!!!");
+                return -1;
+            }
+        }
+        
+        private string MainColorHEX => "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_MAIN);
+        private string SubColorHEX => "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_SUB);
+        private string RemainColorHEX => "#" + ColorUtility.ToHtmlStringRGB(ColorLibManager.Instance.ColorLib.ROOT_SKILL_NAME_RMN);
 
         private string ColorTextPostFix => "</color>";
 

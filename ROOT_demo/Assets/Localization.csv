@@ -31,7 +31,8 @@ EndingMessageNoBoss_EarnedMoney,Text,游戏结束时，显示的内容,时间到
 EndingMessageNoBoss_NoEarnedMoney,Text,游戏结束时，显示的内容,时间到了，你赔了{[VALUE]}块钱[i2p_Zero]时间到了，但你也没赔钱,"Time Up, and you lost {[VALUE]} money[i2p_Zero]Time Up, but you haven't lost money"
 EndingMessageTelemetry_Failed,Text,,未接收到足够的信息、还差{[VALUE]}单位的信息,Pending
 EndingMessageTelemetry_Successed,Text,,接收够了足量的信息,Pending
-EndingMessageTutorial,Text,,本节教程结束~,This section of tutorial has concluded
+EndingMessageTutorial,Text,,可以返回关卡界面游玩其他关卡,This section of tutorial has concluded
+EndingMessageTutorial_Unlocked,Text,,解锁新关卡！！可以返回关卡界面查看~,Pending
 EndingMessageTutorialFailed,Text,,本节教程未完成,This section of tutorial is not finished
 GameCareerSetup,Text,,游戏设置,Game Setup
 GameOver,Text,,游戏结束,GAME OVER

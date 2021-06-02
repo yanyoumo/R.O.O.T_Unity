@@ -27,7 +27,7 @@ namespace ROOT
         {
             if (_instance != null && _instance != this)
             {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             }
             else
             {
@@ -95,16 +95,10 @@ namespace ROOT
             StartCoroutine(LoadGamePlay_Coroutine(actionAsset, loadingProgressorCallBack));
         }
 
-        /*public void LoadCareerSetup(int buttonId)
+        public AsyncOperation LoadCareerSetup(LevelActionAsset _currentUsingAsset)
         {
-            CareerSetupManger.levelId = buttonId;//RISK 从理论上讲、如果那个的加载用个Coroutine、这个数据就能直接传进去了。但是先这样吧。
-            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
-        }*/
-
-        public void LoadCareerSetup(LevelActionAsset _currentUsingAsset)
-        {
-            CareerSetupManger.currentUsingAsset = _currentUsingAsset;//RISK 从理论上讲、如果那个的加载用个Coroutine、这个数据就能直接传进去了。但是先这样吧。
-            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
+            CareerSetupManger.currentUsingAsset = _currentUsingAsset;
+            return SceneManager.LoadSceneAsync(StaticName.SCENE_ID_CAREERSETUP, LoadSceneMode.Additive);
         }
         
         private GameOverMgr _gameOverMgr;

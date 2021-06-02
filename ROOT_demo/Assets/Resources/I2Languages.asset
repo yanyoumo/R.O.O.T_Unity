@@ -171,8 +171,16 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u672C\u8282\u6559\u7A0B\u7ED3\u675F~"
+      - "\u53EF\u4EE5\u8FD4\u56DE\u5173\u5361\u754C\u9762\u6E38\u73A9\u5176\u4ED6\u5173\u5361"
       - This section of tutorial has concluded
+      Flags: 0000
+      Languages_Touch: []
+    - Term: EndingMessageTutorial_Unlocked
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u89E3\u9501\u65B0\u5173\u5361\uFF01\uFF01\u53EF\u4EE5\u8FD4\u56DE\u5173\u5361\u754C\u9762\u67E5\u770B~"
+      - Pending
       Flags: 0000
       Languages_Touch: []
     - Term: EndingMessageTutorialFailed

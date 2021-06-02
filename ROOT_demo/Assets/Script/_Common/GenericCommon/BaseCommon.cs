@@ -36,7 +36,7 @@ namespace ROOT
     {
         void Clicked();
     }
-    
+
     public enum RotationDirection
     {
         //即所为当前状态的表示，也作为旋转动作的标识

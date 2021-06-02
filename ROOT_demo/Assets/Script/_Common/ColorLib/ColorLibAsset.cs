@@ -168,5 +168,23 @@ namespace ROOT.SetupAsset
         public Color ROOT_CURSOR_INFOMODE;
         [PropertyOrder(40)]
         public Color ROOT_CURSOR_BLINK;
+        
+        [PropertySpace] 
+        [Title("BST Level Selection")]
+        [PropertyOrder(41)]
+        public Color ROOT_SELECTIONQUAD_SELECTABLE;
+        [PropertyOrder(42)]
+        public Color ROOT_SELECTIONQUAD_UNSELECTABLE;
+
+        [PropertySpace]
+        [Title("UI Section")] 
+        [PropertyOrder(43)]
+        public Color ROOT_UI_DEFAULT_BLACK;
+        [PropertyOrder(44)]
+        public Color ROOT_UI_HIGHLIGHTING_GREEN;
+        [PropertyOrder(45)]
+        public Color ROOT_UI_HIGHLIGHTING_RED;
+        [PropertyOrder(46)]
+        public Color ROOT_UI_HIGHLIGHTING_BLUE;
     }
 }

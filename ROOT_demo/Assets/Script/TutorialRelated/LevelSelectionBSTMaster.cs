@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ROOT.Consts;
+using ROOT.LevelAccessMgr;
 using ROOT.SetupAsset;
 using TMPro;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace ROOT.UI
         public GameObject LevelQuadTemplate;
         public GameObject BSTLineTemplate;
 
-        private readonly float SpaceX = 350.0f;
+        private readonly float SpaceX = 325.0f;
         private readonly float SpaceY = 330.0f;
         private readonly Vector2 _treeRootPos = new Vector2(150, -175f);
         
@@ -28,7 +29,9 @@ namespace ROOT.UI
 
         private Vector2 PosIDToPos(Vector2Int v2Int)=>_treeRootPos + new Vector2(v2Int.x * SpaceX, v2Int.y * SpaceY);
         
-        private void GenerateSignalQuad(Vector2Int Pos, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack,bool _selectable)
+        private void GenerateSignalQuad(Vector2Int Pos, LevelActionAsset actionAsset, 
+            Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack
+            ,bool _selectable,bool _newLevel,bool _levelCompleted)
         {
             var quadObj = Instantiate(LevelQuadTemplate, LevelSelectionPanel);
             var rectTransform = quadObj.GetComponent<RectTransform>();
@@ -38,11 +41,36 @@ namespace ROOT.UI
             rectTransform.anchoredPosition = PosIDToPos(Pos);
             quad.InitLevelSelectionQuad(actionAsset, buttonCallBack);
             quad.LevelSelectable = _selectable;
+            quad.SetNewLevel = _newLevel;
+            quad.LevelCompleted = _levelCompleted;
         }
 
         private void GenerateActionAssetQuadAndIter(Vector2Int nodePOS,Vector2Int lastNodePOS, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack,bool terminatingLevel)
         {
-            GenerateSignalQuad(nodePOS, actionAsset, buttonCallBack, !terminatingLevel);
+            var isNewLevel = false;
+            var levelCompleted = false;
+            var nextIsTerminatingLevel = false;
+            if (!StartGameMgr.DevMode)
+            {
+                var currentLevelStatus = PlayerPrefsLevelMgr.GetLevelStatus(actionAsset.TitleTerm);
+                switch (currentLevelStatus)
+                {
+                    case LevelStatus.Locked:
+                        nextIsTerminatingLevel = true;
+                        break;
+                    case LevelStatus.Unlocked:
+                        nextIsTerminatingLevel = true;
+                        isNewLevel = !terminatingLevel;
+                        break;
+                    case LevelStatus.Played:
+                        break;
+                    case LevelStatus.Passed:
+                        levelCompleted = !terminatingLevel;
+                        break;
+                }
+            }
+
+            GenerateSignalQuad(nodePOS, actionAsset, buttonCallBack, !terminatingLevel, isNewLevel, levelCompleted);
 
             if (lastNodePOS.x>=0)
             {
@@ -58,12 +86,6 @@ namespace ROOT.UI
                 return;
             }
 
-            var nextIsTerminatingLevel = false;
-            if (!StartGameMgr.DevMode)
-            {
-                nextIsTerminatingLevel = !PlayerPrefs.HasKey(actionAsset.TitleTerm);
-            }
-            
             var lastNodePos = nodePOS;
             if (actionAsset.UnlockingLevel.Length == 0)
             {

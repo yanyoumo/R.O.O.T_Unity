@@ -2,6 +2,7 @@
 using System.Collections;
 using DG.Tweening;
 using ROOT.Consts;
+using ROOT.LevelAccessMgr;
 using ROOT.SetupAsset;
 using ROOT.UI;
 using Sirenix.OdinInspector;
@@ -52,25 +53,6 @@ namespace ROOT
         public static bool UseTouchScreen => DetectedInputScheme == InputScheme.TouchScreen;
         public static bool UseKeyboard => DetectedInputScheme == InputScheme.Keyboard;
         public static bool UseMouse => DetectedInputScheme == InputScheme.Mouse;
-        
-        IEnumerator LoadLevelMasterSceneAndSetActive()
-        {
-            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_LEVELMASTER, LoadSceneMode.Additive);
-            while (true)
-            {
-                yield return 0;
-                try
-                {
-                    SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_LEVELMASTER));
-                }
-                catch (ArgumentException)
-                {
-                    continue;
-                }
-
-                break;
-            }
-        }
 
         [Button]
         void ClearPlayerPrefs()
@@ -94,13 +76,19 @@ namespace ROOT
             if (!PlayerPrefs.HasKey(PLAYER_ID)) PlayerPrefs.SetInt(PLAYER_ID, DateTime.UtcNow.Millisecond);
             if (!PlayerPrefs.HasKey(DEV_MODE)) PlayerPrefs.SetInt(DEV_MODE, 0);
             if (!PlayerPrefs.HasKey(MOUSE_DRAG_SENSITIVITY)) PlayerPrefs.SetInt(MOUSE_DRAG_SENSITIVITY, 50);
-            //if (!PlayerPrefs.HasKey(GAME_PROGRESS)) PlayerPrefs.SetInt(GAME_PROGRESS, 0);
+            if (!PlayerPrefs.HasKey(RootLevelAsset.TitleTerm)) PlayerPrefsLevelMgr.SetUpRootLevelStatus(RootLevelAsset.TitleTerm);
 
             PlayerPrefs.Save();
         }
 
         public GameObject ControllingEventPrefab;
 
+        public static void LoadThenActiveGameCoreScene() =>
+            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_LEVELMASTER, LoadSceneMode.Additive).completed += a =>
+            {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_LEVELMASTER));
+            };
+        
         void Awake()
         {
             DOTween.Init();
@@ -127,11 +115,8 @@ namespace ROOT
             }
 
             Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
-            StartCoroutine(LoadLevelMasterSceneAndSetActive());
-            /*LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
-            LevelLib.Instance.CareerLevelActionAssetLib = CareerGameActionAssetLib;
-            LevelLib.Instance.TestingLevelActionAssetLib = TestingGameActionAssetLib;*/
-            LevelLib.Instance.LockInLib();
+            LoadThenActiveGameCoreScene();
+            //LevelLib.Instance.LockInLib();
         }
 
         private bool OnceGuard = false;

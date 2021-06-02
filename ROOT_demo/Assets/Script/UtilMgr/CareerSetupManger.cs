@@ -37,7 +37,7 @@ namespace ROOT.UI
         
         public void Back()
         {
-            SceneManager.LoadScene(StaticName.SCENE_ID_CAREER, LoadSceneMode.Additive);
+            SceneManager.LoadScene(StaticName.SCENE_ID_BST_CAREER, LoadSceneMode.Additive);
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_CAREERSETUP);
         }
 
