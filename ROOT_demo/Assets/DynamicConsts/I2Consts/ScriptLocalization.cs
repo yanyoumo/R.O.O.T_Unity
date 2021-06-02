@@ -26,6 +26,7 @@ namespace I2.Loc
 		public static string EndingMessageTelemetry_Successed 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageTelemetry_Successed"); } }
 		public static string EndingMessageTutorial 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageTutorial"); } }
 		public static string EndingMessageTutorialFailed 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageTutorialFailed"); } }
+		public static string EndingMessageTutorial_Unlocked 		{ get{ return LocalizationManager.GetTranslation ("EndingMessageTutorial_Unlocked"); } }
 		public static string GameCareerSetup 		{ get{ return LocalizationManager.GetTranslation ("GameCareerSetup"); } }
 		public static string GameOver 		{ get{ return LocalizationManager.GetTranslation ("GameOver"); } }
 		public static string HForHint_KM 		{ get{ return LocalizationManager.GetTranslation ("HForHint_KM"); } }
@@ -113,6 +114,7 @@ namespace I2.Loc
 		public const string EndingMessageTelemetry_Successed = "EndingMessageTelemetry_Successed";
 		public const string EndingMessageTutorial = "EndingMessageTutorial";
 		public const string EndingMessageTutorialFailed = "EndingMessageTutorialFailed";
+		public const string EndingMessageTutorial_Unlocked = "EndingMessageTutorial_Unlocked";
 		public const string GameCareerSetup = "GameCareerSetup";
 		public const string GameOver = "GameOver";
 		public const string HForHint_KM = "HForHint_KM";
