@@ -61,12 +61,12 @@ namespace ROOT.UI
                             break;
                         case LevelStatus.Unlocked:
                             nextIsTerminatingLevel = true;
-                            isNewLevel = true;
+                            isNewLevel = !terminatingLevel;
                             break;
                         case LevelStatus.Played:
                             break;
                         case LevelStatus.Passed:
-                            levelCompleted = true;
+                            levelCompleted = !terminatingLevel;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

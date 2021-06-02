@@ -52,25 +52,6 @@ namespace ROOT
         public static bool UseTouchScreen => DetectedInputScheme == InputScheme.TouchScreen;
         public static bool UseKeyboard => DetectedInputScheme == InputScheme.Keyboard;
         public static bool UseMouse => DetectedInputScheme == InputScheme.Mouse;
-        
-        IEnumerator LoadLevelMasterSceneAndSetActive()
-        {
-            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_LEVELMASTER, LoadSceneMode.Additive);
-            while (true)
-            {
-                yield return 0;
-                try
-                {
-                    SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_LEVELMASTER));
-                }
-                catch (ArgumentException)
-                {
-                    continue;
-                }
-
-                break;
-            }
-        }
 
         [Button]
         void ClearPlayerPrefs()
@@ -101,6 +82,12 @@ namespace ROOT
 
         public GameObject ControllingEventPrefab;
 
+        public static void LoadThenActiveGameCoreScene() =>
+            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_LEVELMASTER, LoadSceneMode.Additive).completed += a =>
+            {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_LEVELMASTER));
+            };
+        
         void Awake()
         {
             DOTween.Init();
@@ -127,11 +114,8 @@ namespace ROOT
             }
 
             Debug.Assert(SceneManager.sceneCount == 1, "More than one scene loaded");
-            StartCoroutine(LoadLevelMasterSceneAndSetActive());
-            /*LevelLib.Instance.TutorialLevelActionAssetLib = TutorialActionAssetLib;
-            LevelLib.Instance.CareerLevelActionAssetLib = CareerGameActionAssetLib;
-            LevelLib.Instance.TestingLevelActionAssetLib = TestingGameActionAssetLib;*/
-            LevelLib.Instance.LockInLib();
+            LoadThenActiveGameCoreScene();
+            //LevelLib.Instance.LockInLib();
         }
 
         private bool OnceGuard = false;

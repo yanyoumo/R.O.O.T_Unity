@@ -46,33 +46,25 @@ namespace ROOT
             }
         }
 
+        //首先返回：要改成返回选择界面。重新开始就放在哪里。
+            //GameOver界面其实很重要，主要是局间的游玩动力；现在实质机制上能展示的只有：解锁新关卡、这个只能尽量用了。
         void UpdateUIContent()
         {
             BackButton.onClick.AddListener(Back);
-            //这里控制游戏结束部分的代码。
-            if (_lastGameAssets.Owner.UseTutorialVer)
+            if (_lastGameAssets.ActionAsset.DisplayedlevelType == LevelType.Tutorial)
             {
-                bool tutorialCompleted = _lastGameAssets.TutorialCompleted.Value;
+                Debug.Assert(_lastGameAssets.TutorialCompleted.HasValue);
+                var tutorialCompleted = _lastGameAssets.TutorialCompleted.Value;
                 EndingTitleLocalize.Term = ScriptTerms.TutorialSectionOver;
+                
                 if (tutorialCompleted)
                 {
-                    PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, (int)LevelStatus.Passed);
-                    foreach (var s in _lastGameAssets.ActionAsset.UnlockingLevel.Where(l => l != null).Select(l => l.TitleTerm))
-                    {
-                        PlayerPrefs.SetInt(s, (int) LevelStatus.Unlocked);
-                    }
-
-                    PlayerPrefs.Save();
-                    if (LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset) == null)
-                    {
-                        OtherButton.interactable = false;//没有下一关了。
-                    }
-                    OtherButton.onClick.AddListener(NextTutorial);
-                    OtherButtonLocalize.Term = ScriptTerms.NextTutorial;
+                    CompleteThisLevelAndUnlockFollowing(ref _lastGameAssets.ActionAsset);
                     EndingMessageLocalize.Term = ScriptTerms.EndingMessageTutorial;
                 }
                 else
                 {
+                    throw new NotImplementedException("教程的失败没有实质完成。");
                     PlayerPrefs.SetInt(_lastGameAssets.ActionAsset.TitleTerm, (int) LevelStatus.Played);
                     PlayerPrefs.Save();
 
@@ -83,16 +75,43 @@ namespace ROOT
             }
             else
             {
+                if (_lastGameAssets.GameOverAsset.Succeed)
+                {
+                    CompleteThisLevelAndUnlockFollowing(ref _lastGameAssets.ActionAsset);
+                }
+                else
+                {
+                    PlayerThisLevelAndUnlockFollowing(ref _lastGameAssets.ActionAsset);
+                }
                 EndingTitleLocalize.Term = ScriptTerms.GameOver;
-                OtherButtonLocalize.Term = ScriptTerms.Restart;
-                OtherButton.onClick.AddListener(GameRestart);
-                OtherButton.interactable = _lastGameAssets.GameOverAsset.Succeed;
                 EndingMessageParam.SetParameterValue("VALUE", _lastGameAssets.GameOverAsset.ValueInt.ToString());
-
                 EndingMessageLocalize.Term = _lastGameAssets.GameOverAsset.Succeed?_lastGameAssets.GameOverAsset.SuccessTerm:_lastGameAssets.GameOverAsset.FailedTerm;
             }
+            OtherButtonLocalize.Term = ScriptTerms.Restart;
+            OtherButton.onClick.AddListener(GameRestart);
+            OtherButton.interactable = _lastGameAssets.GameOverAsset.Succeed;
         }
 
+        //TODO 甚至是不是把整个修改真的封装一下？
+        //TODO RISK 这两个调整内容的还一定要搞一下别往回改、就是LevelStatus其实是有层级的。
+        private void CompleteThisLevelAndUnlockFollowing(ref LevelActionAsset completedLevel)
+        {
+            PlayerPrefs.SetInt(completedLevel.TitleTerm, (int) LevelStatus.Passed);
+            foreach (var s in completedLevel.UnlockingLevel.Where(lv => lv != null).Select(lv => lv.TitleTerm))
+            {
+                PlayerPrefs.SetInt(s, (int) LevelStatus.Unlocked);
+            }
+
+            PlayerPrefs.Save();
+        }
+
+        //TODO RISK 这两个调整内容的还一定要搞一下别往回改、就是LevelStatus其实是有层级的。
+        private void PlayerThisLevelAndUnlockFollowing(ref LevelActionAsset completedLevel)
+        {
+            PlayerPrefs.SetInt(completedLevel.TitleTerm, (int) LevelStatus.Played);
+            PlayerPrefs.Save();
+        }
+        
         void Awake()
         {
             SceneManager.sceneLoaded += GameOverSceneLoaded;
@@ -106,19 +125,12 @@ namespace ROOT
             SceneManager.sceneLoaded -= GameOverSceneLoaded;
         }
 
-        public void NextTutorial()
-        {
-            LevelActionAsset nextLevelActionAsset = LevelLib.Instance.GetNextTutorialActionAsset(_lastGameAssets.ActionAsset);
-            LevelMasterManager.Instance.LoadLevelThenPlay(nextLevelActionAsset);
-            SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
-        }
-
-        public void GameRestart()
+        private void GameRestart()
         {
             SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_GAMEOVER);
         }
 
-        public void Back()
+        private void Back()
         {
             for (var i = 0; i < SceneManager.sceneCount; i++)
             {
@@ -127,7 +139,12 @@ namespace ROOT
                     SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(i));
                 }
             }
-            SceneManager.LoadScene(StaticName.SCENE_ID_START, LoadSceneMode.Single);
+            StartGameMgr.LoadThenActiveGameCoreScene();
+            SceneManager.LoadSceneAsync(StaticName.SCENE_ID_BST_CAREER, LoadSceneMode.Additive).completed += a =>
+            {
+                //因为Unity不允许卸载最后一个场景、所以这边就要听BST场景异步加载完成后再卸载自己。
+                SceneManager.UnloadSceneAsync(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_GAMEOVER));
+            };
         }
     }
 }
