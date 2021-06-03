@@ -30,6 +30,7 @@ MonoBehaviour:
   ShopCost: 1
   UnitCost: 1
   levelType: 0
+  IsTestingLevel: 0
   DisplayedlevelType: 0
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
@@ -2650,4 +2651,5 @@ MonoBehaviour:
   subIDXToinsert: 2
   CSVFileName: 
   UnlockingLevel: []
+  UnlockingLevel_Upper: []
   ExcludedShop: 0

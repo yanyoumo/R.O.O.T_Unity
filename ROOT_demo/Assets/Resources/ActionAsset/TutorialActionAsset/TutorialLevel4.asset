@@ -30,6 +30,8 @@ MonoBehaviour:
   ShopCost: 1
   UnitCost: 1
   levelType: 0
+  IsTestingLevel: 0
+  DisplayedlevelType: 0
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
@@ -84,6 +86,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 1
     ActionType: 0
@@ -115,6 +118,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 2
     ActionType: 3
@@ -146,6 +150,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 3
     ActionType: 21
@@ -177,6 +182,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 1
     ActionSubIdx: 0
     ActionType: 0
@@ -208,6 +214,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 0
     ActionType: 10
@@ -239,6 +246,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 2
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 1
     ActionType: 18
@@ -270,6 +278,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 2
     ActionType: 18
@@ -301,6 +310,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 3
     ActionType: 15
@@ -332,6 +342,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 4
     ActionType: 2
@@ -363,6 +374,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 5
     ActionType: 8
@@ -394,6 +406,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 3
     ActionSubIdx: 0
     ActionType: 5
@@ -425,9 +438,11 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   mainIDXToinsert: 0
   subIDXToinsert: 3
   CSVFileName: 
   UnlockingLevel:
   - {fileID: 11400000, guid: f7fa5c3e0845bdd4eacaf7f98b4236a3, type: 2}
+  UnlockingLevel_Upper: []
   ExcludedShop: 0

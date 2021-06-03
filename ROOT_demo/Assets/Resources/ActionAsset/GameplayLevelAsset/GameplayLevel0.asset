@@ -30,6 +30,7 @@ MonoBehaviour:
   ShopCost: 1
   UnitCost: 1
   levelType: 0
+  IsTestingLevel: 0
   DisplayedlevelType: 1
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
@@ -109,6 +110,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 1
     ActionType: 18
@@ -140,6 +142,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 2
     ActionType: 10
@@ -171,6 +174,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 3
     ActionType: 6
@@ -202,6 +206,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 4
     ActionType: 8
@@ -233,6 +238,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 1
     ActionSubIdx: 0
     ActionType: 5
@@ -264,9 +270,11 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   mainIDXToinsert: 0
   subIDXToinsert: 0
   CSVFileName: 
   UnlockingLevel:
   - {fileID: 11400000, guid: a3112df217681124fa0f8e89d9203781, type: 2}
+  UnlockingLevel_Upper: []
   ExcludedShop: 0
