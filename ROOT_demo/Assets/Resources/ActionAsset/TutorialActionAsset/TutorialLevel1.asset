@@ -468,7 +468,7 @@ MonoBehaviour:
   - ActionIdx: 5
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5355\u5143\u4E0A\u6709\u4E00\u4E2ALED\u6765\u8868\u793A\u5B83\u7684\u6FC0\u6D3B\u72B6\u6001\uFF0C\u7EA2\u8272\u8868\u793A\u5355\u5143\u6CA1\u6709\u88AB\u6FC0\u6D3B\uFF1B\u5F53\u7136\u3001\u6838\u5FC3\u53D8\u4F53\u662F\u4E00\u76F4\u88AB\u6FC0\u6D3B\u7684\u3002"
+    Text: "\u573A\u5355\u5143\u4E0A\u6709\u4E00\u4E2A\u73AF\u72B6LED\u6765\u8868\u793A\u5B83\u7684\u6FC0\u6D3B\u72B6\u6001\uFF0C\u7EA2\u8272\u8868\u793A\u5355\u5143\u6CA1\u6709\u88AB\u6FC0\u6D3B\uFF1B\u5F53\u7136\u3001\u6838\u5FC3\u53D8\u4F53\u662F\u4E00\u76F4\u88AB\u6FC0\u6D3B\u7684\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -519,8 +519,8 @@ MonoBehaviour:
     Set: 0
     HLSet: 1
     HLCustomPos: 1
-    HighLightingPos: {x: 0.1883, y: 0.6049}
-    HighLightingScale: {x: 0.9321266, y: 0.6712506}
+    HighLightingPos: {x: 0.0043, y: 0.4106}
+    HighLightingScale: {x: 1.529039, y: 1.531474}
     AllClear: 0
     UITag: 0
     TimeLineStatus: 0
@@ -948,7 +948,7 @@ MonoBehaviour:
   - ActionIdx: 13
     ActionSubIdx: 1
     ActionType: 0
-    Text: "\u5F53\u5355\u5143\u6B63\u786E\u6FC0\u6D3B\u65F6,\u5355\u5143\u4E0A\u7684\u89D2\u843D\u4E0A\u7684\u6FC0\u6D3BLED\u4F1A\u663E\u793A\u4E3A\u7EFF\u8272\u3002"
+    Text: "\u5F53\u5355\u5143\u6B63\u786E\u6FC0\u6D3B\u65F6\uFF0C\u573A\u5355\u5143\u4E0A\u7684\u73AF\u72B6\u6FC0\u6D3BLED\u4F1A\u663E\u793A\u4E3A\u7EFF\u8272\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1095,8 +1095,8 @@ MonoBehaviour:
     Set: 0
     HLSet: 1
     HLCustomPos: 1
-    HighLightingPos: {x: -0.035, y: 2.38}
-    HighLightingScale: {x: 1.275538, y: 0.4171866}
+    HighLightingPos: {x: -0.0638, y: 2.4834}
+    HighLightingScale: {x: 1.220679, y: 1.061443}
     AllClear: 0
     UITag: 0
     TimeLineStatus: 0
@@ -1108,7 +1108,7 @@ MonoBehaviour:
   - ActionIdx: 16
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u4E4B\u524D\u5DF2\u7ECF\u8FDE\u63A5\u7684\u77E9\u9635\u5355\u5143\u5E95\u90E8\u53EA\u6709\u4E00\u4E2A\u5C0F\u706F\uFF0C\u8FD9\u4EE3\u8868\u4ED6\u7684\u7B49\u7EA7\u662F1\u3002"
+    Text: "\u4E4B\u524D\u5DF2\u7ECF\u8FDE\u63A5\u7684\u77E9\u9635\u5355\u5143\u5E95\u90E8\u53EA\u6709\u4E00\u6BB5\u7B49\u7EA7LED\u88AB\u70B9\u4EAE\uFF0C\u8FD9\u4EE3\u8868\u4ED6\u7684\u7B49\u7EA7\u662F1\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1365,7 +1365,7 @@ MonoBehaviour:
     ActionSubIdx: 2
     ActionType: 0
     Text: "\u6B64\u65F6\u53EF\u4EE5\u4F7F\u7528<sprite=\"FunctionKeyPacked_Lite\"
-      index=9>\u952E\u6765\u5207\u6362\u67E5\u770B\u67D0\u4E2A\u5355\u5143\u76C8\u5229\u7684\u5177\u4F53\u6570\u636E\uFF1B\u5BF9\u4E8E\u77E9\u9635\u7C7B\u578B\u7684\u5355\u5143\uFF0C\u7B49\u7EA7\u5BF9\u76C8\u5229\u7684\u589E\u52A0\u662F\u5448\u500D\u6570\u7684\u5173\u7CFB\u7684\u3002"
+      index=9>\u6765\u5207\u6362\u67E5\u770B\u67D0\u4E2A\u5355\u5143\u76C8\u5229\u7684\u5177\u4F53\u6570\u636E\uFF1B\u5BF9\u4E8E\u77E9\u9635\u7C7B\u578B\u7684\u5355\u5143\uFF0C\u7B49\u7EA7\u5BF9\u76C8\u5229\u7684\u589E\u52A0\u662F\u5448\u500D\u6570\u7684\u5173\u7CFB\u7684\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
