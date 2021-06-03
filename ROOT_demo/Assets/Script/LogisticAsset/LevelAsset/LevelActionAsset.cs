@@ -24,7 +24,7 @@ namespace ROOT.SetupAsset
         [PropertyOrder(-97)] 
         public int AcessID = -1;
         
-        [Range(0, 100),PropertyOrder(-96)] 
+        [Range(0, 1000),PropertyOrder(-96)] 
         public int InitialCurrency = 36;
 
         [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [LabelText("Shop has cost")][PropertyOrder(-95)]

@@ -26,7 +26,7 @@ MonoBehaviour:
   LevelLogic: {fileID: 3818130472288149215, guid: a9d91410b0b8c8545b41feda51e82d76,
     type: 3}
   AcessID: 4
-  InitialCurrency: 100
+  InitialCurrency: 1000
   ShopCost: 1
   UnitCost: 1
   levelType: 0
@@ -333,8 +333,8 @@ MonoBehaviour:
     Set: 0
     HLSet: 1
     HLCustomPos: 1
-    HighLightingPos: {x: 5.7718, y: 2.1606}
-    HighLightingScale: {x: 8.157441, y: 4.796532}
+    HighLightingPos: {x: 5.5519, y: 2.0894}
+    HighLightingScale: {x: 7.370875, y: 4.554525}
     AllClear: 0
     UITag: 0
     TimeLineStatus: 0
@@ -1229,8 +1229,8 @@ MonoBehaviour:
     Set: 0
     HLSet: 1
     HLCustomPos: 1
-    HighLightingPos: {x: 9.2, y: 2.1606}
-    HighLightingScale: {x: 8.157441, y: 4.796532}
+    HighLightingPos: {x: 8.6765, y: 2.0347}
+    HighLightingScale: {x: 7.48552, y: 4.403785}
     AllClear: 0
     UITag: 0
     TimeLineStatus: 0
@@ -1837,8 +1837,8 @@ MonoBehaviour:
     Set: 0
     HLSet: 1
     HLCustomPos: 1
-    HighLightingPos: {x: 6.6055, y: 0.04}
-    HighLightingScale: {x: 11.94576, y: 4.796532}
+    HighLightingPos: {x: 6.3177, y: 0.0863}
+    HighLightingScale: {x: 11.13748, y: 4.589961}
     AllClear: 0
     UITag: 0
     TimeLineStatus: 0
