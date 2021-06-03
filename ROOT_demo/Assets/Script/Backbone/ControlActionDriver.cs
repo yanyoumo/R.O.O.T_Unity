@@ -136,6 +136,7 @@ namespace ROOT
 
             if (actionPack.IsAction(CycleNext)) CtrlPack.SetFlag(ControllingCommand.CycleNext);
             if (actionPack.IsAction(Confirm0)) CtrlPack.SetFlag(ControllingCommand.Confirm);
+            if (actionPack.IsAction(SwapConfirm)) CtrlPack.SetFlag(ControllingCommand.SwapConfirm);
             if (actionPack.IsAction(LeftAlt)) CtrlPack.SetFlag(ControllingCommand.Cancel);
 
             if (actionPack.IsAction(HintControl))
