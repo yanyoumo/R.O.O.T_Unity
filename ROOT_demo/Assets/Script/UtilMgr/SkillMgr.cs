@@ -326,6 +326,7 @@ namespace ROOT
                 else
                 {
                     SwapComplete(_currentSkillID);
+                    MessageDispatcher.SendMessage(WorldEvent.BoardShouldUpdateEvent);
                 }
 
                 if (!swapSuccess)

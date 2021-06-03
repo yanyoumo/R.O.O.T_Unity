@@ -33,7 +33,11 @@ namespace ROOT.SetupAsset
         [VerticalGroup("Split/Right")] [LabelText("Unit could cost")][PropertyOrder(-94)]
         public bool UnitCost = true;
 
-        [Space][PropertyOrder(-1)] public LevelType levelType;
+        [Space][PropertyOrder(-2)] public LevelType levelType;
+
+        [PropertyOrder(-1)] 
+        [LabelText("Level For Test")]
+        public bool IsTestingLevel;
 
         [PropertyOrder(0)]public LevelType DisplayedlevelType;
 
@@ -247,8 +251,12 @@ namespace ROOT.SetupAsset
 
         public (int, bool, bool) GameStartingData => (InitialCurrency, ShopCost, UnitCost);
 
-        [PropertyOrder(200)] [Header("Unlocking Level")]
+        [PropertyOrder(200)] 
+        [Header("Unlocking Level")]
         public LevelActionAsset[] UnlockingLevel;
+        
+        [PropertyOrder(201)]
+        public LevelActionAsset[] UnlockingLevel_Upper;
 
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;
 

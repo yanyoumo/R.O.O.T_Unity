@@ -30,6 +30,7 @@ MonoBehaviour:
   ShopCost: 1
   UnitCost: 1
   levelType: 1
+  IsTestingLevel: 1
   DisplayedlevelType: 0
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
@@ -119,4 +120,5 @@ MonoBehaviour:
   CSVFileName: 
   UnlockingLevel:
   - {fileID: 11400000, guid: 7609b453cd08fbd49adc1f362c47f641, type: 2}
+  UnlockingLevel_Upper: []
   ExcludedShop: 0

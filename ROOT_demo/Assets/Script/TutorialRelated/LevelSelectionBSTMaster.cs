@@ -45,14 +45,14 @@ namespace ROOT.UI
             quad.LevelCompleted = _levelCompleted;
         }
 
-        private void GenerateActionAssetQuadAndIter(Vector2Int nodePOS,Vector2Int lastNodePOS, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack,bool terminatingLevel)
+        private (bool, bool, bool) LevelStatusToBoolData(string titleTerm, bool terminatingLevel)
         {
             var isNewLevel = false;
             var levelCompleted = false;
             var nextIsTerminatingLevel = false;
             if (!StartGameMgr.DevMode)
             {
-                var currentLevelStatus = PlayerPrefsLevelMgr.GetLevelStatus(actionAsset.TitleTerm);
+                var currentLevelStatus = PlayerPrefsLevelMgr.GetLevelStatus(titleTerm);
                 switch (currentLevelStatus)
                 {
                     case LevelStatus.Locked:
@@ -70,42 +70,51 @@ namespace ROOT.UI
                 }
             }
 
-            GenerateSignalQuad(nodePOS, actionAsset, buttonCallBack, !terminatingLevel, isNewLevel, levelCompleted);
+            return (isNewLevel, levelCompleted, nextIsTerminatingLevel);
+        }
 
-            if (lastNodePOS.x>=0)
-            {
-                var lineObj = Instantiate(BSTLineTemplate, TreeBranchLineRoot);
-                var line = lineObj.GetComponent<BSTLine>();
-                line.A.anchoredPosition = PosIDToPos(lastNodePOS);
-                line.B.anchoredPosition = PosIDToPos(nodePOS);
-                line.UpdateLine();
-            }
-            
-            if (terminatingLevel)
-            {
-                return;
-            }
+        private void CreateBSTLine(Vector2Int nodePOS, Vector2Int lastNodePOS)
+        {
+            var lineObj = Instantiate(BSTLineTemplate, TreeBranchLineRoot);
+            var line = lineObj.GetComponent<BSTLine>();
+            line.A.anchoredPosition = PosIDToPos(lastNodePOS);
+            line.B.anchoredPosition = PosIDToPos(nodePOS);
+            line.UpdateLine();
+        }
 
-            var lastNodePos = nodePOS;
-            if (actionAsset.UnlockingLevel.Length == 0)
-            {
-                return;
-            }
-            nodePOS.x++;
+        private void GenerateActionAssetQuad_Iter(LevelActionAsset actionAsset, int index, bool UpOrDown, Vector2Int nextNodeRoot, Vector2Int lastNodePOS, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack, bool nextIsTerminatingLevel)
+        {
+            if (!StartGameMgr.DevMode && actionAsset.IsTestingLevel || actionAsset == null) return; //除掉TestLevels和作为Null的占位符
+            GenerateActionAssetQuad(nextNodeRoot + (UpOrDown ? Vector2Int.up : Vector2Int.down) * index, lastNodePOS, actionAsset, buttonCallBack, nextIsTerminatingLevel);
+        }
+
+        private void GenerateActionAssetQuad(Vector2Int crtNodePOS, Vector2Int lastNodePOS, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack, bool terminatingLevel)
+        {
+            var (isNewLevel, levelCompleted, nextIsTerminatingLevel) = LevelStatusToBoolData(actionAsset.TitleTerm, terminatingLevel);
+            GenerateSignalQuad(crtNodePOS, actionAsset, buttonCallBack, !terminatingLevel, isNewLevel, levelCompleted);
+
+            if (lastNodePOS.x >= 0) CreateBSTLine(crtNodePOS, lastNodePOS);
+
+            if (terminatingLevel || (actionAsset.UnlockingLevel.Length == 0 && actionAsset.UnlockingLevel_Upper.Length == 0)) return;
+
+            var nextNodeRoot = new Vector2Int(crtNodePOS.x + 1, crtNodePOS.y);
+
             for (var i = 0; i < actionAsset.UnlockingLevel.Length; i++)
             {
-                if (!StartGameMgr.DevMode && lastNodePos == Vector2Int.zero && i>0) break; //除掉TestLevels。
-                if (actionAsset.UnlockingLevel[i] != null)//这是允许放一个NULL就可以手动往下挪一行这件事儿。
-                {
-                    GenerateActionAssetQuadAndIter(nodePOS + Vector2Int.down * i, lastNodePos, actionAsset.UnlockingLevel[i], buttonCallBack, nextIsTerminatingLevel);
-                }
+                GenerateActionAssetQuad_Iter(actionAsset.UnlockingLevel[i], i, false, nextNodeRoot, crtNodePOS, buttonCallBack, nextIsTerminatingLevel);
+            }
+            
+            for (var i = 0; i < actionAsset.UnlockingLevel_Upper.Length; i++)
+            {
+                GenerateActionAssetQuad_Iter(actionAsset.UnlockingLevel_Upper[i], i + 1, true, nextNodeRoot, crtNodePOS, buttonCallBack, nextIsTerminatingLevel);
             }
         }
 
-        public void InitBSTTree(LevelActionAsset rootActionAsset,
-            Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
+        public void InitBSTTree(LevelActionAsset rootActionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
         {
-            GenerateActionAssetQuadAndIter(Vector2Int.zero, -Vector2Int.one, rootActionAsset, buttonCallBack, false);
+            var rootActionPos = Vector2Int.zero;
+            rootActionPos.y = -rootActionAsset.UnlockingLevel_Upper.Length;
+            GenerateActionAssetQuad(rootActionPos, -Vector2Int.one, rootActionAsset, buttonCallBack, false);
 
             var quadRects = LevelSelectionPanel.GetComponentsInChildren<RectTransform>()
                 .Where(t => t.parent == LevelSelectionPanel.transform);

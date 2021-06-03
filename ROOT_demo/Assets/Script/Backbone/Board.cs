@@ -454,8 +454,13 @@ namespace ROOT
         private int lastUnitsHashCode = 0;
         private int UnitsHashCode => Units.Select(u => u.GetHashCode()).Aggregate(0, (current, result) => current ^ result);
         private int GridsHashCode => BoardGirdDriver.BoardGirds.Aggregate(0, (current, val) => current ^ (val.Key.GetHashCode() ^ val.Value.CellStatus.GetHashCode()));
-        
+
         private void FullyUpdateBoardData(IMessage rMessage)
+        {
+            FullyUpdateBoardData();
+        }
+
+        private void FullyUpdateBoardData()
         {
             IsDataReady = false;
             //现在要假设所有场景内容全是错的，准备更新。
@@ -494,7 +499,6 @@ namespace ROOT
             LFLocatorStatic = LFLocator;
             URLocatorStatic = URLocator;
             MessageDispatcher.AddListener(WorldEvent.BoardShouldUpdateEvent, FullyUpdateBoardData);
-            //BoardShouldUpdateEvent += FullyUpdateBoardData;
         }
         
         private void Update()
@@ -504,9 +508,10 @@ namespace ROOT
             var hashCode = UnitsHashCode ^ GridsHashCode;
             if (lastUnitsHashCode != hashCode)
             {
+                //RISK 第一次变化这个问题这里不会触发，有空看看去。
                 lastUnitsHashCode = hashCode;
                 RootDebug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode, NameID.YanYoumo_Log);
-                FullyUpdateBoardData(new com.ootii.Messages.Message());
+                FullyUpdateBoardData();
             }
         }
         
