@@ -48,6 +48,8 @@ namespace ROOT.Consts
         public static readonly string PLAYER_ID = "PlayerID";
         public static readonly string MOUSE_DRAG_SENSITIVITY = "MouseDragSensitivity";
         public static readonly string DEV_MODE = "Devmode";
+        public static readonly string Level_SelectionPanel_PosX = "LevelSelectionPanelPosX";
+        public static readonly string Level_SelectionPanel_PosY = "LevelSelectionPanelPosY";
         //public static readonly string GAME_PROGRESS = "GameProgress";
     }
 

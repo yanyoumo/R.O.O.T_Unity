@@ -102,15 +102,21 @@ namespace ROOT.UI
             }
         }
 
-        public void InitBSTTree(LevelActionAsset rootActionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
+        public void InitBSTTree(LevelActionAsset rootActionAsset,
+            Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
         {
             GenerateActionAssetQuadAndIter(Vector2Int.zero, -Vector2Int.one, rootActionAsset, buttonCallBack, false);
-            
-            var quadRects = LevelSelectionPanel.GetComponentsInChildren<RectTransform>().Where(t => t.parent == LevelSelectionPanel.transform);
+
+            var quadRects = LevelSelectionPanel.GetComponentsInChildren<RectTransform>()
+                .Where(t => t.parent == LevelSelectionPanel.transform);
             var maxX = quadRects.Max(r => r.anchoredPosition.x);
             var maxY = quadRects.Max(r => Mathf.Abs(r.anchoredPosition.y));
             LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxX + 125);
             LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, maxY + 175);
+
+            var posX = PlayerPrefs.GetFloat(StaticPlayerPrefName.Level_SelectionPanel_PosX);
+            var posY = PlayerPrefs.GetFloat(StaticPlayerPrefName.Level_SelectionPanel_PosY);
+            LevelSelectionPanel.anchoredPosition = new Vector2(posX, posY);
         }
     }
 }

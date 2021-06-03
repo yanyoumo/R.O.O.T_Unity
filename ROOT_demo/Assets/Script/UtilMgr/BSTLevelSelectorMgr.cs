@@ -15,6 +15,8 @@ namespace ROOT
         public static LevelActionAsset RootLevelAsset;
         public LevelSelectionBSTMaster BSTMaster;
 
+        private Vector2 bstPanelPos => BSTMaster.LevelSelectionPanel.anchoredPosition;
+        
         private void Awake()
         {
             BSTMaster.InitBSTTree(RootLevelAsset, ButtonsListener);
@@ -24,6 +26,8 @@ namespace ROOT
         {
             LevelMasterManager.Instance.LoadCareerSetup(_currentUsingAsset).completed += a =>
             {
+                PlayerPrefs.SetFloat(StaticPlayerPrefName.Level_SelectionPanel_PosX, bstPanelPos.x);
+                PlayerPrefs.SetFloat(StaticPlayerPrefName.Level_SelectionPanel_PosY, bstPanelPos.y);
                 SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_BST_CAREER);
             };
         }
