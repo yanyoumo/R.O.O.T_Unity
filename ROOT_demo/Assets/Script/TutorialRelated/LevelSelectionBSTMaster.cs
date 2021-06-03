@@ -116,8 +116,7 @@ namespace ROOT.UI
             rootActionPos.y = -rootActionAsset.UnlockingLevel_Upper.Length;
             GenerateActionAssetQuad(rootActionPos, -Vector2Int.one, rootActionAsset, buttonCallBack, false);
 
-            var quadRects = LevelSelectionPanel.GetComponentsInChildren<RectTransform>()
-                .Where(t => t.parent == LevelSelectionPanel.transform);
+            var quadRects = LevelSelectionPanel.GetComponentsInChildren<RectTransform>().Where(t => t.parent == LevelSelectionPanel.transform);
             var maxX = quadRects.Max(r => r.anchoredPosition.x);
             var maxY = quadRects.Max(r => Mathf.Abs(r.anchoredPosition.y));
             LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxX + 125);
