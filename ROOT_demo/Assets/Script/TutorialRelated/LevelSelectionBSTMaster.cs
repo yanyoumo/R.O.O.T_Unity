@@ -85,7 +85,7 @@ namespace ROOT.UI
 
         private void GenerateActionAssetQuad_Iter(LevelActionAsset actionAsset, int index, bool UpOrDown, Vector2Int nextNodeRoot, Vector2Int lastNodePOS, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack, bool nextIsTerminatingLevel)
         {
-            if (!StartGameMgr.DevMode && actionAsset == null || actionAsset.IsTestingLevel) return; //除掉TestLevels和作为Null的占位符
+            if (actionAsset == null || (actionAsset.IsTestingLevel && !StartGameMgr.DevMode)) return;
             GenerateActionAssetQuad(nextNodeRoot + (UpOrDown ? Vector2Int.up : Vector2Int.down) * index, lastNodePOS, actionAsset, buttonCallBack, nextIsTerminatingLevel);
         }
 
