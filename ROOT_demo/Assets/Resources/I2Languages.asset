@@ -655,6 +655,38 @@ MonoBehaviour:
       - Pending
       Flags: 0000
       Languages_Touch: []
+    - Term: LevelName_GL3
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E0A\u624B\u8BD5\u8BD5-4"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_GL4
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E0A\u624B\u8BD5\u8BD5-5"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_GL5
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E0A\u624B\u8BD5\u8BD5-6"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_GL6
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u4E0A\u624B\u8BD5\u8BD5-7"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
     - Term: LevelName_TL0
       TermType: 0
       Description: 
@@ -700,6 +732,46 @@ MonoBehaviour:
       Description: 
       Languages:
       - "\u5173\u4E8E\u6280\u80FD"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_TL6
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u77E9\u9635\u4E13\u7CBE"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_TL7
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u70ED\u529B\u4E13\u7CBE"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_TL8
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u9632\u706B\u5899\u4E13\u7CBE"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_TL9
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u878D\u8D44\u73A9\u6CD5"
+      - Pending
+      Flags: 0000
+      Languages_Touch: []
+    - Term: LevelName_TL10
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u9065\u6D4B\u73A9\u6CD5"
       - Pending
       Flags: 0000
       Languages_Touch: []

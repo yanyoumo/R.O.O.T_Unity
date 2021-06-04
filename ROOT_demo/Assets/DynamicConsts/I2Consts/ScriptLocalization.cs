@@ -38,12 +38,21 @@ namespace I2.Loc
 		public static string LevelName_GL0 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL0"); } }
 		public static string LevelName_GL1 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL1"); } }
 		public static string LevelName_GL2 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL2"); } }
+		public static string LevelName_GL3 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL3"); } }
+		public static string LevelName_GL4 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL4"); } }
+		public static string LevelName_GL5 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL5"); } }
+		public static string LevelName_GL6 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL6"); } }
 		public static string LevelName_TL0 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL0"); } }
 		public static string LevelName_TL1 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL1"); } }
+		public static string LevelName_TL10 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL10"); } }
 		public static string LevelName_TL2 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL2"); } }
 		public static string LevelName_TL3 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL3"); } }
 		public static string LevelName_TL4 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL4"); } }
 		public static string LevelName_TL5 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL5"); } }
+		public static string LevelName_TL6 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL6"); } }
+		public static string LevelName_TL7 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL7"); } }
+		public static string LevelName_TL8 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL8"); } }
+		public static string LevelName_TL9 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL9"); } }
 		public static string Level_1 		{ get{ return LocalizationManager.GetTranslation ("Level_1"); } }
 		public static string Level_2 		{ get{ return LocalizationManager.GetTranslation ("Level_2"); } }
 		public static string Level_3 		{ get{ return LocalizationManager.GetTranslation ("Level_3"); } }
@@ -126,12 +135,21 @@ namespace I2.Loc
 		public const string LevelName_GL0 = "LevelName_GL0";
 		public const string LevelName_GL1 = "LevelName_GL1";
 		public const string LevelName_GL2 = "LevelName_GL2";
+		public const string LevelName_GL3 = "LevelName_GL3";
+		public const string LevelName_GL4 = "LevelName_GL4";
+		public const string LevelName_GL5 = "LevelName_GL5";
+		public const string LevelName_GL6 = "LevelName_GL6";
 		public const string LevelName_TL0 = "LevelName_TL0";
 		public const string LevelName_TL1 = "LevelName_TL1";
+		public const string LevelName_TL10 = "LevelName_TL10";
 		public const string LevelName_TL2 = "LevelName_TL2";
 		public const string LevelName_TL3 = "LevelName_TL3";
 		public const string LevelName_TL4 = "LevelName_TL4";
 		public const string LevelName_TL5 = "LevelName_TL5";
+		public const string LevelName_TL6 = "LevelName_TL6";
+		public const string LevelName_TL7 = "LevelName_TL7";
+		public const string LevelName_TL8 = "LevelName_TL8";
+		public const string LevelName_TL9 = "LevelName_TL9";
 		public const string Level_1 = "Level_1";
 		public const string Level_2 = "Level_2";
 		public const string Level_3 = "Level_3";

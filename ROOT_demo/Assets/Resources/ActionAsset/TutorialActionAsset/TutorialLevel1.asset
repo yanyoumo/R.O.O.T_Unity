@@ -1848,5 +1848,6 @@ MonoBehaviour:
   UnlockingLevel:
   - {fileID: 11400000, guid: 3f020c2efac9da844b701d0c75930079, type: 2}
   - {fileID: 11400000, guid: c78736a0910a54c449fb783cf163be7c, type: 2}
-  UnlockingLevel_Upper: []
+  UnlockingLevel_Upper:
+  - {fileID: 11400000, guid: f06c345c07b1ef94c8dd0addaec25bea, type: 2}
   ExcludedShop: 0
