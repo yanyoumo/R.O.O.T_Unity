@@ -14,6 +14,7 @@ namespace ROOT.UI
     public class LevelSelectionBSTMaster : MonoBehaviour
     {
         public RectTransform TreeBranchLineRoot;
+        public RectTransform TreeBranchRoot;
         public RectTransform LevelSelectionPanel;
         public GameObject LevelQuadTemplate;
         public GameObject BSTLineTemplate;
@@ -33,7 +34,7 @@ namespace ROOT.UI
             Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack
             ,bool _selectable,bool _newLevel,bool _levelCompleted)
         {
-            var quadObj = Instantiate(LevelQuadTemplate, LevelSelectionPanel);
+            var quadObj = Instantiate(LevelQuadTemplate, TreeBranchRoot);
             var rectTransform = quadObj.GetComponent<RectTransform>();
             var quad = quadObj.GetComponent<LevelSelectionQuad>();
             rectTransform.anchorMax = Vector2.up;
@@ -84,7 +85,7 @@ namespace ROOT.UI
 
         private void GenerateActionAssetQuad_Iter(LevelActionAsset actionAsset, int index, bool UpOrDown, Vector2Int nextNodeRoot, Vector2Int lastNodePOS, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack, bool nextIsTerminatingLevel)
         {
-            if (!StartGameMgr.DevMode && actionAsset.IsTestingLevel || actionAsset == null) return; //除掉TestLevels和作为Null的占位符
+            if (!StartGameMgr.DevMode && actionAsset == null || actionAsset.IsTestingLevel) return; //除掉TestLevels和作为Null的占位符
             GenerateActionAssetQuad(nextNodeRoot + (UpOrDown ? Vector2Int.up : Vector2Int.down) * index, lastNodePOS, actionAsset, buttonCallBack, nextIsTerminatingLevel);
         }
 
@@ -112,18 +113,23 @@ namespace ROOT.UI
 
         private void CreateActualTree(LevelActionAsset rootActionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
         {
-            //TODO 这里的初始位置流程还是不行。因为初始位置应该受到全部Quad的全部最上面的位置影响。而且其实应该是动态的。
-            var rootYPos = -rootActionAsset.UnlockingLevel_Upper.Count(l => StartGameMgr.DevMode || !l.IsTestingLevel);
-            GenerateActionAssetQuad(new Vector2Int(0, rootYPos), -Vector2Int.one, rootActionAsset, buttonCallBack, false);
+            GenerateActionAssetQuad(Vector2Int.zero, -Vector2Int.one, rootActionAsset, buttonCallBack, false);
         }
 
         private void UpdateLevelSelectionPanelSize()
         {
-            var quadRects = LevelSelectionPanel.GetComponentsInChildren<RectTransform>().Where(t => t.parent == LevelSelectionPanel.transform);
+            var quadRects = TreeBranchRoot.GetComponentsInChildren<RectTransform>().Where(t => t.parent == TreeBranchRoot.transform);
             var maxX = quadRects.Max(r => r.anchoredPosition.x);
-            var maxY = quadRects.Max(r => Mathf.Abs(r.anchoredPosition.y));
-            LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxX + 125);
-            LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, maxY + 175);
+            var minX = quadRects.Min(r => r.anchoredPosition.x);
+            var maxY = quadRects.Max(r => r.anchoredPosition.y);
+            var minY = quadRects.Min(r => r.anchoredPosition.y);
+            LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (maxX - minX) + 125);
+            LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (maxY - minY) + 350);
+
+            Debug.Log("Horizontal=" + (maxX - minX) + 125);
+            Debug.Log("Vertical=" + (maxY - minY) + 350);
+            
+            TreeBranchRoot.anchoredPosition = new Vector2(TreeBranchRoot.anchoredPosition.x, -(maxY - minY) * 0.5f);
         }
 
         private void UpdateLevelSelectionPanelPos()
