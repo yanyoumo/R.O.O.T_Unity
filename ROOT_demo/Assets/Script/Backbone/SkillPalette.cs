@@ -1,4 +1,5 @@
 ﻿using System;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
@@ -6,15 +7,18 @@ namespace ROOT
 {
     public class SkillPalette : MonoBehaviour
     {
-        public int SkillID;
-        public SkillType SklType;
+        [ReadOnly]public int SkillID;
+        [ReadOnly]public SkillType SklType;
         public TextMeshPro SkillTag;
         public TextMeshPro SkillKeyText;
         public SpriteRenderer SkillIcon;
+        public SpriteRenderer LockedIcon;
 
+        private string cachedSkillTagText;
+        
         public String SkillTagText
         {
-            set => SkillTag.text = value;
+            set => SkillTag.text = cachedSkillTagText = value;
         }
 
         public int SkillKeyIconID
@@ -29,7 +33,12 @@ namespace ROOT
 
         public bool SkillEnabled
         {
-            set => SkillIcon.color = value ? Color.white : Color.grey;
+            set
+            {
+                SkillTag.text = value ? SkillTag.text : "?????";
+                LockedIcon.enabled = !value;
+                SkillIcon.color = value ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.65f);
+            }
         }
     }
 

@@ -110,21 +110,34 @@ namespace ROOT.UI
             }
         }
 
-        public void InitBSTTree(LevelActionAsset rootActionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
+        private void CreateActualTree(LevelActionAsset rootActionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
         {
-            var rootActionPos = Vector2Int.zero;
-            rootActionPos.y = -rootActionAsset.UnlockingLevel_Upper.Length;
-            GenerateActionAssetQuad(rootActionPos, -Vector2Int.one, rootActionAsset, buttonCallBack, false);
+            //TODO 这里的初始位置流程还是不行。因为初始位置应该受到全部Quad的全部最上面的位置影响。而且其实应该是动态的。
+            var rootYPos = -rootActionAsset.UnlockingLevel_Upper.Count(l => StartGameMgr.DevMode || !l.IsTestingLevel);
+            GenerateActionAssetQuad(new Vector2Int(0, rootYPos), -Vector2Int.one, rootActionAsset, buttonCallBack, false);
+        }
 
+        private void UpdateLevelSelectionPanelSize()
+        {
             var quadRects = LevelSelectionPanel.GetComponentsInChildren<RectTransform>().Where(t => t.parent == LevelSelectionPanel.transform);
             var maxX = quadRects.Max(r => r.anchoredPosition.x);
             var maxY = quadRects.Max(r => Mathf.Abs(r.anchoredPosition.y));
             LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxX + 125);
             LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, maxY + 175);
+        }
 
+        private void UpdateLevelSelectionPanelPos()
+        {
             var posX = PlayerPrefs.GetFloat(StaticPlayerPrefName.Level_SelectionPanel_PosX);
             var posY = PlayerPrefs.GetFloat(StaticPlayerPrefName.Level_SelectionPanel_PosY);
             LevelSelectionPanel.anchoredPosition = new Vector2(posX, posY);
+        }
+        
+        public void InitBSTTree(LevelActionAsset rootActionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
+        {
+            CreateActualTree(rootActionAsset, buttonCallBack);
+            UpdateLevelSelectionPanelSize();
+            UpdateLevelSelectionPanelPos();
         }
     }
 }

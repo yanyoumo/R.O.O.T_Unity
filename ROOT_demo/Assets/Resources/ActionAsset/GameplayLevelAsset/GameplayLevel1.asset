@@ -123,7 +123,7 @@ MonoBehaviour:
   - PlayingSignalSelector: 0
     CoreGenre: 1
     Sides: 01000000000000000100000000000000
-    Tier: 2
+    Tier: 3
     Pos: {x: -1, y: -1}
     IsStation: 0
   HasBossRound: 0
@@ -280,10 +280,10 @@ MonoBehaviour:
     Tier: 0
     IsStationary: 0
     Tag: 0
-    HandOnCheckType: 250
+    HandOnCheckType: 251
     HandOnFailedType: 0
     HandsOnLockRound: 0
-    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523040\u5143"
+    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523025\u5143"
     TimeOutSec: -1
     TargetTag: 0
     Set: 0

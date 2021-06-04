@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_TL2
-  Thumbnail: {fileID: 21300000, guid: 95121897179f21341a5afc7c88499127, type: 3}
+  Thumbnail: {fileID: 21300000, guid: ca60355f735f90d46a4bb437515201c0, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
     type: 3}
   AcessID: 2
