@@ -13,7 +13,9 @@ namespace ROOT.SetupAsset
     [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : SerializedScriptableObject
     {
-        [Header("Basic Data"),PropertyOrder(-99)] public string TitleTerm;
+        [Header("Basic Data"),PropertyOrder(-99)] 
+        [InfoBox("这里应该用反射流程加一个Title的筛选",InfoMessageType.Warning)]
+        public string TitleTerm;
 
         [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-99)]
         public Sprite Thumbnail;

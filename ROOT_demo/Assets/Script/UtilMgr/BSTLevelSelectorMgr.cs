@@ -26,8 +26,8 @@ namespace ROOT
         {
             LevelMasterManager.Instance.LoadCareerSetup(_currentUsingAsset).completed += a =>
             {
-                PlayerPrefs.SetFloat(StaticPlayerPrefName.Level_SelectionPanel_PosX, bstPanelPos.x);
-                PlayerPrefs.SetFloat(StaticPlayerPrefName.Level_SelectionPanel_PosY, bstPanelPos.y);
+                PlayerPrefs.SetFloat(StaticPlayerPrefName.LEVEL_SELECTION_PANEL_POS_X, bstPanelPos.x);
+                PlayerPrefs.SetFloat(StaticPlayerPrefName.LEVEL_SELECTION_PANEL_POS_Y, bstPanelPos.y);
                 SceneManager.UnloadSceneAsync(StaticName.SCENE_ID_BST_CAREER);
             };
         }

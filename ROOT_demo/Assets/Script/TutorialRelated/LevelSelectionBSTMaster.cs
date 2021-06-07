@@ -130,8 +130,8 @@ namespace ROOT.UI
 
         private void UpdateLevelSelectionPanelPos()
         {
-            var posX = PlayerPrefs.GetFloat(StaticPlayerPrefName.Level_SelectionPanel_PosX);
-            var posY = PlayerPrefs.GetFloat(StaticPlayerPrefName.Level_SelectionPanel_PosY);
+            var posX = PlayerPrefs.GetFloat(StaticPlayerPrefName.LEVEL_SELECTION_PANEL_POS_X);
+            var posY = PlayerPrefs.GetFloat(StaticPlayerPrefName.LEVEL_SELECTION_PANEL_POS_Y);
             LevelSelectionPanel.anchoredPosition = new Vector2(posX, posY);
         }
         
