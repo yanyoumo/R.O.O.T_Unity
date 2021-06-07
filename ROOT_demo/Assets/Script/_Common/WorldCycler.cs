@@ -139,13 +139,15 @@ namespace ROOT
             DOTween.TogglePauseAll();
             MessageDispatcher.SendMessage(new GamePauseInfo {GamePaused = GamePausedStatus});
         }
-        
+
         private static void RespondToKeyGamePauseEvent(IMessage rMessage)
         {
-            var actionPack = rMessage as ActionPack;
-            if (actionPack.IsAction(RewiredConsts.Action.Button.PauseMenu))
+            if (rMessage is ActionPack actPak)
             {
-                ToggleGamePause();
+                if (actPak.IsAction(RewiredConsts.Action.Button.PauseMenu))
+                {
+                    ToggleGamePause();
+                }
             }
         }
 
