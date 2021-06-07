@@ -1,11 +1,15 @@
 using System;
 using com.ootii.Messages;
+using DG.Tweening;
+using ROOT.Message;
 using UnityEngine;
 
 namespace ROOT
 {
     public static class WorldCycler
     {
+        public static bool GamePausedStatus { get; private set; } = false;
+
         public static void Reset()
         {
             TelemetryStage = false;
@@ -123,6 +127,37 @@ namespace ROOT
             ApparentOffset = -RawStep;
             ExpectedStep = 0;
             MessageDispatcher.SendMessage(WorldEvent.ApparentStepResetedEvent);
+        }
+
+        private static void ToggleGamePause()
+        {
+            //FSM暂停 √
+            //DOTween暂停 √
+            //信号动画DOTween改修 
+            //输入队列暂停
+            GamePausedStatus = !GamePausedStatus;
+            DOTween.TogglePauseAll();
+            MessageDispatcher.SendMessage(new GamePauseInfo {GamePaused = GamePausedStatus});
+        }
+        
+        private static void RespondToKeyGamePauseEvent(IMessage rMessage)
+        {
+            var actionPack = rMessage as ActionPack;
+            if (actionPack.IsAction(RewiredConsts.Action.Button.PauseMenu))
+            {
+                ToggleGamePause();
+            }
+        }
+
+        private static void RespondToGamePauseEvent(IMessage rMessage)
+        {
+            ToggleGamePause();
+        }
+
+        static WorldCycler()
+        {
+            MessageDispatcher.AddListener(WorldEvent.ControllingEvent, RespondToKeyGamePauseEvent);
+            MessageDispatcher.AddListener(WorldEvent.RequestGamePauseEvent, RespondToGamePauseEvent);
         }
     }
 }

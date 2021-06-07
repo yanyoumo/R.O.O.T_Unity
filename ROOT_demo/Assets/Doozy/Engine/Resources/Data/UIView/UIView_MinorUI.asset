@@ -20,3 +20,4 @@ MonoBehaviour:
   - CareerSetup_CoreSelection
   - GamePlay_RoundAlert
   - GamePlay_TutorialTextFrame_Alter
+  - GamePause_Content

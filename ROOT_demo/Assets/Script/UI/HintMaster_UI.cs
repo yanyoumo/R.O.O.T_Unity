@@ -25,6 +25,7 @@ namespace ROOT.UI
         public UIView TutorialMainTextFrame;
         public UIView TutorialMainTextFrame_Alter;
         public UIView TutorialHandOff;
+        public UIView GamePauseMenu;
 
         private Dictionary<UIView, bool> tmpHideStatusBuffer;
         
@@ -199,6 +200,22 @@ namespace ROOT.UI
                 }
             }
         }
+
+        private void ToggleGamePauseMenu(IMessage rMessage)
+        {
+            if (rMessage is GamePauseInfo info)
+            {
+                GamePauseMenu.Toggle(info.GamePaused);
+            }
+        }
+
+        public void GameResume()
+        {
+            if (WorldCycler.GamePausedStatus)
+            {
+                MessageDispatcher.SendMessage(WorldEvent.RequestGamePauseEvent);
+            }
+        }
         
         private void Awake()
         {
@@ -218,10 +235,12 @@ namespace ROOT.UI
             MessageDispatcher.AddListener(WorldEvent.HintRelatedEvent, HintEventHandler);
             MessageDispatcher.AddListener(WorldEvent.ToggleHintUIUpEvent, ToggleHintUIUpEventHandler);
             MessageDispatcher.AddListener(WorldEvent.ToggleHintUIDownEvent, ToggleHintUIDownEventHandler);
+            MessageDispatcher.AddListener(WorldEvent.GamePauseEvent, ToggleGamePauseMenu);
         }
 
         private void OnDestroy()
         {
+            MessageDispatcher.AddListener(WorldEvent.GamePauseEvent, ToggleGamePauseMenu);
             MessageDispatcher.RemoveListener(WorldEvent.ToggleHintUIDownEvent,ToggleHintUIDownEventHandler);
             MessageDispatcher.RemoveListener(WorldEvent.ToggleHintUIUpEvent,ToggleHintUIUpEventHandler);
             MessageDispatcher.RemoveListener(WorldEvent.HintRelatedEvent, HintEventHandler);
