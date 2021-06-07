@@ -276,11 +276,11 @@ namespace ROOT
             }
 
             //Confirm Or Cancel Gate
-            if (!ctrlPack.HasFlag(ControllingCommand.Confirm) && !ctrlPack.HasFlag(ControllingCommand.Cancel)) return;
+            if (!ctrlPack.HasFlag(ControllingCommand.SwapConfirm) && !ctrlPack.HasFlag(ControllingCommand.Cancel)) return;
 
             if (CurrentSkillType == SkillType.Swap)
             {
-                var hasConfirm = ctrlPack.HasFlag(ControllingCommand.Confirm);
+                var hasConfirm = ctrlPack.HasFlag(ControllingCommand.SwapConfirm);
                 var hasCancel = ctrlPack.HasFlag(ControllingCommand.Cancel);
 
                 if (hasConfirm && hasCancel) hasConfirm = false; //防止某些不是人的玩家真把确定和取消同时按下去了、把取消优先级提上去。
@@ -326,6 +326,7 @@ namespace ROOT
                 else
                 {
                     SwapComplete(_currentSkillID);
+                    MessageDispatcher.SendMessage(WorldEvent.BoardShouldUpdateEvent);
                 }
 
                 if (!swapSuccess)

@@ -24,6 +24,9 @@ namespace ROOT
         public Transform NewLevelIconRoot;
         public Transform LevelCompleteIconRoot;
 
+        public Image ThumbnailBG;
+        public Image LockedThumbnail;
+        
         private Color SelectableColor => ColorLibManager.Instance.ColorLib.ROOT_SELECTIONQUAD_SELECTABLE;
         private Color UnSelectableColor => ColorLibManager.Instance.ColorLib.ROOT_SELECTIONQUAD_UNSELECTABLE;
         
@@ -56,10 +59,12 @@ namespace ROOT
                 LevelCompleteIconRoot.gameObject.SetActive(_levelCompleted);
             }
         }
-        
+
         private void UpdateSelectable()
         {
-            TutorialThumbnail.sprite = _levelSelectable ? cachedActionAsset.Thumbnail : UnSelectableThumbnail;
+            //TutorialThumbnail.sprite = _levelSelectable ? cachedActionAsset.Thumbnail : UnSelectableThumbnail;
+            ThumbnailBG.enabled = !_levelSelectable;
+            LockedThumbnail.enabled = !_levelSelectable;
             TitleLocalize.SetTerm(_levelSelectable ? cachedActionAsset.TitleTerm : ScriptTerms.Locked);
             ButtonLocalize.SetTerm(_levelSelectable ? ScriptTerms.PlayLevel : ScriptTerms.Locked);
             QuadBackGround.color = _levelSelectable ? SelectableColor : UnSelectableColor;

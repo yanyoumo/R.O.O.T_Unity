@@ -13,7 +13,9 @@ namespace ROOT.SetupAsset
     [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : SerializedScriptableObject
     {
-        [Header("Basic Data"),PropertyOrder(-99)] public string TitleTerm;
+        [Header("Basic Data"),PropertyOrder(-99)] 
+        [InfoBox("这里应该用反射流程加一个Title的筛选",InfoMessageType.Warning)]
+        public string TitleTerm;
 
         [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-99)]
         public Sprite Thumbnail;
@@ -24,7 +26,7 @@ namespace ROOT.SetupAsset
         [PropertyOrder(-97)] 
         public int AcessID = -1;
         
-        [Range(0, 100),PropertyOrder(-96)] 
+        [Range(0, 1000),PropertyOrder(-96)] 
         public int InitialCurrency = 36;
 
         [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [LabelText("Shop has cost")][PropertyOrder(-95)]
@@ -33,7 +35,11 @@ namespace ROOT.SetupAsset
         [VerticalGroup("Split/Right")] [LabelText("Unit could cost")][PropertyOrder(-94)]
         public bool UnitCost = true;
 
-        [Space][PropertyOrder(-1)] public LevelType levelType;
+        [Space][PropertyOrder(-2)] public LevelType levelType;
+
+        [PropertyOrder(-1)] 
+        [LabelText("Level For Test")]
+        public bool IsTestingLevel;
 
         [PropertyOrder(0)]public LevelType DisplayedlevelType;
 
@@ -247,8 +253,12 @@ namespace ROOT.SetupAsset
 
         public (int, bool, bool) GameStartingData => (InitialCurrency, ShopCost, UnitCost);
 
-        [PropertyOrder(200)] [Header("Unlocking Level")]
+        [PropertyOrder(200)] 
+        [Header("Unlocking Level")]
         public LevelActionAsset[] UnlockingLevel;
+        
+        [PropertyOrder(201)]
+        public LevelActionAsset[] UnlockingLevel_Upper;
 
         [Obsolete("Why?")] public Vector2Int[] StationaryRateList => null;
 

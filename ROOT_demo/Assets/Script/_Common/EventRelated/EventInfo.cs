@@ -19,6 +19,12 @@ namespace ROOT.Message
         public override string Type { get; set; }
     }
 
+    public class GamePauseInfo : RootMessageBase
+    {
+        public bool GamePaused;
+        public override string Type => WorldEvent.GamePauseEvent;
+    }
+    
     public class CurrencyUpdatedInfo : RootMessageBase
     {
         public int TotalIncomesVal = int.MaxValue;

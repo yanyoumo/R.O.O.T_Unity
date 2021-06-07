@@ -21,3 +21,4 @@ MonoBehaviour:
   - LevelSelectView
   - OptionView
   - GameOvert
+  - GamePause

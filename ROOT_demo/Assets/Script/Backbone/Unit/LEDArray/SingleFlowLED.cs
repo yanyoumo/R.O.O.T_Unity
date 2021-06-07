@@ -25,8 +25,9 @@ namespace ROOT
             NegXArrow_Tex.sharedMaterial.color = LEDColor;
         }
 
-        private void Update()
+        private void Update()//TODO 到时候更精巧的一些就是这里的流程用DOTween改修一下。
         {
+            if (WorldCycler.GamePausedStatus) return;
             PosXArrow_Tex.sharedMaterial.mainTextureOffset = new Vector2(-0.01f * Time.frameCount, 0.0f);
             NegXArrow_Tex.sharedMaterial.mainTextureOffset = new Vector2(-0.01f * Time.frameCount, 0.0f);
         }
@@ -35,12 +36,6 @@ namespace ROOT
         {
             set
             {
-                /*var absVal = Mathf.Abs(value);
-                var scale = Mathf.Max(absVal / (float) maxVal, 1e-3f);
-                var scaleVec = Vector3.Lerp(MinArrowScale, MaxArrowScale, scale);*/
-                //var scaleVec = Vector3.Lerp(MinArrowScale, MaxArrowScale, 1.0f);
-                /*PosXArrow_Tex.transform.localScale = scaleVec;
-                NegXArrow_Tex.transform.localScale = scaleVec;*/
                 if (value==0)
                 {
                     //目前是要用==0来关掉的。

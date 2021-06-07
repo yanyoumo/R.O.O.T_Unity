@@ -245,6 +245,7 @@ namespace ROOT
         {
             do
             {
+                if (WorldCycler.GamePausedStatus) return;
                 //现在这里是“动态一帧多态”设计、在一帧内现在会无限制地转移状态；
                 //只不过在有的状态转移时进行了标记（即：waitForNextFrame）
                 //进行标记后、就会强制等待新的一帧。

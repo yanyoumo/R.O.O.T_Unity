@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using com.ootii.Messages;
 using Rewired;
+using Rewired.Dev;
 using ROOT.Consts;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -18,7 +20,7 @@ namespace ROOT
     {
         [ReadOnly] public int playerId = 0;
         private Player player;
-        
+
         private static bool holdForDrag = false;
 
         private static Vector2 MouseScreenPos;
@@ -26,6 +28,38 @@ namespace ROOT
         private float minHoldShift => Mathf.Pow(1, Mathf.Lerp(-3.0f, -1.0f, MouseDragSensitivity / 100f));
 
         private int MouseDragSensitivity = 50;
+
+        #region ReflectionSection
+        //TODO 这里反射的代码、还是要中Editor相关的宏框一下。
+
+        [ValueDropdown("CursorActionAsDDList")] 
+        public int[] CursorActions;
+
+        private void RegisterCursorAction()
+        {
+            foreach (var cursorAction in CursorActions)
+            {
+                player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, cursorAction);
+            }
+        }
+
+        private IEnumerable CursorActionAsDDList => GetDDListFromCatagory(typeof(Button));//TODO 这个还要分类弄。
+
+        private IEnumerable GetDDListFromCatagory(Type targetType)
+        {
+            var res = new ValueDropdownList<int>();
+            foreach (var fieldInfo in targetType.GetFields())
+            {
+                var actionAttribute = Attribute.GetCustomAttribute(fieldInfo, typeof(ActionIdFieldInfoAttribute));
+                if (actionAttribute is ActionIdFieldInfoAttribute)
+                {
+                    res.Add(fieldInfo.Name, (int) fieldInfo.GetValue(null));
+                }
+            }
+            return res;
+        }
+
+        #endregion
         
         void Awake()
         {
@@ -39,58 +73,119 @@ namespace ROOT
             {
                 PlayerPrefs.SetInt(StaticPlayerPrefName.MOUSE_DRAG_SENSITIVITY, 50);
             }
-            
+
             player = ReInput.players.GetPlayer(playerId);
 
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorUp);
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorDown);
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorLeft);
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CursorRight);
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.CursorUp);
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.CursorDown);
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.CursorLeft);
+            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.CursorRight);
 
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func0);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func1);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func2);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func3);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func4);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func5);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func6);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func7);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func8);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Func9);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.Func0);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.Func1);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.Func2);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.Func3);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.Func4);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.Func5);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.Func6);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.Func7);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.Func8);
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.Func9);
 
-            player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HoldForDrag);
-            player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Button.HoldForDrag);
-            
-            player.AddInputEventDelegate(OnInputHintUp, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintControl);
-            player.AddInputEventDelegate(OnInputHintDown, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Button.HintControl);
-            
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.TelemetryPause);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.RotateUnit);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintHDD);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.HintNetwork);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.CycleNext);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.InGameOverLayToggle);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Confirm0);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Button.Quit);
-            
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.ShopTierUp);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, Composite.ShopTierDown);
+            player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed,
+                Button.HoldForDrag);
+            player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustReleased,
+                Button.HoldForDrag);
 
-            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickLeftDown, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseLeft);
-            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickLeftUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, Passthough.MouseLeft);
-            //player.AddInputEventDelegate(OnInputUpdateMouseDoubleClick, UpdateLoopType.Update, InputActionEventType.ButtonJustDoublePressed, Passthough.MouseLeft);
-            //player.AddInputEventDelegate(OnInputUpdateMouseHold, UpdateLoopType.Update, InputActionEventType.ButtonJustPressedForTime, Passthough.MouseLeft, new object[] { 1.5f });
-            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickRight, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseRight);
-            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickMiddle, UpdateLoopType.Update, InputActionEventType.ButtonJustSinglePressed, Passthough.MouseMiddle);
-            player.AddInputEventDelegate(OnInputUpdateMouseWheel, UpdateLoopType.Update, InputActionEventType.AxisActive, Passthough.MouseWheel);
-        }
+            player.AddInputEventDelegate(OnInputHintUp, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed,
+                Button.HintControl);
+            player.AddInputEventDelegate(OnInputHintDown, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustReleased, Button
+                    .HintControl);
 
-        private void OnDestroy()
-        {
-            //这里无论怎么处理都需要解注册…………
-            //player.RemoveInputEventDelegate();
-            //player.RemoveInputEventDelegate(OnInputUpdateMouseWheel, UpdateLoopType.Update, InputActionEventType.AxisActive, Passthough.MouseWheel);
-            //throw new NotImplementedException();
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Button.TelemetryPause);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Composite.RotateUnit);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Button.HintHDD);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Button.HintNetwork);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Button.CycleNext);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Button.InGameOverLayToggle);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Button.Confirm0);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Button.SwapConfirm);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Passthough.LeftAlt);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Button.Quit);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Button.PauseMenu);
+
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Composite.ShopTierUp);
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustPressed
+                , Composite.ShopTierDown);
+
+            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickLeftDown, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustSinglePressed, Passthough.MouseLeft);
+            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickLeftUp, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustReleased, Passthough.MouseLeft);
+
+            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickRight, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustSinglePressed, Passthough.MouseRight);
+            player.AddInputEventDelegate(OnInputUpdateMouseSingleClickMiddle, UpdateLoopType.Update,
+                InputActionEventType.ButtonJustSinglePressed, Passthough.MouseMiddle);
+            player.AddInputEventDelegate(OnInputUpdateMouseWheel, UpdateLoopType.Update,
+                InputActionEventType.AxisActive,
+                Passthough.MouseWheel);
         }
 
         private void OnInputUpdateCurser(InputActionEventData obj)
@@ -117,6 +212,7 @@ namespace ROOT
                     actionPack.ActionDirection = RotationDirection.East;
                     break;
             }
+
             actionPack.Sender = this;
             MessageDispatcher.SendMessage(actionPack);
         }
@@ -132,7 +228,7 @@ namespace ROOT
             };
             MessageDispatcher.SendMessage(actionPack);
         }
-        
+
         private void OnInputHintDown(InputActionEventData obj)
         {
             var actionPack = new ActionPack
@@ -145,7 +241,7 @@ namespace ROOT
             MessageDispatcher.SendMessage(actionPack);
         }
 
-        
+
         private void OnInputUpdateFunc(InputActionEventData obj)
         {
             var actionPack = new ActionPack
@@ -192,8 +288,8 @@ namespace ROOT
 
         private void OnInputUpdateMouseSingleClickLeftDown(InputActionEventData obj)
         {
-            MouseScreenPos = player.controllers.Mouse.screenPosition; 
-            RootDebug.Log("Mouse Single Click Down",NameID.JiangDigong_Log);
+            MouseScreenPos = player.controllers.Mouse.screenPosition;
+            RootDebug.Log("Mouse Single Click Down", NameID.JiangDigong_Log);
         }
 
         private void OnInputUpdateMouseSingleClickLeftUp(InputActionEventData obj)
@@ -205,7 +301,7 @@ namespace ROOT
                 Sender = this,
             };
             bool hasAction = false;
-            RootDebug.Log("Mouse Single Click Up",NameID.JiangDigong_Log);
+            RootDebug.Log("Mouse Single Click Up", NameID.JiangDigong_Log);
             if (!MouseScreenPos.Equals(new Vector2(Single.NaN, Single.NaN)))
             {
                 //Debug.Log(Screen.width + "==" + Screen.height);
@@ -216,14 +312,16 @@ namespace ROOT
                     RootDebug.Log("Mouse Single Click", NameID.JiangDigong_Log);
                 }
                 else
-                { 
+                {
                     actionPack.ActionID = Composite.Drag;
                     actionPack.eventType = InputActionEventType.AxisActive;
                     RootDebug.Log("Mouse Drag", NameID.JiangDigong_Log);
                 }
+
                 hasAction = true;
             }
-            MouseScreenPos=new Vector2(Single.NaN, Single.NaN);
+
+            MouseScreenPos = new Vector2(Single.NaN, Single.NaN);
             if (hasAction)
                 MessageDispatcher.SendMessage(actionPack);
         }
@@ -266,6 +364,7 @@ namespace ROOT
             MessageDispatcher.SendMessage(actionPack);
             RootDebug.Log("Mouse Single Click Right", NameID.JiangDigong_Log);
         }
+
         private void OnInputUpdateMouseSingleClickMiddle(InputActionEventData obj)
         {
             var actionPack = new ActionPack
@@ -277,6 +376,7 @@ namespace ROOT
             MessageDispatcher.SendMessage(actionPack);
             RootDebug.Log("Mouse Single Click Middle", NameID.JiangDigong_Log);
         }
+
         private void OnInputUpdateMouseWheel(InputActionEventData obj)
         {
             var actionPack = new ActionPack
@@ -287,7 +387,7 @@ namespace ROOT
                 MouseWheelDelta = player.GetAxisDelta(obj.actionId),
             };
             MessageDispatcher.SendMessage(actionPack);
-            RootDebug.Log("Mouse Wheel Delta "+ player.GetAxisDelta(obj.actionId), NameID.JiangDigong_Log);
+            RootDebug.Log("Mouse Wheel Delta " + player.GetAxisDelta(obj.actionId), NameID.JiangDigong_Log);
         }
     }
 }

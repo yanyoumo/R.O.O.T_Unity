@@ -66,8 +66,7 @@ namespace ROOT
         private bool CtrlQueueNonEmpty => _ctrlPackQueue.Count != 0;
         public bool PendingRequestedBreak => _breakingCMDQueue.Count != 0;
 
-        private Ray MouseScreenPosToRay(Vector2 screenpos) =>
-            Camera.main.ScreenPointToRay(new Vector3(screenpos.x, screenpos.y, 0.0f));
+        private Ray MouseScreenPosToRay(Vector2 screenpos) => Camera.main.ScreenPointToRay(new Vector3(screenpos.x, screenpos.y, 0.0f));
 
         private bool MouseDrivingFunction(ActionPack actionPack)
         {
@@ -103,6 +102,7 @@ namespace ROOT
 
         protected bool CoreDrivingFunction(ActionPack actionPack)
         {
+            if (WorldCycler.GamePausedStatus) return false;
             //Debug.Log("CoreDrivingFunction");
             //TODO 这个里面有些问题、还需要处理。
             if (MouseDrivingFunction(actionPack)) return false;
@@ -136,6 +136,7 @@ namespace ROOT
 
             if (actionPack.IsAction(CycleNext)) CtrlPack.SetFlag(ControllingCommand.CycleNext);
             if (actionPack.IsAction(Confirm0)) CtrlPack.SetFlag(ControllingCommand.Confirm);
+            if (actionPack.IsAction(SwapConfirm)) CtrlPack.SetFlag(ControllingCommand.SwapConfirm);
             if (actionPack.IsAction(LeftAlt)) CtrlPack.SetFlag(ControllingCommand.Cancel);
 
             if (actionPack.IsAction(HintControl))

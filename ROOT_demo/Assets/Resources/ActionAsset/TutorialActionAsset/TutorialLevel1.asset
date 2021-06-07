@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_TL1
-  Thumbnail: {fileID: 21300000, guid: 6a65727d6cebf18419b06ffd46b11c0c, type: 3}
+  Thumbnail: {fileID: 21300000, guid: 201fbe027c752474f9e7720fc923af1b, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
     type: 3}
   AcessID: 1
@@ -30,6 +30,8 @@ MonoBehaviour:
   ShopCost: 1
   UnitCost: 1
   levelType: 0
+  IsTestingLevel: 0
+  DisplayedlevelType: 0
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
@@ -78,6 +80,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 1
     ActionType: 3
@@ -109,6 +112,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 2
     ActionType: 20
@@ -140,6 +144,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 3
     ActionType: 20
@@ -171,6 +176,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 1
+    SkillID: 0
   - ActionIdx: 0
     ActionSubIdx: 4
     ActionType: 20
@@ -202,6 +208,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 2
+    SkillID: 0
   - ActionIdx: 1
     ActionSubIdx: 0
     ActionType: 0
@@ -233,6 +240,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 0
     ActionType: 2
@@ -264,6 +272,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 1
     ActionType: 1
@@ -295,6 +304,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 2
     ActionType: 1
@@ -326,6 +336,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 3
     ActionType: 11
@@ -357,6 +368,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 2
     ActionSubIdx: 3
     ActionType: 0
@@ -388,6 +400,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 3
     ActionSubIdx: 0
     ActionType: 0
@@ -419,6 +432,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 4
     ActionSubIdx: 0
     ActionType: 0
@@ -450,10 +464,11 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 5
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5355\u5143\u4E0A\u6709\u4E00\u4E2ALED\u6765\u8868\u793A\u5B83\u7684\u6FC0\u6D3B\u72B6\u6001\uFF0C\u7EA2\u8272\u8868\u793A\u5355\u5143\u6CA1\u6709\u88AB\u6FC0\u6D3B\uFF1B\u5F53\u7136\u3001\u6838\u5FC3\u53D8\u4F53\u662F\u4E00\u76F4\u88AB\u6FC0\u6D3B\u7684\u3002"
+    Text: "\u573A\u5355\u5143\u4E0A\u6709\u4E00\u4E2A\u73AF\u72B6LED\u6765\u8868\u793A\u5B83\u7684\u6FC0\u6D3B\u72B6\u6001\uFF0C\u7EA2\u8272\u8868\u793A\u5355\u5143\u6CA1\u6709\u88AB\u6FC0\u6D3B\uFF1B\u5F53\u7136\u3001\u6838\u5FC3\u53D8\u4F53\u662F\u4E00\u76F4\u88AB\u6FC0\u6D3B\u7684\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -481,6 +496,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 5
     ActionSubIdx: 1
     ActionType: 12
@@ -503,8 +519,8 @@ MonoBehaviour:
     Set: 0
     HLSet: 1
     HLCustomPos: 1
-    HighLightingPos: {x: 0.1883, y: 0.6049}
-    HighLightingScale: {x: 0.9321266, y: 0.6712506}
+    HighLightingPos: {x: 0.0043, y: 0.4106}
+    HighLightingScale: {x: 1.529039, y: 1.531474}
     AllClear: 0
     UITag: 0
     TimeLineStatus: 0
@@ -512,6 +528,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 6
     ActionSubIdx: 0
     ActionType: 0
@@ -543,6 +560,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 6
     ActionSubIdx: 1
     ActionType: 12
@@ -574,6 +592,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 7
     ActionSubIdx: 0
     ActionType: 0
@@ -605,6 +624,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 8
     ActionSubIdx: 0
     ActionType: 8
@@ -636,6 +656,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 9
     ActionSubIdx: 0
     ActionType: 3
@@ -667,6 +688,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 9
     ActionSubIdx: 1
     ActionType: 0
@@ -698,6 +720,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 10
     ActionSubIdx: 0
     ActionType: 10
@@ -729,6 +752,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 10
     ActionSubIdx: 1
     ActionType: 18
@@ -760,6 +784,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 10
     ActionSubIdx: 2
     ActionType: 12
@@ -791,6 +816,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 10
     ActionSubIdx: 3
     ActionType: 0
@@ -822,6 +848,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 11
     ActionSubIdx: 0
     ActionType: 0
@@ -853,6 +880,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 12
     ActionSubIdx: 0
     ActionType: 0
@@ -884,6 +912,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 13
     ActionSubIdx: 0
     ActionType: 12
@@ -915,10 +944,11 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 13
     ActionSubIdx: 1
     ActionType: 0
-    Text: "\u5F53\u5355\u5143\u6B63\u786E\u6FC0\u6D3B\u65F6,\u5355\u5143\u4E0A\u7684\u89D2\u843D\u4E0A\u7684\u6FC0\u6D3BLED\u4F1A\u663E\u793A\u4E3A\u7EFF\u8272\u3002"
+    Text: "\u5F53\u5355\u5143\u6B63\u786E\u6FC0\u6D3B\u65F6\uFF0C\u573A\u5355\u5143\u4E0A\u7684\u73AF\u72B6\u6FC0\u6D3BLED\u4F1A\u663E\u793A\u4E3A\u7EFF\u8272\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -946,6 +976,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 14
     ActionSubIdx: 0
     ActionType: 0
@@ -977,6 +1008,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 15
     ActionSubIdx: 0
     ActionType: 1
@@ -1008,6 +1040,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 15
     ActionSubIdx: 1
     ActionType: 0
@@ -1039,6 +1072,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 15
     ActionSubIdx: 2
     ActionType: 12
@@ -1061,8 +1095,8 @@ MonoBehaviour:
     Set: 0
     HLSet: 1
     HLCustomPos: 1
-    HighLightingPos: {x: -0.035, y: 2.38}
-    HighLightingScale: {x: 1.275538, y: 0.4171866}
+    HighLightingPos: {x: -0.0638, y: 2.4834}
+    HighLightingScale: {x: 1.220679, y: 1.061443}
     AllClear: 0
     UITag: 0
     TimeLineStatus: 0
@@ -1070,10 +1104,11 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 16
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u4E4B\u524D\u5DF2\u7ECF\u8FDE\u63A5\u7684\u77E9\u9635\u5355\u5143\u5E95\u90E8\u53EA\u6709\u4E00\u4E2A\u5C0F\u706F\uFF0C\u8FD9\u4EE3\u8868\u4ED6\u7684\u7B49\u7EA7\u662F1\u3002"
+    Text: "\u4E4B\u524D\u5DF2\u7ECF\u8FDE\u63A5\u7684\u77E9\u9635\u5355\u5143\u5E95\u90E8\u53EA\u6709\u4E00\u6BB5\u7B49\u7EA7LED\u88AB\u70B9\u4EAE\uFF0C\u8FD9\u4EE3\u8868\u4ED6\u7684\u7B49\u7EA7\u662F1\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1101,6 +1136,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 16
     ActionSubIdx: 1
     ActionType: 12
@@ -1132,6 +1168,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 17
     ActionSubIdx: 0
     ActionType: 0
@@ -1163,6 +1200,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 18
     ActionSubIdx: 0
     ActionType: 0
@@ -1194,6 +1232,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 19
     ActionSubIdx: 0
     ActionType: 0
@@ -1225,6 +1264,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 20
     ActionSubIdx: 0
     ActionType: 8
@@ -1256,6 +1296,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 21
     ActionSubIdx: 0
     ActionType: 3
@@ -1287,6 +1328,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 21
     ActionSubIdx: 1
     ActionType: 12
@@ -1318,11 +1360,12 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 21
     ActionSubIdx: 2
     ActionType: 0
     Text: "\u6B64\u65F6\u53EF\u4EE5\u4F7F\u7528<sprite=\"FunctionKeyPacked_Lite\"
-      index=9>\u952E\u6765\u5207\u6362\u67E5\u770B\u67D0\u4E2A\u5355\u5143\u76C8\u5229\u7684\u5177\u4F53\u6570\u636E\uFF1B\u5BF9\u4E8E\u77E9\u9635\u7C7B\u578B\u7684\u5355\u5143\uFF0C\u7B49\u7EA7\u5BF9\u76C8\u5229\u7684\u589E\u52A0\u662F\u5448\u500D\u6570\u7684\u5173\u7CFB\u7684\u3002"
+      index=9>\u6765\u5207\u6362\u67E5\u770B\u67D0\u4E2A\u5355\u5143\u76C8\u5229\u7684\u5177\u4F53\u6570\u636E\uFF1B\u5BF9\u4E8E\u77E9\u9635\u7C7B\u578B\u7684\u5355\u5143\uFF0C\u7B49\u7EA7\u5BF9\u76C8\u5229\u7684\u589E\u52A0\u662F\u5448\u500D\u6570\u7684\u5173\u7CFB\u7684\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1350,6 +1393,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 22
     ActionSubIdx: 0
     ActionType: 12
@@ -1381,6 +1425,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 22
     ActionSubIdx: 1
     ActionType: 0
@@ -1412,6 +1457,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 23
     ActionSubIdx: 0
     ActionType: 0
@@ -1443,6 +1489,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 24
     ActionSubIdx: 0
     ActionType: 1
@@ -1474,6 +1521,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 24
     ActionSubIdx: 1
     ActionType: 1
@@ -1505,6 +1553,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 24
     ActionSubIdx: 2
     ActionType: 1
@@ -1536,6 +1585,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 25
     ActionSubIdx: 0
     ActionType: 9
@@ -1567,6 +1617,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 25
     ActionSubIdx: 1
     ActionType: 0
@@ -1598,6 +1649,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 26
     ActionSubIdx: 0
     ActionType: 8
@@ -1629,6 +1681,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 27
     ActionSubIdx: 0
     ActionType: 3
@@ -1660,6 +1713,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 27
     ActionSubIdx: 1
     ActionType: 0
@@ -1691,6 +1745,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 28
     ActionSubIdx: 0
     ActionType: 0
@@ -1722,6 +1777,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 29
     ActionSubIdx: 0
     ActionType: 0
@@ -1753,6 +1809,7 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   - ActionIdx: 30
     ActionSubIdx: 0
     ActionType: 5
@@ -1784,10 +1841,13 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
   mainIDXToinsert: 16
   subIDXToinsert: 2
   CSVFileName: TutorialLevel1_Text
   UnlockingLevel:
   - {fileID: 11400000, guid: 3f020c2efac9da844b701d0c75930079, type: 2}
   - {fileID: 11400000, guid: c78736a0910a54c449fb783cf163be7c, type: 2}
+  UnlockingLevel_Upper:
+  - {fileID: 11400000, guid: f06c345c07b1ef94c8dd0addaec25bea, type: 2}
   ExcludedShop: 0

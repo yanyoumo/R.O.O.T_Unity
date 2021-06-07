@@ -173,8 +173,8 @@ namespace ROOT
             return fsm.LevelAsset.SkillMgr.SkillUsedCountByID(4) + fsm.LevelAsset.SkillMgr.SkillUsedCountByID(5) +
                    fsm.LevelAsset.SkillMgr.SkillUsedCountByID(6) >= 1 &&
                    board.Units.Where(unit => unit.CheckType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
-                       unit.GetConnectedOtherUnit.Count(tmp =>
-                           unit.CheckType(SignalType.Matrix, HardwareType.Field)) == 4);
+                       unit.GetConnectedOtherUnit.Count(fieldUnit =>
+                           fieldUnit.CheckType(SignalType.Matrix, HardwareType.Field)) == 4);
         }
     }
 }
