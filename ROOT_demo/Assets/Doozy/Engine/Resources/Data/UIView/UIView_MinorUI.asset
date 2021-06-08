@@ -15,9 +15,10 @@ MonoBehaviour:
   CategoryName: MinorUI
   DatabaseType: 2
   Names:
+  - CareerSetup_CoreSelection
+  - GamePause_Content
+  - GamePlay_RoundAlert
   - GamePlay_TutorialGoal
   - GamePlay_TutorialTextFrame
-  - CareerSetup_CoreSelection
-  - GamePlay_RoundAlert
   - GamePlay_TutorialTextFrame_Alter
-  - GamePause_Content
+  - CareerScene_ScanPopUp
