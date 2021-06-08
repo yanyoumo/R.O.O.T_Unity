@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2173914093708606660}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -638.9026, y: -509.3887, z: -69.05046}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2173914094584961222}
@@ -226,7 +226,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 5
     - _id: 2
       _name: CursorDown
       _type: 1
@@ -235,7 +235,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 5
     - _id: 3
       _name: CursorLeft
       _type: 1
@@ -244,7 +244,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 5
     - _id: 4
       _name: CursorRight
       _type: 1
@@ -253,7 +253,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 5
     - _id: 5
       _name: TelemetryPause
       _type: 1
@@ -325,7 +325,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 6
     - _id: 13
       _name: Func1
       _type: 1
@@ -334,7 +334,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 6
     - _id: 14
       _name: Func2
       _type: 1
@@ -343,7 +343,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 6
     - _id: 15
       _name: Func3
       _type: 1
@@ -352,7 +352,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 6
     - _id: 16
       _name: Func4
       _type: 1
@@ -361,7 +361,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 6
     - _id: 17
       _name: Func5
       _type: 1
@@ -370,7 +370,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 6
     - _id: 18
       _name: Func6
       _type: 1
@@ -379,7 +379,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 6
     - _id: 19
       _name: Func7
       _type: 1
@@ -388,7 +388,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 6
     - _id: 20
       _name: Func8
       _type: 1
@@ -397,7 +397,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 6
     - _id: 21
       _name: Func9
       _type: 1
@@ -406,7 +406,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 1
+      _categoryId: 6
     - _id: 6
       _name: Confirm
       _type: 1
@@ -645,18 +645,32 @@ MonoBehaviour:
       _tag: 
       _id: 4
       _userAssignable: 1
+    - _name: Cursor
+      _descriptiveName: A category that dedicate to Cursor Actions
+      _tag: 
+      _id: 5
+      _userAssignable: 1
+    - _name: Functional
+      _descriptiveName: For all numeric keys at is multipurpose
+      _tag: 
+      _id: 6
+      _userAssignable: 1
     actionCategoryMap:
       list:
       - categoryId: 0
         actionIds: 
       - categoryId: 1
-        actionIds: 010000000200000003000000040000000500000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000120000001300000014000000150000001f000000220000002a0000002b0000002d0000002e000000
+        actionIds: 0500000008000000090000000a0000000b0000001f000000220000002a0000002b0000002d0000002e000000
       - categoryId: 2
         actionIds: 170000001a000000190000001b000000
       - categoryId: 3
         actionIds: 06000000070000001e0000002000000028000000290000002c000000
       - categoryId: 4
         actionIds: 160000001c0000001d00000021000000230000002400000025000000
+      - categoryId: 5
+        actionIds: 01000000020000000300000004000000
+      - categoryId: 6
+        actionIds: 0c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -1311,7 +1325,7 @@ MonoBehaviour:
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
     actionIdCounter: 47
-    actionCategoryIdCounter: 5
+    actionCategoryIdCounter: 7
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 2
     joystickLayoutIdCounter: 1
@@ -1384,7 +1398,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7341050795403467414}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -638.9026, y: -509.3887, z: -69.05046}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2173914094584961222}
@@ -1403,4 +1417,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerId: 0
-  CursorActions: 
+  CursorActions: 01000000020000000300000004000000
+  FunctionalActions: 0c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000
+  BasicActions: 0500000008000000090000000b0000001f000000220000002b0000002d0000002e000000

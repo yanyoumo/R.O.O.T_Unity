@@ -6,6 +6,7 @@ using com.ootii.Messages;
 using ROOT.Message;
 using UnityEngine;
 using static RewiredConsts.Action.Button;
+using static RewiredConsts.Action.Cursor;
 using static RewiredConsts.Action.Composite;
 using static RewiredConsts.Action.Passthough;
 using static ROOT.WorldEvent;

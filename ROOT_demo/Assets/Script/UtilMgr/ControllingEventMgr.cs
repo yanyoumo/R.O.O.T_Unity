@@ -5,8 +5,10 @@ using Rewired;
 using Rewired.Dev;
 using ROOT.Consts;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using static RewiredConsts.Action;
+using Action = RewiredConsts.Action;
 
 namespace ROOT
 {
@@ -32,9 +34,18 @@ namespace ROOT
         #region ReflectionSection
         //TODO 这里反射的代码、还是要中Editor相关的宏框一下。
 
+        [PropertySpace]
         [ValueDropdown("CursorActionAsDDList")] 
         public int[] CursorActions;
+        
+        [PropertySpace]
+        [ValueDropdown("FunctionalActionAsDDList")] 
+        public int[] FunctionalActions;
 
+        [PropertySpace]
+        [ValueDropdown("BasicButtonActionAsDDList")] 
+        public int[] BasicActions;
+        
         private void RegisterCursorAction()
         {
             foreach (var cursorAction in CursorActions)
@@ -43,7 +54,14 @@ namespace ROOT
             }
         }
 
-        private IEnumerable CursorActionAsDDList => GetDDListFromCatagory(typeof(Button));//TODO 这个还要分类弄。
+        private void RegisterBasicKeyAction(int ActionID)
+        {
+            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, ActionID);
+        }
+
+        private IEnumerable BasicButtonActionAsDDList => GetDDListFromCatagory(typeof(Button));
+        private IEnumerable CursorActionAsDDList => GetDDListFromCatagory(typeof(Action.Cursor));
+        private IEnumerable FunctionalActionAsDDList => GetDDListFromCatagory(typeof(Functional));
 
         private IEnumerable GetDDListFromCatagory(Type targetType)
         {
@@ -76,49 +94,9 @@ namespace ROOT
 
             player = ReInput.players.GetPlayer(playerId);
 
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.CursorUp);
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.CursorDown);
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.CursorLeft);
-            player.AddInputEventDelegate(OnInputUpdateCurser, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.CursorRight);
-
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.Func0);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.Func1);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.Func2);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.Func3);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.Func4);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.Func5);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.Func6);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.Func7);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.Func8);
-            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.Func9);
+            RegisterCursorAction();
+            FunctionalActions.ForEach(RegisterBasicKeyAction);
+            BasicActions.ForEach(RegisterBasicKeyAction);
 
             player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update,
                 InputActionEventType.ButtonJustPressed,
@@ -132,47 +110,6 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputHintDown, UpdateLoopType.Update,
                 InputActionEventType.ButtonJustReleased, Button
                     .HintControl);
-
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Button.TelemetryPause);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Composite.RotateUnit);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Button.HintHDD);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Button.HintNetwork);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Button.CycleNext);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Button.InGameOverLayToggle);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Button.Confirm0);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Button.SwapConfirm);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Passthough.LeftAlt);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Button.Quit);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Button.PauseMenu);
-
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Composite.ShopTierUp);
-            player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed
-                , Composite.ShopTierDown);
 
             player.AddInputEventDelegate(OnInputUpdateMouseSingleClickLeftDown, UpdateLoopType.Update,
                 InputActionEventType.ButtonJustSinglePressed, Passthough.MouseLeft);
@@ -199,16 +136,16 @@ namespace ROOT
             };
             switch (actionPack.ActionID)
             {
-                case Button.CursorUp:
+                case Action.Cursor.CursorUp:
                     actionPack.ActionDirection = RotationDirection.North;
                     break;
-                case Button.CursorDown:
+                case Action.Cursor.CursorDown:
                     actionPack.ActionDirection = RotationDirection.South;
                     break;
-                case Button.CursorLeft:
+                case Action.Cursor.CursorLeft:
                     actionPack.ActionDirection = RotationDirection.West;
                     break;
-                case Button.CursorRight:
+                case Action.Cursor.CursorRight:
                     actionPack.ActionDirection = RotationDirection.East;
                     break;
             }
