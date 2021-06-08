@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,11 @@ namespace ROOT.SetupAsset
         [InfoBox("这里应该用反射流程加一个Title的筛选",InfoMessageType.Warning)]
         public string TitleTerm;
 
+        private IEnumerable GetValidTerms()
+        {
+            return new ValueDropdownList<int>();
+        }
+        
         [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-99)]
         public Sprite Thumbnail;
 
