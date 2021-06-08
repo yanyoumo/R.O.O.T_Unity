@@ -102,7 +102,7 @@ namespace ROOT.UI
                     toggles.Add(signalMaster.SignalLib[i], toggleCore);
                     toggleCore.CoreToggle.isOn = (i < 2);
                 }
-                SignalSelectionPanel.RectTransform.anchoredPosition = new Vector2(170f, -220f);
+                //SignalSelectionPanel.RectTransform.anchoredPosition = new Vector2(170f, -220f);
             }
         }
     }
