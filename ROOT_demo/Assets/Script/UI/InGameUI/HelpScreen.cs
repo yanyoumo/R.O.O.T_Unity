@@ -33,13 +33,17 @@ namespace ROOT
         private float _slideDuration = 0.3f;
 
         private bool _atUpOrDown = false;
+        
+        //现在因为之前的动画代码写的并不好，就是在动画时按按钮有Bug；这个到时候还是整体用DOTween改修吧。
         void ToggleHintUIUpEventHandler(IMessage rMessage)
         {
+            if (Animating) return;
             ShouldShow = true;
         }
         
         void ToggleHintUIDownEventHandler(IMessage rMessage)
         {
+            //if (Animating) return;
             ShouldShow = false;
         }
 

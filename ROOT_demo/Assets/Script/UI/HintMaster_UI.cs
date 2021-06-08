@@ -173,8 +173,14 @@ namespace ROOT.UI
             }
         }
 
+        
         private void ToggleHintUIUpEventHandler(IMessage rMessge)
         {
+            /*//RISK 从技术上讲、这么做的确可以防止消失、但是就可能会和面板本身错开。
+            //但是面板本身和这个动画严格来说还是完全异步的、这个的调谐和整合只有说这里的代码去查询HintPanel应有的状态。
+            if (tmpHideStatusBuffer.Keys.Any(v=>v.IsHiding||v.IsShowing)) return;*/
+            
+            //RISK 现在先用的是一个釜底抽薪的方法，就是把这里的动画间隔就先完全去掉、能一定程度上解决时序问题；有时间再详细弄。
             foreach (var key in tmpHideStatusBuffer.Keys.ToArray())
             {
                 tmpHideStatusBuffer[key] = key.IsVisible;
@@ -182,7 +188,7 @@ namespace ROOT.UI
 
             foreach (var uiView in tmpHideStatusBuffer.Keys)
             {
-                uiView.Hide();
+                uiView.Hide(true);
             }
         }
 
@@ -192,11 +198,11 @@ namespace ROOT.UI
             {
                 if (keyValuePair.Value)
                 {
-                    keyValuePair.Key.Show();
+                    keyValuePair.Key.Show(true);
                 }
                 else
                 {
-                    keyValuePair.Key.Hide();
+                    keyValuePair.Key.Hide(true);
                 }
             }
         }
@@ -215,6 +221,12 @@ namespace ROOT.UI
             {
                 MessageDispatcher.SendMessage(WorldEvent.RequestGamePauseEvent);
             }
+        }
+
+        public void QuitApplication()
+        {
+            Debug.Log("QuitApplication");
+            Application.Quit();
         }
         
         private void Awake()
@@ -240,7 +252,7 @@ namespace ROOT.UI
 
         private void OnDestroy()
         {
-            MessageDispatcher.AddListener(WorldEvent.GamePauseEvent, ToggleGamePauseMenu);
+            MessageDispatcher.RemoveListener(WorldEvent.GamePauseEvent, ToggleGamePauseMenu);
             MessageDispatcher.RemoveListener(WorldEvent.ToggleHintUIDownEvent,ToggleHintUIDownEventHandler);
             MessageDispatcher.RemoveListener(WorldEvent.ToggleHintUIUpEvent,ToggleHintUIUpEventHandler);
             MessageDispatcher.RemoveListener(WorldEvent.HintRelatedEvent, HintEventHandler);

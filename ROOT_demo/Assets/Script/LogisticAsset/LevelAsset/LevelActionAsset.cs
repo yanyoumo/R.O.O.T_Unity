@@ -52,18 +52,24 @@ namespace ROOT.SetupAsset
         [VerticalGroup("Split/Right")] [LabelText("Unit could cost")][PropertyOrder(-94)]
         public bool UnitCost = true;
 
-        [Space][PropertyOrder(-2)] public LevelType levelType;
+        [Space][PropertyOrder(-3)] public LevelType levelType;
 
-        [PropertyOrder(-1)] 
+        [PropertyOrder(-2)] 
         [LabelText("Level For Test")]
         public bool IsTestingLevel;
 
+        [PropertyOrder(-1)] 
+        [LabelText("Level For Scan Units")]
+        public bool IsScanLevel;
+        
         [PropertyOrder(0)]public LevelType DisplayedlevelType;
 
         [Header("Detail")][PropertyOrder(1)]
         public AdditionalGameSetup AdditionalGameSetup;
 
         [PropertyOrder(2)]
+        //TODO 这个玩意儿的随机算法还是需要调整一下，现在严格来说是确定位置的不能在随机生成之后。
+        //TODO 所以说，严格来说要在最开始把整个数列考察一下、然后总体生成一些位置。
         public UnitGist[] InitalBoard;
 
         [ShowIf("levelType", LevelType.Career)] [OnValueChanged("HasBossChanged")][PropertyOrder(3)]
