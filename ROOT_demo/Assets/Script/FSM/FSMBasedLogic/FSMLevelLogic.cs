@@ -39,6 +39,8 @@ namespace ROOT
         protected bool RotatedTile = false;
         protected bool RotatedCursor = false;
 
+        protected bool ExternalQuit { get; private set; } = false;
+
         protected internal GameAssets LevelAsset;
         private Cursor Cursor => LevelAsset.Cursor;
         internal ControllingPack _ctrlPack;
@@ -229,7 +231,7 @@ namespace ROOT
 
         protected abstract bool NormalCheckGameOver { get; }
 
-        protected bool CheckGameOver => UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver;
+        protected bool CheckGameOver => ExternalQuit || (UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver);
 
         protected abstract void BoardUpdatedHandler(IMessage rMessage);
 
@@ -265,6 +267,12 @@ namespace ROOT
             //baseVersion Do Nothing.
         }
 
+        private void RequestLevelQuitHandler(IMessage rMessage)
+        {
+            Debug.Log("ExternalQuit = true");
+            ExternalQuit = true;
+        }
+        
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
@@ -289,10 +297,12 @@ namespace ROOT
 
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
             MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
+            MessageDispatcher.AddListener(RequestLevelQuitEvent, RequestLevelQuitHandler);
         }
 
         protected virtual void OnDestroy()
         {
+            MessageDispatcher.RemoveListener(RequestLevelQuitEvent, RequestLevelQuitHandler);
             MessageDispatcher.RemoveListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
             MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
 

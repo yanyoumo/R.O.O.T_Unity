@@ -15,9 +15,11 @@ namespace ROOT
         public static string BoardGridThermoZoneInquiry = "BoardGridThermoZoneInquiry";
 
         public static string MainCameraReadyEvent = "MainCameraReadyEvent";
+        public static string ApparentStepResetedEvent="ApparentStepResetedEvent";
+        
         public static string GamePauseEvent = "GamePauseEvent";
         public static string RequestGamePauseEvent = "RequestGamePauseEvent";
-        public static string ApparentStepResetedEvent="ApparentStepResetedEvent";
+        public static string RequestLevelQuitEvent = "RequestLevelQuitEvent";
         
         public static string InGameOverlayToggleEvent = "InGameOverlayToggleEvent";
         public static string ToggleGamePlayUIEvent = "ToggleGamePlayUIEvent";

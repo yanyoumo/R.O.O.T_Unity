@@ -228,6 +228,12 @@ namespace ROOT.UI
             Debug.Log("QuitApplication");
             Application.Quit();
         }
+
+        public void QuitLevel()
+        {
+            MessageDispatcher.SendMessage(WorldEvent.RequestLevelQuitEvent);
+            MessageDispatcher.SendMessage(WorldEvent.RequestGamePauseEvent);
+        }
         
         private void Awake()
         {

@@ -179,6 +179,7 @@ namespace ROOT
             _ctrlPack = _actionDriver.CtrlQueueHeader;
             UpdateBoardData_Stepped(ref LevelAsset); //RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
             AdditionalMajorUpkeep();
+            if (CheckGameOver) GameEnding();//为了能走流程退出关卡，在这儿也查一下。
             //WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
 
@@ -247,6 +248,10 @@ namespace ROOT
         
         protected virtual void GameEnding()
         {
+            if (ExternalQuit)
+            {
+                //TODO 处理玩家申请结束的情况。
+            }
             //实质上Barebone模式下其实不能结束。//Tutorial版可以。
             if (UseTutorialVer)
             {
