@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Rewired.Dev;
+using ROOT.Consts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
@@ -15,14 +17,23 @@ namespace ROOT.SetupAsset
     public class LevelActionAsset : SerializedScriptableObject
     {
         [Header("Basic Data"),PropertyOrder(-99)] 
-        [InfoBox("这里应该用反射流程加一个Title的筛选",InfoMessageType.Warning)]
+        //[InfoBox("这里应该用反射流程加一个Title的筛选",InfoMessageType.Warning)]
+        //[ValueDropdown("GetValidTerms")]//TODO 这个玩意儿怎么处理测试关卡的种种。
         public string TitleTerm;
 
         private IEnumerable GetValidTerms()
         {
-            return new ValueDropdownList<int>();
+            var res = new ValueDropdownList<string>();
+            foreach (var fieldInfo in typeof(ValidLevelNameTerm).GetFields())
+            {
+                var actionAttribute = Attribute.GetCustomAttribute(fieldInfo, typeof(ActionIdFieldInfoAttribute));
+                if (actionAttribute is ActionIdFieldInfoAttribute)
+                {
+                    res.Add(fieldInfo.Name, (string) fieldInfo.GetValue(null));
+                }
+            }
+            return res;
         }
-        
         [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-99)]
         public Sprite Thumbnail;
 
