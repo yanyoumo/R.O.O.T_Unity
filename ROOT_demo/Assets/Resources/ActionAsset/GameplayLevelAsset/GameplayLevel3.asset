@@ -40,13 +40,13 @@ MonoBehaviour:
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: -1, y: -1}
+    Pos: {x: 0, y: 0}
     IsStation: 1
   - PlayingSignalSelector: 1
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: -1, y: -1}
+    Pos: {x: 5, y: 5}
     IsStation: 1
   - PlayingSignalSelector: 0
     CoreGenre: 1
@@ -93,6 +93,12 @@ MonoBehaviour:
   - PlayingSignalSelector: 1
     CoreGenre: 1
     Sides: 01000000010000000100000000000000
+    Tier: 1
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 1
+    CoreGenre: 1
+    Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: -1, y: -1}
     IsStation: 0
