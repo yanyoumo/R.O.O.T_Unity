@@ -3986,10 +3986,10 @@ MonoBehaviour:
       Event:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 1785396412}
-            m_TargetAssemblyTypeName: Doozy.Engine.UI.UIView, Doozy.Engine
-            m_MethodName: Hide
-            m_Mode: 6
+          - m_Target: {fileID: 1785396416}
+            m_TargetAssemblyTypeName: ROOT.UI.ScanPopUp_UI, Root.UI
+            m_MethodName: PopUIOKButtonPressed
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8049,8 +8049,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1649100801}
   m_HandleRect: {fileID: 1649100800}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.884361
+  m_Value: 1.0000006
+  m_Size: 0.88469106
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -9223,10 +9223,10 @@ MonoBehaviour:
       Event:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 1785396412}
-            m_TargetAssemblyTypeName: Doozy.Engine.UI.UIView, Doozy.Engine
-            m_MethodName: Hide
-            m_Mode: 6
+          - m_Target: {fileID: 1785396416}
+            m_TargetAssemblyTypeName: ROOT.UI.ScanPopUp_UI, Root.UI
+            m_MethodName: PopUINotButtonPressed
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10984,7 +10984,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1431708422}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.9414035
+  m_Size: 0.94140357
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11944,6 +11944,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4a6e2674f4a94949b794c8482dd0914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PopUpUI: {fileID: 1785396412}
+  ScanToggle: {fileID: 1102990029}
   PleaseReadText: {fileID: 2133306964}
   OkText: {fileID: 1804906809}
   ProceeButton: {fileID: 678059685}
