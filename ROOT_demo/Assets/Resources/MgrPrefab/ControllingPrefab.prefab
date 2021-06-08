@@ -280,7 +280,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 3
+      _categoryId: 1
     - _id: 8
       _name: HintHDD
       _type: 1
@@ -561,7 +561,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 3
+      _categoryId: 1
     - _id: 41
       _name: ShopTierDown
       _type: 1
@@ -570,7 +570,7 @@ MonoBehaviour:
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
-      _categoryId: 3
+      _categoryId: 1
     - _id: 42
       _name: HoldForDrag
       _type: 1
@@ -660,11 +660,11 @@ MonoBehaviour:
       - categoryId: 0
         actionIds: 
       - categoryId: 1
-        actionIds: 0500000008000000090000000a0000000b0000001f000000220000002a0000002b0000002d0000002e000000
+        actionIds: 0500000008000000090000000a0000000b0000001f000000220000002a0000002b0000002d0000002e000000070000002800000029000000
       - categoryId: 2
         actionIds: 170000001a000000190000001b000000
       - categoryId: 3
-        actionIds: 06000000070000001e0000002000000028000000290000002c000000
+        actionIds: 060000001e000000200000002c000000
       - categoryId: 4
         actionIds: 160000001c0000001d00000021000000230000002400000025000000
       - categoryId: 5
@@ -1419,4 +1419,6 @@ MonoBehaviour:
   playerId: 0
   CursorActions: 01000000020000000300000004000000
   FunctionalActions: 0c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000
-  BasicActions: 0500000008000000090000000b0000001f000000220000002b0000002d0000002e000000
+  BasicActions: 0500000008000000090000000b0000001f000000220000002b0000002d0000002e000000070000002800000029000000
+  DragUnitAction: 42
+  HintPanelAction: 10

@@ -38,13 +38,17 @@ namespace ROOT
         [ValueDropdown("CursorActionAsDDList")] 
         public int[] CursorActions;
         
-        [PropertySpace]
         [ValueDropdown("FunctionalActionAsDDList")] 
         public int[] FunctionalActions;
 
-        [PropertySpace]
         [ValueDropdown("BasicButtonActionAsDDList")] 
         public int[] BasicActions;
+
+        [ValueDropdown("BasicButtonActionAsDDList")]
+        public int DragUnitAction;
+        
+        [ValueDropdown("BasicButtonActionAsDDList")]
+        public int HintPanelAction;
         
         private void RegisterCursorAction()
         {
@@ -59,6 +63,18 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, ActionID);
         }
 
+        private void RegisterDragUnitKeyAction(int ActionID)
+        {
+            player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, ActionID);
+            player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, ActionID);
+        }
+        
+        private void RegisterHintPanelKeyAction(int ActionID)
+        {
+            player.AddInputEventDelegate(OnInputHintUp, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, ActionID);
+            player.AddInputEventDelegate(OnInputHintDown, UpdateLoopType.Update, InputActionEventType.ButtonJustReleased, ActionID);
+        }
+        
         private IEnumerable BasicButtonActionAsDDList => GetDDListFromCatagory(typeof(Button));
         private IEnumerable CursorActionAsDDList => GetDDListFromCatagory(typeof(Action.Cursor));
         private IEnumerable FunctionalActionAsDDList => GetDDListFromCatagory(typeof(Functional));
@@ -97,19 +113,10 @@ namespace ROOT
             RegisterCursorAction();
             FunctionalActions.ForEach(RegisterBasicKeyAction);
             BasicActions.ForEach(RegisterBasicKeyAction);
+            RegisterDragUnitKeyAction(DragUnitAction);
+            RegisterHintPanelKeyAction(HintPanelAction);
 
-            player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustPressed,
-                Button.HoldForDrag);
-            player.AddInputEventDelegate(OnInputUpdateSpaceUp, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustReleased,
-                Button.HoldForDrag);
-
-            player.AddInputEventDelegate(OnInputHintUp, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed,
-                Button.HintControl);
-            player.AddInputEventDelegate(OnInputHintDown, UpdateLoopType.Update,
-                InputActionEventType.ButtonJustReleased, Button
-                    .HintControl);
+            #region MouseSection
 
             player.AddInputEventDelegate(OnInputUpdateMouseSingleClickLeftDown, UpdateLoopType.Update,
                 InputActionEventType.ButtonJustSinglePressed, Passthough.MouseLeft);
@@ -123,6 +130,8 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateMouseWheel, UpdateLoopType.Update,
                 InputActionEventType.AxisActive,
                 Passthough.MouseWheel);
+
+            #endregion
         }
 
         private void OnInputUpdateCurser(InputActionEventData obj)
