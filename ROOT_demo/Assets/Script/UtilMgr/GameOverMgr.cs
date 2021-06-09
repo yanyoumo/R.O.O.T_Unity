@@ -20,11 +20,12 @@ namespace ROOT
         public string FailedTerm = "";
         public int ValueInt = 0;
     }
-    
+
     public class GameOverMgr : MonoBehaviour
     {
         //可以把LevelAsset整建制传进来。
         private GameAssets _lastGameAssets;
+
         public GameAssets LastGameAssets
         {
             get => _lastGameAssets;
@@ -34,6 +35,7 @@ namespace ROOT
                 UpdateUIContent();
             }
         }
+
         public Localize EndingTitleLocalize;
         public Localize EndingMessageLocalize;
         public LocalizationParamsManager EndingMessageParam;
@@ -43,10 +45,10 @@ namespace ROOT
         public Localize OtherButtonLocalize;
 
         public TextMeshProUGUI EndingMessageTMP;
-        
-        void GameOverSceneLoaded(Scene scene,LoadSceneMode loadSceneMode)
+
+        void GameOverSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
-            if (scene.buildIndex==StaticName.SCENE_ID_GAMEOVER)
+            if (scene.buildIndex == StaticName.SCENE_ID_GAMEOVER)
             {
                 SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(StaticName.SCENE_ID_GAMEOVER));
             }
@@ -59,80 +61,74 @@ namespace ROOT
                 .Select(lv => lv.TitleTerm)
                 .Where(s => PlayerPrefsLevelMgr.GetLevelStatus(s) == LevelStatus.Locked)
                 .ToArray();
-            if (unlockingLevelTerms.Length>0)
+            if (unlockingLevelTerms.Length > 0)
             {
                 PlayerPrefsLevelMgr.CompleteThisLevelAndUnlockFollowing(actionAsset.TitleTerm, unlockingLevelTerms);
             }
+
             return unlockingLevelTerms.Length;
         }
 
         //首先返回：要改成返回选择界面。重新开始就放在哪里。
-            //GameOver界面其实很重要，主要是局间的游玩动力；现在实质机制上能展示的只有：解锁新关卡、这个只能尽量用了。
-            void UpdateUIContent()
+        //GameOver界面其实很重要，主要是局间的游玩动力；现在实质机制上能展示的只有：解锁新关卡、这个只能尽量用了。
+        void UpdateUIContent()
+        {
+            BackButton.onClick.AddListener(Back);
+            EndingMessageTMP.color = ColorLibManager.Instance.ColorLib.ROOT_UI_DEFAULT_BLACK;
+
+            OtherButtonLocalize.Term = Restart;
+            OtherButton.onClick.AddListener(GameRestart);
+            OtherButton.interactable = true;
+
+            if (_lastGameAssets.GameOverAsset.ExternalEnding)
             {
-                BackButton.onClick.AddListener(Back);
-                EndingMessageTMP.color = ColorLibManager.Instance.ColorLib.ROOT_UI_DEFAULT_BLACK;
-
-                if (_lastGameAssets.GameOverAsset.ExternalEnding)
-                {
-                    PlayerPrefsLevelMgr.PlayedThisLevel(_lastGameAssets.ActionAsset.TitleTerm);
-                    EndingTitleLocalize.Term = GameOver; 
-                    EndingMessageLocalize.Term = EndingMessageTutorial;
-                }
-                else
-                {
-                    if (_lastGameAssets.ActionAsset.DisplayedlevelType == LevelType.Tutorial)
-                    {
-                        Debug.Assert(_lastGameAssets.TutorialCompleted.HasValue);
-                        var tutorialCompleted = _lastGameAssets.TutorialCompleted.Value;
-                        EndingTitleLocalize.Term = TutorialSectionOver;
-
-                        if (tutorialCompleted)
-                        {
-                            var unlockedLevelCount =
-                                CompleteThisLevelAndUnlockFollowing(ref _lastGameAssets.ActionAsset);
-                            if (unlockedLevelCount > 0)
-                            {
-                                EndingMessageLocalize.Term = EndingMessageTutorial_Unlocked;
-                                EndingMessageTMP.color = ColorLibManager.Instance.ColorLib.ROOT_UI_HIGHLIGHTING_GREEN;
-                            }
-                            else
-                            {
-                                EndingMessageLocalize.Term = EndingMessageTutorial;
-                            }
-                        }
-                        else
-                        {
-                            throw new NotImplementedException("教程的失败没有实质完成。");
-                            PlayerPrefsLevelMgr.PlayedThisLevel(_lastGameAssets.ActionAsset.TitleTerm);
-                            OtherButton.interactable = false;
-                            OtherButtonLocalize.Term = NextTutorialFailed;
-                            EndingMessageLocalize.Term = EndingMessageTutorialFailed;
-                        }
-                    }
-                    else
-                    {
-                        if (_lastGameAssets.GameOverAsset.Succeed)
-                        {
-                            CompleteThisLevelAndUnlockFollowing(ref _lastGameAssets.ActionAsset);
-                        }
-                        else
-                        {
-                            PlayerPrefsLevelMgr.PlayedThisLevel(_lastGameAssets.ActionAsset.TitleTerm);
-                        }
-
-                        EndingTitleLocalize.Term = GameOver; 
-                        EndingMessageParam.SetParameterValue("VALUE", _lastGameAssets.GameOverAsset.ValueInt.ToString());
-                        EndingMessageLocalize.Term = _lastGameAssets.GameOverAsset.Succeed ? _lastGameAssets.GameOverAsset.SuccessTerm : _lastGameAssets.GameOverAsset.FailedTerm;
-                    }
-                }
-
-                OtherButtonLocalize.Term = Restart;
-                OtherButton.onClick.AddListener(GameRestart);
-                OtherButton.interactable = true;
+                PlayerPrefsLevelMgr.PlayedThisLevel(_lastGameAssets.ActionAsset.TitleTerm);
+                EndingTitleLocalize.Term = GameOver;
+                EndingMessageLocalize.Term = EndingMessageTutorial;
+                return;
             }
 
-            void Awake()
+            if (_lastGameAssets.ActionAsset.DisplayedlevelType == LevelType.Tutorial)
+            {
+                Debug.Assert(_lastGameAssets.TutorialCompleted.HasValue);
+                var tutorialCompleted = _lastGameAssets.TutorialCompleted.Value;
+                EndingTitleLocalize.Term = TutorialSectionOver;
+
+                if (tutorialCompleted)
+                {
+                    var unlockedLevelCount = CompleteThisLevelAndUnlockFollowing(ref _lastGameAssets.ActionAsset);
+                    EndingMessageLocalize.Term = unlockedLevelCount > 0 ? EndingMessageTutorial_Unlocked : EndingMessageTutorial;
+                    if (unlockedLevelCount > 0)
+                    {
+                        EndingMessageTMP.color = ColorLibManager.Instance.ColorLib.ROOT_UI_HIGHLIGHTING_GREEN;
+                    }
+                    return;
+                }
+
+                throw new NotImplementedException("教程的失败没有实质完成。");
+                PlayerPrefsLevelMgr.PlayedThisLevel(_lastGameAssets.ActionAsset.TitleTerm);
+                OtherButton.interactable = false;
+                OtherButtonLocalize.Term = NextTutorialFailed;
+                EndingMessageLocalize.Term = EndingMessageTutorialFailed;
+            }
+
+            if (_lastGameAssets.GameOverAsset.Succeed)
+            {
+                CompleteThisLevelAndUnlockFollowing(ref _lastGameAssets.ActionAsset);
+            }
+            else
+            {
+                PlayerPrefsLevelMgr.PlayedThisLevel(_lastGameAssets.ActionAsset.TitleTerm);
+            }
+
+            EndingTitleLocalize.Term = GameOver;
+            EndingMessageParam.SetParameterValue("VALUE", _lastGameAssets.GameOverAsset.ValueInt.ToString());
+            EndingMessageLocalize.Term = _lastGameAssets.GameOverAsset.Succeed
+                ? _lastGameAssets.GameOverAsset.SuccessTerm
+                : _lastGameAssets.GameOverAsset.FailedTerm;
+        }
+
+        void Awake()
         {
             SceneManager.sceneLoaded += GameOverSceneLoaded;
             GameGlobalStatus currentStatus = LevelMasterManager.GetGameGlobalStatus();
@@ -161,6 +157,7 @@ namespace ROOT
                     SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(i));
                 }
             }
+
             StartGameMgr.LoadThenActiveGameCoreScene();
             SceneManager.LoadSceneAsync(StaticName.SCENE_ID_BST_CAREER, LoadSceneMode.Additive).completed += a =>
             {
