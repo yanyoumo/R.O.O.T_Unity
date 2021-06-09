@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.1273175, g: 0.13414773, b: 0.121078864, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 1aa493aacf51b4b6ebc640501ecbec2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -2691,7 +2691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 1aa493aacf51b4b6ebc640501ecbec2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -3145,7 +3145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 1aa493aacf51b4b6ebc640501ecbec2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -8958,7 +8958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 1aa493aacf51b4b6ebc640501ecbec2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -10685,7 +10685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 1aa493aacf51b4b6ebc640501ecbec2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -10760,7 +10760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 1aa493aacf51b4b6ebc640501ecbec2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -10932,6 +10932,7 @@ GameObject:
   - component: {fileID: 1539605587}
   - component: {fileID: 1539605589}
   - component: {fileID: 1539605588}
+  - component: {fileID: 1539605590}
   m_Layer: 0
   m_Name: LevelFeaturePanel
   m_TagString: Untagged
@@ -11004,6 +11005,38 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1539605586}
   m_CullTransparentMesh: 1
+--- !u!114 &1539605590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539605586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe1803cd82ad3403bb03daf0bf4da661, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DefaultMat: {fileID: 2100000, guid: 1aa493aacf51b4b6ebc640501ecbec2a, type: 2}
+  BWMat: {fileID: 2100000, guid: 1fb877e56726845739d702b36d5538c0, type: 2}
+  IconSprites:
+  - {fileID: 21300000, guid: 89f93d2f5d8839e43bd915ffbcde0278, type: 3}
+  - {fileID: 21300000, guid: 89f93d2f5d8839e43bd915ffbcde0278, type: 3}
+  - {fileID: 21300000, guid: 89f93d2f5d8839e43bd915ffbcde0278, type: 3}
+  - {fileID: 21300000, guid: 89f93d2f5d8839e43bd915ffbcde0278, type: 3}
+  - {fileID: 21300000, guid: 89f93d2f5d8839e43bd915ffbcde0278, type: 3}
+  - {fileID: 21300000, guid: 89f93d2f5d8839e43bd915ffbcde0278, type: 3}
+  - {fileID: 21300000, guid: 89f93d2f5d8839e43bd915ffbcde0278, type: 3}
+  - {fileID: 21300000, guid: 89f93d2f5d8839e43bd915ffbcde0278, type: 3}
+  IconImages:
+  - {fileID: 1265434594}
+  - {fileID: 1836334463}
+  - {fileID: 920278723}
+  - {fileID: 1352643665}
+  - {fileID: 507409103}
+  - {fileID: 99102133}
+  - {fileID: 1698574040}
+  - {fileID: 20011201}
 --- !u!1 &1574309439
 GameObject:
   m_ObjectHideFlags: 0
@@ -11293,7 +11326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 1aa493aacf51b4b6ebc640501ecbec2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -11488,7 +11521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 1aa493aacf51b4b6ebc640501ecbec2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
