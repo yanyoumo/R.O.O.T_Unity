@@ -16,24 +16,9 @@ namespace ROOT.SetupAsset
     [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : SerializedScriptableObject
     {
-        [Header("Basic Data"),PropertyOrder(-99)] 
-        //[InfoBox("这里应该用反射流程加一个Title的筛选",InfoMessageType.Warning)]
-        //[ValueDropdown("GetValidTerms")]//TODO 这个玩意儿怎么处理测试关卡的种种。
+        [Header("Basic Data"),PropertyOrder(-99)]
         public string TitleTerm;
 
-        private IEnumerable GetValidTerms()
-        {
-            var res = new ValueDropdownList<string>();
-            foreach (var fieldInfo in typeof(ValidLevelNameTerm).GetFields())
-            {
-                var actionAttribute = Attribute.GetCustomAttribute(fieldInfo, typeof(ActionIdFieldInfoAttribute));
-                if (actionAttribute is ActionIdFieldInfoAttribute)
-                {
-                    res.Add(fieldInfo.Name, (string) fieldInfo.GetValue(null));
-                }
-            }
-            return res;
-        }
         [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-99)]
         public Sprite Thumbnail;
 
@@ -52,24 +37,26 @@ namespace ROOT.SetupAsset
         [VerticalGroup("Split/Right")] [LabelText("Unit could cost")][PropertyOrder(-94)]
         public bool UnitCost = true;
 
-        [Space][PropertyOrder(-3)] public LevelType levelType;
+        [Space][PropertyOrder(-4)] public LevelType levelType;
 
-        [PropertyOrder(-2)] 
+        [PropertyOrder(-3)] 
         [LabelText("Level For Test")]
         public bool IsTestingLevel;
 
-        [PropertyOrder(-1)] 
+        [PropertyOrder(-2)] 
         [LabelText("Level For Scan Units")]
         public bool IsScanLevel;
         
-        [PropertyOrder(0)]public LevelType DisplayedlevelType;
+        [PropertyOrder(-1)]
+        public LevelFeature LevelFeature;
+        
+        [PropertyOrder(0)]
+        public LevelType DisplayedlevelType;
 
         [Header("Detail")][PropertyOrder(1)]
         public AdditionalGameSetup AdditionalGameSetup;
 
         [PropertyOrder(2)]
-        //TODO 这个玩意儿的随机算法还是需要调整一下，现在严格来说是确定位置的不能在随机生成之后。
-        //TODO 所以说，严格来说要在最开始把整个数列考察一下、然后总体生成一些位置。
         public UnitGist[] InitalBoard;
 
         [ShowIf("levelType", LevelType.Career)] [OnValueChanged("HasBossChanged")][PropertyOrder(3)]

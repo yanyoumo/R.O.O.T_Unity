@@ -1,3 +1,5 @@
+using System;
+
 namespace ROOT
 {
     public enum LevelType
@@ -5,6 +7,19 @@ namespace ROOT
         Tutorial,
         Career,
         //Classic
+    }
+
+    [Flags]
+    public enum LevelFeature //这个认为是纯表现的内容，不和任何实际逻辑相关。现在先凑八个。
+    {
+        Tutorial = 1 << 0,
+        BasicPlayable = 1 << 1,
+        RoundBase = 1 << 2,
+        SelectableUnit = 1 << 3,
+        Boss = 1 << 4,
+        Acquire = 1 << 5,
+        Telemetry = 1 << 6,
+        PlaceHolderA = 1 << 7,
     }
 
     public enum TutorialActionType

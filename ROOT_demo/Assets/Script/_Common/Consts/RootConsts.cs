@@ -19,40 +19,6 @@ namespace ROOT.Consts
         public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
         public static readonly float AutoAnimationDuration = 1.5f; //都是秒
     }
-
-    public static class ValidLevelNameTerm
-    {
-        [ValidLevelNameTerm(LevelType.Tutorial)]
-        public static string LevelName_TL0 = "LevelName_TL0";
-        [ValidLevelNameTerm(LevelType.Tutorial)]
-        public static string LevelName_TL1 = "LevelName_TL1";
-        [ValidLevelNameTerm(LevelType.Tutorial)]
-        public static string LevelName_TL2 = "LevelName_TL2";
-        [ValidLevelNameTerm(LevelType.Tutorial)]
-        public static string LevelName_TL3 = "LevelName_TL3";
-        [ValidLevelNameTerm(LevelType.Tutorial)]
-        public static string LevelName_TL4 = "LevelName_TL4";
-        [ValidLevelNameTerm(LevelType.Tutorial)]
-        public static string LevelName_TL5 = "LevelName_TL5";
-        [ValidLevelNameTerm(LevelType.Tutorial)]
-        public static string LevelName_TL6 = "LevelName_TL6";
-        [ValidLevelNameTerm(LevelType.Career)]
-        public static string LevelName_GL0 = "LevelName_GL0";
-        [ValidLevelNameTerm(LevelType.Career)]
-        public static string LevelName_GL1 = "LevelName_GL1";
-        [ValidLevelNameTerm(LevelType.Career)]
-        public static string LevelName_GL2 = "LevelName_GL2";
-        [ValidLevelNameTerm(LevelType.Career)]
-        public static string LevelName_GL3 = "LevelName_GL3";
-        [ValidLevelNameTerm(LevelType.Career)]
-        public static string LevelName_GL4 = "LevelName_GL4";
-        [ValidLevelNameTerm(LevelType.Career)]
-        public static string LevelName_GL5 = "LevelName_GL5";
-        [ValidLevelNameTerm(LevelType.Career)]
-        public static string LevelName_GL6 = "LevelName_GL6";
-        [ValidLevelNameTerm(LevelType.Career)]
-        public static string LevelName_GL7 = "LevelName_GL7";
-    }
     
     public static class GlobalResourcePath
     {

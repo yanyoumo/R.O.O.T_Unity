@@ -326,6 +326,24 @@ namespace ROOT
             return SignalType.Matrix;
         }
 
+        private void CreateUnitByGists(UnitGist[] unitGists, AdditionalGameSetup additionalGameSetup)
+        {
+            foreach (var unitGist in unitGists)
+            {
+                var signalType = SignalTypeFromAdditionalGameSetup(additionalGameSetup, unitGist.PlayingSignalSelector);
+                var pos = unitGist.Pos;
+                if (pos.x<0||pos.y<0)
+                {
+                    do
+                    {
+                        pos = FindRandomEmptyPlace();
+                    } while (unitGists.Select(g => g.Pos).Where(p => !(p.x < 0 || p.y < 0)).Any(p => p == pos));
+                }
+                CreateUnit(pos, signalType, unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, unitGist.IsStation);
+            }
+        }
+        
+        [Obsolete]
         private void CreateUnitByGist(UnitGist unitGist, AdditionalGameSetup additionalGameSetup)
         {
             var signalType = SignalTypeFromAdditionalGameSetup(additionalGameSetup, unitGist.PlayingSignalSelector);
@@ -333,6 +351,7 @@ namespace ROOT
             if (pos.x<0||pos.y<0) pos = FindRandomEmptyPlace();
             CreateUnit(pos, signalType, unitGist.CoreGenre, unitGist.Sides, unitGist.Tier, unitGist.IsStation);
         }
+        
         public void CreateUnit(Vector2Int board_pos, SignalType signal, HardwareType genre, SideType[] sides, int Tier, bool IsStationary = false, UnitTag unitTag = UnitTag.NoTag)
         {
             var go = Instantiate(UnitTemplate);
@@ -484,10 +503,11 @@ namespace ROOT
         {
             PlayingSignalA = actionAsset.AdditionalGameSetup.PlayingSignalTypeA;
             PlayingSignalB = actionAsset.AdditionalGameSetup.PlayingSignalTypeB;
-            foreach (var unitGist in actionAsset.InitalBoard)
+            CreateUnitByGists(actionAsset.InitalBoard, actionAsset.AdditionalGameSetup);
+            /*foreach (var unitGist in actionAsset.InitalBoard)
             {
                 CreateUnitByGist(unitGist, actionAsset.AdditionalGameSetup);
-            }
+            }*/
         }
 
         void Awake()
