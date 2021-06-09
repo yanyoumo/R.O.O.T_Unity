@@ -19,7 +19,7 @@ namespace ROOT
 
         public static bool GameplayCheck2(FSMLevelLogic fsm, Board board)
         {
-            return fsm.LevelAsset.DeltaCurrency >= 10;
+            return fsm.LevelAsset.DeltaCurrency >= 14;
         }
 
         public static bool GameplayCheck3(FSMLevelLogic fsm, Board board)
