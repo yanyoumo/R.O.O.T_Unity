@@ -147,6 +147,134 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
+  - ActionIdx: 0
+    ActionSubIdx: 3
+    ActionType: 20
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 0
+    ActionSubIdx: 4
+    ActionType: 20
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 1
+    SkillID: 0
+  - ActionIdx: 0
+    ActionSubIdx: 5
+    ActionType: 20
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 2
+    SkillID: 0
+  - ActionIdx: 0
+    ActionSubIdx: 6
+    ActionType: 20
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 3
+    SkillID: 0
   - ActionIdx: 1
     ActionSubIdx: 2
     ActionType: 1
@@ -2048,8 +2176,8 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  mainIDXToinsert: 13
-  subIDXToinsert: 0
+  mainIDXToinsert: 0
+  subIDXToinsert: 6
   CSVFileName: TutorialLevel1_Text
   UnlockingLevel:
   - {fileID: 11400000, guid: dc26637872c05ab4a85fce11d85d7763, type: 2}
