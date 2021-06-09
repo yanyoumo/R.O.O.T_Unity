@@ -31,6 +31,7 @@ MonoBehaviour:
   UnitCost: 1
   levelType: 0
   IsTestingLevel: 0
+  IsScanLevel: 0
   DisplayedlevelType: 1
   AdditionalGameSetup:
     PlayingSignalTypeA: 0

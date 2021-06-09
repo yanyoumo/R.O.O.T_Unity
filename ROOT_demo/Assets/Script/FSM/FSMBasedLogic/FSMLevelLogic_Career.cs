@@ -331,7 +331,7 @@ namespace ROOT
             };
         }
 
-        protected sealed override void GameEnding()
+        protected sealed override void GameEnding_Internal()
         {
             PendingCleanUp = true;
             if (UseTutorialVer)

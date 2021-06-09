@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Rewired.Dev;
+using ROOT.Consts;
 using Sirenix.OdinInspector;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
@@ -13,8 +16,7 @@ namespace ROOT.SetupAsset
     [CreateAssetMenu(fileName = "NewActionAsset", menuName = "ActionAsset/New ActionAsset")]
     public class LevelActionAsset : SerializedScriptableObject
     {
-        [Header("Basic Data"),PropertyOrder(-99)] 
-        [InfoBox("这里应该用反射流程加一个Title的筛选",InfoMessageType.Warning)]
+        [Header("Basic Data"),PropertyOrder(-99)]
         public string TitleTerm;
 
         [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-99)]
@@ -35,13 +37,21 @@ namespace ROOT.SetupAsset
         [VerticalGroup("Split/Right")] [LabelText("Unit could cost")][PropertyOrder(-94)]
         public bool UnitCost = true;
 
-        [Space][PropertyOrder(-2)] public LevelType levelType;
+        [Space][PropertyOrder(-4)] public LevelType levelType;
 
-        [PropertyOrder(-1)] 
+        [PropertyOrder(-3)] 
         [LabelText("Level For Test")]
         public bool IsTestingLevel;
 
-        [PropertyOrder(0)]public LevelType DisplayedlevelType;
+        [PropertyOrder(-2)] 
+        [LabelText("Level For Scan Units")]
+        public bool IsScanLevel;
+        
+        [PropertyOrder(-1)]
+        public LevelFeature LevelFeature;
+        
+        [PropertyOrder(0)]
+        public LevelType DisplayedlevelType;
 
         [Header("Detail")][PropertyOrder(1)]
         public AdditionalGameSetup AdditionalGameSetup;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using I2.Loc;
+using ROOT.RTAttribute;
 using UnityEngine;
 
 namespace ROOT.Consts

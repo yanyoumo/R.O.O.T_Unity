@@ -176,6 +176,7 @@ namespace ROOT
 
         private void MajorUpkeepAction()
         {
+            if (ExternalQuit) GameEnding_External();//申请结束的流程放在儿：优先级高+频度高。
             _ctrlPack = _actionDriver.CtrlQueueHeader;
             UpdateBoardData_Stepped(ref LevelAsset); //RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
             AdditionalMajorUpkeep();
@@ -192,7 +193,7 @@ namespace ROOT
                 _mainFSM.Breaking(_actionDriver.RequestedBreakType);
             }
 
-            if (CheckGameOver) GameEnding();
+            if (CheckGameOver) GameEnding_Internal();
         }
         
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
@@ -234,7 +235,6 @@ namespace ROOT
             //这整个React to IO框架有可能都要模块化。
             WorldExecutor.UpdateCursor_Unit(ref LevelAsset, in _ctrlPack, out MovedTile, out MovedCursor);
             WorldExecutor.UpdateRotate(ref LevelAsset, in _ctrlPack, out RotatedTile, out RotatedCursor);
-            //LevelAsset.GameBoard.UpdateBoardRotate(); //TODO 旋转现在还是闪现的。这个不用着急做。终于要做了！！！
             MovedTile |= _ctrlPack.HasFlag(ControllingCommand.CycleNext); //这个flag的实际含义和名称有冲突。
             if (HandlingShop)
             {
@@ -244,10 +244,16 @@ namespace ROOT
         }
 
         #endregion
-        
-        protected virtual void GameEnding()
+
+        private void GameEnding_External()
         {
-            //实质上Barebone模式下其实不能结束。//Tutorial版可以。
+            PendingCleanUp = true;
+            LevelMasterManager.Instance.LevelFinished(LevelAsset);
+            LevelAsset.GameOverAsset = new GameOverAsset {ExternalEnding=true}; 
+        }
+        
+        protected virtual void GameEnding_Internal()
+        {
             if (UseTutorialVer)
             {
                 PendingCleanUp = true;
@@ -256,10 +262,11 @@ namespace ROOT
                 {
                     SuccessTerm = ScriptTerms.EndingMessageTutorial,
                     FailedTerm = ScriptTerms.EndingMessageTutorialFailed
-                };
+                }; 
                 return;
             }
-            throw new Exception("This game mode could not end.");
+            //实质上Barebone模式下其实不能结束。//Tutorial版可以。
+            throw new Exception("This game mode could not end interally.");
         }
         
         protected virtual void UpdateBoardData_Instantly()
