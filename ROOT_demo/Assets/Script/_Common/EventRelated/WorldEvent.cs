@@ -23,13 +23,16 @@ namespace ROOT
         
         public static string InGameOverlayToggleEvent = "InGameOverlayToggleEvent";
         public static string ToggleGamePlayUIEvent = "ToggleGamePlayUIEvent";
-        public static string ToggleHintUIUpEvent = "ToggleHintUIUpEvent";
-        public static string ToggleHintUIDownEvent = "ToggleHintUIDownEvent";
         public static string HintScreenChangedEvent = "HintScreenChangedEvent";
         public static string HelpScreenShouldAlertEvent = "HelpScreenShouldAlertEvent";
         public static string TutorialMissionShouldAlertEvent = "TutorialMissionShouldAlertEvent";
         public static string ScanUnitLockChangedEvent = "ScanUnitLockChangedEvent";
 
+        public static string ToggleHintUIUpEvent = "ToggleHintUIUpEvent";
+        public static string ToggleHintUIDownEvent = "ToggleHintUIDownEvent";
+        public static string UIShouldMakeWay = "UIShouldMakeWay";
+        public static string UICouldResume = "UICouldResume";
+        
         public static string BoardShouldUpdateEvent = "BoardShouldUpdateEvent";
         public static string BoardUpdatedEvent = "BoardUpdatedEvent";
         public static string BoardReadyEvent = "BoardReadyEvent";
