@@ -85,6 +85,8 @@ namespace ROOT.UI
 
         void Awake()
         {
+            var scanUnlocked = PlayerPrefs.GetInt(StaticPlayerPrefName.UNLOCK_SCAN, 0) > 0;
+            var devMode = PlayerPrefs.GetInt(StaticPlayerPrefName.DEV_MODE, 0) > 0;
             if (LevelIsTutorial)
             {
                 SignalSelectionText.enabled = false;
@@ -96,13 +98,16 @@ namespace ROOT.UI
                 toggles = new Dictionary<SignalType, UnitSelectionToggle>();
                 for (var i = 0; i < signalMaster.SignalLib.Length; i++)
                 {
+                    if (!devMode && !scanUnlocked && signalMaster.SignalLib[i] == SignalType.Scan)
+                    {
+                        continue;
+                    }
                     var toggle = Instantiate(SignalToggleTemplate, SignalSelectionPanel.transform);
                     var toggleCore = toggle.GetComponentInChildren<UnitSelectionToggle>();
                     toggleCore.LabelTextTerm = signalMaster.GetSignalNameTerm(signalMaster.SignalLib[i]);
                     toggles.Add(signalMaster.SignalLib[i], toggleCore);
                     toggleCore.CoreToggle.isOn = (i < 2);
                 }
-                //SignalSelectionPanel.RectTransform.anchoredPosition = new Vector2(170f, -220f);
             }
         }
     }

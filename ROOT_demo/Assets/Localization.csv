@@ -36,7 +36,7 @@ EndingMessageTutorial_Unlocked,Text,,解锁新关卡！！可以返回关卡界�
 EndingMessageTutorialFailed,Text,,本节教程未完成,This section of tutorial is not finished
 GameCareerSetup,Text,,游戏设置,Game Setup
 GameOver,Text,,游戏结束,GAME OVER
-HForHint_KM,Text,,按住<b>[H]</b>键查看操作说明,Hold <b>[H]</b> for controlling
+HForHint_KM,Text,,按住<sprite=17>查看操作说明,Pending
 HForHint_Touch,Text,,按住这里查看操作说明,Hold Here for Hint
 KMEnterToComplete,Text,,"按""回车""以完成任务","Press ""Enter"" to Complete"
 KMEnterToReturn,Text,,"按""回车""以返回","Press ""Enter"" to Return"
