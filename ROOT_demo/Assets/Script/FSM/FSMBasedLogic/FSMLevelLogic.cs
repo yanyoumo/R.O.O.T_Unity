@@ -231,7 +231,7 @@ namespace ROOT
 
         protected abstract bool NormalCheckGameOver { get; }
 
-        protected bool CheckGameOver => ExternalQuit || (UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver);
+        protected bool CheckGameOver => (UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver);
 
         protected abstract void BoardUpdatedHandler(IMessage rMessage);
 
