@@ -4,7 +4,7 @@ namespace ROOT.Signal
     {
         void Awake()
         {
-            UnitSignalCoreType = gameObject.AddComponent<ThermoUnitSignalCore>().GetType();
+            UnitSignalCoreType = gameObject.AddComponent<FirewallUnitSignalCore>().GetType();
         }
         
         public override SignalType SignalType => SignalType.Firewall;

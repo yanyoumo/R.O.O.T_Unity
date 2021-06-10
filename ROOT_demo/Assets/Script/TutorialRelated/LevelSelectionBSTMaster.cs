@@ -51,30 +51,32 @@ namespace ROOT.UI
             var isNewLevel = false;
             var levelCompleted = false;
             var nextIsLevelStub = true;
-            
+
+            if (StartGameMgr.DevMode)
+            {
+                return (false, false, false);
+            }
+
             if (levelStub)
             {
                 return (false, false, true/*not relevant*/);
             }
             
-            if (!StartGameMgr.DevMode)
+            var currentLevelStatus = PlayerPrefsLevelMgr.GetLevelStatus(titleTerm);
+            switch (currentLevelStatus)
             {
-                var currentLevelStatus = PlayerPrefsLevelMgr.GetLevelStatus(titleTerm);
-                switch (currentLevelStatus)
-                {
-                    case LevelStatus.Locked:
-                        Debug.Assert(false, "this level should be stub,which could not reach here.");
-                        break;
-                    case LevelStatus.Unlocked:
-                        isNewLevel = true;
-                        break;
-                    case LevelStatus.Played:
-                        break;
-                    case LevelStatus.Passed:
-                        levelCompleted = true;
-                        nextIsLevelStub = false;
-                        break;
-                }
+                case LevelStatus.Locked:
+                    Debug.Assert(false, "this level should be stub,which could not reach here.");
+                    break;
+                case LevelStatus.Unlocked:
+                    isNewLevel = true;
+                    break;
+                case LevelStatus.Played:
+                    break;
+                case LevelStatus.Passed:
+                    levelCompleted = true;
+                    nextIsLevelStub = false;
+                    break;
             }
 
             return (isNewLevel, levelCompleted, nextIsLevelStub);
