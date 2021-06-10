@@ -19,4 +19,12 @@ MonoBehaviour:
   NecessaryPortCount: 1
   AdditionalPortRate: 35
   UnitMat: {fileID: 2100000, guid: 2193e19820876b248b02f1a7b724d580, type: 2}
-  NeighbouringData: []
+  NeighbouringData:
+  - FliteringSignalType: 1
+    TargetingSignalType: 3
+    FliteringHardwareType: 0
+    TargetingHardwareType: 1
+    FourDirOrEightDir: 0
+    NeighbouringSprite: {fileID: 2800000, guid: a0272e3a537d37e47842f86bf9d12564,
+      type: 3}
+    ColorTint: {r: 0.3811646, g: 1, b: 0.18553454, a: 1}
