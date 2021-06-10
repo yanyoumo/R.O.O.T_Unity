@@ -19,7 +19,7 @@ namespace ROOT.UI
         public GameObject LevelQuadTemplate;
         public GameObject BSTLineTemplate;
 
-        private readonly float SpaceX = 325.0f;
+        private readonly float SpaceX = 350.0f;
         private readonly float SpaceY = 330.0f;
         private readonly Vector2 _treeRootPos = new Vector2(150, -175f);
         
@@ -46,32 +46,38 @@ namespace ROOT.UI
             quad.LevelCompleted = _levelCompleted;
         }
 
-        private (bool, bool, bool) LevelStatusToBoolData(string titleTerm, bool terminatingLevel)
+        private (bool, bool, bool) LevelStatusToBoolData(string titleTerm, bool levelStub)
         {
             var isNewLevel = false;
             var levelCompleted = false;
-            var nextIsTerminatingLevel = false;
+            var nextIsLevelStub = true;
+            
+            if (levelStub)
+            {
+                return (false, false, true/*not relevant*/);
+            }
+            
             if (!StartGameMgr.DevMode)
             {
                 var currentLevelStatus = PlayerPrefsLevelMgr.GetLevelStatus(titleTerm);
                 switch (currentLevelStatus)
                 {
                     case LevelStatus.Locked:
-                        nextIsTerminatingLevel = true;
+                        Debug.Assert(false, "this level should be stub,which could not reach here.");
                         break;
                     case LevelStatus.Unlocked:
-                        nextIsTerminatingLevel = true;
-                        isNewLevel = !terminatingLevel;
+                        isNewLevel = true;
                         break;
                     case LevelStatus.Played:
                         break;
                     case LevelStatus.Passed:
-                        levelCompleted = !terminatingLevel;
+                        levelCompleted = true;
+                        nextIsLevelStub = false;
                         break;
                 }
             }
 
-            return (isNewLevel, levelCompleted, nextIsTerminatingLevel);
+            return (isNewLevel, levelCompleted, nextIsLevelStub);
         }
 
         private void CreateBSTLine(Vector2Int nodePOS, Vector2Int lastNodePOS)
@@ -83,31 +89,31 @@ namespace ROOT.UI
             line.UpdateLine();
         }
 
-        private void GenerateActionAssetQuad_Iter(LevelActionAsset actionAsset, int index, bool UpOrDown, Vector2Int nextNodeRoot, Vector2Int lastNodePOS, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack, bool nextIsTerminatingLevel)
+        private void GenerateActionAssetQuad_Iter(LevelActionAsset actionAsset, int index, bool UpOrDown, Vector2Int nextNodeRoot, Vector2Int lastNodePOS, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack, bool isLevelStub)
         {
             if (actionAsset == null || (actionAsset.IsTestingLevel && !StartGameMgr.DevMode)) return;
-            GenerateActionAssetQuad(nextNodeRoot + (UpOrDown ? Vector2Int.up : Vector2Int.down) * index, lastNodePOS, actionAsset, buttonCallBack, nextIsTerminatingLevel);
+            GenerateActionAssetQuad(nextNodeRoot + (UpOrDown ? Vector2Int.up : Vector2Int.down) * index, lastNodePOS, actionAsset, buttonCallBack, isLevelStub);
         }
 
-        private void GenerateActionAssetQuad(Vector2Int crtNodePOS, Vector2Int lastNodePOS, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack, bool terminatingLevel)
+        private void GenerateActionAssetQuad(Vector2Int crtNodePOS, Vector2Int lastNodePOS, LevelActionAsset actionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack, bool isLevelStub)
         {
-            var (isNewLevel, levelCompleted, nextIsTerminatingLevel) = LevelStatusToBoolData(actionAsset.TitleTerm, terminatingLevel);
-            GenerateSignalQuad(crtNodePOS, actionAsset, buttonCallBack, !terminatingLevel, isNewLevel, levelCompleted);
+            var (isNewLevel, levelCompleted, nextIsLevelStub) = LevelStatusToBoolData(actionAsset.TitleTerm, isLevelStub);
+            GenerateSignalQuad(crtNodePOS, actionAsset, buttonCallBack, !isLevelStub, isNewLevel, levelCompleted);
 
             if (lastNodePOS.x >= 0) CreateBSTLine(crtNodePOS, lastNodePOS);
 
-            if (terminatingLevel || (actionAsset.UnlockingLevel.Length == 0 && actionAsset.UnlockingLevel_Upper.Length == 0)) return;
+            if (isLevelStub || (actionAsset.UnlockingLevel.Length == 0 && actionAsset.UnlockingLevel_Upper.Length == 0)) return;
 
             var nextNodeRoot = new Vector2Int(crtNodePOS.x + 1, crtNodePOS.y);
 
             for (var i = 0; i < actionAsset.UnlockingLevel.Length; i++)
             {
-                GenerateActionAssetQuad_Iter(actionAsset.UnlockingLevel[i], i, false, nextNodeRoot, crtNodePOS, buttonCallBack, nextIsTerminatingLevel);
+                GenerateActionAssetQuad_Iter(actionAsset.UnlockingLevel[i], i, false, nextNodeRoot, crtNodePOS, buttonCallBack, nextIsLevelStub);
             }
             
             for (var i = 0; i < actionAsset.UnlockingLevel_Upper.Length; i++)
             {
-                GenerateActionAssetQuad_Iter(actionAsset.UnlockingLevel_Upper[i], i + 1, true, nextNodeRoot, crtNodePOS, buttonCallBack, nextIsTerminatingLevel);
+                GenerateActionAssetQuad_Iter(actionAsset.UnlockingLevel_Upper[i], i + 1, true, nextNodeRoot, crtNodePOS, buttonCallBack, nextIsLevelStub);
             }
         }
 

@@ -15,6 +15,8 @@ namespace ROOT
         public static LevelActionAsset RootLevelAsset;
         public LevelSelectionBSTMaster BSTMaster;
 
+        public RectTransform ScanToggleRectTransform;//这个玩意儿的解锁条件还得想想。
+        
         private Vector2 bstPanelPos => BSTMaster.LevelSelectionPanel.anchoredPosition;
         
         private void Awake()

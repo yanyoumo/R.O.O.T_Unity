@@ -74,12 +74,9 @@ namespace ROOT
             if (!PlayerPrefs.HasKey(PLAYER_ID)) PlayerPrefs.SetInt(PLAYER_ID, DateTime.UtcNow.Millisecond);
             if (!PlayerPrefs.HasKey(DEV_MODE)) PlayerPrefs.SetInt(DEV_MODE, 0);
             if (!PlayerPrefs.HasKey(MOUSE_DRAG_SENSITIVITY)) PlayerPrefs.SetInt(MOUSE_DRAG_SENSITIVITY, 50);
-            if (!PlayerPrefs.HasKey(LEVEL_SELECTION_PANEL_POS_X))
-                PlayerPrefs.SetFloat(LEVEL_SELECTION_PANEL_POS_X, 0.0f);
-            if (!PlayerPrefs.HasKey(LEVEL_SELECTION_PANEL_POS_Y))
-                PlayerPrefs.SetFloat(LEVEL_SELECTION_PANEL_POS_Y, 0.0f);
-            if (!PlayerPrefs.HasKey(RootLevelAsset.TitleTerm))
-                PlayerPrefsLevelMgr.SetUpRootLevelStatus(RootLevelAsset.TitleTerm);
+            if (!PlayerPrefs.HasKey(LEVEL_SELECTION_PANEL_POS_X)) PlayerPrefs.SetFloat(LEVEL_SELECTION_PANEL_POS_X, 0.0f);
+            if (!PlayerPrefs.HasKey(LEVEL_SELECTION_PANEL_POS_Y)) PlayerPrefs.SetFloat(LEVEL_SELECTION_PANEL_POS_Y, 0.0f);
+            if (!PlayerPrefs.HasKey(RootLevelAsset.TitleTerm)) PlayerPrefsLevelMgr.SetUpRootLevelStatus(RootLevelAsset.TitleTerm);
             if (!PlayerPrefs.HasKey(UNLOCK_SCAN)) PlayerPrefs.SetInt(UNLOCK_SCAN, 0);
 
             PlayerPrefs.Save();
