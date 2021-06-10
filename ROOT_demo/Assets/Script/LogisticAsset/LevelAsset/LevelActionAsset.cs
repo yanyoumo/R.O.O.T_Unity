@@ -37,22 +37,31 @@ namespace ROOT.SetupAsset
         [VerticalGroup("Split/Right")] [LabelText("Unit could cost")][PropertyOrder(-94)]
         public bool UnitCost = true;
 
-        [Space][PropertyOrder(-4)] public LevelType levelType;
+        [Space][PropertyOrder(-6)] public LevelType levelType;
 
-        [PropertyOrder(-3)] 
+        [PropertyOrder(-5)] 
         [LabelText("Level For Test")]
         public bool IsTestingLevel;
 
-        [PropertyOrder(-2)] 
+        [PropertyOrder(-4)] 
         [LabelText("Level For Scan Units")]
         public bool IsScanLevel;
         
-        [PropertyOrder(-1)]
+        [PropertyOrder(-3)]
         public LevelFeature LevelFeature;
         
-        [PropertyOrder(0)]
+        [PropertyOrder(-2)]
         public LevelType DisplayedlevelType;
 
+        [Header("Passages")]
+        [PropertyOrder(-1)]
+        [MultiLineProperty(3)]
+        public String LevelInfo;
+        
+        [PropertyOrder(0)]
+        [MultiLineProperty(3)]
+        public String StoryContent;
+        
         [Header("Detail")][PropertyOrder(1)]
         public AdditionalGameSetup AdditionalGameSetup;
 

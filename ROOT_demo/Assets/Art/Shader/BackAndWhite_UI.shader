@@ -93,7 +93,7 @@ Properties
                 OUT.color = v.color * _Color;
                 return OUT;
             }
-
+        
             fixed4 frag(v2f IN) : SV_Target
             {
                 half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
@@ -106,7 +106,11 @@ Properties
                 clip (color.a - 0.001);
                 #endif
 
-                half BW_value=0.2126*color.r+0.7152*color.g+0.0722*color.b;
+                const half4 linearColor=pow(color,2.2);
+                
+                half BW_value=0.2126*linearColor.r+0.7152*linearColor.g+0.0722*linearColor.b;
+
+                BW_value=pow(BW_value,0.45);
                                     
                 return half4(BW_value,BW_value,BW_value,color.a);
             }
