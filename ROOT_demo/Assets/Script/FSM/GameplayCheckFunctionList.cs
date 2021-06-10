@@ -24,7 +24,7 @@ namespace ROOT
 
         public static bool GameplayCheck3(FSMLevelLogic fsm, Board board)
         {
-            throw new NotImplementedException();
+            return fsm.LevelAsset.DeltaCurrency >= 21;
         }
 
         public static bool GameplayCheck4(FSMLevelLogic fsm, Board board)
