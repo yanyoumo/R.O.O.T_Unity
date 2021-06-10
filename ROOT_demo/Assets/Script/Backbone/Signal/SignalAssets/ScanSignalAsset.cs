@@ -8,10 +8,7 @@ namespace ROOT.Signal
 {
     public class ScanSignalAsset : SignalAssetBase
     {
-        void Awake()
-        {
-            UnitSignalCoreType = gameObject.AddComponent<ScanUnitSignalCore>().GetType();
-        }
+        public override Type UnitSignalCoreType => typeof(ScanUnitSignalCore);
 
         //这里的代码未来还要考虑到这些数据的位置会变。
         public override SignalType SignalType => SignalType.Scan;

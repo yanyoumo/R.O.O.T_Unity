@@ -1,3 +1,5 @@
+using System;
+
 namespace ROOT.Signal
 {
     //现在几点比较严重的问题、就是现在几个新的系统结合起来不匹配。
@@ -10,11 +12,7 @@ namespace ROOT.Signal
     //叮铃铃！有没有可能让商店允许玩家自己选择想购买的等级？
     public class ThermoSignalAsset : SignalAssetBase
     {
-        void Awake()
-        {
-            UnitSignalCoreType = gameObject.AddComponent<ThermoUnitSignalCore>().GetType();
-        }
-
+        public override Type UnitSignalCoreType => typeof(ThermoUnitSignalCore);
         public override SignalType SignalType => SignalType.Thermo;
     }
 }
