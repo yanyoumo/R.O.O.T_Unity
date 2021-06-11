@@ -24,22 +24,25 @@ namespace ROOT
         InfoCol,//先凑活一下。
     }
 
+    [Flags]
     public enum EdgeStatus
     {
         //这个东西有个隐含的需要优先级（队列）的设计。怎么搞？
         //队列还是分层？可能要分层。有了分层还要有顺序的概念。
         //目前这个顺序干脆就设计成这个enum从下往上的逻辑、或者得弄一个数列。
-        InfoZone,
-        ThermoZone,
-        Off,
+        Off = 0,
+        InfoZone = 1 << 0,
+        [Obsolete] ThermoZone = 1 << 1, //RISK 相关的逻辑和数据框架有用、不要剥离，改组和重构一下更有用。
     }
 
     public partial class BoardGirdCell : MonoBehaviour
     {
-        EdgeStatus checkEdgeStatusByPriority()
+        private readonly EdgeStatus[] _priorityList = {EdgeStatus.ThermoZone, EdgeStatus.InfoZone};
+
+        //TODO 用多了以后，可以把CtrlPack里面Flag的控制IO给提出来。
+        EdgeStatus GetCurrentMaxPriorityEdgeStatus()//TODO 在改成Flags的数据底层后、就可以改成直接找最高比特位的那个enum就行了。
         {
-            EdgeStatus[] PriorityList = {EdgeStatus.ThermoZone, EdgeStatus.InfoZone};
-            foreach (var edgeStatus in PriorityList)
+            foreach (var edgeStatus in _priorityList)
             {
                 if (LayeringEdgeStatus.ContainsKey(edgeStatus))
                 {
@@ -52,7 +55,7 @@ namespace ROOT
             return EdgeStatus.Off;
         }
         
-        public Dictionary<EdgeStatus, bool> LayeringEdgeStatus;
+        [ReadOnly] public Dictionary<EdgeStatus, bool> LayeringEdgeStatus;//TODO 这个从数据结构上没有必要，可以把这个enum变成flag来记录。
         private Color NormalColor => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_NORMAL;
         private Color WarningColor=> ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_WARNING;
         private Color HeatSinkColor=> ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_HEATSINK;
@@ -131,8 +134,7 @@ namespace ROOT
             }
         }
 
-        private Dictionary<Vector2Int, RotationDirection[]> thermoPosOffsetEdge = new Dictionary<Vector2Int, RotationDirection[]>
-            {
+        private Dictionary<Vector2Int, RotationDirection[]> thermoPosOffsetEdge = new Dictionary<Vector2Int, RotationDirection[]> {
                 {new Vector2Int(0, 1), new[] {RotationDirection.South}},
                 {new Vector2Int(1, 1), new[] {RotationDirection.South, RotationDirection.West}},
                 {new Vector2Int(1, 0), new[] {RotationDirection.West}},
@@ -180,7 +182,7 @@ namespace ROOT
 
         private void UpdateEdge(List<Vector2Int> zone, bool set)
         {
-            var edgeStatus = checkEdgeStatusByPriority();
+            var edgeStatus = GetCurrentMaxPriorityEdgeStatus();
             if (edgeStatus == EdgeStatus.Off)
             {
                 _edgeDic.Values.ForEach(renderer => renderer.enabled = false);

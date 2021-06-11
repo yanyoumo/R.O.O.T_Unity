@@ -20,11 +20,12 @@ MonoBehaviour:
   AdditionalPortRate: 35
   UnitMat: {fileID: 2100000, guid: 2193e19820876b248b02f1a7b724d580, type: 2}
   NeighbouringData:
-  - FliteringSignalType: 1
-    TargetingSignalType: 3
-    FliteringHardwareType: 0
-    TargetingHardwareType: 1
-    FourDirOrEightDir: 0
-    NeighbouringSprite: {fileID: 2800000, guid: a0272e3a537d37e47842f86bf9d12564,
+  - NeighbouringSprite: {fileID: 2800000, guid: a0272e3a537d37e47842f86bf9d12564,
       type: 3}
     ColorTint: {r: 0.3811646, g: 1, b: 0.18553454, a: 1}
+  - NeighbouringSprite: {fileID: 2800000, guid: b6c8974f5cecb3d48aea17c3836ed4ee,
+      type: 3}
+    ColorTint: {r: 1, g: 0.42138356, b: 0.42138356, a: 1}
+  - NeighbouringSprite: {fileID: 2800000, guid: 6b64212e181d40e498024f7e7739cf39,
+      type: 3}
+    ColorTint: {r: 0.6698113, g: 0, b: 0, a: 1}

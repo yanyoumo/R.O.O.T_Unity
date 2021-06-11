@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using com.ootii.Messages;
+using Sirenix.Utilities;
 using UnityEngine;
 // ReSharper disable PossibleMultipleEnumeration
 
 namespace ROOT.Signal
 {
+    //TODO Thermo单元的信息范围还是需要优化和调整(？)
     public class ThermoUnitSignalCore : UnitSignalCoreBase
     {
         public override SignalType SignalType => SignalType.Thermo;
@@ -44,6 +45,31 @@ namespace ROOT.Signal
             var validPattern = ExpellingPatternList.Where(Board.CheckBoardPosValidStatic);
             var emptyPos = validPattern.Where(Owner.GameBoard.CheckBoardPosValidAndEmpty);
             return emptyPos;
+        }
+        
+        private UnitNeighbDataAsset _neighbDataAsset => SignalMasterMgr.Instance.GetUnitAssetByUnitType(SignalType, HardwareType.Field).NeighbouringData[0];
+        protected override void InitNeighbouringLinkageDisplay()
+        {
+            foreach (var mat in Owner.UnitNeighbouringRendererRoot.LinkageIcons.Select(m=>m.material))
+            {
+                mat.mainTexture = _neighbDataAsset.NeighbouringSprite;
+                mat.color = _neighbDataAsset.ColorTint;
+            }
+        }
+        protected override void NeighbouringLinkageDisplay()
+        {
+            if (cachedCursorPos != Owner.CurrentBoardPosition|| Owner.UnitHardware != HardwareType.Field || !IsUnitActive )
+            {
+                Owner.UnitNeighbouringRendererRoot.LinkageIcons.ForEach(l => l.gameObject.SetActive(false));
+                return;
+            }
+
+            for (var i = 0; i < neighbouringOffsetList.Length; i++)
+            {
+                var inquiryBoardPos = Owner.CurrentBoardPosition + neighbouringOffsetList[i];
+                var displayIcon = GameBoard != null && GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos);
+                Owner.UnitNeighbouringRendererRoot.LinkageIcons[i].gameObject.SetActive(displayIcon && ShowingNeighbouringLinkage);
+            }
         }
         
         public override float SingleUnitScore
