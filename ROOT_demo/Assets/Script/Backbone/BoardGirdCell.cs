@@ -32,30 +32,140 @@ namespace ROOT
         //目前这个顺序干脆就设计成这个enum从下往上的逻辑、或者得弄一个数列。
         Off = 0,
         InfoZone = 1 << 0,
-        [Obsolete] ThermoZone = 1 << 1, //RISK 相关的逻辑和数据框架有用、不要剥离，改组和重构一下更有用。
+        SingleInfoZone = 1 << 1,
     }
 
+    public enum FlagOperation
+    {
+        //Single
+        Is,
+        Has,
+        //Mutiple
+        Set,
+        Unset,
+        Toggle,
+        Mask
+    }
+    public static class FlagOpWrapper
+    {
+        public static bool IsFlag<T>(T FlagA, T FlagB) where T : IConvertible
+        {
+            return OperateFlag_Sig(FlagOperation.Is, FlagA, FlagB);
+        }
+        
+        public static bool HasFlag<T>(T FlagA, T FlagB) where T : IConvertible
+        {
+            return OperateFlag_Sig(FlagOperation.Has, FlagA, FlagB);
+        }
+        
+        public static T SetFlag<T>(T FlagA, T FlagB) where T : IConvertible
+        {
+            return OperateFlag_Mut(FlagOperation.Set, FlagA, FlagB);
+        }
+
+        public static T UnsetFlag<T>(T FlagA, T FlagB) where T : IConvertible
+        {
+            return OperateFlag_Mut(FlagOperation.Unset, FlagA, FlagB);
+        }
+        
+        public static T ToggleFlag<T>(T FlagA, T FlagB) where T : IConvertible
+        {
+            return OperateFlag_Mut(FlagOperation.Toggle, FlagA, FlagB);
+        }
+
+        private static bool OperateFlag_Sig<T>(FlagOperation ops, T FlagA, T FlagB) where T : IConvertible
+        {
+            var intA = Convert.ToInt32(FlagA);
+            var intB = Convert.ToInt32(FlagB);
+            switch (ops)
+            {
+                case FlagOperation.Has:
+                    return HasFlag(intA, intB);
+                case FlagOperation.Is:
+                    return IsFlag(intA, intB);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ops), ops, null);
+            }
+        }
+
+        private static T OperateFlag_Mut<T>(FlagOperation ops, T FlagA, T FlagB) where T : IConvertible
+        {
+            var intA = Convert.ToInt32(FlagA);
+            var intB = Convert.ToInt32(FlagA);
+            var res = 0;
+            switch (ops)
+            {
+                case FlagOperation.Set:
+                    res = _setFlag(intA, intB);
+                    break;
+                case FlagOperation.Unset:
+                    res = _unsetFlag(intA, intB);
+                    break;
+                case FlagOperation.Toggle:
+                    res = _toggleFlag(intA, intB);
+                    break;
+                case FlagOperation.Mask:
+                    res = _maskFlag(intA, intB);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ops), ops, null);
+            }
+            return (T)Convert.ChangeType(res, typeof(T));
+        }
+        
+        public static bool AnyFlag(int FlagA)
+        {
+            return FlagA != 0;
+        }
+
+        public static bool IsFlag(int FlagA,int FlagB)
+        {
+            return FlagA == FlagB;
+        }
+
+        public static bool HasFlag(int FlagA,int FlagB)
+        {
+            return (FlagA & FlagB) == FlagB;
+        }
+        
+        private static int _maskFlag(int FlagA,int FlagB)
+        {
+            return FlagA & FlagB;
+        }
+
+        private static int _setFlag(int FlagA,int FlagB)
+        {
+            return FlagA | FlagB;
+        }
+
+        private static int _unsetFlag(int FlagA,int FlagB)
+        {
+            return FlagA & ~FlagB;
+        }
+
+        private static int _toggleFlag(int FlagA,int FlagB)
+        {
+            return FlagA ^ FlagB;
+        }
+    }
+    
     public partial class BoardGirdCell : MonoBehaviour
     {
-        private readonly EdgeStatus[] _priorityList = {EdgeStatus.ThermoZone, EdgeStatus.InfoZone};
+        private readonly EdgeStatus[] _priorityList = {EdgeStatus.SingleInfoZone, EdgeStatus.InfoZone};
 
-        //TODO 用多了以后，可以把CtrlPack里面Flag的控制IO给提出来。
-        EdgeStatus GetCurrentMaxPriorityEdgeStatus()//TODO 在改成Flags的数据底层后、就可以改成直接找最高比特位的那个enum就行了。
+        EdgeStatus GetCurrentMaxPriorityEdgeStatus()
         {
             foreach (var edgeStatus in _priorityList)
             {
-                if (LayeringEdgeStatus.ContainsKey(edgeStatus))
+                if (FlagOpWrapper.HasFlag(LayeringEdgeStatus,edgeStatus))
                 {
-                    if (LayeringEdgeStatus[edgeStatus])
-                    {
-                        return edgeStatus;
-                    }
+                    return edgeStatus;
                 }
             }
             return EdgeStatus.Off;
         }
-        
-        [ReadOnly] public Dictionary<EdgeStatus, bool> LayeringEdgeStatus;//TODO 这个从数据结构上没有必要，可以把这个enum变成flag来记录。
+
+        [ReadOnly] public EdgeStatus LayeringEdgeStatus { private set; get; } = EdgeStatus.Off;
         private Color NormalColor => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_NORMAL;
         private Color WarningColor=> ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_WARNING;
         private Color HeatSinkColor=> ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_HEATSINK;
@@ -127,14 +237,14 @@ namespace ROOT
             {
                 case EdgeStatus.InfoZone:
                     return ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_ZONE_INFO;
-                case EdgeStatus.ThermoZone:
+                case EdgeStatus.SingleInfoZone://TODO 这个考虑和单元本身联系起来。
                     return ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_ZONE_THERMO;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private Dictionary<Vector2Int, RotationDirection[]> thermoPosOffsetEdge = new Dictionary<Vector2Int, RotationDirection[]> {
+        /*private Dictionary<Vector2Int, RotationDirection[]> thermoPosOffsetEdge = new Dictionary<Vector2Int, RotationDirection[]> {
                 {new Vector2Int(0, 1), new[] {RotationDirection.South}},
                 {new Vector2Int(1, 1), new[] {RotationDirection.South, RotationDirection.West}},
                 {new Vector2Int(1, 0), new[] {RotationDirection.West}},
@@ -143,12 +253,12 @@ namespace ROOT
                 {new Vector2Int(-1, -1), new[] {RotationDirection.North, RotationDirection.East}},
                 {new Vector2Int(-1, 0), new[] {RotationDirection.East}},
                 {new Vector2Int(-1, 1), new[] {RotationDirection.East, RotationDirection.South}},
-            };
+            };*/
 
         //TODO 在准备接进去前一定要注意、这个zone是Thermo单元的位置、而且这个范围是和T2的面积匹配（写死）的。
         //这个表现应该还是好使的、但是可能需要一个方法标记处这一个个圈的"内部"、就是可能有的技能圈为了标记范围、可能有个向内的渐变什么的。
         //这个东西技术上做完了、稍微多一点儿就太乱了。
-        private void UpdateThermoEdge(List<Vector2Int> zone)
+        /*private void UpdateThermoEdge(List<Vector2Int> zone)
         {
             var lightingEdge = new List<RotationDirection>();
             foreach (var edgeDicValue in _edgeDic.Values)
@@ -166,9 +276,9 @@ namespace ROOT
             foreach (var rotationDirection in lightingEdge)
             {
                 _edgeDic[rotationDirection].enabled = true;
-                _edgeDic[rotationDirection].color = GetColorFromEdgeStatus(EdgeStatus.ThermoZone);
+                _edgeDic[rotationDirection].color = GetColorFromEdgeStatus(EdgeStatus.SingleInfoZone);
             }
-        }   
+        }*/
         
         private void UpdateEdgeSingleSide(RotationDirection side, List<Vector2Int> zone,EdgeStatus edgeStatus)
         {
@@ -190,16 +300,14 @@ namespace ROOT
             }
 
             if (!set) zone = owner.BoardGirdDriver.ExtractCachedZone(edgeStatus);
-            //想让Thermo的每个圈圈都显示出来的话、这个需求真滴不好弄。
-            //至少是要换一个思路、可能要每个grid查每个ThermoUnit具体的位置、然后再看。
-            //理论上这个框架还算是可以能用、主要是这个zone实际在Thermo时传递的是热力单元的坐标。
             if (edgeStatus == EdgeStatus.InfoZone)
             {
                 Common.Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, edgeStatus));
             }
-            else if (edgeStatus == EdgeStatus.ThermoZone)
+            else if (edgeStatus == EdgeStatus.SingleInfoZone)
             {
-                UpdateThermoEdge(zone);
+                //TODO 在这里处理单个单元的框架。
+                //UpdateThermoEdge(zone);
             }
         }
 
@@ -210,13 +318,13 @@ namespace ROOT
                 ClearEdge(edgeStatus);
             }
 
-            LayeringEdgeStatus[edgeStatus] = true;
+            LayeringEdgeStatus = FlagOpWrapper.SetFlag(LayeringEdgeStatus, edgeStatus);
             UpdateEdge(zone,true);
         }
 
         public void ClearEdge(EdgeStatus edgeStatus)
         {
-            LayeringEdgeStatus[edgeStatus] = false;
+            LayeringEdgeStatus = FlagOpWrapper.UnsetFlag(LayeringEdgeStatus, edgeStatus);
             UpdateEdge(new List<Vector2Int>(), false);
         }
 
@@ -329,17 +437,17 @@ namespace ROOT
             }
         }
 
-        private bool showingThremoBoarder = false;
+        //private bool showingThremoBoarder = false;
 
-        private void BoardGridThermoZoneInquiry(List<Vector2Int> ThermoZone)
+        /*private void BoardGridThermoZoneInquiry(List<Vector2Int> ThermoZone)
         {
             if (ThermoZone == null)
             {
                 Debug.LogWarning("ThermoZone is null");
                 return;
             }
-            SetEdge(ThermoZone, EdgeStatus.ThermoZone);
-        }
+            SetEdge(ThermoZone, EdgeStatus.SingleInfoZone);
+        }*/
 
         private bool showTextEnabled=false;
 
@@ -425,15 +533,11 @@ namespace ROOT
                 {RotationDirection.South, Edges[3]}
             };
 
-            LayeringEdgeStatus = new Dictionary<EdgeStatus, bool>
-            {
-                {EdgeStatus.InfoZone,false},
-                {EdgeStatus.ThermoZone,false},
-            };
+            LayeringEdgeStatus = EdgeStatus.Off;
+
             UpdateEdge(new List<Vector2Int>(), false);
             
             CashingText.color = NeutralCashColoring;
-            //CashingText.enabled = false;
             CashingTextRoot.gameObject.SetActive(false);
             
             MessageDispatcher.AddListener(InGameOverlayToggleEvent, HintToggle);

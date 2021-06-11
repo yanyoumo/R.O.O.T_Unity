@@ -25,7 +25,7 @@ namespace ROOT
             BoardGirds.Values.ForEach(grid => grid.SetEdge(levelAssets.CollectorZone, EdgeStatus.InfoZone));
         }
 
-        public List<Vector2Int> ExtractCachedZone(EdgeStatus edgeStatus) => BoardGirds.Keys.Where(keys => BoardGirds[keys].LayeringEdgeStatus[edgeStatus]).ToList();
+        public List<Vector2Int> ExtractCachedZone(EdgeStatus edgeStatus) => BoardGirds.Keys.Where(keys =>FlagOpWrapper.HasFlag(BoardGirds[keys].LayeringEdgeStatus,edgeStatus)).ToList();
 
         private PatternPermutation _HeatSinkPermutation = PatternPermutation.None;
         private int _currentHeatSinkPatternsID = 0;
