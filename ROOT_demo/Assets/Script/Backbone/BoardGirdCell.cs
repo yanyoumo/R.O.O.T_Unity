@@ -28,17 +28,20 @@ namespace ROOT
     {
         private readonly EdgeStatus[] _priorityList = {EdgeStatus.SingleInfoZone, EdgeStatus.InfoZone};
 
-        EdgeStatus GetCurrentMaxPriorityEdgeStatus()
+        EdgeStatus CurrentMaxPriorityEdgeStatus
         {
-            //Debug.Log("LayeringEdgeStatus=" + LayeringEdgeStatus);
-            foreach (var edgeStatus in _priorityList)
+            get
             {
-                if (LayeringEdgeStatus.HaveFlag(edgeStatus))
+                //Debug.Log("LayeringEdgeStatus=" + LayeringEdgeStatus);
+                foreach (var edgeStatus in _priorityList)
                 {
-                    return edgeStatus;
+                    if (LayeringEdgeStatus.HaveFlag(edgeStatus))
+                    {
+                        return edgeStatus;
+                    }
                 }
+                return EdgeStatus.Off;
             }
-            return EdgeStatus.Off;
         }
 
         [ReadOnly] public EdgeStatus LayeringEdgeStatus { private set; get; } = EdgeStatus.Off;
@@ -166,9 +169,39 @@ namespace ROOT
             _edgeDic[side].color = GetColorFromEdgeStatus(edgeStatus);
         }
 
+        private void SetEdge_Core(EdgeStatus targetingStatus, List<Vector2Int> zone)
+        {
+            if (targetingStatus == EdgeStatus.Off) return;
+            LayeringEdgeStatus = LayeringEdgeStatus.SetFlag(targetingStatus);
+            if (CurrentMaxPriorityEdgeStatus != targetingStatus) return;
+            Common.Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, CurrentMaxPriorityEdgeStatus));
+        }
+
+        private void UnsetEdge_Core(EdgeStatus targetingStatus)
+        {
+            if (targetingStatus == EdgeStatus.Off) return;
+            LayeringEdgeStatus = LayeringEdgeStatus.UnsetFlag(targetingStatus);
+            if (CurrentMaxPriorityEdgeStatus == EdgeStatus.Off)
+            {
+                _edgeDic.Values.ForEach(renderer => renderer.enabled = false);
+            }
+            else
+            {
+                var zone = owner.BoardGirdDriver.ExtractCachedZone(CurrentMaxPriorityEdgeStatus);
+                Common.Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, CurrentMaxPriorityEdgeStatus));
+            }
+        }
+
+        private void SetEdgeOff()
+        {
+            LayeringEdgeStatus = EdgeStatus.Off;
+            _edgeDic.Values.ForEach(renderer => renderer.enabled = false);
+        }
+        
+        /*[Obsolete]
         private void UpdateEdge(List<Vector2Int> zone, bool set, EdgeStatus targetingStatus)
         {
-            var currentMaxPriorityEdgeStatus = GetCurrentMaxPriorityEdgeStatus();
+            var currentMaxPriorityEdgeStatus = CurrentMaxPriorityEdgeStatus;
             if (set)
             {
                 if (currentMaxPriorityEdgeStatus != targetingStatus||targetingStatus == EdgeStatus.Off)
@@ -190,7 +223,7 @@ namespace ROOT
                 zone = owner.BoardGirdDriver.ExtractCachedZone(currentMaxPriorityEdgeStatus);
                 Common.Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, currentMaxPriorityEdgeStatus));
             }
-        }
+        }*/
 
         public void SetEdge(List<Vector2Int> zone, EdgeStatus edgeStatus)
         {
@@ -200,14 +233,12 @@ namespace ROOT
                 return;
             }
 
-            LayeringEdgeStatus = LayeringEdgeStatus.SetFlag(edgeStatus);
-            UpdateEdge(zone, true, edgeStatus);
+            SetEdge_Core(edgeStatus, zone);
         }
 
         public void ClearEdge(EdgeStatus edgeStatus)
         {
-            LayeringEdgeStatus = LayeringEdgeStatus.UnsetFlag(edgeStatus);
-            UpdateEdge(new List<Vector2Int>(), false, edgeStatus);
+            UnsetEdge_Core(edgeStatus);
         }
 
         public void Blink()
@@ -449,9 +480,7 @@ namespace ROOT
                 {RotationDirection.South, Edges[3]}
             };
 
-            LayeringEdgeStatus = EdgeStatus.Off;
-
-            UpdateEdge(new List<Vector2Int>(), false, EdgeStatus.Off);
+            SetEdgeOff();
             
             CashingText.color = NeutralCashColoring;
             CashingTextRoot.gameObject.SetActive(false);

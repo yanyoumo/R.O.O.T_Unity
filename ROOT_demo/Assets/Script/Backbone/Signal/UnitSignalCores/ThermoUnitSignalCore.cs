@@ -38,8 +38,8 @@ namespace ROOT.Signal
             }
         }
 
-        public override List<Vector2Int> SingleInfoCollectorZone => ExpellingPatternList;
-        
+        public override List<Vector2Int> SingleInfoCollectorZone => Owner.UnitHardware == HardwareType.Core ? new List<Vector2Int>() : ExpellingPatternList;
+
         private IEnumerable<Vector2Int> GetEmptyExpellingPos()
         {
             var validPattern = ExpellingPatternList.Where(Board.CheckBoardPosValidStatic);

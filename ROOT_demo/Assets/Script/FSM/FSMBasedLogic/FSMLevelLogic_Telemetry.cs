@@ -342,7 +342,10 @@ namespace ROOT
         
         private void InGameOverLayToggleHandler(IMessage rMessage)
         {
-            displaySingleInfoZone = !displaySingleInfoZone;
+            if (rMessage.Type==WorldEvent.InGameOverlayToggleEvent)
+            {
+                displaySingleInfoZone = !displaySingleInfoZone;
+            }
             var board = LevelAsset.GameBoard;
             var cursorPos = LevelAsset.Cursor.CurrentBoardPosition;
             board.BoardGirdDriver.ClearAllEdges(EdgeStatus.SingleInfoZone);
@@ -361,11 +364,13 @@ namespace ROOT
         {
             base.Awake();
             MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, InGameOverLayToggleHandler);
+            MessageDispatcher.AddListener(WorldEvent.CursorMovedEvent, InGameOverLayToggleHandler);
         }
 
         protected override void OnDestroy()
         {
-            MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, InGameOverLayToggleHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.CursorMovedEvent, InGameOverLayToggleHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.InGameOverlayToggleEvent, InGameOverLayToggleHandler);
             base.OnDestroy();
         }
 
