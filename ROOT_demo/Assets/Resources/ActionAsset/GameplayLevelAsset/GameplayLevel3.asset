@@ -34,6 +34,8 @@ MonoBehaviour:
   IsScanLevel: 0
   LevelFeature: 0
   DisplayedlevelType: 1
+  LevelInfo: 
+  StoryContent: 
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
@@ -42,13 +44,13 @@ MonoBehaviour:
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: -1, y: -1}
+    Pos: {x: 1, y: 1}
     IsStation: 1
   - PlayingSignalSelector: 1
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: -1, y: -1}
+    Pos: {x: 4, y: 4}
     IsStation: 1
   - PlayingSignalSelector: 0
     CoreGenre: 1
@@ -123,7 +125,7 @@ MonoBehaviour:
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
-    Pos: {x: 1, y: 1}
+    Pos: {x: 0, y: 0}
     Core: 0
     HardwareType: 0
     Sides: 
@@ -261,7 +263,7 @@ MonoBehaviour:
     HandOnCheckType: 250
     HandOnFailedType: 0
     HandsOnLockRound: 0
-    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523021\u5143"
+    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523027\u5143"
     TimeOutSec: -1
     TargetTag: 0
     Set: 0
