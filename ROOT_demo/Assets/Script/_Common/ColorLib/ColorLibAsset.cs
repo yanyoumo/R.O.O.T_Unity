@@ -118,10 +118,8 @@ namespace ROOT.SetupAsset
         [Title("BoardGrid Zone")]
         [PropertyOrder(21)]
         public Color ROOT_MAT_BOARDGRID_ZONE_INFO;
-        [ShowInInspector]
         [PropertyOrder(22)] 
-        [PropertyTooltip("Same as ROOT_MASTER_THERMO")]
-        public Color ROOT_MAT_BOARDGRID_ZONE_THERMO => ROOT_MASTER_THERMO;
+        public Color ROOT_MAT_BOARDGRID_ZONE_SINGLE;
         [Title("BoardGrid Custom HighLighting")]
         [PropertyOrder(23)]
         public Color ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_A;

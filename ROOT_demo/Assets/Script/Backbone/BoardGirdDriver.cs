@@ -23,19 +23,12 @@ namespace ROOT
             BoardGirds.Values.ForEach(grid => grid.ClearEdge(_edgeStatus));
         }
 
-        public void UpdateInfoZone(List<Vector2Int> CollectorZone)
+        public void UpdateInfoData(EdgeStatus targetingStatus, List<Vector2Int> CollectorZone)
         {
-            BoardGirds.Values.ForEach(grid => grid.ClearEdge(EdgeStatus.InfoZone));
-            BoardGirds.Values.ForEach(grid => grid.SetEdge(CollectorZone, EdgeStatus.InfoZone));
+            BoardGirds.Values.ForEach(grid => grid.ClearEdge(targetingStatus));
+            BoardGirds.Values.ForEach(grid => grid.SetEdge(CollectorZone, targetingStatus));
         }
 
-        public void UpdateSingleInfoZone(List<Vector2Int> CollectorZone)
-        {
-            //Debug.Log("CollectorZone.Count=" + CollectorZone.Count);
-            BoardGirds.Values.ForEach(grid => grid.ClearEdge(EdgeStatus.SingleInfoZone));
-            BoardGirds.Values.ForEach(grid => grid.SetEdge(CollectorZone, EdgeStatus.SingleInfoZone));
-        }
-        
         public List<Vector2Int> ExtractCachedZone(EdgeStatus edgeStatus) => BoardGirds.Keys.Where(keys =>BoardGirds[keys].LayeringEdgeStatus.HaveFlag(edgeStatus)).ToList();
 
         private PatternPermutation _HeatSinkPermutation = PatternPermutation.None;
