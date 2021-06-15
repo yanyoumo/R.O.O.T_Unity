@@ -56,17 +56,27 @@ namespace ROOT
 
         private int CompleteThisLevelAndUnlockFollowing(ref LevelActionAsset actionAsset)
         {
-            var unlockingLevelTerms = actionAsset.UnlockingLevel
+            var unlockingLevelTermsA = actionAsset.UnlockingLevel
                 .Where(lv => lv != null)
                 .Select(lv => lv.TitleTerm)
                 .Where(s => PlayerPrefsLevelMgr.GetLevelStatus(s) == LevelStatus.Locked)
                 .ToArray();
-            if (unlockingLevelTerms.Length > 0)
+            var unlockingLevelTermsB = actionAsset.UnlockingLevel_Upper
+                .Where(lv => lv != null)
+                .Select(lv => lv.TitleTerm)
+                .Where(s => PlayerPrefsLevelMgr.GetLevelStatus(s) == LevelStatus.Locked)
+                .ToArray();
+            
+            if (unlockingLevelTermsA.Length > 0)
             {
-                PlayerPrefsLevelMgr.CompleteThisLevelAndUnlockFollowing(actionAsset.TitleTerm, unlockingLevelTerms);
+                PlayerPrefsLevelMgr.CompleteThisLevelAndUnlockFollowing(actionAsset.TitleTerm, unlockingLevelTermsA);
+            }
+            if (unlockingLevelTermsB.Length > 0)
+            {
+                PlayerPrefsLevelMgr.CompleteThisLevelAndUnlockFollowing(actionAsset.TitleTerm, unlockingLevelTermsB);
             }
 
-            return unlockingLevelTerms.Length;
+            return unlockingLevelTermsA.Length;
         }
 
         //首先返回：要改成返回选择界面。重新开始就放在哪里。

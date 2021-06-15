@@ -25,6 +25,6 @@ namespace ROOT
         [Title("Aesthetic Data")]
         public Material UnitMat;
         [Title("Neighbouring DataAsset")]
-        public UnitNeighbouringDataAsset[] NeighbouringData;
+        public UnitNeighbDataAsset[] NeighbouringData;
     }
 }

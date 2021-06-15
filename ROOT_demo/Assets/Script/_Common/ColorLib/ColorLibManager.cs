@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -12,11 +13,13 @@ namespace ROOT.SetupAsset
         
         public ColorLibAsset ColorLib;
 
+        [Obsolete("这个放在Asset里面或者怎么管理。")]
         private Dictionary<SignalType, Color> SignalColorLib => new Dictionary<SignalType, Color>
         {
             {SignalType.Matrix, ColorLib.ROOT_SIGNAL_MATRIX},
             {SignalType.Scan, ColorLib.ROOT_SIGNAL_SCAN},
             {SignalType.Thermo, ColorLib.ROOT_SIGNAL_THREMO},
+            {SignalType.Firewall, ColorLib.ROOT_SIGNAL_FIREWALL},
         };
 
         public Color GetColorBySignalType(SignalType signalType)

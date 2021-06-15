@@ -631,6 +631,14 @@ MonoBehaviour:
       - Thermo
       Flags: 0000
       Languages_Touch: []
+    - Term: Signal_Name_Firewall
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u9632\u706B\u5899"
+      - Firewall
+      Flags: 0000
+      Languages_Touch: []
     - Term: LevelName_GL0
       TermType: 0
       Description: 

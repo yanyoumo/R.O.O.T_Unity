@@ -13,14 +13,14 @@ namespace ROOT.LevelAccessMgr
     
     public static class PlayerPrefsLevelMgr
     {
-        public static LevelStatus GetLevelStatus(string completedLevel)
+        public static LevelStatus GetLevelStatus(string levelNameTerm)
         {
-            if (PlayerPrefs.HasKey(completedLevel))
+            if (PlayerPrefs.HasKey(levelNameTerm))
             {
-                return (LevelStatus) PlayerPrefs.GetInt(completedLevel);
+                return (LevelStatus) PlayerPrefs.GetInt(levelNameTerm);
             }
 
-            ReplaceLevelStatus(completedLevel, LevelStatus.Locked);
+            ReplaceLevelStatus(levelNameTerm, LevelStatus.Locked);
             return LevelStatus.Locked;
         }
         

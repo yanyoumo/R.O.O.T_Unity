@@ -235,13 +235,13 @@ namespace ROOT
 
         protected abstract void BoardUpdatedHandler(IMessage rMessage);
 
-        private void BoardGridThermoZoneInquiryHandler(IMessage rMessage)
+        /*private void BoardGridThermoZoneInquiryHandler(IMessage rMessage)
         {
             if (rMessage is BoardGridThermoZoneInquiry info)
             {
                 info.BoardGridThermoZoneInquiryCallBack(LevelAsset.ThermoZone);
             }
-        }
+        }*/
 
         private void Update()
         {
@@ -296,14 +296,14 @@ namespace ROOT
             Debug.Assert(_actionDriver != null, "have to implement controller driver in 'createDriver' func");
 
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
-            MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
+            //MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
             MessageDispatcher.AddListener(RequestLevelQuitEvent, RequestLevelQuitHandler);
         }
 
         protected virtual void OnDestroy()
         {
             MessageDispatcher.RemoveListener(RequestLevelQuitEvent, RequestLevelQuitHandler);
-            MessageDispatcher.RemoveListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
+            //MessageDispatcher.RemoveListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
             MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
 
             _actionDriver.Unsubscribe();

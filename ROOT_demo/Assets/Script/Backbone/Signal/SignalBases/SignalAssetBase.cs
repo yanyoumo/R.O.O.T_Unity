@@ -12,7 +12,7 @@ namespace ROOT.Signal
     {
         public String SignalNameTerm;
         
-        public Type UnitSignalCoreType { protected set; get; }
+        public abstract Type UnitSignalCoreType { get; }
 
         public abstract SignalType SignalType { get; }
 
