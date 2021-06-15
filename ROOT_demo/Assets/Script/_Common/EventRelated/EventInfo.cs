@@ -104,10 +104,10 @@ namespace ROOT.Message
             public override string Type => WorldEvent.AcquiringCostTargetInquiry;
         }
 
-        public class BoardGridThermoZoneInquiry : RootMessageBase
+        /*public class BoardGridThermoZoneInquiry : RootMessageBase
         {
             public Action<List<Vector2Int>> BoardGridThermoZoneInquiryCallBack;
             public override string Type => WorldEvent.BoardGridThermoZoneInquiry;
-        }
+        }*/
     }
 }
