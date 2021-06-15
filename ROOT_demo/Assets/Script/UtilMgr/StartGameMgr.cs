@@ -7,6 +7,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static ROOT.Consts.StaticPlayerPrefName;
+using Object = System.Object;
 using Random = UnityEngine.Random;
 
 namespace ROOT

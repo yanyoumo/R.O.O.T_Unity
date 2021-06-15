@@ -181,7 +181,7 @@ namespace ROOT
 
             if (RoundLibDriver.IsBossRound && (bossType == BossStageType.Telemetry) && Animating)
             {
-                LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
+                LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset.GameBoard.GetInfoCollectorZone()); //RISK 这里先放在这
             }
             else
             {
@@ -190,7 +190,7 @@ namespace ROOT
                 //总之稳了后，这个不能这么每帧调用。
                 LevelAsset.GameBoard.BoardGirdDriver.UpkeepHeatSink(RoundLibDriver.CurrentStage.Value);
                 LevelAsset.GameBoard.BoardGirdDriver.CheckOverlappedHeatSinkCount(out LevelAsset.occupiedHeatSinkCount);
-                LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset); //RISK 这里先放在这
+                LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset.GameBoard.GetInfoCollectorZone()); //RISK 这里先放在这
                 if (LevelAsset.SkillEnabled)
                 {
                     LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
@@ -337,7 +337,38 @@ namespace ROOT
                 return breakings;
             }
         }
+
+        private bool displaySingleInfoZone = false;
         
+        private void InGameOverLayToggleHandler(IMessage rMessage)
+        {
+            displaySingleInfoZone = !displaySingleInfoZone;
+            var board = LevelAsset.GameBoard;
+            var cursorPos = LevelAsset.Cursor.CurrentBoardPosition;
+            board.BoardGirdDriver.ClearAllEdges(EdgeStatus.SingleInfoZone);
+            if (displaySingleInfoZone)
+            {
+                if (board.CheckBoardPosValidAndFilled(cursorPos))
+                {
+                    var unit = board.FindUnitByPos(cursorPos);
+                    Debug.Assert(unit != null, nameof(unit) + " != null");
+                    board.BoardGirdDriver.UpdateSingleInfoZone(unit.SignalCore.SingleInfoCollectorZone);
+                }
+            }
+        }
+        
+        protected override void Awake()
+        {
+            base.Awake();
+            MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, InGameOverLayToggleHandler);
+        }
+
+        protected override void OnDestroy()
+        {
+            MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, InGameOverLayToggleHandler);
+            base.OnDestroy();
+        }
+
         protected override void ModifyRootFSMTransitions(ref RootFSMTranstionLib RootFSMTransitions)
         {
             base.ModifyRootFSMTransitions(ref RootFSMTransitions);

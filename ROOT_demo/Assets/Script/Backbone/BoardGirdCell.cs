@@ -24,26 +24,16 @@ namespace ROOT
         InfoCol,//先凑活一下。
     }
 
-    [Flags]
-    public enum EdgeStatus
-    {
-        //这个东西有个隐含的需要优先级（队列）的设计。怎么搞？
-        //队列还是分层？可能要分层。有了分层还要有顺序的概念。
-        //目前这个顺序干脆就设计成这个enum从下往上的逻辑、或者得弄一个数列。
-        Off = 0,
-        InfoZone = 1 << 0,
-        SingleInfoZone = 1 << 1,
-    }
-
     public partial class BoardGirdCell : MonoBehaviour
     {
         private readonly EdgeStatus[] _priorityList = {EdgeStatus.SingleInfoZone, EdgeStatus.InfoZone};
 
         EdgeStatus GetCurrentMaxPriorityEdgeStatus()
         {
+            //Debug.Log("LayeringEdgeStatus=" + LayeringEdgeStatus);
             foreach (var edgeStatus in _priorityList)
             {
-                if (FlagOpWrapper.HasFlag(LayeringEdgeStatus,edgeStatus))
+                if (LayeringEdgeStatus.HaveFlag(edgeStatus))
                 {
                     return edgeStatus;
                 }
@@ -176,24 +166,29 @@ namespace ROOT
             _edgeDic[side].color = GetColorFromEdgeStatus(edgeStatus);
         }
 
-        private void UpdateEdge(List<Vector2Int> zone, bool set)
+        private void UpdateEdge(List<Vector2Int> zone, bool set, EdgeStatus targetingStatus)
         {
-            var edgeStatus = GetCurrentMaxPriorityEdgeStatus();
-            if (edgeStatus == EdgeStatus.Off)
+            var currentMaxPriorityEdgeStatus = GetCurrentMaxPriorityEdgeStatus();
+            if (set)
             {
-                _edgeDic.Values.ForEach(renderer => renderer.enabled = false);
-                return;
+                if (currentMaxPriorityEdgeStatus != targetingStatus||targetingStatus == EdgeStatus.Off)
+                {
+                    return;
+                }
+                if (currentMaxPriorityEdgeStatus == EdgeStatus.InfoZone || currentMaxPriorityEdgeStatus == EdgeStatus.SingleInfoZone) //不知道行不行。不行?
+                {
+                    Common.Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, currentMaxPriorityEdgeStatus));
+                }
             }
-
-            if (!set) zone = owner.BoardGirdDriver.ExtractCachedZone(edgeStatus);
-            if (edgeStatus == EdgeStatus.InfoZone)
+            else
             {
-                Common.Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, edgeStatus));
-            }
-            else if (edgeStatus == EdgeStatus.SingleInfoZone)
-            {
-                //TODO 在这里处理单个单元的框架。
-                //UpdateThermoEdge(zone);
+                if (currentMaxPriorityEdgeStatus == EdgeStatus.Off)
+                {
+                    _edgeDic.Values.ForEach(renderer => renderer.enabled = false);
+                    return;
+                }
+                zone = owner.BoardGirdDriver.ExtractCachedZone(currentMaxPriorityEdgeStatus);
+                Common.Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, currentMaxPriorityEdgeStatus));
             }
         }
 
@@ -202,16 +197,17 @@ namespace ROOT
             if (!zone.Contains(OnboardPos))
             {
                 ClearEdge(edgeStatus);
+                return;
             }
 
-            LayeringEdgeStatus = FlagOpWrapper.SetFlag(LayeringEdgeStatus, edgeStatus);
-            UpdateEdge(zone,true);
+            LayeringEdgeStatus = LayeringEdgeStatus.SetFlag(edgeStatus);
+            UpdateEdge(zone, true, edgeStatus);
         }
 
         public void ClearEdge(EdgeStatus edgeStatus)
         {
-            LayeringEdgeStatus = FlagOpWrapper.UnsetFlag(LayeringEdgeStatus, edgeStatus);
-            UpdateEdge(new List<Vector2Int>(), false);
+            LayeringEdgeStatus = LayeringEdgeStatus.UnsetFlag(edgeStatus);
+            UpdateEdge(new List<Vector2Int>(), false, edgeStatus);
         }
 
         public void Blink()
@@ -335,7 +331,7 @@ namespace ROOT
             SetEdge(ThermoZone, EdgeStatus.SingleInfoZone);
         }*/
 
-        private bool showTextEnabled=false;
+        private bool displayOverlayhint=false;
 
         private bool hardwareToggle
         {
@@ -352,8 +348,23 @@ namespace ROOT
             //RISK 如果真是Toggle的话、那么还针对随着单元移动而修改位置。到是姑且可以写在Update里面。
             //现在认为_stageType状态是能够正常更新了。
             //就相当浪费、但是目前也没有很好的办法。
-            showTextEnabled = !showTextEnabled;
-            CashingTextRoot.gameObject.SetActive(showTextEnabled && hardwareToggle);
+            displayOverlayhint = !displayOverlayhint;
+            CashingTextRoot.gameObject.SetActive(displayOverlayhint && hardwareToggle);
+            /*if (owner.BoardGirdDriver.HasInfoZone)
+            {
+                if (displayOverlayhint)
+                {
+                    if (owner.CheckBoardPosValidAndFilled(_cachedCursorPos))//TODO 这里的代码是没必要每个gird的Mono都跑的。
+                    {
+                        var unit = owner.FindUnitByPos(_cachedCursorPos);
+                        SetEdge(unit.SignalCore.SingleInfoCollectorZone, EdgeStatus.SingleInfoZone);
+                    }
+                }
+                else
+                {
+                    ClearEdge(EdgeStatus.SingleInfoZone);
+                }
+            }*/
             SetText(GetCashIO());
         }
 
@@ -369,11 +380,30 @@ namespace ROOT
             }
         }
         
-        private void BoardSignalUpdatedHandler(IMessage rmessage)
+        private Vector2Int _cachedCursorPos = -Vector2Int.one;
+        
+        private void BoardSignalUpdatedHandler(IMessage rMessage)
         {
-            CashingTextRoot.gameObject.SetActive(showTextEnabled && hardwareToggle);
+            if (rMessage is CursorMovedEventData data)
+            {
+                _cachedCursorPos = data.CurrentPosition;
+            }
+            CashingTextRoot.gameObject.SetActive(displayOverlayhint && hardwareToggle);
+            
+            /*if (displayOverlayhint)
+            {
+                if (owner.BoardGirdDriver.HasInfoZone)
+                {
+                    ClearEdge(EdgeStatus.SingleInfoZone);
+                    if (owner.CheckBoardPosValidAndFilled(_cachedCursorPos))
+                    {
+                        var unit = owner.FindUnitByPos(_cachedCursorPos);
+                        SetEdge(unit.SignalCore.SingleInfoCollectorZone, EdgeStatus.SingleInfoZone);
+                    }
+                }
+            }*/
         }
-
+        
         private void BoardGridHighLightSetHandler(IMessage rmessage)
         {
             if (rmessage is BoardGridHighLightSetData info)
@@ -421,12 +451,13 @@ namespace ROOT
 
             LayeringEdgeStatus = EdgeStatus.Off;
 
-            UpdateEdge(new List<Vector2Int>(), false);
+            UpdateEdge(new List<Vector2Int>(), false, EdgeStatus.Off);
             
             CashingText.color = NeutralCashColoring;
             CashingTextRoot.gameObject.SetActive(false);
             
             MessageDispatcher.AddListener(InGameOverlayToggleEvent, HintToggle);
+            //MessageDispatcher.AddListener(TelemetryInfoZoneToggleEvent, TelemetryInfoZoneToggleEventHandler);
             MessageDispatcher.AddListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
             MessageDispatcher.AddListener(BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
             MessageDispatcher.AddListener(BoardGridHighLightSetEvent, BoardGridHighLightSetHandler);
@@ -437,6 +468,7 @@ namespace ROOT
             MessageDispatcher.RemoveListener(BoardGridHighLightSetEvent, BoardGridHighLightSetHandler);
             MessageDispatcher.RemoveListener(BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
             MessageDispatcher.RemoveListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
+            //MessageDispatcher.RemoveListener(TelemetryInfoZoneToggleEvent, TelemetryInfoZoneToggleEventHandler);
             MessageDispatcher.RemoveListener(InGameOverlayToggleEvent, HintToggle);
         }
     }

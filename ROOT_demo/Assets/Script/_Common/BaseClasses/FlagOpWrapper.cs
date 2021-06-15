@@ -17,39 +17,39 @@ namespace ROOT
 
     public static class FlagOpWrapper
     {
-        public static bool IsFlag<T>(T FlagA, T FlagB) where T : IConvertible
+        public static bool IsFlag<T>(this T FlagA, T FlagB) where T : Enum
         {
             return OperateFlag_Sig(FlagOperation.Is, FlagA, FlagB);
         }
 
-        public static bool HasFlag<T>(T FlagA, T FlagB) where T : IConvertible
+        public static bool HaveFlag<T>(this T FlagA, T FlagB) where T : Enum
         {
             return OperateFlag_Sig(FlagOperation.Has, FlagA, FlagB);
         }
 
-        public static T SetFlag<T>(T FlagA, T FlagB) where T : IConvertible
+        public static T SetFlag<T>(this T FlagA, T FlagB) where T : Enum
         {
             return OperateFlag_Mut(FlagOperation.Set, FlagA, FlagB);
         }
 
-        public static T UnsetFlag<T>(T FlagA, T FlagB) where T : IConvertible
+        public static T UnsetFlag<T>(this T FlagA, T FlagB) where T : Enum
         {
             return OperateFlag_Mut(FlagOperation.Unset, FlagA, FlagB);
         }
 
-        public static T ToggleFlag<T>(T FlagA, T FlagB) where T : IConvertible
+        public static T ToggleFlag<T>(this T FlagA, T FlagB) where T : Enum
         {
             return OperateFlag_Mut(FlagOperation.Toggle, FlagA, FlagB);
         }
 
-        private static bool OperateFlag_Sig<T>(FlagOperation ops, T FlagA, T FlagB) where T : IConvertible
+        private static bool OperateFlag_Sig<T>(FlagOperation ops, T FlagA, T FlagB) where T : Enum
         {
-            var intA = Convert.ToInt32(FlagA);
-            var intB = Convert.ToInt32(FlagB);
+            var intA = Convert.ToUInt64(FlagA);
+            var intB = Convert.ToUInt64(FlagB);
             switch (ops)
             {
                 case FlagOperation.Has:
-                    return HasFlag(intA, intB);
+                    return HaveFlag(intA, intB);
                 case FlagOperation.Is:
                     return IsFlag(intA, intB);
                 default:
@@ -57,11 +57,11 @@ namespace ROOT
             }
         }
 
-        private static T OperateFlag_Mut<T>(FlagOperation ops, T FlagA, T FlagB) where T : IConvertible
+        private static T OperateFlag_Mut<T>(FlagOperation ops, T FlagA, T FlagB) where T : Enum
         {
-            var intA = Convert.ToInt32(FlagA);
-            var intB = Convert.ToInt32(FlagA);
-            var res = 0;
+            var intA = Convert.ToUInt64(FlagA);
+            var intB = Convert.ToUInt64(FlagB);
+            ulong res = 0;
             switch (ops)
             {
                 case FlagOperation.Set:
@@ -80,35 +80,35 @@ namespace ROOT
                     throw new ArgumentOutOfRangeException(nameof(ops), ops, null);
             }
 
-            return (T) Convert.ChangeType(res, typeof(T));
+            return (T) Enum.ToObject(typeof(T), res);
         }
 
-        private static bool IsFlag(int FlagA, int FlagB)
+        private static bool IsFlag(ulong FlagA, ulong FlagB)
         {
             return FlagA == FlagB;
         }
 
-        private static bool HasFlag(int FlagA, int FlagB)
+        private static bool HaveFlag(ulong FlagA, ulong FlagB)
         {
             return (FlagA & FlagB) == FlagB;
         }
 
-        private static int _maskFlag(int FlagA, int FlagB)
+        private static ulong _maskFlag(ulong FlagA, ulong FlagB)
         {
             return FlagA & FlagB;
         }
 
-        private static int _setFlag(int FlagA, int FlagB)
+        private static ulong _setFlag(ulong FlagA, ulong FlagB)
         {
             return FlagA | FlagB;
         }
 
-        private static int _unsetFlag(int FlagA, int FlagB)
+        private static ulong _unsetFlag(ulong FlagA, ulong FlagB)
         {
             return FlagA & ~FlagB;
         }
 
-        private static int _toggleFlag(int FlagA, int FlagB)
+        private static ulong _toggleFlag(ulong FlagA, ulong FlagB)
         {
             return FlagA ^ FlagB;
         }
