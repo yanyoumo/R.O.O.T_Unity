@@ -35,6 +35,7 @@ Transform:
   - {fileID: 9118056746903456609}
   - {fileID: 3501529039856494800}
   - {fileID: 4741525229311213615}
+  - {fileID: 7456128061376170717}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -56,6 +57,8 @@ MonoBehaviour:
   SkillKeyText: {fileID: 7383828583652303009}
   SkillIcon: {fileID: 3547738720659014793}
   LockedIcon: {fileID: 589506555690636025}
+  DefaultMat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  BWMat: {fileID: 2100000, guid: 1fb877e56726845739d702b36d5538c0, type: 2}
 --- !u!65 &4010766846298942752
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -85,6 +88,53 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &2741639216227164493
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7456128061376170717}
+  - component: {fileID: 7632773120187157569}
+  m_Layer: 0
+  m_Name: Skill_Count_LED
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7456128061376170717
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2741639216227164493}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.579, y: 0, z: 0.58}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5812061397419790532}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7632773120187157569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2741639216227164493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c267524087794ef46a81fbfea155a89b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LEDColor: {r: 0, g: 0.6509434, b: 0.25490177, a: 1}
+  _LEDArray: []
+  SingleSkillCountTemplate: {fileID: 1984074061900715838, guid: 4f2e26360cbbe4c4b882b29544743b4a,
+    type: 3}
 --- !u!1 &3501529039856494801
 GameObject:
   m_ObjectHideFlags: 0

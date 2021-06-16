@@ -13,6 +13,9 @@ namespace ROOT
 {
     public class SkillMgr : MonoBehaviour
     {
+        /*public Material DefaultMat;
+        public Material BWMat;*/
+        
         public List<SkillPalette> SkillPalettes;
         private List<InstancedSkillData> InstancedSkillData { get; set; }
         public Transform IconFramework;
@@ -383,10 +386,10 @@ namespace ROOT
         {
             return ColorTextPrefix(colorHex) + content + ColorTextPostFix;
         }
-        
+
         private string SkillTagText(InstancedSkillData skill)
         {
-            switch (skill.SklType)
+            /*switch (skill.SklType)
             {
                 case SkillType.TimeFromMoney when skill.CountLimit != -1:
                     return ColoredText("RMN=" + skill.RemainingCount, RemainColorHEX) + " " + ColoredText(skill.TimeGain + "<<", SubColorHEX);
@@ -404,15 +407,21 @@ namespace ROOT
                     return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("Reset", SubColorHEX);
                 default:
                     throw new ArgumentOutOfRangeException();
+            }*/
+            if (skill.Cost <= 0)
+            {
+                return ColoredText("FREE", MainColorHEX);
             }
+
+            return skill.Cost.ToString("D");
         }
 
         private void PopulateInstancedSkill()
         {
             InstancedSkillData = new List<InstancedSkillData>();
-            for (var i = 0; i < SkillPalettes.Count; i++)
+            foreach (var skillDataUnit in SkillData.SkillDataList)
             {
-                InstancedSkillData.Add(new InstancedSkillData(SkillData.SkillDataList[i]));
+                InstancedSkillData.Add(new InstancedSkillData(skillDataUnit));
             }
         }
 
