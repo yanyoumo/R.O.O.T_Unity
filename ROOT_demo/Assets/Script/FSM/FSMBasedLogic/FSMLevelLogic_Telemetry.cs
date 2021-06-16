@@ -352,14 +352,11 @@ namespace ROOT
             var board = LevelAsset.GameBoard;
             var cursorPos = LevelAsset.Cursor.CurrentBoardPosition;
             board.BoardGirdDriver.ClearAllEdges(EdgeStatus.SingleInfoZone);
-            if (displaySingleInfoZone)
+            if (displaySingleInfoZone && board.CheckBoardPosValidAndFilled(cursorPos))
             {
-                if (board.CheckBoardPosValidAndFilled(cursorPos))
-                {
-                    var unit = board.FindUnitByPos(cursorPos);
-                    Debug.Assert(unit != null, nameof(unit) + " != null");
-                    UpdateSingleInfoZone(unit.SignalCore.SingleInfoCollectorZone);
-                }
+                var unit = board.FindUnitByPos(cursorPos);
+                Debug.Assert(unit != null, nameof(unit) + " != null");
+                UpdateSingleInfoZone(unit.SignalCore.SingleInfoCollectorZone);
             }
         }
         

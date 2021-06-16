@@ -5,6 +5,14 @@ using UnityEngine;
 
 namespace ROOT
 {
+    public enum SkillStatus
+    {
+        Normal,
+        SystemLock,
+        MoneyLock,
+        CoolDownLock,
+    }
+    
     public class SkillPalette : MonoBehaviour
     {
         [ReadOnly]public int SkillID;
@@ -31,13 +39,14 @@ namespace ROOT
             set => SkillIcon.sprite = value;
         }
 
-        public bool SkillEnabled
+        public SkillStatus SkillStatus
         {
             set
             {
-                SkillTag.text = value ? SkillTag.text : "?????";
-                LockedIcon.enabled = !value;
-                SkillIcon.color = value ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.65f);
+                //TODO 具体的外观变化还要弄。
+                SkillTag.text = value == SkillStatus.Normal ? SkillTag.text : "?????";
+                LockedIcon.enabled = value != SkillStatus.Normal;
+                SkillIcon.color = value == SkillStatus.Normal ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.65f);
             }
         }
     }

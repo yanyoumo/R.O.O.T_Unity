@@ -425,7 +425,23 @@ namespace ROOT
                 SkillPalettes[i].SklType = InstancedSkillData[i].SklType;
                 SkillPalettes[i].SkillTagText = SkillTagText(InstancedSkillData[i]);
                 SkillPalettes[i].SkillIconSprite = InstancedSkillData[i].SkillIcon;
-                SkillPalettes[i].SkillEnabled = InstancedSkillData[i].SkillEnabled && !InstancedSkillData[i].SkillCoolDown;
+                
+                if (!InstancedSkillData[i].SkillEnabledSystem)
+                {
+                    SkillPalettes[i].SkillStatus = SkillStatus.SystemLock;
+                }
+                else if (!InstancedSkillData[i].SkillEnabledInternal)
+                {
+                    SkillPalettes[i].SkillStatus = SkillStatus.MoneyLock;
+                }
+                else if (InstancedSkillData[i].SkillCoolDown)
+                {
+                    SkillPalettes[i].SkillStatus = SkillStatus.CoolDownLock;
+                }
+                else
+                {
+                    SkillPalettes[i].SkillStatus = SkillStatus.Normal;
+                }
             }
         }
 
