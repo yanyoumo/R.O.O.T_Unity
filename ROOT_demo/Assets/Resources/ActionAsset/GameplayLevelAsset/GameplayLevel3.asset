@@ -260,7 +260,7 @@ MonoBehaviour:
     Tier: 0
     IsStationary: 0
     Tag: 0
-    HandOnCheckType: 250
+    HandOnCheckType: 253
     HandOnFailedType: 0
     HandsOnLockRound: 0
     HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523027\u5143"
