@@ -20,8 +20,13 @@ namespace ROOT.UI
 
         public Transform SeesawTickTotalX;
         public Transform SeesawTick;
-        private float seeSawTickUnit => SeesawTickTotalX.localPosition.x / 4.0f;
+        
+        private int cachedTypeAVal = -1;
+        private int cachedTypeBVal = -1;
+        private float cachedIncomeMultiplierVal = float.NaN;
+        private static string _padding(int a) => Utils.PaddingNum2Digit(a);
 
+        private float seeSawTickUnit => SeesawTickTotalX.localPosition.x / 4.0f;
         private void SetSeesawTick(int del)
         {
             var pos = SeesawTick.localPosition;
@@ -43,34 +48,6 @@ namespace ROOT.UI
             NormalSignal.color = ColorLibManager.Instance.GetColorBySignalType(signalTypeA);
             NetworkSignal.color = ColorLibManager.Instance.GetColorBySignalType(signalTypeB);
         }
-        
-        protected override void Awake()
-        {
-            base.Awake();
-            MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
-            MessageDispatcher.SendMessage(new BalancingSignalSetupInquiryData
-            {
-                BalancingSignalFuncCallBack = func => _balancingSignalFunc = func
-            });
-            MessageDispatcher.SendMessage(new CurrentSignalTypeInquiryData
-            {
-                CurrentSignalCallBack = SetupSignalType,
-            });
-        }
-
-        protected override void OnDestroy()
-        {
-            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
-            base.OnDestroy();
-        }
-
-
-        private static string _padding(int a) => Common.Utils.PaddingNum2Digit(a);
-
-        private int cachedTypeAVal = -1;
-        private int cachedTypeBVal = -1;
-        private float cachedIncomeMultiplierVal = float.NaN;
-
 
         private void UpdateCachedData(BoardSignalUpdatedData inComingData)
         {
@@ -106,6 +83,26 @@ namespace ROOT.UI
             IncomeMultiplier.text = "x" + multiplier.ToString("F");
 
             SetSeesawTick(del);
+        }
+        
+        protected override void Awake()
+        {
+            base.Awake();
+            MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
+            MessageDispatcher.SendMessage(new BalancingSignalSetupInquiryData
+            {
+                BalancingSignalFuncCallBack = func => _balancingSignalFunc = func
+            });
+            MessageDispatcher.SendMessage(new CurrentSignalTypeInquiryData
+            {
+                CurrentSignalCallBack = SetupSignalType,
+            });
+        }
+
+        protected override void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
+            base.OnDestroy();
         }
     }
 }
