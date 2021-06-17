@@ -52,22 +52,34 @@ MonoBehaviour:
     IsStation: 1
   - PlayingSignalSelector: 0
     CoreGenre: 1
-    Sides: 00000000010000000000000001000000
-    Tier: 2
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 0
-    CoreGenre: 1
-    Sides: 00000000010000000000000001000000
-    Tier: 2
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 0
-    CoreGenre: 1
     Sides: 01000000000000000100000000000000
     Tier: 1
     Pos: {x: 2, y: 2}
     IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 01000000010000000000000000000000
+    Tier: 1
+    Pos: {x: 4, y: 1}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000100000000000000
+    Tier: 1
+    Pos: {x: 1, y: 4}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 00000000010000000000000001000000
+    Tier: 2
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 00000000010000000000000001000000
+    Tier: 2
+    Pos: {x: -1, y: -1}
+    IsStation: 0
   - PlayingSignalSelector: 0
     CoreGenre: 1
     Sides: 01000000010000000000000000000000
@@ -94,10 +106,16 @@ MonoBehaviour:
     IsStation: 0
   - PlayingSignalSelector: 0
     CoreGenre: 1
-    Sides: 01000000010000000000000000000000
+    Sides: 01000000000000000100000001000000
     Tier: 1
-    Pos: {x: 4, y: 1}
-    IsStation: 1
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 01000000010000000000000000000000
+    Tier: 3
+    Pos: {x: -1, y: -1}
+    IsStation: 0
   HasBossRound: 0
   Endless: 0
   BossStage: 0
@@ -255,7 +273,7 @@ MonoBehaviour:
     HandOnCheckType: 252
     HandOnFailedType: 0
     HandsOnLockRound: 0
-    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523010\u5143"
+    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523014\u5143"
     TimeOutSec: -1
     TargetTag: 0
     Set: 0
