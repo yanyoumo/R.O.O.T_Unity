@@ -59,6 +59,7 @@ MonoBehaviour:
   LockedIcon: {fileID: 589506555690636025}
   DefaultMat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   BWMat: {fileID: 2100000, guid: 1fb877e56726845739d702b36d5538c0, type: 2}
+  CounterLEDArray: {fileID: 7632773120187157569}
 --- !u!65 &4010766846298942752
 BoxCollider:
   m_ObjectHideFlags: 0

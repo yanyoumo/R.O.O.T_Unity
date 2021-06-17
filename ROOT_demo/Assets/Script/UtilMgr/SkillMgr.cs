@@ -387,35 +387,6 @@ namespace ROOT
             return ColorTextPrefix(colorHex) + content + ColorTextPostFix;
         }
 
-        private string SkillTagText(InstancedSkillData skill)
-        {
-            /*switch (skill.SklType)
-            {
-                case SkillType.TimeFromMoney when skill.CountLimit != -1:
-                    return ColoredText("RMN=" + skill.RemainingCount, RemainColorHEX) + " " + ColoredText(skill.TimeGain + "<<", SubColorHEX);
-                case SkillType.TimeFromMoney:
-                    return ColoredText(skill.TimeGain + "<<", SubColorHEX);
-                case SkillType.FastForward:
-                    return ColoredText(">>>" + skill.FastForwardCount, MainColorHEX) + " " + ColoredText("+" + skill.AdditionalIncome + "%", SubColorHEX);
-                case SkillType.Swap:
-                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("R=" + skill.radius, SubColorHEX);
-                case SkillType.RefreshHeatSink:
-                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("Refresh", SubColorHEX);
-                case SkillType.Discount:
-                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("-" + skill.Discount + "%", SubColorHEX);
-                case SkillType.ResetHeatSink:
-                    return ColoredText("-"+skill.Cost, MainColorHEX) + ColoredText("Reset", SubColorHEX);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }*/
-            if (skill.Cost <= 0)
-            {
-                return ColoredText("FREE", MainColorHEX);
-            }
-
-            return skill.Cost.ToString("D");
-        }
-
         private void PopulateInstancedSkill()
         {
             InstancedSkillData = new List<InstancedSkillData>();
@@ -425,39 +396,29 @@ namespace ROOT
             }
         }
 
-        private void UpdateSkillPalettes()
+        private void InitSkillPalettes()
         {
             for (var i = 0; i < SkillPalettes.Count; i++)
             {
                 SkillPalettes[i].SkillID = i;
                 SkillPalettes[i].SkillKeyIconID = (i + 1) % 10;
-                SkillPalettes[i].SklType = InstancedSkillData[i].SklType;
-                SkillPalettes[i].SkillTagText = SkillTagText(InstancedSkillData[i]);
-                SkillPalettes[i].SkillIconSprite = InstancedSkillData[i].SkillIcon;
-                
-                if (!InstancedSkillData[i].SkillEnabledSystem)
-                {
-                    SkillPalettes[i].SkillStatus = SkillStatus.SystemLock;
-                }
-                else if (!InstancedSkillData[i].SkillEnabledInternal)
-                {
-                    SkillPalettes[i].SkillStatus = SkillStatus.MoneyLock;
-                }
-                else if (InstancedSkillData[i].SkillCoolDown)
-                {
-                    SkillPalettes[i].SkillStatus = SkillStatus.CoolDownLock;
-                }
-                else
-                {
-                    SkillPalettes[i].SkillStatus = SkillStatus.Normal;
-                }
+                SkillPalettes[i].InitPaletteBySkillData(InstancedSkillData[i]);
+            }
+        }
+        
+        private void UpdateSkillPalettes()
+        {
+            for (var i = 0; i < SkillPalettes.Count; i++)
+            {
+                SkillPalettes[i].UpdatePaletteBySkillData(InstancedSkillData[i]);
             }
         }
 
+        
         public void Awake()
         {
             PopulateInstancedSkill();
-            UpdateSkillPalettes();
+            InitSkillPalettes();
         }
     }
 }

@@ -8,10 +8,12 @@ namespace ROOT
 {
     public enum SkillStatus
     {
+        //这个玩意儿意外地可能会冲突。特么可能得用一个flags
         Normal,
         SystemLock,
         MoneyLock,
         CoolDownLock,
+        NoCountLock,
     }
     
     public class SkillPalette : MonoBehaviour
@@ -25,9 +27,66 @@ namespace ROOT
 
         public Material DefaultMat;
         public Material BWMat;
+
+        public SkillCountLEDArray CounterLEDArray;
         
         private string cachedSkillTagText;
-        
+
+        private string SkillTagText_Content(InstancedSkillData skill)
+        {
+            if (skill.Cost <= 0)
+            {
+                return "FREE";
+            }
+            return skill.Cost.ToString("D");
+        }
+        public void InitPaletteBySkillData(InstancedSkillData skillData)
+        {
+            SklType = skillData.SklType;
+            SkillTagText = SkillTagText_Content(skillData);
+            SkillIconSprite = skillData.SkillIcon;
+            
+            if (skillData.RemainingCount!=-1)
+            {
+                MaxSkillCount = skillData.RemainingCount;
+            }
+            else
+            {
+                CounterLEDArray.gameObject.SetActive(false);
+            }
+
+            UpdatePaletteBySkillData(skillData);
+        }
+
+        public void UpdatePaletteBySkillData(InstancedSkillData skillData)
+        {
+            if (CounterLEDArray.gameObject.activeSelf)
+            {
+                CurrentSkillCount = skillData.RemainingCount;
+            }
+
+            if (!skillData.SkillEnabledSystem)
+            {
+                SkillStatus = SkillStatus.SystemLock;
+            }
+            else if (skillData.RemainingCount == 0)
+            {
+                SkillStatus = SkillStatus.NoCountLock;
+            }
+            else if (!skillData.SkillEnabledInternal)
+            {
+                SkillStatus = SkillStatus.MoneyLock;
+            }
+            else if (skillData.SkillCoolDown)
+            {
+                SkillStatus = SkillStatus.CoolDownLock;
+            }
+            else
+            {
+                SkillStatus = SkillStatus.Normal;
+            }
+        }
+
         public String SkillTagText
         {
             set => SkillTag.text = cachedSkillTagText = value;
@@ -43,6 +102,16 @@ namespace ROOT
             set => SkillIcon.sprite = value;
         }
 
+        public int MaxSkillCount
+        {
+            set => CounterLEDArray.InitSkillCountArray(value);
+        }
+
+        public int CurrentSkillCount
+        {
+            set => CounterLEDArray.Val = value;
+        }
+        
         public SkillStatus SkillStatus
         {
             set
@@ -69,7 +138,15 @@ namespace ROOT
                         SkillIcon.color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
                         break;
                     case SkillStatus.CoolDownLock:
-                        throw new NotImplementedException();
+                        SkillTag.text = "Activated";
+                        SkillIcon.material = BWMat;
+                        SkillIcon.color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+                        break;
+                    case SkillStatus.NoCountLock:
+                        SkillTag.text = "Run out";
+                        SkillTag.color = ColorLibManager.Instance.ColorLib.MASTER_RED;
+                        SkillIcon.material = BWMat;
+                        SkillIcon.color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(value), value, null);
