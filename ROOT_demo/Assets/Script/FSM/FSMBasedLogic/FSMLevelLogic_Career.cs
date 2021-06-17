@@ -409,15 +409,31 @@ namespace ROOT
             }
         }
 
+        private void CurrentSignalTypeInquiryHandler(IMessage rMessage)
+        {
+            if (rMessage is CurrentSignalTypeInquiryData data)
+            {
+                var asset = LevelAsset.ActionAsset.AdditionalGameSetup;
+                data.CurrentSignalCallBack(asset.PlayingSignalTypeA, asset.PlayingSignalTypeB);
+            }
+        }
+        
         protected override void Awake()
         {
             base.Awake();
             RoundLibDriver = new RoundLibDriver {owner = this};
+            MessageDispatcher.AddListener(WorldEvent.CurrentSignalTypeInquiry,CurrentSignalTypeInquiryHandler);
             if (UseTutorialVer)
             {
                 FeatureManager.RegistFSMFeature(FSMFeatures.Round,new []{FSMFeatures.Shop,FSMFeatures.Currency}, false);
                 FeatureManager.RegistFSMFeature(FSMFeatures.Skill,new []{FSMFeatures.Round,FSMFeatures.Shop,FSMFeatures.Currency}, false);
             }
+        }
+
+        protected override void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.CurrentSignalTypeInquiry,CurrentSignalTypeInquiryHandler);
+            base.OnDestroy();
         }
     }
 }

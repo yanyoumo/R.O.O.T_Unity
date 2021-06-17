@@ -4,11 +4,6 @@ using static ROOT.WorldEvent;
 
 namespace ROOT.UI
 {
-    /*public interface RoundRelatedUI
-    {
-        public StageType StageType => StageType.Shop;
-    }*/
-    
     public abstract class RoundRelatedUIBase : HideableUI
     {
         protected StageType StageType = StageType.Shop;

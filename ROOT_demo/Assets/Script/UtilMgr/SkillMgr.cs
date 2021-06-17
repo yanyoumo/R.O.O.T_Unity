@@ -401,8 +401,7 @@ namespace ROOT
             for (var i = 0; i < SkillPalettes.Count; i++)
             {
                 SkillPalettes[i].SkillID = i;
-                SkillPalettes[i].SkillKeyIconID = (i + 1) % 10;
-                SkillPalettes[i].InitPaletteBySkillData(InstancedSkillData[i]);
+                SkillPalettes[i].InitPaletteBySkillData(InstancedSkillData[i], (i + 1) % 10);
             }
         }
         

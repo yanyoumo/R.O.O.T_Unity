@@ -6,16 +6,16 @@ using UnityEngine;
 
 namespace ROOT
 {
+    [Flags]
     public enum SkillStatus
     {
-        //这个玩意儿意外地可能会冲突。特么可能得用一个flags
-        Normal,
-        SystemLock,
-        MoneyLock,
-        CoolDownLock,
-        NoCountLock,
+        Normal = 0,
+        MoneyLock = 1 << 1,
+        NoCountLock = 1 << 2,
+        CoolDownLock = 1 << 3,
+        SystemLock = 1 << 4,
     }
-    
+
     public class SkillPalette : MonoBehaviour
     {
         [ReadOnly]public int SkillID;
@@ -31,88 +31,28 @@ namespace ROOT
         public SkillCountLEDArray CounterLEDArray;
         
         private string cachedSkillTagText;
-
-        private string SkillTagText_Content(InstancedSkillData skill)
-        {
-            if (skill.Cost <= 0)
-            {
-                return "FREE";
-            }
-            return skill.Cost.ToString("D");
-        }
-        public void InitPaletteBySkillData(InstancedSkillData skillData)
-        {
-            SklType = skillData.SklType;
-            SkillTagText = SkillTagText_Content(skillData);
-            SkillIconSprite = skillData.SkillIcon;
-            
-            if (skillData.RemainingCount!=-1)
-            {
-                MaxSkillCount = skillData.RemainingCount;
-            }
-            else
-            {
-                CounterLEDArray.gameObject.SetActive(false);
-            }
-
-            UpdatePaletteBySkillData(skillData);
-        }
-
-        public void UpdatePaletteBySkillData(InstancedSkillData skillData)
-        {
-            if (CounterLEDArray.gameObject.activeSelf)
-            {
-                CurrentSkillCount = skillData.RemainingCount;
-            }
-
-            if (!skillData.SkillEnabledSystem)
-            {
-                SkillStatus = SkillStatus.SystemLock;
-            }
-            else if (skillData.RemainingCount == 0)
-            {
-                SkillStatus = SkillStatus.NoCountLock;
-            }
-            else if (!skillData.SkillEnabledInternal)
-            {
-                SkillStatus = SkillStatus.MoneyLock;
-            }
-            else if (skillData.SkillCoolDown)
-            {
-                SkillStatus = SkillStatus.CoolDownLock;
-            }
-            else
-            {
-                SkillStatus = SkillStatus.Normal;
-            }
-        }
-
-        public String SkillTagText
+        
+        private String SkillTagText
         {
             set => SkillTag.text = cachedSkillTagText = value;
         }
 
-        public int SkillKeyIconID
-        {
-            set => SkillKeyText.text = "<sprite=" + value + ">";
-        }
-        
-        public Sprite SkillIconSprite
+        private Sprite SkillIconSprite
         {
             set => SkillIcon.sprite = value;
         }
 
-        public int MaxSkillCount
+        private int MaxSkillCount
         {
             set => CounterLEDArray.InitSkillCountArray(value);
         }
 
-        public int CurrentSkillCount
+        private int CurrentSkillCount
         {
             set => CounterLEDArray.Val = value;
         }
         
-        public SkillStatus SkillStatus
+        private SkillStatus SkillStatus
         {
             set
             {
@@ -128,9 +68,9 @@ namespace ROOT
                         break;
                     case SkillStatus.SystemLock:
                         SkillTag.text = "?????";
-                        LockedIcon.enabled = true;
                         SkillIcon.color = new Color(0.5f, 0.5f, 0.5f, 0.65f);
                         SkillIcon.material = DefaultMat;
+                        LockedIcon.enabled = true;
                         break;
                     case SkillStatus.MoneyLock:
                         SkillTag.color = ColorLibManager.Instance.ColorLib.MASTER_RED;
@@ -139,6 +79,7 @@ namespace ROOT
                         break;
                     case SkillStatus.CoolDownLock:
                         SkillTag.text = "Activated";
+                        SkillTag.color = ColorLibManager.Instance.ColorLib.MASTER_RED;
                         SkillIcon.material = BWMat;
                         SkillIcon.color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
                         break;
@@ -152,6 +93,74 @@ namespace ROOT
                         throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
             }
+        }
+        
+        private int SkillKeyIconID
+        {
+            set => SkillKeyText.text = "<sprite=" + value + ">";
+        }
+        
+        private string SkillTagText_Content(InstancedSkillData skill)
+        {
+            if (skill.Cost <= 0)
+            {
+                return "FREE";
+            }
+            return skill.Cost.ToString("D");
+        }
+
+        
+        public void InitPaletteBySkillData(InstancedSkillData skillData,int _skillKeyIconID)
+        {
+            SklType = skillData.SklType;
+            SkillTagText = SkillTagText_Content(skillData);
+            SkillIconSprite = skillData.SkillIcon;
+            SkillKeyIconID = _skillKeyIconID;
+            
+            if (skillData.RemainingCount!=-1)
+            {
+                MaxSkillCount = skillData.RemainingCount;
+            }
+            else
+            {
+                CounterLEDArray.gameObject.SetActive(false);
+            }
+
+            UpdatePaletteBySkillData(skillData);
+        }
+
+        public void UpdatePaletteBySkillData(InstancedSkillData skillData)
+        {
+            SkillTagText = SkillTagText_Content(skillData);
+
+            if (CounterLEDArray.gameObject.activeSelf)
+            {
+                CurrentSkillCount = skillData.RemainingCount;
+            }
+
+            var combinedStatus = SkillStatus.Normal;
+            
+            if (!skillData.SkillEnabledSystem)
+            {
+                combinedStatus |= SkillStatus.SystemLock;
+            }
+            
+            if (skillData.RemainingCount == 0)
+            {
+                combinedStatus |= SkillStatus.NoCountLock;
+            }
+            
+            if (!skillData.SkillEnabledInternal)
+            {
+                combinedStatus |= SkillStatus.MoneyLock;
+            }
+            
+            if (skillData.SkillCoolDown)
+            {
+                combinedStatus |= SkillStatus.CoolDownLock;
+            }
+
+            SkillStatus = combinedStatus.MaxPriorityFlag();
         }
     }
 

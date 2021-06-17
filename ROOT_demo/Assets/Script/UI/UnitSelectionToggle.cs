@@ -20,12 +20,6 @@ namespace ROOT.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log("eventData.hovered.Count=" + eventData.hovered.Count);
-            foreach (var o in eventData.hovered)
-            {
-                Debug.Log(o.name);
-            }
-            Debug.Log("OnPointerEnter");
             if (eventData.hovered.Contains(gameObject))
             {
                 TooltipUI.ActiveTooltip();
@@ -34,7 +28,6 @@ namespace ROOT.UI
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Debug.Log("OnPointerExit");
             TooltipUI.DeactivateTooltip();
         }
     }

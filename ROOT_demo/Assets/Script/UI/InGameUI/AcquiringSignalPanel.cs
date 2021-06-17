@@ -2,6 +2,7 @@ using System;
 using com.ootii.Messages;
 using ROOT.Common;
 using ROOT.Message.Inquiry;
+using ROOT.SetupAsset;
 using TMPro;
 using UnityEngine;
 
@@ -36,20 +37,31 @@ namespace ROOT.UI
                 UpdateNumbersCore();
             }
         }
+
+        private void SetupSignalType(SignalType signalTypeA, SignalType signalTypeB)
+        {
+            NormalSignal.color = ColorLibManager.Instance.GetColorBySignalType(signalTypeA);
+            NetworkSignal.color = ColorLibManager.Instance.GetColorBySignalType(signalTypeB);
+        }
         
         protected override void Awake()
         {
             base.Awake();
             MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
-            MessageDispatcher.SendMessage(new BalancingSignalSetupInquiry {
-                BalancingSignalFuncCallBack= func=>_balancingSignalFunc=func
+            MessageDispatcher.SendMessage(new BalancingSignalSetupInquiryData
+            {
+                BalancingSignalFuncCallBack = func => _balancingSignalFunc = func
+            });
+            MessageDispatcher.SendMessage(new CurrentSignalTypeInquiryData
+            {
+                CurrentSignalCallBack = SetupSignalType,
             });
         }
 
         protected override void OnDestroy()
         {
-            base.OnDestroy();
             MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
+            base.OnDestroy();
         }
 
 

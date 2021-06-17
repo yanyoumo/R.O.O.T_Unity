@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Common;
+using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
-using ROOT.UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
