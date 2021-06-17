@@ -63,6 +63,11 @@ namespace ROOT
             player.AddInputEventDelegate(OnInputUpdateBasicButton, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, ActionID);
         }
 
+        private void RegisterFunctionKeyAction(int ActionID)
+        {
+            player.AddInputEventDelegate(OnInputUpdateFunc, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, ActionID);
+        }
+        
         private void RegisterDragUnitKeyAction(int ActionID)
         {
             player.AddInputEventDelegate(OnInputUpdateSpaceDown, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, ActionID);
@@ -111,7 +116,7 @@ namespace ROOT
             player = ReInput.players.GetPlayer(playerId);
 
             RegisterCursorAction();
-            FunctionalActions.ForEach(RegisterBasicKeyAction);
+            FunctionalActions.ForEach(RegisterFunctionKeyAction);
             BasicActions.ForEach(RegisterBasicKeyAction);
             RegisterDragUnitKeyAction(DragUnitAction);
             RegisterHintPanelKeyAction(HintPanelAction);
