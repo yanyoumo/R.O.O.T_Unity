@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Common;
+using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
-using ROOT.UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -171,6 +171,9 @@ namespace ROOT
             }
         }
 
+        private void UpdateInfoZone(List<Vector2Int> collectorZone) => LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoData(EdgeStatus.InfoZone,collectorZone);
+        private void UpdateSingleInfoZone(List<Vector2Int> collectorZone) => LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoData(EdgeStatus.SingleInfoZone,collectorZone);
+
         protected override void AdditionalMajorUpkeep()
         {
             base.AdditionalMajorUpkeep();
@@ -181,7 +184,7 @@ namespace ROOT
 
             if (RoundLibDriver.IsBossRound && (bossType == BossStageType.Telemetry) && Animating)
             {
-                LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset.GameBoard.GetInfoCollectorZone()); //RISK 这里先放在这
+                UpdateInfoZone(LevelAsset.GameBoard.GetInfoCollectorZone()); //RISK 这里先放在这
             }
             else
             {
@@ -190,7 +193,7 @@ namespace ROOT
                 //总之稳了后，这个不能这么每帧调用。
                 LevelAsset.GameBoard.BoardGirdDriver.UpkeepHeatSink(RoundLibDriver.CurrentStage.Value);
                 LevelAsset.GameBoard.BoardGirdDriver.CheckOverlappedHeatSinkCount(out LevelAsset.occupiedHeatSinkCount);
-                LevelAsset.GameBoard.BoardGirdDriver.UpdateInfoZone(LevelAsset.GameBoard.GetInfoCollectorZone()); //RISK 这里先放在这
+                UpdateInfoZone(LevelAsset.GameBoard.GetInfoCollectorZone()); //RISK 这里先放在这
                 if (LevelAsset.SkillEnabled)
                 {
                     LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
@@ -349,14 +352,11 @@ namespace ROOT
             var board = LevelAsset.GameBoard;
             var cursorPos = LevelAsset.Cursor.CurrentBoardPosition;
             board.BoardGirdDriver.ClearAllEdges(EdgeStatus.SingleInfoZone);
-            if (displaySingleInfoZone)
+            if (displaySingleInfoZone && board.CheckBoardPosValidAndFilled(cursorPos))
             {
-                if (board.CheckBoardPosValidAndFilled(cursorPos))
-                {
-                    var unit = board.FindUnitByPos(cursorPos);
-                    Debug.Assert(unit != null, nameof(unit) + " != null");
-                    board.BoardGirdDriver.UpdateSingleInfoZone(unit.SignalCore.SingleInfoCollectorZone);
-                }
+                var unit = board.FindUnitByPos(cursorPos);
+                Debug.Assert(unit != null, nameof(unit) + " != null");
+                UpdateSingleInfoZone(unit.SignalCore.SingleInfoCollectorZone);
             }
         }
         

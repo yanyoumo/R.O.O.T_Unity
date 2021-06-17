@@ -80,7 +80,7 @@ namespace ROOT
 
         private void BalancingSignalSetupInquiryHandler(IMessage rMessage)
         {
-            if (rMessage is BalancingSignalSetupInquiry inquiry)
+            if (rMessage is BalancingSignalSetupInquiryData inquiry)
             {
                 inquiry.BalancingSignalFuncCallBack(BalancingSignal);
             }
@@ -90,7 +90,7 @@ namespace ROOT
         
         private void AcquiringCostTargetHandler(IMessage rMessage)
         {
-            if (rMessage is AcquiringCostTargetInquiry inquiry)
+            if (rMessage is AcquiringCostTargetInquiryData inquiry)
             {
                 inquiry.AcquiringCostTargetCallBack(TargetCurrency);
             }

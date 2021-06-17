@@ -47,7 +47,7 @@ namespace ROOT.UI
         protected override void Awake()
         {
             base.Awake();
-            MessageDispatcher.SendMessage(new AcquiringCostTargetInquiry
+            MessageDispatcher.SendMessage(new AcquiringCostTargetInquiryData
             {
                 AcquiringCostTargetCallBack = (tgt) => TgtCurrency.text = tgt.ToString("D4")//TODO 怎么和数值位数和面积匹配是个问题。
             });

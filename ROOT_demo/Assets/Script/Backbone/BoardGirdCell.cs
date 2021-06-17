@@ -117,48 +117,12 @@ namespace ROOT
                 case EdgeStatus.InfoZone:
                     return ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_ZONE_INFO;
                 case EdgeStatus.SingleInfoZone://TODO 这个考虑和单元本身联系起来。
-                    return ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_ZONE_THERMO;
+                    return ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_ZONE_SINGLE;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        /*private Dictionary<Vector2Int, RotationDirection[]> thermoPosOffsetEdge = new Dictionary<Vector2Int, RotationDirection[]> {
-                {new Vector2Int(0, 1), new[] {RotationDirection.South}},
-                {new Vector2Int(1, 1), new[] {RotationDirection.South, RotationDirection.West}},
-                {new Vector2Int(1, 0), new[] {RotationDirection.West}},
-                {new Vector2Int(1, -1), new[] {RotationDirection.West, RotationDirection.North}},
-                {new Vector2Int(0, -1), new[] {RotationDirection.North}},
-                {new Vector2Int(-1, -1), new[] {RotationDirection.North, RotationDirection.East}},
-                {new Vector2Int(-1, 0), new[] {RotationDirection.East}},
-                {new Vector2Int(-1, 1), new[] {RotationDirection.East, RotationDirection.South}},
-            };*/
-
-        //TODO 在准备接进去前一定要注意、这个zone是Thermo单元的位置、而且这个范围是和T2的面积匹配（写死）的。
-        //这个表现应该还是好使的、但是可能需要一个方法标记处这一个个圈的"内部"、就是可能有的技能圈为了标记范围、可能有个向内的渐变什么的。
-        //这个东西技术上做完了、稍微多一点儿就太乱了。
-        /*private void UpdateThermoEdge(List<Vector2Int> zone)
-        {
-            var lightingEdge = new List<RotationDirection>();
-            foreach (var edgeDicValue in _edgeDic.Values)
-            {
-                edgeDicValue.enabled = false;
-            }
-            foreach (var vector2Int in thermoPosOffsetEdge.Keys)
-            {
-                if (zone.Contains(vector2Int + OnboardPos))
-                {
-                    lightingEdge.AddRange(thermoPosOffsetEdge[vector2Int]);
-                }
-            }
-            lightingEdge = lightingEdge.Distinct().ToList();
-            foreach (var rotationDirection in lightingEdge)
-            {
-                _edgeDic[rotationDirection].enabled = true;
-                _edgeDic[rotationDirection].color = GetColorFromEdgeStatus(EdgeStatus.SingleInfoZone);
-            }
-        }*/
-        
         private void UpdateEdgeSingleSide(RotationDirection side, List<Vector2Int> zone,EdgeStatus edgeStatus)
         {
             //set是true的话是设置新的Zone、如果是false走fallback流程。
@@ -197,33 +161,6 @@ namespace ROOT
             LayeringEdgeStatus = EdgeStatus.Off;
             _edgeDic.Values.ForEach(renderer => renderer.enabled = false);
         }
-        
-        /*[Obsolete]
-        private void UpdateEdge(List<Vector2Int> zone, bool set, EdgeStatus targetingStatus)
-        {
-            var currentMaxPriorityEdgeStatus = CurrentMaxPriorityEdgeStatus;
-            if (set)
-            {
-                if (currentMaxPriorityEdgeStatus != targetingStatus||targetingStatus == EdgeStatus.Off)
-                {
-                    return;
-                }
-                if (currentMaxPriorityEdgeStatus == EdgeStatus.InfoZone || currentMaxPriorityEdgeStatus == EdgeStatus.SingleInfoZone) //不知道行不行。不行?
-                {
-                    Common.Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, currentMaxPriorityEdgeStatus));
-                }
-            }
-            else
-            {
-                if (currentMaxPriorityEdgeStatus == EdgeStatus.Off)
-                {
-                    _edgeDic.Values.ForEach(renderer => renderer.enabled = false);
-                    return;
-                }
-                zone = owner.BoardGirdDriver.ExtractCachedZone(currentMaxPriorityEdgeStatus);
-                Common.Utils.ROTATION_LIST.ForEach(edge => UpdateEdgeSingleSide(edge, zone, currentMaxPriorityEdgeStatus));
-            }
-        }*/
 
         public void SetEdge(List<Vector2Int> zone, EdgeStatus edgeStatus)
         {
@@ -350,18 +287,6 @@ namespace ROOT
             }
         }
 
-        //private bool showingThremoBoarder = false;
-
-        /*private void BoardGridThermoZoneInquiry(List<Vector2Int> ThermoZone)
-        {
-            if (ThermoZone == null)
-            {
-                Debug.LogWarning("ThermoZone is null");
-                return;
-            }
-            SetEdge(ThermoZone, EdgeStatus.SingleInfoZone);
-        }*/
-
         private bool displayOverlayhint=false;
 
         private bool hardwareToggle
@@ -381,21 +306,6 @@ namespace ROOT
             //就相当浪费、但是目前也没有很好的办法。
             displayOverlayhint = !displayOverlayhint;
             CashingTextRoot.gameObject.SetActive(displayOverlayhint && hardwareToggle);
-            /*if (owner.BoardGirdDriver.HasInfoZone)
-            {
-                if (displayOverlayhint)
-                {
-                    if (owner.CheckBoardPosValidAndFilled(_cachedCursorPos))//TODO 这里的代码是没必要每个gird的Mono都跑的。
-                    {
-                        var unit = owner.FindUnitByPos(_cachedCursorPos);
-                        SetEdge(unit.SignalCore.SingleInfoCollectorZone, EdgeStatus.SingleInfoZone);
-                    }
-                }
-                else
-                {
-                    ClearEdge(EdgeStatus.SingleInfoZone);
-                }
-            }*/
             SetText(GetCashIO());
         }
 
@@ -420,19 +330,6 @@ namespace ROOT
                 _cachedCursorPos = data.CurrentPosition;
             }
             CashingTextRoot.gameObject.SetActive(displayOverlayhint && hardwareToggle);
-            
-            /*if (displayOverlayhint)
-            {
-                if (owner.BoardGirdDriver.HasInfoZone)
-                {
-                    ClearEdge(EdgeStatus.SingleInfoZone);
-                    if (owner.CheckBoardPosValidAndFilled(_cachedCursorPos))
-                    {
-                        var unit = owner.FindUnitByPos(_cachedCursorPos);
-                        SetEdge(unit.SignalCore.SingleInfoCollectorZone, EdgeStatus.SingleInfoZone);
-                    }
-                }
-            }*/
         }
         
         private void BoardGridHighLightSetHandler(IMessage rmessage)
@@ -486,7 +383,6 @@ namespace ROOT
             CashingTextRoot.gameObject.SetActive(false);
             
             MessageDispatcher.AddListener(InGameOverlayToggleEvent, HintToggle);
-            //MessageDispatcher.AddListener(TelemetryInfoZoneToggleEvent, TelemetryInfoZoneToggleEventHandler);
             MessageDispatcher.AddListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
             MessageDispatcher.AddListener(BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
             MessageDispatcher.AddListener(BoardGridHighLightSetEvent, BoardGridHighLightSetHandler);
@@ -497,7 +393,6 @@ namespace ROOT
             MessageDispatcher.RemoveListener(BoardGridHighLightSetEvent, BoardGridHighLightSetHandler);
             MessageDispatcher.RemoveListener(BoardSignalUpdatedEvent, BoardSignalUpdatedHandler);
             MessageDispatcher.RemoveListener(CurrencyIOStatusChangedEvent,CurrencyIOStatusChangedEventHandler);
-            //MessageDispatcher.RemoveListener(TelemetryInfoZoneToggleEvent, TelemetryInfoZoneToggleEventHandler);
             MessageDispatcher.RemoveListener(InGameOverlayToggleEvent, HintToggle);
         }
     }

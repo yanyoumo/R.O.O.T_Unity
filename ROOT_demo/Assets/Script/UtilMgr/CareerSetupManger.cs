@@ -37,6 +37,8 @@ namespace ROOT.UI
         public TextMeshProUGUI SignalSelectionHint;
         private AdditionalGameSetup _additionalGameSetup = new AdditionalGameSetup();
 
+        public Tooltip_UI TooltipUI;
+
         //private LevelActionAsset actionAsset => LevelLib.Instance.ActionAsset(levelId);
         private LevelActionAsset actionAsset => currentUsingAsset;
         private bool LevelIsTutorial => (actionAsset.levelType == LevelType.Tutorial);//用这个方式判断这个关卡是不是教程.
@@ -111,7 +113,11 @@ namespace ROOT.UI
                 toggleCore.LabelTextTerm = signalMaster.GetSignalNameTerm(signalMaster.SignalLib[i]);
                 toggles.Add(signalMaster.SignalLib[i], toggleCore);
                 toggleCore.CoreToggle.isOn = (i < 2);
-                if (LevelIsTutorial)
+                if (!LevelIsTutorial)
+                {
+                    toggleCore.TooltipUI = TooltipUI;
+                }
+                else
                 {
                     toggleCore.CoreToggle.isOn = false;
                     toggleCore.CoreToggle.interactable = false;
@@ -127,6 +133,7 @@ namespace ROOT.UI
             FeatureIconArrayUI.SetLevelFeature(currentUsingAsset.LevelFeature);
             MainPassage.text = currentUsingAsset.LevelInfo;
             SubPassage.text = currentUsingAsset.StoryContent;
+            TooltipUI.DeactivateTooltip();
             
             var devMode = PlayerPrefs.GetInt(StaticPlayerPrefName.DEV_MODE, 0) > 0;
             CreateSignalSelectionPanel(devMode);

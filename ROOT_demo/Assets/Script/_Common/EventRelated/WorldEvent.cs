@@ -10,6 +10,7 @@ namespace ROOT
         public static string HintRelatedEvent = "HintRelatedEvent";
         public static string BoardGridHighLightSetEvent = "BoardGridHighLightSetEvent";
 
+        public static string CurrentSignalTypeInquiry = "CurrentSignalTypeInquiry";
         public static string BalancingSignalSetupInquiry = "BalancingSignalSetupInquiry";
         public static string AcquiringCostTargetInquiry = "AcquiringCostTargetInquiry";
         public static string BoardGridThermoZoneInquiry = "BoardGridThermoZoneInquiry";
