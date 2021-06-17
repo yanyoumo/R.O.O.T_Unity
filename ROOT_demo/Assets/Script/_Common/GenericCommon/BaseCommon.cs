@@ -2,6 +2,17 @@ using System;
 
 namespace ROOT
 {
+    [Flags]
+    public enum EdgeStatus
+    {
+        //这个东西有个隐含的需要优先级（队列）的设计。怎么搞？
+        //队列还是分层？可能要分层。有了分层还要有顺序的概念。
+        //目前这个顺序干脆就设计成这个enum从下往上的逻辑、或者得弄一个数列。
+        Off = 0,
+        InfoZone = 1 << 0,
+        SingleInfoZone = 1 << 1,
+    }
+    
     public enum HintEventType
     {
         SetGoalContent = 0,

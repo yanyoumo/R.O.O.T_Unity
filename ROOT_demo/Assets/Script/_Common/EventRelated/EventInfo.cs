@@ -92,22 +92,28 @@ namespace ROOT.Message
     
     namespace Inquiry
     {
-        public class BalancingSignalSetupInquiry : RootMessageBase
+        public class BoardSignalUpdatedInfo : RootMessageBase
+        {
+            public BoardSignalUpdatedData SignalData;
+            public override string Type => WorldEvent.BoardSignalUpdatedEvent;
+        }
+        
+        public class BalancingSignalSetupInquiryData : RootMessageBase
         {
             public Action<Func<int, int, float>> BalancingSignalFuncCallBack;
             public override string Type => WorldEvent.BalancingSignalSetupInquiry;
         }
 
-        public class AcquiringCostTargetInquiry : RootMessageBase
+        public class AcquiringCostTargetInquiryData : RootMessageBase
         {
             public Action<int> AcquiringCostTargetCallBack;
             public override string Type => WorldEvent.AcquiringCostTargetInquiry;
         }
 
-        public class BoardGridThermoZoneInquiry : RootMessageBase
+        public class CurrentSignalTypeInquiryData : RootMessageBase
         {
-            public Action<List<Vector2Int>> BoardGridThermoZoneInquiryCallBack;
-            public override string Type => WorldEvent.BoardGridThermoZoneInquiry;
+            public Action<SignalType, SignalType> CurrentSignalCallBack;
+            public override string Type => WorldEvent.CurrentSignalTypeInquiry;
         }
     }
 }

@@ -232,6 +232,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skill_Framework
       objectReference: {fileID: 0}
+    - target: {fileID: 545763207837482330, guid: e97fd50e4d98d004d8e07e6e551b8718,
+        type: 3}
+      propertyPath: BWMat
+      value: 
+      objectReference: {fileID: 2100000, guid: 1fb877e56726845739d702b36d5538c0, type: 2}
+    - target: {fileID: 545763207837482330, guid: e97fd50e4d98d004d8e07e6e551b8718,
+        type: 3}
+      propertyPath: DefaultMat
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 545763207837482331, guid: e97fd50e4d98d004d8e07e6e551b8718,
         type: 3}
       propertyPath: m_RootOrder

@@ -13,7 +13,7 @@ namespace ROOT.Signal
 {
     public abstract class UnitSignalCoreBase : MonoBehaviour
     {
-        public Unit Owner;
+        [ReadOnly]public Unit Owner;
         protected Board GameBoard => Owner.GameBoard;
         //返回对应的信号的enum
         public abstract SignalType SignalType { get; }
@@ -97,9 +97,13 @@ namespace ROOT.Signal
         public virtual bool IsUnitActive => HasCertainSignal(SignalType) || Owner.UnitHardware == HardwareType.Core;
 
         public abstract float SingleUnitScore { get; }
-        
+
+        public virtual void SignalCoreInit()
+        {
+            InitNeighbouringLinkageDisplay();
+        }
                 
-        private bool ShowingNeighbouringLinkage = false;
+        protected bool ShowingNeighbouringLinkage = false;
 
         private void NeighbouringLinkageToggle(IMessage rMessage)
         {
@@ -108,7 +112,7 @@ namespace ROOT.Signal
         }
 
         //N/E/W/S/NE/NW/SE/SW
-        private readonly Vector2Int[] neighbouringOffsetList =
+        protected readonly Vector2Int[] neighbouringOffsetList =
         {
             Vector2Int.up,
             Vector2Int.right,
@@ -120,52 +124,9 @@ namespace ROOT.Signal
             Vector2Int.down + Vector2Int.left
         };
 
-        private Vector2Int cachedCursorPos = -Vector2Int.one;
-        
-        private void NeighbouringLinkageDisplay()
-        {
-            //牛逼、现在只有Cursor所在的地方显示数据！下面两个数据就都没有了。
-            //TODO 这个玩意儿互相的显示怎么弄？//可以“反查询”
-            //TODO 有两个Icon的情况下怎么弄？//Icon可以45°角切半。
-            var unitAsset = SignalMasterMgr.Instance.GetUnitAssetByUnitType(SignalType, Owner.UnitHardware);
-            if (unitAsset.NeighbouringData.Length > 0)
-            {
-                foreach (var dataAsset in unitAsset.NeighbouringData)
-                {
-                    for (var i = 0; i < neighbouringOffsetList.Length; i++)
-                    {
-                        var inquiryBoardPos = Owner.CurrentBoardPosition + neighbouringOffsetList[i];
-                        var displayIcon = false;
+        protected Vector2Int cachedCursorPos { private set; get; } = -Vector2Int.one;
 
-                        if (cachedCursorPos == Owner.CurrentBoardPosition)
-                        {
-                            if (IsUnitActive && (i < 4 || !dataAsset.FourDirOrEightDir))
-                            {
-                                if (GameBoard != null && GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos))
-                                {
-                                    displayIcon = true;
-                                    var otherUnit = Owner.GameBoard.FindUnitByPos(inquiryBoardPos);
-                                    if (dataAsset.FliteringSignalType &&
-                                        otherUnit.UnitSignal != dataAsset.TargetingSignalType)
-                                    {
-                                        displayIcon = false;
-                                    }
-
-                                    if (dataAsset.FliteringHardwareType &&
-                                        otherUnit.UnitHardware != dataAsset.TargetingHardwareType)
-                                    {
-                                        displayIcon = false;
-                                    }
-                                }
-                            }
-                        }
-                        Owner.UnitNeighbouringRendererRoot.LinkageIcons[i].material.mainTexture = dataAsset.NeighbouringSprite;
-                        Owner.UnitNeighbouringRendererRoot.LinkageIcons[i].material.color = dataAsset.ColorTint;
-                        Owner.UnitNeighbouringRendererRoot.LinkageIcons[i].gameObject.SetActive(displayIcon && ShowingNeighbouringLinkage);
-                    }
-                }
-            }
-        }
+        protected virtual void NeighbouringLinkageDisplay() {}
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
         {
@@ -176,6 +137,8 @@ namespace ROOT.Signal
             NeighbouringLinkageDisplay();
         }
 
+        protected virtual void InitNeighbouringLinkageDisplay() { }
+        
         protected virtual void Awake()
         {
             Visited = false;

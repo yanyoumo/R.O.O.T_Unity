@@ -277,12 +277,12 @@ namespace ROOT
             TypeBSignalScore = SignalMasterMgr.Instance.CalAllScoreBySignal(
                 LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, LevelAsset.GameBoard,
                 out var hardwareBCount, out TypeBSignalCount);
-            if (LevelAsset.ActionAsset.AdditionalGameSetup.IsPlayingCertainSignal(SignalType.Thermo))
+            /*if (LevelAsset.ActionAsset.AdditionalGameSetup.IsPlayingCertainSignal(SignalType.Thermo))
             {
                 var thermoFieldUnits = LevelAsset.GameBoard.FindUnitWithCoreType(SignalType.Thermo, HardwareType.Field);
                 var res = thermoFieldUnits.Where(u => u.SignalCore.IsUnitActive).Select(u => u.CurrentBoardPosition);
                 LevelAsset.ThermoZone = res.Where(LevelAsset.GameBoard.CheckBoardPosValid).Distinct().ToList();
-            }
+            }*/
         }
 
         protected virtual void UpdateBoardData_Stepped(ref GameAssets currentLevelAsset)

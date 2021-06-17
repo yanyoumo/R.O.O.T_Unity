@@ -488,6 +488,7 @@ namespace ROOT
                 SignalCore = gameObject.AddComponent(signalCoreType) as UnitSignalCoreBase;
                 // ReSharper disable once PossibleNullReferenceException
                 SignalCore.Owner = this;
+                SignalCore.SignalCoreInit();
             }
         }
         public override int GetHashCode()

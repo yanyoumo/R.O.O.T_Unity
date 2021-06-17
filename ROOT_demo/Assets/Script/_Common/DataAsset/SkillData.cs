@@ -85,9 +85,9 @@ namespace ROOT
 
     public class InstancedSkillData
     {
-        public bool SkillEnabled => SkillEnabledInternal && SkillEnabledSystem;
-        public bool SkillEnabledSystem { private get; set; } = true;
-        public bool SkillEnabledInternal { private get; set; } = true;
+        public bool SkillEnabled => SkillEnabledSystem && SkillEnabledInternal && !SkillCoolDown;
+        public bool SkillEnabledSystem = true;
+        public bool SkillEnabledInternal = true;
         public bool SkillCoolDown = false;
         public int UsedCount = 0;
         public int RemainingCount = -1;

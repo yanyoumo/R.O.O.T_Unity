@@ -11,25 +11,29 @@ namespace ROOT
 {
     public sealed class BoardGirdDriver
     {
-        [ReadOnly]
-        public Board owner;
-        [ReadOnly]
-        public Dictionary<Vector2Int, BoardGirdCell> BoardGirds;
+        [ReadOnly] public Board owner;
+        [ReadOnly] public Dictionary<Vector2Int, BoardGirdCell> BoardGirds;
 
         private HeatSinkPatternLib HeatSinkPatterns => owner.HeatSinkPatterns;
 
-        public void UpdateInfoZone(GameAssets levelAssets)
+        //public bool HasInfoZone { private set; get; }
+
+        public void ClearAllEdges(EdgeStatus _edgeStatus)
         {
-            levelAssets.CollectorZone = owner.GetInfoCollectorZone();
-            BoardGirds.Values.ForEach(grid => grid.ClearEdge(EdgeStatus.InfoZone));
-            BoardGirds.Values.ForEach(grid => grid.SetEdge(levelAssets.CollectorZone, EdgeStatus.InfoZone));
+            BoardGirds.Values.ForEach(grid => grid.ClearEdge(_edgeStatus));
         }
 
-        public List<Vector2Int> ExtractCachedZone(EdgeStatus edgeStatus) => BoardGirds.Keys.Where(keys => BoardGirds[keys].LayeringEdgeStatus[edgeStatus]).ToList();
+        public void UpdateInfoData(EdgeStatus targetingStatus, List<Vector2Int> CollectorZone)
+        {
+            BoardGirds.Values.ForEach(grid => grid.ClearEdge(targetingStatus));
+            BoardGirds.Values.ForEach(grid => grid.SetEdge(CollectorZone, targetingStatus));
+        }
+
+        public List<Vector2Int> ExtractCachedZone(EdgeStatus edgeStatus) => BoardGirds.Keys.Where(keys =>BoardGirds[keys].LayeringEdgeStatus.HaveFlag(edgeStatus)).ToList();
 
         private PatternPermutation _HeatSinkPermutation = PatternPermutation.None;
-        private int _currentHeatSinkPatternsID = 0;
-        private int _currentHeatSinkDiminishingID = 0;
+        private int _currentHeatSinkPatternsID;
+        private int _currentHeatSinkDiminishingID;
 
         public int MinHeatSinkCount => ActualHeatSinkPos.Length;
         private Vector2Int[] RawHeatSinkPos => new Vector2Int[0]; //现在使初始pattern都是空的。
@@ -142,7 +146,6 @@ namespace ROOT
                     go.GetComponent<BoardGirdCell>().owner = owner;
                 }
             }
-
             UpdatePatternID();
         }
 

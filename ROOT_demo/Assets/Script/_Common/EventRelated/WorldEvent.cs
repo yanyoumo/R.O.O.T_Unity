@@ -10,6 +10,7 @@ namespace ROOT
         public static string HintRelatedEvent = "HintRelatedEvent";
         public static string BoardGridHighLightSetEvent = "BoardGridHighLightSetEvent";
 
+        public static string CurrentSignalTypeInquiry = "CurrentSignalTypeInquiry";
         public static string BalancingSignalSetupInquiry = "BalancingSignalSetupInquiry";
         public static string AcquiringCostTargetInquiry = "AcquiringCostTargetInquiry";
         public static string BoardGridThermoZoneInquiry = "BoardGridThermoZoneInquiry";
@@ -22,6 +23,7 @@ namespace ROOT
         public static string RequestLevelQuitEvent = "RequestLevelQuitEvent";
         
         public static string InGameOverlayToggleEvent = "InGameOverlayToggleEvent";
+        //public static string TelemetryInfoZoneToggleEvent = "TelemetryInfoZoneToggleEvent";
         public static string ToggleGamePlayUIEvent = "ToggleGamePlayUIEvent";
         public static string HintScreenChangedEvent = "HintScreenChangedEvent";
         public static string HelpScreenShouldAlertEvent = "HelpScreenShouldAlertEvent";
