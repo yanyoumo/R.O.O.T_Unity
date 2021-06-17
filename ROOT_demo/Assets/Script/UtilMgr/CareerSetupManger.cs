@@ -131,8 +131,8 @@ namespace ROOT.UI
             LevelName.text = LocalizationManager.GetTranslation(currentUsingAsset.TitleTerm);
             LevelIcon.sprite = currentUsingAsset.Thumbnail;
             FeatureIconArrayUI.SetLevelFeature(currentUsingAsset.LevelFeature);
-            MainPassage.text = currentUsingAsset.LevelInfo;
-            SubPassage.text = currentUsingAsset.StoryContent;
+            MainPassage.text = currentUsingAsset.StoryContent;
+            SubPassage.text = currentUsingAsset.LevelInfo;
             TooltipUI.DeactivateTooltip();
             
             var devMode = PlayerPrefs.GetInt(StaticPlayerPrefName.DEV_MODE, 0) > 0;

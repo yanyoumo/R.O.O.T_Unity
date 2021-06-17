@@ -643,7 +643,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u4E0A\u624B\u8BD5\u8BD5"
+      - "\u624B\u75D2\u75D2\u4E86"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -651,7 +651,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u4E0A\u624B\u8BD5\u8BD5-2"
+      - "\u624B\u8FD8\u75D2\u75D2"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -659,7 +659,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u4E0A\u624B\u8BD5\u8BD5-3"
+      - "\u624B\u8FD8\u75D2\u5417"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -667,7 +667,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u4E0A\u624B\u8BD5\u8BD5-4"
+      - "\u8003\u8BC1\u5F97\u7528"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -675,7 +675,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u4E0A\u624B\u8BD5\u8BD5-5"
+      - "\u5E72\u5565\u8003\u8BC1"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -699,7 +699,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u57FA\u7840\u64CD\u4F5C"
+      - "\u9996\u65E5\u62A5\u9053"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -707,7 +707,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u4FE1\u53F7\u57FA\u7840"
+      - "\u4FE1\u53F7\u662F\u5565"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -715,7 +715,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u4FE1\u53F7\u8FDB\u9636"
+      - "\u9AD8\u9636\u4FE1\u53F7"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -723,7 +723,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u5173\u4E8E\u65F6\u6BB5"
+      - "\u5565\u662F\u65F6\u6BB5"
       - Pending
       Flags: 0000
       Languages_Touch: []
