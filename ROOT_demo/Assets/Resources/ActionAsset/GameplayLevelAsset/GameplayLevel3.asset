@@ -44,45 +44,39 @@ MonoBehaviour:
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 1, y: 1}
-    IsStation: 1
+    Pos: {x: -1, y: -1}
+    IsStation: 0
   - PlayingSignalSelector: 1
     CoreGenre: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
-    Pos: {x: 4, y: 4}
-    IsStation: 1
-  - PlayingSignalSelector: 0
-    CoreGenre: 1
-    Sides: 01000000010000000000000000000000
-    Tier: 2
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 0
-    CoreGenre: 1
-    Sides: 01000000000000000100000000000000
-    Tier: 2
     Pos: {x: -1, y: -1}
     IsStation: 0
   - PlayingSignalSelector: 1
-    CoreGenre: 1
-    Sides: 01000000000000000100000000000000
-    Tier: 2
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 1
-    CoreGenre: 1
-    Sides: 01000000010000000000000000000000
-    Tier: 2
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 0
     CoreGenre: 1
     Sides: 01000000010000000100000000000000
-    Tier: 1
+    Tier: 2
     Pos: {x: -1, y: -1}
     IsStation: 0
   - PlayingSignalSelector: 1
+    CoreGenre: 1
+    Sides: 01000000010000000100000000000000
+    Tier: 2
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 1
+    CoreGenre: 1
+    Sides: 01000000010000000100000000000000
+    Tier: 2
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 1
+    CoreGenre: 1
+    Sides: 01000000010000000100000000000000
+    Tier: 2
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
     CoreGenre: 1
     Sides: 01000000010000000100000000000000
     Tier: 1
@@ -94,15 +88,15 @@ MonoBehaviour:
     Tier: 1
     Pos: {x: -1, y: -1}
     IsStation: 0
-  - PlayingSignalSelector: 1
+  - PlayingSignalSelector: 0
     CoreGenre: 1
     Sides: 01000000010000000100000000000000
     Tier: 1
     Pos: {x: -1, y: -1}
     IsStation: 0
-  - PlayingSignalSelector: 1
+  - PlayingSignalSelector: 0
     CoreGenre: 1
-    Sides: 01000000010000000100000001000000
+    Sides: 01000000010000000100000000000000
     Tier: 1
     Pos: {x: -1, y: -1}
     IsStation: 0
@@ -260,10 +254,10 @@ MonoBehaviour:
     Tier: 0
     IsStationary: 0
     Tag: 0
-    HandOnCheckType: 253
+    HandOnCheckType: 254
     HandOnFailedType: 0
     HandsOnLockRound: 0
-    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523027\u5143"
+    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523030\u5143"
     TimeOutSec: -1
     TargetTag: 0
     Set: 0

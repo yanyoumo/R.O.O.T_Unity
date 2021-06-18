@@ -133,7 +133,7 @@ namespace ROOT.UI
             var minY = quadRects.Min(r => r.anchoredPosition.y);
             LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (maxX - minX) + 125);
             LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (maxY - minY) + 350);
-            TreeBranchRoot.anchoredPosition = new Vector2(TreeBranchRoot.anchoredPosition.x, -(maxY - minY) * 0.5f);
+            TreeBranchRoot.anchoredPosition = new Vector2(TreeBranchRoot.anchoredPosition.x, -(maxY + 175));
         }
 
         private void UpdateLevelSelectionPanelPos()
