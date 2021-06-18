@@ -96,7 +96,7 @@ namespace ROOT.UI
 
         private void CreateSignalSelectionPanel(bool devMode)
         {
-            var scanUnlocked = PlayerPrefs.GetInt(StaticPlayerPrefName.UNLOCK_SCAN, 0) > 0;
+            var scanUnlocked = PlayerPrefs.GetInt(StaticPlayerPrefName.SCAN_UNLOCKED, 0) > 0;
 
             SignalSelectionBlocker.gameObject.SetActive(LevelIsTutorial);
 

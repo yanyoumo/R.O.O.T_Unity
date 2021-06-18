@@ -37,14 +37,18 @@ namespace ROOT.SetupAsset
         [VerticalGroup("Split/Right")] [LabelText("Unit could cost")][PropertyOrder(-94)]
         public bool UnitCost = true;
 
-        [Space][PropertyOrder(-6)] public LevelType levelType;
+        [Space][PropertyOrder(-7)] public LevelType levelType;
 
-        [PropertyOrder(-5)] 
+        [PropertyOrder(-6)] 
         [LabelText("Level For Test")]
         public bool IsTestingLevel;
 
+        [PropertyOrder(-5)] 
+        [LabelText("Could Unlock Scan Unit")]
+        public bool UnlockScanToggleLevel;
+        
         [PropertyOrder(-4)] 
-        [LabelText("Level For Scan Units")]
+        [LabelText("Should be unlock for Scan")]
         public bool IsScanLevel;
         
         [PropertyOrder(-3)]

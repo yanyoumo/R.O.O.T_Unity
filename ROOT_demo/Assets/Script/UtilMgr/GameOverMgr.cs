@@ -79,6 +79,15 @@ namespace ROOT
             return unlockingLevelTermsA.Length;
         }
 
+        private void CheckUnlockScanUnit()
+        {
+            if (_lastGameAssets.ActionAsset.UnlockScanToggleLevel)
+            {
+                PlayerPrefs.SetInt(StaticPlayerPrefName.COULD_UNLOCK_SCAN, 1);
+                PlayerPrefs.Save();
+            }
+        }
+        
         //首先返回：要改成返回选择界面。重新开始就放在哪里。
         //GameOver界面其实很重要，主要是局间的游玩动力；现在实质机制上能展示的只有：解锁新关卡、这个只能尽量用了。
         void UpdateUIContent()
@@ -108,6 +117,7 @@ namespace ROOT
                 {
                     var unlockedLevelCount = CompleteThisLevelAndUnlockFollowing(ref _lastGameAssets.ActionAsset);
                     EndingMessageLocalize.Term = unlockedLevelCount > 0 ? EndingMessageTutorial_Unlocked : EndingMessageTutorial;
+                    CheckUnlockScanUnit();
                     if (unlockedLevelCount > 0)
                     {
                         EndingMessageTMP.color = ColorLibManager.Instance.ColorLib.ROOT_UI_HIGHLIGHTING_GREEN;
@@ -124,6 +134,7 @@ namespace ROOT
 
             if (_lastGameAssets.GameOverAsset.Succeed)
             {
+                CheckUnlockScanUnit();
                 CompleteThisLevelAndUnlockFollowing(ref _lastGameAssets.ActionAsset);
             }
             else

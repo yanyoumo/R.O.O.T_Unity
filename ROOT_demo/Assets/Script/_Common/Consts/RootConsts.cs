@@ -51,7 +51,8 @@ namespace ROOT.Consts
         public static readonly string DEV_MODE = "Devmode";
         public static readonly string LEVEL_SELECTION_PANEL_POS_X = "LevelSelectionPanelPosX";
         public static readonly string LEVEL_SELECTION_PANEL_POS_Y = "LevelSelectionPanelPosY";
-        public static readonly string UNLOCK_SCAN = "UnlockScan";
+        public static readonly string COULD_UNLOCK_SCAN = "CouldUnlockScan";
+        public static readonly string SCAN_UNLOCKED = "ScanUnlocked";
     }
 
     public static class StaticName

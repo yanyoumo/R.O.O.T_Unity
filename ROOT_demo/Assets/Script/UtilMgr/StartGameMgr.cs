@@ -78,7 +78,8 @@ namespace ROOT
             if (!PlayerPrefs.HasKey(LEVEL_SELECTION_PANEL_POS_X)) PlayerPrefs.SetFloat(LEVEL_SELECTION_PANEL_POS_X, 0.0f);
             if (!PlayerPrefs.HasKey(LEVEL_SELECTION_PANEL_POS_Y)) PlayerPrefs.SetFloat(LEVEL_SELECTION_PANEL_POS_Y, 0.0f);
             if (!PlayerPrefs.HasKey(RootLevelAsset.TitleTerm)) PlayerPrefsLevelMgr.SetUpRootLevelStatus(RootLevelAsset.TitleTerm);
-            if (!PlayerPrefs.HasKey(UNLOCK_SCAN)) PlayerPrefs.SetInt(UNLOCK_SCAN, 0);
+            if (!PlayerPrefs.HasKey(COULD_UNLOCK_SCAN)) PlayerPrefs.SetInt(COULD_UNLOCK_SCAN, 0);
+            if (!PlayerPrefs.HasKey(SCAN_UNLOCKED)) PlayerPrefs.SetInt(SCAN_UNLOCKED, 0);
 
             PlayerPrefs.Save();
         }
