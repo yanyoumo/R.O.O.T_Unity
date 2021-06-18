@@ -9,7 +9,7 @@ namespace ROOT.UI
     {
         public void ActiveTooltip()
         {
-            //gameObject.SetActive(true);
+            gameObject.SetActive(true);
         }
         
         public void DeactivateTooltip()

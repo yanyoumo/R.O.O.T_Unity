@@ -1,5 +1,6 @@
 using System;
 using I2.Loc;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,7 +12,7 @@ namespace ROOT.UI
     {
         public Toggle CoreToggle;
         public TextMeshProUGUI ToggleText;
-        public Tooltip_UI TooltipUI;
+        [ReadOnly]public Tooltip_UI TooltipUI;
         
         public String LabelTextTerm
         {
@@ -20,14 +21,13 @@ namespace ROOT.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (eventData.hovered.Contains(gameObject))
-            {
-                TooltipUI.ActiveTooltip();
-            }
+            Debug.Log("OnPointerEnter");
+            TooltipUI.ActiveTooltip();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            Debug.Log("OnPointerExit");
             TooltipUI.DeactivateTooltip();
         }
     }
