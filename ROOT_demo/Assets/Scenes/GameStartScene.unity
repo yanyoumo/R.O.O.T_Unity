@@ -2912,8 +2912,8 @@ Transform:
   m_Children:
   - {fileID: 1180892344}
   - {fileID: 1724879692}
-  - {fileID: 1470267330}
   - {fileID: 463729149}
+  - {fileID: 1470267330}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2958,7 +2958,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 326358483}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &463729150
 MonoBehaviour:
@@ -2973,6 +2973,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SignalNameTerm: Signal_Name_Firewall
+  SignalIcon: {fileID: 21300000, guid: 89f93d2f5d8839e43bd915ffbcde0278, type: 3}
+  SignalInfo: "\u8FD9\u662F\u9632\u706B\u5899\u4FE1\u53F7\u7684\u9009\u62E9\u63D0\u793A\u3002"
   CoreUnitAsset: {fileID: 11400000, guid: 5d6cb5b4ab5728b43bf03dde08db4970, type: 2}
   FieldUnitAsset: {fileID: 11400000, guid: e1550f471d0cb494582f84761be4a1e2, type: 2}
 --- !u!1 &474828532
@@ -9248,6 +9250,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SignalNameTerm: Signal_Name_Matrix
+  SignalIcon: {fileID: 21300000, guid: c3c2c45d01a1cf34fb5c07bfcbb7fd19, type: 3}
+  SignalInfo: "\u8FD9\u662F\u77E9\u9635\u4FE1\u53F7\u7684\u9009\u62E9\u63D0\u793A\u3002"
   CoreUnitAsset: {fileID: 11400000, guid: 1088ad42271b67645bced1ade75c78b2, type: 2}
   FieldUnitAsset: {fileID: 11400000, guid: 9309dd200130ed545880d7a3982543f0, type: 2}
 --- !u!1 &1410382974
@@ -9347,7 +9351,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -9401,7 +9405,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 326358483}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1470267331
 MonoBehaviour:
@@ -9416,6 +9420,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SignalNameTerm: Signal_Name_Scan
+  SignalIcon: {fileID: 21300000, guid: ec11ea91870a9ad409d18dd3061323c7, type: 3}
+  SignalInfo: "\u8FD9\u662F\u626B\u63CF\u4FE1\u53F7\u7684\u9009\u62E9\u63D0\u793A\u3002"
   CoreUnitAsset: {fileID: 11400000, guid: f6fb87c84f2f0814497944dcd17e23d6, type: 2}
   FieldUnitAsset: {fileID: 11400000, guid: c81d79e47ef5fdb4588dd39bf584911d, type: 2}
 --- !u!1 &1475265740
@@ -10305,6 +10311,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SignalNameTerm: Signal_Name_Thermo
+  SignalIcon: {fileID: 21300000, guid: 89f93d2f5d8839e43bd915ffbcde0278, type: 3}
+  SignalInfo: "\u8FD9\u662F\u70ED\u529B\u4FE1\u53F7\u7684\u9009\u62E9\u63D0\u793A\u3002"
   CoreUnitAsset: {fileID: 11400000, guid: 8e6c205472b5c8d4faa2484e88bf8c41, type: 2}
   FieldUnitAsset: {fileID: 11400000, guid: 22dd14b7e1ebe9f46973821c764801e0, type: 2}
 --- !u!1 &1847970105

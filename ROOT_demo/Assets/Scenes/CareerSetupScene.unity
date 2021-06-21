@@ -3053,7 +3053,7 @@ MonoBehaviour:
   LoadingProgressor: {fileID: 1054636078}
   LoadingLabel: {fileID: 296107902}
   SignalSelectionPanel: {fileID: 1126789953}
-  SignalToggleTemplate: {fileID: 2244473085337404199, guid: 010a65e47b9f85744bfcbd0f063b5785,
+  SignalToggleTemplate: {fileID: 2244473085337404199, guid: dd38534b4afb77b44a097bec89bde71d,
     type: 3}
   SignalSelectionText: {fileID: 1912739278}
   SignalSelectionHint: {fileID: 764493215}
@@ -10416,7 +10416,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1289.6418, y: -264.11496}
+  m_AnchoredPosition: {x: 1246, y: -283}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1.0000001}
 --- !u!114 &1126789951
@@ -10432,7 +10432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.44025156, g: 0.57621163, b: 0.6603774, a: 0.23529412}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -12447,6 +12447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7628526285827a34c880b824cd5a6696, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TooltipTMP: {fileID: 832216563}
 --- !u!1 &2026058651
 GameObject:
   m_ObjectHideFlags: 0

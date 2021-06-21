@@ -7,10 +7,10 @@ namespace ROOT
     //可能就是需要一个<CoreType,SignalType>的Dictionary，然后时常反着查？
     public enum SignalType
     {
-        Matrix,
-        Thermo,
-        Scan,
-        Firewall,
+        Matrix = 0,
+        Thermo = 1,
+        Scan = 2,
+        Firewall = 3,
     }
 
     public enum HardwareType

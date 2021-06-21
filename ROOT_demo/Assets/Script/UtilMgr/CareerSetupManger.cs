@@ -92,7 +92,7 @@ namespace ROOT.UI
             return true;
         }
         
-        private Dictionary<SignalType, UnitSelectionToggle> toggles;
+        private Dictionary<SignalType, UnitSelectionToggle_Neo> toggles;
 
         private void CreateSignalSelectionPanel(bool devMode)
         {
@@ -101,7 +101,7 @@ namespace ROOT.UI
             SignalSelectionBlocker.gameObject.SetActive(LevelIsTutorial);
 
             var signalMaster = SignalMasterMgr.Instance;
-            toggles = new Dictionary<SignalType, UnitSelectionToggle>();
+            toggles = new Dictionary<SignalType, UnitSelectionToggle_Neo>();
             for (var i = 0; i < signalMaster.SignalLib.Length; i++)
             {
                 if (!devMode && !scanUnlocked && signalMaster.SignalLib[i] == SignalType.Scan)
@@ -109,8 +109,10 @@ namespace ROOT.UI
                     continue;
                 }
                 var toggle = Instantiate(SignalToggleTemplate, SignalSelectionPanel.transform);
-                var toggleCore = toggle.GetComponentInChildren<UnitSelectionToggle>();
+                var toggleCore = toggle.GetComponentInChildren<UnitSelectionToggle_Neo>();
                 toggleCore.LabelTextTerm = signalMaster.GetSignalNameTerm(signalMaster.SignalLib[i]);
+                toggleCore.SignalIcon.sprite = signalMaster.GetSignalIcon(signalMaster.SignalLib[i]);
+                toggleCore.SignalInfo = signalMaster.GetSignalInfo(signalMaster.SignalLib[i]);
                 toggles.Add(signalMaster.SignalLib[i], toggleCore);
                 toggleCore.CoreToggle.isOn = (i < 2);
                 if (!LevelIsTutorial)

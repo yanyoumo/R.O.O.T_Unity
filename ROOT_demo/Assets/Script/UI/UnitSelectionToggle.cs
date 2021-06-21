@@ -8,9 +8,9 @@ using UnityEngine.UI;
 
 namespace ROOT.UI
 {
-    public class UnitSelectionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class UnitSelectionToggle : MonoBehaviour//, IPointerEnterHandler, IPointerExitHandler
     {
-        public Toggle CoreToggle;
+        /*public Toggle CoreToggle;
         public TextMeshProUGUI ToggleText;
         [ReadOnly]public Tooltip_UI TooltipUI;
         
@@ -29,6 +29,6 @@ namespace ROOT.UI
         {
             Debug.Log("OnPointerExit");
             TooltipUI.DeactivateTooltip();
-        }
+        }*/
     }
 }
