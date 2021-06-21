@@ -6333,7 +6333,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u4E2D\u56FD\u667A\u9020\uFF01\u60E0\u53CA\u5168\u7403\uFF01"
+  m_text: "\u4E2D\u56FD\u667A\u9020\uFF01\u60E0\u53CA\u5168\u7403\uFF01<br>\u4E2D\u56FD\u667A\u9020\uFF01\u60E0\u53CA\u5168\u7403\uFF01"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -11465,7 +11465,6 @@ MonoBehaviour:
   - {fileID: 99102133}
   - {fileID: 1698574040}
   - {fileID: 20011201}
-  TestFeature: 0
 --- !u!1 &1574309439
 GameObject:
   m_ObjectHideFlags: 0
