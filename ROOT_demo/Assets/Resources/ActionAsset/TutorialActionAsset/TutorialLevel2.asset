@@ -31,6 +31,7 @@ MonoBehaviour:
   UnitCost: 1
   levelType: 0
   IsTestingLevel: 0
+  UnlockScanToggleLevel: 0
   IsScanLevel: 0
   LevelFeature: 1
   DisplayedlevelType: 0
@@ -1306,7 +1307,7 @@ MonoBehaviour:
   - ActionIdx: 20
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u6B64\u65F6,\u5355\u5143\u4E0A\u7684\u89D2\u843D\u4E0A\u7684\u5927\u7684LED\u4F1A\u663E\u793A\u4E3A\u7EA2\u8272."
+    Text: "\u6B64\u65F6,\u5355\u5143\u4E0A\u73AF\u5F62\u7684LED\u4F1A\u663E\u793A\u4E3A\u7EA2\u8272."
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
