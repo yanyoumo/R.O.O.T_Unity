@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using com.ootii.Messages;
+using ROOT.SetupAsset;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT.Signal
@@ -19,7 +22,7 @@ namespace ROOT.Signal
             return new List<FirewallCircle>();
         }
 
-        private void updateFireWallCircle()
+        private void updateFireWallCircle(Unit[] units)
         {
             //TODO 
             _firewallCircle = new FirewallCircle();//往这个函数里面填东西。
@@ -27,7 +30,13 @@ namespace ROOT.Signal
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
         {
-            updateFireWallCircle();
+            var data = new Unit[0];
+            SignalMasterMgr.Instance.Paths[SignalType.Firewall].ForEach(u => data.AddRange(
+                u.Where(u0=>u0.UnitHardware==HardwareType.Field)));
+            if (data.Length != 0)
+            {
+                updateFireWallCircle(data);
+            }
         }
         
         protected virtual void Awake()
