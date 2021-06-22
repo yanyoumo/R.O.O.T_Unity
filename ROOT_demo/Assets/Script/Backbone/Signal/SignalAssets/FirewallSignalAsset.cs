@@ -19,15 +19,15 @@ namespace ROOT.Signal
             return new List<FirewallCircle>();
         }
 
-        private void updateFireWallCircle()
+        private void updateFireWallCircle(Unit[] units)
         {
             //TODO 
-            _firewallCircle = new FirewallCircle();//往这个函数里面填东西。
+            _firewallCircle = new FirewallCircle(); //往这个函数里面填东西。
         }
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
         {
-            updateFireWallCircle();
+            updateFireWallCircle(new Unit[0]);
         }
         
         protected virtual void Awake()
