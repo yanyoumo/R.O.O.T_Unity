@@ -76,6 +76,22 @@ namespace ROOT.RootMath{
 
         public float SideIndex(Point A)
         {
+            return SideIndex(new Vector2(A.x, A.y));
+        }
+        
+        public float SideIndex(Vector2 A)
+        {
+            if (VorH.HasValue)
+            {
+                if (VorH.Value)
+                {
+                    return A.x - b;
+                }
+                else
+                {
+                    return A.y - b;
+                }
+            }
             return A.y - k * A.x - b;
         }
         
@@ -98,6 +114,50 @@ namespace ROOT.RootMath{
             {
                 VorH = _vORh;
             }
+        }
+
+        public Vector2 Intersect(Line other)
+        {
+            if (k == other.k)
+            {
+                throw new ArgumentException("Two line are parallel, no valid intersection");
+            }
+
+            if (VorH.HasValue && other.VorH.HasValue && VorH.Value == other.VorH.Value)
+            {
+                throw new ArgumentException("Two line are parallel, no valid intersection");
+            }
+            
+            if (VorH.HasValue)
+            {
+                if (VorH.Value)
+                {
+                    if (other.VorH.HasValue)
+                    {
+                        return new Vector2(b, other.b);
+                    }
+
+                    return new Vector2(b, other.k * b + other.b);
+                }
+                else
+                {
+                    if (other.VorH.HasValue)
+                    {
+                        return new Vector2(other.b, b);
+                    }
+
+                    return new Vector2((b - other.b) / other.k, b);
+                }
+            }
+            
+            //n=km+b
+            //n=k1m+b1
+            
+            //km+b=k1m+b1
+
+            var m = (other.b - b) / (k - other.k);
+            var n = k * m + b;
+            return new Vector2(m, n);
         }
         
         public Line(Vector2 A, Vector2 B) : this(new Point(A), new Point(B)) { }
@@ -215,8 +275,8 @@ namespace ROOT.RootMath{
                         return 1;
                     }
 
-                    var resy0 = Mathf.Sqrt(A0) - c.b;
-                    var resy1 = -Mathf.Sqrt(A0) - c.b;
+                    var resy0 = Mathf.Sqrt(A0) + c.b;
+                    var resy1 = -Mathf.Sqrt(A0) + c.b;
                     
                     res = new[]
                     {
@@ -241,8 +301,8 @@ namespace ROOT.RootMath{
                         return 1;
                     }
                     
-                    var resx0 = Mathf.Sqrt(A0) - c.a;
-                    var resx1 = -Mathf.Sqrt(A0) - c.a;
+                    var resx0 = Mathf.Sqrt(A0) + c.a;
+                    var resx1 = -Mathf.Sqrt(A0) + c.a;
                     
                     res = new[]
                     {

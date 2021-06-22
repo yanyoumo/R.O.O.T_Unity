@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ROOT.RootMath;
 using Sirenix.Utilities;
 using UnityEngine;
+
 // ReSharper disable PossibleMultipleEnumeration
 
 namespace ROOT.Signal
@@ -39,9 +39,24 @@ namespace ROOT.Signal
                 return zone.CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
             }
         }
-
-        public override List<Vector2Int> SingleInfoCollectorZone => Owner.UnitHardware == HardwareType.Core ? new List<Vector2Int>() : ExpellingPatternList;
-
+        
+        private IEnumerable<Vector2Int> RawInfoList//这个之所以要单列出来是因为这个要根据Tier有不同的范围。
+        {
+            get
+            {
+                //var circleTier = ExpellingPatternListTierMapping[Owner.Tier - 1];//Tier是Base1的；这里转成Base0的。
+                var zone = Utils.GetPixelateCircle_Tier(4);
+                return zone.CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition);
+            }
+        }
+        
+        private IEnumerable<Vector2Int> GetFilledExpellingPos()
+        {
+            var validPattern = RawInfoList.Where(Board.CheckBoardPosValidStatic);
+            var emptyPos = validPattern.Where(Owner.GameBoard.CheckBoardPosValidAndFilled);
+            return emptyPos;
+        }
+        
         private IEnumerable<Vector2Int> GetEmptyExpellingPos()
         {
             var validPattern = ExpellingPatternList.Where(Board.CheckBoardPosValidStatic);
@@ -89,16 +104,63 @@ namespace ROOT.Signal
         private Vector3 v2Tov3(Vector2 v) => Board.GetFloatTransform_Float(v);
 
         private Vector3 v2Tov3(Point v) => Board.GetFloatTransform_Float(new Vector2(v.x, v.y));
+
+        private const float SenderRadius = 0.25f;
+        private const float BlockerRadius = 1f;
         
-        private void Update()
+        public override List<Vector2Int> SingleInfoCollectorZone
         {
-            //TODO 两个圆共轴的时候输出的结果好像不对——斜率对了、切点不对。
-            //剩下就是两个半径和筛选流程了。
-            var c0 = new Circle(Owner.CurrentBoardPosition, 0.5f);
-            var c1 = new Circle(Vector2.one * 2, 1.0f);
-            var res = RootMath.RootMath.GetOuterCoTangentOf2Circle(c0, c1,out var resp);
-            Debug.DrawLine(v2Tov3(resp[0]), v2Tov3(resp[1]));
-            Debug.DrawLine(v2Tov3(resp[2]), v2Tov3(resp[3]));
+            get
+            {
+                if (Owner.UnitHardware == HardwareType.Core)
+                {
+                    return new List<Vector2Int>();
+                }
+
+                var res = RawInfoList.ToArray();
+                var resKillList = new List<Vector2Int>();
+
+                var center = Owner.CurrentBoardPosition;
+                var c0 = new Circle(Owner.CurrentBoardPosition, SenderRadius);
+
+                foreach (var filledPos in GetFilledExpellingPos())
+                {
+                    if (filledPos==center)
+                    {
+                        continue;
+                    }
+                    resKillList.Add(filledPos);
+                    
+                    var c1 = new Circle(filledPos, BlockerRadius);
+                    var lines = RootMath.RootMath.GetOuterCoTangentOf2Circle(c0, c1, out var resp);
+                    var lineCenter = lines[0].Intersect(lines[1]);
+                    
+                    var v0 = (Point.ToVector2(resp[1]) - lineCenter).normalized;
+                    var v1 = (Point.ToVector2(resp[3]) - lineCenter).normalized;
+                    var vd = (v0 + v1) / 2.0f;
+                    var v01d = Vector2.Dot(vd, v1);
+                    
+                    var facingLine = new Line(resp[1], resp[3]);
+                    var facingIndex = facingLine.SideIndex(center);
+                    
+                    foreach (var vector2Int in res)
+                    {
+                        var vC = (vector2Int - lineCenter).normalized;
+                        if (Vector2.Dot(vd, vC) > v01d)
+                        {
+                            //vector2Int is within blocking angle.
+                            var blockerFacingIndex = facingLine.SideIndex(vector2Int);
+                            if (blockerFacingIndex * facingIndex < 0)
+                            {
+                                //vector2Int is within blocking angle and on blocking side.
+                                resKillList.Add(vector2Int);
+                            }
+                        }
+                    }
+                }
+
+                return res.Where(v => !resKillList.Contains(v)).ToList();
+            }
         }
     }
 }
