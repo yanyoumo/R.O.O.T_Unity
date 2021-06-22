@@ -25,7 +25,7 @@ namespace ROOT.Signal
         private void updateFireWallCircle(Unit[] units)
         {
             //TODO 
-            _firewallCircle = new FirewallCircle();//往这个函数里面填东西。
+            _firewallCircle = new FirewallCircle(); //往这个函数里面填东西。
         }
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
