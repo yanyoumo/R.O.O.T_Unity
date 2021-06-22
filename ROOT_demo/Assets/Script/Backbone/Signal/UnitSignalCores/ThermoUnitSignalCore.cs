@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using ROOT.RootMath;
 using Sirenix.Utilities;
 using UnityEngine;
 // ReSharper disable PossibleMultipleEnumeration
@@ -82,6 +84,21 @@ namespace ROOT.Signal
                 }
                 return 0.0f;
             }
+        }
+
+        private Vector3 v2Tov3(Vector2 v) => Board.GetFloatTransform_Float(v);
+
+        private Vector3 v2Tov3(Point v) => Board.GetFloatTransform_Float(new Vector2(v.x, v.y));
+        
+        private void Update()
+        {
+            //TODO 两个圆共轴的时候输出的结果好像不对——斜率对了、切点不对。
+            //剩下就是两个半径和筛选流程了。
+            var c0 = new Circle(Owner.CurrentBoardPosition, 0.5f);
+            var c1 = new Circle(Vector2.one * 2, 1.0f);
+            var res = RootMath.RootMath.GetOuterCoTangentOf2Circle(c0, c1,out var resp);
+            Debug.DrawLine(v2Tov3(resp[0]), v2Tov3(resp[1]));
+            Debug.DrawLine(v2Tov3(resp[2]), v2Tov3(resp[3]));
         }
     }
 }

@@ -10396,6 +10396,76 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
         type: 3}
+      propertyPath: A
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: B
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: C
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: ax
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: ay
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: ca
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: cb
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: cr
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: lb
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: lk
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: A.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: A.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: B.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
+      propertyPath: B.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 729148212457243063, guid: 49bc32739dd400b42bae1bad3768912c,
+        type: 3}
       propertyPath: RootLevelAsset
       value: 
       objectReference: {fileID: 11400000, guid: 1a303f4b6db6125408117a8d2dfb9782,

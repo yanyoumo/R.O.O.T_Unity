@@ -2,6 +2,7 @@
 using DG.Tweening;
 using ROOT.Consts;
 using ROOT.LevelAccessMgr;
+using ROOT.RootMath;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using UnityEngine;
