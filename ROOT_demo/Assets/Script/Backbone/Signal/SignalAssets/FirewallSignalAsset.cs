@@ -12,17 +12,28 @@ namespace ROOT.Signal
         public static FirewallCircle CurrentFirewallCircle => _firewallCircle;//这个算完之后就给接进去。
         public override Type UnitSignalCoreType => typeof(FirewallUnitSignalCore);
         public override SignalType SignalType => SignalType.Firewall;
+        private static int N => Board.BoardLength;
+        private int [,] _board=new int[N,N];
 
-        private List<FirewallCircle> getFireWallCircleLists(Board _gameBoard)
+        private List<FirewallCircle> _connectComponent;
+
+        private List<FirewallCircle> deleteWhiteSpace()
         {
-            //TODO
             return new List<FirewallCircle>();
         }
-
         private void updateFireWallCircle(Unit[] units)
         {
             //TODO 
+            for (var i = 0; i < N; ++i) 
+                for (var j = 0; j < N; ++j)
+                    _board[i,j] = 0;
+            foreach (var unit in units)
+                _board[unit.CurrentBoardPosition.x, unit.CurrentBoardPosition.y] = 1;
+
+            _connectComponent=deleteWhiteSpace();
+
             _firewallCircle = new FirewallCircle(); //往这个函数里面填东西。
+            
         }
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
