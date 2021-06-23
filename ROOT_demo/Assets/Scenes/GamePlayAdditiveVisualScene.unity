@@ -505,7 +505,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 10.199999, y: 0}
+  m_AnchoredPosition: {x: 9.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &203546150
@@ -528,7 +528,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\"Matrix_Field\": \u77E9\u9635\u573A\u5355\u5143"
+  m_text: "<sprite=\"Signal_Icon\" index=0>: \u77E9\u9635\u573A\u5355\u5143"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -816,7 +816,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &243654817
@@ -839,7 +839,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\"Thermal_Core\": \u70ED\u529B\u6838\u5FC3\u5355\u5143"
+  m_text: "<sprite=\"Signal_Icon\" index=3>: \u70ED\u529B\u6838\u5FC3\u5355\u5143"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -988,7 +988,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &247314610
@@ -1710,7 +1710,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 26.399998, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &352963512
@@ -1733,7 +1733,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\"Thermal_Field\": \u70ED\u529B\u573A\u5355\u5143"
+  m_text: "<sprite=\"Signal_Icon\" index=2>: \u70ED\u529B\u573A\u5355\u5143"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -1882,7 +1882,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &372518571
@@ -1905,7 +1905,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\"Backwards\"\u56DE\u9000\u65F6\u523B\uFF0C\u6B21\u6570\u6709\u9650"
+  m_text: "<sprite=\"Skill_Icon\" index=3>: \u56DE\u9000\u65F6\u523B\uFF0C\u6B21\u6570\u6709\u9650"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -2648,7 +2648,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &435777548
@@ -2671,7 +2671,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\"Fastforward\" \u5FEB\u8FDB\u65F6\u523B\uFF0C\u83B7\u53D6\u6536\u76CA"
+  m_text: "<sprite=\"Skill_Icon\" index=0>: \u5FEB\u8FDB\u65F6\u523B\uFF0C\u83B7\u53D6\u6536\u76CA"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -2882,7 +2882,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: -0}
+  m_AnchoredPosition: {x: 25.5, y: -0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &477599856
@@ -3518,7 +3518,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 26.700003, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &675303800
@@ -4074,7 +4074,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 10.5, y: 0}
+  m_AnchoredPosition: {x: 9.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &806222274
@@ -4591,7 +4591,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &910805194
@@ -5323,7 +5323,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: -0}
+  m_AnchoredPosition: {x: 25.5, y: -0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &989912994
@@ -5346,7 +5346,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "'exchange'\u4EA4\u6362\u5355\u5143\uFF0C\u4EF7\u683C\u8D8A\u8D35\u7CBE\u5EA6\u8D8A\u9AD8"
+  m_text: "<sprite=\"Skill_Icon\" index=4>: \u4EA4\u6362\u5355\u5143\uFF0C\u4EF7\u683C\u8D8A\u8D35\u7CBE\u5EA6\u8D8A\u9AD8"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -5519,7 +5519,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: -0}
+  m_AnchoredPosition: {x: 25.5, y: -0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1024548309
@@ -6999,7 +6999,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1458105802
@@ -7887,7 +7887,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1754663723
@@ -8275,7 +8275,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: -0}
+  m_AnchoredPosition: {x: 25.5, y: -0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1835893732
@@ -8447,7 +8447,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.7, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 56.979, y: 6.633}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1838602893
@@ -8470,7 +8470,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "'heatsink'\u653E\u7F6E\u4E4B\u4E0A\u4F1A\u5F71\u54CD\u6536\u76CA"
+  m_text: "\u5728\u6563\u70ED\u683C<sprite=\"Signal_Icon\" index=4>\u653E\u7F6E\u4E4B\u4E0A\u4F1A\u5F71\u54CD\u6536\u76CA"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -8718,7 +8718,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\"Matrix_Core\": \u77E9\u9635\u6838\u5FC3\u5355\u5143"
+  m_text: "<sprite=\"Signal_Icon\" index=1>: \u77E9\u9635\u6838\u5FC3\u5355\u5143"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
