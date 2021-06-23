@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_TL2
-  Thumbnail: {fileID: 21300000, guid: ca60355f735f90d46a4bb437515201c0, type: 3}
+  Thumbnail: {fileID: 21300000, guid: ac5dd85a6fd7bd643ba132cf6b031d8c, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
     type: 3}
   AcessID: 2
@@ -31,9 +31,12 @@ MonoBehaviour:
   UnitCost: 1
   levelType: 0
   IsTestingLevel: 0
+  UnlockScanToggleLevel: 0
   IsScanLevel: 0
   LevelFeature: 1
   DisplayedlevelType: 0
+  LevelInfo: "\u8BB2\u89E3\u6E38\u620F\u4E2D\u6709\u591A\u4E2A\u4FE1\u53F7\u5171\u5B58\u548C\u66F4\u52A0\u590D\u6742\u7684\u60C5\u51B5\u3002"
+  StoryContent: "ok\uFF0C\u8FD9\u5957\u7CFB\u7EDF\u6709\u4E9B\u590D\u6742\uFF0C\u4F46\u662F\u4F30\u8BA1\u80FD\u5B66\u660E\u767D\u3002"
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
@@ -221,7 +224,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -253,7 +256,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -285,7 +288,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -317,7 +320,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -349,7 +352,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 13

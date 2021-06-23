@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_TL3
-  Thumbnail: {fileID: 21300000, guid: 6dc37bd1b8c05f448932aa74775355be, type: 3}
+  Thumbnail: {fileID: 21300000, guid: e3b1393c4a3fdf54bbeb8af4b855d459, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9d91410b0b8c8545b41feda51e82d76,
     type: 3}
   AcessID: 3
@@ -31,9 +31,12 @@ MonoBehaviour:
   UnitCost: 1
   levelType: 0
   IsTestingLevel: 0
+  UnlockScanToggleLevel: 0
   IsScanLevel: 0
   LevelFeature: 5
   DisplayedlevelType: 0
+  LevelInfo: "\u8BB2\u89E3\u6E38\u620F\u4E2D\u65F6\u95F4\u5355\u5143\u2014\u2014\u65F6\u523B\u548C\u65F6\u6BB5\u7684\u673A\u5236\u3002"
+  StoryContent: "\u4E4B\u540E\u79FB\u52A8\u5355\u5143\u770B\u6765\u4E0D\u80FD\u968F\u4FBF\u79FB\u52A8\u4E86\u3002"
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1

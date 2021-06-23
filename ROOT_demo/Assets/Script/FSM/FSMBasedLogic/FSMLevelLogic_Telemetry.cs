@@ -356,7 +356,10 @@ namespace ROOT
             {
                 var unit = board.FindUnitByPos(cursorPos);
                 Debug.Assert(unit != null, nameof(unit) + " != null");
-                UpdateSingleInfoZone(unit.SignalCore.SingleInfoCollectorZone);
+                if (unit.SignalCore.IsUnitActive)
+                {
+                    UpdateSingleInfoZone(unit.SignalCore.SingleInfoCollectorZone);
+                }
             }
         }
         
