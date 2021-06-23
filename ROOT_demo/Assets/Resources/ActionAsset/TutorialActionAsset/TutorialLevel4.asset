@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_TL4
-  Thumbnail: {fileID: 21300000, guid: f4a3ac2ff8727094da630da0583fdf08, type: 3}
+  Thumbnail: {fileID: 21300000, guid: 9b18445684318514d9d38cf7c58c6671, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9d91410b0b8c8545b41feda51e82d76,
     type: 3}
   AcessID: 4
@@ -31,11 +31,12 @@ MonoBehaviour:
   UnitCost: 1
   levelType: 0
   IsTestingLevel: 0
+  UnlockScanToggleLevel: 0
   IsScanLevel: 0
   LevelFeature: 5
   DisplayedlevelType: 0
-  LevelInfo: 
-  StoryContent: 
+  LevelInfo: "\u65F6\u6BB5\u5728\u5B9E\u9645\u6E38\u620F\u4E2D\u90FD\u662F\u8FDE\u7EED\u7684\u3002"
+  StoryContent: "\u770B\u6765\u8FD9\u4E9B\u65F6\u523B\u8FDE\u63A5\u5728\u4E00\u8D77\u540E\u4F1A\u6709\u4E0D\u540C\u7684\u611F\u89C9\u3002"
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
@@ -165,7 +166,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -485,7 +486,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -517,7 +518,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -549,7 +550,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -581,7 +582,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -613,7 +614,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -645,7 +646,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0

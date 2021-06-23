@@ -44,8 +44,7 @@ namespace ROOT.Signal
         {
             get
             {
-                //var circleTier = ExpellingPatternListTierMapping[Owner.Tier - 1];//Tier是Base1的；这里转成Base0的。
-                var zone = Utils.GetPixelateCircle_Tier(4);
+                var zone = Utils.GetPixelateCircle_Tier(Owner.Tier + 2);
                 return zone.CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition);
             }
         }
