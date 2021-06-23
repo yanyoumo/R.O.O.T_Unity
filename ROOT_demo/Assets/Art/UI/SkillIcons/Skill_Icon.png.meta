@@ -1,0 +1,468 @@
+fileFormatVersion: 2
+guid: 6f5122d76cb75d64ebb1447ac8b6b4f3
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2956361448602115594
+    second: Skill_Icon_0
+  - first:
+      213: -3143513023718747802
+    second: Skill_Icon_1
+  - first:
+      213: -7430735366532357134
+    second: Skill_Icon_2
+  - first:
+      213: 8843062601972942257
+    second: Skill_Icon_3
+  - first:
+      213: 6488378629568105004
+    second: Skill_Icon_4
+  - first:
+      213: -847528622618507884
+    second: Skill_Icon_5
+  - first:
+      213: 1554106434720932728
+    second: Skill_Icon_6
+  - first:
+      213: 1286748313836195225
+    second: Skill_Icon_7
+  - first:
+      213: 3785326788010380329
+    second: Skill_Icon_8
+  - first:
+      213: 4001027141535562523
+    second: Skill_Icon_9
+  - first:
+      213: 4754924745651995992
+    second: Skill_Icon_10
+  - first:
+      213: 5328134891325068131
+    second: Skill_Icon_11
+  - first:
+      213: -3182379858092952373
+    second: Skill_Icon_12
+  - first:
+      213: -5800752684634715397
+    second: Skill_Icon_13
+  - first:
+      213: -5029711927731390584
+    second: Skill_Icon_14
+  - first:
+      213: -408537899102133946
+    second: Skill_Icon_15
+  - first:
+      213: -8311659372533513794
+    second: Skill_Icon_16
+  - first:
+      213: -4645975652319527268
+    second: Skill_Icon_17
+  - first:
+      213: 6948946759866624408
+    second: Skill_Icon_18
+  - first:
+      213: 4962169252022623794
+    second: Skill_Icon_19
+  - first:
+      213: 1717388861608076273
+    second: Skill_Icon_20
+  - first:
+      213: -8477655214482937113
+    second: Skill_Icon_21
+  - first:
+      213: 8148082419769405078
+    second: Skill_Icon_22
+  - first:
+      213: -3948416825446492649
+    second: Skill_Icon_23
+  - first:
+      213: 8841055716977850764
+    second: Skill_Icon_24
+  - first:
+      213: -6366030955018528892
+    second: Skill_Icon_25
+  - first:
+      213: 5881238698249321985
+    second: Skill_Icon_26
+  - first:
+      213: -2306454054580120069
+    second: Skill_Icon_27
+  - first:
+      213: 2246393522976524942
+    second: Skill_Icon_28
+  - first:
+      213: -1659393112575823143
+    second: Skill_Icon_29
+  - first:
+      213: -3276453058483989773
+    second: Skill_Icon_30
+  - first:
+      213: 2676579355822933894
+    second: Skill_Icon_31
+  - first:
+      213: -200354276711601980
+    second: Skill_Icon_32
+  - first:
+      213: -3179691444919030474
+    second: Skill_Icon_33
+  - first:
+      213: 5185177153268972229
+    second: Skill_Icon_34
+  - first:
+      213: -1209205706080820268
+    second: Skill_Icon_35
+  - first:
+      213: -7636391636920775233
+    second: Skill_Icon_36
+  - first:
+      213: -1312360355406336449
+    second: Skill_Icon_37
+  - first:
+      213: 4913552197586281798
+    second: Skill_Icon_38
+  - first:
+      213: 3866656759427453172
+    second: Skill_Icon_39
+  - first:
+      213: 1832296767149109678
+    second: Skill_Icon_40
+  - first:
+      213: 8550209481499626968
+    second: Skill_Icon_41
+  - first:
+      213: 371889024233010145
+    second: Skill_Icon_42
+  - first:
+      213: 2877350493059813671
+    second: Skill_Icon_43
+  - first:
+      213: 7964129161806690771
+    second: Skill_Icon_44
+  - first:
+      213: -776366716350836044
+    second: Skill_Icon_45
+  - first:
+      213: -6371274452721278007
+    second: Skill_Icon_46
+  - first:
+      213: 7499846570537297859
+    second: Skill_Icon_47
+  - first:
+      213: 5074170002285118770
+    second: Skill_Icon_48
+  - first:
+      213: -831384946505796768
+    second: Skill_Icon_49
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Skill_Icon_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0e9693f21b170920800000000000000
+      internalID: 2956361448602115594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill_Icon_1
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 512
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6611e6a5f8fff54d0800000000000000
+      internalID: -3143513023718747802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill_Icon_2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 512
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f328e9cd89b0e890800000000000000
+      internalID: -7430735366532357134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill_Icon_3
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 511
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b5832d759ed8ba70800000000000000
+      internalID: 8843062601972942257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill_Icon_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2a84a79cf95b0a50800000000000000
+      internalID: 6488378629568105004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill_Icon_5
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 256
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49509d74539fc34f0800000000000000
+      internalID: -847528622618507884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill_Icon_6
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 256
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 873a0b0819b419510800000000000000
+      internalID: 1554106434720932728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill_Icon_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99d0a8126c27bd110800000000000000
+      internalID: 1286748313836195225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill_Icon_8
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92c012e78ae288430800000000000000
+      internalID: 3785326788010380329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill_Icon_9
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1b7ce3acf0868730800000000000000
+      internalID: 4001027141535562523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: e283abb3792a3b2488856feff97059e1
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

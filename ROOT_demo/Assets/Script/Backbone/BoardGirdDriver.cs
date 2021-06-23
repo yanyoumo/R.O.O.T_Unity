@@ -137,7 +137,7 @@ namespace ROOT
                 for (var j = 0; j < BoardLength; j++)
                 {
                     var go = MonoBehaviour.Instantiate(owner.BoardGridTemplate, owner.BoardGridRoot);
-                    var gridLength = owner._boardPhysicalLength;
+                    var gridLength = Board._boardPhysicalLength;
                     var offset = new Vector3(i * gridLength, 0.0f, j * gridLength);
                     go.transform.localPosition = owner.BoardGridZeroing.position + offset;
                     var key = new Vector2Int(i, j);

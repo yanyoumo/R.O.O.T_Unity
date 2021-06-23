@@ -31,7 +31,12 @@ MonoBehaviour:
   UnitCost: 1
   levelType: 0
   IsTestingLevel: 0
+  UnlockScanToggleLevel: 0
+  IsScanLevel: 0
+  LevelFeature: 2
   DisplayedlevelType: 1
+  LevelInfo: 
+  StoryContent: 
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1

@@ -182,10 +182,14 @@ namespace ROOT.SetupAsset
         [PropertyOrder(43)]
         public Color ROOT_UI_DEFAULT_BLACK;
         [PropertyOrder(44)]
-        public Color ROOT_UI_HIGHLIGHTING_GREEN;
+        public Color ROOT_UI_DEFAULT_DARKGRAY;
         [PropertyOrder(45)]
-        public Color ROOT_UI_HIGHLIGHTING_RED;
+        public Color ROOT_UI_DEFAULT_WHITE;
         [PropertyOrder(46)]
+        public Color ROOT_UI_HIGHLIGHTING_GREEN;
+        [PropertyOrder(47)]
+        public Color ROOT_UI_HIGHLIGHTING_RED;
+        [PropertyOrder(48)]
         public Color ROOT_UI_HIGHLIGHTING_BLUE;
     }
 }

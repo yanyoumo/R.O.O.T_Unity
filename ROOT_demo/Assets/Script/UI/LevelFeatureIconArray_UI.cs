@@ -1,3 +1,4 @@
+using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,14 +13,6 @@ namespace ROOT.UI
         public Sprite[] IconSprites;
         public Image[] IconImages;
 
-        public LevelFeature TestFeature;
-
-        [Button]
-        public void TestLevelFeature()
-        {
-            SetLevelFeature(TestFeature);
-        }
-
         public void SetLevelFeature(LevelFeature _levelFeature)
         {
             for (var i = 0; i < 8; i++)
@@ -27,6 +20,7 @@ namespace ROOT.UI
                 var currentFlag = 1 << i;
                 var hasFlag = ((int) _levelFeature & currentFlag) == currentFlag;
                 IconImages[i].material = hasFlag ? DefaultMat : BWMat;
+                IconImages[i].color = hasFlag ? ColorLibManager.Instance.ColorLib.MASTER_WHITE : ColorLibManager.Instance.ColorLib.ROOT_UI_DEFAULT_DARKGRAY;
             }
         }
 

@@ -336,6 +336,16 @@ namespace ROOT.Signal
             return signalAssetLib[signalType].SignalNameTerm;
         }
 
+        public Sprite GetSignalIcon(SignalType signalType)
+        {
+            return signalAssetLib[signalType].SignalIcon;
+        }
+        
+        public string GetSignalInfo(SignalType signalType)
+        {
+            return signalAssetLib[signalType].SignalInfo;
+        }
+        
         #endregion
 
         void Start()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ namespace ROOT.Signal
     public abstract class SignalAssetBase : MonoBehaviour
     {
         public String SignalNameTerm;
+        public Sprite SignalIcon;
+        [MultiLineProperty(2)]
+        public String SignalInfo;
         
         public abstract Type UnitSignalCoreType { get; }
 

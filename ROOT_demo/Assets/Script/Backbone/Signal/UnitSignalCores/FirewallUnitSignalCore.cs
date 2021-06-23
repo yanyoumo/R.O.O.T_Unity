@@ -14,19 +14,9 @@ namespace ROOT.Signal
         
         [ShowInInspector] public override SignalType SignalType => SignalType.Firewall;
 
-        [Obsolete]
-        public override List<Vector2Int> SingleInfoCollectorZone
-        {
-            get
-            {
-                //TODO 可不可以要求必须成环？如果是、那么怎么和单元等级交互？
-                var zone = Utils.GetPixelateCircle_Tier(Owner.Tier - 1);
-                var res = new List<Vector2Int>();
-                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
-                return res;
-            }
-        }
-        
+        //只要这么写，查询任何一个在圈内防火墙单元返回的都是全部的面积。上层轮询的时候反正是distinct的，所以理论上无所谓。
+        public override List<Vector2Int> SingleInfoCollectorZone => FirewallSignalAsset.CurrentFirewallCircle.Contains(Owner.CurrentBoardPosition) ? FirewallSignalAsset.CurrentFirewallCircle : new List<Vector2Int>();
+
         private List<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(2).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
 
         private int NeighbouringFirewallUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitSignal == SignalType.Firewall);

@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using com.ootii.Messages;
 using ROOT.Consts;
 using ROOT.LevelAccessMgr;
 using ROOT.SetupAsset;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -94,6 +96,7 @@ namespace ROOT.UI
         private void GenerateActionAssetQuad_Iter(LevelActionAsset actionAsset, int index, bool UpOrDown, Vector2Int nextNodeRoot, Vector2Int lastNodePOS, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack, bool isLevelStub)
         {
             if (actionAsset == null || (actionAsset.IsTestingLevel && !StartGameMgr.DevMode)) return;
+            if ((actionAsset.IsScanLevel && PlayerPrefs.GetInt(StaticPlayerPrefName.SCAN_UNLOCKED, 0) != 1) && !StartGameMgr.DevMode) return;
             GenerateActionAssetQuad(nextNodeRoot + (UpOrDown ? Vector2Int.up : Vector2Int.down) * index, lastNodePOS, actionAsset, buttonCallBack, isLevelStub);
         }
 
@@ -133,7 +136,7 @@ namespace ROOT.UI
             var minY = quadRects.Min(r => r.anchoredPosition.y);
             LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (maxX - minX) + 125);
             LevelSelectionPanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (maxY - minY) + 350);
-            TreeBranchRoot.anchoredPosition = new Vector2(TreeBranchRoot.anchoredPosition.x, -(maxY - minY) * 0.5f);
+            TreeBranchRoot.anchoredPosition = new Vector2(TreeBranchRoot.anchoredPosition.x, -(maxY + 175));
         }
 
         private void UpdateLevelSelectionPanelPos()
@@ -142,12 +145,58 @@ namespace ROOT.UI
             var posY = PlayerPrefs.GetFloat(StaticPlayerPrefName.LEVEL_SELECTION_PANEL_POS_Y);
             LevelSelectionPanel.anchoredPosition = new Vector2(posX, posY);
         }
+
+        private LevelActionAsset cachedRootActionAsset;
+        private Action<LevelActionAsset, TextMeshProUGUI> cachedButtonCallBack;
+
+        private void ClearBSTTree()
+        {
+            foreach (Transform child in TreeBranchRoot.transform)
+            {
+                if (child!=TreeBranchLineRoot)
+                {
+                    Destroy(child.gameObject);
+                }
+                else
+                {
+                    foreach (Transform tmp in child)
+                    {
+                        Destroy(tmp.gameObject);
+                    }
+                }
+            }
+        }
+
+        private void ScanUnitLockChangedHandler(IMessage rMessage)
+        {
+            RecreateBSTTree();
+        }
+        
+        private void RecreateBSTTree()
+        {
+            ClearBSTTree();
+            CreateActualTree(cachedRootActionAsset, cachedButtonCallBack);
+            UpdateLevelSelectionPanelSize();
+            UpdateLevelSelectionPanelPos();
+        }
         
         public void InitBSTTree(LevelActionAsset rootActionAsset, Action<LevelActionAsset, TextMeshProUGUI> buttonCallBack)
         {
+            cachedRootActionAsset = rootActionAsset;
+            cachedButtonCallBack = buttonCallBack;
             CreateActualTree(rootActionAsset, buttonCallBack);
             UpdateLevelSelectionPanelSize();
             UpdateLevelSelectionPanelPos();
+        }
+
+        private void Awake()
+        {
+            MessageDispatcher.AddListener(WorldEvent.ScanUnitLockChangedEvent,ScanUnitLockChangedHandler);
+        }
+
+        private void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.ScanUnitLockChangedEvent,ScanUnitLockChangedHandler);
         }
     }
 }

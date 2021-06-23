@@ -1038,7 +1038,7 @@ namespace ROOT
             {
                 currentLevelAsset.Cursor.ClampPosesInBoard();
             }
-            indicatorCursor.UpdateTransform(currentLevelAsset.GameBoard.GetFloatTransform(indicatorCursor.CurrentBoardPosition));
+            indicatorCursor.UpdateTransform(Board.GetFloatTransform(indicatorCursor.CurrentBoardPosition));
             indicatorCursor.CursorColor = col;
             return indicator;
         }

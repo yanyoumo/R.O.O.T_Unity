@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_GL2
-  Thumbnail: {fileID: 21300000, guid: 57d26bcf687e24a41b96ffb61343fabc, type: 3}
+  Thumbnail: {fileID: 21300000, guid: a04ff4eb5d545a24bae9e07b2efba7d9, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
     type: 3}
   AcessID: 2
@@ -31,9 +31,12 @@ MonoBehaviour:
   UnitCost: 1
   levelType: 0
   IsTestingLevel: 0
+  UnlockScanToggleLevel: 0
   IsScanLevel: 0
   LevelFeature: 2
   DisplayedlevelType: 1
+  LevelInfo: "\u77E9\u9635\u5F80\u5F80\u662F\u6DF7\u5408\u5173\u5361\u4E2D\u7684\u9AA8\u5E72\u548C\u7C98\u5408\u5242\u3002"
+  StoryContent: "\u6211\u53BB\uFF0C\u6211\u5E0C\u671B\u6211\u4E4B\u524D\u91CD\u8BD5\u7684\u65F6\u5019\u6CA1\u6709\u7ED9\u5730\u52E4\u7684\u5144\u5F1F\u4EEC\u592A\u591A\u9EBB\u70E6\u3002"
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
@@ -52,22 +55,34 @@ MonoBehaviour:
     IsStation: 1
   - PlayingSignalSelector: 0
     CoreGenre: 1
-    Sides: 00000000010000000000000001000000
-    Tier: 2
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 0
-    CoreGenre: 1
-    Sides: 00000000010000000000000001000000
-    Tier: 2
-    Pos: {x: -1, y: -1}
-    IsStation: 0
-  - PlayingSignalSelector: 0
-    CoreGenre: 1
     Sides: 01000000000000000100000000000000
     Tier: 1
     Pos: {x: 2, y: 2}
     IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 01000000010000000000000000000000
+    Tier: 1
+    Pos: {x: 4, y: 1}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 00000000000000000100000000000000
+    Tier: 1
+    Pos: {x: 1, y: 4}
+    IsStation: 1
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 00000000010000000000000001000000
+    Tier: 2
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 00000000010000000000000001000000
+    Tier: 2
+    Pos: {x: -1, y: -1}
+    IsStation: 0
   - PlayingSignalSelector: 0
     CoreGenre: 1
     Sides: 01000000010000000000000000000000
@@ -94,10 +109,16 @@ MonoBehaviour:
     IsStation: 0
   - PlayingSignalSelector: 0
     CoreGenre: 1
-    Sides: 01000000010000000000000000000000
+    Sides: 01000000000000000100000001000000
     Tier: 1
-    Pos: {x: 4, y: 1}
-    IsStation: 1
+    Pos: {x: -1, y: -1}
+    IsStation: 0
+  - PlayingSignalSelector: 0
+    CoreGenre: 1
+    Sides: 01000000010000000000000000000000
+    Tier: 3
+    Pos: {x: -1, y: -1}
+    IsStation: 0
   HasBossRound: 0
   Endless: 0
   BossStage: 0
@@ -255,7 +276,7 @@ MonoBehaviour:
     HandOnCheckType: 252
     HandOnFailedType: 0
     HandsOnLockRound: 0
-    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523010\u5143"
+    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523014\u5143"
     TimeOutSec: -1
     TargetTag: 0
     Set: 0

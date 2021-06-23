@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using ROOT.RootMath;
 using Sirenix.Utilities;
 using UnityEngine;
+
 // ReSharper disable PossibleMultipleEnumeration
 
 namespace ROOT.Signal
@@ -37,9 +39,23 @@ namespace ROOT.Signal
                 return zone.CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
             }
         }
-
-        public override List<Vector2Int> SingleInfoCollectorZone => Owner.UnitHardware == HardwareType.Core ? new List<Vector2Int>() : ExpellingPatternList;
-
+        
+        private IEnumerable<Vector2Int> RawInfoList//这个之所以要单列出来是因为这个要根据Tier有不同的范围。
+        {
+            get
+            {
+                var zone = Utils.GetPixelateCircle_Tier(Owner.Tier + 2);
+                return zone.CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition);
+            }
+        }
+        
+        private IEnumerable<Vector2Int> GetFilledExpellingPos()
+        {
+            var validPattern = RawInfoList.Where(Board.CheckBoardPosValidStatic);
+            var emptyPos = validPattern.Where(Owner.GameBoard.CheckBoardPosValidAndFilled);
+            return emptyPos;
+        }
+        
         private IEnumerable<Vector2Int> GetEmptyExpellingPos()
         {
             var validPattern = ExpellingPatternList.Where(Board.CheckBoardPosValidStatic);
@@ -81,6 +97,78 @@ namespace ROOT.Signal
                     return Mathf.Round(GetEmptyExpellingPos().Count() * PerGridScoreByTier[Owner.Tier - 1] * ThermoScoreMultiplier);
                 }
                 return 0.0f;
+            }
+        }
+
+        private Vector3 v2Tov3(Vector2 v) => Board.GetFloatTransform_Float(v);
+
+        private Vector3 v2Tov3(Point v) => Board.GetFloatTransform_Float(new Vector2(v.x, v.y));
+
+        private const float SenderRadius = 0.25f;
+        private const float BlockerRadius = 1f;
+
+        private void getRadiusedBlockList(ref List<Vector2Int> resKillList, Vector2Int[] rawInfoList, Point[] cirPts, Line[] cirLines, Vector2 center)
+        {
+            //RISK 这个先不做了感觉Simple版不够用之后再优化。
+        }
+
+        private void getSimpleBlockList(ref List<Vector2Int> resKillList, Vector2Int[] rawInfoList, Point[] cirPts, Line[] cirLines, Vector2 center)
+        {
+            var lineCenter = cirLines[0].Intersect(cirLines[1]);
+
+            var v0 = (Point.ToVector2(cirPts[1]) - lineCenter).normalized;
+            var v1 = (Point.ToVector2(cirPts[3]) - lineCenter).normalized;
+            var vd = (v0 + v1) / 2.0f;
+            var v01d = Vector2.Dot(vd, v1);
+                    
+            var facingLine = new Line(cirPts[1], cirPts[3]);
+            var facingIndex = facingLine.SideIndex(center);
+                    
+            foreach (var vector2Int in rawInfoList)
+            {
+                var vC = (vector2Int - lineCenter).normalized;
+                if (Vector2.Dot(vd, vC) > v01d)
+                {
+                    //vector2Int is within blocking angle.
+                    var blockerFacingIndex = facingLine.SideIndex(vector2Int);
+                    if (blockerFacingIndex * facingIndex < 0)
+                    {
+                        //vector2Int is within blocking angle and on blocking side.
+                        resKillList.Add(vector2Int);
+                    }
+                }
+            }
+        }
+        
+        public override List<Vector2Int> SingleInfoCollectorZone
+        {
+            get
+            {
+                if (Owner.UnitHardware == HardwareType.Core)
+                {
+                    return new List<Vector2Int>();
+                }
+
+                var res = RawInfoList.ToArray();
+                var resKillList = new List<Vector2Int>();
+
+                var center = Owner.CurrentBoardPosition;
+                var c0 = new Circle(Owner.CurrentBoardPosition, SenderRadius);
+
+                foreach (var filledPos in GetFilledExpellingPos())
+                {
+                    if (filledPos==center)
+                    {
+                        continue;
+                    }
+                    
+                    var c1 = new Circle(filledPos, BlockerRadius);
+                    var lines = RootMath.RootMath.GetOuterCoTangentOf2Circle(c0, c1, out var resp);
+                    getSimpleBlockList(ref resKillList,res, resp, lines, center);//日了，这个需要是填充的。
+                    resKillList.Add(filledPos);
+                }
+                resKillList = resKillList.Distinct().ToList();
+                return res.Where(v => !resKillList.Contains(v)).ToList();
             }
         }
     }

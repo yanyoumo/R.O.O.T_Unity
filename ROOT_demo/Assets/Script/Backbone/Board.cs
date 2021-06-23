@@ -95,9 +95,9 @@ namespace ROOT
         public static Transform URLocatorStatic;
 
         public static int BoardLength => StaticNumericData.BoardLength;
-        public readonly float _boardPhysicalLength = 1.2f;
-        private readonly float _boardPhysicalOriginX = -3.1f - 1.75f - 2.0f;
-        private readonly float _boardPhysicalOriginY = -3.1f;
+        public const float _boardPhysicalLength = 1.2f;
+        public const float _boardPhysicalOriginX = -3.1f - 1.75f - 2.0f;
+        public const float _boardPhysicalOriginY = -3.1f;
 
         public GameObject UnitTemplate;
         public GameObject BoardGridTemplate;
@@ -270,10 +270,16 @@ namespace ROOT
             return res;
         }
 
-        public Vector3 GetFloatTransform(Vector2Int boardPos)
+        public static Vector3 GetFloatTransform_Float(Vector2 boardPos)
         {
-            return new Vector3(_boardPhysicalOriginX + boardPos.x * this._boardPhysicalLength, 0,
-                this._boardPhysicalOriginY + boardPos.y * this._boardPhysicalLength);
+            return new Vector3(_boardPhysicalOriginX + boardPos.x * _boardPhysicalLength, 0,
+                _boardPhysicalOriginY + boardPos.y * _boardPhysicalLength);
+        }
+        
+        public static Vector3 GetFloatTransform(Vector2Int boardPos)
+        {
+            return new Vector3(_boardPhysicalOriginX + boardPos.x * _boardPhysicalLength, 0,
+                _boardPhysicalOriginY + boardPos.y * _boardPhysicalLength);
         }
         
         public Vector3 GetFloatTransformAnimation(Vector2Int boardPos)
