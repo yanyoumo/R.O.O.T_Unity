@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_TL4
-  Thumbnail: {fileID: 21300000, guid: f4a3ac2ff8727094da630da0583fdf08, type: 3}
+  Thumbnail: {fileID: 21300000, guid: 9b18445684318514d9d38cf7c58c6671, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9d91410b0b8c8545b41feda51e82d76,
     type: 3}
   AcessID: 4
@@ -166,7 +166,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -198,7 +198,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -230,7 +230,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -262,7 +262,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -294,7 +294,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -326,7 +326,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
@@ -358,7 +358,7 @@ MonoBehaviour:
     Core: 0
     HardwareType: 0
     Sides: 
-    Tier: 0
+    Tier: 1
     IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
