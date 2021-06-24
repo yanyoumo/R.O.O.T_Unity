@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_GL4
-  Thumbnail: {fileID: 21300000, guid: 57d26bcf687e24a41b96ffb61343fabc, type: 3}
+  Thumbnail: {fileID: 21300000, guid: f99306ffbfd959b4da5c11a39bea21ef, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
     type: 3}
   AcessID: 2
