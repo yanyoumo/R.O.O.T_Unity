@@ -13,6 +13,8 @@ namespace ROOT.Signal
 {
     public abstract class UnitSignalCoreBase : MonoBehaviour
     {
+        [ShowInInspector] public int MatrixVal=> SignalDataPackList[SignalType.Matrix].SignalDepth;
+
         [ReadOnly]public Unit Owner;
         protected Board GameBoard => Owner.GameBoard;
         //返回对应的信号的enum
