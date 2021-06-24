@@ -18,7 +18,6 @@ namespace ROOT.Signal
         public override List<Vector2Int> SingleInfoCollectorZone => FirewallSignalAsset.CurrentFirewallCircle.Contains(Owner.CurrentBoardPosition) ? FirewallSignalAsset.CurrentFirewallCircle : new List<Vector2Int>();
 
         private List<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(2).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
-
         private int NeighbouringFirewallUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitSignal == SignalType.Firewall);
         
         private const int perFirewallFieldUnitPrice = 1;//这个系数一定要往上调。

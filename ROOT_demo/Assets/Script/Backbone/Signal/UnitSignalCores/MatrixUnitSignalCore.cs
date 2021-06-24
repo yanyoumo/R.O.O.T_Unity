@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -7,6 +8,9 @@ namespace ROOT.Signal
     public class MatrixUnitSignalCore : UnitSignalCoreBase
     {
         [ShowInInspector] public override SignalType SignalType => SignalType.Matrix;
+        
+        private const int perMatrixFieldUnitPrice = 1;
+        private float[] scoreMultiplier = {0.075f, 0.25f, 0.5f, 0.75f, 1.0f};
 
         public override List<Vector2Int> SingleInfoCollectorZone
         {
@@ -18,9 +22,9 @@ namespace ROOT.Signal
                 return res;
             }
         }
-        
-        private const int perMatrixFieldUnitPrice = 1;
-        //Core不计分。
-        public override float SingleUnitScore => (IsUnitActive && Owner.UnitHardware == HardwareType.Field) ? perMatrixFieldUnitPrice * Owner.Tier : 0.0f;
+        private List<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(1).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
+        private int NeighbouringMatrixUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitSignal == SignalType.Matrix);
+
+        public override float SingleUnitScore => (IsUnitActive && Owner.UnitHardware == HardwareType.Field) ? perMatrixFieldUnitPrice * scoreMultiplier[NeighbouringMatrixUnitCount] * Owner.Tier : 0.0f;
     }
 }
