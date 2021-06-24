@@ -134,8 +134,15 @@ namespace ROOT.Signal
         private void BoardDataUpdatedHandler(IMessage rMessage)
         {
             var data = new Unit[0];
-            SignalMasterMgr.Instance.Paths[SignalType.Firewall].ForEach(u => data.AddRange(
-                u.Where(u0 => u0.UnitHardware == HardwareType.Field)));
+            try
+            {
+                SignalMasterMgr.Instance.Paths[SignalType.Firewall].ForEach(u => data.AddRange(u.Where(u0=>u0.UnitHardware==HardwareType.Field)));
+            }
+            catch (KeyNotFoundException)
+            {
+                return;
+            }
+
             if (data.Length != 0)
             {
                 updateFireWallCircle(data);
