@@ -326,11 +326,18 @@ namespace ROOT.Signal
             return GetUnitAssetByUnitType(signalType, genre).UnitPrice;
         }
 
+        /*[Obsolete]
         public Material GetMatByUnitType(SignalType signalType, HardwareType genre)
         {
-            return GetUnitAssetByUnitType(signalType, genre).UnitMat;
-        }
+            throw new NotImplementedException();
+            //return GetUnitAssetByUnitType(signalType, genre).UnitMat;
+        }*/
 
+        public Sprite GetSpriteIconByUnitType(SignalType signalType, HardwareType genre)
+        {
+            return GetUnitAssetByUnitType(signalType, genre).IconSprite;
+        }
+        
         public String GetSignalNameTerm(SignalType signalType)
         {
             return signalAssetLib[signalType].SignalNameTerm;

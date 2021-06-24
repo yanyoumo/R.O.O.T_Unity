@@ -12,7 +12,7 @@ namespace ROOT.Signal
         {
             get
             {
-                var zone = Utils.GetPixelateCircle_Tier(Owner.Tier - 1);
+                var zone = Utils.GetPixelateCircle_Tier(Owner.Tier - 1);//TODO 这里要加一个Cap
                 var res = new List<Vector2Int>();
                 zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
                 return res;

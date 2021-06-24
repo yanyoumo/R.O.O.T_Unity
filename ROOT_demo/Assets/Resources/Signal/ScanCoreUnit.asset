@@ -18,4 +18,5 @@ MonoBehaviour:
   BaseRate: 5
   NecessaryPortCount: 1
   AdditionalPortRate: 50
-  UnitMat: {fileID: 2100000, guid: 621b7c0dce4b33d49b5a75d9e2bd70ac, type: 2}
+  IconSprite: {fileID: 21300000, guid: e14e822e70542b143b98f8e1ec44b356, type: 3}
+  NeighbouringData: []

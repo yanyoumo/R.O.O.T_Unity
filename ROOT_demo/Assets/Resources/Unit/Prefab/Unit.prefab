@@ -2950,6 +2950,8 @@ MonoBehaviour:
   AdditionalClampMesh: {fileID: 5168225995973686400}
   BuyingMat: {fileID: 2100000, guid: c2504203b500373419174027cdccfc0c, type: 2}
   ImmovableMat: {fileID: 2100000, guid: 541e53b91680b4649ae7774c1b9da4b7, type: 2}
+  CoreSpriteRenderer: {fileID: 8045466694132173773}
+  FieldSpriteRenderer: {fileID: 1080769550317530321}
   ShopBackPlane: {fileID: 3879975519063178855}
   ShopDiscountRoot: {fileID: 3146945582300183988}
   ThermoRangeIndicatorRoot: {fileID: 8808140154013189069}
@@ -4655,7 +4657,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 899df1935bd8608408ce1a16969b0a14, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
