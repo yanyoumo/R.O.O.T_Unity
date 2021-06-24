@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!244 &-7900037077647432838
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: f9d377f0d2175654a98fe1a5008c5433
+  m_EffectName: Attenuation
+  m_MixLevel: 6fcfafdb9ad990241a734ebc43be80f2
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &-2778401539968794568
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -14,13 +28,32 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!243 &-1489326983134835930
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SFX
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 2c10c30d41c131c40a49719b4d34823f
+  m_Children: []
+  m_Volume: 6abbab26902dac64696081cfcdb08f1b
+  m_Pitch: 2af6ecbbbd1cf5c41adfb3685083e640
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -7900037077647432838}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!243 &-229334749960048241
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ButtonClick
+  m_Name: SFX
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 4a54fedf216785e4abff48273e33ccec
   m_Children: []
@@ -53,7 +86,7 @@ AudioMixerController:
   m_AudioMixerGroupViews:
   - guids:
     - c1629b5cb100b164fa2f61049054714b
-    - 4a54fedf216785e4abff48273e33ccec
+    - 2c10c30d41c131c40a49719b4d34823f
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -67,7 +100,7 @@ AudioMixerGroupController:
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: c1629b5cb100b164fa2f61049054714b
   m_Children:
-  - {fileID: -229334749960048241}
+  - {fileID: -1489326983134835930}
   m_Volume: 18acbe88dc9439c4a8234c75158a8bad
   m_Pitch: f13a11ecd2fb4184794e2857646838a8
   m_Send: 00000000000000000000000000000000

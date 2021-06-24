@@ -1645,7 +1645,7 @@ MonoBehaviour:
       GameEvents: []
       SoundData:
         SoundSource: 0
-        DatabaseName: Example Clicks
+        DatabaseName: ROOT SFX
         SoundName: Cool UI Button
         AudioClip: {fileID: 0}
         OutputAudioMixerGroup: {fileID: 0}
@@ -4643,7 +4643,7 @@ MonoBehaviour:
       GameEvents: []
       SoundData:
         SoundSource: 0
-        DatabaseName: Example Clicks
+        DatabaseName: ROOT SFX
         SoundName: Cool UI Button
         AudioClip: {fileID: 0}
         OutputAudioMixerGroup: {fileID: 0}
