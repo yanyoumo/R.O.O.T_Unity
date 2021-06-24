@@ -16,7 +16,7 @@ namespace ROOT.SetupAsset
         [Obsolete("这个放在Asset里面或者怎么管理。")]
         private Dictionary<SignalType, Color> SignalColorLib => new Dictionary<SignalType, Color>
         {
-            {SignalType.Basic, ColorLib.ROOT_SIGNAL_MATRIX},//TODO
+            {SignalType.Basic, ColorLib.ROOT_MASTER_BASIC},
             {SignalType.Matrix, ColorLib.ROOT_SIGNAL_MATRIX},
             {SignalType.Scan, ColorLib.ROOT_SIGNAL_SCAN},
             {SignalType.Thermo, ColorLib.ROOT_SIGNAL_THREMO},
