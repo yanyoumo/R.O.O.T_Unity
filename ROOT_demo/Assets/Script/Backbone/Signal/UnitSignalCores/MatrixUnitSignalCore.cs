@@ -16,14 +16,22 @@ namespace ROOT.Signal
         {
             get
             {
-                var zone = Utils.GetPixelateCircle_Tier(Owner.Tier - 1);
-                var res = new List<Vector2Int>();
-                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
-                return res;
+                if (IsUnitActive && Owner.UnitHardware == HardwareType.Field)
+                {
+                    foreach (var matrixIsland in MatrixSignalAsset.MatrixIslandPack)
+                    {
+                        if (matrixIsland.Contains(Owner.CurrentBoardPosition))
+                        {
+                            return matrixIsland.GetMatrixIslandInfoZone();
+                        }
+                    }
+                }
+                return new List<Vector2Int>();
             }
         }
-        private List<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(1).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
-        private int NeighbouringMatrixUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitSignal == SignalType.Matrix);
+
+        private IEnumerable<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(1).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
+        private int NeighbouringMatrixUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitSignal == SignalType);
 
         public override float SingleUnitScore => (IsUnitActive && Owner.UnitHardware == HardwareType.Field) ? perMatrixFieldUnitPrice * scoreMultiplier[NeighbouringMatrixUnitCount] * Owner.Tier : 0.0f;
     }

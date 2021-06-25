@@ -15,7 +15,16 @@ namespace ROOT.Signal
         [ShowInInspector] public override SignalType SignalType => SignalType.Firewall;
 
         //只要这么写，查询任何一个在圈内防火墙单元返回的都是全部的面积。上层轮询的时候反正是distinct的，所以理论上无所谓。
-        public override List<Vector2Int> SingleInfoCollectorZone => FirewallSignalAsset.CurrentFirewallCircle.Contains(Owner.CurrentBoardPosition) ? FirewallSignalAsset.CurrentFirewallCircle : new List<Vector2Int>();
+        public override List<Vector2Int> SingleInfoCollectorZone
+        {
+            get
+            {
+                //TODO 这个还得改，这个不太行。
+                return FirewallSignalAsset.CurrentFirewallCircle.Contains(Owner.CurrentBoardPosition)
+                    ? FirewallSignalAsset.CurrentFirewallCircle
+                    : new List<Vector2Int>();
+            }
+        }
 
         private List<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(2).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
         private int NeighbouringFirewallUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitSignal == SignalType.Firewall);
