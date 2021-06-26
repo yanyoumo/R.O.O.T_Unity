@@ -386,12 +386,11 @@ namespace ROOT.Signal
             }
         }
 
-        public SignalPathLib Paths => _paths == null ? new SignalPathLib() : _paths;
-        private SignalPathLib _paths;
+        public SignalPathLib Paths { private set; get; }
 
         private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
         {
-            _paths = new SignalPathLib();
+            Paths = new SignalPathLib();
             board.Units.Select(u => u.SignalCore).ForEach(s => s.ResetSignalStrengthComplex());
             foreach (var signalAssetBase in signalAssetLib.Where(v => selectedTypes.Contains(v.Key)).Select(v => v.Value))
             {
