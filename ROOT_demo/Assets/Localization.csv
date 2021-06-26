@@ -89,6 +89,7 @@ Ending,Text,,结束,Ending
 Signal_Name_Matrix,Text,,矩阵,Matrix
 Signal_Name_Scan,Text,,扫描,Scan
 Signal_Name_Thermo,Text,,热力,Thermo
+Signal_Name_Cluster,Text,,集群,Cluster
 Signal_Name_Firewall,Text,,防火墙,Firewall
 LevelName_GL0,Text,,手痒痒了,Pending
 LevelName_GL1,Text,,手还痒痒,Pending
