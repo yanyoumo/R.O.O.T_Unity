@@ -61,8 +61,8 @@ namespace ROOT
         private static bool ConnectAnyMatrixFieldDirectlyWithMatrixCore(FSMLevelLogic fsm, Board board)
         {
             // we have one matrix field and one matrix core here
-            return board.Units.Where(unit => unit.CheckType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
-                unit.GetConnectedOtherUnit.Any(unit => unit.CheckType(SignalType.Matrix, HardwareType.Field)));
+            return board.Units.Where(unit => unit.CheckType(SignalType.Cluster, HardwareType.Core)).Any(unit =>
+                unit.GetConnectedOtherUnit.Any(unit => unit.CheckType(SignalType.Cluster, HardwareType.Field)));
         }
 
         private static bool ConnectAnyThermalFieldDirectlyWithThermalCore(FSMLevelLogic fsm, Board board)
@@ -100,19 +100,19 @@ namespace ROOT
         public static bool ConnectDifferentCoreAndField(FSMLevelLogic fsm, Board board)
         {
             // we have one thermo field and one thermo core here
-            return board.Units.Where(unit => unit.CheckType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
+            return board.Units.Where(unit => unit.CheckType(SignalType.Cluster, HardwareType.Core)).Any(unit =>
                 unit.GetConnectedOtherUnit.Any(unit => unit.CheckType(SignalType.Thermo, HardwareType.Field))) && 
                    board.Units.Where(unit => unit.CheckType(SignalType.Thermo, HardwareType.Core)).Any(unit =>
-                    unit.GetConnectedOtherUnit.Any(unit => unit.CheckType(SignalType.Matrix, HardwareType.Field)));
+                    unit.GetConnectedOtherUnit.Any(unit => unit.CheckType(SignalType.Cluster, HardwareType.Field)));
         }
 
         public static bool MoveThreeMatrixAndTwoThermalToPlace(FSMLevelLogic fsm, Board board)
         {
             var dic = new Dictionary<Vector2Int, SignalType>
             {
-                {new Vector2Int(1,5), SignalType.Matrix},
-                {new Vector2Int(2,5), SignalType.Matrix},
-                {new Vector2Int(2,4), SignalType.Matrix},
+                {new Vector2Int(1,5), SignalType.Cluster},
+                {new Vector2Int(2,5), SignalType.Cluster},
+                {new Vector2Int(2,4), SignalType.Cluster},
                 {new Vector2Int(2,2), SignalType.Thermo},
                 {new Vector2Int(2,3), SignalType.Thermo}
             };
@@ -133,7 +133,7 @@ namespace ROOT
             var unit = board.FindUnitByPos(new Vector2Int(2,1));
             if (unit == null)
                 return false;
-            return unit.UnitSignal == SignalType.Matrix && board.GetUnitsConnectedIsland() == 1;
+            return unit.UnitSignal == SignalType.Cluster && board.GetUnitsConnectedIsland() == 1;
         }
 
         public static bool ContinueWhenOneUnitIsBought(FSMLevelLogic fsm, Board board)
@@ -172,9 +172,9 @@ namespace ROOT
         {
             return fsm.LevelAsset.SkillMgr.SkillUsedCountByID(4) + fsm.LevelAsset.SkillMgr.SkillUsedCountByID(5) +
                    fsm.LevelAsset.SkillMgr.SkillUsedCountByID(6) >= 1 &&
-                   board.Units.Where(unit => unit.CheckType(SignalType.Matrix, HardwareType.Core)).Any(unit =>
+                   board.Units.Where(unit => unit.CheckType(SignalType.Cluster, HardwareType.Core)).Any(unit =>
                        unit.GetConnectedOtherUnit.Count(fieldUnit =>
-                           fieldUnit.CheckType(SignalType.Matrix, HardwareType.Field)) == 4);
+                           fieldUnit.CheckType(SignalType.Cluster, HardwareType.Field)) == 4);
         }
     }
 }

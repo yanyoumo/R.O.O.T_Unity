@@ -6,7 +6,7 @@ namespace ROOT.Signal
 {
     public class BasicUnitSignalCore : UnitSignalCoreBase
     {
-        [ShowInInspector] public override SignalType SignalType => SignalType.Basic;
+        [ShowInInspector] public override SignalType SignalType => SignalType.Matrix;
 
         public override List<Vector2Int> SingleInfoCollectorZone
         {

@@ -9,24 +9,24 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    public class MatrixSignalAsset : SignalAssetBase
+    public class ClusterSignalAsset : SignalAssetBase
     {
-        public override Type UnitSignalCoreType => typeof(MatrixUnitSignalCore);
-        public override SignalType SignalType => SignalType.Matrix;
+        public override Type UnitSignalCoreType => typeof(ClusterUnitSignalCore);
+        public override SignalType SignalType => SignalType.Cluster;
 
-        public static List<MatrixIsland> MatrixIslandPack => _matrixIslandPack;
-        private static List<MatrixIsland> _matrixIslandPack;
+        public static List<MatrixIsland> ClusterIslandPack => _clusterIslandPack;
+        private static List<MatrixIsland> _clusterIslandPack;
         
         private List<Vector2Int> FindSingleIsland_Iter(Vector2Int crt)
         {
             var res = new List<Vector2Int>();
-            Debug.Assert(MatrixIslandMap.ContainsKey(crt));
-            MatrixIslandMap[crt] = true;
+            Debug.Assert(ClusterIslandMap.ContainsKey(crt));
+            ClusterIslandMap[crt] = true;
             res.Add(crt);
             foreach (var vector2Int in StaticNumericData.V2Int4DirLib)
             {
                 var ccrt = crt + vector2Int;
-                if (MatrixIslandMap.ContainsKey(ccrt) && !MatrixIslandMap[ccrt])
+                if (ClusterIslandMap.ContainsKey(ccrt) && !ClusterIslandMap[ccrt])
                 {
                     var localRes = FindSingleIsland_Iter(ccrt);
                     if (localRes.Count>0)
@@ -38,28 +38,28 @@ namespace ROOT.Signal
             return res;
         }
 
-        private Dictionary<Vector2Int, bool> MatrixIslandMap;
+        private Dictionary<Vector2Int, bool> ClusterIslandMap;
         
-        private void updateMatrixIsland(IEnumerable<Unit> units)
+        private void updateClusterIsland(IEnumerable<Unit> units)
         {
-            MatrixIslandMap = new Dictionary<Vector2Int, bool>();
-            _matrixIslandPack = new List<MatrixIsland>();
-            units.Select(u => u.CurrentBoardPosition).ForEach(p => MatrixIslandMap.Add(p, false));
+            ClusterIslandMap = new Dictionary<Vector2Int, bool>();
+            _clusterIslandPack = new List<MatrixIsland>();
+            units.Select(u => u.CurrentBoardPosition).ForEach(p => ClusterIslandMap.Add(p, false));
 
             do
             {
-                var currentV2I = MatrixIslandMap.First(t => !t.Value).Key;
+                var currentV2I = ClusterIslandMap.First(t => !t.Value).Key;
                 var singleIsland = FindSingleIsland_Iter(currentV2I);
                 var unitTierParallel = singleIsland.Select(p => units.First(u => u.CurrentBoardPosition == p).Tier);
-                _matrixIslandPack.Add(new MatrixIsland(singleIsland, unitTierParallel));
-            } while (MatrixIslandMap.Any(t => !t.Value));
+                _clusterIslandPack.Add(new MatrixIsland(singleIsland, unitTierParallel));
+            } while (ClusterIslandMap.Any(t => !t.Value));
         }
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
         {            
             var data = SignalMasterMgr.Instance.GetActiveUnitByUnitType(SignalType, HardwareType.Field).ToArray();
             if (data.Length == 0) return;
-            updateMatrixIsland(data);
+            updateClusterIsland(data);
         }
         
         protected virtual void Awake()

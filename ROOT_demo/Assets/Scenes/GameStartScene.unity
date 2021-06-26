@@ -9257,7 +9257,7 @@ GameObject:
   - component: {fileID: 1180892344}
   - component: {fileID: 1180892345}
   m_Layer: 0
-  m_Name: MatrixSignal
+  m_Name: ClusterSignal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

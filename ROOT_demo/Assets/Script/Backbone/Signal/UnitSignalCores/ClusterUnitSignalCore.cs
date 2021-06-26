@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    public class MatrixUnitSignalCore : UnitSignalCoreBase
+    public class ClusterUnitSignalCore : UnitSignalCoreBase
     {
-        [ShowInInspector] public override SignalType SignalType => SignalType.Matrix;
+        [ShowInInspector] public override SignalType SignalType => SignalType.Cluster;
         
         private const int perMatrixFieldUnitPrice = 1;
         private float[] scoreMultiplier = {0.075f, 0.25f, 0.5f, 0.75f, 1.0f};
@@ -20,7 +20,7 @@ namespace ROOT.Signal
             {
                 if (IsUnitActive && Owner.UnitHardware == HardwareType.Field)
                 {
-                    foreach (var matrixIsland in MatrixSignalAsset.MatrixIslandPack)
+                    foreach (var matrixIsland in ClusterSignalAsset.ClusterIslandPack)
                     {
                         if (matrixIsland.Contains(Owner.CurrentBoardPosition))
                         {
@@ -69,7 +69,7 @@ namespace ROOT.Signal
 
         private bool IsActiveFieldUnitThisSignal(Unit u) => u.SignalCore.IsUnitActive && u.UnitSignal == SignalType && u.UnitHardware == HardwareType.Field;
         private IEnumerable<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(1).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
-        private int NeighbouringMatrixUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && IsActiveFieldUnitThisSignal(u));
-        public override float SingleUnitScore => IsActiveFieldUnitThisSignal(Owner) ? perMatrixFieldUnitPrice * scoreMultiplier[NeighbouringMatrixUnitCount] * Owner.Tier : 0.0f;
+        private int NeighbouringClusterUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && IsActiveFieldUnitThisSignal(u));
+        public override float SingleUnitScore => IsActiveFieldUnitThisSignal(Owner) ? perMatrixFieldUnitPrice * scoreMultiplier[NeighbouringClusterUnitCount] * Owner.Tier : 0.0f;
     }
 }

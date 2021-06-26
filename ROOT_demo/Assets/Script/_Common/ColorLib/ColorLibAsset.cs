@@ -38,11 +38,11 @@ namespace ROOT.SetupAsset
         public Color MASTER_PURPLE;
         [PropertySpace]
         [PropertyOrder(-5)]
-        public Color ROOT_MASTER_BASIC;
+        public Color ROOT_MASTER_MATRIX;
         [PropertyOrder(-4)]
         public Color ROOT_MASTER_THERMO;
         [PropertyOrder(-3)]
-        public Color ROOT_MASTER_MATRIX;
+        public Color ROOT_MASTER_CLUSTER;
         [PropertyOrder(-2)]
         public Color ROOT_MASTER_FIREWALL;
         [PropertyOrder(-1)]
