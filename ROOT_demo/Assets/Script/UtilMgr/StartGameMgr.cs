@@ -73,6 +73,17 @@ namespace ROOT
             PlayerPrefs.Save();
         }
 
+        /*public int[] data;
+        
+        [Button]
+        public void ParallelTest()
+        {
+            foreach (var i in data.AsParallel())
+            {
+                Debug.Log(i);
+            }
+        }*/
+        
         private void SetUpPlayerPrefs()
         {
             if (!PlayerPrefs.HasKey(PLAYER_ID)) PlayerPrefs.SetInt(PLAYER_ID, DateTime.UtcNow.Millisecond);

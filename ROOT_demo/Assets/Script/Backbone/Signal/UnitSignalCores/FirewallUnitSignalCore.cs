@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ROOT.Consts;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -52,9 +53,11 @@ namespace ROOT.Signal
                 return;
             }
 
-            for (var i = 0; i < neighbouringOffsetList.Length; i++)
+            var _8DirArray = StaticNumericData.V2Int8DirLib.ToArray();
+            
+            for (var i = 0; i < _8DirArray.Length; i++)
             {
-                var inquiryBoardPos = Owner.CurrentBoardPosition + neighbouringOffsetList[i];
+                var inquiryBoardPos = Owner.CurrentBoardPosition + _8DirArray[i];
                 var displayIcon = false;
                 if (GameBoard != null && GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos))
                 {

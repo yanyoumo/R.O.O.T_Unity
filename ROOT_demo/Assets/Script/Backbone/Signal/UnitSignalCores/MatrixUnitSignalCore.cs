@@ -22,7 +22,7 @@ namespace ROOT.Signal
                     {
                         if (matrixIsland.Contains(Owner.CurrentBoardPosition))
                         {
-                            return matrixIsland.GetMatrixIslandInfoZone();
+                            return matrixIsland.GetMatrixIslandInfoZone().ToList();
                         }
                     }
                 }

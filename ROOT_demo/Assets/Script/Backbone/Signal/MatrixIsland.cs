@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ROOT.Consts;
 using UnityEngine;
 
 namespace ROOT.Signal
@@ -10,9 +11,7 @@ namespace ROOT.Signal
         
         private int _connectingVal;
         
-        private readonly Vector2Int[] NebrList = {Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right};
-
-        private bool Vec2IntIsFourDirNeighbouring(Vector2Int A, Vector2 B)
+        private bool Vec2IntIsFourDirNeighbouring(Vector2Int A, Vector2Int B)
         {
             if (A == B)
             {
@@ -21,7 +20,7 @@ namespace ROOT.Signal
             }
 
             var dif = A - B;
-            return dif == Vector2.up || dif == Vector2.down || dif == Vector2.left || dif == Vector2.right;
+            return dif == Vector2Int.up || dif == Vector2Int.down || dif == Vector2Int.left || dif == Vector2Int.right;
         }
 
         private Vector2 CenterPos
@@ -34,12 +33,12 @@ namespace ROOT.Signal
             }
         }
 
-        private List<Vector2Int> TotalSurroundingGrid(IEnumerable<Vector2Int> src)
+        private IEnumerable<Vector2Int> TotalSurroundingGrid(IEnumerable<Vector2Int> src)
         {
             var res = new List<Vector2Int>();
-            foreach (var vector2 in src)
+            foreach (var vector2 in src.Where(v => GridTotalSurroundingCount(v, src) != 4))//RISK 这里AsParallel不好使，但是需要具体去看下原因。
             {
-                foreach (var dir in NebrList)
+                foreach (var dir in StaticNumericData.V2Int4DirLib)
                 {
                     var offsetV2 = vector2 + dir;
                     if (!src.Contains(offsetV2) && !res.Contains(offsetV2))
@@ -48,8 +47,8 @@ namespace ROOT.Signal
                     }
                 }
             }
-            
-            return res.Distinct().ToList();
+
+            return res.Distinct();
         }
 
         private int GridTotalSurroundingCount(Vector2Int v, IEnumerable<Vector2Int> pool)
@@ -57,13 +56,19 @@ namespace ROOT.Signal
             return pool.Count(v0 => Vec2IntIsFourDirNeighbouring(v, v0));
         }
 
-        private float OrderByCenterPos(Vector2Int v) => Vector2.Distance(v, CenterPos);
+        private int OrderByCenterPos_Discrete(Vector2Int v)
+        {
+            var dist_f = Vector2.Distance(v, CenterPos);
+            return Mathf.RoundToInt(dist_f * 1000);//保留小数点后三位，量化所较数据。
+        }
 
+        private int OrderByPosID(Vector2Int v) => Board.BoardLength * v.y + v.x;
+        
         private int TotalGridCount => _connectingVal;
         
-        public List<Vector2Int> GetMatrixIslandInfoZone()
+        public IEnumerable<Vector2Int> GetMatrixIslandInfoZone()
         {
-            var res = this.Select(p => p).ToList();
+            var res = this.Where(v => true);
             var extraGridCount = TotalGridCount - Count;
             if (extraGridCount <= 0)
             {
@@ -72,12 +77,14 @@ namespace ROOT.Signal
 
             for (var i = 0; i < extraGridCount; i++)
             {
-                //RISK 这个过程有一定的"随机性"，可能不是特别好。
+                //RISK 现有框架下程序是决定性的、但是从玩家角度看有一定随机性，这个有空看看。
                 var pendingExtraGrid = TotalSurroundingGrid(res);
                 var maxSurroundingCount = pendingExtraGrid.Max(v => GridTotalSurroundingCount(v, res));
                 var maxSurroundingCountList = pendingExtraGrid.Where(v => GridTotalSurroundingCount(v, res) == maxSurroundingCount);
-                var nextGridListOrdered = maxSurroundingCountList.OrderBy(OrderByCenterPos).ToList();
-                res.Add(nextGridListOrdered[0]);
+                var minGridDist = maxSurroundingCountList.Min(OrderByCenterPos_Discrete);
+                var minGridDistList = maxSurroundingCountList.Where(v => OrderByCenterPos_Discrete(v) == minGridDist);
+                var IDOrderedFinalist = minGridDistList.OrderBy(OrderByPosID);
+                res = res.Append(IDOrderedFinalist.First());
             }
 
             return res;
