@@ -28,7 +28,7 @@ namespace ROOT.Signal
         }
 
         private List<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(2).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
-        private int NeighbouringFirewallUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitSignal == SignalType.Firewall);
+        private int NeighbouringFirewallUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitHardware == HardwareType.Field && u.SignalCore.IsUnitActive && u.UnitSignal == SignalType.Firewall);
         
         private const int perFirewallFieldUnitPrice = 1;//这个系数一定要往上调。
 
@@ -63,7 +63,7 @@ namespace ROOT.Signal
                 {
                     var otherUnit = GameBoard.FindUnitByPos(inquiryBoardPos);
                     Debug.Assert(otherUnit != null);
-                    displayIcon = otherUnit.UnitSignal == SignalType.Firewall;
+                    displayIcon = otherUnit.SignalCore.IsUnitActive && otherUnit.UnitHardware == HardwareType.Field && (otherUnit.UnitSignal == SignalType.Firewall);
                 }
 
                 switch (NeighbouringFirewallUnitCount)

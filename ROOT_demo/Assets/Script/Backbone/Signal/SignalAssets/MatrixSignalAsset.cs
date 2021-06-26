@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
+using ROOT.Consts;
+using Sirenix.Utilities;
 using UnityEngine;
+// ReSharper disable PossibleMultipleEnumeration
 
 namespace ROOT.Signal
 {
@@ -13,16 +16,14 @@ namespace ROOT.Signal
 
         public static List<MatrixIsland> MatrixIslandPack => _matrixIslandPack;
         private static List<MatrixIsland> _matrixIslandPack;
-
-        private readonly Vector2Int[] NebrList = {Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right};
-
+        
         private List<Vector2Int> FindSingleIsland_Iter(Vector2Int crt)
         {
             var res = new List<Vector2Int>();
             Debug.Assert(MatrixIslandMap.ContainsKey(crt));
             MatrixIslandMap[crt] = true;
             res.Add(crt);
-            foreach (var vector2Int in NebrList)
+            foreach (var vector2Int in StaticNumericData.V2Int4DirLib)
             {
                 var ccrt = crt + vector2Int;
                 if (MatrixIslandMap.ContainsKey(ccrt) && !MatrixIslandMap[ccrt])
@@ -43,10 +44,7 @@ namespace ROOT.Signal
         {
             MatrixIslandMap = new Dictionary<Vector2Int, bool>();
             _matrixIslandPack = new List<MatrixIsland>();
-            foreach (var pos in units.Select(u=>u.CurrentBoardPosition))
-            {
-                MatrixIslandMap.Add(pos, false);
-            }
+            units.Select(u => u.CurrentBoardPosition).ForEach(p => MatrixIslandMap.Add(p, false));
 
             do
             {
