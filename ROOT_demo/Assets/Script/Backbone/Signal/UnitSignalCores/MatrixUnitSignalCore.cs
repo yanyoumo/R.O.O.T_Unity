@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    public class BasicUnitSignalCore : UnitSignalCoreBase
+    public class MatrixUnitSignalCore : UnitSignalCoreBase
     {
         [ShowInInspector] public override SignalType SignalType => SignalType.Matrix;
 
