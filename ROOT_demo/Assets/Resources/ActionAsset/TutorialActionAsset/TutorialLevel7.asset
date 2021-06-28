@@ -23,7 +23,7 @@ MonoBehaviour:
     SerializationNodes: []
   TitleTerm: LevelName_TL7
   Thumbnail: {fileID: 21300000, guid: f6a8f0c8d3c9cfa46b57cf90ef50a9cb, type: 3}
-  LevelLogic: {fileID: 3818130472288149215, guid: a9d91410b0b8c8545b41feda51e82d76,
+  LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
     type: 3}
   AcessID: 4
   InitialCurrency: 1000
@@ -31,9 +31,12 @@ MonoBehaviour:
   UnitCost: 1
   levelType: 0
   IsTestingLevel: 0
+  UnlockScanToggleLevel: 0
   IsScanLevel: 0
   LevelFeature: 1
   DisplayedlevelType: 0
+  LevelInfo: 
+  StoryContent: 
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
@@ -2684,7 +2687,6 @@ MonoBehaviour:
   mainIDXToinsert: 32
   subIDXToinsert: 1
   CSVFileName: 
-  UnlockingLevel:
-  - {fileID: 11400000, guid: cb986f21946665d4e890ec4fda4ad9f8, type: 2}
+  UnlockingLevel: []
   UnlockingLevel_Upper: []
   ExcludedShop: 0
