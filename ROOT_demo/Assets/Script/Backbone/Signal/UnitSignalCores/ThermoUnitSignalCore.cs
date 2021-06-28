@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ROOT.Consts;
 using ROOT.RootMath;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -30,7 +31,7 @@ namespace ROOT.Signal
         //迪公说的对、在另外两个玩法中、Tier的提高是一个正反馈的内容；但是现在的设计含有负反馈内容。
         //根据现在的实现、改上面三个变量就可以很方便的改正；想改成纯正反馈也很简单：
         //所有等级所需的范围相同；但是每个空单元单位提成是等比例的「1、2、3、4、5」；（自然、总数也会是和Tier等比例的。
-        private List<Vector2Int> ExpellingPatternList
+        private IEnumerable<Vector2Int> ExpellingPatternList
         {
             get
             {
@@ -80,9 +81,11 @@ namespace ROOT.Signal
                 return;
             }
 
-            for (var i = 0; i < neighbouringOffsetList.Length; i++)
+            var _8DirArray = StaticNumericData.V2Int8DirLib.ToArray();
+
+            for (var i = 0; i < _8DirArray.Length; i++)
             {
-                var inquiryBoardPos = Owner.CurrentBoardPosition + neighbouringOffsetList[i];
+                var inquiryBoardPos = Owner.CurrentBoardPosition + _8DirArray[i];
                 var displayIcon = GameBoard != null && GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos);
                 Owner.UnitNeighbouringRendererRoot.LinkageIcons[i].gameObject.SetActive(displayIcon && ShowingNeighbouringLinkage);
             }

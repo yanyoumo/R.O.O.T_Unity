@@ -30,22 +30,13 @@ namespace ROOT.Signal
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
         {
-            var data = new Unit[0];
-            try
+            var data = SignalMasterMgr.Instance.GetActiveUnitByUnitType(SignalType, HardwareType.Field).ToArray();
+            if (data.Length == 0)
             {
-                SignalMasterMgr.Instance.Paths[SignalType.Firewall].ForEach(u => data.AddRange(u.Where(u0 => u0.UnitHardware == HardwareType.Field)));
-            }
-            catch (KeyNotFoundException)
-            {
-                Debug.Log("It's not playing Firewall Unit, Calculation skipped");
                 _firewallCircle = new FirewallCircle();
                 return;
             }
-
-            if (data.Length != 0)
-            {
-                updateFireWallCircle(data);
-            }
+            updateFireWallCircle(data);
         }
         
         protected virtual void Awake()

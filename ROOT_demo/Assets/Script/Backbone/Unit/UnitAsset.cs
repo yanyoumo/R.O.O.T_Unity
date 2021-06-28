@@ -23,7 +23,8 @@ namespace ROOT
         [Range(0,100)]
         public int AdditionalPortRate;
         [Title("Aesthetic Data")]
-        public Material UnitMat;
+        //public Material UnitMat;
+        public Sprite IconSprite;
         [Title("Neighbouring DataAsset")]
         public UnitNeighbDataAsset[] NeighbouringData;
     }

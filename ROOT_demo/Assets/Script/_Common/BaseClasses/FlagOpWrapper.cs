@@ -80,7 +80,7 @@ namespace ROOT
             }
 
             var flagA = (ulong) 1 << (maxBitCount - 1);
-            Debug.Log(flagA.ToString("X"));
+            //Debug.Log(flagA.ToString("X"));
             var bitCount = -1;
             do
             {

@@ -17,6 +17,7 @@ namespace ROOT.SetupAsset
         private Dictionary<SignalType, Color> SignalColorLib => new Dictionary<SignalType, Color>
         {
             {SignalType.Matrix, ColorLib.ROOT_SIGNAL_MATRIX},
+            {SignalType.Cluster, ColorLib.ROOT_MASTER_CLUSTER},
             {SignalType.Scan, ColorLib.ROOT_SIGNAL_SCAN},
             {SignalType.Thermo, ColorLib.ROOT_SIGNAL_THREMO},
             {SignalType.Firewall, ColorLib.ROOT_SIGNAL_FIREWALL},
@@ -30,7 +31,7 @@ namespace ROOT.SetupAsset
             }
             catch (KeyNotFoundException)
             {
-                Debug.LogError("Key " + SignalType.Matrix + " is not present in Color Lib, please add.");
+                Debug.LogError("Key " + signalType + " is not present in Color Lib, please add.");
             }
             return Color.clear;
         }

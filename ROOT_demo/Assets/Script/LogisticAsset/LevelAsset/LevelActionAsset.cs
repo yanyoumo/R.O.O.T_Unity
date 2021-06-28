@@ -19,16 +19,16 @@ namespace ROOT.SetupAsset
         [Header("Basic Data"),PropertyOrder(-99)]
         public string TitleTerm;
 
-        [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-99)]
+        [AssetSelector(Filter = "t:Sprite", Paths = "Assets/Resources/UIThumbnail/TutorialThumbnail"),PropertyOrder(-98)]
         public Sprite Thumbnail;
 
-        [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab"),PropertyOrder(-98)]
+        [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab"),PropertyOrder(-97)]
         public GameObject LevelLogic;
 
-        [PropertyOrder(-97)] 
-        public int AcessID = -1;
+        /*[PropertyOrder(-97)] 
+        public int AcessID = -1;*/
         
-        [Range(0, 1000),PropertyOrder(-96)] 
+        [Range(0, 10000),PropertyOrder(-96)] 
         public int InitialCurrency = 36;
 
         [HorizontalGroup("Split")] [VerticalGroup("Split/Left")] [LabelText("Shop has cost")][PropertyOrder(-95)]
