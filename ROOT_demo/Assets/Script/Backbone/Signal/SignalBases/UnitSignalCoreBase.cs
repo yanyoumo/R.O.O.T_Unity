@@ -26,6 +26,9 @@ namespace ROOT.Signal
 
         public SignalData CorrespondingSignalData => SignalDataPackList[SignalType];
 
+        protected bool IsActiveFieldUnitThisSignal(Unit u) => u.SignalCore.IsUnitActive && u.UnitSignal == SignalType && u.UnitHardware == HardwareType.Field;
+        protected bool IsActiveUnitThisSignal(Unit u) => u.SignalCore.IsUnitActive && u.UnitSignal == SignalType;
+        
         public void ResetSignalStrengthComplex()
         {
             SignalDataPackList = new SignalDataPack();
