@@ -888,7 +888,7 @@ MonoBehaviour:
   - ActionIdx: 8
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u67D0\u4E2A\u96C6\u7FA4\u573A\u5355\u5143<b>\u56DB\u65B9\u5411\u76F8\u90BB</b>\u7684\u6FC0\u6D3B\u7684\u96C6\u7FA4\u5355\u5143\u8D8A\u591A\uFF0C\u90A3\u4E48\u5B83\u7684\u6536\u5165\u5C31\u4F1A\u8D8A\u591A\u3002"
+    Text: "\u67D0\u4E2A\u96C6\u7FA4\u573A\u5355\u5143<b>\u516B\u65B9\u5411\u5468\u56F4</b>\u7684\u6FC0\u6D3B\u7684\u96C6\u7FA4\u5355\u5143\u8D8A\u591A\uFF0C\u90A3\u4E48\u5B83\u7684\u6536\u5165\u5C31\u4F1A\u8D8A\u591A\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1029,7 +1029,7 @@ MonoBehaviour:
     HandOnCheckType: 35
     HandOnFailedType: 0
     HandsOnLockRound: 0
-    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u76C8\u5229\u63D0\u5347\u523020\u5143\u3002"
+    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u76C8\u5229\u63D0\u5347\u523016\u5143\u3002"
     TimeOutSec: 60
     TargetTag: 0
     Set: 0
