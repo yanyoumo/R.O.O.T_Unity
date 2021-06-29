@@ -25,14 +25,14 @@ namespace ROOT.UI
         
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log("OnPointerEnter");
+            //Debug.Log("OnPointerEnter");
             TooltipUI.ActiveTooltip(SignalInfo);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Debug.Log("OnPointerExit");
             TooltipUI.DeactivateTooltip();
+            //Debug.Log("OnPointerExit");
         }
     }
 }

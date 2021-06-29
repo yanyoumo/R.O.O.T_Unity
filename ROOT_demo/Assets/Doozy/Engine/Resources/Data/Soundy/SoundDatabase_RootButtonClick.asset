@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-3137852599425451614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6c631d933489d4ca7328a2a5983e10, type: 3}
+  m_Name: No Sound
+  m_EditorClassIdentifier: 
+  DatabaseName: ROOT SFX
+  SoundName: No Sound
+  IgnoreListenerPause: 1
+  Volume:
+    MinValue: 0
+    MaxValue: 0
+  Pitch:
+    MinValue: 0
+    MaxValue: 0
+  SpatialBlend: 0
+  Loop: 0
+  Mode: 0
+  ResetSequenceAfterInactiveTime: 0
+  SequenceResetTime: 5
+  Sounds: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b400ee936d64d0e93e3892c7c321e09, type: 3}
+  m_Name: SoundDatabase_RootButtonClick
+  m_EditorClassIdentifier: 
+  DatabaseName: ROOT SFX
+  OutputAudioMixerGroup: {fileID: -1489326983134835930, guid: ca584b4b0c19c554fb4fb1459ddcba12,
+    type: 2}
+  SoundNames:
+  - No Sound
+  - Cool UI Button
+  - No Sound
+  Database:
+  - {fileID: -3137852599425451614}
+  - {fileID: 1620857320307788667}
+--- !u!114 &1620857320307788667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6c631d933489d4ca7328a2a5983e10, type: 3}
+  m_Name: Cool UI Button
+  m_EditorClassIdentifier: 
+  DatabaseName: ROOT SFX
+  SoundName: Cool UI Button
+  IgnoreListenerPause: 1
+  Volume:
+    MinValue: 0
+    MaxValue: 0
+  Pitch:
+    MinValue: 0
+    MaxValue: 0
+  SpatialBlend: 0
+  Loop: 0
+  Mode: 0
+  ResetSequenceAfterInactiveTime: 0
+  SequenceResetTime: 5
+  Sounds:
+  - AudioClip: {fileID: 8300000, guid: 16218b869fb9dab4780f7dab5dac5863, type: 3}
+    Weight: 1

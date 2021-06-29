@@ -23,17 +23,17 @@ MonoBehaviour:
     SerializationNodes: []
   TitleTerm: LevelName_GL6
   Thumbnail: {fileID: 21300000, guid: 57d26bcf687e24a41b96ffb61343fabc, type: 3}
-  LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
+  LevelLogic: {fileID: 485162502774370968, guid: 93fcf6610650a564f859c0167f0cf4a1,
     type: 3}
   AcessID: 2
   InitialCurrency: 0
   ShopCost: 1
   UnitCost: 1
-  levelType: 0
+  levelType: 1
   IsTestingLevel: 0
   UnlockScanToggleLevel: 0
   IsScanLevel: 0
-  LevelFeature: 2
+  LevelFeature: 62
   DisplayedlevelType: 1
   LevelInfo: 
   StoryContent: 

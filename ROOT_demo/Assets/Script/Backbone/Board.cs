@@ -155,7 +155,7 @@ namespace ROOT
             {
                 var unit = _unitsGameObjects[vector2Int].GetComponentInChildren<Unit>();
 
-                if ((unit.UnitSignal == SignalType.Matrix && unit.UnitHardware == HardwareType.Field) ||
+                if ((unit.UnitSignal == SignalType.Cluster && unit.UnitHardware == HardwareType.Field) ||
                     ((unit.UnitSignal == SignalType.Scan && unit.UnitHardware == HardwareType.Field) &&
                      unit.SignalCore.InServerGrid && unit.SignalCore.ScanSignalPathDepth == 1))
                 {
@@ -329,7 +329,7 @@ namespace ROOT
                 return additionalGameSetup.PlayingSignalTypeB;
             }
 
-            return SignalType.Matrix;
+            return SignalType.Cluster;
         }
 
         private void CreateUnitByGists(UnitGist[] unitGists, AdditionalGameSetup additionalGameSetup)

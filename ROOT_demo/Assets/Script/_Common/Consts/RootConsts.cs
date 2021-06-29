@@ -15,11 +15,25 @@ namespace ROOT.Consts
 
         public static readonly float BlinkSingleDuration = 0.1f;
         public static readonly float BlinkTransferInterval = 0.05f;
-        
+
         public static readonly float DefaultAnimationDuration = 0.15f; //都是秒
         public static readonly float AutoAnimationDuration = 1.5f; //都是秒
+
+        public static IEnumerable<Vector2Int> V2Int4DirLib => _4dir;
+        public static IEnumerable<Vector2Int> V2Int8DirLib => _8dir;
+
+        //N/S/W/E
+        private static Vector2Int[] _4dir = {Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right};
+
+        //N/S/W/E/NE/NW/SE/SW
+        private static Vector2Int[] _8dir =
+        {
+            Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right,
+            Vector2Int.up + Vector2Int.right, Vector2Int.up + Vector2Int.left,
+            Vector2Int.down + Vector2Int.right, Vector2Int.down + Vector2Int.left
+        };
     }
-    
+
     public static class GlobalResourcePath
     {
         public static string UNIT_MAT_PATH_PREFIX = "Unit/Material/";

@@ -126,6 +126,37 @@ namespace ROOT.Signal
 
         public static explicit operator SignalPath(List<Unit> path) => new SignalPath(path);
 
+        //这个算法也没用，因为新矩阵找岛是跨越信号的。
+        public List<List<Vector2Int>> GetSignalIsLandOnPath(SignalType _signalType)
+        {
+            var isLandCounter = -1;
+            var isLandBreaker = true;
+            var res = new List<List<Vector2Int>>();
+            List<Vector2Int> localIsland = new List<Vector2Int>();
+            foreach (var unit in _core)
+            {
+                if (isLandBreaker && unit.UnitSignal == _signalType)
+                {
+                    isLandCounter++;
+                    isLandBreaker = false;
+                    localIsland = new List<Vector2Int> {unit.CurrentBoardPosition};
+                    continue;
+                }
+
+                if (!isLandBreaker && unit.UnitSignal != _signalType)
+                {
+                    isLandBreaker = true;
+                    res.Add(localIsland.Select(p => p).ToList());
+                    continue;
+                }
+
+                if (!isLandBreaker)
+                {
+                    localIsland.Add(unit.CurrentBoardPosition);
+                }
+            }
+            return res;
+        }
         
         public override bool Equals(object obj)
         {
@@ -326,11 +357,18 @@ namespace ROOT.Signal
             return GetUnitAssetByUnitType(signalType, genre).UnitPrice;
         }
 
+        /*[Obsolete]
         public Material GetMatByUnitType(SignalType signalType, HardwareType genre)
         {
-            return GetUnitAssetByUnitType(signalType, genre).UnitMat;
-        }
+            throw new NotImplementedException();
+            //return GetUnitAssetByUnitType(signalType, genre).UnitMat;
+        }*/
 
+        public Sprite GetSpriteIconByUnitType(SignalType signalType, HardwareType genre)
+        {
+            return GetUnitAssetByUnitType(signalType, genre).IconSprite;
+        }
+        
         public String GetSignalNameTerm(SignalType signalType)
         {
             return signalAssetLib[signalType].SignalNameTerm;
@@ -386,12 +424,11 @@ namespace ROOT.Signal
             }
         }
 
-        public SignalPathLib Paths => _paths == null ? new SignalPathLib() : _paths;
-        private SignalPathLib _paths;
+        public SignalPathLib Paths { private set; get; }
 
         private void RefreshBoardSelectedSignalStrength(Board board, SignalType[] selectedTypes)
         {
-            _paths = new SignalPathLib();
+            Paths = new SignalPathLib();
             board.Units.Select(u => u.SignalCore).ForEach(s => s.ResetSignalStrengthComplex());
             foreach (var signalAssetBase in signalAssetLib.Where(v => selectedTypes.Contains(v.Key)).Select(v => v.Value))
             {
@@ -401,6 +438,22 @@ namespace ROOT.Signal
         }
         
         #region Delegate
+
+        public IEnumerable<Unit> GetActiveUnitByUnitType(SignalType type, HardwareType hwType)
+        {
+            var data = new List<Unit>();
+            try
+            {
+                Instance.Paths[type].ForEach(u => data.AddRange(u.Where(u0 => u0.UnitSignal == type && u0.UnitHardware == hwType && u0.SignalCore.IsUnitActive)));
+            }
+            catch (KeyNotFoundException)
+            {
+                Debug.LogWarning("Targeting Signal not found, Getting skipped");
+            }
+
+            return data.Distinct();
+        }
+
         public bool ShowSignal(SignalType type, RotationDirection dir, Unit unit, Unit otherUnit)
         {
             return signalAssetLib[type].ShowSignal(dir, unit, otherUnit);

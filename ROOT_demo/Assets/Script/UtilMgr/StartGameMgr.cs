@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using DG.Tweening;
 using ROOT.Consts;
 using ROOT.LevelAccessMgr;
 using ROOT.RootMath;
 using ROOT.SetupAsset;
+using ROOT.Signal;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -71,6 +73,17 @@ namespace ROOT
             PlayerPrefs.Save();
         }
 
+        /*public int[] data;
+        
+        [Button]
+        public void ParallelTest()
+        {
+            foreach (var i in data.AsParallel())
+            {
+                Debug.Log(i);
+            }
+        }*/
+        
         private void SetUpPlayerPrefs()
         {
             if (!PlayerPrefs.HasKey(PLAYER_ID)) PlayerPrefs.SetInt(PLAYER_ID, DateTime.UtcNow.Millisecond);

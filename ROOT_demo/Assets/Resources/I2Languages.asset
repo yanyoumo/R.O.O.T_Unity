@@ -631,6 +631,14 @@ MonoBehaviour:
       - Thermo
       Flags: 0000
       Languages_Touch: []
+    - Term: Signal_Name_Cluster
+      TermType: 0
+      Description: 
+      Languages:
+      - "\u96C6\u7FA4"
+      - Cluster
+      Flags: 0000
+      Languages_Touch: []
     - Term: Signal_Name_Firewall
       TermType: 0
       Description: 
@@ -683,7 +691,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u4E0A\u624B\u8BD5\u8BD5-6"
+      - "\u4E00\u8F6E\u878D\u8D44"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -691,7 +699,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u4E0A\u624B\u8BD5\u8BD5-7"
+      - "\u4E8C\u8F6E\u878D\u8D44"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -747,7 +755,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u77E9\u9635\u4E13\u7CBE"
+      - "\u96C6\u7FA4\u57FA\u7840"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -755,7 +763,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u70ED\u529B\u4E13\u7CBE"
+      - "\u9632\u706B\u5899\u57FA\u7840"
       - Pending
       Flags: 0000
       Languages_Touch: []
@@ -763,7 +771,7 @@ MonoBehaviour:
       TermType: 0
       Description: 
       Languages:
-      - "\u9632\u706B\u5899\u4E13\u7CBE"
+      - "\u8FD8\u5F97\u878D\u8D44"
       - Pending
       Flags: 0000
       Languages_Touch: []

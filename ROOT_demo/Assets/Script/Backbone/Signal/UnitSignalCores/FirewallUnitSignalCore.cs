@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ROOT.Consts;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -15,11 +16,19 @@ namespace ROOT.Signal
         [ShowInInspector] public override SignalType SignalType => SignalType.Firewall;
 
         //只要这么写，查询任何一个在圈内防火墙单元返回的都是全部的面积。上层轮询的时候反正是distinct的，所以理论上无所谓。
-        public override List<Vector2Int> SingleInfoCollectorZone => FirewallSignalAsset.CurrentFirewallCircle.Contains(Owner.CurrentBoardPosition) ? FirewallSignalAsset.CurrentFirewallCircle : new List<Vector2Int>();
+        public override List<Vector2Int> SingleInfoCollectorZone
+        {
+            get
+            {
+                //TODO 这个还得改，这个不太行。
+                return FirewallSignalAsset.CurrentFirewallCircle.Contains(Owner.CurrentBoardPosition)
+                    ? FirewallSignalAsset.CurrentFirewallCircle
+                    : new List<Vector2Int>();
+            }
+        }
 
         private List<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(2).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
-
-        private int NeighbouringFirewallUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitSignal == SignalType.Firewall);
+        private int NeighbouringFirewallUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitHardware == HardwareType.Field && u.SignalCore.IsUnitActive && u.UnitSignal == SignalType.Firewall);
         
         private const int perFirewallFieldUnitPrice = 1;//这个系数一定要往上调。
 
@@ -44,15 +53,17 @@ namespace ROOT.Signal
                 return;
             }
 
-            for (var i = 0; i < neighbouringOffsetList.Length; i++)
+            var _8DirArray = StaticNumericData.V2Int8DirLib.ToArray();
+            
+            for (var i = 0; i < _8DirArray.Length; i++)
             {
-                var inquiryBoardPos = Owner.CurrentBoardPosition + neighbouringOffsetList[i];
+                var inquiryBoardPos = Owner.CurrentBoardPosition + _8DirArray[i];
                 var displayIcon = false;
                 if (GameBoard != null && GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos))
                 {
                     var otherUnit = GameBoard.FindUnitByPos(inquiryBoardPos);
                     Debug.Assert(otherUnit != null);
-                    displayIcon = otherUnit.UnitSignal == SignalType.Firewall;
+                    displayIcon = otherUnit.SignalCore.IsUnitActive && otherUnit.UnitHardware == HardwareType.Field && (otherUnit.UnitSignal == SignalType.Firewall);
                 }
 
                 switch (NeighbouringFirewallUnitCount)

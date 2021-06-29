@@ -76,6 +76,7 @@ namespace I2.Loc
 		public static string Scan_Core 		{ get{ return LocalizationManager.GetTranslation ("Scan Core"); } }
 		public static string SelectTwoCore 		{ get{ return LocalizationManager.GetTranslation ("SelectTwoCore"); } }
 		public static string Shop 		{ get{ return LocalizationManager.GetTranslation ("Shop"); } }
+		public static string Signal_Name_Cluster 		{ get{ return LocalizationManager.GetTranslation ("Signal_Name_Cluster"); } }
 		public static string Signal_Name_Firewall 		{ get{ return LocalizationManager.GetTranslation ("Signal_Name_Firewall"); } }
 		public static string Signal_Name_Matrix 		{ get{ return LocalizationManager.GetTranslation ("Signal_Name_Matrix"); } }
 		public static string Signal_Name_Scan 		{ get{ return LocalizationManager.GetTranslation ("Signal_Name_Scan"); } }
@@ -174,6 +175,7 @@ namespace I2.Loc
 		public const string Scan_Core = "Scan Core";
 		public const string SelectTwoCore = "SelectTwoCore";
 		public const string Shop = "Shop";
+		public const string Signal_Name_Cluster = "Signal_Name_Cluster";
 		public const string Signal_Name_Firewall = "Signal_Name_Firewall";
 		public const string Signal_Name_Matrix = "Signal_Name_Matrix";
 		public const string Signal_Name_Scan = "Signal_Name_Scan";

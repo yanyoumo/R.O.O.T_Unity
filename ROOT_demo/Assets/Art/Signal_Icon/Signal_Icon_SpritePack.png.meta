@@ -26,6 +26,12 @@ TextureImporter:
   - first:
       213: -8162966790791693269
     second: Signal_Icon_SpritePack_7
+  - first:
+      213: -7064792715097363438
+    second: Signal_Icon_SpritePack_8
+  - first:
+      213: 3225883514793263581
+    second: Signal_Icon_SpritePack_9
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -119,9 +125,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1
-        y: 683
-        width: 340
-        height: 340
+        y: 517
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -139,10 +145,10 @@ TextureImporter:
       name: Signal_Icon_SpritePack_1
       rect:
         serializedVersion: 2
-        x: 342
-        y: 683
-        width: 340
-        height: 340
+        x: 259
+        y: 517
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,10 +166,10 @@ TextureImporter:
       name: Signal_Icon_SpritePack_2
       rect:
         serializedVersion: 2
-        x: 682
-        y: 683
-        width: 340
-        height: 340
+        x: 517
+        y: 517
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,10 +187,10 @@ TextureImporter:
       name: Signal_Icon_SpritePack_3
       rect:
         serializedVersion: 2
-        x: 1
-        y: 342
-        width: 340
-        height: 340
+        x: 775
+        y: 517
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -202,10 +208,10 @@ TextureImporter:
       name: Signal_Icon_SpritePack_4
       rect:
         serializedVersion: 2
-        x: 342
-        y: 342
-        width: 340
-        height: 340
+        x: 1
+        y: 259
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -223,10 +229,10 @@ TextureImporter:
       name: Signal_Icon_SpritePack_5
       rect:
         serializedVersion: 2
-        x: 683
-        y: 342
-        width: 340
-        height: 340
+        x: 259
+        y: 259
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -244,10 +250,10 @@ TextureImporter:
       name: Signal_Icon_SpritePack_6
       rect:
         serializedVersion: 2
-        x: 1
-        y: 1
-        width: 340
-        height: 340
+        x: 517
+        y: 259
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -265,10 +271,10 @@ TextureImporter:
       name: Signal_Icon_SpritePack_7
       rect:
         serializedVersion: 2
-        x: 342
+        x: 1
         y: 1
-        width: 340
-        height: 340
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -278,6 +284,48 @@ TextureImporter:
       bones: []
       spriteID: b2cfc89f3f057be80800000000000000
       internalID: -8162966790791693269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Signal_Icon_SpritePack_8
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21caadcd470d4fd90800000000000000
+      internalID: -7064792715097363438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Signal_Icon_SpritePack_9
+      rect:
+        serializedVersion: 2
+        x: 517
+        y: 1
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd18a0a17f3a4cc20800000000000000
+      internalID: 3225883514793263581
       vertices: []
       indices: 
       edges: []

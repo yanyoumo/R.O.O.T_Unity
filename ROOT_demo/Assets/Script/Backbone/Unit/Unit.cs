@@ -48,6 +48,8 @@ namespace ROOT
         public MeshRenderer AdditionalClampMesh;
         public Material BuyingMat;
         public Material ImmovableMat;
+        public SpriteRenderer CoreSpriteRenderer;
+        public SpriteRenderer FieldSpriteRenderer;
 
         public Transform ShopBackPlane;
         public Transform ShopDiscountRoot;
@@ -446,6 +448,7 @@ namespace ROOT
             Debug.Assert(sides.Length == 4);
             InitUnit(signal, genre, sides[0], sides[1], sides[2], sides[3], tier, gameBoard, unitTag);
         }
+
         private void InitUnit(SignalType signal, HardwareType genre,
             SideType lNSide, SideType lSSide, SideType lWSide, SideType lESide,
             int tier, Board gameBoard, UnitTag _unitTag)
@@ -459,7 +462,11 @@ namespace ROOT
             UnitSides.Add(RotationDirection.West, lWSide);
             UnitSides.Add(RotationDirection.East, lESide);
 
-            _coreMeshRenderer.material = SignalMasterMgr.Instance.GetMatByUnitType(signal, genre);
+            //_coreMeshRenderer.material = SignalMasterMgr.Instance.GetMatByUnitType(signal, genre);
+            CoreSpriteRenderer.sprite = SignalMasterMgr.Instance.GetSpriteIconByUnitType(signal, genre);
+            FieldSpriteRenderer.sprite = SignalMasterMgr.Instance.GetSpriteIconByUnitType(signal, genre);
+            CoreSpriteRenderer.enabled = genre == HardwareType.Core;
+            FieldSpriteRenderer.enabled = genre == HardwareType.Field;
 
             InitConnector(_localNorthConnector, lNSide, signalColorA, signalColorB);
             InitConnector(_localEastConnector, lESide, signalColorA, signalColorB);
@@ -491,6 +498,7 @@ namespace ROOT
                 SignalCore.SignalCoreInit();
             }
         }
+
         public override int GetHashCode()
         {
             var A = CurrentBoardPosition.GetHashCode();

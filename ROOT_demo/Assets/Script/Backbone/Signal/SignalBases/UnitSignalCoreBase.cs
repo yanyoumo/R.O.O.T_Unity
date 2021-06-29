@@ -13,6 +13,8 @@ namespace ROOT.Signal
 {
     public abstract class UnitSignalCoreBase : MonoBehaviour
     {
+        //[ShowInInspector] public int MatrixVal=> SignalDataPackList[SignalType.Matrix].SignalDepth;
+
         [ReadOnly]public Unit Owner;
         protected Board GameBoard => Owner.GameBoard;
         //返回对应的信号的enum
@@ -112,7 +114,7 @@ namespace ROOT.Signal
         }
 
         //N/E/W/S/NE/NW/SE/SW
-        protected readonly Vector2Int[] neighbouringOffsetList =
+        /*protected readonly Vector2Int[] neighbouringOffsetList =
         {
             Vector2Int.up,
             Vector2Int.right,
@@ -122,7 +124,7 @@ namespace ROOT.Signal
             Vector2Int.up + Vector2Int.left,
             Vector2Int.down + Vector2Int.right,
             Vector2Int.down + Vector2Int.left
-        };
+        };*/
 
         protected Vector2Int cachedCursorPos { private set; get; } = -Vector2Int.one;
 
