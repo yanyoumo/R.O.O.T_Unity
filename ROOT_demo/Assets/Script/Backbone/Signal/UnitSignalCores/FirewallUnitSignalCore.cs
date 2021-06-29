@@ -10,7 +10,7 @@ namespace ROOT.Signal
 {
     public class FirewallUnitSignalCore : UnitSignalCoreBase
     {
-        //TODO 这个数据可以考虑直接写进去。
+        //这个数据对于已有的1~5的Tier粒度不够。可能要比较极限的数据配置。可能改四方向。
         private float[] scoreMultiplier = {0.3f, 0.65f, 1.0f, 0.9f, 0.8f, 0.7f, 0.5f, 0.3f, 0.1f};
         
         [ShowInInspector] public override SignalType SignalType => SignalType.Firewall;
