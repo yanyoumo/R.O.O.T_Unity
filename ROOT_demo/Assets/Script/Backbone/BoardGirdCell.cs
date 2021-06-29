@@ -231,7 +231,7 @@ namespace ROOT
             BoardStrokeMesh.material.color = NormalStrokeColor;
         }
 
-        private int GetCashIO()
+        private float GetCashIO()
         {
             if (!_boardCouldIOCurrency) return 0;
 
@@ -241,7 +241,7 @@ namespace ROOT
 
                 var unit=owner.FindUnitByPos(OnboardPos);
                 if (unit == null) throw new ArgumentException();
-                return Mathf.RoundToInt(unit.SignalCore.SingleUnitScore) - HeatSinkCost;
+                return unit.SignalCore.SingleUnitScore - HeatSinkCost;
             }
 
             if (owner.CheckBoardPosValidAndEmpty(OnboardPos)) return 0;
@@ -249,8 +249,49 @@ namespace ROOT
             return -HeatSinkCost;
         }
 
+        private void SetText(float number)
+        {
+            var numberAsString = "";
+            
+            if (Math.Abs(number)>9.9f)
+            {
+                numberAsString = (number >= 0 ? "+" : "-") + Common.Utils.PaddingNum2Digit(Math.Abs(Mathf.RoundToInt(number)));
+            }
+            else if (number!=0.0f)
+            {
+                numberAsString = (number >= 0 ? "+" : "-") + Math.Abs(number).ToString("F1");
+            }
+            else
+            {
+                numberAsString = "+00";
+            }
 
-        private void SetText(int number)
+            if (!_boardCouldIOCurrency)
+            {
+                CashingText.color = NeutralCashColoring;
+                CashingText.text = "---";
+                return;
+            }
+
+            CashingText.text = numberAsString;
+
+            if (!_unitCouldGenerateIncome)
+            {
+                CashingText.color = number == 0 ? NeutralCashColoring : NegativeCashColoring;
+                return;
+            }
+
+            if (number != 0)
+            {
+                CashingText.color = number > 0 ? PositiveCashColoring : NegativeCashColoring;
+                return;
+            }
+
+            var nonEmptyColoring = _cellStatus == CellStatus.Warning ? NegativeCashColoring : PositiveCashColoring;
+            CashingText.color = owner.CheckBoardPosValidAndEmpty(OnboardPos) ? NeutralCashColoring : nonEmptyColoring;
+        }
+
+        /*private void SetText_Int(int number)
         {
             var numberAsString = (number >= 0 ? "+" : "-") + Common.Utils.PaddingNum2Digit(Math.Abs(number));
             
@@ -277,7 +318,7 @@ namespace ROOT
 
             var nonEmptyColoring = _cellStatus == CellStatus.Warning ? NegativeCashColoring : PositiveCashColoring;
             CashingText.color = owner.CheckBoardPosValidAndEmpty(OnboardPos) ? NeutralCashColoring : nonEmptyColoring;
-        }
+        }*/
 
         private void Update()
         {

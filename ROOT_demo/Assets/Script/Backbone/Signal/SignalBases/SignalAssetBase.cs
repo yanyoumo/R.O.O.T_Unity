@@ -56,7 +56,7 @@ namespace ROOT.Signal
             hardwareCount = targetSignalCore.Count(s => s.IsUnitActive);
             signalCount = targetSignalCore.Where(s => s.IsUnitActive).Sum(u => u.Owner.Tier);
             //
-            return targetSignalCore.Sum(s => Mathf.Round(s.SingleUnitScore));
+            return targetSignalCore.Sum(s => s.SingleUnitScore);
         }
 
         public virtual IEnumerable<SignalPath> FindAllPathSingleLayer(Board board)

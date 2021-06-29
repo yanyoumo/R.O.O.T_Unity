@@ -18,7 +18,7 @@ namespace ROOT
         public bool Succeed = false;
         public string SuccessTerm = "";
         public string FailedTerm = "";
-        public int ValueInt = 0;
+        public float ValueFloat = 0;
     }
 
     public class GameOverMgr : MonoBehaviour
@@ -143,7 +143,7 @@ namespace ROOT
             }
 
             EndingTitleLocalize.Term = GameOver;
-            EndingMessageParam.SetParameterValue("VALUE", _lastGameAssets.GameOverAsset.ValueInt.ToString());
+            EndingMessageParam.SetParameterValue("VALUE", _lastGameAssets.GameOverAsset.ValueFloat.ToString("F0"));
             EndingMessageLocalize.Term = _lastGameAssets.GameOverAsset.Succeed
                 ? _lastGameAssets.GameOverAsset.SuccessTerm
                 : _lastGameAssets.GameOverAsset.FailedTerm;

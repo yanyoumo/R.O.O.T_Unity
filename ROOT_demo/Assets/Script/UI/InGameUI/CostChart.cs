@@ -80,7 +80,12 @@ namespace ROOT.UI
         private BossStageType bossType = BossStageType.Telemetry;
 
         protected virtual void UpdateIncomeUI() => UpdateIncomeVal(_cached_incomesVal);
-        
+
+        private void CostChartUpdateCore(float currencyVal, float incomesVal, float baseincomesVal, float bonusincomesVal)
+        {
+            CostChartUpdateCore(Mathf.RoundToInt(currencyVal), Mathf.RoundToInt(incomesVal), Mathf.RoundToInt(baseincomesVal), Mathf.RoundToInt(bonusincomesVal));
+        }
+
         private void CostChartUpdateCore(int currencyVal, int incomesVal, int baseincomesVal, int bonusincomesVal)
         {
             //Debug.Log("CostChartUpdateCore");

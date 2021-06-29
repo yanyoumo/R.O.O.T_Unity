@@ -326,7 +326,7 @@ namespace ROOT
         protected override void populateGameOverAsset(ref GameOverAsset _gameOverAsset)
         {
             base.populateGameOverAsset(ref _gameOverAsset);
-            _gameOverAsset.ValueInt = TotalSprayCount;//TODO 这个东西有问题。没有在哪记录
+            _gameOverAsset.ValueFloat = TotalSprayCount;//TODO 这个东西有问题。没有在哪记录
         }
         
         protected override Dictionary<BreakingCommand, Action> RootFSMBreakings

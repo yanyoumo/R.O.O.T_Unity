@@ -297,7 +297,7 @@ namespace ROOT
             }
         }
 
-        protected virtual int GetBonusInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore) * (LevelAsset.CurrencyRebate - 1.0f));//BUG 这个数据有问题？没有实质的加上去？
+        protected virtual float GetBonusInCome() => (TypeASignalScore + TypeBSignalScore) * (LevelAsset.CurrencyRebate - 1.0f);//BUG 这个数据有问题？没有实质的加上去？
         
         protected override void BoardUpdatedHandler(IMessage rMessage)
         {
@@ -327,7 +327,7 @@ namespace ROOT
             {
                 SuccessTerm = SucceedEndingTerm,
                 FailedTerm = FailedEndingTerm,
-                ValueInt = LevelAsset.GameCurrencyMgr.CurrencyDiffFromStartToNow,
+                ValueFloat = LevelAsset.GameCurrencyMgr.CurrencyDiffFromStartToNow,
             };
         }
 
