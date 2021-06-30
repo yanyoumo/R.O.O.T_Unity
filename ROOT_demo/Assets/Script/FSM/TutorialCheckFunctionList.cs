@@ -23,6 +23,12 @@ namespace ROOT
         AtLeastUseFastForwardOneTime = 30,
         UseBackward = 31,
         UseTransferToConnectUnits = 32,
+        ConnectAllCusterUnits = 33,
+        ConnectAllFirewallUnits = 34,
+        Reach16Benefit = 35,
+        Reach10Benefit = 36,
+        Reach12Benefit = 37,
+        Reach14Benefit = 38,
 
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
         CustomCheckGameplay0 = 250,
@@ -175,6 +181,23 @@ namespace ROOT
                    board.Units.Where(unit => unit.CheckType(SignalType.Cluster, HardwareType.Core)).Any(unit =>
                        unit.GetConnectedOtherUnit.Count(fieldUnit =>
                            fieldUnit.CheckType(SignalType.Cluster, HardwareType.Field)) == 4);
+        }
+
+        public static bool ConnectAllCusterUnit(FSMLevelLogic fsm, Board board) => ConnectAllUnitByType(board, SignalType.Cluster);
+        public static bool ConnectAllFirewallUnit(FSMLevelLogic fsm, Board board) => ConnectAllUnitByType(board, SignalType.Firewall);
+        public static bool ReachBenefitOf16(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 16);
+        public static bool ReachBenefitOf10(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 10);
+        public static bool ReachBenefitOf12(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 12);
+        public static bool ReachBenefitOf14(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 14);
+        
+        private static bool ConnectAllUnitByType(Board board, SignalType _signalType)
+        {
+            return board.Units.Where(u => u.SignalCore.SignalType == _signalType).All(u => u.SignalCore.IsUnitActive);
+        }
+        
+        private static bool ReachBenefit(FSMLevelLogic fsm,int Target)
+        {
+            return fsm.LevelAsset.DeltaCurrency >= Target;
         }
     }
 }

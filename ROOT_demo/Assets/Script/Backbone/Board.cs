@@ -31,7 +31,7 @@ namespace ROOT
     public partial class BoardGirdCell
     {
         public int HeatSinkID { get; internal set; }//Always Positive.
-        public int HeatSinkCost { get; internal set; }//Always Positive.
+        public int HeatSinkCost { get; internal set; }//Always Positive. 这个可以是Int
     }
 
     public partial class Unit

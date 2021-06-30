@@ -11,8 +11,8 @@ namespace ROOT.Signal
     {
         [ShowInInspector] public override SignalType SignalType => SignalType.Cluster;
         
-        private const int perMatrixFieldUnitPrice = 1;
-        private float[] scoreMultiplier = {0.075f, 0.25f, 0.5f, 0.75f, 1.0f};
+        private const int perClusterFieldUnitPrice = 1;
+        private readonly float[] scoreMultiplier = {0.2f, 0.3f, 0.4f, 0.5f, 0.75f, 1f, 1.5f, 2f, 2.5f};
 
         public override List<Vector2Int> SingleInfoCollectorZone
         {
@@ -51,25 +51,24 @@ namespace ROOT.Signal
                 return;
             }
 
-            var _4DirArray = StaticNumericData.V2Int4DirLib.ToArray();
+            var _8DirArray = StaticNumericData.V2Int8DirLib.ToArray();
 
-            for (var i = 0; i < _4DirArray.Length; i++)
+            for (var i = 0; i < _8DirArray.Length; i++)
             {
-                var inquiryBoardPos = Owner.CurrentBoardPosition + _4DirArray[i];
+                var inquiryBoardPos = Owner.CurrentBoardPosition + _8DirArray[i];
                 var displayIcon = false;
                 if (GameBoard != null && GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos))
                 {
                     var otherUnit = GameBoard.FindUnitByPos(inquiryBoardPos);
                     Debug.Assert(otherUnit != null);
-                    displayIcon = IsActiveFieldUnitThisSignal(otherUnit);
+                    displayIcon = IsActiveUnitThisSignal(otherUnit);
                 }
                 Owner.UnitNeighbouringRendererRoot.LinkageIcons[i].gameObject.SetActive(displayIcon && ShowingNeighbouringLinkage);
             }
         }
-
-        private bool IsActiveFieldUnitThisSignal(Unit u) => u.SignalCore.IsUnitActive && u.UnitSignal == SignalType && u.UnitHardware == HardwareType.Field;
-        private IEnumerable<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(1).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
-        private int NeighbouringClusterUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && IsActiveFieldUnitThisSignal(u));
-        public override float SingleUnitScore => IsActiveFieldUnitThisSignal(Owner) ? perMatrixFieldUnitPrice * scoreMultiplier[NeighbouringClusterUnitCount] * Owner.Tier : 0.0f;
+        
+        private IEnumerable<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(2).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
+        private int NeighbClusterUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && IsActiveUnitThisSignal(u));
+        public override float SingleUnitScore => IsActiveFieldUnitThisSignal(Owner) ? perClusterFieldUnitPrice * scoreMultiplier[NeighbClusterUnitCount] * Owner.Tier : 0.0f;
     }
 }
