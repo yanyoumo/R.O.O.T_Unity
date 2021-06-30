@@ -83,8 +83,11 @@ namespace ROOT
             else
             {
                 SetUpHandlingCurrency();
-                //正式游戏自动切第一页先。
-                MessageDispatcher.SendMessage(new HintPageChangedData {Toggle = true, TutorialOrGameplay = false, PageNum = 0});
+                MessageDispatcher.SendMessage(new HintPageChangedData
+                {
+                    Toggle = true, TutorialOrGameplay = false, 
+                    PageNum = 0,PageNums = GamePlayHintPages
+                });
                 WorldExecutor.InitCursor(LevelAsset, new Vector2Int(2, 3));
             }
         }

@@ -64,6 +64,7 @@ namespace ROOT.Message
         public bool Toggle = false;
         public bool AdditiveOrReplace = false;
         public int PageNum = 0;
+        public IEnumerable<int> PageNums;
         public override string Type => WorldEvent.HintScreenChangedEvent;
     }
     
