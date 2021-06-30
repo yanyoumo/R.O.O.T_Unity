@@ -85,10 +85,20 @@ namespace ROOT
                 SetUpHandlingCurrency();
                 MessageDispatcher.SendMessage(new HintPageChangedData
                 {
-                    Toggle = true, TutorialOrGameplay = false, 
-                    PageNum = 0,PageNums = GamePlayHintPages
+                    Toggle = true, TutorialOrGameplay = false,
+                    PageNum = -1, PageNums = GamePlayHintPages
                 });
                 WorldExecutor.InitCursor(LevelAsset, new Vector2Int(2, 3));
+            }
+            
+            if (LevelAsset.ActionAsset.DisplayedlevelType == LevelType.Career)
+            {
+                //RISK 这个是圆锥插方榫，这个有空调一下
+                MessageDispatcher.SendMessage(new HintPageChangedData
+                {
+                    Toggle = true, TutorialOrGameplay = false,
+                    PageNum = -1, PageNums = GamePlayHintPages
+                });
             }
         }
 

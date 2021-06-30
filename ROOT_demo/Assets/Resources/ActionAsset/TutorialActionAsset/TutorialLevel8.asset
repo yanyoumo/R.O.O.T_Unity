@@ -25,7 +25,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: f6a8f0c8d3c9cfa46b57cf90ef50a9cb, type: 3}
   LevelLogic: {fileID: 485162502774370968, guid: afa13f756bdc973499104583a03ad166,
     type: 3}
-  InitialCurrency: 1000
+  InitialCurrency: 0
   ShopCost: 1
   UnitCost: 1
   levelType: 0
@@ -39,6 +39,7 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
+    AdditionalGameplayHintPages: 
   InitalBoard: []
   HasBossRound: 0
   Endless: 1

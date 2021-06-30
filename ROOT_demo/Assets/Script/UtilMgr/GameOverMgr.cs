@@ -107,6 +107,7 @@ namespace ROOT
                 return;
             }
 
+            //RISK DisplayedlevelType == LevelType.Career 部分逻辑有问题。
             if (_lastGameAssets.ActionAsset.DisplayedlevelType == LevelType.Tutorial)
             {
                 Debug.Assert(_lastGameAssets.TutorialCompleted.HasValue);

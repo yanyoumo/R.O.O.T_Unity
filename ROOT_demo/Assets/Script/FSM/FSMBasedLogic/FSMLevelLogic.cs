@@ -30,13 +30,13 @@ namespace ROOT
         [HideInInspector] public bool PendingCleanUp;
         public bool UseTutorialVer = false;
 
-        public IEnumerable<int> GamePlayHintPages
+        protected IEnumerable<int> GamePlayHintPages
         {
             get
             {
-                var res = BaseGamePlayHintPages;
-                res.AddRange(GamePlayHintPagesByLevelType);
-                res.AddRange(LevelAsset.ActionAsset.AdditionalGameSetup.AdditionalGameplayHintPages);
+                var res = BaseGamePlayHintPages.Where(i => true); //Duplicate
+                res = res.Union(GamePlayHintPagesByLevelType);
+                res = res.Union(LevelAsset.ActionAsset.AdditionalGameSetup.AdditionalGameplayHintPages);
                 return res.Distinct();
             }
         }

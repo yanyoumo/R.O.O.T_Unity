@@ -10,7 +10,7 @@ namespace ROOT.SetupAsset
         //这个就稍微有些蠢、这个类需要能静态指定一个默认值、但是struct搞不了这件事儿；就只能用class……
         public SignalType PlayingSignalTypeA;
         public SignalType PlayingSignalTypeB;
-        public int[] AdditionalGameplayHintPages;
+        public int[] AdditionalGameplayHintPages = new int[0];
 
         public bool IsPlayingCertainSignal(SignalType signal)
         {
