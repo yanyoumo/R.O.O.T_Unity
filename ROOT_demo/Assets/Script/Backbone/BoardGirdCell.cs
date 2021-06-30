@@ -71,10 +71,10 @@ namespace ROOT
         public TextMeshPro CashingText;
 
         public Transform CashingTextRoot;
-        
-        public Color NegativeCashColoring;
-        public Color PositiveCashColoring;
-        public Color NeutralCashColoring;
+
+        [ShowInInspector] public Color NegativeCashColoring => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_CASHTEXT_NEG;
+        [ShowInInspector] public Color PositiveCashColoring=> ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_CASHTEXT_POS;
+        [ShowInInspector] public Color NeutralCashColoring => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_CASHTEXT_NEU;
         
         public CellStatus CellStatus
         {
@@ -291,35 +291,6 @@ namespace ROOT
             CashingText.color = owner.CheckBoardPosValidAndEmpty(OnboardPos) ? NeutralCashColoring : nonEmptyColoring;
         }
 
-        /*private void SetText_Int(int number)
-        {
-            var numberAsString = (number >= 0 ? "+" : "-") + Common.Utils.PaddingNum2Digit(Math.Abs(number));
-            
-            if (!_boardCouldIOCurrency)
-            {
-                CashingText.color = NeutralCashColoring;
-                CashingText.text = "---";
-                return;
-            }
-
-            CashingText.text = numberAsString;
-
-            if (!_unitCouldGenerateIncome)
-            {
-                CashingText.color = number == 0 ? NeutralCashColoring : NegativeCashColoring;
-                return;
-            }
-
-            if (number != 0)
-            {
-                CashingText.color = number > 0 ? PositiveCashColoring : NegativeCashColoring;
-                return;
-            }
-
-            var nonEmptyColoring = _cellStatus == CellStatus.Warning ? NegativeCashColoring : PositiveCashColoring;
-            CashingText.color = owner.CheckBoardPosValidAndEmpty(OnboardPos) ? NeutralCashColoring : nonEmptyColoring;
-        }*/
-
         private void Update()
         {
             if (CashingText.enabled)
@@ -336,7 +307,7 @@ namespace ROOT
             {
                 if (!owner.CheckBoardPosValidAndFilled(OnboardPos)) return false;
                 var unit = owner.FindUnitByPos(OnboardPos);
-                return unit != null && unit.UnitHardware == HardwareType.Field;
+                return unit != null && (HeatSinkCost > 0 || unit.UnitHardware == HardwareType.Field);
             }
         }
 

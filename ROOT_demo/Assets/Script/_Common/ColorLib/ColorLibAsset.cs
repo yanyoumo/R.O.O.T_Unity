@@ -124,76 +124,87 @@ namespace ROOT.SetupAsset
         public Color ROOT_MAT_BOARDGRID_ZONE_INFO;
         [PropertyOrder(22)] 
         public Color ROOT_MAT_BOARDGRID_ZONE_SINGLE;
-        [Title("BoardGrid Custom HighLighting")]
+        [Title("BoardGrid CashText")]
         [PropertyOrder(23)]
-        public Color ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_A;
+        [ShowInInspector]
+        [PropertyTooltip("Same as ROOT_UI_HIGHLIGHTING_GREEN")]
+        public Color ROOT_MAT_BOARDGRID_CASHTEXT_POS => ROOT_UI_HIGHLIGHTING_GREEN;
         [PropertyOrder(24)]
-        public Color ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_B;
+        [ShowInInspector]
+        [PropertyTooltip("Same as ROOT_UI_HIGHLIGHTING_RED")]
+        public Color ROOT_MAT_BOARDGRID_CASHTEXT_NEG => ROOT_UI_HIGHLIGHTING_RED;
         [PropertyOrder(25)]
+        public Color ROOT_MAT_BOARDGRID_CASHTEXT_NEU;
+        [Title("BoardGrid Custom HighLighting")]
+        [PropertyOrder(26)]
+        public Color ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_A;
+        [PropertyOrder(27)]
+        public Color ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_B;
+        [PropertyOrder(28)]
         public Color ROOT_MAT_BOARDGRID_CUSTOM_HIGHLIGHTING_C;
         
         [PropertySpace]
         [Title("Destoryer")]
-        [PropertyOrder(26)]
+        [PropertyOrder(29)]
         public Color ROOT_DESTORYER_STRIKING;
-        [PropertyOrder(27)]
+        [PropertyOrder(30)]
         public Color ROOT_DESTORYER_WARNING;
 
         [PropertySpace]
         [Title("Skill")]
-        [PropertyOrder(28)]
-        public Color ROOT_SKILL_NAME_MAIN;
-        [PropertyOrder(29)]
-        public Color ROOT_SKILL_NAME_SUB;
-        [PropertyOrder(30)]
-        public Color ROOT_SKILL_NAME_RMN;
         [PropertyOrder(31)]
-        public Color ROOT_SKILL_SWAP_UNITA;
+        public Color ROOT_SKILL_NAME_MAIN;
         [PropertyOrder(32)]
-        public Color ROOT_SKILL_SWAP_UNITB;
+        public Color ROOT_SKILL_NAME_SUB;
         [PropertyOrder(33)]
+        public Color ROOT_SKILL_NAME_RMN;
+        [PropertyOrder(34)]
+        public Color ROOT_SKILL_SWAP_UNITA;
+        [PropertyOrder(35)]
+        public Color ROOT_SKILL_SWAP_UNITB;
+        [PropertyOrder(36)]
         public Color ROOT_SHOP_CHEAP_PURPLE;
         
         [PropertySpace]
         [Title("Unit Activation LED")]
-        [PropertyOrder(34)]
-        public Color ROOT_UNIT_ACTIVATION_LED_0;
-        [PropertyOrder(35)]
-        public Color ROOT_UNIT_ACTIVATION_LED_1;
-        [PropertyOrder(36)]
-        public Color ROOT_UNIT_ACTIVATION_LED_2;
         [PropertyOrder(37)]
+        public Color ROOT_UNIT_ACTIVATION_LED_0;
+        [PropertyOrder(38)]
+        public Color ROOT_UNIT_ACTIVATION_LED_1;
+        [PropertyOrder(39)]
+        public Color ROOT_UNIT_ACTIVATION_LED_2;
+        [PropertyOrder(40)]
         public Color ROOT_UNIT_ACTIVATION_LED_3;
 
         [PropertySpace] 
         [Title("Cursor")]
-        [PropertyOrder(38)]
+        [PropertyOrder(41)]
         public Color ROOT_CURSOR_DEFAULT;
-        [PropertyOrder(39)]
+        [PropertyOrder(42)]
         public Color ROOT_CURSOR_INFOMODE;
-        [PropertyOrder(40)]
+        [PropertyOrder(43)]
         public Color ROOT_CURSOR_BLINK;
         
         [PropertySpace] 
         [Title("BST Level Selection")]
-        [PropertyOrder(41)]
+        [PropertyOrder(44)]
         public Color ROOT_SELECTIONQUAD_SELECTABLE;
-        [PropertyOrder(42)]
+        [PropertyOrder(45)]
         public Color ROOT_SELECTIONQUAD_UNSELECTABLE;
 
         [PropertySpace]
         [Title("UI Section")] 
-        [PropertyOrder(43)]
-        public Color ROOT_UI_DEFAULT_BLACK;
-        [PropertyOrder(44)]
-        public Color ROOT_UI_DEFAULT_DARKGRAY;
-        [PropertyOrder(45)]
-        public Color ROOT_UI_DEFAULT_WHITE;
         [PropertyOrder(46)]
-        public Color ROOT_UI_HIGHLIGHTING_GREEN;
+        public Color ROOT_UI_DEFAULT_BLACK;
         [PropertyOrder(47)]
-        public Color ROOT_UI_HIGHLIGHTING_RED;
+        public Color ROOT_UI_DEFAULT_DARKGRAY;
         [PropertyOrder(48)]
+        public Color ROOT_UI_DEFAULT_WHITE;
+        [PropertyOrder(49)]
+        public Color ROOT_UI_HIGHLIGHTING_GREEN;
+        [PropertyOrder(50)]
+        public Color ROOT_UI_HIGHLIGHTING_RED;
+        [PropertyOrder(51)]
         public Color ROOT_UI_HIGHLIGHTING_BLUE;
     }
 }

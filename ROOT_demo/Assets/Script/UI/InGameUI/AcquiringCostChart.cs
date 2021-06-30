@@ -1,8 +1,8 @@
 using com.ootii.Messages;
 using ROOT.Common;
 using ROOT.Message.Inquiry;
+using ROOT.SetupAsset;
 using TMPro;
-using UnityEngine;
 
 namespace ROOT.UI
 {
@@ -13,19 +13,20 @@ namespace ROOT.UI
         protected override UITag UITag => UITag.Currency_Acquiring;
 
         public TextMeshPro TgtCurrency;//这个数据一局中不会变，所以原则上应该不用cache
-        public TextMeshPro BonusCurrency;//这个数据一局中不会变，所以原则上应该不用cache
+        public TextMeshPro BonusCurrency;
+        public TextMeshPro Slash;//那个杠杠，要统一改一下颜色。
 
         private void UpdateBonusIncomeVal(int bonusIncomesVal)
         {
             if (bonusIncomesVal > 0)
             {
-                BonusCurrency.text = "+" + ROOT.Common.Utils.PaddingNum(bonusIncomesVal, 2);
-                BonusCurrency.color = Color.green;
+                BonusCurrency.text = "+" + Utils.PaddingNum(bonusIncomesVal, 2);
+                BonusCurrency.color = ColorLibManager.Instance.ColorLib.ROOT_UI_HIGHLIGHTING_GREEN;
             }
             else if (bonusIncomesVal == 0)
             {
                 BonusCurrency.text = "+00";
-                BonusCurrency.color = Color.grey;
+                BonusCurrency.color = ColorLibManager.Instance.ColorLib.ROOT_UI_DEFAULT_DARKGRAY;
             }
         }
         
@@ -41,15 +42,17 @@ namespace ROOT.UI
         {
             base.UpdateIncomeValAsNotActive();
             BonusCurrency.text = "---";
-            BonusCurrency.color = Color.black;
+            BonusCurrency.color = ColorLibManager.Instance.ColorLib.ROOT_UI_DEFAULT_BLACK;
         }
 
         protected override void Awake()
         {
             base.Awake();
+            TgtCurrency.color = ColorLibManager.Instance.ColorLib.ROOT_UI_HIGHLIGHTING_GREEN;
+            Slash.color = ColorLibManager.Instance.ColorLib.ROOT_UI_HIGHLIGHTING_GREEN;
             MessageDispatcher.SendMessage(new AcquiringCostTargetInquiryData
             {
-                AcquiringCostTargetCallBack = (tgt) => TgtCurrency.text = tgt.ToString("D4")//TODO 怎么和数值位数和面积匹配是个问题。
+                AcquiringCostTargetCallBack = tgt => TgtCurrency.text = tgt.ToString("D4")//TODO 怎么和数值位数和面积匹配是个问题。
             });
         }
     }

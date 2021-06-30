@@ -73,15 +73,17 @@ namespace ROOT
             PlayerPrefs.Save();
         }
 
-        /*public int[] data;
-        
-        [Button]
-        public void ParallelTest()
+        /*[Button]
+        public void TestFormat()
         {
-            foreach (var i in data.AsParallel())
-            {
-                Debug.Log(i);
-            }
+            var res = 0.3165432168f;
+            Debug.Log(res.ToString("0000"));
+            Debug.Log(res.ToString("####"));
+            Debug.Log(res.ToString("00.00"));
+            Debug.Log(res.ToString("##.##"));
+            Debug.Log(res.ToString("0.0"));
+            Debug.Log(res.ToString("#.#"));
+            Debug.Log(res.ToString("%00"));
         }*/
         
         private void SetUpPlayerPrefs()

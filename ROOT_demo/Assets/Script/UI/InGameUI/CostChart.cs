@@ -3,6 +3,7 @@ using com.ootii.Messages;
 using ROOT.Common;
 using ROOT.Message;
 using ROOT.Message.Inquiry;
+using ROOT.SetupAsset;
 using TMPro;
 using UnityEngine;
 using static ROOT.WorldEvent;
@@ -43,10 +44,14 @@ namespace ROOT.UI
             Currency.text = Utils.PaddingNum(currencyVal, 4);
         }
 
+        private Color TextRed => ColorLibManager.Instance.ColorLib.ROOT_UI_HIGHLIGHTING_RED;
+        private Color TextGreen => ColorLibManager.Instance.ColorLib.ROOT_UI_HIGHLIGHTING_GREEN;
+        private Color TextBlack => ColorLibManager.Instance.ColorLib.ROOT_UI_DEFAULT_BLACK;
+        
         protected virtual void UpdateIncomeValAsNotActive()
         {
             Incomes.text = "---";
-            Incomes.color = Color.black;
+            Incomes.color = TextBlack;
         }
         
         protected void UpdateIncomeVal(int incomesVal)
@@ -54,17 +59,17 @@ namespace ROOT.UI
             if (incomesVal > 0)
             {
                 Incomes.text = Utils.PaddingNum(incomesVal, 3);
-                Incomes.color = Color.green;
+                Incomes.color = TextGreen;
             }
             else if (incomesVal == 0)
             {
                 Incomes.text = "000";
-                Incomes.color = Color.red;
+                Incomes.color = TextRed;
             }
             else
             {
                 Incomes.text = "-" + Utils.PaddingNum(Math.Abs(incomesVal), 2);
-                Incomes.color = Color.red;
+                Incomes.color = TextRed;
             }
         }
 
@@ -124,6 +129,8 @@ namespace ROOT.UI
         {
             base.Awake();
             MessageDispatcher.AddListener(CurrencyUpdatedEvent, CostChartUpdateHandler);
+            Currency.color = TextGreen;
+            Incomes.color = TextGreen;
         }
 
         protected override void OnDestroy()
