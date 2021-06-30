@@ -133,7 +133,7 @@ namespace ROOT.Signal
 
         private void dfs(Vector2Int u, Vector2Int f)
         {
-            int child = 0;
+            var child = 0;
             dfn[u] = low[u] = ++dfsClock;
             foreach (var v in edge[u])
             {
@@ -188,8 +188,54 @@ namespace ROOT.Signal
                     res.Add(test);
                     continue;
                 }
-                var tmpList = test.ToList();
 
+                foreach (var point in test.Where(point => !cutVertexSet.Contains(point)))
+                {
+                    int x = point.x, y = point.y;
+                    var tmp = new FirewallCircle();
+                    var queue = new Queue<Vector2Int>();
+                    tmp.Add(new Vector2Int(x, y));
+                    queue.Enqueue(new Vector2Int(x, y));
+                    _board[x, y] = 3;
+                    while (queue.Count != 0)
+                    {
+                        var now = queue.Dequeue();
+                        for (var i = 0; i < 4; ++i)
+                        {
+                            int xx = now.x + dx4[i], yy = now.y + dy4[i];
+                            if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] == -1)
+                                continue;
+                            tmp.Add(new Vector2Int(xx, yy));
+                            if (cutVertexSet.Contains(new Vector2Int(xx, yy)))
+                                continue;
+                            _board[xx, yy] = 3;
+                            queue.Enqueue(new Vector2Int(xx, yy));
+                        }
+                    }
+                    res.Add(tmp);
+                }
+
+            }
+            return res;
+        }
+
+        private FirewallCircle DeleteInnerCircle(FirewallCircle test)
+        {
+            var res = new FirewallCircle();
+            foreach (var point in test)
+            {
+                var cnt = 0;
+                for (var i = 0; i < 4; ++i)
+                {
+                    int xx = point.x + dx4[i], yy = point.y + dy4[i];
+                    if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] == -1)
+                        break;
+                    ++cnt;
+                }
+
+                if (cnt == 4)
+                    continue;
+                res.Add(point);
             }
             return res;
         }
@@ -203,9 +249,16 @@ namespace ROOT.Signal
                 _board[unit.CurrentBoardPosition.x, unit.CurrentBoardPosition.y] = 1;
 
             _connectComponent = DeleteCutVertex(DeleteWhiteSpace());
-
+            var maxArea = 0;
             _firewallCircle = new FirewallCircle(); //往这个函数里面填东西。
+            foreach (var circle in _connectComponent)
+            {
+                if (circle.Count <= maxArea) continue;
+                maxArea = circle.Count;
+                _firewallCircle = circle;
+            }
 
+            _firewallCircle = DeleteInnerCircle(_firewallCircle);
         }
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
