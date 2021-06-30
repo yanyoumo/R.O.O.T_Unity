@@ -18,9 +18,9 @@ namespace ROOT.Signal
                 return res;
             }
         }
-        
-        private const int perMatrixFieldUnitPrice = 1;
-        //Core不计分。
-        public override float SingleUnitScore => (IsUnitActive && Owner.UnitHardware == HardwareType.Field) ? perMatrixFieldUnitPrice * Owner.Tier : 0.0f;
+
+        //TODO 这里再放一些Cap
+        private const float perMatrixFieldUnitPrice = 1.0f;
+        public override float SingleUnitScore => IsActiveFieldUnitThisSignal(Owner) ? perMatrixFieldUnitPrice * Owner.Tier : 0.0f;
     }
 }

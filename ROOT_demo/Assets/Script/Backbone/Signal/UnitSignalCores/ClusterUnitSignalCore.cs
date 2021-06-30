@@ -11,8 +11,8 @@ namespace ROOT.Signal
     {
         [ShowInInspector] public override SignalType SignalType => SignalType.Cluster;
         
-        private const int perMatrixFieldUnitPrice = 1;
-        private float[] scoreMultiplier = {0.2f, 0.3f, 0.4f, 0.5f, 0.75f, 1f, 1.5f, 2f, 2.5f};
+        private const int perClusterFieldUnitPrice = 1;
+        private readonly float[] scoreMultiplier = {0.2f, 0.3f, 0.4f, 0.5f, 0.75f, 1f, 1.5f, 2f, 2.5f};
 
         public override List<Vector2Int> SingleInfoCollectorZone
         {
@@ -68,7 +68,7 @@ namespace ROOT.Signal
         }
         
         private IEnumerable<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(2).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
-        private int NeighbouringClusterUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && IsActiveUnitThisSignal(u));
-        public override float SingleUnitScore => IsActiveFieldUnitThisSignal(Owner) ? perMatrixFieldUnitPrice * scoreMultiplier[NeighbouringClusterUnitCount] * Owner.Tier : 0.0f;
+        private int NeighbClusterUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && IsActiveUnitThisSignal(u));
+        public override float SingleUnitScore => IsActiveFieldUnitThisSignal(Owner) ? perClusterFieldUnitPrice * scoreMultiplier[NeighbClusterUnitCount] * Owner.Tier : 0.0f;
     }
 }

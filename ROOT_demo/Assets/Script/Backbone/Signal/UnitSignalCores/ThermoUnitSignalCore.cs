@@ -18,7 +18,7 @@ namespace ROOT.Signal
         //8、8、8、8、8
         private static readonly float[] PerGridScoreByTier = {1, 2, 3, 4, 5};
         //8、16、24、32、40
-        private static readonly float ThermoScoreMultiplier = 1/2.0f;
+        private static readonly float ThermoScoreMultiplier = 0.5f;
         //4、8、12、16、20
 
 
@@ -95,17 +95,13 @@ namespace ROOT.Signal
         {
             get
             {
-                if (IsUnitActive && Owner.UnitHardware == HardwareType.Field)
+                if (IsActiveFieldUnitThisSignal(Owner))
                 {
-                    return Mathf.Round(GetEmptyExpellingPos().Count() * PerGridScoreByTier[Owner.Tier - 1] * ThermoScoreMultiplier);
+                    return GetEmptyExpellingPos().Count() * PerGridScoreByTier[Owner.Tier - 1] * ThermoScoreMultiplier;
                 }
                 return 0.0f;
             }
         }
-
-        private Vector3 v2Tov3(Vector2 v) => Board.GetFloatTransform_Float(v);
-
-        private Vector3 v2Tov3(Point v) => Board.GetFloatTransform_Float(new Vector2(v.x, v.y));
 
         private const float SenderRadius = 0.25f;
         private const float BlockerRadius = 1f;

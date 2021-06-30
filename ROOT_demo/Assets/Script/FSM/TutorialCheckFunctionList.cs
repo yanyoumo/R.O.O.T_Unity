@@ -25,8 +25,10 @@ namespace ROOT
         UseTransferToConnectUnits = 32,
         ConnectAllCusterUnits = 33,
         ConnectAllFirewallUnits = 34,
-        Reach22Benefit = 35,
+        Reach16Benefit = 35,
         Reach10Benefit = 36,
+        Reach12Benefit = 37,
+        Reach14Benefit = 38,
 
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
         CustomCheckGameplay0 = 250,
@@ -183,8 +185,10 @@ namespace ROOT
 
         public static bool ConnectAllCusterUnit(FSMLevelLogic fsm, Board board) => ConnectAllUnitByType(board, SignalType.Cluster);
         public static bool ConnectAllFirewallUnit(FSMLevelLogic fsm, Board board) => ConnectAllUnitByType(board, SignalType.Firewall);
-        public static bool ReachBenefitOf22(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 22);
+        public static bool ReachBenefitOf16(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 16);
         public static bool ReachBenefitOf10(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 10);
+        public static bool ReachBenefitOf12(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 12);
+        public static bool ReachBenefitOf14(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 14);
         
         private static bool ConnectAllUnitByType(Board board, SignalType _signalType)
         {
