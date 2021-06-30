@@ -22,33 +22,15 @@ namespace ROOT.Signal
          * unit:        1 ->  2
          */
         private List<FirewallCircle> _connectComponent;
-        private static int[] dx4 = { 0, -1, 0, 1 };
-        private static int[] dy4 = { -1, 0, 1, 0 };
-        private static int[] dx8 = { 0, -1, -1, -1, 0, 1, 1, 1 };
-        private static int[] dy8 = { -1, -1, 0, 1, 1, 1, 0, -1 };
+        private static int[] dx4 = { -1, 0, 1, 0 };
+        private static int[] dy4 = { 0, 1, 0, -1 };
+        private static int[] dx8 = { -1, -1, 0, 1, 1, 1, 0, -1 };
+        private static int[] dy8 = { 0, 1, 1, 1, 0, -1, -1, -1 };
         private Dictionary<Vector2Int, List<Vector2Int>> edge;
         private Dictionary<Vector2Int, int> low;
         private HashSet<Vector2Int> cutVertexSet;
         private Dictionary<Vector2Int, int> dfn;
         private int dfsClock;
-        private void bfs(int x, int y)
-        {
-            var queue = new Queue<Vector2Int>();
-            queue.Enqueue(new Vector2Int(x, y));
-            _board[x, y] = -1;
-            while (queue.Count != 0)
-            {
-                var now = queue.Dequeue();
-                for (var i = 0; i < 4; ++i)
-                {
-                    int xx = now.x + dx4[i], yy = now.y + dy4[i];
-                    if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] != 0)
-                        continue;
-                    _board[xx, yy] = -1;
-                    queue.Enqueue(new Vector2Int(xx, yy));
-                }
-            }
-        }
 
         private FirewallCircle GetConnectComponent(int x, int y)
         {
@@ -63,7 +45,8 @@ namespace ROOT.Signal
                 for (var i = 0; i < 4; ++i)
                 {
                     int xx = now.x + dx4[i], yy = now.y + dy4[i];
-                    if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] == -1)
+                    //-1 white; 1 black; 2 visited
+                    if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] != 1)
                         continue;
                     _board[xx, yy] = 2;
                     res.Add(new Vector2Int(xx, yy));
@@ -75,14 +58,16 @@ namespace ROOT.Signal
 
         private FirewallCircle DeleteNonCircle(FirewallCircle now)
         {
+            if (now.Count == 1)
+                return new FirewallCircle();
             edge = new Dictionary<Vector2Int, List<Vector2Int>>();
             var inDegree = new Dictionary<Vector2Int, int>();
             foreach (var point in now)
             {
                 edge[point] = new List<Vector2Int>();
+                inDegree[point] = 0;
                 for (var i = 0; i < 8; ++i)
                 {
-                    inDegree[point] = 0;
                     int xx = point.x + dx8[i], yy = point.y + dy8[i];
                     if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] != 2)
                         continue;
@@ -110,6 +95,25 @@ namespace ROOT.Signal
 
             return now.Where(point => _board[point.x, point.y] == 2).ToList();
         }
+        private void bfs(int x, int y)
+        {
+            var queue = new Queue<Vector2Int>();
+            queue.Enqueue(new Vector2Int(x, y));
+            _board[x, y] = -1;
+            while (queue.Count != 0)
+            {
+                var now = queue.Dequeue();
+                for (var i = 0; i < 4; ++i)
+                {
+                    int xx = now.x + dx4[i], yy = now.y + dy4[i];
+                    //0 white; 1 black; -1 visited
+                    if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] != 0)
+                        continue;
+                    _board[xx, yy] = -1;
+                    queue.Enqueue(new Vector2Int(xx, yy));
+                }
+            }
+        }
         private List<FirewallCircle> DeleteWhiteSpace()
         {
             var res = new List<FirewallCircle>();
@@ -124,10 +128,12 @@ namespace ROOT.Signal
                 if (_board[i, N - 1] == 0)
                     bfs(i, N - 1);
             }
+            print("DelereWhite");
             for (var i = 0; i < N; ++i)
                 for (var j = 0; j < N; ++j)
                     if (_board[i, j] == 1)
                         res.Add(GetConnectComponent(i, j));
+            print("DelereNoCircle");
             return res;
         }
 
@@ -239,6 +245,22 @@ namespace ROOT.Signal
             }
             return res;
         }
+
+        private void print(string info)
+        {
+            string s = info + "\n";
+            for (var j = N - 1; j >= 0; --j)
+            {
+                for (var i = 0; i < N; ++i)
+                {
+                    s += _board[i, j];
+                    s += ' ';
+                }
+
+                s += "\n";
+            }
+            Debug.Log(s);
+        }
         private void updateFireWallCircle(Unit[] units)
         {
             //TODO 
@@ -247,10 +269,9 @@ namespace ROOT.Signal
                     _board[i, j] = 0;
             foreach (var unit in units)
                 _board[unit.CurrentBoardPosition.x, unit.CurrentBoardPosition.y] = 1;
-
+            print("Origin");
             _connectComponent = DeleteCutVertex(DeleteWhiteSpace());
             var maxArea = 0;
-            _firewallCircle = new FirewallCircle(); //往这个函数里面填东西。
             foreach (var circle in _connectComponent)
             {
                 if (circle.Count <= maxArea) continue;
@@ -259,6 +280,7 @@ namespace ROOT.Signal
             }
 
             _firewallCircle = DeleteInnerCircle(_firewallCircle);
+
         }
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
@@ -271,7 +293,7 @@ namespace ROOT.Signal
             }
             updateFireWallCircle(data);
         }
-        
+
         protected virtual void Awake()
         {
             MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent, BoardDataUpdatedHandler);
