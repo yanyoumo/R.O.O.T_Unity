@@ -16,6 +16,7 @@ namespace ROOT
         public TextMeshPro PressHForHintText;
         public Transform GameplayPageRoot;
         public Transform TutorialPageRoot;
+        public HelpScreen_SignalSub_UI SignalSub;
         
         private int _gameplayPageCount => _gameplayPages.Length;
         private int _tutorialPageCount => _tutorialPages.Length;
@@ -43,6 +44,12 @@ namespace ROOT
             //RISK 现在是好使的，但是toggleOff部分的逻辑不完整，但是现在符合需求了。先不动了。
             if (rMessage is HintPageChangedData data)
             {
+
+                if (data.changeSignalHint)
+                {
+                    SignalSub.SetupSignalHints(data.UpperSignal, data.LowerSignal, data.TelemetryOrNot);
+                }
+                
                 var targetingPages = data.TutorialOrGameplay ? _tutorialPages : _gameplayPages;
 
                 if (data.PageNum >= 0)

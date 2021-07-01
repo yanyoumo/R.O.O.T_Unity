@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_TL8
-  Thumbnail: {fileID: 21300000, guid: f6a8f0c8d3c9cfa46b57cf90ef50a9cb, type: 3}
+  Thumbnail: {fileID: 21300000, guid: c26157e633ad00c429faa060cb198d55, type: 3}
   LevelLogic: {fileID: 485162502774370968, guid: afa13f756bdc973499104583a03ad166,
     type: 3}
   InitialCurrency: 36
@@ -39,6 +39,7 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
+    AdditionalGameplayHintPages: 
   InitalBoard:
   - PlayingSignalSelector: 0
     CoreGenre: 0
@@ -230,6 +231,70 @@ MonoBehaviour:
     HandOnMission: 
     TimeOutSec: 0
     TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: -1
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 0
+    ActionSubIdx: 5
+    ActionType: 18
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 0
+    ActionSubIdx: 6
+    ActionType: 18
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
     Set: 1
     HLSet: 0
     HLCustomPos: 0
@@ -244,7 +309,7 @@ MonoBehaviour:
     Numpage: 0
     SkillID: 0
   - ActionIdx: 0
-    ActionSubIdx: 5
+    ActionSubIdx: 7
     ActionType: 18
     Text: 
     DoppelgangerToggle: 0
@@ -456,11 +521,11 @@ MonoBehaviour:
     TargetTag: 0
     Set: 1
     HLSet: 1
-    HLCustomPos: 1
+    HLCustomPos: 0
     HighLightingPos: {x: 0, y: 0}
     HighLightingScale: {x: 0, y: 0}
     AllClear: 0
-    UITag: 0
+    UITag: 4
     TimeLineStatus: 0
     HighLightType: 0
     poses: []
@@ -776,11 +841,11 @@ MonoBehaviour:
     TargetTag: 0
     Set: 0
     HLSet: 1
-    HLCustomPos: 1
+    HLCustomPos: 0
     HighLightingPos: {x: 0, y: 0}
     HighLightingScale: {x: 0, y: 0}
     AllClear: 0
-    UITag: 0
+    UITag: 1
     TimeLineStatus: 0
     HighLightType: 0
     poses: []

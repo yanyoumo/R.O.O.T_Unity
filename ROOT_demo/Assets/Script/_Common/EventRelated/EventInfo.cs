@@ -65,6 +65,12 @@ namespace ROOT.Message
         public bool AdditiveOrReplace = false;
         public int PageNum = 0;
         public IEnumerable<int> PageNums;
+
+        public bool changeSignalHint = false;
+        public SignalType UpperSignal;
+        public SignalType LowerSignal;
+        public bool TelemetryOrNot = false;
+        
         public override string Type => WorldEvent.HintScreenChangedEvent;
     }
     

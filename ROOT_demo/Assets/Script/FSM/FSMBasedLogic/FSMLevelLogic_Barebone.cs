@@ -83,21 +83,19 @@ namespace ROOT
             else
             {
                 SetUpHandlingCurrency();
-                MessageDispatcher.SendMessage(new HintPageChangedData
-                {
-                    Toggle = true, TutorialOrGameplay = false,
-                    PageNum = -1, PageNums = GamePlayHintPages
-                });
                 WorldExecutor.InitCursor(LevelAsset, new Vector2Int(2, 3));
             }
-            
-            if (LevelAsset.ActionAsset.DisplayedlevelType == LevelType.Career)
+
+            if (!UseTutorialVer || LevelAsset.ActionAsset.DisplayedlevelType == LevelType.Career)
             {
-                //RISK 这个是圆锥插方榫，这个有空调一下
                 MessageDispatcher.SendMessage(new HintPageChangedData
                 {
                     Toggle = true, TutorialOrGameplay = false,
-                    PageNum = -1, PageNums = GamePlayHintPages
+                    PageNum = -1, PageNums = GamePlayHintPages,
+                    changeSignalHint = true,
+                    UpperSignal = LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA,
+                    LowerSignal = LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB,
+                    TelemetryOrNot = CouldHandleBoss && HandleBossType == BossStageType.Telemetry
                 });
             }
         }
