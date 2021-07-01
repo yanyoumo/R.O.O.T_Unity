@@ -149,35 +149,10 @@ namespace ROOT
         public Unit[] FindUnitsByUnitTag(UnitTag tag) => Units.Where(u => u.UnitTag == tag).ToArray();
         public Unit FindNearestSignalAP(Vector2Int Pos)
         {
-            var distance = float.MaxValue;
-            var nearestPos = Vector2Int.zero;
-            foreach (var vector2Int in _unitsGameObjects.Keys)
-            {
-                var unit = _unitsGameObjects[vector2Int].GetComponentInChildren<Unit>();
-
-                if ((unit.UnitSignal == SignalType.Cluster && unit.UnitHardware == HardwareType.Field) ||
-                    ((unit.UnitSignal == SignalType.Scan && unit.UnitHardware == HardwareType.Field) &&
-                     unit.SignalCore.InServerGrid && unit.SignalCore.ScanSignalPathDepth == 1))
-                {
-                    if (vector2Int == Pos)
-                    {
-                        distance = 0;
-                        nearestPos = vector2Int;
-                        break;
-                    }
-                    else
-                    {
-                        var tmpDist = Vector2.Distance(Pos, vector2Int);
-                        if (tmpDist < distance)
-                        {
-                            distance = tmpDist;
-                            nearestPos = vector2Int;
-                        }
-                    }
-                }
-            }
-
-            return _unitsGameObjects[nearestPos].GetComponentInChildren<Unit>();
+            var activedUnits = Units.Where(u => u.SignalCore.IsUnitActive);
+            var nearestDist = activedUnits.Min(u => Vector2.Distance(Pos, u.CurrentBoardPosition));
+            var nearestUnits = activedUnits.Where(u => Math.Abs(Vector2.Distance(Pos, u.CurrentBoardPosition) - nearestDist) < 1e-4);
+            return nearestUnits.First();
         }
         [CanBeNull] public Unit FindRandomUnit => GetUnitCount == 0 ? null : Units[Mathf.FloorToInt(UnityEngine.Random.value * Units.Length)];
         [CanBeNull] public Unit FindUnitByPos(Vector2Int boardPos)

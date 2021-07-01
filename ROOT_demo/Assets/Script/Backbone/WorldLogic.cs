@@ -844,10 +844,10 @@ namespace ROOT
 
         public static void InitDestoryer(ref GameAssets LevelAsset)
         {
-            if (LevelAsset.WarningDestoryer == null)
+            /*if (LevelAsset.WarningDestoryer == null)
             {
                 Debug.LogError("WarningDestoryer is null, please fix."); return;
-            }
+            }*/
             LevelAsset.WarningDestoryer = new MeteoriteBomber {GameBoard = LevelAsset.GameBoard};
             LevelAsset.WarningDestoryer.Init(4, 1);
         }

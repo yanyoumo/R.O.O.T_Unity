@@ -265,19 +265,22 @@ namespace ROOT
         private BossAdditionalSetupAsset BossRoundData => LevelAsset.ActionAsset.BossSetup;
         private int TotalSprayCount => BossRoundData.BossLength * SprayCountPerAnimateInterval;
         private int TargetInfoCount => Mathf.RoundToInt(BossRoundData.InfoCount * BossRoundData.InfoTargetRatio);
-        
+
         private void TelemetryInit()
         {
             SprayCountArray = Utils.SpreadOutLayingWRandomization(TotalSprayCount, BossRoundData.InfoCount, BossRoundData.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
             WorldCycler.TelemetryStage = true;
-            
-            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData()
+
+            var signalInfo = new BoardSignalUpdatedInfo
             {
-                InfoTarget = TargetInfoCount,
-                IsTelemetryStage=WorldCycler.TelemetryStage,//
-            },};
+                SignalData = new BoardSignalUpdatedData()
+                {
+                    InfoTarget = TargetInfoCount,
+                    IsTelemetryStage = WorldCycler.TelemetryStage, //
+                },
+            };
             MessageDispatcher.SendMessage(signalInfo);
         }
 

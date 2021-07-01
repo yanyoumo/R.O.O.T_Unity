@@ -56,15 +56,18 @@ namespace ROOT
             }
             else if (_timer >= _delay)
             {
-                foreach (var gird in GameAsset.CollectorZone.Select(vec => GameAsset.GameBoard.BoardGirdDriver.BoardGirds[vec]))
+                if (GameAsset.CollectorZone.Count!=0)
                 {
-                    if (WithInUnitExtend(gird, transform.position))
+                    foreach (var gird in GameAsset.CollectorZone.Select(vec => GameAsset.GameBoard.BoardGirdDriver.BoardGirds[vec]))
                     {
-                        GameAsset.SignalInfo++;
-                        var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {InfoCounter = GameAsset.SignalInfo},};
-                        MessageDispatcher.SendMessage(signalInfo);
-                        GameAsset.GameBoard.SomeGridHasCollectedInfo(gird);
-                        Destroy(gameObject);
+                        if (WithInUnitExtend(gird, transform.position))
+                        {
+                            GameAsset.SignalInfo++;
+                            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {InfoCounter = GameAsset.SignalInfo},};
+                            MessageDispatcher.SendMessage(signalInfo);
+                            GameAsset.GameBoard.SomeGridHasCollectedInfo(gird);
+                            Destroy(gameObject);
+                        }
                     }
                 }
             }

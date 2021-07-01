@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cinemachine;
 using ROOT.SetupAsset;
+using ROOT.Signal;
 using UnityEngine;
 
 namespace ROOT
@@ -43,8 +44,7 @@ namespace ROOT
         public InfoAirdrop AirDrop;
         public int ReqOkCount;
         public int SignalInfo;
-        public List<Vector2Int> CollectorZone;
-        //public List<Vector2Int> ThermoZone;
+        public List<Vector2Int> CollectorZone => GameBoard.GetInfoCollectorZone();
 
         public CinemachineFreeLook CineCam;
 
