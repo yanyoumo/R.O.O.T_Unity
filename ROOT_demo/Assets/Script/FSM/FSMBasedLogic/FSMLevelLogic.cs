@@ -12,6 +12,7 @@ using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
 using ROOT.Signal;
 using ROOT.UI;
+using Sirenix.Utilities;
 using UnityEngine;
 using static ROOT.WorldEvent;
 
@@ -29,6 +30,20 @@ namespace ROOT
         [HideInInspector] public bool PendingCleanUp;
         public bool UseTutorialVer = false;
 
+        protected IEnumerable<int> GamePlayHintPages
+        {
+            get
+            {
+                var res = BaseGamePlayHintPages.Where(i => true); //Duplicate
+                res = res.Union(GamePlayHintPagesByLevelType);
+                res = res.Union(LevelAsset.ActionAsset.AdditionalGameSetup.AdditionalGameplayHintPages);
+                return res.Distinct();
+            }
+        }
+
+        private readonly int[] BaseGamePlayHintPages = {0, 1, 2, 3};
+        protected virtual IEnumerable<int> GamePlayHintPagesByLevelType { get; } = new int[0];
+        
         public abstract bool CouldHandleTimeLine { get; }
         public abstract bool CouldHandleBoss { get; }
         public abstract BossStageType HandleBossType { get; }

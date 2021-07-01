@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cinemachine;
 using com.ootii.Messages;
 using I2.Loc;
@@ -8,6 +9,7 @@ using ROOT.Consts;
 using ROOT.Message;
 using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
@@ -16,6 +18,16 @@ namespace ROOT
     {
         protected virtual string SucceedEndingTerm => ScriptTerms.EndingMessageNoBoss_EarnedMoney;
         protected virtual string FailedEndingTerm => ScriptTerms.EndingMessageNoBoss_NoEarnedMoney;
+
+        protected override IEnumerable<int> GamePlayHintPagesByLevelType
+        {
+            get
+            {
+                var res = base.GamePlayHintPagesByLevelType.ToList();
+                res.AddRange(new[] {4, 5, 6});
+                return res;
+            }
+        }
         
         protected override float LevelProgress => LevelAsset.StepCount / (float) RoundLibDriver.PlayableCount;
         public override bool CouldHandleTimeLine => true;

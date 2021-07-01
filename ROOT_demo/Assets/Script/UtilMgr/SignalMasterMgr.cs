@@ -446,7 +446,7 @@ namespace ROOT.Signal
             {
                 Instance.Paths[type].ForEach(u => data.AddRange(u.Where(u0 => u0.UnitSignal == type && u0.UnitHardware == hwType && u0.SignalCore.IsUnitActive)));
             }
-            catch (KeyNotFoundException)
+            catch (Exception)
             {
                 Debug.LogWarning("Targeting Signal not found, Getting skipped");
             }

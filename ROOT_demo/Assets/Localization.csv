@@ -98,6 +98,9 @@ LevelName_GL3,Text,,考证得用,Pending
 LevelName_GL4,Text,,干啥考证,Pending
 LevelName_GL5,Text,,一轮融资,Pending
 LevelName_GL6,Text,,二轮融资,Pending
+LevelName_GL7,Text,,同步遥测,Pending
+LevelName_GL8,Text,,卫星遥测,Pending
+LevelName_GL9,Text,,深空遥测,Pending
 LevelName_TL0,Text,,首日报道,Pending
 LevelName_TL1,Text,,信号是啥,Pending
 LevelName_TL2,Text,,高阶信号,Pending
@@ -107,5 +110,6 @@ LevelName_TL5,Text,,关于技能,Pending
 LevelName_TL6,Text,,集群基础,Pending
 LevelName_TL7,Text,,防火墙基础,Pending
 LevelName_TL8,Text,,还得融资,Pending
-LevelName_TL9,Text,,融资玩法,Pending
-LevelName_TL10,Text,,遥测玩法,Pending
+LevelName_TL9,Text,,遥测是啥,Pending
+LevelName_TL10,Text,,信场初步,Pending
+LevelName_TL11,Text,,信场高阶,Pending

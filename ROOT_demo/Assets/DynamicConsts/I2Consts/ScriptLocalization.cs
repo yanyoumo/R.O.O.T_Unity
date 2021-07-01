@@ -42,9 +42,13 @@ namespace I2.Loc
 		public static string LevelName_GL4 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL4"); } }
 		public static string LevelName_GL5 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL5"); } }
 		public static string LevelName_GL6 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL6"); } }
+		public static string LevelName_GL7 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL7"); } }
+		public static string LevelName_GL8 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL8"); } }
+		public static string LevelName_GL9 		{ get{ return LocalizationManager.GetTranslation ("LevelName_GL9"); } }
 		public static string LevelName_TL0 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL0"); } }
 		public static string LevelName_TL1 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL1"); } }
 		public static string LevelName_TL10 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL10"); } }
+		public static string LevelName_TL11 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL11"); } }
 		public static string LevelName_TL2 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL2"); } }
 		public static string LevelName_TL3 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL3"); } }
 		public static string LevelName_TL4 		{ get{ return LocalizationManager.GetTranslation ("LevelName_TL4"); } }
@@ -141,9 +145,13 @@ namespace I2.Loc
 		public const string LevelName_GL4 = "LevelName_GL4";
 		public const string LevelName_GL5 = "LevelName_GL5";
 		public const string LevelName_GL6 = "LevelName_GL6";
+		public const string LevelName_GL7 = "LevelName_GL7";
+		public const string LevelName_GL8 = "LevelName_GL8";
+		public const string LevelName_GL9 = "LevelName_GL9";
 		public const string LevelName_TL0 = "LevelName_TL0";
 		public const string LevelName_TL1 = "LevelName_TL1";
 		public const string LevelName_TL10 = "LevelName_TL10";
+		public const string LevelName_TL11 = "LevelName_TL11";
 		public const string LevelName_TL2 = "LevelName_TL2";
 		public const string LevelName_TL3 = "LevelName_TL3";
 		public const string LevelName_TL4 = "LevelName_TL4";

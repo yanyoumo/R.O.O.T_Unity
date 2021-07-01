@@ -1008,6 +1008,7 @@ MonoBehaviour:
   ButtonLocalize: {fileID: 1493171874861717145}
   TitleLocalize: {fileID: 3315755744154712382}
   QuadBackGround: {fileID: 6553303017857089957}
+  IconBG: {fileID: 5106610748994429530}
   TutorialIcon: {fileID: 199701193067558425}
   GameplayIcon: {fileID: 9201342815909669194}
   NewLevelIconRoot: {fileID: 9192201122727652848}

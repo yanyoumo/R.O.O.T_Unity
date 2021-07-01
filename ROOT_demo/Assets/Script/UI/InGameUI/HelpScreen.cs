@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using com.ootii.Messages;
 using DG.Tweening;
 using I2.Loc;
@@ -15,6 +16,7 @@ namespace ROOT
         public TextMeshPro PressHForHintText;
         public Transform GameplayPageRoot;
         public Transform TutorialPageRoot;
+        public HelpScreen_SignalSub_UI SignalSub;
         
         private int _gameplayPageCount => _gameplayPages.Length;
         private int _tutorialPageCount => _tutorialPages.Length;
@@ -27,37 +29,64 @@ namespace ROOT
         private const float _downPos = -10.49f;
         private const float _slideDuration = 0.3f;
 
-        private void TogglePage_Additive(Transform[] targetingPages, HintPageChangedData data)
+        private void toggleSinglePage(Transform[] targetingPages,bool toggle,int pageNum)
         {
-            targetingPages[data.PageNum].gameObject.SetActive(data.Toggle);
-        }
-
-        private void TogglePage_Replace(Transform[] targetingPages, HintPageChangedData data)
-        {
-            for (var i = 0; i < targetingPages.Length; i++)
+            if (pageNum < 0 || pageNum >= targetingPages.Length)
             {
-                targetingPages[i].gameObject.SetActive(data.Toggle && (i == data.PageNum));
+                Debug.LogWarning("Requesting page:" + pageNum + " for is not valid, request ignored!");
+                return;
             }
+            targetingPages[pageNum].gameObject.SetActive(toggle);
         }
 
         void HintPageChangedEventHandler(IMessage rMessage)
         {
+            //RISK 现在是好使的，但是toggleOff部分的逻辑不完整，但是现在符合需求了。先不动了。
             if (rMessage is HintPageChangedData data)
             {
-                var targetingPages = data.TutorialOrGameplay ? _tutorialPages : _gameplayPages;
-                Debug.Log("targetingPages.Length=" + targetingPages.Length);
-                if (data.Toggle && (data.PageNum < 0 || data.PageNum >= targetingPages.Length))
+
+                if (data.changeSignalHint)
                 {
-                    Debug.LogWarning("Requesting page:"+data.PageNum+" for "+ (data.TutorialOrGameplay ? "Tutorial" : "Gameplay")+" is not valid, request ignored!");
-                    return;
+                    SignalSub.SetupSignalHints(data.UpperSignal, data.LowerSignal, data.TelemetryOrNot);
                 }
-                if (data.AdditiveOrReplace)
+                
+                var targetingPages = data.TutorialOrGameplay ? _tutorialPages : _gameplayPages;
+
+                if (data.PageNum >= 0)
                 {
-                    TogglePage_Additive(targetingPages, data);
+                    if (data.AdditiveOrReplace)
+                    {
+                        toggleSinglePage(targetingPages, data.Toggle, data.PageNum);
+                    }
+                    else
+                    {
+                        for (var i = 0; i < targetingPages.Length; i++)
+                        {
+                            toggleSinglePage(targetingPages, data.Toggle && (i == data.PageNum), i);
+                        }
+                    }
                 }
                 else
                 {
-                    TogglePage_Replace(targetingPages, data);
+                    if (data.PageNums == null || !data.PageNums.Any())
+                    {
+                        Debug.LogWarning("Not correct page data in here");
+                        return;
+                    }
+                    if (data.AdditiveOrReplace)
+                    {
+                        foreach (var dataPageNum in data.PageNums)
+                        {
+                            toggleSinglePage(targetingPages, data.Toggle, dataPageNum);
+                        }
+                    }
+                    else
+                    {
+                        for (var i = 0; i < targetingPages.Length; i++)
+                        {
+                            toggleSinglePage(targetingPages, data.Toggle && data.PageNums.Contains(i), i);
+                        }
+                    }
                 }
             }
         }

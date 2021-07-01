@@ -25,7 +25,6 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: 2731a85ef377ddc43aff8029e981fcbc, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9d91410b0b8c8545b41feda51e82d76,
     type: 3}
-  AcessID: 4
   InitialCurrency: 1000
   ShopCost: 1
   UnitCost: 1
@@ -40,6 +39,7 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
+    AdditionalGameplayHintPages: 
   InitalBoard: []
   HasBossRound: 0
   Endless: 1
@@ -3042,7 +3042,8 @@ MonoBehaviour:
   subIDXToinsert: 6
   CSVFileName: 
   UnlockingLevel:
-  - {fileID: 11400000, guid: f06c345c07b1ef94c8dd0addaec25bea, type: 2}
+  - {fileID: 11400000, guid: e819963aa7158fa48910bc5c30745fb9, type: 2}
   - {fileID: 11400000, guid: b0f3fbc94fa732f44bc295dcb4644c78, type: 2}
-  UnlockingLevel_Upper: []
+  UnlockingLevel_Upper:
+  - {fileID: 11400000, guid: f06c345c07b1ef94c8dd0addaec25bea, type: 2}
   ExcludedShop: 0
