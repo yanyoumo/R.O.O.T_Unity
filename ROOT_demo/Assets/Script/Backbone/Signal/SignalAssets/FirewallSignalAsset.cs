@@ -46,7 +46,7 @@ namespace ROOT.Signal
                 {
                     int xx = now.x + dx4[i], yy = now.y + dy4[i];
                     //-1 white; 1 black; 2 visited
-                    if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] != 1)
+                    if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] == -1 || _board[xx, yy] == 2)
                         continue;
                     _board[xx, yy] = 2;
                     res.Add(new Vector2Int(xx, yy));
@@ -59,7 +59,10 @@ namespace ROOT.Signal
         private FirewallCircle DeleteNonCircle(FirewallCircle now)
         {
             if (now.Count == 1)
+            {
+                _board[now[0].x, now[0].y] = -1;
                 return new FirewallCircle();
+            }
             edge = new Dictionary<Vector2Int, List<Vector2Int>>();
             var inDegree = new Dictionary<Vector2Int, int>();
             foreach (var point in now)
@@ -194,7 +197,6 @@ namespace ROOT.Signal
                     res.Add(test);
                     continue;
                 }
-
                 foreach (var point in test.Where(point => !cutVertexSet.Contains(point)))
                 {
                     int x = point.x, y = point.y;
@@ -222,6 +224,7 @@ namespace ROOT.Signal
                 }
 
             }
+            print("DelereCutVertux");
             return res;
         }
 
@@ -240,7 +243,10 @@ namespace ROOT.Signal
                 }
 
                 if (cnt == 4)
+                {
+                    _board[point.x, point.y] = -1;
                     continue;
+                }
                 res.Add(point);
             }
             return res;
@@ -272,15 +278,17 @@ namespace ROOT.Signal
             print("Origin");
             _connectComponent = DeleteCutVertex(DeleteWhiteSpace());
             var maxArea = 0;
+            _firewallCircle = new FirewallCircle();
             foreach (var circle in _connectComponent)
             {
                 if (circle.Count <= maxArea) continue;
                 maxArea = circle.Count;
                 _firewallCircle = circle;
             }
-
-            _firewallCircle = DeleteInnerCircle(_firewallCircle);
-
+            if (maxArea != 0)
+                _firewallCircle = DeleteInnerCircle(_firewallCircle);
+            Debug.Log("area"+ maxArea);
+            print("DeleteInner");
         }
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
