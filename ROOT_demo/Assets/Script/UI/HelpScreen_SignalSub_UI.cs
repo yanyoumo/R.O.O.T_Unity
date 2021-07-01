@@ -7,7 +7,7 @@ namespace ROOT
 {
     public class HelpScreen_SignalSub_UI : MonoBehaviour
     {
-        public Transform[] SignalHintArray;
+        public SingleSignalHint_UI[] SignalHintArray;
 
         public float UpperPosZ;
         public float LowerPosZ;
@@ -17,17 +17,20 @@ namespace ROOT
         {
             SignalHintArray.ForEach(t => t.gameObject.SetActive(false));
 
-            var upperTrans = SignalHintArray[(int) signalTypeUpper];
-            var lowerTrans = SignalHintArray[(int) signalTypeLower];
+            var upperSignalHint = SignalHintArray[(int) signalTypeUpper];
+            var lowerSignalHint = SignalHintArray[(int) signalTypeLower];
 
-            var upperPos = upperTrans.localPosition;
-            var lowerPos = lowerTrans.localPosition;
+            var upperPos = upperSignalHint.transform.localPosition;
+            var lowerPos = lowerSignalHint.transform.localPosition;
 
-            upperTrans.gameObject.SetActive(true);
-            lowerTrans.gameObject.SetActive(true);
+            upperSignalHint.gameObject.SetActive(true);
+            lowerSignalHint.gameObject.SetActive(true);
 
-            upperTrans.localPosition = new Vector3(upperPos.x, upperPos.y, UpperPosZ);
-            lowerTrans.localPosition = new Vector3(lowerPos.x, lowerPos.y, LowerPosZ);
+            upperSignalHint.UseTelemetry = TelemetryOrNot;
+            lowerSignalHint.UseTelemetry = TelemetryOrNot;
+            
+            upperSignalHint.transform.localPosition = new Vector3(upperPos.x, upperPos.y, UpperPosZ);
+            lowerSignalHint.transform.localPosition = new Vector3(lowerPos.x, lowerPos.y, LowerPosZ);
         }
     }
 }
