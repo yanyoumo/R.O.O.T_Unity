@@ -25,8 +25,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: 57d26bcf687e24a41b96ffb61343fabc, type: 3}
   LevelLogic: {fileID: 485162502774370968, guid: 93fcf6610650a564f859c0167f0cf4a1,
     type: 3}
-  AcessID: 2
-  InitialCurrency: 0
+  InitialCurrency: 80
   ShopCost: 1
   UnitCost: 1
   levelType: 1
@@ -40,19 +39,38 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
+    AdditionalGameplayHintPages: 
   InitalBoard: []
-  HasBossRound: 0
+  HasBossRound: 1
   Endless: 0
-  BossStage: 0
-  RoundLib: []
+  BossStage: 1
+  RoundLib:
+  - ID: 0
+    ShopLength: 9
+    RequireLength: 8
+    TypeARequirement: 0
+    TypeBRequirement: 0
+    HeatSinkLength: 13
+  - ID: 1
+    ShopLength: 13
+    RequireLength: 8
+    TypeARequirement: 0
+    TypeBRequirement: 0
+    HeatSinkLength: 14
+  - ID: 2
+    ShopLength: 18
+    RequireLength: 10
+    TypeARequirement: 0
+    TypeBRequirement: 0
+    HeatSinkLength: 21
   BossSetup:
-    BossStageTypeVal: 0
+    BossStageTypeVal: 1
     BossLength: 0
     DestoryerCount: 0
     InfoCount: 0
     InfoVariantRatio: 0
     InfoTargetRatio: 0
-    AcquiringTarget: 0
+    AcquiringTarget: 3500
   Actions:
   - ActionIdx: 0
     ActionSubIdx: 0

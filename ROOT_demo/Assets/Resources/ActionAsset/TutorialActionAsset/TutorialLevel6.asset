@@ -39,6 +39,7 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 2
     PlayingSignalTypeB: 0
+    AdditionalGameplayHintPages: 
   InitalBoard: []
   HasBossRound: 0
   Endless: 1
@@ -1689,7 +1690,6 @@ MonoBehaviour:
   mainIDXToinsert: 17
   subIDXToinsert: 0
   CSVFileName: LevelName_TL6
-  UnlockingLevel:
-  - {fileID: 11400000, guid: e819963aa7158fa48910bc5c30745fb9, type: 2}
+  UnlockingLevel: []
   UnlockingLevel_Upper: []
   ExcludedShop: 0

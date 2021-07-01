@@ -12,7 +12,6 @@ namespace ROOT
         public float UpperPosZ;
         public float LowerPosZ;
 
-        //TODO 还要处理遥测部分的逻辑。
         public void SetupSignalHints(SignalType signalTypeUpper, SignalType signalTypeLower, bool TelemetryOrNot)
         {
             SignalHintArray.ForEach(t => t.gameObject.SetActive(false));

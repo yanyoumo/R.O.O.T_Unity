@@ -18,6 +18,7 @@ namespace ROOT
         public Localize TitleLocalize;
         public Image QuadBackGround;
 
+        public Image IconBG;
         public Image TutorialIcon;
         public Image GameplayIcon;
 
@@ -62,7 +63,6 @@ namespace ROOT
 
         private void UpdateSelectable()
         {
-            //TutorialThumbnail.sprite = _levelSelectable ? cachedActionAsset.Thumbnail : UnSelectableThumbnail;
             ThumbnailBG.enabled = !_levelSelectable;
             LockedThumbnail.enabled = !_levelSelectable;
             TitleLocalize.SetTerm(_levelSelectable ? cachedActionAsset.TitleTerm : ScriptTerms.Locked);
@@ -79,14 +79,17 @@ namespace ROOT
             TutorialThumbnail.sprite = actionAsset.Thumbnail;
             TitleLocalize.SetTerm(cachedActionAsset.TitleTerm);
             ButtonLocalize.SetTerm(ScriptTerms.PlayLevel);
-            //LevelAccessID = cachedActionAsset.AcessID;
             StartLevelButton.onClick.AddListener(() =>
             {
                 buttonCallBack(cachedActionAsset, StartLevelButton.GetComponentInChildren<TextMeshProUGUI>());
             });
             
-            TutorialIcon.enabled = actionAsset.DisplayedlevelType == LevelType.Tutorial;
-            GameplayIcon.enabled = actionAsset.DisplayedlevelType != LevelType.Tutorial;
+            var displayIsTutorial=actionAsset.DisplayedlevelType == LevelType.Tutorial;
+            
+            TutorialIcon.enabled = displayIsTutorial;
+            GameplayIcon.enabled = !displayIsTutorial;
+
+            IconBG.color = displayIsTutorial ? ColorLibManager.Instance.ColorLib.ROOT_UI_HIGHLIGHTING_BLUE : ColorLibManager.Instance.ColorLib.ROOT_UI_HIGHLIGHTING_GREEN;
         }
     }
 }
