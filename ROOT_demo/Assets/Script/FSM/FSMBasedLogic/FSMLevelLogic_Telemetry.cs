@@ -356,7 +356,7 @@ namespace ROOT
             {
                 var unit = board.FindUnitByPos(cursorPos);
                 Debug.Assert(unit != null, nameof(unit) + " != null");
-                if (unit.SignalCore.IsUnitActive)
+                if (unit.SignalCore.IsUnitActive && unit.UnitHardware == HardwareType.Field)
                 {
                     UpdateSingleInfoZone(unit.SignalCore.SingleInfoCollectorZone);
                 }
