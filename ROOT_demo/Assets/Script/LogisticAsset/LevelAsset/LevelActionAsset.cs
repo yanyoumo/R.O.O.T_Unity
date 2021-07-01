@@ -52,7 +52,7 @@ namespace ROOT.SetupAsset
         public LevelFeature LevelFeature;
         
         [PropertyOrder(-2)]
-        public LevelType DisplayedlevelType;
+        public LevelType DisplayedlevelType;//实质的LevelType应该优先级更高些。
 
         [Header("Passages")]
         [PropertyOrder(-1)]

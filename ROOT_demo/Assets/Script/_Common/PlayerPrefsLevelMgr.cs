@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ROOT.LevelAccessMgr
@@ -24,7 +25,7 @@ namespace ROOT.LevelAccessMgr
             return LevelStatus.Locked;
         }
         
-        public static void CompleteThisLevelAndUnlockFollowing(string completedLevel, string[] unlockedCompletedLevel)
+        public static void CompleteThisLevelAndUnlockFollowing(string completedLevel, IEnumerable<string> unlockedCompletedLevel)
         {
             UpdateLevelStatus(completedLevel, LevelStatus.Passed);
             foreach (var s in unlockedCompletedLevel)

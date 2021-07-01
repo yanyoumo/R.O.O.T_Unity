@@ -5,7 +5,6 @@ using com.ootii.Messages;
 using ROOT.Consts;
 using Sirenix.Utilities;
 using UnityEngine;
-// ReSharper disable PossibleMultipleEnumeration
 
 namespace ROOT.Signal
 {
@@ -14,7 +13,7 @@ namespace ROOT.Signal
         public override Type UnitSignalCoreType => typeof(ClusterUnitSignalCore);
         public override SignalType SignalType => SignalType.Cluster;
 
-        public static List<ClusterIsland> ClusterIslandPack => _clusterIslandPack;
+        public static IEnumerable<ClusterIsland> ClusterIslandPack => _clusterIslandPack;
         private static List<ClusterIsland> _clusterIslandPack;
         
         private List<Vector2Int> FindSingleIsland_Iter(Vector2Int crt)
