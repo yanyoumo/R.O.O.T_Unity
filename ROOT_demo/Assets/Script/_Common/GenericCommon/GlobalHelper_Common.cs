@@ -61,7 +61,7 @@ namespace ROOT.Common
             throw new ArgumentException();
         }
 
-        public static string PaddingNum4Digit(int input) => input >= 10000 ? "????" : input.ToString("D4");
+        public static string PaddingNum4Digit(int input) => input.ToString("0000");
         public static string PaddingNum3Digit(int input) => input >= 1000 ? "???" : input.ToString("D3");
         public static string PaddingNum2Digit(int input) => input >= 100 ? "??" : input.ToString("D2");
         

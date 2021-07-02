@@ -268,7 +268,8 @@ namespace ROOT
 
         private BossAdditionalSetupAsset BossRoundData => LevelAsset.ActionAsset.BossSetup;
         private int TotalSprayCount => BossRoundData.BossLength * SprayCountPerAnimateInterval;
-        private int TargetInfoCount => Mathf.RoundToInt(BossRoundData.InfoCount * BossRoundData.InfoTargetRatio);
+
+        private int TargetInfoCount => Mathf.RoundToInt(BossRoundData.InfoCount * BossRoundData.InfoTargetRatio / 100.0f);
 
         private void TelemetryInit()
         {

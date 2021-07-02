@@ -107,7 +107,7 @@ namespace ROOT.UI
             MissionTarget_Big.text = "[" + _padding(_cachedData.CrtMission) + "]";
             NormalTierText.text = "[" + _padding(_cachedData.TypeATier) + "]";
             NetworkTierText.text = "[" + _padding(_cachedData.TypeBTier) + "]";
-            SignalText.text = Utils.PaddingNum4Digit(_cachedData.InfoCounter) + "/" + Utils.PaddingNum4Digit(_cachedData.InfoTarget);
+            SignalText.text = Utils.PaddingNum4Digit(_cachedData.InfoCounter == int.MaxValue ? 0 : _cachedData.InfoCounter) + "/" + Utils.PaddingNum4Digit(_cachedData.InfoTarget);
 
             UpdateIsTelemetry(_cachedData.IsTelemetryStage.Value);
             UpdatePauseTag(_cachedData.TelemetryPaused.Value, _cachedData.IsTelemetryStage.Value);
