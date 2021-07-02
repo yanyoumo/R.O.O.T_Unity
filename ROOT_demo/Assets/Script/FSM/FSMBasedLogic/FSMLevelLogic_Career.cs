@@ -270,7 +270,7 @@ namespace ROOT
             if (LevelAsset.DestroyerEnabled)
             {
                 WorldExecutor.UpdateDestoryer(LevelAsset);
-                if (LevelAsset.WarningDestoryer != null)
+                if (LevelAsset.WarningDestoryer != null && !WorldCycler.TelemetryPause)//RISK 这里先弄一下，把遥测暂停时的功击流程关了。这个本应该下沉的。
                 {
                     LevelAsset.WarningDestoryer.Step(out var outCore);
                     LevelAsset.DestoryedCoreType = outCore;

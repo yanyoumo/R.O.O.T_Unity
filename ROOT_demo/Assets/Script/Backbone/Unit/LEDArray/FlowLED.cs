@@ -34,9 +34,6 @@ namespace ROOT
             {
                 sfLEDB.SetupLEDColor(ColorLibManager.Instance.ColorLib.ROOT_MASTER_INFO);
             }
-            
-            //TODO 会报一个这样的问题。（？）
-            //Coroutine couldn't be started because the the game object 'DirectionalFlowLED' is inactive!
             StartCoroutine(Timer(duration));
         }
     }
