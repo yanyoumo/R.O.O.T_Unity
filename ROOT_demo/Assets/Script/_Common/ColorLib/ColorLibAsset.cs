@@ -20,35 +20,37 @@ namespace ROOT.SetupAsset
     public class ColorLibAsset : ScriptableObject
     {   
         [Title("Master")]
-        [PropertyOrder(-13)]
+        [PropertyOrder(-14)]
         public Color MASTER_WHITE;
-        [PropertyOrder(-12)]
+        [PropertyOrder(-13)]
         public Color MASTER_BLACK;
-        [PropertyOrder(-11)]
+        [PropertyOrder(-12)]
         public Color MASTER_RED;
-        [PropertyOrder(-10)]
+        [PropertyOrder(-11)]
         public Color MASTER_YELLOW;
-        [PropertyOrder(-9)]
+        [PropertyOrder(-10)]
         public Color MASTER_GREEN;
-        [PropertyOrder(-8)]
+        [PropertyOrder(-9)]
         public Color MASTER_CYAN;
-        [PropertyOrder(-7)]
+        [PropertyOrder(-8)]
         public Color MASTER_BLUE;
-        [PropertyOrder(-6)]
+        [PropertyOrder(-7)]
         public Color MASTER_PURPLE;
         [PropertySpace]
-        [PropertyOrder(-5)]
+        [PropertyOrder(-6)]
         public Color ROOT_MASTER_MATRIX;
-        [PropertyOrder(-4)]
+        [PropertyOrder(-5)]
         public Color ROOT_MASTER_THERMO;
-        [PropertyOrder(-3)]
+        [PropertyOrder(-4)]
         public Color ROOT_MASTER_CLUSTER;
-        [PropertyOrder(-2)]
+        [PropertyOrder(-3)]
         public Color ROOT_MASTER_FIREWALL;
-        [PropertyOrder(-1)]
+        [PropertyOrder(-2)]
         public Color ROOT_MASTER_SCAN;
-        [PropertyOrder(0)]
+        [PropertyOrder(-1)]
         public Color ROOT_MASTER_DISASTER;
+        [PropertyOrder(0)]
+        public Color ROOT_MASTER_INFO;
         
         [PropertySpace]
         [Title("TimeLine")]

@@ -16,6 +16,13 @@ namespace ROOT
 
         private int minVal = 1;
         private int maxVal = 10;
+
+        public void SetupLEDColor(Color col)
+        {
+            LEDColor = col;
+            PosXArrow_Tex.sharedMaterial.color = LEDColor;
+            NegXArrow_Tex.sharedMaterial.color = LEDColor;
+        }
         
         private void Awake()
         {
