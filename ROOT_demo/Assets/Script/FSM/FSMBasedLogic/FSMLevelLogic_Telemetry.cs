@@ -265,19 +265,22 @@ namespace ROOT
         private BossAdditionalSetupAsset BossRoundData => LevelAsset.ActionAsset.BossSetup;
         private int TotalSprayCount => BossRoundData.BossLength * SprayCountPerAnimateInterval;
         private int TargetInfoCount => Mathf.RoundToInt(BossRoundData.InfoCount * BossRoundData.InfoTargetRatio);
-        
+
         private void TelemetryInit()
         {
             SprayCountArray = Utils.SpreadOutLayingWRandomization(TotalSprayCount, BossRoundData.InfoCount, BossRoundData.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
             WorldCycler.TelemetryStage = true;
-            
-            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData()
+
+            var signalInfo = new BoardSignalUpdatedInfo
             {
-                InfoTarget = TargetInfoCount,
-                IsTelemetryStage=WorldCycler.TelemetryStage,//
-            },};
+                SignalData = new BoardSignalUpdatedData()
+                {
+                    InfoTarget = TargetInfoCount,
+                    IsTelemetryStage = WorldCycler.TelemetryStage, //
+                },
+            };
             MessageDispatcher.SendMessage(signalInfo);
         }
 
@@ -326,7 +329,7 @@ namespace ROOT
         protected override void populateGameOverAsset(ref GameOverAsset _gameOverAsset)
         {
             base.populateGameOverAsset(ref _gameOverAsset);
-            _gameOverAsset.ValueInt = TotalSprayCount;//TODO 这个东西有问题。没有在哪记录
+            _gameOverAsset.ValueFloat = TotalSprayCount;//TODO 这个东西有问题。没有在哪记录
         }
         
         protected override Dictionary<BreakingCommand, Action> RootFSMBreakings
@@ -356,7 +359,7 @@ namespace ROOT
             {
                 var unit = board.FindUnitByPos(cursorPos);
                 Debug.Assert(unit != null, nameof(unit) + " != null");
-                if (unit.SignalCore.IsUnitActive)
+                if (unit.SignalCore.IsUnitActive && unit.UnitHardware == HardwareType.Field)
                 {
                     UpdateSingleInfoZone(unit.SignalCore.SingleInfoCollectorZone);
                 }

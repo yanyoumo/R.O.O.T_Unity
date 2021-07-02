@@ -5,7 +5,6 @@ using com.ootii.Messages;
 using ROOT.Consts;
 using Sirenix.Utilities;
 using UnityEngine;
-// ReSharper disable PossibleMultipleEnumeration
 
 namespace ROOT.Signal
 {
@@ -14,8 +13,8 @@ namespace ROOT.Signal
         public override Type UnitSignalCoreType => typeof(ClusterUnitSignalCore);
         public override SignalType SignalType => SignalType.Cluster;
 
-        public static List<MatrixIsland> ClusterIslandPack => _clusterIslandPack;
-        private static List<MatrixIsland> _clusterIslandPack;
+        public static IEnumerable<ClusterIsland> ClusterIslandPack => _clusterIslandPack;
+        private static List<ClusterIsland> _clusterIslandPack;
         
         private List<Vector2Int> FindSingleIsland_Iter(Vector2Int crt)
         {
@@ -43,7 +42,7 @@ namespace ROOT.Signal
         private void updateClusterIsland(IEnumerable<Unit> units)
         {
             ClusterIslandMap = new Dictionary<Vector2Int, bool>();
-            _clusterIslandPack = new List<MatrixIsland>();
+            _clusterIslandPack = new List<ClusterIsland>();
             units.Select(u => u.CurrentBoardPosition).ForEach(p => ClusterIslandMap.Add(p, false));
 
             do
@@ -51,7 +50,7 @@ namespace ROOT.Signal
                 var currentV2I = ClusterIslandMap.First(t => !t.Value).Key;
                 var singleIsland = FindSingleIsland_Iter(currentV2I);
                 var unitTierParallel = singleIsland.Select(p => units.First(u => u.CurrentBoardPosition == p).Tier);
-                _clusterIslandPack.Add(new MatrixIsland(singleIsland, unitTierParallel));
+                _clusterIslandPack.Add(new ClusterIsland(singleIsland, unitTierParallel));
             } while (ClusterIslandMap.Any(t => !t.Value));
         }
 

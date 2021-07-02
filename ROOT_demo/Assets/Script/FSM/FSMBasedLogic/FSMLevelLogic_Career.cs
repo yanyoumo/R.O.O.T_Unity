@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cinemachine;
 using com.ootii.Messages;
 using I2.Loc;
@@ -8,6 +9,7 @@ using ROOT.Consts;
 using ROOT.Message;
 using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT
@@ -16,6 +18,16 @@ namespace ROOT
     {
         protected virtual string SucceedEndingTerm => ScriptTerms.EndingMessageNoBoss_EarnedMoney;
         protected virtual string FailedEndingTerm => ScriptTerms.EndingMessageNoBoss_NoEarnedMoney;
+
+        protected override IEnumerable<int> GamePlayHintPagesByLevelType
+        {
+            get
+            {
+                var res = base.GamePlayHintPagesByLevelType.ToList();
+                res.AddRange(new[] {4, 5, 6});
+                return res;
+            }
+        }
         
         protected override float LevelProgress => LevelAsset.StepCount / (float) RoundLibDriver.PlayableCount;
         public override bool CouldHandleTimeLine => true;
@@ -297,7 +309,7 @@ namespace ROOT
             }
         }
 
-        protected virtual int GetBonusInCome() => Mathf.RoundToInt((TypeASignalScore + TypeBSignalScore) * (LevelAsset.CurrencyRebate - 1.0f));//BUG 这个数据有问题？没有实质的加上去？
+        protected virtual float GetBonusInCome() => (TypeASignalScore + TypeBSignalScore) * (LevelAsset.CurrencyRebate - 1.0f);//BUG 这个数据有问题？没有实质的加上去？
         
         protected override void BoardUpdatedHandler(IMessage rMessage)
         {
@@ -327,7 +339,7 @@ namespace ROOT
             {
                 SuccessTerm = SucceedEndingTerm,
                 FailedTerm = FailedEndingTerm,
-                ValueInt = LevelAsset.GameCurrencyMgr.CurrencyDiffFromStartToNow,
+                ValueFloat = LevelAsset.GameCurrencyMgr.CurrencyDiffFromStartToNow,
             };
         }
 

@@ -390,49 +390,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 218689897, guid: f27b51b0160467b479049062b712715f, type: 3}
-      propertyPath: m_Name
-      value: Currency
-      objectReference: {fileID: 0}
-    - target: {fileID: 218689899, guid: f27b51b0160467b479049062b712715f, type: 3}
-      propertyPath: m_fontStyle
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 218689899, guid: f27b51b0160467b479049062b712715f, type: 3}
-      propertyPath: m_fontColor.b
-      value: 0.12452403
-      objectReference: {fileID: 0}
-    - target: {fileID: 218689899, guid: f27b51b0160467b479049062b712715f, type: 3}
-      propertyPath: m_fontColor.g
-      value: 0.14899999
-      objectReference: {fileID: 0}
-    - target: {fileID: 218689899, guid: f27b51b0160467b479049062b712715f, type: 3}
-      propertyPath: m_fontColor.r
-      value: 0.059974827
-      objectReference: {fileID: 0}
-    - target: {fileID: 218689899, guid: f27b51b0160467b479049062b712715f, type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4280296975
-      objectReference: {fileID: 0}
-    - target: {fileID: 3159655934193895928, guid: f27b51b0160467b479049062b712715f,
-        type: 3}
-      propertyPath: Incomes
-      value: 
-      objectReference: {fileID: 3159655934518466358}
-    - target: {fileID: 3159655934193895928, guid: f27b51b0160467b479049062b712715f,
-        type: 3}
-      propertyPath: Currency
-      value: 
-      objectReference: {fileID: 3159655934518466359}
     - target: {fileID: 3159655934193895929, guid: f27b51b0160467b479049062b712715f,
         type: 3}
       propertyPath: m_Name
       value: CostChart
-      objectReference: {fileID: 0}
-    - target: {fileID: 3159655934193895929, guid: f27b51b0160467b479049062b712715f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3159655934193895931, guid: f27b51b0160467b479049062b712715f,
         type: 3}
@@ -491,30 +452,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f27b51b0160467b479049062b712715f, type: 3}
---- !u!114 &3159655934518466358 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3159655933966893554, guid: f27b51b0160467b479049062b712715f,
-    type: 3}
-  m_PrefabInstance: {fileID: 3159655934518466357}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3159655934518466359 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 218689899, guid: f27b51b0160467b479049062b712715f,
-    type: 3}
-  m_PrefabInstance: {fileID: 3159655934518466357}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &5948678325247081592
 PrefabInstance:
   m_ObjectHideFlags: 0

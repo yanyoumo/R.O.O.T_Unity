@@ -55,6 +55,7 @@ namespace ROOT.Signal
             var targetSignalCore = gameBoard.Units.Where(u => u.UnitSignal == SignalType).Select(u => u.SignalCore).ToArray();
             hardwareCount = targetSignalCore.Count(s => s.IsUnitActive);
             signalCount = targetSignalCore.Where(s => s.IsUnitActive).Sum(u => u.Owner.Tier);
+            //
             return targetSignalCore.Sum(s => s.SingleUnitScore);
         }
 

@@ -18,7 +18,7 @@ namespace ROOT
         public bool Succeed = false;
         public string SuccessTerm = "";
         public string FailedTerm = "";
-        public int ValueInt = 0;
+        public float ValueFloat = 0;
     }
 
     public class GameOverMgr : MonoBehaviour
@@ -56,27 +56,31 @@ namespace ROOT
 
         private int CompleteThisLevelAndUnlockFollowing(ref LevelActionAsset actionAsset)
         {
+            //这里发现了这么一个问题、Linq出来的IEnumerable出来后，它是存的一个reference。
+            //基于这个IEnumerable的数据变了后，IEnumerable的结果不同。
+            //Linq存下来的严格来说是一个“查询”，而不是“结果”。
+                //这个特性有 循环内 修改循环的问题。
+            //所以这里必须ToArray。（ToArray或者ToList会把这个“查询”存储成“结果”。）
             var unlockingLevelTermsA = actionAsset.UnlockingLevel
-                .Where(lv => lv != null)
-                .Select(lv => lv.TitleTerm)
-                .Where(s => PlayerPrefsLevelMgr.GetLevelStatus(s) == LevelStatus.Locked)
-                .ToArray();
+                .Where(lv => lv != null).Select(lv => lv.TitleTerm)
+                .Where(s => PlayerPrefsLevelMgr.GetLevelStatus(s) == LevelStatus.Locked).ToArray();
+
             var unlockingLevelTermsB = actionAsset.UnlockingLevel_Upper
-                .Where(lv => lv != null)
-                .Select(lv => lv.TitleTerm)
-                .Where(s => PlayerPrefsLevelMgr.GetLevelStatus(s) == LevelStatus.Locked)
-                .ToArray();
-            
-            if (unlockingLevelTermsA.Length > 0)
+                .Where(lv => lv != null).Select(lv => lv.TitleTerm)
+                .Where(s => PlayerPrefsLevelMgr.GetLevelStatus(s) == LevelStatus.Locked).ToArray();
+
+            if (unlockingLevelTermsA.Any())
             {
+                //如果unlockingLevelTerms还是IEnumerable的话：
+                    //那么这两个函数通过修改actionAsset的内容，会反过来通过actionAsset间接影响unlockingLevelTerms的值。
                 PlayerPrefsLevelMgr.CompleteThisLevelAndUnlockFollowing(actionAsset.TitleTerm, unlockingLevelTermsA);
             }
-            if (unlockingLevelTermsB.Length > 0)
+            if (unlockingLevelTermsB.Any())
             {
                 PlayerPrefsLevelMgr.CompleteThisLevelAndUnlockFollowing(actionAsset.TitleTerm, unlockingLevelTermsB);
             }
 
-            return unlockingLevelTermsA.Length;
+            return unlockingLevelTermsA.Length + unlockingLevelTermsB.Length;
         }
 
         private void CheckUnlockScanUnit()
@@ -107,11 +111,12 @@ namespace ROOT
                 return;
             }
 
-            if (_lastGameAssets.ActionAsset.DisplayedlevelType == LevelType.Tutorial)
+            if (_lastGameAssets.ActionAsset.levelType == LevelType.Tutorial)
             {
                 Debug.Assert(_lastGameAssets.TutorialCompleted.HasValue);
                 var tutorialCompleted = _lastGameAssets.TutorialCompleted.Value;
-                EndingTitleLocalize.Term = TutorialSectionOver;
+                var isFakeTutorial = _lastGameAssets.ActionAsset.DisplayedlevelType == LevelType.Career;
+                EndingTitleLocalize.Term = isFakeTutorial ? GameOver : TutorialSectionOver;
 
                 if (tutorialCompleted)
                 {
@@ -142,8 +147,9 @@ namespace ROOT
                 PlayerPrefsLevelMgr.PlayedThisLevel(_lastGameAssets.ActionAsset.TitleTerm);
             }
 
+            //这里也要写解锁相关内容。
             EndingTitleLocalize.Term = GameOver;
-            EndingMessageParam.SetParameterValue("VALUE", _lastGameAssets.GameOverAsset.ValueInt.ToString());
+            EndingMessageParam.SetParameterValue("VALUE", _lastGameAssets.GameOverAsset.ValueFloat.ToString("F0"));
             EndingMessageLocalize.Term = _lastGameAssets.GameOverAsset.Succeed
                 ? _lastGameAssets.GameOverAsset.SuccessTerm
                 : _lastGameAssets.GameOverAsset.FailedTerm;

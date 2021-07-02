@@ -25,9 +25,6 @@ namespace ROOT.SetupAsset
         [Required] [AssetSelector(Filter = "t:Prefab", Paths = "Assets/Resources/LevelLogicPrefab"),PropertyOrder(-97)]
         public GameObject LevelLogic;
 
-        /*[PropertyOrder(-97)] 
-        public int AcessID = -1;*/
-        
         [Range(0, 10000),PropertyOrder(-96)] 
         public int InitialCurrency = 36;
 
@@ -55,7 +52,7 @@ namespace ROOT.SetupAsset
         public LevelFeature LevelFeature;
         
         [PropertyOrder(-2)]
-        public LevelType DisplayedlevelType;
+        public LevelType DisplayedlevelType;//实质的LevelType应该优先级更高些。
 
         [Header("Passages")]
         [PropertyOrder(-1)]

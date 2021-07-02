@@ -4,6 +4,7 @@ using ROOT.Common;
 using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
 using TMPro;
+using UnityEngine;
 
 namespace ROOT.UI
 {
@@ -29,6 +30,8 @@ namespace ROOT.UI
         {
             if (rmMessage is BoardSignalUpdatedInfo info)
             {
+                //Debug.Log("BoardSignalUpdatedHandler");
+                //Debug.Log("info.SignalData.IsTelemetryStage=" + info.SignalData.IsTelemetryStage);
                 UpdateCachedData(info.SignalData);
                 UpdateNumbersCore();
             }
@@ -79,7 +82,11 @@ namespace ROOT.UI
         private void UpdateCachedData(BoardSignalUpdatedData inComingData)
         {
             _cachedData.TelemetryPaused = inComingData.TelemetryPaused;
-            _cachedData.IsTelemetryStage = inComingData.IsTelemetryStage;
+            //RISK 临时修一下。让这个flag只开不关。
+            if (!_cachedData.IsTelemetryStage)
+            {
+                _cachedData.IsTelemetryStage = inComingData.IsTelemetryStage;
+            }
             
             for (var i = 0; i < 10; i++)
             {
@@ -100,7 +107,7 @@ namespace ROOT.UI
             UpdateIsTelemetry(_cachedData.IsTelemetryStage);
             UpdatePauseTag(_cachedData.TelemetryPaused,_cachedData.IsTelemetryStage);
         }
-        
+
         protected override void Awake()
         {
             base.Awake();

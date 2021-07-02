@@ -10,7 +10,7 @@ namespace ROOT.Signal
 {
     public class FirewallUnitSignalCore : UnitSignalCoreBase
     {
-        //TODO 这个数据可以考虑直接写进去。
+        //这个数据对于已有的1~5的Tier粒度不够。可能要比较极限的数据配置。可能改四方向。 不用了，系统支持float数据了
         private float[] scoreMultiplier = {0.3f, 0.65f, 1.0f, 0.9f, 0.8f, 0.7f, 0.5f, 0.3f, 0.1f};
         
         [ShowInInspector] public override SignalType SignalType => SignalType.Firewall;
@@ -28,11 +28,9 @@ namespace ROOT.Signal
         }
 
         private List<Vector2Int> SearchingPatternList => Utils.GetPixelateCircle_Tier(2).CenteredPatternList.Select(s => s + Owner.CurrentBoardPosition).ToList();
-        private int NeighbouringFirewallUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.UnitHardware == HardwareType.Field && u.SignalCore.IsUnitActive && u.UnitSignal == SignalType.Firewall);
-        
-        private const int perFirewallFieldUnitPrice = 1;//这个系数一定要往上调。
+        private int NeighbFirewallUnitCount => SearchingPatternList.Select(p => GameBoard.FindUnitByPos(p)).Count(u => u != null && u != Owner && u.SignalCore.IsUnitActive && u.UnitSignal == SignalType.Firewall);
 
-        public override float SingleUnitScore => (IsUnitActive && Owner.UnitHardware == HardwareType.Field) ? perFirewallFieldUnitPrice * scoreMultiplier[NeighbouringFirewallUnitCount] * Owner.Tier : 0.0f;
+        public override float SingleUnitScore => IsActiveFieldUnitThisSignal(Owner) ? scoreMultiplier[NeighbFirewallUnitCount] * Owner.Tier : 0.0f;
         
         private UnitNeighbDataAsset _defaultNeighbDataAsset => SignalMasterMgr.Instance.GetUnitAssetByUnitType(SignalType, HardwareType.Field).NeighbouringData[0];
         private UnitNeighbDataAsset _lowNeighbDataAsset => SignalMasterMgr.Instance.GetUnitAssetByUnitType(SignalType, HardwareType.Field).NeighbouringData[1];
@@ -63,10 +61,10 @@ namespace ROOT.Signal
                 {
                     var otherUnit = GameBoard.FindUnitByPos(inquiryBoardPos);
                     Debug.Assert(otherUnit != null);
-                    displayIcon = otherUnit.SignalCore.IsUnitActive && otherUnit.UnitHardware == HardwareType.Field && (otherUnit.UnitSignal == SignalType.Firewall);
+                    displayIcon = otherUnit.SignalCore.IsUnitActive && (otherUnit.UnitSignal == SignalType.Firewall);
                 }
 
-                switch (NeighbouringFirewallUnitCount)
+                switch (NeighbFirewallUnitCount)
                 {
                     case 0:
                     case 1:

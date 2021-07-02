@@ -71,10 +71,10 @@ namespace ROOT
         public TextMeshPro CashingText;
 
         public Transform CashingTextRoot;
-        
-        public Color NegativeCashColoring;
-        public Color PositiveCashColoring;
-        public Color NeutralCashColoring;
+
+        [ShowInInspector] public Color NegativeCashColoring => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_CASHTEXT_NEG;
+        [ShowInInspector] public Color PositiveCashColoring=> ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_CASHTEXT_POS;
+        [ShowInInspector] public Color NeutralCashColoring => ColorLibManager.Instance.ColorLib.ROOT_MAT_BOARDGRID_CASHTEXT_NEU;
         
         public CellStatus CellStatus
         {
@@ -231,7 +231,7 @@ namespace ROOT
             BoardStrokeMesh.material.color = NormalStrokeColor;
         }
 
-        private int GetCashIO()
+        private float GetCashIO()
         {
             if (!_boardCouldIOCurrency) return 0;
 
@@ -241,7 +241,7 @@ namespace ROOT
 
                 var unit=owner.FindUnitByPos(OnboardPos);
                 if (unit == null) throw new ArgumentException();
-                return Mathf.RoundToInt(unit.SignalCore.SingleUnitScore) - HeatSinkCost;
+                return unit.SignalCore.SingleUnitScore - HeatSinkCost;
             }
 
             if (owner.CheckBoardPosValidAndEmpty(OnboardPos)) return 0;
@@ -249,11 +249,23 @@ namespace ROOT
             return -HeatSinkCost;
         }
 
-
-        private void SetText(int number)
+        private void SetText(float number)
         {
-            var numberAsString = (number >= 0 ? "+" : "-") + Common.Utils.PaddingNum2Digit(Math.Abs(number));
+            var numberAsString = "";
             
+            if (Math.Abs(number)>9.9f)
+            {
+                numberAsString = (number >= 0 ? "+" : "-") + Common.Utils.PaddingNum2Digit(Math.Abs(Mathf.RoundToInt(number)));
+            }
+            else if (number!=0.0f)
+            {
+                numberAsString = (number >= 0 ? "+" : "-") + Math.Abs(number).ToString("F1");
+            }
+            else
+            {
+                numberAsString = "+00";
+            }
+
             if (!_boardCouldIOCurrency)
             {
                 CashingText.color = NeutralCashColoring;
@@ -295,7 +307,7 @@ namespace ROOT
             {
                 if (!owner.CheckBoardPosValidAndFilled(OnboardPos)) return false;
                 var unit = owner.FindUnitByPos(OnboardPos);
-                return unit != null && unit.UnitHardware == HardwareType.Field;
+                return unit != null && (HeatSinkCost > 0 || unit.UnitHardware == HardwareType.Field);
             }
         }
 

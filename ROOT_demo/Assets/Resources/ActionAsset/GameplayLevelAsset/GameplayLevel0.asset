@@ -25,7 +25,6 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: 259285a3a82299648838be1bdc9a7c98, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
     type: 3}
-  AcessID: 2
   InitialCurrency: 0
   ShopCost: 1
   UnitCost: 1
@@ -40,6 +39,7 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
+    AdditionalGameplayHintPages: 
   InitalBoard:
   - PlayingSignalSelector: 0
     CoreGenre: 0
@@ -62,7 +62,7 @@ MonoBehaviour:
   - PlayingSignalSelector: 0
     CoreGenre: 1
     Sides: 00000000010000000100000000000000
-    Tier: 2
+    Tier: 3
     Pos: {x: -1, y: -1}
     IsStation: 0
   - PlayingSignalSelector: 0

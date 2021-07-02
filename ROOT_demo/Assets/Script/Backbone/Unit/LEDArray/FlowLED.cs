@@ -18,7 +18,7 @@ namespace ROOT
         {
             SignalFlowLEDA.Val = inORout ? 1 : -1;
             SignalFlowLEDB.Val = inORout ? 1 : -1;
-            StartCoroutine(Timer(duration));
+            //StartCoroutine(Timer(duration));
         }
     }
 }

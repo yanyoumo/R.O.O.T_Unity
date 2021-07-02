@@ -13,19 +13,27 @@ namespace ROOT.Signal
 {
     public abstract class UnitSignalCoreBase : MonoBehaviour
     {
-        //[ShowInInspector] public int MatrixVal=> SignalDataPackList[SignalType.Matrix].SignalDepth;
-
         [ReadOnly]public Unit Owner;
-        protected Board GameBoard => Owner.GameBoard;
+        [ReadOnly] [ShowInInspector] public SignalDataPack SignalDataPackList;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
         //返回对应的信号的enum
-        public abstract SignalType SignalType { get; }
+        //为返回对应的在 遥测阶段 中获得的遥测范围。
+        [ReadOnly] public RotationDirection SignalFromDir;
+        [ReadOnly] public bool Visited;//dequeue
+        [ReadOnly] public bool Visiting;//enqueue
         
-        [ReadOnly]
-        [ShowInInspector]
-        public SignalDataPack SignalDataPackList;//Signal:信号 第一个int：物理深度 第二个int：（信号深度）只计算对应信号场单元的深度。
-
+        //标记扫描信号的路径的参数。
+        [ReadOnly] public int ScanSignalPathDepth; //for scoring purpose
+        [ReadOnly] [ShowInInspector] public int ServerSignalDepth;
+        [ReadOnly] [ShowInInspector] public bool InServerGrid; //for scoring purpose
+        
+        public abstract SignalType SignalType { get; }
+        public abstract List<Vector2Int> SingleInfoCollectorZone { get; }
         public SignalData CorrespondingSignalData => SignalDataPackList[SignalType];
 
+        protected Board GameBoard => Owner.GameBoard;
+        protected bool IsActiveFieldUnitThisSignal(Unit u) => u.SignalCore.IsUnitActive && u.UnitSignal == SignalType && u.UnitHardware == HardwareType.Field;
+        protected bool IsActiveUnitThisSignal(Unit u) => u.SignalCore.IsUnitActive && u.UnitSignal == SignalType;
+        
         public void ResetSignalStrengthComplex()
         {
             SignalDataPackList = new SignalDataPack();
@@ -34,13 +42,6 @@ namespace ROOT.Signal
                 SignalDataPackList[signalType] = new SignalData(0, 0, 0, null);
             }
         }
-
-        //为返回对应的在 遥测阶段 中获得的遥测范围。
-        public abstract List<Vector2Int> SingleInfoCollectorZone { get; }
-
-        [ReadOnly] public RotationDirection SignalFromDir;
-        [ReadOnly] public bool Visited;//dequeue
-        [ReadOnly] public bool Visiting;//enqueue
 
         public int FindCertainSignalDiv_FlatSignal(SignalType signalType)
         {
@@ -66,18 +67,6 @@ namespace ROOT.Signal
             return SignalDataPackList[signalType];
         }
 
-        //标记扫描信号的路径的参数。
-        [ReadOnly] public int ScanSignalPathDepth; //for scoring purpose
-
-        [ReadOnly] [ShowInInspector] public int ServerSignalDepth;
-
-        /// <summary>
-        /// 标记一次计分后，本单元是否处于必要最长序列中。不处于的需要显式记为false。
-        /// </summary>
-        [ReadOnly]
-        [ShowInInspector]
-        public bool InServerGrid; //for scoring purpose
-        
         //0:no signal.
         //1:has signal but no active.
         //2:signal and active.
@@ -106,29 +95,12 @@ namespace ROOT.Signal
         }
                 
         protected bool ShowingNeighbouringLinkage = false;
-
-        private void NeighbouringLinkageToggle(IMessage rMessage)
-        {
-            ShowingNeighbouringLinkage = !ShowingNeighbouringLinkage;
-            NeighbouringLinkageDisplay();
-        }
-
-        //N/E/W/S/NE/NW/SE/SW
-        /*protected readonly Vector2Int[] neighbouringOffsetList =
-        {
-            Vector2Int.up,
-            Vector2Int.right,
-            Vector2Int.left,
-            Vector2Int.down,
-            Vector2Int.up + Vector2Int.right,
-            Vector2Int.up + Vector2Int.left,
-            Vector2Int.down + Vector2Int.right,
-            Vector2Int.down + Vector2Int.left
-        };*/
-
+        
         protected Vector2Int cachedCursorPos { private set; get; } = -Vector2Int.one;
 
         protected virtual void NeighbouringLinkageDisplay() {}
+
+        protected virtual void InitNeighbouringLinkageDisplay() { }
 
         private void BoardDataUpdatedHandler(IMessage rMessage)
         {
@@ -138,8 +110,12 @@ namespace ROOT.Signal
             }
             NeighbouringLinkageDisplay();
         }
-
-        protected virtual void InitNeighbouringLinkageDisplay() { }
+        
+        private void NeighbouringLinkageToggle(IMessage rMessage)
+        {
+            ShowingNeighbouringLinkage = !ShowingNeighbouringLinkage;
+            NeighbouringLinkageDisplay();
+        }
         
         protected virtual void Awake()
         {

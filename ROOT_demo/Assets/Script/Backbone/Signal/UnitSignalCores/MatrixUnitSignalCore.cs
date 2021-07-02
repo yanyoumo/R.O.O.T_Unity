@@ -12,15 +12,19 @@ namespace ROOT.Signal
         {
             get
             {
-                var zone = Utils.GetPixelateCircle_Tier(Owner.Tier - 1);//TODO 这里要加一个Cap
-                var res = new List<Vector2Int>();
-                zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
-                return res;
+                if (IsUnitActive && Owner.UnitHardware == HardwareType.Field)
+                {
+                    var zone = Utils.GetPixelateCircle_Tier(Owner.Tier - 1); //TODO 这里要加一个Cap
+                    var res = new List<Vector2Int>();
+                    zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
+                    return res;
+                }
+                return new List<Vector2Int>();
             }
         }
-        
-        private const int perMatrixFieldUnitPrice = 1;
-        //Core不计分。
-        public override float SingleUnitScore => (IsUnitActive && Owner.UnitHardware == HardwareType.Field) ? perMatrixFieldUnitPrice * Owner.Tier : 0.0f;
+
+        //TODO 这里再放一些Cap
+        private const float perMatrixFieldUnitPrice = 1.0f;
+        public override float SingleUnitScore => IsActiveFieldUnitThisSignal(Owner) ? perMatrixFieldUnitPrice * Owner.Tier : 0.0f;
     }
 }

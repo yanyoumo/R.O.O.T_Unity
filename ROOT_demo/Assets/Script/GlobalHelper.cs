@@ -253,20 +253,18 @@ namespace ROOT
             var sum = res.Sum();
             if (sum != 0)
             {
-                if (Mathf.Abs(sum) < length)
+                var sign = Mathf.Sign(sum) > 0;
+                var absSum = Mathf.Abs(sum);
+                if (Mathf.Abs(sum) <= length)
                 {
-                    var sign = Mathf.Sign(sum) > 0;
-                    var absSum = Mathf.Abs(sum);
                     for (var i = 0; i < absSum; i++)
                     {
-                        //如果sum数值小于总数，就将前sum个数量的值中都敲掉1就行了。
+                        //如果sum数值小于等于总数，就将前sum个数量的值中都敲掉1就行了。
                         res[i] = res[i] - (sign ? 1 : -1);
                     }
                 }
                 else
                 {
-                    var sign = Mathf.Sign(sum) > 0;
-                    var absSum = Mathf.Abs(sum);
                     var offset = SpreadOutLaying(length, absSum, out var sum1);
                     for (var i = 0; i < length; i++)
                     {
@@ -313,10 +311,29 @@ namespace ROOT
         /// <returns>将总数按照计数切分的结果</returns>
         public static int[] SpreadOutLaying(int length, int sum, out int[] sumArray)
         {
-
-            if (length < 1 || length > sum)
+            if (length==0)
             {
-                throw new ArgumentException("目标计数，大于等于1;总数，大于等于目标计数");
+                throw new DivideByZeroException("切分数不能为0!");
+            }
+
+            if (sum<length)
+            {
+                var res = new int[length];
+                sumArray = new int[length];
+                for (int i = 0; i < length; i++)
+                {
+                    if (i<sum)
+                    {
+                        res[i] = 1;
+                        sumArray[i] = i+1;
+                    }
+                    else
+                    {
+                        res[i] = 0;
+                        sumArray[i] = sum;
+                    }
+                }
+                return res;
             }
 
             sumArray = new int[length];

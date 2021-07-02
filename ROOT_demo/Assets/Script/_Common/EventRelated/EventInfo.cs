@@ -27,10 +27,10 @@ namespace ROOT.Message
     
     public class CurrencyUpdatedInfo : RootMessageBase
     {
-        public int TotalIncomesVal = int.MaxValue;
-        public int BaseIncomesVal = int.MaxValue;
-        public int BonusIncomesVal = int.MaxValue;
-        public int CurrencyVal = int.MaxValue;
+        public float TotalIncomesVal = int.MaxValue;
+        public float BaseIncomesVal = int.MaxValue;
+        public float BonusIncomesVal = int.MaxValue;
+        public float CurrencyVal = int.MaxValue;
         public override string Type => WorldEvent.CurrencyUpdatedEvent;
     }
 
@@ -64,6 +64,13 @@ namespace ROOT.Message
         public bool Toggle = false;
         public bool AdditiveOrReplace = false;
         public int PageNum = 0;
+        public IEnumerable<int> PageNums;
+
+        public bool changeSignalHint = false;
+        public SignalType UpperSignal;
+        public SignalType LowerSignal;
+        public bool TelemetryOrNot = false;
+        
         public override string Type => WorldEvent.HintScreenChangedEvent;
     }
     

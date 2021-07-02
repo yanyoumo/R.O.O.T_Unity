@@ -75,12 +75,14 @@ namespace ROOT.UI
             {
                 resString = "-" + resString;
             }
-
-            SignalDelta.text = resString;
-
+            
             var multiplier = _balancingSignalFunc(cachedTypeAVal, cachedTypeBVal);
 
-            IncomeMultiplier.text = "x" + multiplier.ToString("F");
+            var frac_mul = multiplier - 1.0f;
+            var abs_frac_mul = Mathf.Abs(frac_mul);
+            var sign = frac_mul >= 0 ? "+" : "-";
+
+            IncomeMultiplier.text = sign + abs_frac_mul.ToString("#0%");
 
             SetSeesawTick(del);
         }

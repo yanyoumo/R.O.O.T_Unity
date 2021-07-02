@@ -88,7 +88,7 @@ namespace ROOT
         public bool SpendShopCurrency(float price) => !_shopCost || _currency.SpendCurrency(price);
         public bool PerMove(float deltaCurrency) => !_unitCost || _currency.ChangeCurrency(deltaCurrency);
 
-        public int CurrencyDiffFromStartToNow => Mathf.RoundToInt(Currency - StartingMoney);
+        public float CurrencyDiffFromStartToNow => Currency - StartingMoney;
         
         public bool EndGameCheck()
         {

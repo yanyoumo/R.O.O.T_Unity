@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ROOT.Signal
 {
-    public class MatrixIsland : List<Vector2Int>
+    public class ClusterIsland : List<Vector2Int>//甚至这个代码可以不改，玩家其实对这个八方向还是四方向不敏感的。
     {
         private List<int> matrixUnitTierList;
         
@@ -20,7 +20,7 @@ namespace ROOT.Signal
             }
 
             var dif = A - B;
-            return dif == Vector2Int.up || dif == Vector2Int.down || dif == Vector2Int.left || dif == Vector2Int.right;
+            return StaticNumericData.V2Int4DirLib.Any(v => v == dif);
         }
 
         private Vector2 CenterPos
@@ -90,7 +90,7 @@ namespace ROOT.Signal
             return res;
         }
 
-        public MatrixIsland(IEnumerable<Vector2Int> lv2, IEnumerable<int> unitTiers)
+        public ClusterIsland(IEnumerable<Vector2Int> lv2, IEnumerable<int> unitTiers)
         {
             Debug.Assert(lv2.Count() == unitTiers.Count(),"position and tier count should be same!!");
 
