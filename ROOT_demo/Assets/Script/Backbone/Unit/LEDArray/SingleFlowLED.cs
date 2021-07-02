@@ -17,7 +17,7 @@ namespace ROOT
         private int maxVal = 10;
 
         private Color _cachedColor;
-        private Color blinkingColor = ColorLibManager.Instance.ColorLib.ROOT_MASTER_INFO;
+        private Color blinkingColor => ColorLibManager.Instance.ColorLib.ROOT_MASTER_INFO;
         
         /*public void SetupLEDColor(Color col)
         {

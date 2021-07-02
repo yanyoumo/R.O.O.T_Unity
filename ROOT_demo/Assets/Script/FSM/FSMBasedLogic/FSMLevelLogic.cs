@@ -36,7 +36,7 @@ namespace ROOT
             {
                 var res = BaseGamePlayHintPages.Where(i => true); //Duplicate
                 res = res.Union(GamePlayHintPagesByLevelType);
-                res = res.Union(LevelAsset.ActionAsset.AdditionalGameSetup.AdditionalGameplayHintPages);
+                //res = res.Union(LevelAsset.ActionAsset.AdditionalGameSetup.AdditionalGameplayHintPages);
                 return res.Distinct();
             }
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Common;
@@ -22,6 +23,15 @@ namespace ROOT
         protected override string FailedEndingTerm => ScriptTerms.EndingMessageTelemetry_Failed;
         public override bool CouldHandleBoss => true;
         public override BossStageType HandleBossType => BossStageType.Telemetry;
+        
+        protected override IEnumerable<int> GamePlayHintPagesByLevelType
+        {
+            get
+            {
+                var res = base.GamePlayHintPagesByLevelType.ToList();
+                return res.Append(8);
+            }
+        }
         
         #region TelemetryStage
 

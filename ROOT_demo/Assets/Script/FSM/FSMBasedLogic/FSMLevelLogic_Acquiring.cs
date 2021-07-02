@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Common;
@@ -20,6 +21,15 @@ namespace ROOT
         public override BossStageType HandleBossType => BossStageType.Acquiring;
         public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_ACQUIRING;
 
+        protected override IEnumerable<int> GamePlayHintPagesByLevelType
+        {
+            get
+            {
+                var res = base.GamePlayHintPagesByLevelType.ToList();
+                return res.Append(7);
+            }
+        }
+        
         private Func<int, float> BalancingFunc = (i) => 2.0f - i * 0.25f;
         private IEnumerable<int> offset=> new[]{0, 1, 2, 3, 4, 5};
         private float[] _balancingChart => new[]{1.3f, 1.2f, 1.0f, 0.8f, 0.5f, 0.1f};
