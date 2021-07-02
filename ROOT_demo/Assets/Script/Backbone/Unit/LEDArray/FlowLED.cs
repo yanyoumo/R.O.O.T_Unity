@@ -17,23 +17,8 @@ namespace ROOT
         
         public override void Blink(float duration, bool inORout)
         {
-            if (!gameObject.activeSelf)
-            {
-                return;
-            }
-            
             SignalFlowLEDA.Val = inORout ? 1 : -1;
             SignalFlowLEDB.Val = inORout ? 1 : -1;
-            
-            if (SignalFlowLEDA is SingleFlowLED sfLEDA)
-            {
-                sfLEDA.SetupLEDColor(ColorLibManager.Instance.ColorLib.ROOT_MASTER_INFO);
-            }
-            
-            if (SignalFlowLEDB is SingleFlowLED sfLEDB)
-            {
-                sfLEDB.SetupLEDColor(ColorLibManager.Instance.ColorLib.ROOT_MASTER_INFO);
-            }
             StartCoroutine(Timer(duration));
         }
     }

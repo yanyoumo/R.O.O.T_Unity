@@ -97,14 +97,14 @@ namespace ROOT.Message
         public override string Type => WorldEvent.CursorMovedEvent;
     }
     
+    public class BoardSignalUpdatedInfo : RootMessageBase
+    {
+        public BoardSignalUpdatedData SignalData;
+        public override string Type => WorldEvent.BoardSignalUpdatedEvent;
+    }
+    
     namespace Inquiry
     {
-        public class BoardSignalUpdatedInfo : RootMessageBase
-        {
-            public BoardSignalUpdatedData SignalData;
-            public override string Type => WorldEvent.BoardSignalUpdatedEvent;
-        }
-        
         public class BalancingSignalSetupInquiryData : RootMessageBase
         {
             public Action<Func<int, int, float>> BalancingSignalFuncCallBack;

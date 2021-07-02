@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Common;
+using ROOT.Message;
 using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
 using UnityEngine;
@@ -238,7 +239,11 @@ namespace ROOT
                 WorldCycler.TelemetryPause = true;
                 StartTelemetryCost();
             }
-            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData() {TelemetryPaused = WorldCycler.TelemetryPause},};
+            var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData()
+            {
+                IsTelemetryStage = WorldCycler.TelemetryStage,
+                TelemetryPaused = WorldCycler.TelemetryPause
+            },};
             MessageDispatcher.SendMessage(signalInfo);
         }
         private void DealTelemetryPauseBreaking()

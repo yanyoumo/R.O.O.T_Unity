@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using com.ootii.Messages;
+using ROOT.Message;
+using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -17,19 +20,50 @@ namespace ROOT
         private int minVal = 1;
         private int maxVal = 10;
 
-        public void SetupLEDColor(Color col)
+        private Color _cachedColor;
+        private Color blinkingColor = ColorLibManager.Instance.ColorLib.ROOT_MASTER_INFO;
+        
+        /*public void SetupLEDColor(Color col)
         {
             LEDColor = col;
             PosXArrow_Tex.sharedMaterial.color = LEDColor;
             NegXArrow_Tex.sharedMaterial.color = LEDColor;
+        }*/
+
+        private void BoardSignalUpdatedHandler(IMessage rMessage)
+        {
+            if (rMessage is BoardSignalUpdatedInfo info)
+            {
+                if (info.SignalData.IsTelemetryStage.HasValue && info.SignalData.IsTelemetryStage.Value)
+                {
+                    if (info.SignalData.TelemetryPaused.HasValue && info.SignalData.TelemetryPaused.Value)
+                    {
+                        PosXArrow_Tex.sharedMaterial.color = _cachedColor;
+                        NegXArrow_Tex.sharedMaterial.color = _cachedColor;
+                    }
+
+                    if (!info.SignalData.TelemetryPaused.HasValue || !info.SignalData.TelemetryPaused.Value)
+                    {
+                        PosXArrow_Tex.sharedMaterial.color = blinkingColor;
+                        NegXArrow_Tex.sharedMaterial.color = blinkingColor;
+                    }
+                }
+            }
         }
-        
+
         private void Awake()
         {
             PosXArrow_Tex.material = new Material(PosXArrow_Tex.material);
             NegXArrow_Tex.material = new Material(NegXArrow_Tex.material);
             PosXArrow_Tex.sharedMaterial.color = LEDColor;
             NegXArrow_Tex.sharedMaterial.color = LEDColor;
+            _cachedColor = LEDColor;
+            MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
+        }
+
+        private void OnDestroy()
+        {
+            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent,BoardSignalUpdatedHandler);
         }
 
         private void Update()//TODO 到时候更精巧的一些就是这里的流程用DOTween改修一下。

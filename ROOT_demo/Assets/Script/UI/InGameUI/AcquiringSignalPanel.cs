@@ -1,6 +1,7 @@
 using System;
 using com.ootii.Messages;
 using ROOT.Common;
+using ROOT.Message;
 using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
 using TMPro;
