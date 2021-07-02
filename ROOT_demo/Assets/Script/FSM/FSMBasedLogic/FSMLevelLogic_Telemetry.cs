@@ -5,7 +5,6 @@ using com.ootii.Messages;
 using I2.Loc;
 using ROOT.Common;
 using ROOT.Message;
-using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
 using UnityEngine;
 using Random = UnityEngine.Random;

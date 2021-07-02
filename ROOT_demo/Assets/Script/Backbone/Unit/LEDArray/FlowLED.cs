@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Doozy;
-using ROOT.SetupAsset;
 using UnityEngine;
 
 namespace ROOT

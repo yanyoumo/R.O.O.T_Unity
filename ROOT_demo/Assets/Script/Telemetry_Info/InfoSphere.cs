@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using com.ootii.Messages;
 using ROOT.Message;
-using ROOT.Message.Inquiry;
 using UnityEngine;
 
 namespace ROOT
