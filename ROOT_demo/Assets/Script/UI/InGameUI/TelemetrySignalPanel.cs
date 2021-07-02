@@ -5,6 +5,7 @@ using ROOT.Message.Inquiry;
 using ROOT.SetupAsset;
 using TMPro;
 using UnityEngine;
+// ReSharper disable PossibleInvalidOperationException
 
 namespace ROOT.UI
 {
@@ -81,13 +82,16 @@ namespace ROOT.UI
         
         private void UpdateCachedData(BoardSignalUpdatedData inComingData)
         {
-            _cachedData.TelemetryPaused = inComingData.TelemetryPaused;
-            //RISK 临时修一下。让这个flag只开不关。
-            if (!_cachedData.IsTelemetryStage)
+            if (inComingData.TelemetryPaused.HasValue)
             {
-                _cachedData.IsTelemetryStage = inComingData.IsTelemetryStage;
+                _cachedData.TelemetryPaused = inComingData.TelemetryPaused.Value;
             }
             
+            if (inComingData.IsTelemetryStage.HasValue)
+            {
+                _cachedData.IsTelemetryStage = inComingData.IsTelemetryStage.Value;
+            }
+
             for (var i = 0; i < 10; i++)
             {
                 UpdateCachedData(inComingData, i);
@@ -104,8 +108,8 @@ namespace ROOT.UI
             NetworkTierText.text = "[" + _padding(_cachedData.TypeBTier) + "]";
             SignalText.text = Utils.PaddingNum4Digit(_cachedData.InfoCounter) + "/" + Utils.PaddingNum4Digit(_cachedData.InfoTarget);
 
-            UpdateIsTelemetry(_cachedData.IsTelemetryStage);
-            UpdatePauseTag(_cachedData.TelemetryPaused,_cachedData.IsTelemetryStage);
+            UpdateIsTelemetry(_cachedData.IsTelemetryStage.Value);
+            UpdatePauseTag(_cachedData.TelemetryPaused.Value, _cachedData.IsTelemetryStage.Value);
         }
 
         protected override void Awake()
@@ -116,7 +120,7 @@ namespace ROOT.UI
             {
                 CurrentSignalCallBack = SetupSignalType,
             });
-            _cachedData = new BoardSignalUpdatedData();
+            _cachedData = new BoardSignalUpdatedData {IsTelemetryStage = false, TelemetryPaused = false};
         }
 
         protected override void OnDestroy()
