@@ -21,8 +21,8 @@ namespace ROOT
 
         private readonly float baseTokenHeight = 0.38f;
         public Transform QuadTransform;
-        public TextMeshPro valMarkerNormal;
-        public TextMeshPro valMarkerNetwork;
+        //public TextMeshPro valMarkerNormal;
+        //public TextMeshPro valMarkerNetwork;
         float yOffset = 0.01f;
 
         public bool SetHideToken
@@ -39,21 +39,21 @@ namespace ROOT
 
         public void DisableValMarker()
         {
-            valMarkerNormal.enabled = false;
-            valMarkerNetwork.enabled = false;
+            //valMarkerNormal.enabled = false;
+            //valMarkerNetwork.enabled = false;
         }
 
         public void SetValMarker(int val, TimeLineTokenType type)
         {
             if (type == TimeLineTokenType.RequireNormal)
             {
-                valMarkerNormal.enabled = true;
-                valMarkerNormal.text = val.ToString();
+                //valMarkerNormal.enabled = true;
+                //valMarkerNormal.text = val.ToString();
             }
             else if (type == TimeLineTokenType.RequireNetwork)
             {
-                valMarkerNetwork.enabled = true;
-                valMarkerNetwork.text = val.ToString();
+                //valMarkerNetwork.enabled = true;
+                //valMarkerNetwork.text = val.ToString();
             }
         }
 
