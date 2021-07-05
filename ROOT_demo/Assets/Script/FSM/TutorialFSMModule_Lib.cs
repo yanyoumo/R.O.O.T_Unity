@@ -33,7 +33,7 @@ namespace ROOT.FSM
             {TutorialCheckType.Reach14Benefit, TutorialCheckFunctionList.ReachBenefitOf14},
             {TutorialCheckType.ReachInfoZoneOf18, TutorialCheckFunctionList.ReachInfoZoneOf18},
             {TutorialCheckType.ReachInfoZoneOf19, TutorialCheckFunctionList.ReachInfoZoneOf19},
-            {TutorialCheckType.ReachInfoZoneOf20, TutorialCheckFunctionList.ReachInfoZoneOf20},
+            {TutorialCheckType.ReachInfoZoneOf14, TutorialCheckFunctionList.ReachInfoZoneOf14},
             {TutorialCheckType.ReachInfoZoneOf21, TutorialCheckFunctionList.ReachInfoZoneOf21},
             {TutorialCheckType.CustomCheckGameplay0, GameplayCheckFunctionList.GameplayCheck0},
             {TutorialCheckType.CustomCheckGameplay1, GameplayCheckFunctionList.GameplayCheck1},

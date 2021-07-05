@@ -54,11 +54,26 @@ namespace ROOT.Signal
             } while (ClusterIslandMap.Any(t => !t.Value));
         }
 
+        private int _cacheBoardHash;
+        private bool initCache = true;
+
         private void BoardDataUpdatedHandler(IMessage rMessage)
         {            
             var data = SignalMasterMgr.Instance.GetActiveUnitByUnitType(SignalType, HardwareType.Field).ToArray();
             if (data.Length == 0) return;
-            updateClusterIsland(data);
+            if (initCache)
+            {
+                _cacheBoardHash = Board.BoardHashCode;
+                initCache = false;
+                updateClusterIsland(data);
+                return;
+            }
+
+            if (_cacheBoardHash != Board.BoardHashCode)
+            {
+                updateClusterIsland(data);
+                _cacheBoardHash = Board.BoardHashCode;
+            }
         }
         
         protected virtual void Awake()

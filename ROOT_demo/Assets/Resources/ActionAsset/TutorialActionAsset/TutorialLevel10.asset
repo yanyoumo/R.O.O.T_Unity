@@ -25,7 +25,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 0}
   LevelLogic: {fileID: 2283185294020619326, guid: 8e1708a552d7f7d49a7eab5d8aa6bd3e,
     type: 3}
-  InitialCurrency: 36
+  InitialCurrency: 8888
   ShopCost: 1
   UnitCost: 1
   levelType: 0
@@ -75,38 +75,6 @@ MonoBehaviour:
     ActionSubIdx: 0
     ActionType: 0
     Text: "\u5728ROOT\u7CFB\u7EDF\u4E2D\uFF0C\u4E4B\u524D\u63D0\u5230\u7684\u878D\u8D44\u90E8\u5206\u4F5C\u4E3A\u6700\u7EC8\u9636\u6BB5\u53EF\u4EE5\u66FF\u6362\u4E3A\u9065\u6D4B\u9636\u6BB5\u3002"
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnFailedType: 0
-    HandsOnLockRound: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-    SkillID: 0
-  - ActionIdx: 0
-    ActionSubIdx: 0
-    ActionType: 0
-    Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -234,7 +202,7 @@ MonoBehaviour:
   - ActionIdx: 2
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5728\u90A3\u91CC\u53EA\u7B80\u8981\u5730\u8FDB\u884C\u4E86\u4ECB\u7ECD\uFF0C\u5728\u672C\u5173\u4E2D\uFF0C\u5C06\u4ED4\u7EC6\u4ECB\u7ECD\uFF1A\u201C\u77E9\u9635\u201D\u548C\u201C\u70ED\u529B\u201D\u7684\u4FE1\u606F\u573A\u7684\u751F\u6210\u673A\u5236\u3002"
+    Text: "\u5728\u90A3\u91CC\u53EA\u7B80\u8981\u5730\u8FDB\u884C\u4E86\u4ECB\u7ECD\uFF0C\u5728\u672C\u5173\u4E2D\uFF0C\u5C06\u4ED4\u7EC6\u4ECB\u7ECD\uFF1A<b>\u3010\u77E9\u9635\u3011</b>\u548C<b>\u3010\u70ED\u529B\u3011</b>\u7684\u4FE1\u606F\u573A\u7684\u751F\u6210\u673A\u5236\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}

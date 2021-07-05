@@ -23,9 +23,9 @@ MonoBehaviour:
     SerializationNodes: []
   TitleTerm: LevelName_TL11
   Thumbnail: {fileID: 0}
-  LevelLogic: {fileID: 485162502774370968, guid: afa13f756bdc973499104583a03ad166,
+  LevelLogic: {fileID: 2283185294020619326, guid: 8e1708a552d7f7d49a7eab5d8aa6bd3e,
     type: 3}
-  InitialCurrency: 36
+  InitialCurrency: 8888
   ShopCost: 1
   UnitCost: 1
   levelType: 0
@@ -37,21 +37,9 @@ MonoBehaviour:
   LevelInfo: 
   StoryContent: 
   AdditionalGameSetup:
-    PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 1
-  InitalBoard:
-  - PlayingSignalSelector: 0
-    CoreGenre: 0
-    Sides: 01000000010000000100000001000000
-    Tier: 1
-    Pos: {x: 2, y: 3}
-    IsStation: 0
-  - PlayingSignalSelector: 1
-    CoreGenre: 0
-    Sides: 01000000010000000100000001000000
-    Tier: 1
-    Pos: {x: 3, y: 2}
-    IsStation: 0
+    PlayingSignalTypeA: 2
+    PlayingSignalTypeB: 3
+  InitalBoard: []
   HasBossRound: 0
   Endless: 1
   BossStage: 0
@@ -87,38 +75,6 @@ MonoBehaviour:
     ActionSubIdx: 0
     ActionType: 0
     Text: "\u5728ROOT\u7CFB\u7EDF\u4E2D\uFF0C\u4E4B\u524D\u63D0\u5230\u7684\u878D\u8D44\u90E8\u5206\u4F5C\u4E3A\u6700\u7EC8\u9636\u6BB5\u53EF\u4EE5\u66FF\u6362\u4E3A\u9065\u6D4B\u9636\u6BB5\u3002"
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnFailedType: 0
-    HandsOnLockRound: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-    SkillID: 0
-  - ActionIdx: 0
-    ActionSubIdx: 0
-    ActionType: 0
-    Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -246,7 +202,7 @@ MonoBehaviour:
   - ActionIdx: 2
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5728\u90A3\u91CC\u53EA\u7B80\u8981\u5730\u8FDB\u884C\u4E86\u4ECB\u7ECD\uFF0C\u5728\u672C\u5173\u4E2D\uFF0C\u5C06\u4ED4\u7EC6\u4ECB\u7ECD\uFF1A\u201C\u77E9\u9635\u201D\u548C\u201C\u70ED\u529B\u201D\u7684\u4FE1\u606F\u573A\u7684\u751F\u6210\u673A\u5236\u3002"
+    Text: "\u5728\u90A3\u91CC\u53EA\u7B80\u8981\u5730\u8FDB\u884C\u4E86\u4ECB\u7ECD\uFF0C\u5728\u672C\u5173\u4E2D\uFF0C\u5C06\u4ED4\u7EC6\u4ECB\u7ECD\uFF1A<b>\u3010\u96C6\u7FA4\u3011</b>\u548C<b>\u3010\u9632\u706B\u5899\u3011</b>\u7684\u4FE1\u606F\u573A\u7684\u751F\u6210\u673A\u5236\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -310,7 +266,7 @@ MonoBehaviour:
   - ActionIdx: 4
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5BF9\u4E8E\u77E9\u9635\u7CFB\u5217\u5355\u5143\uFF0C\u5176\u751F\u6210\u4FE1\u606F\u573A\u7684\u673A\u5236\u662F\u6700\u4E3A\u7B80\u5355\u7684\u3002"
+    Text: "\u5BF9\u4E8E\u96C6\u7FA4\u7CFB\u5217\u5355\u5143\uFF0C\u5176\u751F\u6210\u7684\u4FE1\u606F\u573A\u8303\u56F4\u662F\u6309\u7167\u5176\u573A\u5355\u5143\u8FDE\u6210\u7684\u201C\u96C6\u7FA4\u201D\u8FDB\u884C\u8BA1\u7B97\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -342,7 +298,7 @@ MonoBehaviour:
   - ActionIdx: 5
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u53EA\u8981\u77E9\u9635\u573A\u5355\u5143\u88AB\u6FC0\u6D3B\uFF0C\u90A3\u4E48\u5B83\u5C31\u4F1A\u4EE5\u5176\u4E3A\u4E2D\u5FC3\u751F\u6210\u5706\u5F62\u7684\u4FE1\u606F\u573A\u3002"
+    Text: "\u53EA\u8981\u96C6\u7FA4\u573A\u5355\u5143\u88AB\u6FC0\u6D3B\uFF0C\u90A3\u4E48\u5B83\u5C31\u4F1A\u4EE5\u5176\u4E3A\u4E2D\u5FC3\u751F\u6210\u5706\u5F62\u7684\u4FE1\u606F\u573A\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -374,7 +330,7 @@ MonoBehaviour:
   - ActionIdx: 6
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5E76\u4E14\u968F\u7740\u77E9\u9635\u573A\u7684\u7B49\u7EA7\u63D0\u5347\uFF0C\u751F\u6210\u7684\u4FE1\u606F\u573A\u534A\u5F84\u4F1A\u63D0\u5347\u3002"
+    Text: "\u8FD9\u4E2A\u201C\u96C6\u7FA4\u201D\u7684\u641C\u7D22\u8303\u56F4\u8303\u56F4\u4E3A\u516B\u65B9\u5411\u3001\u5E76\u4E14\u5305\u542B\u6240\u6709\u6FC0\u6D3B\u7684\u96C6\u7FA4\u573A\u5355\u5143\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -437,6 +393,198 @@ MonoBehaviour:
     SkillID: 0
   - ActionIdx: 7
     ActionSubIdx: 0
+    ActionType: 8
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 41
+    HandOnFailedType: 0
+    HandsOnLockRound: 1
+    HandOnMission: "\u5C06\u4FE1\u606F\u573A\u6269\u5927\u523014\u4E2A\u5355\u5143\u683C\u3002"
+    TimeOutSec: 120
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 8
+    ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u6BCF\u4E2A\u573A\u5355\u5143\u90FD\u4F1A\u5C06\u5176\u7B49\u7EA7\u8D21\u732E\u5230\u96C6\u7FA4\u4E2D\u5E76\u4E14\u6C42\u548C\u6765\u8BA1\u7B97\u8FD9\u4E2A\u96C6\u7FA4\u751F\u6210\u603B\u9762\u79EF\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 8
+    ActionSubIdx: 1
+    ActionType: 3
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 9
+    ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u9664\u4E86\u7B49\u7EA7\u672C\u8EAB\u3001\u6BCF\u4E2A\u5355\u5143\u5468\u56F4\u7684\u6FC0\u6D3B\u7684\u96C6\u7FA4\u573A\u5355\u5143\u6570\u91CF\u8D8A\u591A\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 10
+    ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u90A3\u4E48\u5B83\u5C31\u4F1A\u5C06\u6570\u91CF\u8F6C\u6362\u4E3A\u500D\u6570\u4E58\u4E0A\u7B49\u7EA7\u7684\u79EF\u8D21\u732E\u7ED9\u201C\u96C6\u7FA4\u201D\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 11
+    ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u603B\u4E4B\u4E00\u4E2A\u201C\u96C6\u7FA4\u201D\u4E2D\u7684\u5355\u5143\u603B\u548C\u8D8A\u9AD8\u3001\u5E76\u4E14\u5176\u4E92\u76F8\u76F8\u90BB\u7684\u6B21\u6570\u8D8A\u591A\u3001\u90A3\u4E48\u8FD9\u4E2A\u201C\u96C6\u7FA4\u201D\u751F\u6210\u7684\u4FE1\u606F\u573A\u9762\u79EF\u8D8A\u5927\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 12
+    ActionSubIdx: 0
     ActionType: 2
     Text: 
     DoppelgangerToggle: 0
@@ -467,18 +615,18 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 7
+  - ActionIdx: 12
     ActionSubIdx: 1
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
-    Pos: {x: 2, y: 3}
-    Core: 0
+    Pos: {x: -1, y: -1}
+    Core: 2
     HardwareType: 0
     Sides: 01000000010000000100000001000000
     Tier: 1
-    IsStationary: 1
+    IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
     HandOnFailedType: 0
@@ -499,18 +647,18 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 7
+  - ActionIdx: 12
     ActionSubIdx: 2
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
-    Pos: {x: 3, y: 3}
-    Core: 0
+    Pos: {x: -1, y: -1}
+    Core: 2
     HardwareType: 1
     Sides: 01000000010000000100000001000000
     Tier: 3
-    IsStationary: 1
+    IsStationary: 0
     Tag: 0
     HandOnCheckType: 0
     HandOnFailedType: 0
@@ -531,14 +679,14 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 7
+  - ActionIdx: 12
     ActionSubIdx: 3
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
-    Core: 0
+    Core: 2
     HardwareType: 1
     Sides: 00000000010000000100000000000000
     Tier: 4
@@ -563,14 +711,14 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 7
+  - ActionIdx: 12
     ActionSubIdx: 4
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
-    Core: 0
+    Core: 2
     HardwareType: 1
     Sides: 01000000000000000000000000000000
     Tier: 2
@@ -595,14 +743,46 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 7
+  - ActionIdx: 12
     ActionSubIdx: 5
     ActionType: 1
     Text: 
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: -1, y: -1}
-    Core: 0
+    Core: 2
+    HardwareType: 1
+    Sides: 01000000010000000100000000000000
+    Tier: 2
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 12
+    ActionSubIdx: 6
+    ActionType: 1
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: -1, y: -1}
+    Core: 2
     HardwareType: 1
     Sides: 00000000000000000100000000000000
     Tier: 2
@@ -627,8 +807,104 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 7
-    ActionSubIdx: 6
+  - ActionIdx: 12
+    ActionSubIdx: 7
+    ActionType: 1
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: -1, y: -1}
+    Core: 2
+    HardwareType: 1
+    Sides: 01000000010000000000000000000000
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 12
+    ActionSubIdx: 8
+    ActionType: 1
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: -1, y: -1}
+    Core: 2
+    HardwareType: 1
+    Sides: 01000000000000000100000000000000
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 12
+    ActionSubIdx: 9
+    ActionType: 1
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: -1, y: -1}
+    Core: 2
+    HardwareType: 1
+    Sides: 00000000010000000100000000000000
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 12
+    ActionSubIdx: 10
     ActionType: 22
     Text: 
     DoppelgangerToggle: 0
@@ -659,202 +935,10 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 8
-    ActionSubIdx: 0
-    ActionType: 8
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 39
-    HandOnFailedType: 0
-    HandsOnLockRound: 1
-    HandOnMission: "\u5C06\u4FE1\u606F\u573A\u6269\u5927\u523018\u4E2A\u5355\u5143\u683C\u3002"
-    TimeOutSec: 120
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-    SkillID: 0
-  - ActionIdx: 9
-    ActionSubIdx: 0
-    ActionType: 0
-    Text: "\u4F46\u662F\u56E0\u4E3A\u77E9\u9635\u5355\u5143\u76F8\u5173\u7684\u6613\u7528\u6027\u3001\u5176\u534A\u5F84\u968F\u7B49\u7EA7\u63D0\u5347\u7684\u8FC7\u7A0B\u6709\u4E00\u5B9A\u7684\u6781\u9650\u3002"
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 1
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnFailedType: 0
-    HandsOnLockRound: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-    SkillID: 0
-  - ActionIdx: 9
-    ActionSubIdx: 1
-    ActionType: 3
-    Text: 
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnFailedType: 0
-    HandsOnLockRound: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-    SkillID: 0
-  - ActionIdx: 10
-    ActionSubIdx: 0
-    ActionType: 0
-    Text: "\u5BF9\u4E8E\u70ED\u529B\u7CFB\u5217\u5355\u5143\uFF0C\u5176\u751F\u6210\u4FE1\u606F\u573A\u7684\u57FA\u672C\u673A\u5236\u548C\u77E9\u9635\u5355\u5143\u76F8\u540C\u3002"
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnFailedType: 0
-    HandsOnLockRound: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-    SkillID: 0
-  - ActionIdx: 11
-    ActionSubIdx: 0
-    ActionType: 0
-    Text: "\u53EA\u8981\u70ED\u529B\u573A\u5355\u5143\u88AB\u6FC0\u6D3B\uFF0C\u540C\u6837\u5730\u3001\u5B83\u4F1A\u4EE5\u5176\u4E3A\u4E2D\u5FC3\u751F\u6210\u5706\u5F62\u7684\u4FE1\u606F\u573A\u3002"
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnFailedType: 0
-    HandsOnLockRound: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-    SkillID: 0
-  - ActionIdx: 12
-    ActionSubIdx: 0
-    ActionType: 0
-    Text: "\u5E76\u4E14\u968F\u7740\u70ED\u529B\u573A\u7684\u7B49\u7EA7\u63D0\u5347\uFF0C\u751F\u6210\u7684\u4FE1\u606F\u573A\u534A\u5F84\u4F1A\u7A33\u5B9A\u5730\u63D0\u5347\u3002"
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnFailedType: 0
-    HandsOnLockRound: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-    SkillID: 0
   - ActionIdx: 13
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5E76\u4E14\u5176\u57FA\u7840\u503C\u548C\u589E\u957F\u503C\u6BD4\u77E9\u9635\u7CFB\u5217\u66F4\u9AD8\u3002"
+    Text: "\u6700\u540E\u7684\u662F\u9632\u706B\u5899\u5355\u5143\uFF0C\u5176\u751F\u6210\u7684\u4FE1\u606F\u573A\u8303\u56F4\u662F\u6309\u7167\u5176\u573A\u5355\u5143\u8FDE\u6210\u7684\u201C\u73AF\u201D\u8FDB\u884C\u8BA1\u7B97\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -886,7 +970,7 @@ MonoBehaviour:
   - ActionIdx: 14
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u4F46\u662F\u6709\u4E00\u70B9\u548C\u77E9\u9635\u7684\u5173\u952E\u4E0D\u540C\uFF0C\u70ED\u529B\u573A\u5355\u5143\u751F\u6210\u7684\u4FE1\u606F\u573A\u6709\u53EF\u80FD\u4F1A\u4EFB\u4F55\u72B6\u6001\u7684\u4EFB\u4F55\u5355\u5143\u6240\u201C\u906E\u853D\u201D\u3002"
+    Text: "\u8FD9\u4E2A\u201C\u73AF\u201D\u7684\u641C\u7D22\u8303\u56F4\u8303\u56F4\u4E3A\u516B\u65B9\u5411\u3001\u5E76\u4E14\u5305\u542B\u6240\u6709\u6FC0\u6D3B\u7684\u96C6\u7FA4\u573A\u5355\u5143\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -915,7 +999,103 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 14
+  - ActionIdx: 15
+    ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u7CFB\u7EDF\u5C06\u4F1A\u81EA\u52A8\u9009\u62E9\u4E00\u4E2A\u56F4\u6210\u9762\u79EF\u6700\u5927\u7684\u5355\u4E2A\u73AF\uFF0C\u5E76\u4E14\u57FA\u4E8E\u5176\u751F\u6210\u9632\u706B\u5899\u7684\u4FE1\u606F\u573A\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 16
+    ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u8FD9\u4E2A\u4FE1\u606F\u573A\u4F1A\u662F\u8FD9\u4E2A\u201C\u573A\u201D\u7684\u5185\u90E8\u3001\u5373\u2014\u2014\u9ED8\u8BA4\u6765\u8BF4\uFF0C\u7EC4\u6210\u8FD9\u4E2A\u201C\u73AF\u201D\u7684\u573A\u5355\u5143\u672C\u8EAB\u5E76\u4E0D\u4F1A\u6709\u4FE1\u606F\u573A\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 17
+    ActionSubIdx: 0
+    ActionType: 0
+    Text: "\u4F46\u662F\u968F\u7740\u573A\u5355\u5143\u672C\u8EAB\u7684\u7B49\u7EA7\u63D0\u5347\u3001\u5904\u4E8E\u8FD9\u4E2A\u201C\u73AF\u201D\u4E0A\u7684\u5355\u5143\u4E5F\u4F1A\u4EA7\u751F\u573A\u3001\u4F1A\u4EA7\u751F\u8FD9\u4E2A\u4FE1\u606F\u573A\u4F1A\u4ECE\u201C\u73AF\u201D\u5185\u90E8\u5916\u6269\u7684\u6548\u5E94\u3002"
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 0
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 0
+    SkillID: 0
+  - ActionIdx: 17
     ActionSubIdx: 1
     ActionType: 19
     Text: 
@@ -947,7 +1127,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 14
+  - ActionIdx: 17
     ActionSubIdx: 2
     ActionType: 1
     Text: 
@@ -979,7 +1159,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 14
+  - ActionIdx: 17
     ActionSubIdx: 3
     ActionType: 1
     Text: 
@@ -1011,7 +1191,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 14
+  - ActionIdx: 17
     ActionSubIdx: 4
     ActionType: 1
     Text: 
@@ -1043,7 +1223,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 14
+  - ActionIdx: 17
     ActionSubIdx: 5
     ActionType: 1
     Text: 
@@ -1075,7 +1255,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 14
+  - ActionIdx: 17
     ActionSubIdx: 6
     ActionType: 1
     Text: 
@@ -1107,7 +1287,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 14
+  - ActionIdx: 17
     ActionSubIdx: 7
     ActionType: 8
     Text: 
@@ -1139,7 +1319,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 15
+  - ActionIdx: 18
     ActionSubIdx: 0
     ActionType: 3
     Text: 
@@ -1171,7 +1351,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 15
+  - ActionIdx: 18
     ActionSubIdx: 1
     ActionType: 0
     Text: "\u8FD9\u5C31\u662F\u8FD9\u4E24\u6B3E\u5355\u5143\u7CFB\u5217\u7684\u4FE1\u606F\u573A\u6FC0\u6D3B\u673A\u5236\u3002"
@@ -1203,7 +1383,7 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  - ActionIdx: 16
+  - ActionIdx: 19
     ActionSubIdx: 0
     ActionType: 5
     Text: 
@@ -1235,9 +1415,9 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  mainIDXToinsert: 0
-  subIDXToinsert: 5
-  CSVFileName: 
+  mainIDXToinsert: 7
+  subIDXToinsert: 9
+  CSVFileName: TL11
   UnlockingLevel: []
   UnlockingLevel_Upper: []
   ExcludedShop: 0

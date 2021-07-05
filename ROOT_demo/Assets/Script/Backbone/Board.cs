@@ -501,7 +501,9 @@ namespace ROOT
             URLocatorStatic = URLocator;
             MessageDispatcher.AddListener(WorldEvent.BoardShouldUpdateEvent, FullyUpdateBoardData);
         }
-        
+
+        public static int BoardHashCode { get; private set; }
+
         private void Update()
         {
             //这里的实现现在有点儿“鲁”，但是这里只有一个目的，就是需要让让派生数据随着锚点数据更新而更新。
@@ -509,6 +511,7 @@ namespace ROOT
             var hashCode = UnitsHashCode ^ GridsHashCode;
             if (lastUnitsHashCode != hashCode)
             {
+                BoardHashCode = hashCode;
                 //RISK 第一次变化这个问题这里不会触发，有空看看去。
                 lastUnitsHashCode = hashCode;
                 RootDebug.Log("RefreshBoardAllSignalStrength:" + lastUnitsHashCode, NameID.YanYoumo_Log);

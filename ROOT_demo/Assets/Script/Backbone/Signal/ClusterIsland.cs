@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ROOT.Consts;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ROOT.Signal
@@ -36,11 +37,11 @@ namespace ROOT.Signal
         private IEnumerable<Vector2Int> TotalSurroundingGrid(IEnumerable<Vector2Int> src)
         {
             var res = new List<Vector2Int>();
-            foreach (var vector2 in src.Where(v => GridTotalSurroundingCount(v, src) != 4))//RISK 这里AsParallel不好使，但是需要具体去看下原因。
+            foreach (var vector2Int in src)
             {
                 foreach (var dir in StaticNumericData.V2Int4DirLib)
                 {
-                    var offsetV2 = vector2 + dir;
+                    var offsetV2 = vector2Int + dir;
                     if (!src.Contains(offsetV2) && !res.Contains(offsetV2))
                     {
                         res.Add(offsetV2);
@@ -53,7 +54,7 @@ namespace ROOT.Signal
 
         private int GridTotalSurroundingCount(Vector2Int v, IEnumerable<Vector2Int> pool)
         {
-            return pool.Count(v0 => Vec2IntIsFourDirNeighbouring(v, v0));
+            return StaticNumericData.V2Int4DirLib.Count(o => pool.Contains(v + o));
         }
 
         private int OrderByCenterPos_Discrete(Vector2Int v)
@@ -66,7 +67,9 @@ namespace ROOT.Signal
         
         private int TotalGridCount => _connectingVal;
         
-        public IEnumerable<Vector2Int> GetMatrixIslandInfoZone()
+        public List<Vector2Int> ClusterIslandInfoZone { get; private set; }
+        
+        private IEnumerable<Vector2Int> InitClusterIslandInfoZone()
         {
             var res = this.Where(v => true);
             var extraGridCount = TotalGridCount - Count;
@@ -74,7 +77,7 @@ namespace ROOT.Signal
             {
                 return res;
             }
-
+            
             for (var i = 0; i < extraGridCount; i++)
             {
                 //RISK 现有框架下程序是决定性的、但是从玩家角度看有一定随机性，这个有空看看。
@@ -113,6 +116,8 @@ namespace ROOT.Signal
             }
 
             _connectingVal /= 2;//等效为每个Tier提供0.5个倍数。
+
+            ClusterIslandInfoZone = InitClusterIslandInfoZone().ToList();
         }
 
         public override string ToString()

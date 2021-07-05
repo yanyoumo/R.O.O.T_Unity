@@ -20,11 +20,11 @@ namespace ROOT.Signal
             {
                 if (IsUnitActive && Owner.UnitHardware == HardwareType.Field)
                 {
-                    foreach (var matrixIsland in ClusterSignalAsset.ClusterIslandPack)
+                    foreach (var clusterIsland in ClusterSignalAsset.ClusterIslandPack)
                     {
-                        if (matrixIsland.Contains(Owner.CurrentBoardPosition))
+                        if (clusterIsland.Contains(Owner.CurrentBoardPosition))
                         {
-                            return matrixIsland.GetMatrixIslandInfoZone().ToList();
+                            return clusterIsland.ClusterIslandInfoZone.ToList();
                         }
                     }
                 }

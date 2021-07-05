@@ -32,7 +32,7 @@ namespace ROOT
         
         ReachInfoZoneOf18 = 39,
         ReachInfoZoneOf19 = 40,
-        ReachInfoZoneOf20 = 41,
+        ReachInfoZoneOf14 = 41,
         ReachInfoZoneOf21 = 42,
 
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
@@ -196,7 +196,7 @@ namespace ROOT
         public static bool ReachBenefitOf14(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 14);
         public static bool ReachInfoZoneOf18(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 18);
         public static bool ReachInfoZoneOf19(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 19);
-        public static bool ReachInfoZoneOf20(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 18);
+        public static bool ReachInfoZoneOf14(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 14);
         public static bool ReachInfoZoneOf21(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 18);
         
         private static bool InfoZoneCount(FSMLevelLogic fsm, int Target)
