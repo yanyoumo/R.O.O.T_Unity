@@ -73,18 +73,11 @@ namespace ROOT
             PlayerPrefs.Save();
         }
 
-        /*[Button]
-        public void TestFormat()
+        public void ResetPlayerPrefs()
         {
-            var res = 0.3165432168f;
-            Debug.Log(res.ToString("0000"));
-            Debug.Log(res.ToString("####"));
-            Debug.Log(res.ToString("00.00"));
-            Debug.Log(res.ToString("##.##"));
-            Debug.Log(res.ToString("0.0"));
-            Debug.Log(res.ToString("#.#"));
-            Debug.Log(res.ToString("%00"));
-        }*/
+            ClearPlayerPrefs();
+            SetUpPlayerPrefs();
+        }
         
         private void SetUpPlayerPrefs()
         {

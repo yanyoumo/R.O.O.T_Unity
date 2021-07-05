@@ -39,7 +39,6 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
-    AdditionalGameplayHintPages: 
   InitalBoard:
   - PlayingSignalSelector: 1
     CoreGenre: 0
@@ -52,7 +51,7 @@ MonoBehaviour:
     Sides: 01000000010000000100000001000000
     Tier: 1
     Pos: {x: 2, y: 3}
-    IsStation: 1
+    IsStation: 0
   - PlayingSignalSelector: 1
     CoreGenre: 1
     Sides: 01000000010000000100000001000000
