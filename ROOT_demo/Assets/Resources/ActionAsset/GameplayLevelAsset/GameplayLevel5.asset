@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_GL5
-  Thumbnail: {fileID: 21300000, guid: 57d26bcf687e24a41b96ffb61343fabc, type: 3}
+  Thumbnail: {fileID: 21300000, guid: 4ab31db478f9ee54fb730c8df4de9db1, type: 3}
   LevelLogic: {fileID: 485162502774370968, guid: 93fcf6610650a564f859c0167f0cf4a1,
     type: 3}
   InitialCurrency: 80
@@ -39,7 +39,6 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
-    AdditionalGameplayHintPages: 
   InitalBoard: []
   HasBossRound: 1
   Endless: 0

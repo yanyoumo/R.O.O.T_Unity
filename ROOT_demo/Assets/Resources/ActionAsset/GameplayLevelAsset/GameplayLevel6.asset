@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   TitleTerm: LevelName_GL6
-  Thumbnail: {fileID: 21300000, guid: 57d26bcf687e24a41b96ffb61343fabc, type: 3}
+  Thumbnail: {fileID: 21300000, guid: d11a070301a1fb440b6af9844f2039c3, type: 3}
   LevelLogic: {fileID: 485162502774370968, guid: 93fcf6610650a564f859c0167f0cf4a1,
     type: 3}
   InitialCurrency: 120
@@ -37,9 +37,8 @@ MonoBehaviour:
   LevelInfo: 
   StoryContent: 
   AdditionalGameSetup:
-    PlayingSignalTypeA: 0
-    PlayingSignalTypeB: 1
-    AdditionalGameplayHintPages: 
+    PlayingSignalTypeA: 2
+    PlayingSignalTypeB: 3
   InitalBoard: []
   HasBossRound: 1
   Endless: 0
