@@ -29,6 +29,11 @@ namespace ROOT
         Reach10Benefit = 36,
         Reach12Benefit = 37,
         Reach14Benefit = 38,
+        
+        ReachInfoZoneOf18 = 39,
+        ReachInfoZoneOf19 = 40,
+        ReachInfoZoneOf20 = 41,
+        ReachInfoZoneOf21 = 42,
 
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
         CustomCheckGameplay0 = 250,
@@ -189,7 +194,16 @@ namespace ROOT
         public static bool ReachBenefitOf10(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 10);
         public static bool ReachBenefitOf12(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 12);
         public static bool ReachBenefitOf14(FSMLevelLogic fsm, Board board) => ReachBenefit(fsm, 14);
+        public static bool ReachInfoZoneOf18(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 18);
+        public static bool ReachInfoZoneOf19(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 19);
+        public static bool ReachInfoZoneOf20(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 18);
+        public static bool ReachInfoZoneOf21(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 18);
         
+        private static bool InfoZoneCount(FSMLevelLogic fsm, int Target)
+        {
+            return fsm.LevelAsset.CollectorZone.Distinct().Count() >= Target;
+        }
+
         private static bool ConnectAllUnitByType(Board board, SignalType _signalType)
         {
             return board.Units.Where(u => u.SignalCore.SignalType == _signalType).All(u => u.SignalCore.IsUnitActive);
