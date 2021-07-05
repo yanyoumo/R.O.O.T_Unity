@@ -25,7 +25,6 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: ae5d1e45f8beaa443be921a6cef908e8, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
     type: 3}
-  AcessID: 1
   InitialCurrency: 0
   ShopCost: 1
   UnitCost: 1

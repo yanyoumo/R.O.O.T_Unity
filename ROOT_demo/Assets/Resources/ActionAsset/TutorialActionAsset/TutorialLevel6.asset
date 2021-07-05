@@ -34,12 +34,11 @@ MonoBehaviour:
   IsScanLevel: 0
   LevelFeature: 1
   DisplayedlevelType: 0
-  LevelInfo: 
-  StoryContent: 
+  LevelInfo: "\u9664\u4E86\u4E4B\u524D\u63D0\u5230\u8FC7\u7684\u5355\u5143\uFF0C\u8FD8\u6709\u4E00\u79CD\u201C\u96C6\u7FA4\u5355\u5143\u201D\u3002"
+  StoryContent: "\u54E6\u8C41\uFF1F\u5B66\u4E86\u8FD9\u4E48\u4E45\u3001\u8FD8\u6709\u65B0\u73A9\u610F\u513F\u5462\uFF1Fw"
   AdditionalGameSetup:
     PlayingSignalTypeA: 2
     PlayingSignalTypeB: 0
-    AdditionalGameplayHintPages: 
   InitalBoard: []
   HasBossRound: 0
   Endless: 1

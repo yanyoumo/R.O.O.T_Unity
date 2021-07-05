@@ -34,8 +34,8 @@ MonoBehaviour:
   IsScanLevel: 0
   LevelFeature: 62
   DisplayedlevelType: 1
-  LevelInfo: 
-  StoryContent: 
+  LevelInfo: "\u4F7F\u7528\u4F60\u4E4B\u524D\u5B66\u4E60\u5230\u7684\u6280\u80FD\u4E3A\u516C\u53F8\u83B7\u53D6\u5B9E\u9645\u7684\u5229\u76CA\u5427\uFF01"
+  StoryContent: "\u4E0D\u662F\uFF0C\u516C\u53F8\u7684\u878D\u8D44\u771F\u7684\u4E5F\u662F\u6211\u641E\uFF1F"
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
