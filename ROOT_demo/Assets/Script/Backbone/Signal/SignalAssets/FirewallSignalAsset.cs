@@ -151,7 +151,7 @@ namespace ROOT.Signal
                     dfs(v, u);
                     ++child;
                     low[u] = Math.Min(low[v], low[u]); //更新当前顶点cur能否访问到最早顶点的时间截 
-                    if (low[v] >= dfn[u] && f.Equals(new Vector2Int(-1, -1)))
+                    if (low[v] >= dfn[u] && !f.Equals(new Vector2Int(-1, -1)))
                         cutVertexSet.Add(u); //v往回找到的最大时间截所在点还在u的子树里，则为u割点 
                 }
                 else
@@ -187,9 +187,12 @@ namespace ROOT.Signal
                     }
                 }
 
-                foreach (var point in test.Where(point => dfn[point] == 0))
+                foreach (var point in test)
                 {
-                    dfs(point, new Vector2Int(-1, -1));
+                    if (dfn[point] == 0)
+                    {
+                        dfs(point, new Vector2Int(-1, -1));
+                    }
                 }
 
                 if (cutVertexSet.Count == 0)
@@ -197,32 +200,38 @@ namespace ROOT.Signal
                     res.Add(test);
                     continue;
                 }
-                foreach (var point in test.Where(point => !cutVertexSet.Contains(point)))
-                {
-                    int x = point.x, y = point.y;
-                    var tmp = new FirewallCircle();
-                    var queue = new Queue<Vector2Int>();
-                    tmp.Add(new Vector2Int(x, y));
-                    queue.Enqueue(new Vector2Int(x, y));
-                    _board[x, y] = 3;
-                    while (queue.Count != 0)
-                    {
-                        var now = queue.Dequeue();
-                        for (var i = 0; i < 4; ++i)
-                        {
-                            int xx = now.x + dx4[i], yy = now.y + dy4[i];
-                            if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] == -1)
-                                continue;
-                            tmp.Add(new Vector2Int(xx, yy));
-                            if (cutVertexSet.Contains(new Vector2Int(xx, yy)))
-                                continue;
-                            _board[xx, yy] = 3;
-                            queue.Enqueue(new Vector2Int(xx, yy));
-                        }
-                    }
-                    res.Add(tmp);
-                }
 
+                string s = "Vertex";
+                foreach (var point in cutVertexSet)
+                    s += "(" + point.x + "," + point.y + ")";
+                Debug.Log(s);
+                foreach (var point in test)
+                {
+                    if (!cutVertexSet.Contains(point)&& _board[point.x, point.y] ==2)
+                    {
+                        int x = point.x, y = point.y;
+                        var tmp = new FirewallCircle();
+                        var queue = new Queue<Vector2Int>();
+                        tmp.Add(new Vector2Int(x, y));
+                        queue.Enqueue(new Vector2Int(x, y));
+                        _board[x, y] = 3;
+                        while (queue.Count != 0)
+                        {
+                            var now = queue.Dequeue();
+                            for (var i = 0; i < 4; ++i)
+                            {
+                                int xx = now.x + dx4[i], yy = now.y + dy4[i];
+                                if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] == -1|| _board[xx, yy] == 3) continue;
+                                tmp.Add(new Vector2Int(xx, yy));
+                                if (cutVertexSet.Contains(new Vector2Int(xx, yy))) continue;
+                                _board[xx, yy] = 3;
+                                queue.Enqueue(new Vector2Int(xx, yy));
+                            }
+                        }
+
+                        res.Add(tmp);
+                    }
+                }
             }
             print("DelereCutVertux");
             return res;
