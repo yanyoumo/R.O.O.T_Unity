@@ -258,6 +258,7 @@ namespace ROOT.Signal
                 if (cnt == 4)
                 {
                     _board[point.x, point.y] = -1;
+                    _firewallInnerZone.Add(point);
                     continue;
                 }
                 res.Add(point);
@@ -292,6 +293,7 @@ namespace ROOT.Signal
             _connectComponent = DeleteCutVertex(DeleteWhiteSpace());
             var maxArea = 0;
             _firewallCircle = new FirewallCircle();
+            _firewallInnerZone = new FirewallInner();
             foreach (var circle in _connectComponent)
             {
                 if (circle.Count <= maxArea) continue;
