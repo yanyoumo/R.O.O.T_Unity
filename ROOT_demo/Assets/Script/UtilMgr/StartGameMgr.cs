@@ -78,15 +78,18 @@ namespace ROOT
             ClearPlayerPrefs();
             SetUpPlayerPrefs();
         }
-        
+
         private void SetUpPlayerPrefs()
         {
             if (!PlayerPrefs.HasKey(PLAYER_ID)) PlayerPrefs.SetInt(PLAYER_ID, DateTime.UtcNow.Millisecond);
             if (!PlayerPrefs.HasKey(DEV_MODE)) PlayerPrefs.SetInt(DEV_MODE, 0);
             if (!PlayerPrefs.HasKey(MOUSE_DRAG_SENSITIVITY)) PlayerPrefs.SetInt(MOUSE_DRAG_SENSITIVITY, 50);
-            if (!PlayerPrefs.HasKey(LEVEL_SELECTION_PANEL_POS_X)) PlayerPrefs.SetFloat(LEVEL_SELECTION_PANEL_POS_X, 0.0f);
-            if (!PlayerPrefs.HasKey(LEVEL_SELECTION_PANEL_POS_Y)) PlayerPrefs.SetFloat(LEVEL_SELECTION_PANEL_POS_Y, 0.0f);
-            if (!PlayerPrefs.HasKey(RootLevelAsset.TitleTerm)) PlayerPrefsLevelMgr.SetUpRootLevelStatus(RootLevelAsset.TitleTerm);
+            if (!PlayerPrefs.HasKey(LEVEL_SELECTION_PANEL_POS_X))
+                PlayerPrefs.SetFloat(LEVEL_SELECTION_PANEL_POS_X, 0.0f);
+            if (!PlayerPrefs.HasKey(LEVEL_SELECTION_PANEL_POS_Y))
+                PlayerPrefs.SetFloat(LEVEL_SELECTION_PANEL_POS_Y, 0.0f);
+            if (!PlayerPrefs.HasKey(RootLevelAsset.TitleTerm))
+                PlayerPrefsLevelMgr.SetUpRootLevelStatus(RootLevelAsset.TitleTerm);
             if (!PlayerPrefs.HasKey(COULD_UNLOCK_SCAN)) PlayerPrefs.SetInt(COULD_UNLOCK_SCAN, 0);
             if (!PlayerPrefs.HasKey(SCAN_UNLOCKED)) PlayerPrefs.SetInt(SCAN_UNLOCKED, 0);
 
@@ -103,6 +106,9 @@ namespace ROOT
 
         void Awake()
         {
+            string[] arguments = Environment.GetCommandLineArgs();
+            Debug.Log("GetCommandLineArgs: {" + string.Join(", ", arguments) + "}");
+
             DOTween.Init();
             SetUpPlayerPrefs();
 //这里不能用Time.time，因为Awake和游戏运行时间差距一般很小且固定。所以这里要去调系统时间
@@ -114,12 +120,23 @@ namespace ROOT
             DetectedScreenRatio = PCSimulateDevice;
             DetectedInputScheme = EditorInputScheme;
 #elif UNITY_STANDALONE_WIN
-DetectedScreenRatio = SupportedScreenRatio.HD;
-DetectedInputScheme = InputScheme.Keyboard;
+            DetectedScreenRatio = SupportedScreenRatio.HD;
+            DetectedInputScheme = InputScheme.Keyboard;
+
+            if (arguments.Length > 1)
+            {
+                var tryA = int.TryParse(arguments[1], out var w);
+                var tryB = int.TryParse(arguments[2], out var h);
+
+                if (tryA && tryB)
+                {
+                    Screen.SetResolution(w, h, false);
+                }
+            }
 #elif UNITY_IOS
-(DetectedScreenRatio,DetectedInputScheme) = MobileDeviceMgr.AdaptMobileScreen();
+            (DetectedScreenRatio,DetectedInputScheme) = MobileDeviceMgr.AdaptMobileScreen();
 #else
-throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException();
 #endif
             if (GameObject.FindWithTag(StaticTagName.TAG_CONTROLLING_EVENT_MGR) == null)
             {
