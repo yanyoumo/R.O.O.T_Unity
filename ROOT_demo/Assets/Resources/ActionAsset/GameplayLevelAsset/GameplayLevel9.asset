@@ -47,33 +47,45 @@ MonoBehaviour:
   - ID: 0
     ShopLength: 8
     RequireLength: 4
-    TypeARequirement: 0
-    TypeBRequirement: 0
+    TypeARequirement: 4
+    TypeBRequirement: 3
     HeatSinkLength: 9
   - ID: 1
     ShopLength: 10
     RequireLength: 6
-    TypeARequirement: 0
-    TypeBRequirement: 0
+    TypeARequirement: 5
+    TypeBRequirement: 6
     HeatSinkLength: 15
   - ID: 2
     ShopLength: 13
     RequireLength: 7
-    TypeARequirement: 0
-    TypeBRequirement: 0
+    TypeARequirement: 7
+    TypeBRequirement: 9
     HeatSinkLength: 16
   - ID: 3
     ShopLength: 17
     RequireLength: 9
-    TypeARequirement: 0
-    TypeBRequirement: 0
+    TypeARequirement: 9
+    TypeBRequirement: 12
     HeatSinkLength: 17
   - ID: 4
     ShopLength: 19
     RequireLength: 10
-    TypeARequirement: 0
-    TypeBRequirement: 0
+    TypeARequirement: 11
+    TypeBRequirement: 15
     HeatSinkLength: 25
+  - ID: 0
+    ShopLength: 23
+    RequireLength: 12
+    TypeARequirement: 14
+    TypeBRequirement: 17
+    HeatSinkLength: 22
+  - ID: 0
+    ShopLength: 29
+    RequireLength: 15
+    TypeARequirement: 16
+    TypeBRequirement: 21
+    HeatSinkLength: 26
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 45
