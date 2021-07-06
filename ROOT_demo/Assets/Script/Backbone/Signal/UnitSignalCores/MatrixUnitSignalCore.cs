@@ -8,13 +8,17 @@ namespace ROOT.Signal
     {
         [ShowInInspector] public override SignalType SignalType => SignalType.Matrix;
 
+        private const float perMatrixFieldUnitPrice = 1.0f;
+        private int[] matrixTierSignalZoneMapping = {0, 1, 2, 2, 3};
+        
         public override List<Vector2Int> SingleInfoCollectorZone
         {
             get
             {
                 if (IsUnitActive && Owner.UnitHardware == HardwareType.Field)
                 {
-                    var zone = Utils.GetPixelateCircle_Tier(Owner.Tier - 1); //TODO 这里要加一个Cap
+                    var zoneIndex = matrixTierSignalZoneMapping[Owner.Tier - 1];
+                    var zone = Utils.GetPixelateCircle_Tier(zoneIndex);
                     var res = new List<Vector2Int>();
                     zone.PatternList.ForEach(vec => res.Add(vec + Owner.CurrentBoardPosition - new Vector2Int(zone.CircleRadius, zone.CircleRadius)));
                     return res;
@@ -23,8 +27,6 @@ namespace ROOT.Signal
             }
         }
 
-        //TODO 这里再放一些Cap
-        private const float perMatrixFieldUnitPrice = 1.0f;
         public override float SingleUnitScore => IsActiveFieldUnitThisSignal(Owner) ? perMatrixFieldUnitPrice * Owner.Tier : 0.0f;
     }
 }
