@@ -304,6 +304,9 @@ namespace ROOT.Signal
             print("DeleteInner");
         }
 
+        private int _cacheBoardHash;
+        private bool initCache = true;
+        
         private void BoardDataUpdatedHandler(IMessage rMessage)
         {
             var data = SignalMasterMgr.Instance.GetActiveUnitByUnitType(SignalType, HardwareType.Field).ToArray();
@@ -313,7 +316,20 @@ namespace ROOT.Signal
                 _firewallInnerZone = new FirewallInner();
                 return;
             }
-            updateFireWallCircle(data);
+            
+            if (initCache)
+            {
+                _cacheBoardHash = Board.BoardHashCode;
+                initCache = false;
+                updateFireWallCircle(data);
+                return;
+            }
+
+            if (_cacheBoardHash != Board.BoardHashCode)
+            {
+                updateFireWallCircle(data);
+                _cacheBoardHash = Board.BoardHashCode;
+            }
         }
 
         protected virtual void Awake()
