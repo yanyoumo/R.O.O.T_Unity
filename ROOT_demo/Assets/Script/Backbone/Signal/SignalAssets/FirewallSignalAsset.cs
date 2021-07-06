@@ -258,6 +258,7 @@ namespace ROOT.Signal
                 if (cnt == 4)
                 {
                     _board[point.x, point.y] = -1;
+                    _firewallInnerZone.Add(point);
                     continue;
                 }
                 res.Add(point);
