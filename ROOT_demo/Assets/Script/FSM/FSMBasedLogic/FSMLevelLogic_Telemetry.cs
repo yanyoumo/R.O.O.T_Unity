@@ -386,6 +386,10 @@ namespace ROOT
             base.Awake();
             MessageDispatcher.AddListener(WorldEvent.InGameOverlayToggleEvent, InGameOverLayToggleHandler);
             MessageDispatcher.AddListener(WorldEvent.CursorMovedEvent, InGameOverLayToggleHandler);
+            if (UseTutorialVer)
+            {
+                FeatureManager.RegistFSMFeature(FSMFeatures.Telemetry,new []{FSMFeatures.Shop,FSMFeatures.Currency,FSMFeatures.Round}, false);
+            }
         }
 
         protected override void OnDestroy()
