@@ -39,7 +39,19 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 2
     PlayingSignalTypeB: 3
-  InitalBoard: []
+  InitalBoard:
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 01000000010000000100000001000000
+    Tier: 1
+    Pos: {x: 2, y: 2}
+    IsStation: 0
+  - PlayingSignalSelector: 1
+    CoreGenre: 0
+    Sides: 01000000010000000100000001000000
+    Tier: 1
+    Pos: {x: 3, y: 3}
+    IsStation: 0
   HasBossRound: 1
   Endless: 0
   BossStage: 1
