@@ -101,12 +101,12 @@ namespace ROOT.UI
 
         private void UpdateNumbersCore()
         {
-            NormalSignal.text = _padding(_cachedData.CrtTypeASignal) + "/" + _padding(_cachedData.TgtTypeASignal);
-            NetworkSignal.text = _padding(_cachedData.CrtTypeBSignal) + "/" + _padding(_cachedData.TgtTypeBSignal);
+            NormalSignal.text = _padding(_cachedData.CurrentActivatedTierSumA) + "/" + _padding(_cachedData.TargetActivatedTierSumA);
+            NetworkSignal.text = _padding(_cachedData.CurrentActivatedTierSumB) + "/" + _padding(_cachedData.TargetActivatedTierSumB);
             MissionTarget.text = "[" + _padding(_cachedData.CrtMission) + "]";
             MissionTarget_Big.text = "[" + _padding(_cachedData.CrtMission) + "]";
-            NormalTierText.text = "[" + _padding(_cachedData.TypeATier) + "]";
-            NetworkTierText.text = "[" + _padding(_cachedData.TypeBTier) + "]";
+            NormalTierText.text = "[" + _padding(_cachedData.CurrentTotalTierSumA) + "]";
+            NetworkTierText.text = "[" + _padding(_cachedData.CurrentTotalTierSumB) + "]";
             SignalText.text = Utils.PaddingNum4Digit(_cachedData.InfoCounter == int.MaxValue ? 0 : _cachedData.InfoCounter) + "/" + Utils.PaddingNum4Digit(_cachedData.InfoTarget);
 
             UpdateIsTelemetry(_cachedData.IsTelemetryStage.Value);

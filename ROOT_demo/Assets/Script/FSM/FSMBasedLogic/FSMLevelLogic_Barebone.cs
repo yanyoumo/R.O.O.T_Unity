@@ -310,10 +310,10 @@ namespace ROOT
             {
                 SignalData = new BoardSignalUpdatedData()
                 {
-                    CrtTypeASignal = TypeASignalCount,
-                    CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = LevelAsset.GameBoard.GetTotalTierCountByType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
-                    TypeBTier = LevelAsset.GameBoard.GetTotalTierCountByType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
+                    CurrentActivatedTierSumA = TypeASignalCount,
+                    CurrentActivatedTierSumB = TypeBSignalCount,
+                    CurrentTotalTierSumA = LevelAsset.GameBoard.GetTotalTierCountByType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeA, HardwareType.Field),
+                    CurrentTotalTierSumB = LevelAsset.GameBoard.GetTotalTierCountByType(LevelAsset.ActionAsset.AdditionalGameSetup.PlayingSignalTypeB, HardwareType.Field),
                 },
             };
             MessageDispatcher.SendMessage(signalInfo);

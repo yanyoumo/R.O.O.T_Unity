@@ -52,8 +52,8 @@ namespace ROOT.UI
 
         private void UpdateCachedData(BoardSignalUpdatedData inComingData)
         {
-            if (inComingData.CrtTypeASignal != int.MaxValue) cachedTypeAVal = inComingData.CrtTypeASignal;
-            if (inComingData.CrtTypeBSignal != int.MaxValue) cachedTypeBVal = inComingData.CrtTypeBSignal;
+            if (inComingData.CurrentActivatedTierSumA != int.MaxValue) cachedTypeAVal = inComingData.CurrentActivatedTierSumA;
+            if (inComingData.CurrentActivatedTierSumB != int.MaxValue) cachedTypeBVal = inComingData.CurrentActivatedTierSumB;
         }
 
         private void UpdateNumbersCore()

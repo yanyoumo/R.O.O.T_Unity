@@ -82,11 +82,12 @@ namespace ROOT
         
         public int Tier
         {
-            get => _tier;
+            get => UnitHardware == HardwareType.Field ? _tier : 0;
             private set
             {
-                _tier = value;
-                TierTag.text = Common.Utils.PaddingNum2Digit(_tier);
+                var isField = UnitHardware == HardwareType.Field;
+                _tier = isField ? value : 0;
+                TierTag.text = isField ? Common.Utils.PaddingNum2Digit(_tier) : "--";
                 TierLEDs.Val = _tier;
             }
         }

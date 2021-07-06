@@ -15,12 +15,24 @@ namespace ROOT.Signal
         
         [ShowInInspector] public override SignalType SignalType => SignalType.Firewall;
 
+        private IEnumerable<Vector2Int> ExtractHLineFromRing(IEnumerable<Vector2Int> ring,int HLineindex)
+        {
+            return ring.Where(v => v.y == HLineindex);
+        }
+        
+        private IEnumerable<Vector2Int> GetInnerFromRing(IEnumerable<Vector2Int> ring)
+        {
+            //TODO 这里目前只能处理凸包，这个还满要命的。
+            throw new NotImplementedException();
+        }
+        
         //只要这么写，查询任何一个在圈内防火墙单元返回的都是全部的面积。上层轮询的时候反正是distinct的，所以理论上无所谓。
         public override List<Vector2Int> SingleInfoCollectorZone
         {
             get
             {
-                //TODO 这个还得改，这个不太行。
+                //RISK 迪公那里是要返回没有边儿的一圈儿，那么这里就Contains不出来自己。
+                //所以可能就真得让迪公返回一个边儿上的圈圈、然后这里来判断。然后再进行“外扩操作”。
                 return FirewallSignalAsset.CurrentFirewallCircle.Contains(Owner.CurrentBoardPosition)
                     ? FirewallSignalAsset.CurrentFirewallCircle
                     : new List<Vector2Int>();

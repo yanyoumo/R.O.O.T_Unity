@@ -8,14 +8,14 @@ namespace ROOT
         public bool? IsTelemetryStage = null;
         public bool? TelemetryPaused = null;
 
-        public int CrtTypeASignal = int.MaxValue;
-        public int TgtTypeASignal = int.MaxValue;
-        public int CrtTypeBSignal = int.MaxValue;
-        public int TgtTypeBSignal = int.MaxValue;
+        public int CurrentActivatedTierSumA = int.MaxValue;
+        public int TargetActivatedTierSumA = int.MaxValue;
+        public int CurrentActivatedTierSumB = int.MaxValue;
+        public int TargetActivatedTierSumB = int.MaxValue;
         public int CrtMission = int.MaxValue;
         public int TgtMission = int.MaxValue;
-        public int TypeATier = int.MaxValue;
-        public int TypeBTier = int.MaxValue;
+        public int CurrentTotalTierSumA = int.MaxValue;//包含统计未激活的。
+        public int CurrentTotalTierSumB = int.MaxValue;//包含统计未激活的。
         public int InfoCounter = int.MaxValue;
         public int InfoTarget = int.MaxValue;
 
@@ -26,21 +26,21 @@ namespace ROOT
                 switch (i)
                 {
                     case 0:
-                        return CrtTypeASignal;
+                        return CurrentActivatedTierSumA;
                     case 1:
-                        return TgtTypeASignal;
+                        return TargetActivatedTierSumA;
                     case 2:
-                        return CrtTypeBSignal;
+                        return CurrentActivatedTierSumB;
                     case 3:
-                        return TgtTypeBSignal;
+                        return TargetActivatedTierSumB;
                     case 4:
                         return CrtMission;
                     case 5:
                         return TgtMission;
                     case 6:
-                        return TypeATier;
+                        return CurrentTotalTierSumA;
                     case 7:
-                        return TypeBTier;
+                        return CurrentTotalTierSumB;
                     case 8:
                         return InfoCounter;
                     case 9:
@@ -54,16 +54,16 @@ namespace ROOT
                 switch (i)
                 {
                     case 0:
-                        CrtTypeASignal = value;
+                        CurrentActivatedTierSumA = value;
                         return;
                     case 1:
-                        TgtTypeASignal = value;
+                        TargetActivatedTierSumA = value;
                         return;
                     case 2:
-                        CrtTypeBSignal = value;
+                        CurrentActivatedTierSumB = value;
                         return;
                     case 3:
-                        TgtTypeBSignal = value;
+                        TargetActivatedTierSumB = value;
                         return;
                     case 4:
                         CrtMission = value;
@@ -72,10 +72,10 @@ namespace ROOT
                         TgtMission = value;
                         return;
                     case 6:
-                        TypeATier = value;
+                        CurrentTotalTierSumA = value;
                         return;
                     case 7:
-                        TypeBTier = value;
+                        CurrentTotalTierSumB = value;
                         return;
                     case 8:
                         InfoCounter = value;

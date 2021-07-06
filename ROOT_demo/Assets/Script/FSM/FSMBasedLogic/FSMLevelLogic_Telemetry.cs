@@ -120,8 +120,8 @@ namespace ROOT
                 {
                     SignalData = new BoardSignalUpdatedData()
                     {
-                        TgtTypeASignal = normalRval,
-                        TgtTypeBSignal = networkRval,
+                        TargetActivatedTierSumA = normalRval,
+                        TargetActivatedTierSumB = networkRval,
                     },
                 };
                 MessageDispatcher.SendMessage(signalInfo);

@@ -70,10 +70,10 @@ namespace ROOT
             {
                 SignalData = new BoardSignalUpdatedData()
                 {
-                    CrtTypeASignal = TypeASignalCount,
-                    CrtTypeBSignal = TypeBSignalCount,
-                    TypeATier = aSignalCount,
-                    TypeBTier = bSignalCount,
+                    CurrentActivatedTierSumA = TypeASignalCount,
+                    CurrentActivatedTierSumB = TypeBSignalCount,
+                    CurrentTotalTierSumA = aSignalCount,
+                    CurrentTotalTierSumB = bSignalCount,
                 },
             };
             MessageDispatcher.SendMessage(signalInfo);
