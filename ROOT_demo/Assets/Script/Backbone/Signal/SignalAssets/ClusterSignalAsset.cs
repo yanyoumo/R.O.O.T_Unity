@@ -60,7 +60,12 @@ namespace ROOT.Signal
         private void BoardDataUpdatedHandler(IMessage rMessage)
         {            
             var data = SignalMasterMgr.Instance.GetActiveUnitByUnitType(SignalType, HardwareType.Field).ToArray();
-            if (data.Length == 0) return;
+            if (data.Length == 0)
+            {
+                ClusterIslandMap = new Dictionary<Vector2Int, bool>();
+                _clusterIslandPack = new List<ClusterIsland>();
+                return;
+            }
             if (initCache)
             {
                 _cacheBoardHash = Board.BoardHashCode;
