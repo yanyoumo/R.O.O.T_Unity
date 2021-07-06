@@ -30,7 +30,7 @@ namespace ROOT.Signal
                 if (Owner.Tier < 2) return FirewallInner;
 
                 var localZone = Utils.GetPixelateCircle_Tier(Owner.Tier - 2);
-                var zone = localZone.PatternList.Select(v => v + Owner.CurrentBoardPosition);
+                var zone = localZone.PatternList.Select(v => v + Owner.CurrentBoardPosition- new Vector2Int(localZone.CircleRadius, localZone.CircleRadius));
                 return FirewallInner.Union(zone).Distinct().ToList();
             }
         }
