@@ -9,10 +9,14 @@ using UnityEngine;
 namespace ROOT.Signal
 {
     using FirewallCircle = List<Vector2Int>;
+    using FirewallInner = List<Vector2Int>;
+    
     public class FirewallSignalAsset : SignalAssetBase
     {
         private static FirewallCircle _firewallCircle;
-        public static FirewallCircle CurrentFirewallCircle => _firewallCircle;//这个算完之后就给接进去。
+        private static FirewallInner _firewallInnerZone;
+        public static FirewallCircle CurrentFirewallCircle => _firewallCircle;
+        public static FirewallInner CurrentFirewallInner => _firewallInnerZone;
         public override Type UnitSignalCoreType => typeof(FirewallUnitSignalCore);
         public override SignalType SignalType => SignalType.Firewall;
         private static int N => Board.BoardLength;
@@ -306,6 +310,7 @@ namespace ROOT.Signal
             if (data.Length == 0)
             {
                 _firewallCircle = new FirewallCircle();
+                _firewallInnerZone = new FirewallInner();
                 return;
             }
             updateFireWallCircle(data);
