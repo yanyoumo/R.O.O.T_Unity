@@ -23,7 +23,7 @@ MonoBehaviour:
     SerializationNodes: []
   TitleTerm: LevelName_GL9
   Thumbnail: {fileID: 21300000, guid: 57d26bcf687e24a41b96ffb61343fabc, type: 3}
-  LevelLogic: {fileID: 485162502774370968, guid: 93fcf6610650a564f859c0167f0cf4a1,
+  LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,
     type: 3}
   InitialCurrency: 120
   ShopCost: 1
@@ -42,7 +42,7 @@ MonoBehaviour:
   InitalBoard: []
   HasBossRound: 1
   Endless: 0
-  BossStage: 1
+  BossStage: 0
   RoundLib:
   - ID: 0
     ShopLength: 8
@@ -75,12 +75,12 @@ MonoBehaviour:
     TypeBRequirement: 0
     HeatSinkLength: 25
   BossSetup:
-    BossStageTypeVal: 1
-    BossLength: 0
-    DestoryerCount: 0
-    InfoCount: 0
-    InfoVariantRatio: 0
-    InfoTargetRatio: 0
+    BossStageTypeVal: 0
+    BossLength: 45
+    DestoryerCount: 20
+    InfoCount: 1000
+    InfoVariantRatio: 30
+    InfoTargetRatio: 95
     AcquiringTarget: 8500
   Actions:
   - ActionIdx: 0
