@@ -2180,38 +2180,6 @@ MonoBehaviour:
     SkillID: 0
   - ActionIdx: 35
     ActionSubIdx: 0
-    ActionType: 0
-    Text: "\u8BF7\u9009\u62E9\u7EE7\u7EED\u6E38\u620F\u8FDB\u5165\u4E0B\u4E00\u6559\u7A0B\u3002 "
-    DoppelgangerToggle: 0
-    DoppelgangerText: 
-    Pos: {x: 0, y: 0}
-    Core: 0
-    HardwareType: 0
-    Sides: 
-    Tier: 0
-    IsStationary: 0
-    Tag: 0
-    HandOnCheckType: 0
-    HandOnFailedType: 0
-    HandsOnLockRound: 0
-    HandOnMission: 
-    TimeOutSec: 0
-    TargetTag: 0
-    Set: 0
-    HLSet: 0
-    HLCustomPos: 0
-    HighLightingPos: {x: 0, y: 0}
-    HighLightingScale: {x: 0, y: 0}
-    AllClear: 0
-    UITag: 0
-    TimeLineStatus: 0
-    HighLightType: 0
-    poses: []
-    FSMCoreFeat: 0
-    Numpage: 0
-    SkillID: 0
-  - ActionIdx: 36
-    ActionSubIdx: 0
     ActionType: 5
     Text: 
     DoppelgangerToggle: 0
