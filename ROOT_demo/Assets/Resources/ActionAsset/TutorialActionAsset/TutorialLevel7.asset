@@ -56,7 +56,7 @@ MonoBehaviour:
   - ActionIdx: 0
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u6B22\u8FCE\u8FDB\u5165ROOT\u7CFB\u7EDF\u6559\u5B66\u7684\u65B0\u5355\u5143\uFF0C\u8FD9\u91CC\u662F\u6211\u4EEC\u6700\u65B0\u5F00\u53D1\u51FA\u6765\u7684\u2014\u2014\u9632\u706B\u5899\u5355\u5143\u3002"
+    Text: "\u6B22\u8FCE\u8FDB\u5165ROOT\u7CFB\u7EDF\u6559\u5B66\u7684\u65B0\u5355\u5143\uFF0C\u8FD9\u91CC\u662F\u6211\u4EEC\u6700\u65B0\u5F00\u53D1\u51FA\u6765\u7684\u2014\u2014<b>\u3010\u9632\u706B\u5899\u3011</b>\u5355\u5143\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -884,6 +884,38 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
+  - ActionIdx: 7
+    ActionSubIdx: 1
+    ActionType: 20
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 0
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 20
     SkillID: 0
   - ActionIdx: 8
     ActionSubIdx: 0

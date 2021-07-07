@@ -56,7 +56,7 @@ MonoBehaviour:
   - ActionIdx: 0
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u6B22\u8FCE\u8FDB\u5165ROOT\u7CFB\u7EDF\u6559\u5B66\u7684\u65B0\u5355\u5143\uFF0C\u8FD9\u91CC\u662F\u6211\u4EEC\u6700\u65B0\u5F00\u53D1\u51FA\u6765\u7684\u2014\u2014\u96C6\u7FA4\u5355\u5143\u3002"
+    Text: "\u6B22\u8FCE\u8FDB\u5165ROOT\u7CFB\u7EDF\u6559\u5B66\u7684\u65B0\u5355\u5143\uFF0C\u8FD9\u91CC\u662F\u6211\u4EEC\u6700\u65B0\u5F00\u53D1\u51FA\u6765\u7684\u2014\u2014<b>\u3010\u96C6\u7FA4\u3011</b>\u5355\u5143\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -216,7 +216,7 @@ MonoBehaviour:
   - ActionIdx: 3
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u8FD9\u91CC\u5C31\u6765\u4ECB\u7ECD\u7B2C\u4E09\u79CD\u2014\u2014\u96C6\u7FA4\u5355\u5143\u3002"
+    Text: "\u8FD9\u91CC\u5C31\u6765\u4ECB\u7ECD\u7B2C\u4E09\u79CD\u2014\u2014<b>\u3010\u96C6\u7FA4\u3011</b>\u5355\u5143\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -884,6 +884,38 @@ MonoBehaviour:
     poses: []
     FSMCoreFeat: 0
     Numpage: 0
+    SkillID: 0
+  - ActionIdx: 7
+    ActionSubIdx: 1
+    ActionType: 20
+    Text: 
+    DoppelgangerToggle: 0
+    DoppelgangerText: 
+    Pos: {x: 0, y: 0}
+    Core: 0
+    HardwareType: 0
+    Sides: 
+    Tier: 1
+    IsStationary: 0
+    Tag: 0
+    HandOnCheckType: 0
+    HandOnFailedType: 0
+    HandsOnLockRound: 0
+    HandOnMission: 
+    TimeOutSec: 0
+    TargetTag: 0
+    Set: 1
+    HLSet: 0
+    HLCustomPos: 0
+    HighLightingPos: {x: 0, y: 0}
+    HighLightingScale: {x: 0, y: 0}
+    AllClear: 0
+    UITag: 0
+    TimeLineStatus: 0
+    HighLightType: 0
+    poses: []
+    FSMCoreFeat: 0
+    Numpage: 19
     SkillID: 0
   - ActionIdx: 8
     ActionSubIdx: 0
@@ -1686,9 +1718,9 @@ MonoBehaviour:
     FSMCoreFeat: 0
     Numpage: 0
     SkillID: 0
-  mainIDXToinsert: 17
-  subIDXToinsert: 0
-  CSVFileName: LevelName_TL6
+  mainIDXToinsert: 4
+  subIDXToinsert: 5
+  CSVFileName: TutorialLevel6_Text
   UnlockingLevel: []
   UnlockingLevel_Upper: []
   ExcludedShop: 0
