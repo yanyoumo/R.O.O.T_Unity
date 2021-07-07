@@ -1012,7 +1012,7 @@ MonoBehaviour:
     Tier: 0
     IsStationary: 0
     Tag: 0
-    HandOnCheckType: 0
+    HandOnCheckType: 41
     HandOnFailedType: 0
     HandsOnLockRound: 1
     HandOnMission: "\u5C06\u4FE1\u606F\u573A\u6269\u5927\u523014\u4E2A\u5355\u5143\u683C\u3002"
@@ -1648,7 +1648,7 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 3
     HardwareType: 1
-    Sides: 01000000000000000000000001000000
+    Sides: 00000000000000000100000001000000
     Tier: 2
     IsStationary: 0
     Tag: 0
@@ -1680,7 +1680,7 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 3
     HardwareType: 1
-    Sides: 00000000010000000000000001000000
+    Sides: 00000000000000000100000001000000
     Tier: 1
     IsStationary: 0
     Tag: 0
@@ -1712,7 +1712,7 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 3
     HardwareType: 1
-    Sides: 00000000010000000000000001000000
+    Sides: 00000000000000000100000001000000
     Tier: 2
     IsStationary: 0
     Tag: 0
@@ -1744,7 +1744,7 @@ MonoBehaviour:
     Pos: {x: -1, y: -1}
     Core: 3
     HardwareType: 1
-    Sides: 00000000010000000100000000000000
+    Sides: 01000000010000000000000000000000
     Tier: 1
     IsStationary: 0
     Tag: 0
@@ -1780,10 +1780,10 @@ MonoBehaviour:
     Tier: 1
     IsStationary: 0
     Tag: 0
-    HandOnCheckType: 42
+    HandOnCheckType: 44
     HandOnFailedType: 0
     HandsOnLockRound: 1
-    HandOnMission: "\u5C06\u4FE1\u606F\u573A\u6269\u5927\u523019\u4E2A\u5355\u5143\u683C\u3002"
+    HandOnMission: "\u5C06\u4FE1\u606F\u573A\u6269\u5927\u523012\u4E2A\u5355\u5143\u683C\u3002"
     TimeOutSec: 180
     TargetTag: 0
     Set: 0

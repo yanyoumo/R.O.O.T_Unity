@@ -36,6 +36,7 @@ namespace ROOT.FSM
             {TutorialCheckType.ReachInfoZoneOf19, TutorialCheckFunctionList.ReachInfoZoneOf19},
             {TutorialCheckType.ReachInfoZoneOf14, TutorialCheckFunctionList.ReachInfoZoneOf14},
             {TutorialCheckType.ReachInfoZoneOf21, TutorialCheckFunctionList.ReachInfoZoneOf21},
+            {TutorialCheckType.ReachInfoZoneOf12, TutorialCheckFunctionList.ReachInfoZoneOf12},
             {TutorialCheckType.CustomCheckGameplay0, GameplayCheckFunctionList.GameplayCheck0},
             {TutorialCheckType.CustomCheckGameplay1, GameplayCheckFunctionList.GameplayCheck1},
             {TutorialCheckType.CustomCheckGameplay2, GameplayCheckFunctionList.GameplayCheck2},

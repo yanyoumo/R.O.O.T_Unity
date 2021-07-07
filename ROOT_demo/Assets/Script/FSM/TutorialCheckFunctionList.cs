@@ -34,8 +34,8 @@ namespace ROOT
         ReachInfoZoneOf19 = 40,
         ReachInfoZoneOf14 = 41,
         ReachInfoZoneOf21 = 42,
-
         Achieve750ProfitOrTimeOut = 43,
+        ReachInfoZoneOf12 = 44,
         
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
         CustomCheckGameplay0 = 250,
@@ -200,6 +200,7 @@ namespace ROOT
         public static bool ReachInfoZoneOf19(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 19);
         public static bool ReachInfoZoneOf14(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 14);
         public static bool ReachInfoZoneOf21(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 18);
+        public static bool ReachInfoZoneOf12(FSMLevelLogic fsm, Board board) => InfoZoneCount(fsm, 12);
         
         private static bool InfoZoneCount(FSMLevelLogic fsm, int Target)
         {

@@ -24,15 +24,14 @@ namespace ROOT.Signal
         {
             get
             {
-                return FirewallCircle;
-                /*var withInFireWallCircle = FirewallCircle.Contains(Owner.CurrentBoardPosition);
+                var withInFireWallCircle = FirewallCircle.Contains(Owner.CurrentBoardPosition);
                 if (!withInFireWallCircle) return new List<Vector2Int>();
 
                 if (Owner.Tier < 2) return FirewallInner;
 
                 var localZone = Utils.GetPixelateCircle_Tier(Owner.Tier - 2);
                 var zone = localZone.PatternList.Select(v => v + Owner.CurrentBoardPosition- new Vector2Int(localZone.CircleRadius, localZone.CircleRadius));
-                return FirewallInner.Union(zone).Distinct().ToList();*/
+                return FirewallInner.Union(zone).Distinct().ToList();
             }
         }
 
