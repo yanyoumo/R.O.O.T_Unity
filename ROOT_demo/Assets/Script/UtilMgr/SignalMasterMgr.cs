@@ -444,6 +444,9 @@ namespace ROOT.Signal
             var data = new List<Unit>();
             try
             {
+                Instance.Paths[type].ForEach(u => data.AddRange(u.Where(u0 => u0.UnitSignal == type && u0.UnitHardware == hwType)));
+                Debug.Log("tmp.Length=" + data.Count);
+                data = new List<Unit>();
                 Instance.Paths[type].ForEach(u => data.AddRange(u.Where(u0 => u0.UnitSignal == type && u0.UnitHardware == hwType && u0.SignalCore.IsUnitActive)));
             }
             catch (Exception)

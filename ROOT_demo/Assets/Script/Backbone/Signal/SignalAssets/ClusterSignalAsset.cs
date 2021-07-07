@@ -66,6 +66,9 @@ namespace ROOT.Signal
                 _clusterIslandPack = new List<ClusterIsland>();
                 return;
             }
+            
+            //这里可能有和Firewall一样的问题，但是不知道为什么没有症状。考虑一下，也改掉，但是这个算法可不是高效的。
+            
             if (initCache)
             {
                 _cacheBoardHash = Board.BoardHashCode;
@@ -83,12 +86,12 @@ namespace ROOT.Signal
         
         protected virtual void Awake()
         {
-            MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent, BoardDataUpdatedHandler);
+            MessageDispatcher.AddListener(WorldEvent.BoardUpdatedEvent, BoardDataUpdatedHandler);
         }
 
         private void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent, BoardDataUpdatedHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.BoardUpdatedEvent, BoardDataUpdatedHandler);
         }
     }
 }

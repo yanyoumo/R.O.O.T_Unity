@@ -314,34 +314,43 @@ namespace ROOT.Signal
             var data = SignalMasterMgr.Instance.GetActiveUnitByUnitType(SignalType, HardwareType.Field).ToArray();
             if (data.Length == 0)
             {
+                //Debug.Log("data.Length == 0");
                 _firewallCircle = new FirewallCircle();
                 _firewallInnerZone = new FirewallInner();
                 return;
             }
             
-            if (initCache)
+            //HACK 不知道为什么这里用Cache流程就有问题，得亏迪公的算法快。
+            updateFireWallCircle(data);
+            
+            /*if (initCache)
             {
-                _cacheBoardHash = Board.BoardHashCode;
+                Debug.Log("initCache");
                 initCache = false;
                 updateFireWallCircle(data);
+                _cacheBoardHash = Board.BoardHashCode;
                 return;
             }
 
             if (_cacheBoardHash != Board.BoardHashCode)
             {
+                Debug.Log("_cacheBoardHash != Board.BoardHashCode");
                 updateFireWallCircle(data);
                 _cacheBoardHash = Board.BoardHashCode;
+                return;
             }
+
+            Debug.Log("DONE Nothing");*/
         }
 
         protected virtual void Awake()
         {
-            MessageDispatcher.AddListener(WorldEvent.BoardSignalUpdatedEvent, BoardDataUpdatedHandler);
+            MessageDispatcher.AddListener(WorldEvent.BoardUpdatedEvent, BoardDataUpdatedHandler);
         }
 
         private void OnDestroy()
         {
-            MessageDispatcher.RemoveListener(WorldEvent.BoardSignalUpdatedEvent, BoardDataUpdatedHandler);
+            MessageDispatcher.RemoveListener(WorldEvent.BoardUpdatedEvent, BoardDataUpdatedHandler);
         }
     }
 }
