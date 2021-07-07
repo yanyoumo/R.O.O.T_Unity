@@ -637,7 +637,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7774994, y: 1}
+    m_SensorSize: {x: 1.7780173, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -653,7 +653,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145128176}
-  m_LocalRotation: {x: 0.69192743, y: 0.00012782126, z: 0.00013337057, w: 0.72196704}
+  m_LocalRotation: {x: 0.69192743, y: 0.00012782276, z: 0.00013337213, w: 0.72196704}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -6886,7 +6886,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7774994, y: 1}
+    m_SensorSize: {x: 1.7780173, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -7311,8 +7311,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<sprite=\"Cursor\" index=0>+ <sprite=\"FunctionKeyPacked_Lite\" index=4>:  
-    \u65CB\u8F6C\u5355\u5143"
+  m_text: "\u5149\u6807 <sprite=\"Cursor\" index=0>+ <sprite=\"FunctionKeyPacked_Lite\"
+    index=4>:   \u65CB\u8F6C\u5355\u5143"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -7376,7 +7376,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -7.4168873, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -10044,8 +10044,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<sprite=\"Cursor\" index=0>+<sprite=\"FunctionKeyPacked_Lite\" index=0>
-    + <sprite=\"WASD_Light\" index=0>\uFF1A\u79FB\u52A8\u5355\u5143"
+  m_text: "\u5149\u6807 <sprite=\"Cursor\" index=0>+<sprite=\"FunctionKeyPacked_Lite\"
+    index=0>\u62D6\u52A8\uFF1A\u79FB\u52A8\u5355\u5143"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -10109,7 +10109,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -10.526529, w: 0}
+  m_margin: {x: 0, y: 0, z: -17.908155, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -13001,8 +13001,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<sprite=\"Cursor\" index=0>+ <sprite=\"FunctionKeyPacked_Lite\" index=4>:  
-    \u65CB\u8F6C\u5355\u5143"
+  m_text: "\u5149\u6807 <sprite=\"Cursor\" index=0>+ <sprite=\"FunctionKeyPacked_Lite\"
+    index=4>:   \u65CB\u8F6C\u5355\u5143"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -13066,7 +13066,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -10.785273, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -13169,7 +13169,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7774994, y: 1}
+    m_SensorSize: {x: 1.7780173, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -13746,7 +13746,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7774994, y: 1}
+    m_SensorSize: {x: 1.7780173, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -14021,8 +14021,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<sprite=\"Cursor\" index=0>+<sprite=\"FunctionKeyPacked_Lite\" index=0>
-    + <sprite=\"WASD_Light\" index=0>\uFF1A\u79FB\u52A8\u5355\u5143"
+  m_text: "\u5149\u6807 <sprite=\"Cursor\" index=0>+<sprite=\"FunctionKeyPacked_Lite\"
+    index=0>\u62D6\u52A8\uFF1A\u79FB\u52A8\u5355\u5143"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee78e55cfde2ea43844a0f763722f3b, type: 2}
   m_sharedMaterial: {fileID: -1499313188539969486, guid: 7ee78e55cfde2ea43844a0f763722f3b,
@@ -14086,7 +14086,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -10.526529, w: 0}
+  m_margin: {x: 0, y: 0, z: -16.032034, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
