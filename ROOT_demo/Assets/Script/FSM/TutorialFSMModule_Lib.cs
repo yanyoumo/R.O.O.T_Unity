@@ -32,7 +32,7 @@ namespace ROOT.FSM
             {TutorialCheckType.Reach10Benefit, TutorialCheckFunctionList.ReachBenefitOf10},
             {TutorialCheckType.Reach12Benefit, TutorialCheckFunctionList.ReachBenefitOf12},
             {TutorialCheckType.Reach14Benefit, TutorialCheckFunctionList.ReachBenefitOf14},
-            {TutorialCheckType.ReachInfoZoneOf18, TutorialCheckFunctionList.ReachInfoZoneOf18},
+            {TutorialCheckType.ReachInfoZoneOf17, TutorialCheckFunctionList.ReachInfoZoneOf17},
             {TutorialCheckType.ReachInfoZoneOf19, TutorialCheckFunctionList.ReachInfoZoneOf19},
             {TutorialCheckType.ReachInfoZoneOf14, TutorialCheckFunctionList.ReachInfoZoneOf14},
             {TutorialCheckType.ReachInfoZoneOf21, TutorialCheckFunctionList.ReachInfoZoneOf21},
