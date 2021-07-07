@@ -250,6 +250,11 @@ namespace ROOT.Signal
                 for (var i = 0; i < 4; ++i)
                 {
                     int xx = point.x + dx4[i], yy = point.y + dy4[i];
+                    /*
+                     * white -1
+                     * input 2,3
+                     * change inner into 4
+                     */
                     if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] == -1)
                         break;
                     ++cnt;
@@ -257,7 +262,7 @@ namespace ROOT.Signal
 
                 if (cnt == 4)
                 {
-                    _board[point.x, point.y] = -1;
+                    _board[point.x, point.y] = 4;
                     _firewallInnerZone.Add(point);
                     continue;
                 }
