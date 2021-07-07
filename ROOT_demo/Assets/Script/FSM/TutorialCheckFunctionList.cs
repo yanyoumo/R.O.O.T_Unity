@@ -159,7 +159,7 @@ namespace ROOT
             {
                 var gist = career.RoundLibDriver.GetCurrentRoundGist(career.RoundLibDriver.StepCount);
                 var truncatedStep = career.RoundLibDriver.GetTruncatedStep(career.RoundLibDriver.StepCount);
-                timeOut = truncatedStep - gist.shopLength >= 35;
+                timeOut = truncatedStep - gist.shopLength >= 25;
             }
             return Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) >= 150 || timeOut;
         }

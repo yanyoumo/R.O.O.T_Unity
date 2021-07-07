@@ -2957,7 +2957,7 @@ MonoBehaviour:
     HandOnCheckType: 21
     HandOnFailedType: 0
     HandsOnLockRound: 1
-    HandOnMission: "\u589E\u52A0\u91D1\u94B1\u81F3150\u6216\u8FBE\u523035\u65F6\u523B"
+    HandOnMission: "\u589E\u52A0\u91D1\u94B1\u81F3150\u6216\u8FBE\u523025\u65F6\u523B"
     TimeOutSec: 120
     TargetTag: 0
     Set: 0

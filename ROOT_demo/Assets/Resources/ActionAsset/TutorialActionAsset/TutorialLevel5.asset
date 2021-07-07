@@ -94,7 +94,7 @@ MonoBehaviour:
   - ActionIdx: 0
     ActionSubIdx: 1
     ActionType: 0
-    Text: "\u5728ROOT\u4E2D\uFF0C\u9664\u4E86\u5355\u5143\uFF0C\u8FD8\u6709\u6280\u80FD\uFF0C\u8FD9\u4E9B\u6280\u80FD\u53EF\u4EE5\u4E3A\u60A8\u63D0\u4F9B\u4E00\u4E9B\u522B\u6837\u7684\u7B56\u7565~"
+    Text: "\u5728ROOT\u7CFB\u7EDF\u4E2D\uFF0C\u9664\u4E86\u5355\u5143\uFF0C\u8FD8\u6709\u6280\u80FD\u7CFB\u7EDF\uFF0C\u8FD9\u4E9B\u6280\u80FD\u53EF\u4EE5\u4E3A\u4F60\u63D0\u4F9B\u4E00\u4E9B\u522B\u6837\u7684\u7B56\u7565\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -318,7 +318,7 @@ MonoBehaviour:
   - ActionIdx: 1
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5728\u672C\u6559\u7A0B\u4E2D\uFF0C\u6211\u4EEC\u4F1A\u5411\u60A8\u4ECB\u7ECD\u4E09\u4E2A\u57FA\u7840\u7684\u6280\u80FD\uFF0C\u5206\u522B\u662F\u5FEB\u8FDB\uFF0C\u56DE\u9000\uFF0C\u548C\u4EA4\u6362\u77AC\u79FB\u3002"
+    Text: "\u5728\u672C\u6559\u7A0B\u4E2D\u4F1A\u5411\u4F60\u4ECB\u7ECD\u4E09\u4E2A\u57FA\u7840\u7684\u6280\u80FD\uFF0C\u5206\u522B\u662F\u5FEB\u8FDB\uFF0C\u56DE\u9000\uFF0C\u548C\u4EA4\u6362\u77AC\u79FB\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -574,7 +574,7 @@ MonoBehaviour:
   - ActionIdx: 3
     ActionSubIdx: 2
     ActionType: 0
-    Text: "\u5728\u6280\u80FD\u754C\u9762\u7684\u7B2C\u4E00\u884C\u524D\u4E24\u4E2A\u5C31\u662F\u5FEB\u8FDB\u6280\u80FD."
+    Text: "\u5728\u6280\u80FD\u754C\u9762\u7684\u7B2C\u4E00\u884C\u524D\u4E24\u4E2A\u5C31\u662F\u5FEB\u8FDB\u6280\u80FD\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -766,7 +766,7 @@ MonoBehaviour:
   - ActionIdx: 6
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u8BA9\u6211\u4EEC\u6765\u770B\u8FD9\u6837\u4E00\u4E2A\u60C5\u51B5~"
+    Text: "\u6765\u770B\u8FD9\u6837\u4E00\u4E2A\u60C5\u51B5\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1214,7 +1214,7 @@ MonoBehaviour:
   - ActionIdx: 8
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u6B64\u65F6\u79BB\u9700\u6C42\u65F6\u6BB5\u7ED3\u675F\u8FD8\u6709\u4E00\u6BB5\u7684\u65F6\u523B\uFF0C\u6211\u4EEC\u53EF\u4EE5\u4F7F\u7528\u8FDE\u6309<sprite=\"FunctionKeyPacked_Lite\"
+    Text: "\u6B64\u65F6\u79BB\u9700\u6C42\u65F6\u6BB5\u7ED3\u675F\u8FD8\u6709\u4E00\u6BB5\u7684\u65F6\u523B\uFF0C\u7684\u786E\u53EF\u4EE5\u8FDE\u6309<sprite=\"FunctionKeyPacked_Lite\"
       index=6>\u6765\u63A8\u8FDB\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
@@ -1247,7 +1247,7 @@ MonoBehaviour:
   - ActionIdx: 9
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u540C\u65F6\u6211\u4EEC\u4E5F\u53EF\u4EE5\u4F7F\u7528\u5FEB\u8FDB\u6280\u80FD\u6765\u5FEB\u901F\u63A8\u8FDB\u65F6\u523B\uFF0C\u540C\u65F6\u8FD8\u53EF\u83B7\u5F97\u989D\u5916\u6536\u76CA\u52A0\u6210\uFF0C"
+    Text: "\u6216\u8005\u4F60\u4E5F\u53EF\u4EE5\u4F7F\u7528\u5FEB\u8FDB\u6280\u80FD\u6765\u5FEB\u901F\u63A8\u8FDB\u65F6\u523B\uFF0C\u540C\u65F6\u8FD8\u53EF\u83B7\u5F97\u989D\u5916\u6536\u76CA\u52A0\u6210\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1279,7 +1279,7 @@ MonoBehaviour:
   - ActionIdx: 10
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5FEB\u8FDB\u7684\u65F6\u5019\u6563\u70ED\u683C\u4E5F\u4F1A\u5FEB\u901F\u6269\u6563\uFF0C\u6240\u4EE5\u4E5F\u8981\u6743\u8861\u5FEB\u8FDB\u907F\u514D\u8BA9\u5355\u5143\u88AB\u6269\u6563\u7684\u6563\u70ED\u683C\u5F71\u54CD\u6536\u76CA\u3002"
+    Text: "\u5FEB\u8FDB\u7684\u65F6\u5019\u6563\u70ED\u683C\u4E5F\u4F1A\u6B63\u5E38\u6269\u6563\uFF0C\u6240\u4EE5\u4E5F\u8981\u6743\u8861\u5FEB\u8FDB\u907F\u514D\u8BA9\u5355\u5143\u88AB\u6269\u6563\u7684\u6563\u70ED\u683C\u5F71\u54CD\u6536\u76CA\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1311,7 +1311,7 @@ MonoBehaviour:
   - ActionIdx: 11
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u63A5\u4E0B\u6765\u8BF7\u4F60\u4F7F\u7528\u4E00\u6B21\u5FEB\u8FDB\u6280\u80FD\u6765\u611F\u53D7\u5B83\u7684\u4F5C\u7528"
+    Text: "\u73B0\u5728\u8BF7\u4F60\u4F7F\u7528\u4E00\u6B21\u5FEB\u8FDB\u6280\u80FD\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1439,7 +1439,7 @@ MonoBehaviour:
   - ActionIdx: 13
     ActionSubIdx: 1
     ActionType: 0
-    Text: "\u63A5\u4E0B\u6765\u6211\u4EEC\u6765\u770B\u65F6\u523B\u56DE\u9000\u8FD9\u4E2A\u6280\u80FD"
+    Text: "\u63A5\u4E0B\u6765\u6211\u4EEC\u6765\u770B\u65F6\u523B\u56DE\u9000\u8FD9\u4E2A\u6280\u80FD\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1695,7 +1695,7 @@ MonoBehaviour:
   - ActionIdx: 15
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u8FD9\u4E2A\u6280\u80FD\u662F\u80FD\u591F\u8BA9\u4F60<b>\u56DE\u9000</b>3\u4E2A\u6216\u80057\u4E2A\u65F6\u523B\uFF01"
+    Text: "\u8FD9\u4E2A\u6280\u80FD\u662F\u80FD\u591F\u8BA9\u4F60<b>\u56DE\u9000</b>3\u4E2A\u6216\u80057\u4E2A\u65F6\u523B\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -1887,7 +1887,7 @@ MonoBehaviour:
   - ActionIdx: 20
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u63A5\u4E0B\u6765\u8BF7\u4F60\u4F7F\u7528\u4E00\u6B21\u56DE\u9000\u6280\u80FD~"
+    Text: "\u63A5\u4E0B\u6765\u8BF7\u4F60\u4F7F\u7528\u4E00\u6B21\u56DE\u9000\u6280\u80FD\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -2015,7 +2015,7 @@ MonoBehaviour:
   - ActionIdx: 22
     ActionSubIdx: 2
     ActionType: 0
-    Text: "\u6700\u540E\uFF0C\u6211\u4EEC\u6765\u8BF4\u4E00\u4E0B\u4EA4\u6362\u77AC\u79FB\uFF0C"
+    Text: "\u6700\u540E\uFF0C\u6211\u4EEC\u6765\u8BF4\u4E00\u4E0B\u4EA4\u6362\u77AC\u79FB\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -2399,7 +2399,7 @@ MonoBehaviour:
   - ActionIdx: 25
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u8FD9\u4E2A\u6280\u80FD\u6709\u4E09\u4E2A\u7B49\u7EA7\uFF0C\u6700\u4FBF\u5B9C\u768450\u5757\u94B1\u7684\u7248\u672C\uFF0C\u4F1A\u5C06\u9009\u4E2D\u5355\u5143\u968F\u673A\u4EA4\u6362\u5230\u76EE\u6807\n\u4F4D\u7F6E\u6216\u5468\u56F4\u516B\u65B9\u5411\u4EFB\u610F\u4E00\u683C\u7684\u4F4D\u7F6E\u3002"
+    Text: "\u8FD9\u4E2A\u6280\u80FD\u6709\u4E09\u4E2A\u7B49\u7EA7\uFF0C\u6700\u4FBF\u5B9C\u768450\u5757\u94B1\u7684\u7248\u672C\uFF0C\u4F1A\u5C06\u9009\u4E2D\u5355\u5143\u968F\u673A\u4EA4\u6362\u5230\u76EE\u6807<br>\u4F4D\u7F6E\u6216\u5468\u56F4\u516B\u65B9\u5411\u4EFB\u610F\u4E00\u683C\u7684\u4F4D\u7F6E\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -2559,7 +2559,7 @@ MonoBehaviour:
   - ActionIdx: 29
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u53E6\u5916\uFF0C\u5982\u679C\u5F53\u60A8\u9009\u4E2D\u5176\u4E2D\u4E00\u4E2A\u6280\u80FD\u4F46\u662F\u540E\u6094\u60F3\u6362\u53E6\u4E00\u6863\uFF0C\u53EF\u4EE5\u6309<sprite=\"FunctionKeyPacked_Lite\"
+    Text: "\u53E6\u5916\uFF0C\u5982\u679C\u5F53\u4F60\u9009\u62E9\u201C\u4EA4\u6362\u201D\u6280\u80FD\u540E\u53EF\u4EE5\u6309<sprite=\"FunctionKeyPacked_Lite\"
       index=7>\u6765\u53D6\u6D88\uFF0C\u5E76\u8FD4\u8FD8\u6280\u80FD\u8D44\u91D1\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
@@ -2592,7 +2592,7 @@ MonoBehaviour:
   - ActionIdx: 30
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u4E3E\u4E00\u4E2A\u4F8B\u5B50"
+    Text: "\u4E3E\u4E00\u4E2A\u4F8B\u5B50\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -2848,7 +2848,7 @@ MonoBehaviour:
   - ActionIdx: 31
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u8BF7\u60A8\u4F7F\u7528\u4EA4\u6362\u77AC\u79FB\u6280\u80FD\uFF0C\u5C06\u53F3\u4E0B\u89D2\u7684\u77E9\u9635\u5355\u5143\u8FDE\u63A5\u5230\u5DE6\u4E0A\u77E9\u9635\u6838\u5FC3\u3002"
+    Text: "\u8BF7\u4F60\u4F7F\u7528\u4EA4\u6362\u77AC\u79FB\u6280\u80FD\uFF0C\u5C06\u53F3\u4E0B\u89D2\u7684\u77E9\u9635\u5355\u5143\u8FDE\u63A5\u5230\u5DE6\u4E0A\u77E9\u9635\u6838\u5FC3\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -2944,7 +2944,7 @@ MonoBehaviour:
   - ActionIdx: 33
     ActionSubIdx: 1
     ActionType: 0
-    Text: "\u606D\u559C\u60A8\u5DF2\u7ECF\u5B8C\u6210\u6280\u80FD\u521D\u7EA7\u6559\u7A0B\uFF0C\u8BF7\u60A8\u7EE7\u7EED\u63A5\u4E0B\u6765\u7684\u6E38\u620F\u5427"
+    Text: "\u5F53\u7136\uFF0C\u9664\u6B64\u4EE5\u5916\uFF1B\u8FD8\u6709\u4E09\u4E2A\u5373\u65F6\u4F7F\u7528\u7684\u6280\u80FD\uFF1A\u5206\u522B\u4E3A\u5546\u5E97\u6253\u6298\u3001\u6563\u70ED\u91CD\u7F6E\u548C\u6563\u70ED\u6E05\u7406\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -2976,7 +2976,7 @@ MonoBehaviour:
   - ActionIdx: 34
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u5F53\u7136\uFF0C\u9664\u6B64\u4EE5\u5916\uFF1B\u8FD8\u6709\u4E09\u4E2A\u5373\u65F6\u4F7F\u7528\u7684\u6280\u80FD\uFF1B\u53EF\u4EE5\u4F7F\u7528\u547C\u51FA\u5E2E\u52A9\u754C\u9762\u6765\u67E5\u770B\u5177\u4F53\u529F\u80FD~"
+    Text: "\u4EE5\u4E0A\u5C31\u662FROOT\u7CFB\u7EDF\u7684\u6280\u80FD\u90E8\u5206\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -3039,7 +3039,7 @@ MonoBehaviour:
     SkillID: 0
   mainIDXToinsert: 14
   subIDXToinsert: 6
-  CSVFileName: 
+  CSVFileName: TutorialLevel5_Text
   UnlockingLevel:
   - {fileID: 11400000, guid: e819963aa7158fa48910bc5c30745fb9, type: 2}
   - {fileID: 11400000, guid: b0f3fbc94fa732f44bc295dcb4644c78, type: 2}
