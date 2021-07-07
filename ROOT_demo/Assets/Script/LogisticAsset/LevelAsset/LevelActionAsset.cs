@@ -221,10 +221,15 @@ namespace ROOT.SetupAsset
             } while (!sw.EndOfStream);
             sw.Close();
 
-            var typeValid=contentBuffer.All(t => Actions.Where(a => a.ActionIdx == t.Item1 && a.ActionSubIdx == t.Item2).All(a => a.ActionType == TutorialActionType.Text));
+            var typeValid = contentBuffer.All(t => Actions.First(a => a.ActionIdx == t.Item1 && a.ActionSubIdx == t.Item2).ActionType == TutorialActionType.Text);
             if (!typeValid)
             {
                 Debug.LogWarning("Actions type is not text, Replace abort, please check!!");
+                var err=contentBuffer.Where(t => Actions.First(a => a.ActionIdx == t.Item1 && a.ActionSubIdx == t.Item2).ActionType != TutorialActionType.Text);
+                foreach (var tuple in err)
+                {
+                    Debug.Log(tuple.Item1 + "," + tuple.Item2 + "," + tuple.Item3);
+                }
                 return;
             }
             for (var i = 0; i < Actions.Length; i++)
