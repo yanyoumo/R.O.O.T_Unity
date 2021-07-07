@@ -165,11 +165,7 @@ namespace ROOT
             {
                 if (HasBossRound && Endless)
                 {
-#if UNITY_EDITOR
                     return false;
-#else
-                    throw new Exception("a round lib couldn't has boss and being endless");
-#endif
                 }
 
                 return Endless;

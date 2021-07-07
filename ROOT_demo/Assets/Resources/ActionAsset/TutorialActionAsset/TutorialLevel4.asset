@@ -57,17 +57,23 @@ MonoBehaviour:
   BossStage: 0
   RoundLib:
   - ID: 0
-    ShopLength: 11
-    RequireLength: 12
+    ShopLength: 6
+    RequireLength: 10
+    TypeARequirement: 0
+    TypeBRequirement: 0
+    HeatSinkLength: 12
+  - ID: 1
+    ShopLength: 8
+    RequireLength: 10
+    TypeARequirement: 0
+    TypeBRequirement: 0
+    HeatSinkLength: 12
+  - ID: 2
+    ShopLength: 8
+    RequireLength: 10
     TypeARequirement: 0
     TypeBRequirement: 0
     HeatSinkLength: 10
-  - ID: 1
-    ShopLength: 18
-    RequireLength: 18
-    TypeARequirement: 0
-    TypeBRequirement: 0
-    HeatSinkLength: 0
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 0
@@ -701,7 +707,7 @@ MonoBehaviour:
     HandOnCheckType: 43
     HandOnFailedType: 0
     HandsOnLockRound: 0
-    HandOnMission: "\u5B8C\u6210\u4E24\u4E2A\u8F6E\u6B21\u5927\u5FAA\u73AF\u6216\u4F7F\u91D1\u94B1\u603B\u989D\u8FBE\u5230750"
+    HandOnMission: "\u5B8C\u6210\u4E09\u4E2A\u8F6E\u6B21\u5927\u5FAA\u73AF\u6216\u4F7F\u91D1\u94B1\u603B\u989D\u8FBE\u5230750"
     TimeOutSec: -1
     TargetTag: 0
     Set: 0

@@ -215,14 +215,13 @@ namespace ROOT
         {
             return fsm.LevelAsset.DeltaCurrency >= Target;
         }
-        
+
         public static bool Achieve750ProfitOrTimeOut(FSMLevelLogic fsm, Board board)
         {
             var timeOut = false;
             if (fsm is FSMLevelLogic_Career career)
             {
-                var currentID = career.RoundLibDriver.GetCurrentRoundGist(career.RoundLibDriver.StepCount).ID;
-                timeOut = currentID > 2;
+                timeOut = career.RoundLibDriver.StepCount >= 86;
             }
             return Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) >= 750 || timeOut;
         }
