@@ -70,7 +70,7 @@ namespace ROOT
         private readonly int VerticalCount = 3;
         private readonly int PremiumCount = 2;
 
-        public TextMeshPro ShopTierMultiplierText;
+        //public TextMeshPro ShopTierMultiplierText;
         
         private int EmptyCount => HorizontalCount - PremiumCount;
         private int RetailCount => HorizontalCount * (VerticalCount - 1);
@@ -199,7 +199,7 @@ namespace ROOT
         {
             if (ShopStarted) return;
             CreateSelfUnit();
-            ShopTierMultiplierText.text = "1";
+            //ShopTierMultiplierText.text = "1";
             ShopStarted = true;
         }
 
@@ -289,7 +289,7 @@ namespace ROOT
                     _ShopTierMultiplierOffset = tmpOffset;
                     UpdateShopSelf(_discountRate);
                 }
-                ShopTierMultiplierText.text = ShopTierMultiplier.ToString();
+                //ShopTierMultiplierText.text = ShopTierMultiplier.ToString();
             }
         }
         
