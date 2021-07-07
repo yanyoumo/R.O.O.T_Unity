@@ -25,8 +25,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: 9b18445684318514d9d38cf7c58c6671, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9d91410b0b8c8545b41feda51e82d76,
     type: 3}
-  AcessID: 4
-  InitialCurrency: 36
+  InitialCurrency: 60
   ShopCost: 1
   UnitCost: 1
   levelType: 0
@@ -40,17 +39,35 @@ MonoBehaviour:
   AdditionalGameSetup:
     PlayingSignalTypeA: 0
     PlayingSignalTypeB: 1
-  InitalBoard: []
+  InitalBoard:
+  - PlayingSignalSelector: 0
+    CoreGenre: 0
+    Sides: 01000000010000000100000001000000
+    Tier: 1
+    Pos: {x: 2, y: 2}
+    IsStation: 0
+  - PlayingSignalSelector: 1
+    CoreGenre: 0
+    Sides: 01000000010000000100000001000000
+    Tier: 1
+    Pos: {x: 3, y: 3}
+    IsStation: 0
   HasBossRound: 0
   Endless: 1
   BossStage: 0
   RoundLib:
   - ID: 0
     ShopLength: 11
-    RequireLength: 15
+    RequireLength: 12
     TypeARequirement: 0
     TypeBRequirement: 0
     HeatSinkLength: 10
+  - ID: 1
+    ShopLength: 18
+    RequireLength: 18
+    TypeARequirement: 0
+    TypeBRequirement: 0
+    HeatSinkLength: 0
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 0
@@ -681,10 +698,10 @@ MonoBehaviour:
     Tier: 0
     IsStationary: 0
     Tag: 0
-    HandOnCheckType: 0
+    HandOnCheckType: 43
     HandOnFailedType: 0
     HandsOnLockRound: 0
-    HandOnMission: "\u5728\u9650\u5236\u65F6\u6BB5\u5185\u4F7F\u91D1\u94B1\u8FBE\u52301000"
+    HandOnMission: "\u5B8C\u6210\u4E24\u4E2A\u8F6E\u6B21\u5927\u5FAA\u73AF\u6216\u4F7F\u91D1\u94B1\u603B\u989D\u8FBE\u5230750"
     TimeOutSec: -1
     TargetTag: 0
     Set: 0

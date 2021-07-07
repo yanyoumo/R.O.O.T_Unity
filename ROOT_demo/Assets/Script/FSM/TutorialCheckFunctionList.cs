@@ -35,6 +35,8 @@ namespace ROOT
         ReachInfoZoneOf14 = 41,
         ReachInfoZoneOf21 = 42,
 
+        Achieve750ProfitOrTimeOut = 43,
+        
         //250左右的号段我用了、给基本Gameplay内容做一些判断-youmo
         CustomCheckGameplay0 = 250,
         CustomCheckGameplay1 = 251,
@@ -212,6 +214,17 @@ namespace ROOT
         private static bool ReachBenefit(FSMLevelLogic fsm,int Target)
         {
             return fsm.LevelAsset.DeltaCurrency >= Target;
+        }
+        
+        public static bool Achieve750ProfitOrTimeOut(FSMLevelLogic fsm, Board board)
+        {
+            var timeOut = false;
+            if (fsm is FSMLevelLogic_Career career)
+            {
+                var currentID = career.RoundLibDriver.GetCurrentRoundGist(career.RoundLibDriver.StepCount).ID;
+                timeOut = currentID > 2;
+            }
+            return Mathf.RoundToInt(fsm.LevelAsset.GameCurrencyMgr.Currency) >= 750 || timeOut;
         }
     }
 }

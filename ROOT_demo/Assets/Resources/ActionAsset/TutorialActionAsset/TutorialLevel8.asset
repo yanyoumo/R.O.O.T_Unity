@@ -150,7 +150,7 @@ MonoBehaviour:
   - ActionIdx: 0
     ActionSubIdx: 2
     ActionType: 0
-    Text: "\u6B22\u8FCE\u4F60\u8FDB\u5165ROOT\u878D\u8D44\u6D4B\u8BD5\u5173\u5361\u6559\u7A0B\u3002"
+    Text: "\u6B22\u8FCE\u4F60\u8FDB\u5165ROOT\u7CFB\u7EDF\u7684<b>\u3010\u878D\u8D44\u3011</b>\u4EFB\u52A1\u6559\u7A0B\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}
@@ -982,7 +982,7 @@ MonoBehaviour:
   - ActionIdx: 17
     ActionSubIdx: 0
     ActionType: 0
-    Text: "\u8FD9\u5C31\u662F\u878D\u8D44\u5173\u5361\u7684\u89C4\u5219\uFF0C\u63A5\u4E0B\u6765\u4F60\u53EF\u4EE5\u5C1D\u8BD5\u6311\u6218\u3002"
+    Text: "\u8FD9\u5C31\u662F\u878D\u8D44\u5173\u5361\u7684\u89C4\u5219\uFF0C\u63A5\u4E0B\u6765\u4F60\u53EF\u4EE5\u5C1D\u8BD5\u6311\u6218\u878D\u8D44\u4EFB\u52A1\u3002"
     DoppelgangerToggle: 0
     DoppelgangerText: 
     Pos: {x: 0, y: 0}

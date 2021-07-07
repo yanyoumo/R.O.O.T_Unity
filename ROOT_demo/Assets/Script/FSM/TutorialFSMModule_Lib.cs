@@ -21,6 +21,7 @@ namespace ROOT.FSM
             {TutorialCheckType.MoveOneMatrixToPlace, TutorialCheckFunctionList.MoveOneMatrixToPlace},
             {TutorialCheckType.ContinueWhenOneUnitIsBought, TutorialCheckFunctionList.ContinueWhenOneUnitIsBought},
             {TutorialCheckType.Achieve150ProfitOrTimeOut, TutorialCheckFunctionList.Achieve150ProfitOrTimeOut},
+            {TutorialCheckType.Achieve750ProfitOrTimeOut, TutorialCheckFunctionList.Achieve750ProfitOrTimeOut},
             {TutorialCheckType.Proceed5TimeTick, TutorialCheckFunctionList.Proceed5TimeTick},
             {TutorialCheckType.AtLeastUseFastForwardOneTime, TutorialCheckFunctionList.AtLeastUseFastForwardOneTime},
             {TutorialCheckType.UseBackward, TutorialCheckFunctionList.UseBackward},
