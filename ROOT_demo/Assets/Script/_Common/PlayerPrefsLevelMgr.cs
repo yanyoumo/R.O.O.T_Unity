@@ -24,6 +24,11 @@ namespace ROOT.LevelAccessMgr
             ReplaceLevelStatus(levelNameTerm, LevelStatus.Locked);
             return LevelStatus.Locked;
         }
+
+        public static void CompleteThisLevel(string completedLevel)
+        {
+            UpdateLevelStatus(completedLevel, LevelStatus.Passed);
+        }
         
         public static void CompleteThisLevelAndUnlockFollowing(string completedLevel, IEnumerable<string> unlockedCompletedLevel)
         {

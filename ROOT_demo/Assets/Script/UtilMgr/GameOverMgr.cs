@@ -80,6 +80,11 @@ namespace ROOT
                 PlayerPrefsLevelMgr.CompleteThisLevelAndUnlockFollowing(actionAsset.TitleTerm, unlockingLevelTermsB);
             }
 
+            if (!unlockingLevelTermsA.Any() && !unlockingLevelTermsB.Any())
+            {
+                PlayerPrefsLevelMgr.CompleteThisLevel(actionAsset.TitleTerm);
+            }
+
             return unlockingLevelTermsA.Length + unlockingLevelTermsB.Length;
         }
 
