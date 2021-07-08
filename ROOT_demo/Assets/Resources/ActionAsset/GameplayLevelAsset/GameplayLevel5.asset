@@ -58,22 +58,22 @@ MonoBehaviour:
   RoundLib:
   - ID: 0
     ShopLength: 9
-    RequireLength: 8
+    RequireLength: 24
     TypeARequirement: 0
     TypeBRequirement: 0
     HeatSinkLength: 13
   - ID: 1
     ShopLength: 13
-    RequireLength: 8
+    RequireLength: 24
     TypeARequirement: 0
     TypeBRequirement: 0
     HeatSinkLength: 14
   - ID: 2
-    ShopLength: 18
-    RequireLength: 10
+    ShopLength: 11
+    RequireLength: 20
     TypeARequirement: 0
     TypeBRequirement: 0
-    HeatSinkLength: 21
+    HeatSinkLength: 18
   BossSetup:
     BossStageTypeVal: 1
     BossLength: 0
@@ -81,7 +81,7 @@ MonoBehaviour:
     InfoCount: 0
     InfoVariantRatio: 0
     InfoTargetRatio: 0
-    AcquiringTarget: 3500
+    AcquiringTarget: 1500
   Actions:
   - ActionIdx: 0
     ActionSubIdx: 0

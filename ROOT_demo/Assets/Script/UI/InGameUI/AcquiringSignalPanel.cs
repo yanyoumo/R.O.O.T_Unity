@@ -22,8 +22,13 @@ namespace ROOT.UI
         public Transform SeesawTickTotalX;
         public Transform SeesawTick;
         
+        public TextMeshPro TypeASignalTotalCount;
+        public TextMeshPro TypeBSignalTotalCount;
+        
         private int cachedTypeAVal = -1;
         private int cachedTypeBVal = -1;
+        private int cachedCurrentTotalTierSumA = -1;
+        private int cachedCurrentTotalTierSumB = -1;
         private float cachedIncomeMultiplierVal = float.NaN;
         private static string _padding(int a) => Utils.PaddingNum2Digit(a);
 
@@ -48,18 +53,25 @@ namespace ROOT.UI
         {
             NormalSignal.color = ColorLibManager.Instance.GetColorBySignalType(signalTypeA);
             NetworkSignal.color = ColorLibManager.Instance.GetColorBySignalType(signalTypeB);
+            TypeASignalTotalCount.color = ColorLibManager.Instance.GetColorBySignalType(signalTypeA);
+            TypeBSignalTotalCount.color = ColorLibManager.Instance.GetColorBySignalType(signalTypeB);
         }
 
         private void UpdateCachedData(BoardSignalUpdatedData inComingData)
         {
             if (inComingData.CurrentActivatedTierSumA != int.MaxValue) cachedTypeAVal = inComingData.CurrentActivatedTierSumA;
             if (inComingData.CurrentActivatedTierSumB != int.MaxValue) cachedTypeBVal = inComingData.CurrentActivatedTierSumB;
+            if (inComingData.CurrentTotalTierSumA != int.MaxValue) cachedCurrentTotalTierSumA = inComingData.CurrentTotalTierSumA;
+            if (inComingData.CurrentTotalTierSumB != int.MaxValue) cachedCurrentTotalTierSumB = inComingData.CurrentTotalTierSumB;
         }
 
         private void UpdateNumbersCore()
         {
             NormalSignal.text = _padding(cachedTypeAVal);
             NetworkSignal.text = _padding(cachedTypeBVal);
+
+            TypeASignalTotalCount.text = "[" + cachedCurrentTotalTierSumA.ToString("D2") + "]";
+            TypeBSignalTotalCount.text = "[" + cachedCurrentTotalTierSumB.ToString("D2") + "]";
 
             var del = cachedTypeAVal - cachedTypeBVal;
             var resString = _padding(Math.Abs(del));

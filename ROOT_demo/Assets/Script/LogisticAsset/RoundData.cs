@@ -33,7 +33,7 @@ namespace ROOT.SetupAsset
         [Range(0, 60)]
         public int ShopLength;
 
-        [Space] [Range(0, 30)]
+        [Space] [Range(0, 60)]
         public int RequireLength;
 
         [HorizontalGroup("Split")] [VerticalGroup("Split/Left")]
