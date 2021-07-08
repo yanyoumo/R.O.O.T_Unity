@@ -25,7 +25,6 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: e302961b1e596d34bb67cace14fada30, type: 3}
   LevelLogic: {fileID: 3818130472288149215, guid: a9462fb761d48b045a2a45a3e9f7ad46,
     type: 3}
-  AcessID: 2
   InitialCurrency: 0
   ShopCost: 1
   UnitCost: 1
@@ -258,7 +257,7 @@ MonoBehaviour:
     HandOnCheckType: 254
     HandOnFailedType: 0
     HandsOnLockRound: 0
-    HandOnMission: "\u5C06\u68CB\u76D8\u4E0A\u7684\u6536\u5165\u63D0\u9AD8\u523030\u5143"
+    HandOnMission: "\u5C06\u68CB\u76D8\u7684\u5373\u65F6\u5229\u6DA6\u63D0\u9AD8\u523030\u5143"
     TimeOutSec: -1
     TargetTag: 0
     Set: 0
