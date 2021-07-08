@@ -25,7 +25,7 @@ MonoBehaviour:
   Thumbnail: {fileID: 21300000, guid: de96f66025310fb43a639114e396fbda, type: 3}
   LevelLogic: {fileID: 2283185294020619326, guid: 00ffe948adad1f8489d9d973e9a4e1c7,
     type: 3}
-  InitialCurrency: 120
+  InitialCurrency: 45
   ShopCost: 1
   UnitCost: 1
   levelType: 1
@@ -58,46 +58,34 @@ MonoBehaviour:
   RoundLib:
   - ID: 0
     ShopLength: 8
-    RequireLength: 4
+    RequireLength: 12
     TypeARequirement: 4
     TypeBRequirement: 3
     HeatSinkLength: 9
   - ID: 1
     ShopLength: 10
-    RequireLength: 6
+    RequireLength: 12
     TypeARequirement: 5
     TypeBRequirement: 6
-    HeatSinkLength: 15
+    HeatSinkLength: 12
   - ID: 2
     ShopLength: 13
-    RequireLength: 7
+    RequireLength: 14
     TypeARequirement: 7
     TypeBRequirement: 9
-    HeatSinkLength: 16
+    HeatSinkLength: 13
   - ID: 3
-    ShopLength: 17
-    RequireLength: 9
+    ShopLength: 13
+    RequireLength: 11
     TypeARequirement: 9
     TypeBRequirement: 12
-    HeatSinkLength: 17
+    HeatSinkLength: 12
   - ID: 4
-    ShopLength: 19
+    ShopLength: 10
     RequireLength: 10
     TypeARequirement: 11
     TypeBRequirement: 15
-    HeatSinkLength: 25
-  - ID: 0
-    ShopLength: 23
-    RequireLength: 12
-    TypeARequirement: 14
-    TypeBRequirement: 17
-    HeatSinkLength: 22
-  - ID: 0
-    ShopLength: 29
-    RequireLength: 15
-    TypeARequirement: 16
-    TypeBRequirement: 21
-    HeatSinkLength: 26
+    HeatSinkLength: 10
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 45

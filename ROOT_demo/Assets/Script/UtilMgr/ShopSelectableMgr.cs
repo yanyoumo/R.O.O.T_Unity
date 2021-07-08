@@ -244,6 +244,7 @@ namespace ROOT
 
             if (_itemUnit != null)
             {
+                //TODO 这里严格来说还要处理一下全盘皆满的极端特殊情况。
                 GameBoard.DeliverUnitRandomPlace(DuplicateUnitToBoard(_itemUnit[itemID]));
                 return true;
             }

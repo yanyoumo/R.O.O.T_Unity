@@ -93,11 +93,11 @@ MonoBehaviour:
   BossStage: 0
   RoundLib:
   - ID: 0
-    ShopLength: 1
-    RequireLength: 1
+    ShopLength: 7
+    RequireLength: 18
     TypeARequirement: 6
     TypeBRequirement: 4
-    HeatSinkLength: 1
+    HeatSinkLength: 13
   BossSetup:
     BossStageTypeVal: 0
     BossLength: 300
