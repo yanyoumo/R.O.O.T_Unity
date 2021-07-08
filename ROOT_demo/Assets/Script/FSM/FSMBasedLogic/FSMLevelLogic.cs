@@ -169,6 +169,8 @@ namespace ROOT
 
         private void PostAnimationUpdate(MoveableBase moveableBase)
         {
+            if (moveableBase == null) return;
+            
             moveableBase.SetCurrentAndNextPos(moveableBase.NextBoardPosition);
             moveableBase.PingPongRotationDirection();
             if (moveableBase is Unit u)
@@ -183,6 +185,8 @@ namespace ROOT
             animatingSeq.PrependInterval(AnimationDuration);//是为了干挪时间轴的时候也等一个AnimationDuration的时长。
             foreach (var moveableBase in LevelAsset.AnimationPendingObj)
             {
+                if (moveableBase == null) continue;
+
                 if (moveableBase.NextBoardPosition != moveableBase.CurrentBoardPosition)
                 {
                     var actualNextPos = LevelAsset.GameBoard.GetFloatTransformAnimation(moveableBase.NextBoardPosition);
