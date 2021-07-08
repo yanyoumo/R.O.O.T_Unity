@@ -49,6 +49,7 @@ namespace ROOT.FSM
                 if (!NotEnding)
                 {
                     LevelAsset.TutorialCompleted = EndingWSuccess;
+                    WorldCycler.Reset();
                     return true;
                 }
                 return false;

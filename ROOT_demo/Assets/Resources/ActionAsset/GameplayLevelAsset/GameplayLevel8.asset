@@ -91,7 +91,7 @@ MonoBehaviour:
     BossLength: 30
     DestoryerCount: 15
     InfoCount: 500
-    InfoVariantRatio: 15
+    InfoVariantRatio: 3
     InfoTargetRatio: 65
     AcquiringTarget: 8500
   Actions:

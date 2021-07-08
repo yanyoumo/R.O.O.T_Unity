@@ -260,6 +260,7 @@ namespace ROOT
         {
             PendingCleanUp = true;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
+            WorldCycler.Reset();
             LevelAsset.GameOverAsset = new GameOverAsset {ExternalEnding=true}; 
         }
         
