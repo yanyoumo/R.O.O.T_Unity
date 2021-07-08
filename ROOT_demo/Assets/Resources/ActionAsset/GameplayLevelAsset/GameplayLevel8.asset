@@ -32,7 +32,7 @@ MonoBehaviour:
   IsTestingLevel: 0
   UnlockScanToggleLevel: 0
   IsScanLevel: 0
-  LevelFeature: 62
+  LevelFeature: 94
   DisplayedlevelType: 1
   LevelInfo: "\u548C\u516C\u53F8\u5728\u7B2C\u4E00\u536B\u661F\u57FA\u5730\u7684\u9879\u76EE\u7EC4\u5408\u4F5C\u8FDB\u884C\u7684\u5B9E\u6218\u9065\u6D4B\u9879\u76EE\u3002"
   StoryContent: "\u8BF6\u8BF6\uFF0C\u4ECA\u5929\u6211\u80FD\u76F4\u63A5\u53BB\u548C\u536B\u661F\u57FA\u5730\u7684\u9065\u6D4B\u7CFB\u7EDF\u4EA4\u4E92\u4E86\uFF1F"
