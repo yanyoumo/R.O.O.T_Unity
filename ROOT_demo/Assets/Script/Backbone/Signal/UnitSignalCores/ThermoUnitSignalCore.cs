@@ -86,7 +86,7 @@ namespace ROOT.Signal
             for (var i = 0; i < _8DirArray.Length; i++)
             {
                 var inquiryBoardPos = Owner.CurrentBoardPosition + _8DirArray[i];
-                var displayIcon = GameBoard != null && GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos);
+                var displayIcon = GameBoard != null && ((!GameBoard.CheckBoardPosValid(inquiryBoardPos))||GameBoard.CheckBoardPosValidAndFilled(inquiryBoardPos));
                 Owner.UnitNeighbouringRendererRoot.LinkageIcons[i].gameObject.SetActive(displayIcon && ShowingNeighbouringLinkage);
             }
         }
