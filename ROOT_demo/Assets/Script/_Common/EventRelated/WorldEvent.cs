@@ -13,6 +13,7 @@ namespace ROOT
         public static string CurrentSignalTypeInquiry = "CurrentSignalTypeInquiry";
         public static string BalancingSignalSetupInquiry = "BalancingSignalSetupInquiry";
         public static string AcquiringCostTargetInquiry = "AcquiringCostTargetInquiry";
+        public static string FSMLevelTypeInquiry = "FSMLevelTypeInquiry";
 
         public static string MainCameraReadyEvent = "MainCameraReadyEvent";
         public static string ApparentStepResetedEvent="ApparentStepResetedEvent";

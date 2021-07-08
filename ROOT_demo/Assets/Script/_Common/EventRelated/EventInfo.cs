@@ -122,5 +122,11 @@ namespace ROOT.Message
             public Action<SignalType, SignalType> CurrentSignalCallBack;
             public override string Type => WorldEvent.CurrentSignalTypeInquiry;
         }
+
+        public class FSMLevelTypeInquiryData : RootMessageBase
+        {
+            public Action<LevelType, LevelType> FSMLevelTypeCallBack;
+            public override string Type => WorldEvent.FSMLevelTypeInquiry;
+        }
     }
 }

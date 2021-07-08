@@ -2,6 +2,7 @@ using System;
 using com.ootii.Messages;
 using ROOT.Common;
 using ROOT.Message;
+using ROOT.Message.Inquiry;
 using TMPro;
 using UnityEngine;
 using static ROOT.WorldEvent;
@@ -18,6 +19,8 @@ namespace ROOT.UI
         private int _cached_currencyVal;
         private int _cached_incomesVal;
 
+        private bool IsSimpleLevel = false;
+        
         private void UpdateCachedData(int currencyVal, int incomesVal, int baseincomesVal, int bonusincomesVal)
         {
             if (currencyVal != int.MaxValue) _cached_currencyVal = currencyVal;
@@ -26,7 +29,7 @@ namespace ROOT.UI
         
         private void UpdateCurrencyVal(int currencyVal)
         {
-            Currency.text = Utils.PaddingNum(currencyVal, 4);
+            Currency.text = IsSimpleLevel ? "<b>----</b>" : Utils.PaddingNum(currencyVal, 4);
         }
 
         private void UpdateIncomeVal(int incomesVal)
@@ -70,10 +73,16 @@ namespace ROOT.UI
             UpdateIncomeVal(_cached_incomesVal);
         }
 
+        private void LevelTypeCallBack(LevelType levelType, LevelType displayLevelType)
+        {
+            IsSimpleLevel = (levelType == LevelType.Tutorial) && (displayLevelType == LevelType.Career);
+        }
+        
         protected override void Awake()
         {
             base.Awake();
             MessageDispatcher.AddListener(CurrencyUpdatedEvent, CostChartUpdateHandler);
+            MessageDispatcher.SendMessage(new FSMLevelTypeInquiryData {FSMLevelTypeCallBack = LevelTypeCallBack});
         }
 
         protected override void OnDestroy()

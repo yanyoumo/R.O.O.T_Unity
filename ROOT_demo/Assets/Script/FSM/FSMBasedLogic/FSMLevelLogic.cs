@@ -287,7 +287,15 @@ namespace ROOT
             Debug.Log("ExternalQuit = true");
             ExternalQuit = true;
         }
-        
+
+        private void FSMLevelTypeInquiryHander(IMessage rMessage)
+        {
+            if (rMessage is FSMLevelTypeInquiryData data)
+            {
+                data.FSMLevelTypeCallBack(LevelAsset.ActionAsset.levelType, LevelAsset.ActionAsset.DisplayedlevelType);
+            }
+        }
+
         protected virtual void Awake()
         {
             LevelAsset = new GameAssets();
@@ -296,8 +304,8 @@ namespace ROOT
             {
                 TutorialModule = new TutorialFSMModule(this);
                 FeatureManager = new FSMFeatureManager {FeaturesChanged = FeaturesChangedHandler};
-                FeatureManager.RegistFSMFeature(FSMFeatures.Currency,new FSMFeatures[0], false);
-                FeatureManager.RegistFSMFeature(FSMFeatures.Shop,new [] {FSMFeatures.Currency}, false);
+                FeatureManager.RegistFSMFeature(FSMFeatures.Currency, new FSMFeatures[0], false);
+                FeatureManager.RegistFSMFeature(FSMFeatures.Shop, new[] {FSMFeatures.Currency}, false);
             }
 
             UpdateLogicLevelReference();
@@ -311,14 +319,14 @@ namespace ROOT
             Debug.Assert(_actionDriver != null, "have to implement controller driver in 'createDriver' func");
 
             MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
-            //MessageDispatcher.AddListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
+            MessageDispatcher.AddListener(FSMLevelTypeInquiry, FSMLevelTypeInquiryHander);
             MessageDispatcher.AddListener(RequestLevelQuitEvent, RequestLevelQuitHandler);
         }
 
         protected virtual void OnDestroy()
         {
             MessageDispatcher.RemoveListener(RequestLevelQuitEvent, RequestLevelQuitHandler);
-            //MessageDispatcher.RemoveListener(WorldEvent.BoardGridThermoZoneInquiry, BoardGridThermoZoneInquiryHandler);
+            MessageDispatcher.RemoveListener(FSMLevelTypeInquiry, FSMLevelTypeInquiryHander);
             MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
 
             _actionDriver.Unsubscribe();
