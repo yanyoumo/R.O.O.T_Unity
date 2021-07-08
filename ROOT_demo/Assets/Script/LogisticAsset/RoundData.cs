@@ -14,7 +14,7 @@ namespace ROOT.SetupAsset
         public int normalReq=> owner.TypeARequirement;
         public int networkReq=> owner.TypeBRequirement;
         public int shopLength => owner.ShopLength;
-        public int[] HSSwTruncatedIdx=> new[] {1};
+        public int[] HSSwTruncatedIdx => new[] {0};
 
         public bool SwitchHeatsink(int tCount)
         {

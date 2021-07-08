@@ -166,14 +166,16 @@ namespace ROOT
             {
                 RoundLibDriver.StretchCurrentRound(LevelAsset.StepCount);
             }
+            
+            UpdateLevelAsset();//先删除，再清理。
+            
             var roundGist = RoundLibDriver.CurrentRoundGist.Value;
             var tCount = RoundLibDriver.GetTruncatedStep(LevelAsset.StepCount);
             if (roundGist.SwitchHeatsink(tCount))
             {
+                //Debug.Log("roundGist.SwitchHeatsink(tCount)");
                 LevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
             }
-
-            UpdateLevelAsset();
 
             var discount = 0;
 
