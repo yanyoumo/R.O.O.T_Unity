@@ -80,17 +80,16 @@ namespace ROOT
 
         #region TelemetryTransit
 
-        //TODO
-        private BossStageType bossType = BossStageType.Telemetry;
+        //private BossStageType bossType = BossStageType.Telemetry;
 
         private bool CheckTelemetryStageInit()
         {
-            return RoundLibDriver.IsBossRound && (bossType == BossStageType.Telemetry) && (!WorldCycler.TelemetryStage);
+            return RoundLibDriver.IsBossRound && (!WorldCycler.TelemetryStage);
         }
 
         private bool CheckTelemetryStage()
         {
-            return RoundLibDriver.IsBossRound&&(bossType == BossStageType.Telemetry);
+            return RoundLibDriver.IsBossRound;
         }
 
         private bool CheckTelemetryAndPaused()
@@ -186,34 +185,28 @@ namespace ROOT
 
         protected override void AdditionalMajorUpkeep()
         {
-            base.AdditionalMajorUpkeep();
             if (CheckTelemetryStageInit())
             {
                 TelemetryInit();
             }
 
-            if (RoundLibDriver.IsBossRound && (bossType == BossStageType.Telemetry) && Animating)
-            {
-                UpdateInfoZone(LevelAsset.GameBoard.GetInfoCollectorZone()); //RISK 这里先放在这
-            }
-            else
+            if (!RoundLibDriver.IsBossRound || !Animating)
             {
                 WorldExecutor.CleanDestoryer(LevelAsset);
-                //RISK 为了和商店同步，这里就先这样，但是可以检测只有购买后那一次才查一次。
-                //总之稳了后，这个不能这么每帧调用。
                 LevelAsset.GameBoard.BoardGirdDriver.UpkeepHeatSink(RoundLibDriver.CurrentStage.Value);
                 LevelAsset.GameBoard.BoardGirdDriver.CheckOverlappedHeatSinkCount(out LevelAsset.occupiedHeatSinkCount);
-                UpdateInfoZone(LevelAsset.GameBoard.GetInfoCollectorZone()); //RISK 这里先放在这
-                if (LevelAsset.SkillEnabled)
+                if (LevelAsset.SkillEnabled && HandlingSkill)
                 {
                     LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
                 }
             }
+
+            UpdateInfoZone(LevelAsset.GameBoard.GetInfoCollectorZone());
+            RoundLockTutorialVerHandler();
         }
 
         protected override void AdditionalMinorUpkeep()
         {
-            base.AdditionalMinorUpkeep();
             if (CheckTelemetryStage())
             {
                 TelemetryMinorUpdate();
@@ -222,12 +215,12 @@ namespace ROOT
 
         protected override void AdditionalReactIO()
         {
-            base.AdditionalReactIO();
-            AddtionalRecatIO_Telemetry();
+            AddtionalReactIO_Skill();
+            AddtionalReactIO_Telemetry();
         }
 
         #region TelemetryRelated
-        private void AddtionalRecatIO_Telemetry()
+        private void AddtionalReactIO_Telemetry()
         {
             if (_ctrlPack.HasFlag(ControllingCommand.TelemetryResume) && CheckTelemetryAndPaused())
             {

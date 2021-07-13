@@ -10,10 +10,30 @@ namespace ROOT
     public sealed class RoundLibDriver
     {
         public FSMLevelLogic owner;
+        public bool UseStaticLib = true;
+        public List<RoundData> DynamicRoundLib;//主要是现有框架下能不能处理为空的RoundLib。
+        
         private LevelActionAsset _ActionAsset => owner.LevelAsset.ActionAsset;
         private RoundGist? GetRoundGistByStep(int step) => GetCurrentRoundGist(step);
         private StageType? Stage(int step) => GetCurrentType(step);
+        private List<RoundData> RoundLib => UseStaticLib ? _ActionAsset.RoundLib : DynamicRoundLib;
+        private bool HasBossRound => _ActionAsset.HasBossRound;
+        private bool Endless => _ActionAsset.Endless;
+        private BossAdditionalSetupAsset BossSetup => _ActionAsset.BossSetup;
+        private bool GetEndless
+        {
+            get
+            {
+                if (HasBossRound && Endless)
+                {
+                    return false;
+                }
 
+                return Endless;
+            }
+        }
+
+        
         public int StepCount => owner.LevelAsset.StepCount;
         public int LastStepCount => StepCount - 1;
 
@@ -22,20 +42,12 @@ namespace ROOT
         public RoundGist? PreviousRoundGist => (LastStepCount >= 0) ? GetCurrentRoundGist(LastStepCount) : CurrentRoundGist;
 
         public StageType? CurrentStage => Stage(owner.LevelAsset.StepCount);
-
         public bool IsShopRound => CurrentStage == StageType.Shop;
         public bool IsRequireRound => CurrentStage == StageType.Require;
         public bool IsDestoryerRound => CurrentStage == StageType.Destoryer;
         public bool IsBossRound => CurrentStage == StageType.Boss;
 
         #region RoundData
-        
-        public bool UseStaticLib = true;
-        public List<RoundData> DynamicRoundLib;//主要是现有框架下能不能处理为空的RoundLib。
-        private List<RoundData> RoundLib => UseStaticLib ? _ActionAsset.RoundLib : DynamicRoundLib;
-        private bool HasBossRound => _ActionAsset.HasBossRound;
-        private bool Endless => _ActionAsset.Endless;
-        private BossAdditionalSetupAsset BossSetup => _ActionAsset.BossSetup;
 
         private RoundData GetCurrentRound(int step, out int truncatedStep, out bool normalRoundEnded)
         {
@@ -76,7 +88,7 @@ namespace ROOT
 
             throw new ArgumentException("Round should have Ended");
         }
-
+        
         public void StretchCurrentRound(int step)
         {
             if (UseStaticLib)
@@ -158,21 +170,8 @@ namespace ROOT
             GetCurrentRound(step, out var res, out var B);
             return res;
         }
-
-        private bool GetEndless
-        {
-            get
-            {
-                if (HasBossRound && Endless)
-                {
-                    return false;
-                }
-
-                return Endless;
-            }
-        }
-
-        public int PlayableCount
+        
+        public int TotalPlayableCount
         {
             get
             {
@@ -190,9 +189,20 @@ namespace ROOT
                 return false;
             }
 
-            return StepCount >= PlayableCount;
+            return StepCount >= TotalPlayableCount;
         }
 
+        public bool IsLastNormalRound(int StepCount)
+        {
+            if (GetEndless)
+            {
+                return false;
+            }
+
+            var round = GetCurrentRound(StepCount, out var tStep, out var data);
+            return round.ID == RoundLib.Count() - 1;
+        }
+        
         #endregion
     }
 }

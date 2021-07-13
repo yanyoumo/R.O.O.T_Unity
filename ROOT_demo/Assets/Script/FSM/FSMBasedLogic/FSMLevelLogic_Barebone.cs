@@ -190,6 +190,10 @@ namespace ROOT
             if (ExternalQuit) GameEnding_External();//申请结束的流程放在儿：优先级高+频度高。
             _ctrlPack = _actionDriver.CtrlQueueHeader;
             UpdateBoardData_Stepped(ref LevelAsset); //RISK 放在这儿能解决一些问题，但是太费了。一个可以靠谱地检测这个需要更新的逻辑。
+            if (UseTutorialVer)
+            {
+                TutorialModule.TutorialMajorUpkeep();
+            }
             AdditionalMajorUpkeep();
             //WorldExecutor.LightUpBoard(ref LevelAsset, _ctrlPack);
         }
@@ -197,6 +201,10 @@ namespace ROOT
         //现在在MinorUpkeep流程中、会将队列的break命令一口气全处理完。
         private void MinorUpKeepAction()
         {
+            if (UseTutorialVer)
+            {
+                TutorialModule.TutorialMinorUpkeep();
+            }
             AdditionalMinorUpkeep();
             while (_actionDriver.PendingRequestedBreak)
             {
@@ -250,6 +258,10 @@ namespace ROOT
             if (HandlingShop)
             {
                 MovedTile |= WorldExecutor.UpdateShopBuy(ref LevelAsset, in _ctrlPack);
+            }
+            if (UseTutorialVer)
+            {
+                TutorialModule.TutorialReactIO();
             }
             AdditionalReactIO();
         }

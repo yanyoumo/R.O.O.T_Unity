@@ -29,7 +29,7 @@ namespace ROOT
             }
         }
         
-        protected override float LevelProgress => LevelAsset.StepCount / (float) RoundLibDriver.PlayableCount;
+        protected override float LevelProgress => LevelAsset.StepCount / (float) RoundLibDriver.TotalPlayableCount;
         public override bool CouldHandleTimeLine => true;
         public override BossStageType HandleBossType => throw new ArgumentException("could not handle Boss");
         public override int LEVEL_ART_SCENE_ID => StaticName.SCENE_ID_ADDITIONAL_VISUAL_CAREER;
@@ -75,15 +75,8 @@ namespace ROOT
             }
         }
 
-        protected override void AdditionalMajorUpkeep()
+        protected void RoundLockTutorialVerHandler()
         {
-            base.AdditionalMajorUpkeep();
-            LevelAsset.GameBoard.BoardGirdDriver.UpkeepHeatSink(RoundLibDriver.CurrentStage.Value);
-            LevelAsset.GameBoard.BoardGirdDriver.CheckOverlappedHeatSinkCount(out LevelAsset.occupiedHeatSinkCount);
-            if (LevelAsset.SkillEnabled && HandlingSkill)
-            {
-                LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
-            }
             if (UseTutorialVer)
             {
                 if (!_roundLocked && TutorialModule.RoundLock)
@@ -96,6 +89,17 @@ namespace ROOT
                     UnSetRoundLock();
                 }
             }
+        }
+        
+        protected override void AdditionalMajorUpkeep()
+        {
+            LevelAsset.GameBoard.BoardGirdDriver.UpkeepHeatSink(RoundLibDriver.CurrentStage.Value);
+            LevelAsset.GameBoard.BoardGirdDriver.CheckOverlappedHeatSinkCount(out LevelAsset.occupiedHeatSinkCount);
+            if (LevelAsset.SkillEnabled && HandlingSkill)
+            {
+                LevelAsset.SkillMgr.UpKeepSkill(LevelAsset);
+            }
+            RoundLockTutorialVerHandler();
         }
 
         protected override void AdditionalInitLevel()
@@ -188,24 +192,17 @@ namespace ROOT
             LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = (IsSkillAllowed && HandlingSkill);
         }
 
-        private void AddtionalReactIO_Skill()
+        protected void AddtionalReactIO_Skill()
         {
-            if (LevelAsset.SkillEnabled && HandlingSkill)
+            if (HandlingSkill && LevelAsset.SkillEnabled && HandlingSkill && LevelAsset.SkillMgr != null)
             {
-                if (LevelAsset.SkillMgr != null)
-                {
-                    LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
-                }
+                LevelAsset.SkillMgr.TriggerSkill(LevelAsset, _ctrlPack);
             }
         }
 
         protected override void AdditionalReactIO()
         {
-            base.AdditionalReactIO();
-            if (HandlingSkill)
-            {
-                AddtionalReactIO_Skill();
-            }
+            AddtionalReactIO_Skill();
         }
 
         private void SkillMajorUpkeep()
@@ -272,7 +269,7 @@ namespace ROOT
             if (LevelAsset.DestroyerEnabled)
             {
                 WorldExecutor.UpdateDestoryer(LevelAsset);
-                if (LevelAsset.WarningDestoryer != null && !WorldCycler.TelemetryPause)//RISK 这里先弄一下，把遥测暂停时的功击流程关了。这个本应该下沉的。
+                if (LevelAsset.WarningDestoryer != null && !WorldCycler.TelemetryPause)//RISK 这里先弄一下，把遥测暂停时的攻击流程关了。这个本应该下沉的。
                 {
                     LevelAsset.WarningDestoryer.Step(out var outCore);
                     LevelAsset.DestoryedCoreType = outCore;

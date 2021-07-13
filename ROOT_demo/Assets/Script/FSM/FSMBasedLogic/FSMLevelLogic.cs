@@ -64,6 +64,7 @@ namespace ROOT
         public FSMFeatureManager FeatureManager;
         
         protected float AnimationTimerOrigin = 0.0f; //都是秒
+        protected BossStageType? BossStage => LevelAsset.ActionAsset.GetBossStage;
 
         public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? StaticNumericData.AutoAnimationDuration : StaticNumericData.DefaultAnimationDuration;
         
@@ -221,29 +222,22 @@ namespace ROOT
 
         #region AdditionalActionInjection
 
+        //下面两个Additional的函数、在重载的时候不要链式调用。每个变体都写自己的。
+        //所有UpKeep里面都要做的，放到基本的Upkeep代码里面。
+        //如果出现了部分变体共用代码，那么需要在共有父类里面想办法抽象。
         protected virtual void AdditionalReactIO()
         {
-            if (UseTutorialVer)
-            {
-                TutorialModule.TutorialReactIO();
-            }
+            //BaseVersion Do Nothing.
         }
-
+        
         protected virtual void AdditionalMajorUpkeep()
         {
-            //这个东西之前没有base链式调用、改了后可能有问题；好像没有
-            if (UseTutorialVer)
-            {
-                TutorialModule.TutorialMajorUpkeep();
-            }
+            //BaseVersion Do Nothing.
         }
 
         protected virtual void AdditionalMinorUpkeep()
         {
-            if (UseTutorialVer)
-            {
-                TutorialModule.TutorialMinorUpkeep();
-            }
+            //BaseVersion Do Nothing.
         }
 
         #endregion
