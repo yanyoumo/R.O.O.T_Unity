@@ -22,14 +22,23 @@ namespace ROOT.Clock
                 return instance;
             }
         }
+        
+        public bool GamePausedStatus { get; private set; } = false;
+        public bool HasTelemetryPauseModule => TelemetryPauseModule != null;
+        public ClockTelemetryPauseModule TelemetryPauseModule => GetComponent<ClockTelemetryPauseModule>();
 
-        private ClockPauseModule _pauseModule => GetComponent<ClockPauseModule>();
-
+        private void ToggleGamePause()
+        {
+            GamePausedStatus = !GamePausedStatus;
+            DOTween.TogglePauseAll();
+            MessageDispatcher.SendMessage(new GamePauseInfo {GamePaused = GamePausedStatus});
+        }
+        
         public void Reset()
         {
-            if (_pauseModule != null)
+            if (TelemetryPauseModule != null)
             {
-                _pauseModule.ResetClockPauseModule();
+                TelemetryPauseModule.ResetClockPauseModule();
             }
             InitCycler();
         }
@@ -54,11 +63,11 @@ namespace ROOT.Clock
         {
             get
             {
-                if (_pauseModule != null)
+                if (TelemetryPauseModule != null)
                 {
-                    if (_pauseModule.TelemetryStage)
+                    if (TelemetryPauseModule.TelemetryStage)
                     {
-                        if (_pauseModule.TelemetryPause)
+                        if (TelemetryPauseModule.TelemetryPause)
                         {
                             return null;
                         }
@@ -153,28 +162,9 @@ namespace ROOT.Clock
 
             instance = this;
             DontDestroyOnLoad(gameObject);
-        }
-    }
-
-    [RequireComponent(typeof(MasterClock))]
-    public class ClockPauseModule : MonoBehaviour
-    {
-        public bool GamePausedStatus { get; private set; } = false;
-        public bool TelemetryStage = false;
-        public bool TelemetryPause = false;
-        public bool AnimationTimeLongSwitch => TelemetryStage && !TelemetryPause;
-
-        public void ResetClockPauseModule()
-        {
-            TelemetryStage = false;
-            TelemetryPause = false;
-        }
-        
-        private void ToggleGamePause()
-        {
-            GamePausedStatus = !GamePausedStatus;
-            DOTween.TogglePauseAll();
-            MessageDispatcher.SendMessage(new GamePauseInfo {GamePaused = GamePausedStatus});
+            
+            MessageDispatcher.AddListener(WorldEvent.ControllingEvent, RespondToKeyGamePauseEvent);
+            MessageDispatcher.AddListener(WorldEvent.RequestGamePauseEvent, RespondToGamePauseEvent);
         }
         
         private void RespondToKeyGamePauseEvent(IMessage rMessage)
@@ -192,11 +182,21 @@ namespace ROOT.Clock
         {
             ToggleGamePause();
         }
-        
-        private void Awake()
+    }
+
+    [RequireComponent(typeof(MasterClock))]
+    public class ClockTelemetryPauseModule : MonoBehaviour
+    {
+        public bool TelemetryStage = false;
+        public bool TelemetryPause = false;
+        public bool AnimationTimeLongSwitch => TelemetryStage && !TelemetryPause;
+    
+        public void ResetClockPauseModule()
         {
-            MessageDispatcher.AddListener(WorldEvent.ControllingEvent, RespondToKeyGamePauseEvent);
-            MessageDispatcher.AddListener(WorldEvent.RequestGamePauseEvent, RespondToGamePauseEvent);
+            TelemetryStage = false;
+            TelemetryPause = false;
         }
+
+        private MasterClock owner => GetComponent<MasterClock>();
     }
 }

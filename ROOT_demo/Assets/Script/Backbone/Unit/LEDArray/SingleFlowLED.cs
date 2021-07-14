@@ -1,4 +1,5 @@
 using com.ootii.Messages;
+using ROOT.Clock;
 using ROOT.Message;
 using ROOT.SetupAsset;
 using UnityEngine;
@@ -64,7 +65,7 @@ namespace ROOT
 
         private void Update()//TODO 到时候更精巧的一些就是这里的流程用DOTween改修一下。
         {
-            if (WorldCycler.GamePausedStatus) return;
+            if (MasterClock.Instance.GamePausedStatus) return;
             PosXArrow_Tex.sharedMaterial.mainTextureOffset = new Vector2(-0.01f * Time.frameCount, 0.0f);
             NegXArrow_Tex.sharedMaterial.mainTextureOffset = new Vector2(-0.01f * Time.frameCount, 0.0f);
         }

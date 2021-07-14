@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cinemachine;
+using ROOT.Clock;
 using ROOT.SetupAsset;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace ROOT
     [Serializable]
     public sealed class GameAssets //ASSET 这里不应该有任何实际的逻辑（有些便于操作的除外
     {
-        public int StepCount => WorldCycler.Step;
+        public int StepCount => MasterClock.Instance.Step;
         public float LevelProgress = 0.0f;
         public bool BuyingCursor = false;
         public int BuyingID = -1;

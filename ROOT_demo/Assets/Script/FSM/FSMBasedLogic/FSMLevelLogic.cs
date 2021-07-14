@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using DG.Tweening;
+using ROOT.Clock;
 using ROOT.Common;
 using ROOT.Consts;
 using ROOT.FSM;
@@ -66,8 +67,21 @@ namespace ROOT
         protected float AnimationTimerOrigin = 0.0f; //都是秒
         protected BossStageType? BossStage => LevelAsset.ActionAsset.GetBossStage;
 
-        public static float AnimationDuration => WorldCycler.AnimationTimeLongSwitch ? StaticNumericData.AutoAnimationDuration : StaticNumericData.DefaultAnimationDuration;
-        
+        public static float AnimationDuration//这个玩意儿就应该放到MasterClock里面了。
+        {
+            get
+            {
+                if (MasterClock.Instance.HasTelemetryPauseModule)//这个东西是不是干脆放在TelemetryFSM里面，没必要非要和Clock在一起，但是AnimationDuration又冲突。
+                {
+                    
+                }
+
+                return MasterClock.Instance.TelemetryPauseModule.AnimationTimeLongSwitch
+                    ? StaticNumericData.AutoAnimationDuration
+                    : StaticNumericData.DefaultAnimationDuration;
+            }
+        }
+
         #region FSM参数
 
         protected RootFSM _mainFSM;
@@ -86,7 +100,7 @@ namespace ROOT
         
         #region 类属性
 
-        protected bool? AutoDrive => WorldCycler.NeedAutoDriveStep;
+        protected bool? AutoDrive => MasterClock.Instance.NeedAutoDriveStep;
 
         private bool ShouldCycle => (AutoDrive.HasValue) || ShouldCycleFunc(in _ctrlPack, true, in MovedTile, in MovedCursor);
 
@@ -253,7 +267,7 @@ namespace ROOT
         {
             do
             {
-                if (WorldCycler.GamePausedStatus) return;
+                if (MasterClock.Instance.GamePausedStatus) return;
                 //现在这里是“动态一帧多态”设计、在一帧内现在会无限制地转移状态；
                 //只不过在有的状态转移时进行了标记（即：waitForNextFrame）
                 //进行标记后、就会强制等待新的一帧。

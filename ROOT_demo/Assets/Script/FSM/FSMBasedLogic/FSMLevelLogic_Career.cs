@@ -4,6 +4,7 @@ using System.Linq;
 using Cinemachine;
 using com.ootii.Messages;
 using I2.Loc;
+using ROOT.Clock;
 using ROOT.Common;
 using ROOT.Consts;
 using ROOT.Message;
@@ -109,7 +110,7 @@ namespace ROOT
             if (LevelAsset.ActionAsset.RoundLib.Count > 0)
             {
                 //这个东西放在这里还是怎么着？就先这样吧。
-                WorldCycler.InitCycler();
+                MasterClock.Instance.InitCycler();
                 if (LevelAsset.TimeLine != null)
                 {
                     LevelAsset.TimeLine.InitWithAssets(RoundLibDriver);
@@ -168,7 +169,7 @@ namespace ROOT
                 LevelAsset.GameBoard.BoardGirdDriver.UpcountHeatSinkStep();
             }
             
-            if (DestroyerRoundEnding && !WorldCycler.NeedAutoDriveStep.HasValue)
+            if (DestroyerRoundEnding && !MasterClock.Instance.NeedAutoDriveStep.HasValue)
             {
                 LevelAsset.GameBoard.BoardGirdDriver.DestoryHeatsinkOverlappedUnit();
             }
@@ -281,7 +282,7 @@ namespace ROOT
             if (LevelAsset.DestroyerEnabled)
             {
                 WorldExecutor.UpdateDestoryer(LevelAsset);
-                if (LevelAsset.WarningDestoryer != null && !WorldCycler.TelemetryPause)//RISK 这里先弄一下，把遥测暂停时的攻击流程关了。这个本应该下沉的。
+                if (LevelAsset.WarningDestoryer != null && !MasterClock.Instance.TelemetryPauseModule.TelemetryPause)//RISK 这里先弄一下，把遥测暂停时的攻击流程关了。这个本应该下沉的。
                 {
                     LevelAsset.WarningDestoryer.Step(out var outCore);
                     LevelAsset.DestoryedCoreType = outCore;
@@ -315,7 +316,7 @@ namespace ROOT
             get
             {
                 var res=RoundLibDriver.HasEnded(LevelAsset.StepCount);
-                if (res) WorldCycler.Reset();
+                if (res) MasterClock.Instance.Reset();
                 return res;
             }
         }
@@ -340,7 +341,7 @@ namespace ROOT
 
         private void ReverseCycle()
         {
-            WorldCycler.StepDown();
+            MasterClock.Instance.StepDown();
             LevelAsset.TimeLine.Reverse();
         }
 

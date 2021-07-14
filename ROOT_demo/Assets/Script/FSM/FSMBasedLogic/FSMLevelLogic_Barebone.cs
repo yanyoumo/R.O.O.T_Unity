@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using I2.Loc;
+using ROOT.Clock;
 using ROOT.Common;
 using ROOT.Consts;
 using ROOT.Message;
@@ -218,7 +219,7 @@ namespace ROOT
         //考虑吧ForwardCycle再拆碎、就是movedTile与否的两种状态。
         private void ForwardCycle()
         {
-            WorldCycler.StepUp();
+            MasterClock.Instance.StepUp();
             if (LevelAsset.TimeLine != null)
             {
                 LevelAsset.TimeLine.Step();
@@ -272,7 +273,7 @@ namespace ROOT
         {
             PendingCleanUp = true;
             LevelMasterManager.Instance.LevelFinished(LevelAsset);
-            WorldCycler.Reset();
+            MasterClock.Instance.Reset();
             LevelAsset.GameOverAsset = new GameOverAsset {ExternalEnding=true}; 
         }
         

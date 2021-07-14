@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
+using ROOT.Clock;
 using ROOT.Common;
 using ROOT.Message;
 using ROOT.Message.Inquiry;
@@ -49,7 +50,7 @@ namespace ROOT.FSM
                 if (!NotEnding)
                 {
                     LevelAsset.TutorialCompleted = EndingWSuccess;
-                    WorldCycler.Reset();
+                    MasterClock.Instance.Reset();
                     return true;
                 }
                 return false;
@@ -296,7 +297,7 @@ namespace ROOT.FSM
 
         private void ResetApparentStep(TutorialActionData tutorialActionData)
         {
-            WorldCycler.ResetApparentStep();
+            MasterClock.Instance.ResetApparentStep();
         }
 
         private void HighLightGridFunc(TutorialActionData tutorialActionData)
@@ -367,7 +368,7 @@ namespace ROOT.FSM
                 throw new ApplicationException("FSM should support TimeLine but no correct API");
             }
             var nextStep=owner_Career.RoundLibDriver.GetCurrentStageRemainingStep(owner.LevelAsset.StepCount);
-            WorldCycler.ExpectedStepIncrement(nextStep);
+            MasterClock.Instance.ExpectedStepIncrement(nextStep);
         }
 
         private void SetSkillEnablingFunc(TutorialActionData tutorialActionData)

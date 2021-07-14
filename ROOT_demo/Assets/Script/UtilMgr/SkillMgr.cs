@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
+using ROOT.Clock;
 using ROOT.Message;
 using ROOT.SetupAsset;
 using Sirenix.OdinInspector;
@@ -78,14 +79,14 @@ namespace ROOT
                         skillActived = true;
                         CurrentSkillType = SkillType.TimeFromMoney;
                         _currentSkillID = skillIndex;
-                        WorldCycler.ExpectedStepDecrement(skill.TimeGain);
+                        MasterClock.Instance.ExpectedStepDecrement(skill.TimeGain);
                         UpdateUICurrencyVal(currentLevelAsset); //因为这个时间点后就AutoDrive了，所以就没机会调UpdateBoard了，所以先在这里调一下。
                     }
                     break;
                 case SkillType.FastForward:
                     skillActived = true;
                     _fastForwardRebate = 1.00f + 0.01f * skill.AdditionalIncome;
-                    WorldCycler.ExpectedStepIncrement(skill.FastForwardCount);
+                    MasterClock.Instance.ExpectedStepIncrement(skill.FastForwardCount);
                     CurrentSkillType = SkillType.FastForward;
                     _currentSkillID = skillIndex;
                     break;
@@ -164,7 +165,7 @@ namespace ROOT
         public void UpKeepSkill(GameAssets currentLevelAsset)
         {
             //这里为什么没有和Swap部分整合？因为这里的逻辑不会懂FSM运行状态、而Swap会。
-            var autoDrive = WorldCycler.NeedAutoDriveStep;
+            var autoDrive = MasterClock.Instance.NeedAutoDriveStep;
             UpdateSkillActive(currentLevelAsset);
             if (!CurrentSkillType.HasValue) return;
             switch (CurrentSkillType.Value)

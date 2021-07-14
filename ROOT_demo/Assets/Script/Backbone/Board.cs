@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using JetBrains.Annotations;
+using ROOT.Clock;
 using ROOT.Consts;
 using ROOT.SetupAsset;
 using ROOT.Signal;
@@ -72,7 +73,7 @@ namespace ROOT
             if (WorldNeighboringData == null) return;
             Common.Utils.ROTATION_LIST.ForEach(ResetConnector);
             ConnectorLocalDir.Values.ForEach(val => val.Connected = false);
-            var ignoreVal = WorldCycler.TelemetryStage && !WorldCycler.TelemetryPause;
+            var ignoreVal = MasterClock.Instance.TelemetryPauseModule.TelemetryStage && !MasterClock.Instance.TelemetryPauseModule.TelemetryPause;
             Common.Utils.ROTATION_LIST.Where(FilterConnector).ForEach(dir => SetConnector(dir, ignoreVal));
         }
 

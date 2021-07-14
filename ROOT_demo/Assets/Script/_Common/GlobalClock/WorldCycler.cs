@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace ROOT
 {
-    public static class WorldCycler//这个玩意儿应该弄成单例，因为这个是需要多态的。
+    /*public static class WorldCycler//这个玩意儿应该弄成单例，因为这个是需要多态的。
     {
         public static bool GamePausedStatus { get; private set; } = false;
 
@@ -161,5 +161,5 @@ namespace ROOT
             MessageDispatcher.AddListener(WorldEvent.ControllingEvent, RespondToKeyGamePauseEvent);
             MessageDispatcher.AddListener(WorldEvent.RequestGamePauseEvent, RespondToGamePauseEvent);
         }
-    }
+    }*/
 }

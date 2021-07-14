@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
 using I2.Loc;
+using ROOT.Clock;
 using ROOT.Common;
 using ROOT.Message;
 using ROOT.SetupAsset;
@@ -23,7 +24,19 @@ namespace ROOT
         protected override string FailedEndingTerm => ScriptTerms.EndingMessageTelemetry_Failed;
         public override bool CouldHandleBoss => true;
         public override BossStageType HandleBossType => BossStageType.Telemetry;
-        
+
+        private bool TelemetryPause
+        {
+            get => MasterClock.Instance.TelemetryPauseModule.TelemetryPause;
+            set => MasterClock.Instance.TelemetryPauseModule.TelemetryPause = value;
+        }
+
+        private bool TelemetryStage
+        {
+            get => MasterClock.Instance.TelemetryPauseModule.TelemetryStage;
+            set => MasterClock.Instance.TelemetryPauseModule.TelemetryStage = value;
+        }
+
         protected override IEnumerable<int> GamePlayHintPagesByLevelType
         {
             get
@@ -42,7 +55,7 @@ namespace ROOT
         private void TelemetryPauseRunStop()
         {
             Debug.Log("BossStagePauseRunStop");
-            WorldCycler.TelemetryPause = false;
+            TelemetryPause = false;
             StopTelemetryCost();
         }
 
@@ -84,7 +97,7 @@ namespace ROOT
 
         private bool CheckTelemetryStageInit()
         {
-            return RoundLibDriver.IsBossRound && (!WorldCycler.TelemetryStage);
+            return RoundLibDriver.IsBossRound && (!TelemetryStage);
         }
 
         private bool CheckTelemetryStage()
@@ -94,12 +107,12 @@ namespace ROOT
 
         private bool CheckTelemetryAndPaused()
         {
-            return WorldCycler.TelemetryStage && WorldCycler.TelemetryPause;
+            return TelemetryStage && TelemetryPause;
         }
 
         private bool CheckTelemetryAndNotPaused()
         {
-            return WorldCycler.TelemetryStage && !WorldCycler.TelemetryPause;
+            return TelemetryStage && !TelemetryPause;
         }
 
         #endregion
@@ -139,7 +152,7 @@ namespace ROOT
                 LevelAsset.GameBoard.BoardGirdDriver.UpcountHeatSinkStep();
             }
 
-            if (DestroyerRoundEnding && !WorldCycler.NeedAutoDriveStep.HasValue && !RoundLibDriver.IsLastNormalRound(LevelAsset.StepCount))
+            if (DestroyerRoundEnding && !MasterClock.Instance.NeedAutoDriveStep.HasValue && !RoundLibDriver.IsLastNormalRound(LevelAsset.StepCount))
             {
                 LevelAsset.GameBoard.BoardGirdDriver.DestoryHeatsinkOverlappedUnit();
             }
@@ -157,8 +170,8 @@ namespace ROOT
             HandleShopDiscount();
             CheckSkillMgr();
             
-            LevelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
-            if ((LevelAsset.DestroyerEnabled && !RoundLibDriver.IsDestoryerRound) && !WorldCycler.TelemetryStage)
+            LevelAsset.DestroyerEnabled = TelemetryStage;
+            if ((LevelAsset.DestroyerEnabled && !RoundLibDriver.IsDestoryerRound) && !TelemetryStage)
             {
                 LevelAsset.WarningDestoryer.ForceReset();
             }
@@ -170,7 +183,7 @@ namespace ROOT
 
         private void TelemetryMinorUpdate()
         {
-            if (WorldCycler.TelemetryPause) return;
+            if (TelemetryPause) return;
             _telemetryInfoSprayTimer += Time.deltaTime;
             if (_telemetryInfoSprayTimer >= _telemetryInfoSprayTimerInterval)
             {
@@ -246,20 +259,20 @@ namespace ROOT
         private void TelemetryPauseTriggered()
         {
             if (LevelAsset.ReqOkCount <= 0) return;
-            if (WorldCycler.TelemetryPause)
+            if (TelemetryPause)
             {
-                WorldCycler.TelemetryPause = false;
+                TelemetryPause = false;
                 StopTelemetryCost();
             }
             else
             {
-                WorldCycler.TelemetryPause = true;
+                TelemetryPause = true;
                 StartTelemetryCost();
             }
             var signalInfo = new BoardSignalUpdatedInfo {SignalData = new BoardSignalUpdatedData()
             {
-                IsTelemetryStage = WorldCycler.TelemetryStage,
-                TelemetryPaused = WorldCycler.TelemetryPause
+                IsTelemetryStage = TelemetryStage,
+                TelemetryPaused = TelemetryPause
             },};
             MessageDispatcher.SendMessage(signalInfo);
         }
@@ -294,14 +307,14 @@ namespace ROOT
             SprayCountArray = Utils.SpreadOutLayingWRandomization(TotalSprayCount, BossRoundData.InfoCount, BossRoundData.InfoVariantRatio);
 
             LevelAsset.DestroyerEnabled = true;
-            WorldCycler.TelemetryStage = true;
+            TelemetryStage = true;
 
             var signalInfo = new BoardSignalUpdatedInfo
             {
                 SignalData = new BoardSignalUpdatedData()
                 {
                     InfoTarget = TargetInfoCount,
-                    IsTelemetryStage = WorldCycler.TelemetryStage, //
+                    IsTelemetryStage = TelemetryStage, //
                 },
             };
             MessageDispatcher.SendMessage(signalInfo);

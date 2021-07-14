@@ -4,6 +4,7 @@ using System.Linq;
 using com.ootii.Messages;
 using DG.Tweening;
 using Doozy.Engine.UI;
+using ROOT.Clock;
 using ROOT.Message;
 using TMPro;
 using UnityEngine;
@@ -251,7 +252,7 @@ namespace ROOT.UI
 
         public void GameResume()
         {
-            if (WorldCycler.GamePausedStatus)
+            if (MasterClock.Instance.GamePausedStatus)
             {
                 MessageDispatcher.SendMessage(WorldEvent.RequestGamePauseEvent);
             }

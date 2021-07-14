@@ -10,7 +10,7 @@ using UnityEngine;
 namespace ROOT
 {
     //煊煊的需求派生出如下几个实际feature：
-    //1、WorldCycler里面的Step数据可以重置、视在Step通过offset重置。
+    //1、MasterClock.Instance里面的Step数据可以重置、视在Step通过offset重置。
     //2、Timeline是否Disable
     //3、Timeline是否现实Token
     //4、Career及以上FSM是否处理round的事件。

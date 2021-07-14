@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using com.ootii.Messages;
+using ROOT.Clock;
 using ROOT.Message;
 using UnityEngine;
 using static RewiredConsts.Action.Button;
@@ -103,7 +104,7 @@ namespace ROOT
 
         protected bool CoreDrivingFunction(ActionPack actionPack)
         {
-            if (WorldCycler.GamePausedStatus) return false;
+            if (MasterClock.Instance.GamePausedStatus) return false;
             //Debug.Log("CoreDrivingFunction");
             //TODO 这个里面有些问题、还需要处理。
             if (MouseDrivingFunction(actionPack)) return false;
@@ -318,11 +319,23 @@ namespace ROOT
             }
         }
 
+        private bool TelemetryPause
+        {
+            get => MasterClock.Instance.TelemetryPauseModule.TelemetryPause;
+            set => MasterClock.Instance.TelemetryPauseModule.TelemetryPause = value;
+        }
+
+        private bool TelemetryStage
+        {
+            get => MasterClock.Instance.TelemetryPauseModule.TelemetryStage;
+            set => MasterClock.Instance.TelemetryPauseModule.TelemetryStage = value;
+        }
+        
         private bool TelemetryRespondToControlEvent(ActionPack actionPack)
         {
-            if ((WorldCycler.TelemetryStage && actionPack.IsAction(TelemetryPause)))
+            if ((TelemetryStage && actionPack.IsAction(RewiredConsts.Action.Button.TelemetryPause)))
             {
-                if (WorldCycler.TelemetryPause)
+                if (TelemetryPause)
                 {
                     CtrlPack.SetFlag(ControllingCommand.TelemetryResume);
                 }
@@ -334,7 +347,7 @@ namespace ROOT
 
             //Boss阶段非暂停的时候、输入不进入队列。
             //RISK 主要是下面这个、总觉得可能有冲突的问题。
-            return !WorldCycler.TelemetryStage || WorldCycler.TelemetryPause;
+            return !TelemetryStage || TelemetryPause;
         }
     }
 
