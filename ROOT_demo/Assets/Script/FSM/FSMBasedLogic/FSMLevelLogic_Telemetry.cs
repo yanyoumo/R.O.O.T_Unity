@@ -133,23 +133,25 @@ namespace ROOT
         }
 
         
-        protected override void UpdateLevelAsset()
+        /*protected override void UpdateLevelAsset()
         {
-            base.UpdateLevelAsset();
             if ((LevelAsset.DestroyerEnabled && !RoundLibDriver.IsDestoryerRound) && !WorldCycler.TelemetryStage)
             {
                 LevelAsset.WarningDestoryer.ForceReset();
             }
-        }
+        }*/
 
         protected override void UpdateRoundData_Stepped()
         {
             base.UpdateRoundData_Stepped();
             LevelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
-            var roundGist = RoundLibDriver.CurrentRoundGist.Value;
+            if ((LevelAsset.DestroyerEnabled && !RoundLibDriver.IsDestoryerRound) && !WorldCycler.TelemetryStage)
+            {
+                LevelAsset.WarningDestoryer.ForceReset();
+            }
             if (RoundLibDriver.IsRequireRound || RoundLibDriver.IsShopRound)
             {
-                UpdateSignalReq(roundGist);
+                UpdateSignalReq(CurrentRoundGist);
             }
         }
 

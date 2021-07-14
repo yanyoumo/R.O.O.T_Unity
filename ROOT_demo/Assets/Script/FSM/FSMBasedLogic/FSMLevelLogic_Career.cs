@@ -40,7 +40,12 @@ namespace ROOT
         private bool IsReverseCycle => (AutoDrive.HasValue && !AutoDrive.Value);
         protected bool IsSkillAllowed => !RoundLibDriver.IsShopRound;
         protected bool BoardCouldIOCurrency => (RoundLibDriver.IsRequireRound || RoundLibDriver.IsDestoryerRound);
-        
+        protected StageType LastStage => RoundLibDriver.PreviousRoundGist?.Type ?? StageType.Shop;
+        protected bool LastRoundStageIsDestroy => LastStage == StageType.Destoryer;
+        protected RoundGist CurrentRoundGist => RoundLibDriver.CurrentRoundGist.Value;
+        protected int TruncatedStep => RoundLibDriver.GetTruncatedStep(LevelAsset.StepCount);
+        protected bool DestroyerRoundEnding => LastRoundStageIsDestroy && !RoundLibDriver.IsDestoryerRound;
+
         private bool CheckIsSkill() => LevelAsset.SkillMgr != null && LevelAsset.SkillMgr.CurrentSkillType.HasValue &&
                                        LevelAsset.SkillMgr.CurrentSkillType.Value == SkillType.Swap;
         private bool CheckAutoF() => AutoDrive.HasValue && AutoDrive.Value;
@@ -61,7 +66,7 @@ namespace ROOT
 
         protected virtual void UpdateLevelAsset()
         {
-            var lastStage = RoundLibDriver.PreviousRoundGist?.Type ?? StageType.Shop;
+            /*var lastStage = RoundLibDriver.PreviousRoundGist?.Type ?? StageType.Shop;
             var lastDestoryBool = lastStage == StageType.Destoryer;
 
             if (RoundLibDriver.IsRequireRound && IsForwardCycle)
@@ -72,7 +77,7 @@ namespace ROOT
             if ((lastDestoryBool && !RoundLibDriver.IsDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
             {
                 LevelAsset.GameBoard.BoardGirdDriver.DestoryHeatsinkOverlappedUnit();
-            }
+            }*/
         }
 
         protected void RoundLockTutorialVerHandler()
@@ -141,7 +146,7 @@ namespace ROOT
             }
         }
 
-        private bool _roundLocked = false;
+        protected bool _roundLocked { private set; get; } = false;
 
         private void UseDynamicRoundLib()
         {
@@ -163,7 +168,7 @@ namespace ROOT
         {
             _roundLocked = false;
         }
-        
+
         protected virtual void UpdateRoundData_Stepped()
         {
             if (_roundLocked)
@@ -171,17 +176,23 @@ namespace ROOT
                 RoundLibDriver.StretchCurrentRound(LevelAsset.StepCount);
             }
             
-            UpdateLevelAsset();//先删除，再清理。
+            var discount = 0;
             
-            var roundGist = RoundLibDriver.CurrentRoundGist.Value;
-            var tCount = RoundLibDriver.GetTruncatedStep(LevelAsset.StepCount);
-            if (roundGist.SwitchHeatsink(tCount))
+            if (RoundLibDriver.IsRequireRound && IsForwardCycle)
             {
-                //Debug.Log("roundGist.SwitchHeatsink(tCount)");
-                LevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
+                LevelAsset.GameBoard.BoardGirdDriver.UpcountHeatSinkStep();
             }
 
-            var discount = 0;
+            //这个框架下是链式调用、但是这个代码就是属于子类需要修改这里的代码的内容。
+            if (DestroyerRoundEnding && !WorldCycler.NeedAutoDriveStep.HasValue)
+            {
+                LevelAsset.GameBoard.BoardGirdDriver.DestoryHeatsinkOverlappedUnit();
+            }
+
+            if (CurrentRoundGist.SwitchHeatsink(TruncatedStep))
+            {
+                LevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
+            }
 
             if (!LevelAsset.Shop.ShopOpening && RoundLibDriver.IsShopRound && HandlingSkill)
             {
@@ -216,7 +227,7 @@ namespace ROOT
         
         private void UpdateRoundTimingData_Stepped()
         {
-            var currentStageType = RoundLibDriver.CurrentRoundGist.Value.Type;
+            var currentStageType = CurrentRoundGist.Type;
             if (lastStageType == null || lastStageType.Value != currentStageType)
             {
                 //RISK 这个变成每个时刻都改了、想着加一个Guard
@@ -224,7 +235,7 @@ namespace ROOT
                 var timingEvent = new TimingEventInfo
                 {
                     Type = WorldEvent.InGameStageChangedEvent,
-                    CurrentStageType = RoundLibDriver.CurrentRoundGist.Value.Type,
+                    CurrentStageType = CurrentRoundGist.Type,
                 };
                 var timingEvent2 = new TimingEventInfo
                 {
@@ -234,7 +245,7 @@ namespace ROOT
                 };
                 MessageDispatcher.SendMessage(timingEvent);
                 MessageDispatcher.SendMessage(timingEvent2);
-                lastStageType = RoundLibDriver.CurrentRoundGist.Value.Type;
+                lastStageType = CurrentRoundGist.Type;
             }
 
             if (RoundLibDriver.PreCheckRoundGist.HasValue)
