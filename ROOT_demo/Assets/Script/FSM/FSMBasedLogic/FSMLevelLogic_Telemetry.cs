@@ -132,18 +132,31 @@ namespace ROOT
             }
         }
 
-        
-        /*protected override void UpdateLevelAsset()
+        private void HandleHeatSink_Telemetry()
         {
-            if ((LevelAsset.DestroyerEnabled && !RoundLibDriver.IsDestoryerRound) && !WorldCycler.TelemetryStage)
+            if (RoundLibDriver.IsRequireRound && IsForwardCycle)
             {
-                LevelAsset.WarningDestoryer.ForceReset();
+                LevelAsset.GameBoard.BoardGirdDriver.UpcountHeatSinkStep();
             }
-        }*/
+
+            if (DestroyerRoundEnding && !WorldCycler.NeedAutoDriveStep.HasValue && !RoundLibDriver.IsLastNormalRound(LevelAsset.StepCount))
+            {
+                LevelAsset.GameBoard.BoardGirdDriver.DestoryHeatsinkOverlappedUnit();
+            }
+
+            if (CurrentRoundGist.SwitchHeatsink(TruncatedStep))
+            {
+                LevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
+            }
+        }
 
         protected override void UpdateRoundData_Stepped()
         {
-            base.UpdateRoundData_Stepped();
+            HandleRoundStretch();
+            HandleHeatSink_Telemetry();
+            HandleShopDiscount();
+            CheckSkillMgr();
+            
             LevelAsset.DestroyerEnabled = WorldCycler.TelemetryStage;
             if ((LevelAsset.DestroyerEnabled && !RoundLibDriver.IsDestoryerRound) && !WorldCycler.TelemetryStage)
             {

@@ -64,22 +64,6 @@ namespace ROOT
 
         private int Cost => LevelAsset.GameBoard.BoardGirdDriver.HeatSinkCost;
 
-        protected virtual void UpdateLevelAsset()
-        {
-            /*var lastStage = RoundLibDriver.PreviousRoundGist?.Type ?? StageType.Shop;
-            var lastDestoryBool = lastStage == StageType.Destoryer;
-
-            if (RoundLibDriver.IsRequireRound && IsForwardCycle)
-            {
-                LevelAsset.GameBoard.BoardGirdDriver.UpdatePatternDiminishing();
-            }
-
-            if ((lastDestoryBool && !RoundLibDriver.IsDestoryerRound) && !WorldCycler.NeedAutoDriveStep.HasValue)
-            {
-                LevelAsset.GameBoard.BoardGirdDriver.DestoryHeatsinkOverlappedUnit();
-            }*/
-        }
-
         protected void RoundLockTutorialVerHandler()
         {
             if (UseTutorialVer)
@@ -157,33 +141,33 @@ namespace ROOT
                 RoundLibDriver.UseStaticLib = false;
             }
         }
-        
-        protected virtual void SetUpRoundLock()
+
+        private void SetUpRoundLock()
         {
             _roundLocked = true;
             UseDynamicRoundLib();
         }
-        
-        protected virtual void UnSetRoundLock()
+
+        private void UnSetRoundLock()
         {
             _roundLocked = false;
         }
 
-        protected virtual void UpdateRoundData_Stepped()
+        protected void HandleRoundStretch()
         {
             if (_roundLocked)
             {
                 RoundLibDriver.StretchCurrentRound(LevelAsset.StepCount);
             }
-            
-            var discount = 0;
-            
+        }
+
+        private void HandleHeatSink()
+        {
             if (RoundLibDriver.IsRequireRound && IsForwardCycle)
             {
                 LevelAsset.GameBoard.BoardGirdDriver.UpcountHeatSinkStep();
             }
-
-            //这个框架下是链式调用、但是这个代码就是属于子类需要修改这里的代码的内容。
+            
             if (DestroyerRoundEnding && !WorldCycler.NeedAutoDriveStep.HasValue)
             {
                 LevelAsset.GameBoard.BoardGirdDriver.DestoryHeatsinkOverlappedUnit();
@@ -193,6 +177,11 @@ namespace ROOT
             {
                 LevelAsset.GameBoard.BoardGirdDriver.UpdatePatternID();
             }
+        }
+        
+        protected void HandleShopDiscount()
+        {
+            var discount = 0;
 
             if (!LevelAsset.Shop.ShopOpening && RoundLibDriver.IsShopRound && HandlingSkill)
             {
@@ -200,7 +189,19 @@ namespace ROOT
             }
 
             LevelAsset.Shop.OpenShop(RoundLibDriver.IsShopRound, discount);
+        }
+
+        protected void CheckSkillMgr()
+        {
             LevelAsset.SkillMgr.SkillEnabled = LevelAsset.SkillEnabled = (IsSkillAllowed && HandlingSkill);
+        }
+        
+        protected virtual void UpdateRoundData_Stepped()
+        {
+            HandleRoundStretch();
+            HandleHeatSink();
+            HandleShopDiscount();
+            CheckSkillMgr();
         }
 
         protected void AddtionalReactIO_Skill()
