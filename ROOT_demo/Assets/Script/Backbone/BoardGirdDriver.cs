@@ -40,7 +40,7 @@ namespace ROOT
 
         private Vector2Int[] ActualHeatSinkPos => GetActualHeatSinkUpward().ForEach(vec => Utils.PermutateV2I(vec, Board.BoardLength - 1, _HeatSinkPermutation)).ToArray();
 
-        public int DiminishingStep { get; private set; }
+        public int HeatSinkStep { get; private set; }
 
         public void DestoryHeatsinkOverlappedUnit()
         {
@@ -56,7 +56,7 @@ namespace ROOT
             //有办法，就是想办法在pattern里面储存“不能被填充”这种数据。
             //现在Diminishing里面加了一个Maxout。hmmmm先这样，并没有解决上面的核心问题。
             //Debug.Log("DiminishingStep="+DiminishingStep);
-            if (DiminishingStep == -1) return RawHeatSinkPos;
+            if (HeatSinkStep == -1) return RawHeatSinkPos;
 
             var res = RawHeatSinkPos.ToList();
             var HeatSinkPattern = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID];
@@ -64,7 +64,7 @@ namespace ROOT
             //RISK 这个算法还是考虑写道HeatSinkPattern的算法里面。
             var maxOut = HeatSinkPattern.CutOffCount;
 
-            var TaperedDiminishingStep = Mathf.Min(DiminishingStep, maxOut);
+            var TaperedDiminishingStep = Mathf.Min(HeatSinkStep, maxOut);
 
             for (var i = 0; i < TaperedDiminishingStep; i++)
             {
@@ -84,11 +84,11 @@ namespace ROOT
         [Obsolete]
         private Vector2Int[] GetActualHeatSinkDownward()
         {
-            if (DiminishingStep == -1) return RawHeatSinkPos;
+            if (HeatSinkStep == -1) return RawHeatSinkPos;
 
             var res = RawHeatSinkPos.ToList();
             var dimList = HeatSinkPatterns.DiminishingList[_currentHeatSinkDiminishingID].DiminishingList;
-            for (var i = 0; i < DiminishingStep; i++)
+            for (var i = 0; i < HeatSinkStep; i++)
             {
                 if (i < dimList.Count && res.Contains(dimList[i]))
                 {
@@ -99,9 +99,9 @@ namespace ROOT
             return res.ToArray();
         }
 
-        public void UpdatePatternDiminishing()
+        public void UpcountHeatSinkStep()
         {
-            DiminishingStep++;
+            HeatSinkStep++;
         }
 
         public void UpdatePatternID()
@@ -119,7 +119,7 @@ namespace ROOT
             } while ((_currentHeatSinkDiminishingID == oldDimID || _currentHeatSinkPatternsID == oldID) && counter <= max);
 
             //ActualHeatSinkPos = new Vector2Int[];
-            DiminishingStep = 0;
+            HeatSinkStep = 0;
             foreach (var boardGirdsValue in BoardGirds.Values)
             {
                 //刷一下格子的消耗。
@@ -199,7 +199,7 @@ namespace ROOT
         public void ResetHeatSink()
         {
             Debug.Log("HeatSink Reseted");
-            DiminishingStep = 0;
+            HeatSinkStep = 0;
         }
 
         [CanBeNull]
