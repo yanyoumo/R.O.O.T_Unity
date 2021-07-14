@@ -19,6 +19,7 @@ namespace ROOT.Signal
         public static FirewallInner CurrentFirewallInner => _firewallInnerZone;
         public override Type UnitSignalCoreType => typeof(FirewallUnitSignalCore);
         public override SignalType SignalType => SignalType.Firewall;
+        
         private static int N => Board.BoardLength;
         private int[,] _board = new int[N, N];
         /*
@@ -314,48 +315,23 @@ namespace ROOT.Signal
         private int _cacheBoardHash;
         private bool initCache = true;
         
-        private void BoardDataUpdatedHandler(IMessage rMessage)
+        public override void SignalDataUpdatedCallback()
         {
+            if (_cacheBoardHash == Board.BoardHashCode && !initCache)
+            {
+                return;
+            }
+            _cacheBoardHash = Board.BoardHashCode;
+            initCache = false;
+
             var data = SignalMasterMgr.Instance.GetActiveUnitByUnitType(SignalType, HardwareType.Field).ToArray();
             if (data.Length == 0)
             {
-                //Debug.Log("data.Length == 0");
                 _firewallCircle = new FirewallCircle();
                 _firewallInnerZone = new FirewallInner();
                 return;
             }
-            
-            //HACK 不知道为什么这里用Cache流程就有问题，得亏迪公的算法快。
             updateFireWallCircle(data);
-            
-            /*if (initCache)
-            {
-                Debug.Log("initCache");
-                initCache = false;
-                updateFireWallCircle(data);
-                _cacheBoardHash = Board.BoardHashCode;
-                return;
-            }
-
-            if (_cacheBoardHash != Board.BoardHashCode)
-            {
-                Debug.Log("_cacheBoardHash != Board.BoardHashCode");
-                updateFireWallCircle(data);
-                _cacheBoardHash = Board.BoardHashCode;
-                return;
-            }
-
-            Debug.Log("DONE Nothing");*/
-        }
-
-        protected virtual void Awake()
-        {
-            MessageDispatcher.AddListener(WorldEvent.BoardUpdatedEvent, BoardDataUpdatedHandler);
-        }
-
-        private void OnDestroy()
-        {
-            MessageDispatcher.RemoveListener(WorldEvent.BoardUpdatedEvent, BoardDataUpdatedHandler);
         }
     }
 }

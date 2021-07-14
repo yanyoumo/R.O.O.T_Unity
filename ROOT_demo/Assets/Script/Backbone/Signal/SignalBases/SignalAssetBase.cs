@@ -23,6 +23,8 @@ namespace ROOT.Signal
         public UnitAsset CoreUnitAsset;
         public UnitAsset FieldUnitAsset;
 
+        public virtual void SignalDataUpdatedCallback() { }
+
         //在LED屏幕上是否显示本信号的的逻辑。
         public bool ShowSignal(RotationDirection dir, Unit unit, Unit otherUnit) => SignalMasterMgr.Instance.Paths.WithinCertainSignalSamePathAndNeighboring(unit, otherUnit, SignalType);
 

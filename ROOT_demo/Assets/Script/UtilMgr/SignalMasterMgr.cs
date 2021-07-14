@@ -399,6 +399,7 @@ namespace ROOT.Signal
         public void RefreshBoardAllSignalStrength(Board board)
         {
             RefreshBoardSelectedSignalStrength(board, SignalLib);
+            signalAssetLib.Values.ForEach(s => s.SignalDataUpdatedCallback());
         }
 
 

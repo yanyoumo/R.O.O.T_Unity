@@ -340,9 +340,9 @@ namespace ROOT
             }
         }
 
-        protected override void BoardUpdatedHandler(IMessage rMessage)
+        protected override void BoardUpdatedCallBack()
         {
-            base.BoardUpdatedHandler(rMessage);
+            base.BoardUpdatedCallBack();
             if (RoundLibDriver.CurrentRoundGist.HasValue)
             {
                 UpdateRoundData_Instantly_Telemetry();

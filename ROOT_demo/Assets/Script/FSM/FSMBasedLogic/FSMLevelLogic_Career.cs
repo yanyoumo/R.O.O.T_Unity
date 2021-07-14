@@ -322,9 +322,9 @@ namespace ROOT
 
         protected virtual float GetBonusInCome() => (TypeASignalScore + TypeBSignalScore) * (LevelAsset.CurrencyRebate - 1.0f);//BUG 这个数据有问题？没有实质的加上去？
         
-        protected override void BoardUpdatedHandler(IMessage rMessage)
+        protected override void BoardUpdatedCallBack()
         {
-            base.BoardUpdatedHandler(rMessage);
+            base.BoardUpdatedCallBack();
             UpdateBoardData_Instantly_Career();
         }
 

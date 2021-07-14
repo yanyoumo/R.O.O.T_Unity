@@ -104,6 +104,8 @@ namespace ROOT
         public Transform BoardGridRoot;
         public Transform BoardGridZeroing;
 
+        public Action BoardUpdatedFSMCallBack;
+        
         private Dictionary<Vector2Int, GameObject> _unitsGameObjects;
         
         public int GetUnitCount => _unitsGameObjects.Count;
@@ -472,6 +474,7 @@ namespace ROOT
             Units.ForEach(u => u.UpdateActivationLED());
             //至此所有单元提示灯具设置完成。
             MessageDispatcher.SendMessage(WorldEvent.BoardUpdatedEvent);
+            BoardUpdatedFSMCallBack?.Invoke();
             IsDataReady = true;
         }
 
