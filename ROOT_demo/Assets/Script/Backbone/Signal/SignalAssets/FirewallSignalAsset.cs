@@ -10,7 +10,7 @@ namespace ROOT.Signal
 {
     using FirewallCircle = List<Vector2Int>;
     using FirewallInner = List<Vector2Int>;
-    
+
     public class FirewallSignalAsset : SignalAssetBase
     {
         private static FirewallCircle _firewallCircle;
@@ -19,7 +19,7 @@ namespace ROOT.Signal
         public static FirewallInner CurrentFirewallInner => _firewallInnerZone;
         public override Type UnitSignalCoreType => typeof(FirewallUnitSignalCore);
         public override SignalType SignalType => SignalType.Firewall;
-        
+
         private static int N => Board.BoardLength;
         private int[,] _board = new int[N, N];
         /*
@@ -206,13 +206,11 @@ namespace ROOT.Signal
                     continue;
                 }
 
-                string s = "Vertex";
-                foreach (var point in cutVertexSet)
-                    s += "(" + point.x + "," + point.y + ")";
-                Debug.Log(s);
+                var s = cutVertexSet.Aggregate("Vertex", (current, point) => current + ("(" + point.x + "," + point.y + ")"));
+                RootDebug.Log(s, NameID.JiangDigong_Log);
                 foreach (var point in test)
                 {
-                    if (!cutVertexSet.Contains(point)&& _board[point.x, point.y] ==2)
+                    if (!cutVertexSet.Contains(point) && _board[point.x, point.y] == 2)
                     {
                         int x = point.x, y = point.y;
                         var tmp = new FirewallCircle();
@@ -226,7 +224,7 @@ namespace ROOT.Signal
                             for (var i = 0; i < 4; ++i)
                             {
                                 int xx = now.x + dx4[i], yy = now.y + dy4[i];
-                                if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] == -1|| _board[xx, yy] == 3) continue;
+                                if (xx < 0 || xx >= N || yy < 0 || yy >= N || _board[xx, yy] == -1 || _board[xx, yy] == 3) continue;
                                 tmp.Add(new Vector2Int(xx, yy));
                                 if (cutVertexSet.Contains(new Vector2Int(xx, yy))) continue;
                                 _board[xx, yy] = 3;
@@ -274,7 +272,7 @@ namespace ROOT.Signal
 
         private void print(string info)
         {
-            string s = info + "\n";
+            var s = info + "\n";
             for (var j = N - 1; j >= 0; --j)
             {
                 for (var i = 0; i < N; ++i)
@@ -285,7 +283,7 @@ namespace ROOT.Signal
 
                 s += "\n";
             }
-            Debug.Log(s);
+            RootDebug.Log(s, NameID.JiangDigong_Log);
         }
         private void updateFireWallCircle(Unit[] units)
         {
@@ -308,13 +306,13 @@ namespace ROOT.Signal
             }
             if (maxArea != 0)
                 _firewallCircle = DeleteInnerCircle(_firewallCircle);
-            Debug.Log("area"+ maxArea);
+            RootDebug.Log("area" + maxArea, NameID.JiangDigong_Log);
             print("DeleteInner");
         }
 
         private int _cacheBoardHash;
         private bool initCache = true;
-        
+
         public override void SignalDataUpdatedCallback()
         {
             if (_cacheBoardHash == Board.BoardHashCode && !initCache)
