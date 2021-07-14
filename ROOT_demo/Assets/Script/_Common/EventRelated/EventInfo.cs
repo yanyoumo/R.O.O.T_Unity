@@ -5,6 +5,7 @@ using ROOT.Common;
 using ROOT.Consts;
 using ROOT.Message;
 using UnityEngine;
+using static ROOT.WorldEvent;
 
 namespace ROOT.Message
 {
@@ -22,7 +23,7 @@ namespace ROOT.Message
     public class GamePauseInfo : RootMessageBase
     {
         public bool GamePaused;
-        public override string Type => WorldEvent.GamePauseEvent;
+        public override string Type => GamePauseEvent;
     }
     
     public class CurrencyUpdatedInfo : RootMessageBase
@@ -31,7 +32,7 @@ namespace ROOT.Message
         public float BaseIncomesVal = int.MaxValue;
         public float BonusIncomesVal = int.MaxValue;
         public float CurrencyVal = int.MaxValue;
-        public override string Type => WorldEvent.CurrencyUpdatedEvent;
+        public override string Type => CurrencyUpdatedEvent;
     }
 
     public class HintEventInfo : RootMessageBase
@@ -39,13 +40,13 @@ namespace ROOT.Message
         public HintEventType HintEventType;
         public bool BoolData;
         public String StringData = "";
-        public override string Type => WorldEvent.HintRelatedEvent;
+        public override string Type => HintRelatedEvent;
     }
 
     public class ShopTierOffsetChangedData : RootMessageBase
     {
         public bool UpwardOrDownward = true;
-        public override string Type => WorldEvent.ShopTierOffsetChangedEvent;
+        public override string Type => ShopTierOffsetChangedEvent;
     }
 
     public class HighLightingUIChangedData : RootMessageBase
@@ -55,7 +56,7 @@ namespace ROOT.Message
         public Vector2 pos = Vector2.zero;
         public Vector2 scale = Vector2.zero;
         public UITag uiTag = UITag.Currency_Career;
-        public override string Type => WorldEvent.HighLightingUIChangedEvent;
+        public override string Type => HighLightingUIChangedEvent;
     }
 
     public class HintPageChangedData : RootMessageBase
@@ -71,7 +72,7 @@ namespace ROOT.Message
         public SignalType LowerSignal;
         public bool TelemetryOrNot = false;
         
-        public override string Type => WorldEvent.HintScreenChangedEvent;
+        public override string Type => HintScreenChangedEvent;
     }
     
     public class BoardGridHighLightSetData : RootMessageBase
@@ -80,7 +81,7 @@ namespace ROOT.Message
         public GridHighLightType HLType;
         public bool AllClear;
         public Vector2Int[] Poses;
-        public override string Type => WorldEvent.BoardGridHighLightSetEvent;
+        public override string Type => BoardGridHighLightSetEvent;
     }
 
     public class ToggleGameplayUIData : RootMessageBase
@@ -88,19 +89,19 @@ namespace ROOT.Message
         public bool Set;
         public bool SelectAll;
         public UITag UITag;
-        public override string Type => WorldEvent.ToggleGamePlayUIEvent;
+        public override string Type => ToggleGamePlayUIEvent;
     }
         
     public class CursorMovedEventData : RootMessageBase
     {
         public Vector2Int CurrentPosition;
-        public override string Type => WorldEvent.CursorMovedEvent;
+        public override string Type => CursorMovedEvent;
     }
     
     public class BoardSignalUpdatedInfo : RootMessageBase
     {
         public BoardSignalUpdatedData SignalData;
-        public override string Type => WorldEvent.BoardSignalUpdatedEvent;
+        public override string Type => BoardSignalUpdatedEvent;
     }
     
     namespace Inquiry
@@ -108,25 +109,25 @@ namespace ROOT.Message
         public class BalancingSignalSetupInquiryData : RootMessageBase
         {
             public Action<Func<int, int, float>> BalancingSignalFuncCallBack;
-            public override string Type => WorldEvent.BalancingSignalSetupInquiry;
+            public override string Type => BalancingSignalSetupInquiry;
         }
 
         public class AcquiringCostTargetInquiryData : RootMessageBase
         {
             public Action<int> AcquiringCostTargetCallBack;
-            public override string Type => WorldEvent.AcquiringCostTargetInquiry;
+            public override string Type => AcquiringCostTargetInquiry;
         }
 
         public class CurrentSignalTypeInquiryData : RootMessageBase
         {
             public Action<SignalType, SignalType> CurrentSignalCallBack;
-            public override string Type => WorldEvent.CurrentSignalTypeInquiry;
+            public override string Type => CurrentSignalTypeInquiry;
         }
 
         public class FSMLevelTypeInquiryData : RootMessageBase
         {
             public Action<LevelType, LevelType> FSMLevelTypeCallBack;
-            public override string Type => WorldEvent.FSMLevelTypeInquiry;
+            public override string Type => FSMLevelTypeInquiry;
         }
     }
 }

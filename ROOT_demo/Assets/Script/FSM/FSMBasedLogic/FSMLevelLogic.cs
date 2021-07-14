@@ -159,6 +159,7 @@ namespace ROOT
         {
             LevelAsset.CursorTemplate = Resources.Load<GameObject>("Cursor/Prefab/Cursor");
             LevelAsset.GameBoard = FindObjectOfType<Board>();
+            LevelAsset.GameBoard.BoardUpdatedFSMCallBack = BoardUpdatedCallBack;
             LevelAsset.AirDrop = LevelAsset.GameBoard.AirDrop;
             LevelAsset.AirDrop.GameAsset = LevelAsset;
             LevelAsset.Owner = this;
@@ -246,15 +247,7 @@ namespace ROOT
 
         protected bool CheckGameOver => (UseTutorialVer ? TutorialModule.TutorialCheckGameOver : NormalCheckGameOver);
 
-        protected abstract void BoardUpdatedHandler(IMessage rMessage);
-
-        /*private void BoardGridThermoZoneInquiryHandler(IMessage rMessage)
-        {
-            if (rMessage is BoardGridThermoZoneInquiry info)
-            {
-                info.BoardGridThermoZoneInquiryCallBack(LevelAsset.ThermoZone);
-            }
-        }*/
+        protected abstract void BoardUpdatedCallBack();
 
         private void Update()
         {
@@ -316,7 +309,6 @@ namespace ROOT
             createDriver();
             Debug.Assert(_actionDriver != null, "have to implement controller driver in 'createDriver' func");
 
-            MessageDispatcher.AddListener(BoardUpdatedEvent, BoardUpdatedHandler);
             MessageDispatcher.AddListener(FSMLevelTypeInquiry, FSMLevelTypeInquiryHander);
             MessageDispatcher.AddListener(RequestLevelQuitEvent, RequestLevelQuitHandler);
         }
@@ -325,7 +317,6 @@ namespace ROOT
         {
             MessageDispatcher.RemoveListener(RequestLevelQuitEvent, RequestLevelQuitHandler);
             MessageDispatcher.RemoveListener(FSMLevelTypeInquiry, FSMLevelTypeInquiryHander);
-            MessageDispatcher.RemoveListener(BoardUpdatedEvent, BoardUpdatedHandler);
 
             _actionDriver.Unsubscribe();
             _actionDriver = null;

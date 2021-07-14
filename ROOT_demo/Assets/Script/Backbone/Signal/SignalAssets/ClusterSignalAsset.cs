@@ -57,8 +57,15 @@ namespace ROOT.Signal
         private int _cacheBoardHash;
         private bool initCache = true;
 
-        private void BoardDataUpdatedHandler(IMessage rMessage)
-        {            
+        public override void SignalDataUpdatedCallback()
+        {     
+            if (_cacheBoardHash == Board.BoardHashCode && !initCache)
+            {
+                return;
+            }
+            _cacheBoardHash = Board.BoardHashCode;
+            initCache = false;
+
             var data = SignalMasterMgr.Instance.GetActiveUnitByUnitType(SignalType, HardwareType.Field).ToArray();
             if (data.Length == 0)
             {
@@ -66,32 +73,7 @@ namespace ROOT.Signal
                 _clusterIslandPack = new List<ClusterIsland>();
                 return;
             }
-            
-            //这里可能有和Firewall一样的问题，但是不知道为什么没有症状。考虑一下，也改掉，但是这个算法可不是高效的。
-            
-            if (initCache)
-            {
-                _cacheBoardHash = Board.BoardHashCode;
-                initCache = false;
-                updateClusterIsland(data);
-                return;
-            }
-
-            if (_cacheBoardHash != Board.BoardHashCode)
-            {
-                updateClusterIsland(data);
-                _cacheBoardHash = Board.BoardHashCode;
-            }
-        }
-        
-        protected virtual void Awake()
-        {
-            MessageDispatcher.AddListener(WorldEvent.BoardUpdatedEvent, BoardDataUpdatedHandler);
-        }
-
-        private void OnDestroy()
-        {
-            MessageDispatcher.RemoveListener(WorldEvent.BoardUpdatedEvent, BoardDataUpdatedHandler);
+            updateClusterIsland(data);
         }
     }
 }

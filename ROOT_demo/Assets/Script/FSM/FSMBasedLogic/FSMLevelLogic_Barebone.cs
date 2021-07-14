@@ -316,7 +316,7 @@ namespace ROOT
         
         //这个函数只有在Board被更新的时候才会走、但是里面有和轮次相关的数据。
         //现在的解决方法是变轮次的的时候，发一个"Board已更新"的事件.
-        protected override void BoardUpdatedHandler(IMessage rMessage)
+        protected override void BoardUpdatedCallBack()
         {
             UpdateBoardData_Instantly();
             var signalInfo = new BoardSignalUpdatedInfo
