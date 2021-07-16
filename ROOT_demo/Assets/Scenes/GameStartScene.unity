@@ -2940,6 +2940,7 @@ GameObject:
   m_Component:
   - component: {fileID: 452672681}
   - component: {fileID: 452672682}
+  - component: {fileID: 452672683}
   m_Layer: 0
   m_Name: MasterClock
   m_TagString: Untagged
@@ -2971,6 +2972,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 358db3e24b45eff4aa8a8a4c01b0d712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &452672683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452672680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e06892d82f4b77e45aeab26965992223, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &463729148

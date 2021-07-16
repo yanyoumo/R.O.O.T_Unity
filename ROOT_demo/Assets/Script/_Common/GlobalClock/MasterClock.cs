@@ -1,16 +1,19 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using com.ootii.Messages;
 using DG.Tweening;
 using ROOT.Message;
+using ROOT.RTAttribute;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace ROOT.Clock
 {
     public class MasterClock : MonoBehaviour
     {
-        private static MasterClock instance=null;
+        private static MasterClock instance = null;
+
         public static MasterClock Instance
         {
             get
@@ -19,10 +22,11 @@ namespace ROOT.Clock
                 {
                     throw new ApplicationException("MasterClock not exist!!");
                 }
+
                 return instance;
             }
         }
-        
+
         public bool GamePausedStatus { get; private set; } = false;
         public bool HasTelemetryPauseModule => TelemetryPauseModule != null;
         public ClockTelemetryPauseModule TelemetryPauseModule => GetComponent<ClockTelemetryPauseModule>();
@@ -33,16 +37,17 @@ namespace ROOT.Clock
             DOTween.TogglePauseAll();
             MessageDispatcher.SendMessage(new GamePauseInfo {GamePaused = GamePausedStatus});
         }
-        
+
         public void Reset()
         {
             if (TelemetryPauseModule != null)
             {
                 TelemetryPauseModule.ResetClockPauseModule();
             }
+
             InitCycler();
         }
-        
+
         public int Step => ApparentStep;
 
         private bool? RawNeedAutoDriveStep
@@ -71,9 +76,11 @@ namespace ROOT.Clock
                         {
                             return null;
                         }
+
                         return true;
                     }
                 }
+
                 return RawNeedAutoDriveStep;
             }
         }
@@ -81,6 +88,7 @@ namespace ROOT.Clock
         public int RawStep { private set; get; }
         public int ApparentOffset { private set; get; }
         public int ExpectedStep { private set; get; }
+
         public int ApparentStep
         {
             set => RawStep = value - ApparentOffset;
@@ -158,15 +166,17 @@ namespace ROOT.Clock
                     return;
                 }
             }
-            catch (ApplicationException) { }
+            catch (ApplicationException)
+            {
+            }
 
             instance = this;
             DontDestroyOnLoad(gameObject);
-            
+
             MessageDispatcher.AddListener(WorldEvent.ControllingEvent, RespondToKeyGamePauseEvent);
             MessageDispatcher.AddListener(WorldEvent.RequestGamePauseEvent, RespondToGamePauseEvent);
         }
-        
+
         private void RespondToKeyGamePauseEvent(IMessage rMessage)
         {
             if (rMessage is ActionPack actPak)
@@ -182,21 +192,35 @@ namespace ROOT.Clock
         {
             ToggleGamePause();
         }
-    }
 
-    [RequireComponent(typeof(MasterClock))]
-    public class ClockTelemetryPauseModule : MonoBehaviour
-    {
-        public bool TelemetryStage = false;
-        public bool TelemetryPause = false;
-        public bool AnimationTimeLongSwitch => TelemetryStage && !TelemetryPause;
-    
-        public void ResetClockPauseModule()
+        [Button]
+        private void TestRegister()
         {
-            TelemetryStage = false;
-            TelemetryPause = false;
+            TestFunction();
         }
 
-        private MasterClock owner => GetComponent<MasterClock>();
+        [ReplaceableAction] 
+        public Action TestFunction = () => Debug.Log("TestFunction_Base");
+        
+        internal void RegisterClockModule(ClockModuleBase module)
+        {
+            //Debug.Log("RegisterClockModule");
+            var repActionField = typeof(ClockModuleBase).GetFields().Where(f => f.IsDefined(typeof(ReplaceableActionAttribute), false));
+            //Debug.Log("repActionField.Count=" + repActionField.Count());
+            foreach (var fieldInfo in repActionField)
+            {
+                FieldInfo target;
+                try
+                {
+                    target = GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).First(f => f.IsDefined(typeof(ReplaceableActionAttribute), false) && f.Name == fieldInfo.Name);
+                }
+                catch (InvalidOperationException e)
+                {
+                    Debug.LogWarning("No corresponding ReplaceableAction in master clock for:" + fieldInfo.Name);
+                    continue;
+                }
+                target.SetValue(this, fieldInfo.GetValue(module));
+            }
+        }
     }
 }
