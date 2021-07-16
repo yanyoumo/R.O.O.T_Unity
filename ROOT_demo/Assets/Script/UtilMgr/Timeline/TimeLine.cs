@@ -2,6 +2,7 @@
 using System.Collections;
 using com.ootii.Messages;
 using DG.Tweening;
+using ROOT.Clock;
 using ROOT.Common;
 using ROOT.SetupAsset;
 using Sirenix.Utilities;
@@ -181,7 +182,7 @@ namespace ROOT
         private void Animate(bool Forward)
         {
             TimeLineMarkerRoot.transform
-                .DOLocalMoveX((Forward ? -1 : 1) * UnitLength / SubDivision, FSMLevelLogic.AnimationDuration)
+                .DOLocalMoveX((Forward ? -1 : 1) * UnitLength / SubDivision, MasterClock.Instance.AnimationDuration())
                 .OnComplete(AnimationComplete);
         }
         

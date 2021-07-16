@@ -288,7 +288,7 @@ namespace ROOT
         private const int SprayCountPerAnimateInterval = 4;
         private const float TelemetryInfoSprayTimerIntervalOffsetRange = 0.5f;
 
-        private float _telemetryInfoSprayTimerIntervalBase => AnimationDuration / SprayCountPerAnimateInterval;
+        private float _telemetryInfoSprayTimerIntervalBase => MasterClock.Instance.AnimationDuration() / SprayCountPerAnimateInterval;
         private float _telemetryInfoSprayTimerInterval => _telemetryInfoSprayTimerIntervalBase + _telemetryInfoSprayTimerIntervalOffset; 
 
         private float _telemetryInfoSprayTimerIntervalOffset = 0.0f;

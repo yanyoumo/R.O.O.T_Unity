@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using com.ootii.Messages;
 using DG.Tweening;
+using ROOT.Consts;
 using ROOT.Message;
 using ROOT.RTAttribute;
 using Sirenix.OdinInspector;
@@ -31,6 +32,18 @@ namespace ROOT.Clock
         public bool HasTelemetryPauseModule => TelemetryPauseModule != null;
         public ClockTelemetryPauseModule TelemetryPauseModule => GetComponent<ClockTelemetryPauseModule>();
 
+        [Replaceable] public Func<float> AnimationDuration = () => StaticNumericData.DefaultAnimationDuration;
+        
+        /*public float AnimationDuration//这个玩意儿就应该放到MasterClock里面了。
+        {
+            get
+            {
+                return MasterClock.Instance.TelemetryPauseModule.AnimationTimeLongSwitch
+                    ? StaticNumericData.AutoAnimationDuration
+                    : StaticNumericData.DefaultAnimationDuration;
+            }
+        }*/
+        
         private void ToggleGamePause()
         {
             GamePausedStatus = !GamePausedStatus;
@@ -193,26 +206,24 @@ namespace ROOT.Clock
             ToggleGamePause();
         }
 
-        [Button]
+        /*[Button]
         private void TestRegister()
         {
             TestFunction();
-        }
+        }*/
 
-        [ReplaceableAction] 
-        public Action TestFunction = () => Debug.Log("TestFunction_Base");
+        /*[ReplaceableAction] 
+        public Action TestFunction = () => Debug.Log("TestFunction_Base");*/
         
         internal void RegisterClockModule(ClockModuleBase module)
         {
-            //Debug.Log("RegisterClockModule");
-            var repActionField = typeof(ClockModuleBase).GetFields().Where(f => f.IsDefined(typeof(ReplaceableActionAttribute), false));
-            //Debug.Log("repActionField.Count=" + repActionField.Count());
+            var repActionField = module.GetType().GetFields().Where(f => f.IsDefined(typeof(ReplaceableAttribute), false));
             foreach (var fieldInfo in repActionField)
             {
                 FieldInfo target;
                 try
                 {
-                    target = GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).First(f => f.IsDefined(typeof(ReplaceableActionAttribute), false) && f.Name == fieldInfo.Name);
+                    target = GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).First(f => f.IsDefined(typeof(ReplaceableAttribute), false) && f.Name == fieldInfo.Name);
                 }
                 catch (InvalidOperationException e)
                 {

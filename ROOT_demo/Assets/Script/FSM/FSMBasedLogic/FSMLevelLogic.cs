@@ -66,21 +66,7 @@ namespace ROOT
         
         protected float AnimationTimerOrigin = 0.0f; //都是秒
         protected BossStageType? BossStage => LevelAsset.ActionAsset.GetBossStage;
-
-        public static float AnimationDuration//这个玩意儿就应该放到MasterClock里面了。
-        {
-            get
-            {
-                if (MasterClock.Instance.HasTelemetryPauseModule)//这个东西是不是干脆放在TelemetryFSM里面，没必要非要和Clock在一起，但是AnimationDuration又冲突。
-                {
-                    
-                }
-
-                return MasterClock.Instance.TelemetryPauseModule.AnimationTimeLongSwitch
-                    ? StaticNumericData.AutoAnimationDuration
-                    : StaticNumericData.DefaultAnimationDuration;
-            }
-        }
+        
 
         #region FSM参数
 
@@ -198,7 +184,7 @@ namespace ROOT
         protected void Animate_DOTween()
         {
             var animatingSeq = DOTween.Sequence();
-            animatingSeq.PrependInterval(AnimationDuration);//是为了干挪时间轴的时候也等一个AnimationDuration的时长。
+            animatingSeq.PrependInterval(MasterClock.Instance.AnimationDuration());//是为了干挪时间轴的时候也等一个AnimationDuration的时长。
             foreach (var moveableBase in LevelAsset.AnimationPendingObj)
             {
                 if (moveableBase == null) continue;
@@ -207,12 +193,12 @@ namespace ROOT
                 {
                     var actualNextPos = LevelAsset.GameBoard.GetFloatTransformAnimation(moveableBase.NextBoardPosition);
                     actualNextPos.y = moveableBase.AnimatingRoot.transform.position.y; //保证所有物体移动时对于棋盘的垂直高度不变。
-                    animatingSeq.Insert(0, moveableBase.AnimatingRoot.DOMove(actualNextPos, AnimationDuration));
+                    animatingSeq.Insert(0, moveableBase.AnimatingRoot.DOMove(actualNextPos, MasterClock.Instance.AnimationDuration()));
                 }
                 if (moveableBase.NextRotationDirection != moveableBase.CurrentRotationDirection)
                 {
                     var actualNextRotEuler = Common.Utils.RotationToEuler(moveableBase.NextRotationDirection);
-                    animatingSeq.Insert(0, moveableBase.AnimatingRoot.DORotate(actualNextRotEuler, AnimationDuration));
+                    animatingSeq.Insert(0, moveableBase.AnimatingRoot.DORotate(actualNextRotEuler, MasterClock.Instance.AnimationDuration()));
                 }
             }
             animatingSeq.OnComplete(PostAnimateUpdate);

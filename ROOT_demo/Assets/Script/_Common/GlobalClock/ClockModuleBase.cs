@@ -6,9 +6,9 @@ using UnityEngine;
 namespace ROOT.Clock
 {
     [RequireComponent(typeof(MasterClock))]
-    public class ClockModuleBase : MonoBehaviour
+    public abstract class ClockModuleBase : MonoBehaviour
     {
-        [ReplaceableAction] public Action TestFunction = () => Debug.Log("TestFunction_Derived");
+        //[ReplaceableAction] public Action TestFunction = () => Debug.Log("TestFunction_Derived");
 
         private void Awake()
         {
